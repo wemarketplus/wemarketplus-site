@@ -7,101 +7,154 @@
 
 <style>
 body {
-  margin:0;
-  font-family:'Segoe UI', sans-serif;
-  background: radial-gradient(circle at top, #0b1f36, #02070f);
-  color:white;
+    margin:0;
+    font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at top, #0b1f36, #02070f);
+    color:white;
 }
 
 nav {
-  display:flex;
-  justify-content:space-between;
-  padding:20px 40px;
-  background: rgba(0,0,0,0.6);
+    display:flex;
+    justify-content:space-between;
+    padding:20px 40px;
+    background: rgba(0,0,0,0.6);
 }
 
 nav a {
-  color:white;
-  margin:0 10px;
-  text-decoration:none;
+    color:white;
+    margin-left:15px;
+    text-decoration:none;
 }
 
 .hero {
-  text-align:center;
-  padding:120px 20px;
+    text-align:center;
+    padding:100px 20px;
 }
 
 .hero h1 {
-  font-size:60px;
-  background: linear-gradient(90deg,#00f0ff,#00ff9f);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+    font-size:48px;
+    color:#00ffd5;
 }
 
-.btn {
-  background: linear-gradient(90deg,#00f0ff,#00ff9f);
-  padding:14px 28px;
-  border-radius:30px;
-  color:black;
-  text-decoration:none;
-  font-weight:bold;
+.button {
+    background:#00ffd5;
+    color:black;
+    padding:12px 25px;
+    border-radius:30px;
+    text-decoration:none;
+    display:inline-block;
+    margin-top:20px;
+    cursor:pointer;
 }
 
-.cards {
-  display:flex;
-  justify-content:center;
-  gap:25px;
-  padding:60px;
-  flex-wrap:wrap;
+.section {
+    padding:60px 20px;
+    text-align:center;
 }
 
-.card {
-  background: rgba(255,255,255,0.05);
-  padding:30px;
-  border-radius:15px;
-  width:280px;
-  border:1px solid rgba(255,255,255,0.1);
+.crm-grid {
+    display:flex;
+    justify-content:center;
+    gap:30px;
+    flex-wrap:wrap;
+}
+
+.crm-card {
+    background:#0c1c2e;
+    padding:20px;
+    border-radius:15px;
+    width:300px;
+}
+
+.crm-card img {
+    width:100%;
+    border-radius:10px;
+}
+
+.package {
+    background:#06121f;
+    margin-top:10px;
+    padding:10px;
+    border-radius:10px;
 }
 </style>
+
+<script>
+function showDemo(name){
+    alert("Launching Demo for " + name);
+}
+
+function subscribe(name, tier){
+    alert("Redirecting to Stripe for " + name + " - " + tier);
+}
+</script>
+
 </head>
 
 <body>
 
 <nav>
-  <h2>We Market Plus</h2>
-  <div>
-    <a href="#">Home</a>
-    <a href="#">Features</a>
-    <a href="#">Pricing</a>
-    <a href="#">Contact</a>
-  </div>
+<div><strong>We Market Plus</strong></div>
+<div>
+<a href="#">Home</a>
+<a href="#">Features</a>
+<a href="#">Pricing</a>
+<a href="#">Contact</a>
+</div>
 </nav>
 
-<div class="hero">
-  <h1>Connect. Grow. Succeed.</h1>
-  <p>HospiceLink Pro • Max • Gold</p>
-  <br>
-  <a class="btn">Get Started</a>
+<section class="hero">
+<h1>Connect. Grow. Succeed.</h1>
+<p>HospiceLink Pro • Gold • Max</p>
+<div class="button">Get Started</div>
+</section>
+
+<section class="section">
+<h2>Our CRM Solutions</h2>
+
+<div class="crm-grid">
+
+<!-- PRO -->
+<div class="crm-card">
+<img src="assets/pro-logo.png">
+<h3>HospiceLink Pro</h3>
+<p>For marketers only. No GPS or mileage tracking.</p>
+
+<div class="package">0–10 Users - $99/mo <br><button onclick="subscribe('Pro','0-10')">Subscribe</button></div>
+<div class="package">10–20 Users - $199/mo <br><button onclick="subscribe('Pro','10-20')">Subscribe</button></div>
+<div class="package">Unlimited - $299/mo <br><button onclick="subscribe('Pro','Unlimited')">Subscribe</button></div>
+
+<button onclick="showDemo('Pro')">Watch Demo</button>
 </div>
 
-<div class="cards">
+<!-- GOLD -->
+<div class="crm-card">
+<img src="assets/gold-logo.jpeg">
+<h3>HospiceLink Gold</h3>
+<p>For Nurses, Caregivers & Marketers. Includes GPS + Mileage.</p>
 
-  <div class="card">
-    <h2>HospiceLink Pro</h2>
-    <p>Marketing CRM built for hospice outreach</p>
-  </div>
+<div class="package">0–10 Users - $199/mo <br><button onclick="subscribe('Gold','0-10')">Subscribe</button></div>
+<div class="package">10–20 Users - $399/mo <br><button onclick="subscribe('Gold','10-20')">Subscribe</button></div>
+<div class="package">Unlimited - $599/mo <br><button onclick="subscribe('Gold','Unlimited')">Subscribe</button></div>
 
-  <div class="card">
-    <h2>HospiceLink Max</h2>
-    <p>Marketing, Care & Compliance Platform</p>
-  </div>
+<button onclick="showDemo('Gold')">Watch Demo</button>
+</div>
 
-  <div class="card">
-    <h2>HospiceLink Gold</h2>
-    <p>Enterprise-level CRM for scaling agencies</p>
-  </div>
+<!-- MAX -->
+<div class="crm-card">
+<img src="assets/max-logo.jpeg">
+<h3>HospiceLink Max</h3>
+<p>Enterprise solution for marketers with GPS + Mileage tracking.</p>
+
+<div class="package">0–10 Users - $299/mo <br><button onclick="subscribe('Max','0-10')">Subscribe</button></div>
+<div class="package">10–20 Users - $599/mo <br><button onclick="subscribe('Max','10-20')">Subscribe</button></div>
+<div class="package">Unlimited - $999/mo <br><button onclick="subscribe('Max','Unlimited')">Subscribe</button></div>
+
+<button onclick="showDemo('Max')">Watch Demo</button>
+</div>
 
 </div>
+</section>
 
 </body>
 </html>
