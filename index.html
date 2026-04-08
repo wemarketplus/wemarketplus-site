@@ -1,54 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>We Market Plus LLC</title>
+
+<style>
+body {
+    margin:0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg,#0b1f36,#02070f);
+    color:white;
+}
+
+header {
+    text-align:center;
+    padding:40px;
+}
+
+header img {
+    width:220px;
+}
+
+h1 {
+    font-size:40px;
+    margin-top:10px;
+}
+
+.pricing {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:30px;
+    padding:40px;
+}
+
+.card {
+    background:rgba(255,255,255,0.05);
+    border-radius:20px;
+    padding:25px;
+    width:300px;
+    text-align:center;
+    backdrop-filter: blur(10px);
+    box-shadow:0 0 20px rgba(0,0,0,0.4);
+}
+
+.card img {
+    width:120px;
+    margin-bottom:15px;
+}
+
+ul {
+    list-style:none;
+    padding:0;
+}
+
+li {
+    margin:8px 0;
+}
+
+button {
+    margin:10px 5px;
+    padding:10px 15px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.demo {
+    background:#3498db;
+    color:white;
+}
+
+.subscribe {
+    background:#2ecc71;
+    color:white;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<img src="assets/site-logo.png">
+<h1>We Market Plus LLC</h1>
+<p>Powerful CRM Solutions for Hospice Growth</p>
+</header>
+
 <div class="pricing">
 
-  <!-- PRO -->
-  <div class="card">
-    <img src="assets/pro-logo.png" width="120">
-    <h2>HospiceLink Pro</h2>
-    <p>For marketers only (No GPS / Mileage)</p>
+<!-- PRO -->
+<div class="card">
+<img src="assets/pro-logo.png">
+<h2>HospiceLink Pro</h2>
+<p>For marketers only (No GPS / Mileage)</p>
 
-    <ul>
-      <li>0–5 Users — $99/mo</li>
-      <li>5–10 Users — $199/mo</li>
-      <li>10–20 Users — $250/mo</li>
-      <li>Unlimited Users — $299/mo</li>
-    </ul>
+<ul>
+<li>0–5 Users — $99/mo</li>
+<li>5–10 Users — $199/mo</li>
+<li>10–20 Users — $250/mo</li>
+<li>Unlimited Users — $299/mo</li>
+</ul>
 
-    <button onclick="alert('Pro Demo Coming Soon')">Watch Demo</button>
-    <button onclick="alert('Stripe Checkout Coming Next')">Subscribe</button>
-  </div>
+<button class="demo">Watch Demo</button>
+<button class="subscribe">Subscribe</button>
+</div>
 
+<!-- GOLD -->
+<div class="card">
+<img src="assets/gold-logo.jpeg">
+<h2>HospiceLink Gold</h2>
+<p>For Nurses, Caregivers & Marketers (Includes GPS & Mileage)</p>
 
-  <!-- GOLD (MOST EXPENSIVE) -->
-  <div class="card">
-    <img src="assets/gold-logo.jpeg" width="120">
-    <h2>HospiceLink Gold</h2>
-    <p>For Nurses, Caregivers & Marketers (Includes GPS & Mileage)</p>
+<ul>
+<li>0–10 Users — $250/mo</li>
+<li>10–20 Users — $349/mo</li>
+<li>Unlimited Users — $449/mo</li>
+</ul>
 
-    <ul>
-      <li>0–10 Users — $250/mo</li>
-      <li>10–20 Users — $349/mo</li>
-      <li>Unlimited Users — $449/mo</li>
-    </ul>
+<button class="demo">Watch Demo</button>
+<button class="subscribe">Subscribe</button>
+</div>
 
-    <button onclick="alert('Gold Demo Coming Soon')">Watch Demo</button>
-    <button onclick="alert('Stripe Checkout Coming Next')">Subscribe</button>
-  </div>
+<!-- MAX -->
+<div class="card">
+<img src="assets/max-logo.png">
+<h2>HospiceLink Max</h2>
+<p>For marketers + GPS + mileage tracking + automation</p>
 
+<ul>
+<li>0–10 Users — $199/mo</li>
+<li>10–20 Users — $299/mo</li>
+<li>Unlimited Users — $399/mo</li>
+</ul>
 
-  <!-- MAX -->
-  <div class="card">
-    <img src="assets/max-logo.jpeg" width="120">
-    <h2>HospiceLink Max</h2>
-    <p>For marketers + GPS + mileage tracking + automation</p>
-
-    <ul>
-      <li>0–10 Users — $199/mo</li>
-      <li>10–20 Users — $299/mo</li>
-      <li>Unlimited Users — $399/mo</li>
-    </ul>
-
-    <button onclick="alert('Max Demo Coming Soon')">Watch Demo</button>
-    <button onclick="alert('Stripe Checkout Coming Next')">Subscribe</button>
-  </div>
+<button class="demo">Watch Demo</button>
+<button class="subscribe">Subscribe</button>
+</div>
 
 </div>
+
+</body>
+</html>
