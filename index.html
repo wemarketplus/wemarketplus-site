@@ -158,12 +158,37 @@
     }
 
     .card{
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04));
-      border:1px solid var(--line);
-      border-radius:28px;
-      padding:22px;
-      box-shadow:0 20px 45px rgba(0,0,0,.30);
-    }
+  background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:28px;
+  padding:22px;
+  box-shadow:0 20px 45px rgba(0,0,0,.30);
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  position:relative;
+  overflow:hidden;
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  border-radius:28px;
+  padding:1px;
+  background:linear-gradient(135deg, rgba(44,168,255,.55), rgba(15,240,218,.35), rgba(142,232,63,.30));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+  opacity:.35;
+}
+
+.card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 30px 60px rgba(0,0,0,.42), 0 0 30px rgba(44,168,255,.12);
+  border-color:rgba(44,168,255,.35);
+}
 
     .logo-box{
       background:rgba(255,255,255,.03);
