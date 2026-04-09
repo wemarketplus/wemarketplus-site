@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRM Demo</title>
+  <style>
+    :root{
+      --bg:#071120;
+      --card:#0f1b34;
+      --line:rgba(255,255,255,.12);
+      --text:#f3f7ff;
+      --muted:#c8d4e8;
+      --blue:#49b6ff;
+      --green:#8cff66;
+      --red:#ff8d8d;
+      --yellow:#ffd86b;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;font-family:Arial, Helvetica, sans-serif;color:var(--text);
+      background:radial-gradient(circle at top, #12345f 0%, #09162b 35%, #050b15 100%);
+    }
+    .wrap{max-width:1240px;margin:0 auto;padding:24px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+    .top h1{margin:0;font-size:38px}
+    .sub{color:var(--muted);font-size:18px;line-height:1.6;margin:8px 0 0}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border:none;
+      border-radius:999px;font-weight:900;text-decoration:none;cursor:pointer;
+    }
+    .btn-blue{background:linear-gradient(90deg,#42b7ff,#6ed6ff);color:#07111f}
+    .btn-green{background:linear-gradient(90deg,#82f86b,#b8ff79);color:#08101b}
+    .grid{display:grid;grid-template-columns:2fr 1fr;gap:18px}
+    .card{
+      background:linear-gradient(180deg, rgba(18,30,60,.96), rgba(9,16,30,.98));
+      border:1px solid rgba(73,182,255,.24);border-radius:24px;padding:20px;
+    }
+    .card h2,.card h3{margin:0 0 12px}
+    .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+    .tab{
+      padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);cursor:pointer;font-weight:800;color:#fff;
+    }
+    .tab.active{background:linear-gradient(90deg,#42b7ff,#6ed6ff);color:#07111f}
+    .panel{display:none}
+    .panel.active{display:block}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+    .stat{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:14px}
+    .stat strong{display:block;font-size:28px;margin-bottom:6px}
+    .muted{color:var(--muted)}
+    .pipeline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .stage{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:14px;min-height:240px}
+    .stage h4{margin:0 0 10px}
+    .chip{
+      display:block;background:rgba(73,182,255,.12);border:1px solid rgba(73,182,255,.24);
+      padding:10px 12px;border-radius:12px;margin-bottom:10px;font-size:14px;
+    }
+    .note-list,.task-list{display:grid;gap:10px}
+    .item{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:14px;padding:12px}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:12px;border-bottom:1px solid var(--line);text-align:left}
+    th{color:#dfe9f8}
+    .good{color:var(--green);font-weight:900}
+    .warn{color:var(--yellow);font-weight:900}
+    .bad{color:var(--red);font-weight:900}
+    textarea,input{
+      width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);
+      background:#0b1630;color:#fff;margin-top:8px;
+    }
+    @media (max-width:980px){
+      .grid{grid-template-columns:1fr}
+      .stats{grid-template-columns:1fr 1fr}
+      .pipeline{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1 id="title">CRM Demo</h1>
+        <p class="sub" id="subtitle"></p>
+      </div>
+      <a class="btn btn-blue" href="index.html#pricing">Back to Pricing</a>
+    </div>
+
+    <div class="tabs" id="tabs"></div>
+
+    <div class="grid">
+      <div class="card">
+        <div id="panel-pipeline" class="panel active"></div>
+        <div id="panel-notes" class="panel"></div>
+        <div id="panel-mileage" class="panel"></div>
+        <div id="panel-admin" class="panel"></div>
+      </div>
+
+      <div class="card">
+        <h3>Package Summary</h3>
+        <div id="summary"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const crm = new URLSearchParams(window.location.search).get("crm") || "pro";
+    const storageKey = `demo_notes_${crm}`;
+
+    const configs = {
+      pro: {
+        title: "HospiceLink Pro Demo",
+        subtitle: "Marketing-only CRM with referral pipeline, notes, tasks, conversion tracking, and referral relationship management.",
+        tabs: ["Pipeline", "Notes", "Admin"],
+        summary: `
+          <div class="item"><strong>Audience:</strong><br>Hospice marketers only</div>
+          <div class="item"><strong>Core Tools:</strong><br>Inquiry pipeline, facility/doctor tracking, marketer notes, follow-ups, referral conversion visibility, tasks</div>
+          <div class="item"><strong>Primary Focus:</strong><br>Everything a hospice marketer needs</div>
+        `
+      },
+      gold: {
+        title: "HospiceLink Gold Demo",
+        subtitle: "Nurses, caregivers, and marketing with notes, GPS, mileage, clinical workflow concepts, and team support tools.",
+        tabs: ["Notes", "Mileage", "Admin"],
+        summary: `
+          <div class="item"><strong>Audience:</strong><br>Nurses, caregivers, marketers</div>
+          <div class="item"><strong>Core Tools:</strong><br>Notes, speech-to-text concept, GPS/EVV concept, mileage, family communication, supplies/DME concepts</div>
+          <div class="item"><strong>Primary Focus:</strong><br>Broader care-support plus marketing</div>
+        `
+      },
+      max: {
+        title: "HospiceLink Max Demo",
+        subtitle: "Hospice marketing CRM with GPS, mileage, notes, automation, field visibility, and marketer productivity tools.",
+        tabs: ["Pipeline", "Notes", "Mileage", "Admin"],
+        summary: `
+          <div class="item"><strong>Audience:</strong><br>Hospice marketers</div>
+          <div class="item"><strong>Core Tools:</strong><br>Pipeline, marketer notes, GPS check-ins, mileage, automation, productivity visibility</div>
+          <div class="item"><strong>Primary Focus:</strong><br>Marketing growth with field accountability</div>
+        `
+      }
+    };
+
+    const cfg = configs[crm] || configs.pro;
+    document.getElementById("title").textContent = cfg.title;
+    document.getElementById("subtitle").textContent = cfg.subtitle;
+    document.getElementById("summary").innerHTML = cfg.summary;
+
+    const tabs = document.getElementById("tabs");
+    cfg.tabs.forEach((tabName, i) => {
+      const btn = document.createElement("button");
+      btn.className = "tab" + (i === 0 ? " active" : "");
+      btn.textContent = tabName;
+      btn.onclick = () => {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("panel-" + tabName.toLowerCase()).classList.add("active");
+      };
+      tabs.appendChild(btn);
+    });
+
+    const pipelineHTML = `
+      <h2>Referral Pipeline</h2>
+      <div class="stats">
+        <div class="stat"><strong>42</strong><span class="muted">Active Leads</span></div>
+        <div class="stat"><strong>18</strong><span class="muted">Visits This Week</span></div>
+        <div class="stat"><strong>9</strong><span class="muted">Admissions</span></div>
+        <div class="stat"><strong>4</strong><span class="muted">Lost</span></div>
+      </div>
+      <div class="pipeline">
+        <div class="stage">
+          <h4>Inquiry</h4>
+          <span class="chip">Parkview SNF — Social Worker Lisa</span>
+          <span class="chip">Dr. Morgan Office — Family requested info</span>
+          <span class="chip">Oak Hollow ALF — Needs follow-up</span>
+        </div>
+        <div class="stage">
+          <h4>Visit</h4>
+          <span class="chip">Westside Hospital — Marketer met discharge planner</span>
+          <span class="chip">Suncrest Rehab — Family consult scheduled</span>
+        </div>
+        <div class="stage">
+          <h4>Admit</h4>
+          <span class="chip">Dr. Patel Referral — Admitted 04/07</span>
+          <span class="chip">Brookstone ALF — Admitted 04/06</span>
+        </div>
+        <div class="stage">
+          <h4>Lost</h4>
+          <span class="chip">Hill Country SNF — Chose competitor</span>
+          <span class="chip">Family declined services</span>
+        </div>
+      </div>
+    `;
+
+    function renderNotesPanel(){
+      const saved = JSON.parse(localStorage.getItem(storageKey) || "[]");
+      const notesHTML = `
+        <h2>Notes Engine</h2>
+        <div class="item">
+          <strong>Add Note</strong>
+          <input id="noteTitle" placeholder="Example: Westside Hospital Follow-Up">
+          <textarea id="noteBody" rows="4" placeholder="Type your note here..."></textarea>
+          <button class="btn btn-green" style="margin-top:10px" onclick="addNote()">Save Note</button>
+        </div>
+        <div class="note-list" id="notesList"></div>
+      `;
+      document.getElementById("panel-notes").innerHTML = notesHTML;
+      const list = document.getElementById("notesList");
+
+      const defaults = [
+        {title:"Westside Hospital", body:"Met with discharge planner. Left brochure, discussed GIP transitions, asked for Friday follow-up."},
+        {title:"Parkview SNF", body:"DON asked for payer overview sheet. Reminder created for tomorrow."},
+        {title:"Dr. Morgan Office", body:"Referral source asked for physician update workflow. Sent follow-up email and logged touchpoint."}
+      ];
+
+      const combined = saved.length ? saved : defaults;
+
+      combined.forEach((n, idx) => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `<strong>${n.title}</strong><br>${n.body}`;
+        list.appendChild(div);
+      });
+
+      if(crm === "gold"){
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `<strong>Speech-to-Text Clinical Note Concept</strong><br>"Patient resting comfortably. Daughter notified. Wound supplies requested."`;
+        list.appendChild(div);
+      }
+    }
+
+    function addNote(){
+      const title = document.getElementById("noteTitle").value.trim();
+      const body = document.getElementById("noteBody").value.trim();
+      if(!title || !body) return;
+      const saved = JSON.parse(localStorage.getItem(storageKey) || "[]");
+      saved.unshift({title, body});
+      localStorage.setItem(storageKey, JSON.stringify(saved));
+      renderNotesPanel();
+    }
+    window.addNote = addNote;
+
+    const mileageHTML = `
+      <h2>GPS / Mileage</h2>
+      <div class="stats">
+        <div class="stat"><strong>7</strong><span class="muted">Check-ins Today</span></div>
+        <div class="stat"><strong>63.4</strong><span class="muted">Billable Miles</span></div>
+        <div class="stat"><strong>12.6</strong><span class="muted">Commute Miles Excluded</span></div>
+        <div class="stat"><strong class="good">Verified</strong><span class="muted">Location Status</span></div>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Stop</th><th>Type</th><th>GPS</th><th>Miles</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Westside Hospital</td><td>Facility Visit</td><td>Matched</td><td>12.2</td><td class="good">Verified</td></tr>
+          <tr><td>Suncrest Rehab</td><td>Facility Visit</td><td>Matched</td><td>8.7</td><td class="good">Verified</td></tr>
+          <tr><td>Brookstone ALF</td><td>Family Meeting</td><td>Matched</td><td>10.4</td><td class="warn">Manual Review</td></tr>
+        </tbody>
+      </table>
+      <div class="item" style="margin-top:14px">
+        <strong>Commuter Deduction Concept</strong><br>
+        Drive from home to first stop is excluded. Only mileage between verified stops is counted as billable mileage.
+      </div>
+    `;
+
+    const adminHTML = `
+      <h2>Admin Dashboard</h2>
+      <div class="task-list">
+        <div class="item"><strong>User Management</strong><br>Current users: 4 / Allowed seats: ${crm === "pro" ? "5" : "10"}<br><span class="good">Within plan limit</span></div>
+        <div class="item"><strong>Billing Status</strong><br>Subscription: Active<br><span class="good">Account not suspended</span></div>
+        <div class="item"><strong>Password / Username Control</strong><br>Admin can reset staff passwords and change usernames.</div>
+        <div class="item"><strong>Audit-Ready Concepts</strong><br>Missing signatures, late notes, or continuous-care alerts can be flagged here in production buildout.</div>
+      </div>
+    `;
+
+    document.getElementById("panel-pipeline").innerHTML = pipelineHTML;
+    document.getElementById("panel-mileage").innerHTML = mileageHTML;
+    document.getElementById("panel-admin").innerHTML = adminHTML;
+    renderNotesPanel();
+  </script>
+</body>
+</html>
