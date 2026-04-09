@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Set Up Your CRM</title>
+  <style>
+    body{
+      margin:0;font-family:Arial, Helvetica, sans-serif;color:#f5f8ff;
+      background:radial-gradient(circle at top, #14345f 0%, #09162b 34%, #050b15 100%);
+    }
+    .wrap{max-width:760px;margin:0 auto;padding:40px 20px}
+    .box{
+      background:linear-gradient(180deg, rgba(18,31,61,.95), rgba(11,18,36,.96));
+      border:1px solid rgba(73,182,255,.22);border-radius:24px;padding:24px;
+    }
+    h1{margin:0 0 12px}
+    p{color:#c7d3e8;line-height:1.7}
+    label{display:block;margin:12px 0 6px;font-weight:800}
+    input,select{
+      width:100%;padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);color:#fff;font-size:16px;
+    }
+    button{
+      margin-top:18px;width:100%;padding:16px;border:none;border-radius:999px;
+      background:linear-gradient(90deg,#82f86b,#b8ff79);color:#08101b;font-weight:900;font-size:16px;cursor:pointer;
+    }
+    .msg{margin-top:14px;font-weight:800}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="box">
+      <h1>Set Up Your CRM</h1>
+      <p>After purchase, create your first Organization Admin account here.</p>
+
+      <label>Company Name</label>
+      <input id="company" placeholder="Your company name">
+
+      <label>Billing Email</label>
+      <input id="email" type="email" placeholder="Use the same email used in Stripe">
+
+      <label>Package Purchased</label>
+      <select id="plan">
+        <option value="pro_0_5">HospiceLink Pro — 0–5 Users</option>
+        <option value="pro_5_10">HospiceLink Pro — 5–10 Users</option>
+        <option value="pro_10_20">HospiceLink Pro — 10–20 Users</option>
+        <option value="pro_unlimited">HospiceLink Pro — Unlimited Users</option>
+        <option value="gold_0_10">HospiceLink Gold — 0–10 Users</option>
+        <option value="gold_10_20">HospiceLink Gold — 10–20 Users</option>
+        <option value="gold_unlimited">HospiceLink Gold — Unlimited Users</option>
+        <option value="max_0_10">HospiceLink Max — 0–10 Users</option>
+        <option value="max_10_20">HospiceLink Max — 10–20 Users</option>
+        <option value="max_unlimited">HospiceLink Max — Unlimited Users</option>
+      </select>
+
+      <label>Create Admin Username</label>
+      <input id="username" placeholder="admin username">
+
+      <label>Create Admin Password</label>
+      <input id="password" type="password" placeholder="Create a strong password">
+
+      <button onclick="setupAdmin()">Create Admin Account</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "https://YOUR-BACKEND.onrender.com";
+
+    async function setupAdmin(){
+      const companyName = document.getElementById("company").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const planCode = document.getElementById("plan").value;
+
+      const msg = document.getElementById("msg");
+      msg.textContent = "";
+
+      if(!companyName || !email || !username || !password || !planCode){
+        msg.textContent = "Please complete all fields.";
+        msg.style.color = "#ff9a9a";
+        return;
+      }
+
+      try{
+        const res = await fetch(`${API_BASE}/api/onboard-admin`, {
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({ companyName, email, username, password, planCode })
+        });
+
+        const data = await res.json();
+
+        if(res.ok){
+          msg.textContent = "Admin account created successfully.";
+          msg.style.color = "#9aff89";
+        } else {
+          msg.textContent = data.message || "Could not create admin account.";
+          msg.style.color = "#ff9a9a";
+        }
+      } catch(err){
+        msg.textContent = "Could not connect to the backend.";
+        msg.style.color = "#ff9a9a";
+      }
+    }
+  </script>
+</body>
+</html>
