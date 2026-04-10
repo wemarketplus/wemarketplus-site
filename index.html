@@ -24,13 +24,20 @@
     }
     .wrap{max-width:1240px;margin:0 auto;padding:24px}
     .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-    .top h1{margin:0;font-size:32px}
-    .sub{color:var(--muted);font-size:16px;line-height:1.4;margin:4px 0 0}
+    .top h1{margin:0;font-size:38px}
+    .sub{color:var(--muted);font-size:18px;line-height:1.6;margin:8px 0 0}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border:none;
+      border-radius:999px;font-weight:900;text-decoration:none;cursor:pointer;
+    }
+    .btn-blue{background:linear-gradient(90deg,#42b7ff,#6ed6ff);color:#07111f}
     .grid{display:grid;grid-template-columns:2fr 1fr;gap:18px}
     .card{
       background:linear-gradient(180deg, rgba(18,30,60,.96), rgba(9,16,30,.98));
       border:1px solid rgba(73,182,255,.24);border-radius:24px;padding:20px;
+      min-height: 400px;
     }
+    .card h2,.card h3{margin:0 0 12px}
     .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
     .tab{
       padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.06);
@@ -39,68 +46,49 @@
     .tab.active{background:linear-gradient(90deg,#42b7ff,#6ed6ff);color:#07111f}
     .panel{display:none}
     .panel.active{display:block}
-    .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
-    .stat{background:rgba(255,255,255,0.04);border:1px solid var(--line);border-radius:18px;padding:14px}
-    .stat strong{display:block;font-size:24px;color:var(--blue)}
-    .pipeline{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .stage{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:12px}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+    .stat{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:14px}
+    .stat strong{display:block;font-size:28px;margin-bottom:6px}
+    .muted{color:var(--muted)}
+    .pipeline{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .stage{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:14px;min-height:150px}
     .chip{
       display:block;background:rgba(73,182,255,.12);border:1px solid rgba(73,182,255,.24);
-      padding:10px;border-radius:12px;margin-bottom:8px;font-size:13px;
+      padding:10px 12px;border-radius:12px;margin-bottom:10px;font-size:14px;
     }
     .item{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
-    table{width:100%;border-collapse:collapse;font-size:13px}
-    th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left}
-    .good{color:var(--green)}
-    @media (max-width:768px){ .grid{grid-template-columns:1fr} }
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:12px;border-bottom:1px solid var(--line);text-align:left}
+    .good{color:var(--green);font-weight:900}
+    .warn{color:var(--yellow);font-weight:900}
+    textarea,input{
+      width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);
+      background:#0b1630;color:#fff;margin-top:8px;
+    }
+    @media (max-width:980px){
+      .grid{grid-template-columns:1fr}
+      .stats{grid-template-columns:1fr 1fr}
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="top">
       <div>
-        <h1 id="title">HospiceLink Demo</h1>
+        <h1 id="title">CRM Loading...</h1>
         <p class="sub" id="subtitle"></p>
       </div>
+      <a class="btn btn-blue" href="index.html">Back Home</a>
     </div>
 
     <div class="tabs" id="tabs"></div>
 
     <div class="grid">
       <div class="card">
-        <div id="panel-pipeline" class="panel">
-           <h2>Referral Pipeline</h2>
-           <div class="stats">
-             <div class="stat"><strong>42</strong><span>Active Leads</span></div>
-             <div class="stat"><strong>9</strong><span>Admissions</span></div>
-           </div>
-           <div class="pipeline">
-             <div class="stage"><h4>Inquiry</h4><span class="chip">Parkview SNF</span><span class="chip">Dr. Morgan Office</span></div>
-             <div class="stage"><h4>Admit</h4><span class="chip">Brookstone ALF</span><span class="chip">Dr. Patel Ref</span></div>
-           </div>
-        </div>
-        <div id="panel-notes" class="panel">
-           <h2>Notes Engine</h2>
-           <div class="item"><strong>Westside Hospital</strong><br>Met with discharge planner. Left brochures.</div>
-           <div class="item"><strong>Parkview SNF</strong><br>DON requested payer overview sheet.</div>
-        </div>
-        <div id="panel-mileage" class="panel">
-           <h2>GPS / Mileage</h2>
-           <div class="stats">
-             <div class="stat"><strong>63.4</strong><span>Total Miles</span></div>
-             <div class="stat"><strong class="good">Verified</strong><span>GPS Status</span></div>
-           </div>
-           <table>
-             <tr><th>Stop</th><th>Miles</th><th>Status</th></tr>
-             <tr><td>Westside Hospital</td><td>12.2</td><td class="good">Verified</td></tr>
-             <tr><td>Suncrest Rehab</td><td>8.7</td><td class="good">Verified</td></tr>
-           </table>
-        </div>
-        <div id="panel-admin" class="panel">
-           <h2>Admin Dashboard</h2>
-           <div class="item"><strong>User Management</strong><br>4 / 10 seats used.</div>
-           <div class="item"><strong>Billing Status</strong><br><span class="good">Account Active</span></div>
-        </div>
+        <div id="panel-pipeline" class="panel"></div>
+        <div id="panel-notes" class="panel"></div>
+        <div id="panel-mileage" class="panel"></div>
+        <div id="panel-admin" class="panel"></div>
       </div>
 
       <div class="card">
@@ -111,26 +99,31 @@
   </div>
 
   <script>
-    const crm = new URLSearchParams(window.location.search).get("crm") || "pro";
+    const params = new URLSearchParams(window.location.search);
+    const crm = params.get("crm") || "pro";
+    const storageKey = `demo_notes_${crm}`;
 
     const configs = {
       pro: {
         title: "HospiceLink Pro Demo",
-        subtitle: "Marketing-only CRM with referral pipeline and tracking.",
+        subtitle: "Marketing-only CRM for referral pipelines.",
         tabs: ["Pipeline", "Notes", "Admin"],
-        summary: `<div class="item"><strong>Audience:</strong><br>Hospice Marketers</div><div class="item"><strong>Focus:</strong><br>Referral conversions</div>`
+        defaultTab: "Pipeline",
+        summary: `<div class="item"><strong>Audience:</strong> Marketers</div>`
       },
       gold: {
         title: "HospiceLink Gold Demo",
-        subtitle: "Nurses and marketing with clinical notes and GPS.",
+        subtitle: "Clinical & Marketing support.",
         tabs: ["Notes", "Mileage", "Admin"],
-        summary: `<div class="item"><strong>Audience:</strong><br>Nurses & Caregivers</div><div class="item"><strong>Focus:</strong><br>Care support & Mileage</div>`
+        defaultTab: "Notes",
+        summary: `<div class="item"><strong>Audience:</strong> Nurses & Marketers</div>`
       },
       max: {
         title: "HospiceLink Max Demo",
-        subtitle: "Full suite with GPS, automation, and productivity tools.",
+        subtitle: "Full automation and GPS tracking.",
         tabs: ["Pipeline", "Notes", "Mileage", "Admin"],
-        summary: `<div class="item"><strong>Audience:</strong><br>Full Growth Teams</div><div class="item"><strong>Focus:</strong><br>Scale & Accountability</div>`
+        defaultTab: "Pipeline",
+        summary: `<div class="item"><strong>Audience:</strong> Growth Teams</div>`
       }
     };
 
@@ -139,10 +132,11 @@
     document.getElementById("subtitle").textContent = cfg.subtitle;
     document.getElementById("summary").innerHTML = cfg.summary;
 
+    // Render Tabs
     const tabsContainer = document.getElementById("tabs");
-    cfg.tabs.forEach((tabName, i) => {
+    cfg.tabs.forEach(tabName => {
       const btn = document.createElement("button");
-      btn.className = "tab" + (i === 0 ? " active" : "");
+      btn.className = "tab" + (tabName === cfg.defaultTab ? " active" : "");
       btn.textContent = tabName;
       btn.onclick = () => {
         document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
@@ -151,8 +145,38 @@
         document.getElementById("panel-" + tabName.toLowerCase()).classList.add("active");
       };
       tabsContainer.appendChild(btn);
-      if(i === 0) document.getElementById("panel-" + tabName.toLowerCase()).classList.add("active");
     });
+
+    // Content Templates
+    const pipelineHTML = `<h2>Referral Pipeline</h2><div class="pipeline"><div class="stage"><h4>Inquiry</h4><span class="chip">Parkview SNF</span></div><div class="stage"><h4>Admit</h4><span class="chip">Brookstone ALF</span></div></div>`;
+    const mileageHTML = `<h2>GPS / Mileage</h2><div class="stat"><strong>63.4</strong> Mi Today</div>`;
+    const adminHTML = `<h2>Admin</h2><div class="item">Subscription: <strong>Active</strong></div>`;
+
+    function renderNotes(){
+      const saved = JSON.parse(localStorage.getItem(storageKey) || "[]");
+      let html = `<h2>Notes</h2><textarea id="nBody" placeholder="Add a note..."></textarea><button onclick="saveN()" class="tab active" style="margin-top:10px">Save</button><div id="list" style="margin-top:20px">`;
+      saved.forEach(n => { html += `<div class="item">${n}</div>` });
+      html += `</div>`;
+      document.getElementById("panel-notes").innerHTML = html;
+    }
+
+    window.saveN = () => {
+      const b = document.getElementById("nBody").value;
+      if(!b) return;
+      const saved = JSON.parse(localStorage.getItem(storageKey) || "[]");
+      saved.unshift(b);
+      localStorage.setItem(storageKey, JSON.stringify(saved));
+      renderNotes();
+    };
+
+    // Initialize View
+    document.getElementById("panel-pipeline").innerHTML = pipelineHTML;
+    document.getElementById("panel-mileage").innerHTML = mileageHTML;
+    document.getElementById("panel-admin").innerHTML = adminHTML;
+    renderNotes();
+    
+    // Force active panel on load
+    document.getElementById("panel-" + cfg.defaultTab.toLowerCase()).classList.add("active");
   </script>
 </body>
 </html>
