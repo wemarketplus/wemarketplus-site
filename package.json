@@ -1,18 +1,7 @@
-{
-  "name": "wemarktplus-backend",
-  "version": "1.0.0",
-  "description": "Starter backend for We Market Plus hospice CRM SaaS",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
-    "express": "^4.19.2",
-    "jsonwebtoken": "^9.0.2",
-    "stripe": "^16.5.0",
-    "uuid": "^10.0.0"
-  }
+"dependencies": {
+  "cors": "^2.8.5",
+  "dotenv": "^16.0.0",
+  "express": "^4.19.2",
+  "node-fetch": "^2.6.7",
+  "stripe": "^16.5.0"
 }
