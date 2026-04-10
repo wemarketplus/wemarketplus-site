@@ -1,445 +1,152 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>We Market Plus LLC</title>
-  <meta name="description" content="Hospice CRM software by We Market Plus LLC" />
   <style>
-    :root{
-      --bg1:#06101d;
-      --bg2:#0b2140;
-      --line:rgba(255,255,255,.12);
-      --text:#f5f8ff;
-      --muted:#c7d3e8;
-      --blue:#49b6ff;
-      --green:#8cff66;
-      --green2:#b8ff7f;
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
+    body {
       margin:0;
-      font-family:Arial, Helvetica, sans-serif;
-      color:var(--text);
-      background:radial-gradient(circle at top, #14345f 0%, #09162b 34%, #050b15 100%);
+      font-family: Arial;
+      background:#0F172A;
+      color:white;
+      text-align:center;
     }
-    nav{
-      position:sticky;top:0;z-index:50;
-      display:flex;justify-content:space-between;align-items:center;gap:18px;
-      padding:16px 24px;background:rgba(5,11,22,.88);
-      backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08);
-    }
-    .brand{display:flex;align-items:center;gap:12px}
-    .brand img{width:56px;height:56px;object-fit:contain;background:#fff;border-radius:12px;padding:6px}
-    .brand h1{margin:0;font-size:20px;line-height:1.1}
-    .brand p{margin:4px 0 0;color:var(--muted);font-size:12px}
-    .nav-links{display:flex;flex-wrap:wrap;gap:18px;align-items:center}
-    .nav-links a{color:#fff;text-decoration:none;font-weight:800;font-size:15px}
-    .nav-links a:hover{color:var(--blue)}
-    .hero{max-width:1240px;margin:0 auto;padding:78px 24px 38px;text-align:center}
-    .pill{
-      display:inline-block;padding:10px 18px;border-radius:999px;
-      background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);
-      color:#dbe7f8;font-weight:800;margin-bottom:18px;
-    }
-    .hero h2{
-      margin:0 0 12px;font-size:72px;line-height:1;font-weight:900;
-      background:linear-gradient(90deg, var(--blue), #7bd3ff, var(--green), var(--green2));
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-    }
-    .hero p{max-width:980px;margin:0 auto 24px;color:#dce6f6;font-size:22px;line-height:1.6}
-    .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-    .section{max-width:1240px;margin:0 auto;padding:40px 24px}
-    .section h3{font-size:46px;margin:0 0 14px}
-    .lead{margin:0 0 24px;color:var(--muted);line-height:1.7;font-size:19px}
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:999px;
-      padding:14px 20px;font-weight:900;cursor:pointer;text-decoration:none;font-size:16px;
-    }
-    .btn-blue{background:linear-gradient(90deg,#42b7ff,#6ed6ff);color:#07111f}
-    .btn-green{background:linear-gradient(90deg,#82f86b,#b8ff79);color:#08101b}
-    .btn-dark{background:#0e1930;color:#fff;border:1px solid rgba(255,255,255,.12)}
-    .btn-small{padding:10px 14px;font-size:14px}
-    .feature-grid,.legal-grid,.contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-    .feature-box,.legal-box,.contact-box{
-      background:linear-gradient(180deg, rgba(18,31,61,.95), rgba(11,18,36,.96));
-      border:1px solid rgba(73,182,255,.22);border-radius:22px;padding:22px;
-    }
-    .feature-box h4,.legal-box h4,.contact-box h4{margin:0 0 8px;font-size:28px}
-    .feature-box p,.legal-box p,.contact-box p{margin:0 0 14px;color:var(--muted);line-height:1.7}
-    .crm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
-    .crm-card{
-      position:relative;background:linear-gradient(180deg, rgba(18,30,60,.96), rgba(9,16,30,.98));
-      border:1px solid rgba(73,182,255,.26);border-radius:30px;padding:24px;overflow:hidden;
-      box-shadow:0 25px 60px rgba(0,0,0,.30);transition:all .35s ease;
-    }
-    .crm-card::before{
-      content:"";position:absolute;inset:-2px;border-radius:32px;padding:1px;
-      background:linear-gradient(135deg, rgba(73,182,255,.75), rgba(140,255,102,.45), rgba(73,182,255,.28));
-      -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite:xor;mask-composite:exclude;opacity:.55;pointer-events:none;
-    }
-    .crm-card::after{
-      content:"";position:absolute;left:50%;transform:translateX(-50%);bottom:-85px;width:78%;height:145px;
-      background:radial-gradient(circle, rgba(73,182,255,.36) 0%, rgba(73,182,255,.10) 40%, rgba(73,182,255,0) 72%);
-      filter:blur(18px);pointer-events:none;
-    }
-    .crm-card:hover{transform:translateY(-8px) scale(1.01);border-color:rgba(73,182,255,.58)}
-    .badge{
-      position:absolute;top:16px;right:16px;background:linear-gradient(90deg, var(--blue), var(--green));
-      color:#06111d;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:900;
-    }
-    .logo-wrap{
-      height:220px;display:flex;align-items:center;justify-content:center;
-      border:1px solid rgba(255,255,255,.09);border-radius:24px;background:rgba(255,255,255,.04);
-      padding:18px;margin-bottom:18px;
-    }
-    .logo-wrap img{max-width:100%;max-height:100%;object-fit:contain}
-    .crm-card h4{margin:0 0 8px;font-size:34px}
-    .crm-sub{margin:0 0 14px;color:#eaf1fb;font-size:17px;line-height:1.6;font-weight:700}
-    .crm-desc{margin:0 0 18px;color:var(--muted);font-size:15px;line-height:1.7;min-height:260px}
-    .card-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
-    .price-list{border-top:1px solid rgba(255,255,255,.08);margin-top:12px}
-    .price-row{
-      display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;
-      padding:15px 0;border-bottom:1px solid rgba(255,255,255,.08);
-    }
-    .price-row:last-child{border-bottom:none}
-    .price-name{font-size:16px;font-weight:800}
-    .price-amt{font-size:18px;font-weight:900;white-space:nowrap}
-    footer{max-width:1240px;margin:0 auto;padding:34px 24px 54px;color:var(--muted);text-align:center}
 
-    .modal{
-      position:fixed;inset:0;display:none;align-items:center;justify-content:center;
-      z-index:9999;background:rgba(0,0,0,.74);padding:18px;
+    .header {
+      padding:20px;
+      font-size:28px;
+      background:#020617;
     }
-    .modal.show{display:flex}
-    .modal-box{
-      width:min(680px,100%);max-height:92vh;overflow:auto;
-      background:linear-gradient(180deg,#0d1730,#09101f);
-      border:1px solid rgba(255,255,255,.10);border-radius:24px;padding:24px;
-      box-shadow:0 20px 60px rgba(0,0,0,.45);
-    }
-    .modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
-    .modal-head h4{margin:0;font-size:34px}
-    .close-btn{border:none;background:none;color:#fff;font-size:30px;cursor:pointer;line-height:1}
-    .agreement-list{display:grid;gap:12px;margin:16px 0}
-    .agree-item{
-      display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px;
-    }
-    .agree-item input{margin-top:3px}
-    .agree-item strong{display:block;margin-bottom:6px}
-    .msg{margin-top:12px;min-height:20px;font-size:14px;font-weight:800;color:#ff9696}
 
-    @media (max-width:1100px){
-      .crm-grid,.feature-grid,.legal-grid,.contact-grid{grid-template-columns:1fr}
+    .hero {
+      padding:60px 20px;
     }
-    @media (max-width:760px){
-      nav{flex-direction:column;align-items:flex-start}
-      .hero h2{font-size:50px}
-      .hero p{font-size:18px}
-      .section h3{font-size:38px}
-      .price-row{grid-template-columns:1fr}
-      .modal-head h4{font-size:28px}
+
+    .hero h1 {
+      font-size:48px;
+      color:#4ade80;
+    }
+
+    .section {
+      padding:40px 20px;
+    }
+
+    .plans {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:20px;
+    }
+
+    .card {
+      background:white;
+      color:black;
+      padding:20px;
+      width:300px;
+      border-radius:12px;
+    }
+
+    .btn {
+      display:block;
+      margin-top:10px;
+      padding:12px;
+      background:#0F6D6D;
+      color:white;
+      text-decoration:none;
+      border-radius:6px;
+    }
+
+    .demo-btn {
+      background:#22c55e;
     }
   </style>
 </head>
+
 <body>
 
-  <nav>
-    <div class="brand">
-      <img src="assets/site-logo.png" alt="We Market Plus LLC logo">
-      <div>
-        <h1>We Market Plus LLC</h1>
-        <p>Connect. Grow. Succeed.</p>
-      </div>
+<div class="header">
+  We Market Plus LLC
+</div>
+
+<div class="hero">
+  <h1>Connect. Grow. Succeed.</h1>
+  <p>Hospice CRM SaaS Platform</p>
+</div>
+
+<!-- ================= PRO ================= -->
+<div class="section">
+  <h2>HospiceLink Pro (Marketing CRM)</h2>
+
+  <div class="plans">
+
+    <div class="card">
+      <h3>0–5 Users</h3>
+      <p>$99/month</p>
+      <a href="demo-pro.html" class="btn demo-btn">View Demo</a>
+      <a href="https://buy.stripe.com/6oU3cw4VW1fp6Ld6hffEk00" class="btn">Buy Now</a>
     </div>
 
-    <div class="nav-links">
-      <a href="#homepage">Homepage</a>
-      <a href="#features">Features</a>
-      <a href="#pricing">Pricing</a>
-      <a href="#contact">Contact</a>
-      <a href="#terms">Terms</a>
-      <a href="#privacy">Privacy</a>
-      <a href="#baa">BAA</a>
+    <div class="card">
+      <h3>5–10 Users</h3>
+      <p>$199/month</p>
+      <a href="demo-pro.html" class="btn demo-btn">View Demo</a>
+      <a href="https://buy.stripe.com/aFa5kEagg2jt9Xp0WVfEk01" class="btn">Buy Now</a>
     </div>
-  </nav>
 
-  <section class="hero" id="homepage">
-    <div class="pill">Hospice CRM Platform by We Market Plus LLC</div>
-    <h2>Connect. Grow. Succeed.</h2>
-    <p>
-      Choose the package you want, watch the live demo, review the agreements, and continue to checkout.
-      Each package has its own Subscribe button.
-    </p>
-    <div class="hero-actions">
-      <a href="#pricing" class="btn btn-blue">View Pricing</a>
-      <a href="demo.html?crm=pro" class="btn btn-green">Watch Demos</a>
+    <div class="card">
+      <h3>Unlimited</h3>
+      <p>$299/month</p>
+      <a href="demo-pro.html" class="btn demo-btn">View Demo</a>
+      <a href="https://buy.stripe.com/dRmeVe0FGe2bedF20ZfEk03" class="btn">Buy Now</a>
     </div>
-  </section>
 
-  <section class="section" id="features">
-    <h3>Platform Highlights</h3>
-    <p class="lead">
-      These are positioned as fully built out hospice CRM SaaS systems with marketing workflow, notes,
-      GPS and mileage where applicable, admin control, subscription control, and compliance-focused structure.
-    </p>
-
-    <div class="feature-grid">
-      <div class="feature-box">
-        <h4>Marketing Workflow</h4>
-        <p>
-          Inquiry → Visit → Admit → Lost tracking, referral source management, notes, reminders, touch logs,
-          conversion visibility, competitor tracking concepts, and territory management.
-        </p>
-      </div>
-
-      <div class="feature-box">
-        <h4>Compliance & Billing Controls</h4>
-        <p>
-          Terms, Privacy, BAA acknowledgment, and nonpayment suspension language before checkout.
-          Backend seat-cap and suspension logic can control actual CRM access after purchase.
-        </p>
-      </div>
-
-      <div class="feature-box">
-        <h4>GPS, Mileage & Care Support</h4>
-        <p>
-          GPS check-in concepts, EVV concepts, mileage tracking, commuter deduction concepts, clinical note concepts,
-          family logs, and admin reporting support for the higher-tier products.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="pricing">
-    <h3>Pricing</h3>
-    <p class="lead">Every package below has its own Subscribe button.</p>
-
-    <div class="crm-grid">
-      <article class="crm-card">
-        <div class="logo-wrap">
-          <img src="assets/pro-logo.png" alt="HospiceLink Pro logo">
-        </div>
-        <h4>HospiceLink Pro</h4>
-        <p class="crm-sub">For marketing only</p>
-        <p class="crm-desc">
-          HospiceLink Pro is for hospice marketers only. It should contain everything a marketer needs, including
-          notes, referral source management, facility tracking, physician and discharge planner relationship tracking,
-          follow-up reminders, direct communication logs, referral conversion tracking, territory management, and a
-          visible pipeline from inquiry to visit to admit to lost.
-        </p>
-
-        <div class="card-actions">
-          <a href="demo.html?crm=pro" class="btn btn-blue btn-small">Watch Demo</a>
-        </div>
-
-        <div class="price-list">
-          <div class="price-row"><div class="price-name">0–5 Users</div><div class="price-amt">$99/mo</div><button class="btn btn-green btn-small" onclick="startSubscribe('HospiceLink Pro','0–5 Users','$99/mo','https://buy.stripe.com/6oU3cw4VW1fp6Ld6hffEk00')">Subscribe</button></div>
-          <div class="price-row"><div class="price-name">5–10 Users</div><div class="price-amt">$199/mo</div><button class="btn btn-green btn-small" onclick="startSubscribe('HospiceLink Pro','5–10 Users','$199/mo','https://buy.stripe.com/aFa5kEagg2jt9Xp0WVfEk01')">Subscribe</button></div>
-          <div class="price-row"><div class="price-name">10–20 Users</div><div class="price-amt">$250/mo</div><button class="btn btn-green btn-small" onclick="startSubscribe('HospiceLink Pro','10–20 Users','$250/mo','https://buy.stripe.com/6oU8wQfAA7DN2uX497fEk02')">Subscribe</button></div>
-          <div class="price-row"><div class="price-name">Unlimited Users</div><div class="price-amt">$299/mo</div><button class="btn btn-green btn-small" onclick="startSubscribe('HospiceLink Pro','Unlimited Users','$299/mo','https://buy.stripe.com/dRmeVe0FGe2bedF20ZfEk03')">Subscribe</button></div>
-        </div>
-      </article>
-
-      <article class="crm-card">
-        <div class="badge">Most Popular</div>
-        <div class="logo-wrap">
-          <img src="assets/gold-logo.jpeg" alt="HospiceLink Gold logo">
-        </div>
-        <h4>HospiceLink Gold</h4>
-        <p class="crm-sub">For nurses, caregivers, and marketing</p>
-        <p class="crm-desc">
-          HospiceLink Gold is for nurses, caregivers, and marketers. It should include notes, GPS tracking,
-          mileage tracking, care-support workflows, speech-to-text note concepts, supplies/DME request concepts,
-          family communication log concepts, EVV concepts, and role-based workflows so clinical users and marketing
-          users can work in the same environment.
-        </p>
-
-        <div class="card-actions">
-          <a href="demo.html?crm=gold" class="btn btn-blue btn-small">Watch Demo</a>
-        </div>
-
-        <div class="price-list">
-          <div class="price-row"><div class="price-name">0–10 Users</div><div class="price-amt">$250/mo</div><button class="btn btn-green btn-small" onclick="startSubscribe('HospiceLink Gold','0–10 Users','$250/mo','https://buy.stripe.com/bJe00k3RSgaj1qT353fEk05')">Subscribe</button></div>
-          <div class="price-row"><div class="price-name">10–20 Users</div><div class="price-amt">$349/mo</div><button class="btn btn-green btn-small" onclick="startSubscribe('HospiceLink Gold','10–20 Users','$349/mo','https://buy.stripe.com/9B614odsscY79Xp9trfEk06')">Subscribe</button></div>
-          <div class="price-row"><div class="price-name">Unlimited Users</div><div class="price-amt">$449/mo</div><button class="btn btn-green btn-small" onclick="startSubscribe('HospiceLink Gold','Unlimited Users','$449/mo','https://buy.stripe.com/6oUaEY3RS7DNb1t6hffEk07')">Subscribe</button></div>
-        </div>
-      </article>
-
-      <article class="crm-card">
-        <div class="logo-wrap">
-          <img src="assets/max-logo.png" alt="HospiceLink Max logo">
-        </div>
-        <h4>HospiceLink Max</h4>
-        <p class="crm-sub">For hospice marketing with GPS, mileage, notes, and automation</p>
-        <p class="crm-desc">
-          HospiceLink Max is for hospice marketers who need more than a basic CRM. It should include marketer notes,
-          GPS tracking, mileage tracking, automation workflows, productivity visibility, field accountability,
-          referral pipeline progression from inquiry to visit to admit to lost, referral source ROI, and strong
-          follow-up tasking for hospice growth.
-        </p>
-
-        <div class="card-actions">
-          <a href="demo.html?crm=max" class="btn btn-blue btn-small">Watch Demo</a>
-        </div>
-
-        <div class="price-list">
-          <div class="price-row"><div class="price-name">0–10 Users</div><div class="price-amt">$199/mo</div><button class="btn btn-green btn-small" onclick="startSubscribe('HospiceLink Max','0–10 Users','$199/mo','https://buy.stripe.com/6oU6oI744gajfhJeNLfEk08')">Subscribe</button></div>
-          <div class="price-row"><div class="price-name">10–20 Users</div><div class="price-amt">$299/mo</div><button class="btn btn-green btn-small" onclick="startSubscribe('HospiceLink Max','10–20 Users','$299/mo','https://buy.stripe.com/00w6oI1JKe2b8Tl8pnfEk09')">Subscribe</button></div>
-          <div class="price-row"><div class="price-name">Unlimited Users</div><div class="price-amt">$399/mo</div><button class="btn btn-green btn-small" onclick="startSubscribe('HospiceLink Max','Unlimited Users','$399/mo','https://buy.stripe.com/6oU6oI6008HRedFaxvfEk0a')">Subscribe</button></div>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <section class="section" id="contact">
-    <h3>Contact</h3>
-    <div class="contact-grid">
-      <div class="contact-box" style="grid-column:1 / -1;">
-        <h4>We Market Plus LLC</h4>
-        <p>
-          Email: info@wemarktplus.com<br>
-          Phone: +1 (469) 793-0673
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="terms">
-    <h3>Terms of Service</h3>
-    <div class="legal-grid">
-      <div class="legal-box" style="grid-column:1 / -1;">
-        <h4>Subscription Terms</h4>
-        <p>
-          By subscribing to a We Market Plus LLC CRM package, the customer agrees to recurring billing for the
-          selected subscription plan. Access to the CRM is licensed, not sold, and is intended to remain active
-          only while the subscription is current and in good standing. Nonpayment, failed billing, cancellation,
-          delinquent status, or misuse may result in suspension or termination of CRM access. Package limits are
-          intended to apply to the number of allowed user accounts under the purchased tier. No white-label resale
-          or unauthorized sublicensing is permitted.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="privacy">
-    <h3>Privacy Policy</h3>
-    <div class="legal-grid">
-      <div class="legal-box" style="grid-column:1 / -1;">
-        <h4>Privacy & Data Handling</h4>
-        <p>
-          We Market Plus LLC is committed to maintaining appropriate privacy, confidentiality, and data-handling
-          practices. Customers are responsible for using the platform in a manner consistent with their own
-          compliance obligations. This starter system is a business and workflow platform concept and requires
-          production-grade security, encryption, audit logging, and legal review before live handling of PHI.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="baa">
-    <h3>Business Associate Agreement</h3>
-    <div class="legal-grid">
-      <div class="legal-box" style="grid-column:1 / -1;">
-        <h4>BAA Acknowledgment</h4>
-        <p>
-          Before moving into checkout, the customer must acknowledge the Business Associate Agreement requirement
-          where protected health information or related regulated data may be involved in platform use. Subscription
-          purchase and continued use of the service may be conditioned on required agreement acceptance.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <footer>© 2026 We Market Plus LLC. All Rights Reserved.</footer>
-
-  <div class="modal" id="subscribeModal">
-    <div class="modal-box">
-      <div class="modal-head">
-        <h4>Before You Continue</h4>
-        <button class="close-btn" onclick="closeModal('subscribeModal')">&times;</button>
-      </div>
-
-      <p id="subscribeSummary" class="lead" style="font-size:18px; margin-bottom:8px;"></p>
-
-      <div class="agreement-list">
-        <label class="agree-item">
-          <input type="checkbox" class="consent-check">
-          <div><strong>Terms of Service</strong>I agree to the monthly subscription terms.</div>
-        </label>
-        <label class="agree-item">
-          <input type="checkbox" class="consent-check">
-          <div><strong>Privacy Policy</strong>I acknowledge the privacy policy and data handling terms.</div>
-        </label>
-        <label class="agree-item">
-          <input type="checkbox" class="consent-check">
-          <div><strong>Business Associate Agreement</strong>I acknowledge the BAA requirements and responsibilities related to protected health information.</div>
-        </label>
-        <label class="agree-item">
-          <input type="checkbox" class="consent-check">
-          <div><strong>Automatic Suspension for Nonpayment</strong>I understand that if the subscription is not paid, CRM access may be suspended until the account is current.</div>
-        </label>
-      </div>
-
-      <div style="display:flex; gap:12px; flex-wrap:wrap;">
-        <button class="btn btn-green" onclick="continueToStripe()">Continue to Stripe</button>
-        <button class="btn btn-dark" onclick="closeModal('subscribeModal')">Cancel</button>
-      </div>
-
-      <div class="msg" id="subscribeMsg"></div>
-    </div>
   </div>
+</div>
 
-  <script>
-    let pendingStripeLink = "";
+<!-- ================= GOLD ================= -->
+<div class="section">
+  <h2>HospiceLink Gold (Care + Marketing)</h2>
 
-    function openModal(id){
-      document.getElementById(id).classList.add("show");
-      document.body.style.overflow = "hidden";
-    }
+  <div class="plans">
 
-    function closeModal(id){
-      document.getElementById(id).classList.remove("show");
-      document.body.style.overflow = "";
-      document.getElementById("subscribeMsg").textContent = "";
-    }
+    <div class="card">
+      <h3>0–10 Users</h3>
+      <p>$250/month</p>
+      <a href="demo-gold.html" class="btn demo-btn">View Demo</a>
+      <a href="https://buy.stripe.com/bJe00k3RSgaj1qT353fEk05" class="btn">Buy Now</a>
+    </div>
 
-    window.addEventListener("click", function(e){
-      if(e.target.classList.contains("modal")){
-        closeModal(e.target.id);
-      }
-    });
+    <div class="card">
+      <h3>Unlimited</h3>
+      <p>$449/month</p>
+      <a href="demo-gold.html" class="btn demo-btn">View Demo</a>
+      <a href="https://buy.stripe.com/6oUaEY3RS7DNb1t6hffEk07" class="btn">Buy Now</a>
+    </div>
 
-    function startSubscribe(crm, users, price, stripeLink){
-      pendingStripeLink = stripeLink;
-      document.getElementById("subscribeSummary").textContent = `${crm} | ${users} | ${price}`;
-      document.querySelectorAll(".consent-check").forEach(c => c.checked = false);
-      document.getElementById("subscribeMsg").textContent = "";
-      openModal("subscribeModal");
-    }
+  </div>
+</div>
 
-    function continueToStripe(){
-      const checks = [...document.querySelectorAll(".consent-check")];
-      const allChecked = checks.every(c => c.checked);
+<!-- ================= MAX ================= -->
+<div class="section">
+  <h2>HospiceLink Max (Full Enterprise CRM)</h2>
 
-      if(!allChecked){
-        document.getElementById("subscribeMsg").textContent =
-          "Please accept all required agreements before continuing to Stripe.";
-        return;
-      }
+  <div class="plans">
 
-      if(!pendingStripeLink){
-        document.getElementById("subscribeMsg").textContent =
-          "This Stripe link has not been added yet.";
-        return;
-      }
+    <div class="card">
+      <h3>0–10 Users</h3>
+      <p>$199/month</p>
+      <a href="demo-max.html" class="btn demo-btn">View Demo</a>
+      <a href="https://buy.stripe.com/6oU6oI744gajfhJeNLfEk08" class="btn">Buy Now</a>
+    </div>
 
-      window.open(pendingStripeLink, "_blank");
-    }
-  </script>
+    <div class="card">
+      <h3>Unlimited</h3>
+      <p>$399/month</p>
+      <a href="demo-max.html" class="btn demo-btn">View Demo</a>
+      <a href="https://buy.stripe.com/6oU6oI6008HRedFaxvfEk0a" class="btn">Buy Now</a>
+    </div>
+
+  </div>
+</div>
+
 </body>
 </html>
