@@ -5,55 +5,54 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CRM Demo</title>
   <style>
-    :root{--bg:#071120;--card:#0f1b34;--line:rgba(255,255,255,.12);--text:#f3f7ff;--muted:#c8d4e8;--blue:#49b6ff;--green:#8cff66;}
-    body{margin:0;font-family:sans-serif;background:#071120;color:var(--text);padding:20px;}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:10px;}
-    .tabs{display:flex;gap:8px;margin-bottom:15px;flex-wrap:wrap;}
-    .tab{padding:8px 12px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,0.05);color:#fff;cursor:pointer;font-size:13px;}
-    .tab.active{background:var(--blue);color:#000;font-weight:bold;}
+    :root{--bg:#071120;--card:#0f1b34;--line:rgba(255,255,255,.12);--text:#f3f7ff;--blue:#49b6ff;--green:#8cff66;}
+    body{margin:0;font-family:sans-serif;background:#071120;color:var(--text);padding:15px;overflow:hidden;}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px;margin-top:10px;min-height:280px;}
+    .tabs{display:flex;gap:8px;margin-bottom:12px;}
+    .tab{padding:6px 12px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,0.05);color:#fff;cursor:pointer;font-size:12px;font-weight:bold;}
+    .tab.active{background:var(--blue);color:#000;}
     .panel{display:none;}
     .panel.active{display:block;}
-    .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;}
-    .stat{background:rgba(255,255,255,0.03);padding:10px;border-radius:10px;text-align:center;}
-    .stat b{display:block;font-size:20px;color:var(--blue);}
-    .chip{display:block;background:rgba(73,182,255,0.1);padding:8px;border-radius:8px;margin-bottom:5px;font-size:12px;border:1px solid rgba(73,182,255,0.2);}
+    .stat-row{display:flex;justify-content:space-around;margin-bottom:15px;background:rgba(255,255,255,0.03);padding:10px;border-radius:8px;}
+    .stat{text-align:center;}
+    .stat b{display:block;font-size:18px;color:var(--blue);}
+    .chip{background:rgba(73,182,255,0.1);padding:10px;border-radius:8px;margin-bottom:8px;font-size:12px;border:1px solid rgba(73,182,255,0.2);line-height:1.4;}
   </style>
 </head>
 <body>
-  <h2 id="title" style="margin:0 0 5px 0;">CRM Demo</h2>
-  <p id="subtitle" style="margin:0 0 15px 0;font-size:14px;color:var(--muted);"></p>
+  <h3 id="title" style="margin:0 0 4px 0;">Loading...</h3>
+  <p id="subtitle" style="margin:0 0 12px 0;font-size:12px;opacity:0.7;"></p>
 
   <div class="tabs" id="tabs"></div>
 
   <div class="card">
     <div id="p-pipeline" class="panel">
-      <div class="stat-grid">
-        <div class="stat"><b>42</b>Leads</div>
-        <div class="stat"><b>9</b>Admits</div>
+      <div class="stat-row">
+        <div class="stat"><b>42</b>Active Leads</div>
+        <div class="stat"><b>9</b>Admissions</div>
       </div>
-      <div class="chip">Parkview SNF - Follow up</div>
-      <div class="chip">Dr. Morgan - New Referral</div>
-      <div class="chip">Oak Hollow - Info Sent</div>
+      <div class="chip"><b>Parkview SNF:</b> Social worker requested info packet.</div>
+      <div class="chip"><b>Dr. Morgan:</b> New hospice referral for evaluation.</div>
     </div>
 
     <div id="p-notes" class="panel">
-      <div class="chip"><b>Westside Hospital:</b> Met with discharge planner.</div>
-      <div class="chip"><b>Dr. Patel:</b> Discussed GIP transitions.</div>
-      <textarea style="width:100%;background:#000;color:#fff;border:1px solid var(--line);padding:10px;border-radius:8px;margin-top:10px;" placeholder="Add a quick note..."></textarea>
+      <div class="chip"><b>10:30 AM:</b> Met with Westside Hospital discharge team. Provided new brochures.</div>
+      <div class="chip"><b>02:15 PM:</b> Follow-up with Suncrest Rehab regarding Payer Source updates.</div>
     </div>
 
     <div id="p-mileage" class="panel">
-      <div class="stat-grid">
+      <div class="stat-row">
         <div class="stat"><b>63.4</b>Miles</div>
-        <div class="stat"><b>7</b>Stops</div>
+        <div class="stat"><b>7</b>Verified Stops</div>
       </div>
-      <div class="chip">GPS Verified: Westside Hospital (12.2 mi)</div>
-      <div class="chip">GPS Verified: Suncrest Rehab (8.7 mi)</div>
+      <div class="chip"><b>Verified:</b> Westside Hospital (12.2 mi)</div>
+      <div class="chip"><b>Verified:</b> Suncrest Rehab (8.7 mi)</div>
     </div>
 
     <div id="p-admin" class="panel">
-      <div class="chip">User Seats: 4 / 10</div>
-      <div class="chip">Status: <span style="color:var(--green)">Active</span></div>
+      <div class="chip">Team Access: 4 / 10 Licenses Used</div>
+      <div class="chip">System Status: <span style="color:var(--green)">Healthy</span></div>
+      <div class="chip">Latest Sync: 2 minutes ago</div>
     </div>
   </div>
 
@@ -62,14 +61,14 @@
     const mode = params.get("crm") || "pro";
     
     const configs = {
-      pro: { t: "Pro Marketing Demo", sub: "Referral tracking and pipeline.", tabs: ["Pipeline", "Notes", "Admin"] },
-      gold: { t: "Gold Clinical Demo", sub: "Caregiver notes and mileage.", tabs: ["Notes", "Mileage", "Admin"] },
-      max: { t: "Max Enterprise Demo", sub: "Full automation suite.", tabs: ["Pipeline", "Notes", "Mileage", "Admin"] }
+      pro: { t: "HospiceLink Pro Demo", s: "Marketing & Referral Pipeline", tabs: ["Pipeline", "Notes", "Admin"] },
+      gold: { t: "HospiceLink Gold Demo", s: "Clinical Support & Mileage", tabs: ["Notes", "Mileage", "Admin"] },
+      max: { t: "HospiceLink Max Demo", s: "Full Automation Suite", tabs: ["Pipeline", "Notes", "Mileage", "Admin"] }
     };
 
     const cfg = configs[mode] || configs.pro;
     document.getElementById("title").innerText = cfg.t;
-    document.getElementById("subtitle").innerText = cfg.sub;
+    document.getElementById("subtitle").innerText = cfg.s;
 
     const container = document.getElementById("tabs");
     cfg.tabs.forEach((name, i) => {
@@ -83,6 +82,7 @@
         document.getElementById("p-" + name.toLowerCase()).classList.add("active");
       };
       container.appendChild(btn);
+      // This line forces the first panel to show immediately!
       if(i === 0) document.getElementById("p-" + name.toLowerCase()).classList.add("active");
     });
   </script>
