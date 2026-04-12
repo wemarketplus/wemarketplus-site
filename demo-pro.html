@@ -369,49 +369,66 @@
       .layout{grid-template-columns:1fr}
       .sidebar{position:relative;height:auto}
     }
-  </style>
-</head>
-<body>
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="brand">
-        <h1>HospiceLink Pro</h1>
-        <p>Marketing CRM Demo</p>
-      </div>
-
-      <nav class="nav">
-        <a href="#dashboard" class="active">Dashboard</a>
-        <a href="#users">Admin / Users</a>
-        <a href="#prospects">Prospects</a>
-        <a href="#referrals">Referral Sources</a>
-        <a href="#pipeline">Pipeline</a>
-        <a href="#visits">Facility Visits</a>
-        <a href="#followups">Follow-Ups</a>
-        <a href="#notes">Marketer Notes</a>
-      </nav>
-
-      <div class="footer-actions">
-        <a href="index.html#pricing" class="btn btn-blue btn-small">Back to Website</a>
-      </div>
-    </aside>
-
-    <main class="main">
-      <div class="topbar" id="dashboard">
-        <div>
-          <h2>HospiceLink Pro Demo</h2>
-          <p>Built for marketers only. Everything a marketer needs to be successful in the field.</p>
-        </div>
-        <a href="index.html#pricing" class="btn btn-blue">Back to Website</a>
-      </div>
-
-      <section class="hero">
-        <h3>Marketing CRM Dashboard</h3>
-        <p>
-          This demo shows admin user controls, subscription seat limits, prospect management,
-          referral source tracking, marketer notes, pipeline movement, facility visits,
-          pending follow-ups, and admissions visibility.
-        </p>
-      </section>
+  .note-form-wrap{
+  background:#fff;
+  color:#111;
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.note-form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+.note-form-grid .full{
+  grid-column:1 / -1;
+}
+.note-form-wrap label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:6px;
+}
+.note-form-wrap input,
+.note-form-wrap select,
+.note-form-wrap textarea{
+  width:100%;
+  border:1px solid #d7e0ec;
+  border-radius:12px;
+  padding:12px;
+  font:inherit;
+}
+.note-form-wrap textarea{
+  min-height:110px;
+  resize:vertical;
+}
+.note-help{
+  color:#5a6678;
+  font-size:13px;
+  margin-top:4px;
+  line-height:1.5;
+}
+.note-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+.admin-banner{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+}
+.admin-note{
+  margin:0 0 18px;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.6;
+}
 
       <section class="kpis">
         <div class="kpi"><span>New Prospects</span><strong>24</strong></div>
@@ -531,6 +548,7 @@
 
       <section class="section" id="referrals">
   <h3>Referral Sources</h3>
+
   <div class="grid-3">
     <div class="card">
       <h4>North Dallas Rehab</h4>
@@ -546,27 +564,40 @@
     </div>
   </div>
 
-  <div class="grid-3" style="margin-top:18px;">
-    <div class="card">
-      <h4>Add Referral Source</h4>
-      <p>Admin can add new referral sources to the CRM and assign them to the marketer’s active territory.</p>
-      <div class="mini-actions">
-        <span class="pill pill-green">Add Referral</span>
-      </div>
+  <div class="section" style="margin-top:18px; background:#0f1c34;">
+    <div class="admin-banner">
+      <h3 style="margin:0;">Referral Source Management</h3>
+      <span class="pill pill-purple">Admin View Only</span>
     </div>
-    <div class="card">
-      <h4>Delete Referral Source</h4>
-      <p>Admin can remove inactive, duplicate, or closed referral sources from the CRM.</p>
-      <div class="mini-actions">
-        <span class="pill pill-red">Delete Referral</span>
+
+    <p class="admin-note">
+      User view hides this panel. Only the Admin account holder can add or delete referral sources for the company CRM.
+    </p>
+
+    <div class="grid-3">
+      <div class="card">
+        <h4>Add Referral Source</h4>
+        <p>Admin can add new referral sources to the CRM and assign them to the marketer’s active territory.</p>
+        <div class="mini-actions">
+          <span class="pill pill-green">Add Referral</span>
+        </div>
       </div>
-    </div>
-    <div class="card">
-      <h4>Referral Status Tracking</h4>
-      <p>Referral sources are visibly marked red for no referrals and green for active referral partners.</p>
-      <div class="mini-actions">
-        <span class="pill pill-green">Green = Sending</span>
-        <span class="pill pill-red">Red = No Referrals</span>
+
+      <div class="card">
+        <h4>Delete Referral Source</h4>
+        <p>Admin can remove inactive, duplicate, or closed referral sources from the CRM.</p>
+        <div class="mini-actions">
+          <span class="pill pill-red">Delete Referral</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Referral Status Tracking</h4>
+        <p>Referral sources are visibly marked red for no referrals and green for active referral partners.</p>
+        <div class="mini-actions">
+          <span class="pill pill-green">Green = Sending</span>
+          <span class="pill pill-red">Red = No Referrals</span>
+        </div>
       </div>
     </div>
   </div>
@@ -724,26 +755,66 @@
       </section>
 
       <section class="section" id="notes">
-        <h3>Marketer Notes</h3>
-        <div class="grid-2">
-          <div class="note-box">
-            <h4>North Dallas Rehab</h4>
-            <p>“Met with DON. They want quicker response time updates and stronger family communication.”</p>
-          </div>
-          <div class="note-box">
-            <h4>Baylor Case Manager</h4>
-            <p>“Requested a one-page hospice eligibility sheet for discharge planning support.”</p>
-          </div>
-          <div class="note-box">
-            <h4>Prospect: Mary J.</h4>
-            <p>“Family is comparing agencies. Need to reinforce response time and support availability.”</p>
-          </div>
-          <div class="note-box">
-            <h4>Admissions Update</h4>
-            <p>“Robert H. admitted this week. Source credited to Encompass touchpoint from last Friday.”</p>
-          </div>
-        </div>
-      </section>
+  <h3>Marketer Notes</h3>
+
+  <div class="note-form-wrap">
+    <div class="note-form-grid">
+      <div>
+        <label for="noteNameSelect">Select Name</label>
+        <select id="noteNameSelect">
+          <option value="">Select a saved name</option>
+        </select>
+        <div class="note-help">If you have noted before, your name will appear here.</div>
+      </div>
+
+      <div>
+        <label for="noteNewName">First Time? Add Name</label>
+        <input id="noteNewName" type="text" placeholder="Enter your name to save it for next time">
+        <div class="note-help">New names will be saved and repopulated in the dropdown next time.</div>
+      </div>
+
+      <div>
+        <label for="noteDate">Date</label>
+        <input id="noteDate" type="date" required>
+      </div>
+
+      <div>
+        <label for="noteTime">Time</label>
+        <input id="noteTime" type="time" required>
+      </div>
+
+      <div class="full">
+        <label for="noteText">Note</label>
+        <textarea id="noteText" placeholder="Enter note details here..." required></textarea>
+      </div>
+    </div>
+
+    <div class="note-actions">
+      <button class="btn btn-green" type="button" onclick="saveDemoNote('pro')">Add Note</button>
+    </div>
+  </div>
+
+  <div id="notesList">
+    <div class="grid-2">
+      <div class="note-box">
+        <h4>Ericka — 2026-04-12 at 09:15 AM</h4>
+        <p>Met with DON. They want quicker response time updates and stronger family communication.</p>
+      </div>
+      <div class="note-box">
+        <h4>Ericka — 2026-04-11 at 02:30 PM</h4>
+        <p>Baylor requested a one-page hospice eligibility sheet for discharge planning support.</p>
+      </div>
+      <div class="note-box">
+        <h4>Ericka — 2026-04-10 at 11:00 AM</h4>
+        <p>Family is comparing agencies. Need to reinforce response time and support availability.</p>
+      </div>
+      <div class="note-box">
+        <h4>Ericka — 2026-04-09 at 04:20 PM</h4>
+        <p>Robert H. admitted this week. Source credited to Encompass touchpoint from last Friday.</p>
+      </div>
+    </div>
+  </div>
+</section>
     </main>
   </div>
 </body>
