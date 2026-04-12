@@ -227,39 +227,100 @@
       overflow:auto;
       border-radius:18px;
     }
-    .pipeline{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:16px;
-    }
-    .stage{
-      background:#0f1c34;
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:14px;
-    }
-    .stage h4{
-      margin:0 0 12px;
-      font-size:18px;
-    }
-    .lead-card{
-      background:#fff;
-      color:#111;
-      border-radius:14px;
-      padding:12px;
-      margin-bottom:12px;
-      box-shadow:0 8px 18px rgba(0,0,0,.10);
-    }
-    .lead-card:last-child{margin-bottom:0}
-    .lead-card strong{
-      display:block;
-      margin-bottom:6px;
-    }
-    .lead-card small{
-      color:#444;
-      line-height:1.5;
-      display:block;
-    }
+    <section class="section" id="pipeline">
+  <h3>Pipeline</h3>
+  <div class="pipeline">
+    <div class="stage">
+      <div class="stage-header">
+        <div class="stage-title">
+          <span class="stage-dot dot-inquiry"></span>
+          <h4>Inquiry</h4>
+        </div>
+        <span class="stage-count">2</span>
+      </div>
+      <div class="stage-body">
+        <div class="lead-card">
+          <strong>Robert H.</strong>
+          <small>Referral source: North Park Rehab</small>
+          <div class="card-meta">
+            <span class="card-tag">Nurse review</span>
+          </div>
+        </div>
+        <div class="lead-card">
+          <strong>Melanie D.</strong>
+          <small>Referral source: SNF social worker</small>
+          <div class="card-meta">
+            <span class="card-tag">Clinical follow-up</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="stage-header">
+        <div class="stage-title">
+          <span class="stage-dot dot-visit"></span>
+          <h4>Visit Scheduled</h4>
+        </div>
+        <span class="stage-count">1</span>
+      </div>
+      <div class="stage-body">
+        <div class="lead-card">
+          <strong>Carol P.</strong>
+          <small>Nurse assessment set for Thursday</small>
+          <div class="card-meta">
+            <span class="card-tag">Assessment</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="stage-header">
+        <div class="stage-title">
+          <span class="stage-dot dot-pending"></span>
+          <h4>Pending Admission</h4>
+        </div>
+        <span class="stage-count">1</span>
+      </div>
+      <div class="stage-body">
+        <div class="lead-card">
+          <strong>Dorothy F.</strong>
+          <small>Waiting on final signatures and meds list</small>
+          <div class="card-meta">
+            <span class="card-tag">Family update needed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="stage-header">
+        <div class="stage-title">
+          <span class="stage-dot dot-closed"></span>
+          <h4>Admitted / Lost</h4>
+        </div>
+        <span class="stage-count">2</span>
+      </div>
+      <div class="stage-body">
+        <div class="lead-card">
+          <strong>Thomas J.</strong>
+          <small>Admitted this week</small>
+          <div class="card-meta">
+            <span class="card-tag">Closed won</span>
+          </div>
+        </div>
+        <div class="lead-card">
+          <strong>Helen P.</strong>
+          <small>Lost to competitor</small>
+          <div class="card-meta">
+            <span class="card-tag">Closed lost</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
     .split{
       display:grid;
       grid-template-columns:1.2fr .8fr;
@@ -455,49 +516,99 @@
       </section>
 
       <section class="section" id="pipeline">
-        <h3>Pipeline</h3>
-        <div class="pipeline">
-          <div class="stage">
-            <h4>Inquiry</h4>
-            <div class="lead-card">
-              <strong>Robert H.</strong>
-              <small>Referral source: North Park Rehab</small>
-            </div>
-            <div class="lead-card">
-              <strong>Melanie D.</strong>
-              <small>Referral source: SNF social worker</small>
-            </div>
-          </div>
-
-          <div class="stage">
-            <h4>Visit Scheduled</h4>
-            <div class="lead-card">
-              <strong>Carol P.</strong>
-              <small>Nurse assessment set for Thursday</small>
-            </div>
-          </div>
-
-          <div class="stage">
-            <h4>Pending Admission</h4>
-            <div class="lead-card">
-              <strong>Dorothy F.</strong>
-              <small>Waiting on final signatures and meds list</small>
-            </div>
-          </div>
-
-          <div class="stage">
-            <h4>Admitted / Lost</h4>
-            <div class="lead-card">
-              <strong>Thomas J.</strong>
-              <small>Admitted this week</small>
-            </div>
-            <div class="lead-card">
-              <strong>Helen P.</strong>
-              <small>Lost to competitor</small>
-            </div>
+  <h3>Pipeline</h3>
+  <div class="pipeline">
+    <div class="stage">
+      <div class="stage-header">
+        <div class="stage-title">
+          <span class="stage-dot dot-inquiry"></span>
+          <h4>Inquiry</h4>
+        </div>
+        <span class="stage-count">2</span>
+      </div>
+      <div class="stage-body">
+        <div class="lead-card">
+          <strong>Maria T.</strong>
+          <small>Source: Encompass</small>
+          <div class="card-meta">
+            <span class="card-tag">High-value account</span>
           </div>
         </div>
-      </section>
+        <div class="lead-card">
+          <strong>Kevin H.</strong>
+          <small>Source: Assisted Living ED</small>
+          <div class="card-meta">
+            <span class="card-tag">Warm lead</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="stage-header">
+        <div class="stage-title">
+          <span class="stage-dot dot-visit"></span>
+          <h4>Visit Scheduled</h4>
+        </div>
+        <span class="stage-count">1</span>
+      </div>
+      <div class="stage-body">
+        <div class="lead-card">
+          <strong>Carla B.</strong>
+          <small>Consult set for Thursday at 1 PM</small>
+          <div class="card-meta">
+            <span class="card-tag">Priority visit</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="stage-header">
+        <div class="stage-title">
+          <span class="stage-dot dot-pending"></span>
+          <h4>Pending Admission</h4>
+        </div>
+        <span class="stage-count">1</span>
+      </div>
+      <div class="stage-body">
+        <div class="lead-card">
+          <strong>James R.</strong>
+          <small>Waiting on signed admission packet</small>
+          <div class="card-meta">
+            <span class="card-tag">Revenue opportunity</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="stage-header">
+        <div class="stage-title">
+          <span class="stage-dot dot-closed"></span>
+          <h4>Admitted / Lost</h4>
+        </div>
+        <span class="stage-count">2</span>
+      </div>
+      <div class="stage-body">
+        <div class="lead-card">
+          <strong>Henry P.</strong>
+          <small>Admitted this week</small>
+          <div class="card-meta">
+            <span class="card-tag">Closed won</span>
+          </div>
+        </div>
+        <div class="lead-card">
+          <strong>Linda S.</strong>
+          <small>Lost to competitor</small>
+          <div class="card-meta">
+            <span class="card-tag">Closed lost</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
       <section class="section" id="tracking">
         <h3>Caregiver, Nurse & Marketer Tracking</h3>
