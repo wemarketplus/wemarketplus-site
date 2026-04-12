@@ -225,38 +225,118 @@
       border-radius:18px;
     }
     .pipeline{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:16px;
-    }
-    .stage{
-      background:#0f1c34;
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:14px;
-    }
-    .stage h4{
-      margin:0 0 12px;
-      font-size:18px;
-    }
-    .lead-card{
-      background:#fff;
-      color:#111;
-      border-radius:14px;
-      padding:12px;
-      margin-bottom:12px;
-      box-shadow:0 8px 18px rgba(0,0,0,.10);
-    }
-    .lead-card:last-child{margin-bottom:0}
-    .lead-card strong{
-      display:block;
-      margin-bottom:6px;
-    }
-    .lead-card small{
-      color:#444;
-      line-height:1.5;
-      display:block;
-    }
+  display:grid;
+  grid-template-columns:repeat(4,minmax(240px,1fr));
+  gap:18px;
+  align-items:start;
+}
+.stage{
+  background:linear-gradient(180deg,#10203a,#0c172c);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:14px;
+  min-height:320px;
+  box-shadow:0 14px 30px rgba(0,0,0,.18);
+}
+.stage-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
+  padding-bottom:10px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.stage-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.stage-dot{
+  width:12px;
+  height:12px;
+  border-radius:999px;
+}
+.stage-count{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:28px;
+  height:28px;
+  padding:0 8px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  font-size:12px;
+  font-weight:800;
+}
+.stage h4{
+  margin:0;
+  font-size:17px;
+}
+.stage-body{
+  display:grid;
+  gap:12px;
+}
+.lead-card{
+  position:relative;
+  background:#fff;
+  color:#111;
+  border-radius:16px;
+  padding:14px 14px 12px;
+  box-shadow:0 12px 24px rgba(0,0,0,.12);
+  border:1px solid rgba(0,0,0,.06);
+  cursor:grab;
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.lead-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 16px 28px rgba(0,0,0,.16);
+}
+.lead-card:active{
+  cursor:grabbing;
+}
+.lead-card:last-child{margin-bottom:0}
+.lead-card::before{
+  content:"⋮⋮";
+  position:absolute;
+  top:10px;
+  right:12px;
+  color:#9aa5b5;
+  font-size:13px;
+  letter-spacing:1px;
+}
+.lead-card strong{
+  display:block;
+  margin-bottom:6px;
+  font-size:15px;
+  padding-right:24px;
+}
+.lead-card small{
+  color:#444;
+  line-height:1.5;
+  display:block;
+  margin-bottom:8px;
+}
+.card-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:8px;
+}
+.card-tag{
+  display:inline-block;
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:800;
+  background:#eef4fb;
+  color:#36506d;
+}
+.dot-inquiry{background:#6ec5ff}
+.dot-visit{background:#ffd36e}
+.dot-pending{background:#ffb36e}
+.dot-closed{background:#8cff66}
     .split{
       display:grid;
       grid-template-columns:1.2fr .8fr;
@@ -450,49 +530,101 @@
       </section>
 
       <section class="section" id="pipeline">
-        <h3>Pipeline</h3>
-        <div class="pipeline">
-          <div class="stage">
-            <h4>Inquiry</h4>
-            <div class="lead-card">
-              <strong>Mary J.</strong>
-              <small>Referral source: North Dallas Rehab</small>
-            </div>
-            <div class="lead-card">
-              <strong>Kevin R.</strong>
-              <small>Referral source: Hospital CM</small>
-            </div>
-          </div>
-
-          <div class="stage">
-            <h4>Visit Scheduled</h4>
-            <div class="lead-card">
-              <strong>Tina P.</strong>
-              <small>Visit booked for Thursday at 2 PM</small>
-            </div>
-          </div>
-
-          <div class="stage">
-            <h4>Pending Admission</h4>
-            <div class="lead-card">
-              <strong>John T.</strong>
-              <small>Waiting on final signatures</small>
-            </div>
-          </div>
-
-          <div class="stage">
-            <h4>Admitted / Lost</h4>
-            <div class="lead-card">
-              <strong>Robert H.</strong>
-              <small>Admitted this week</small>
-            </div>
-            <div class="lead-card">
-              <strong>Lisa W.</strong>
-              <small>Lost to competitor</small>
-            </div>
+  <h3>Pipeline</h3>
+  <div class="pipeline">
+    <div class="stage">
+      <div class="stage-header">
+        <div class="stage-title">
+          <span class="stage-dot dot-inquiry"></span>
+          <h4>Inquiry</h4>
+        </div>
+        <span class="stage-count">2</span>
+      </div>
+      <div class="stage-body">
+        <div class="lead-card">
+          <strong>Mary J.</strong>
+          <small>Referral source: North Dallas Rehab</small>
+          <div class="card-meta">
+            <span class="card-tag">New lead</span>
+            <span class="card-tag">Family pending</span>
           </div>
         </div>
-      </section>
+        <div class="lead-card">
+          <strong>Kevin R.</strong>
+          <small>Referral source: Hospital CM</small>
+          <div class="card-meta">
+            <span class="card-tag">Needs outreach</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="stage-header">
+        <div class="stage-title">
+          <span class="stage-dot dot-visit"></span>
+          <h4>Visit Scheduled</h4>
+        </div>
+        <span class="stage-count">1</span>
+      </div>
+      <div class="stage-body">
+        <div class="lead-card">
+          <strong>Tina P.</strong>
+          <small>Visit booked for Thursday at 2 PM</small>
+          <div class="card-meta">
+            <span class="card-tag">Consult set</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="stage-header">
+        <div class="stage-title">
+          <span class="stage-dot dot-pending"></span>
+          <h4>Pending Admission</h4>
+        </div>
+        <span class="stage-count">1</span>
+      </div>
+      <div class="stage-body">
+        <div class="lead-card">
+          <strong>John T.</strong>
+          <small>Waiting on final signatures</small>
+          <div class="card-meta">
+            <span class="card-tag">Docs pending</span>
+            <span class="card-tag">High priority</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="stage-header">
+        <div class="stage-title">
+          <span class="stage-dot dot-closed"></span>
+          <h4>Admitted / Lost</h4>
+        </div>
+        <span class="stage-count">2</span>
+      </div>
+      <div class="stage-body">
+        <div class="lead-card">
+          <strong>Robert H.</strong>
+          <small>Admitted this week</small>
+          <div class="card-meta">
+            <span class="card-tag">Closed won</span>
+          </div>
+        </div>
+        <div class="lead-card">
+          <strong>Lisa W.</strong>
+          <small>Lost to competitor</small>
+          <div class="card-meta">
+            <span class="card-tag">Closed lost</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
       <section class="section split" id="visits">
         <div>
