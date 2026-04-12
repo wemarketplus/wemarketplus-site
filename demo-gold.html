@@ -6,85 +6,168 @@
   <title>HospiceLink Gold Demo</title>
   <style>
     body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#081426;color:#fff}
-    .wrap{max-width:1200px;margin:0 auto;padding:40px 24px}
+    .wrap{max-width:1280px;margin:0 auto;padding:36px 24px}
     .top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
     a.btn{display:inline-block;padding:12px 18px;border-radius:999px;text-decoration:none;font-weight:700}
     .btn-blue{background:#49b6ff;color:#081426}
-    .hero{padding:40px 0 20px}
+    .hero{padding:30px 0 12px}
     .hero h1{font-size:54px;margin:0 0 10px;color:#8cff66}
-    .hero p{font-size:20px;color:#d5e0ef}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:30px}
-    .card{background:#fff;color:#111;border-radius:24px;padding:24px}
-    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:30px}
+    .hero p{font-size:20px;color:#d5e0ef;line-height:1.6}
+    .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:24px}
     .kpi{background:#10203a;border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:18px}
     .kpi strong{display:block;font-size:34px;margin-top:8px}
-    table{width:100%;border-collapse:collapse;margin-top:24px;background:#fff;color:#111}
-    th,td{padding:14px;border-bottom:1px solid #e8edf3;text-align:left}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:24px}
+    .card{background:#fff;color:#111;border-radius:24px;padding:24px}
+    .card h3{margin-top:0}
+    table{width:100%;border-collapse:collapse;margin-top:24px;background:#fff;color:#111;border-radius:16px;overflow:hidden}
+    th,td{padding:14px;border-bottom:1px solid #e8edf3;text-align:left;vertical-align:top}
     th{background:#f4f8fc}
-    @media (max-width:900px){.grid,.kpis{grid-template-columns:1fr}}
+    .tag-red,.tag-green,.tag-blue,.tag-gold{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700}
+    .tag-red{background:#ffd9d9;color:#8f1f1f}
+    .tag-green{background:#d8ffe2;color:#136c32}
+    .tag-blue{background:#dff1ff;color:#0f5c8a}
+    .tag-gold{background:#fff3cf;color:#7a5a00}
+    @media (max-width:1000px){.grid,.kpis{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="top">
       <h2>HospiceLink Gold Demo</h2>
-      <a href="index.html" class="btn btn-blue">Back to Website</a>
+      <a href="index.html#pricing" class="btn btn-blue">Back to Website</a>
     </div>
 
     <section class="hero">
       <h1>Care + Marketing Demo</h1>
-      <p>HospiceLink Gold supports nurses, caregivers, and marketers with notes, EVV concepts, GPS concepts, mileage concepts, and family communication logs.</p>
+      <p>
+        This CRM includes everything a marketer, CNA, caregiver, and nurse needs to be successful in the field.
+        Admin can add or delete users, but only up to the number allowed by the subscription. The demo includes
+        prospects, statuses, referral sources, marketer/CNA/nurse notes, pipeline, facility visits, follow-ups,
+        admissions, family communication, EVV concepts, mileage concepts, and a patient/staff table.
+      </p>
     </section>
 
     <section class="kpis">
       <div class="kpi">Visits Today<strong>18</strong></div>
       <div class="kpi">Clinical Notes<strong>14</strong></div>
       <div class="kpi">Mileage<strong>112</strong></div>
-      <div class="kpi">Family Updates<strong>9</strong></div>
+      <div class="kpi">Admissions<strong>5</strong></div>
+      <div class="kpi">User Seats<strong>12 / 20</strong></div>
     </section>
 
     <section class="grid">
       <div class="card">
-        <h3>Nurse Notes</h3>
-        <p>Document visit details, symptom updates, and follow-up needs.</p>
+        <h3>Admin User Controls</h3>
+        <p>Admin can add users, delete users, assign roles, and control access.</p>
+        <p><strong>Rule:</strong> only add as many users as the subscription allows.</p>
       </div>
       <div class="card">
-        <h3>Caregiver Tracking</h3>
-        <p>Track visit completion, EVV concepts, and daily activity support.</p>
+        <h3>Prospect & Pipeline</h3>
+        <p>Add or delete prospects, update status, and move them from Inquiry to Admission to Lost.</p>
       </div>
       <div class="card">
-        <h3>Family Communication</h3>
-        <p>Log updates provided to responsible parties and family members.</p>
+        <h3>Referral Sources</h3>
+        <p>Show sources with status indicators: Green for sending referrals and Red for no referrals.</p>
       </div>
     </section>
 
     <table>
       <thead>
         <tr>
-          <th>Patient</th>
-          <th>Discipline</th>
+          <th>Prospect / Patient</th>
           <th>Status</th>
+          <th>Referral Source</th>
+          <th>Referral Status</th>
           <th>Assigned Staff</th>
+          <th>Next Step</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>Robert H.</td>
-          <td>Nursing</td>
-          <td>Completed</td>
-          <td>Nurse Angela</td>
+          <td><span class="tag-blue">Inquiry</span></td>
+          <td>North Park Rehab</td>
+          <td><span class="tag-green">Green - Sending Referrals</span></td>
+          <td>Nurse Angela / Ericka</td>
+          <td>Schedule assessment</td>
         </tr>
         <tr>
           <td>Dorothy F.</td>
-          <td>Caregiver</td>
-          <td>Scheduled</td>
-          <td>Caregiver Mike</td>
+          <td><span class="tag-gold">Pending Admission</span></td>
+          <td>Baylor</td>
+          <td><span class="tag-green">Green - Sending Referrals</span></td>
+          <td>CNA Mike / Ericka</td>
+          <td>Collect final documents</td>
         </tr>
         <tr>
           <td>Helen P.</td>
-          <td>Marketing / Family Update</td>
-          <td>In Progress</td>
+          <td><span class="tag-red">Lost</span></td>
+          <td>Physician Office</td>
+          <td><span class="tag-red">Red - No Referrals</span></td>
           <td>Ericka</td>
+          <td>Revisit source in 2 weeks</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <section class="grid">
+      <div class="card">
+        <h3>Marketer / CNA / Nurse Notes</h3>
+        <p>“Family wants update after nurse visit. CNA completed hygiene support. Marketer to follow up with discharge planner.”</p>
+      </div>
+      <div class="card">
+        <h3>Caregiver, Nurse & Marketer Tracking</h3>
+        <p>Track completed visits, assigned staff, outcomes, and next actions by role.</p>
+      </div>
+      <div class="card">
+        <h3>Family Communication</h3>
+        <p>Log who was contacted, what update was shared, and when next follow-up is due.</p>
+      </div>
+      <div class="card">
+        <h3>EVV Concepts</h3>
+        <p>Arrival time, departure time, location verification concept, and visit confirmation.</p>
+      </div>
+      <div class="card">
+        <h3>Mileage Concepts</h3>
+        <p>Track drive time and miles between accounts or patient visits.</p>
+      </div>
+      <div class="card">
+        <h3>Facility Visits & Admissions</h3>
+        <p>See which facilities were visited, who was met, and which visits turned into admissions.</p>
+      </div>
+    </section>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Staff</th>
+          <th>Role</th>
+          <th>Patient / Account</th>
+          <th>Visit Type</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Angela</td>
+          <td>Nurse</td>
+          <td>Robert H.</td>
+          <td>Assessment</td>
+          <td>Completed</td>
+        </tr>
+        <tr>
+          <td>Mike</td>
+          <td>CNA / Caregiver</td>
+          <td>Dorothy F.</td>
+          <td>Care Support</td>
+          <td>Scheduled</td>
+        </tr>
+        <tr>
+          <td>Ericka</td>
+          <td>Marketer</td>
+          <td>Baylor</td>
+          <td>Facility Visit</td>
+          <td>Completed</td>
         </tr>
       </tbody>
     </table>
