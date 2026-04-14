@@ -1,68 +1,185 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>HospiceLink Pro CRM</title>
-
-  <script>
-    const API_BASE = "https://hospicelink-crm.onrender.com";
-
-    // 🔐 AUTH CHECK
-    if (!localStorage.getItem("token")) {
-      alert("You must login first");
-      window.location.href = "login.html";
+  <title>HospiceLink Pro Demo</title>
+  <style>
+    :root{
+      --bg:#06131f;
+      --panel:#10233a;
+      --line:rgba(255,255,255,.10);
+      --text:#f4f8ff;
+      --muted:#c9d6ea;
+      --blue:#49b6ff;
+      --green:#8cff66;
+      --green-soft:#d8ffe2;
+      --red-soft:#ffd9d9;
+      --red:#8f1f1f;
+      --yellow-soft:#fff3cf;
+      --yellow:#7a5a00;
     }
-
-    function getToken() {
-      return localStorage.getItem("token");
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+    .topbar{display:flex;justify-content:space-between;align-items:center;padding:26px 34px}
+    .topbar h1{margin:0;font-size:24px}
+    .btn{display:inline-block;padding:12px 18px;border-radius:999px;text-decoration:none;font-weight:700;border:none;cursor:pointer}
+    .btn-blue{background:var(--blue);color:#07111f}
+    .hero{padding:0 34px 20px}
+    .hero h2{font-size:58px;line-height:1;margin:12px 0;color:var(--green)}
+    .hero p{font-size:18px;line-height:1.6;color:var(--muted);max-width:1200px}
+    .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;padding:0 34px 22px}
+    .kpi{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px}
+    .kpi span{display:block;color:var(--muted);margin-bottom:10px}
+    .kpi strong{font-size:24px}
+    .section{margin:0 34px 22px;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:22px}
+    .section h3{margin:0 0 16px;font-size:28px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+    .card{background:#fff;color:#111;border-radius:20px;padding:20px}
+    .card h4{margin:0 0 10px;font-size:18px}
+    .pill{display:inline-block;padding:8px 12px;border-radius:999px;font-weight:700;font-size:13px}
+    .pill-green{background:var(--green-soft);color:#136c32}
+    .pill-red{background:var(--red-soft);color:var(--red)}
+    .pill-yellow{background:var(--yellow-soft);color:var(--yellow)}
+    .admin-box{margin-top:16px;padding:18px;border:1px dashed rgba(255,255,255,.25);border-radius:18px}
+    .admin-title{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+    .admin-note{color:var(--muted);font-size:14px;margin:0 0 14px}
+    .kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+    .col{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:14px}
+    .col h4{margin:0 0 12px}
+    .task{background:#fff;color:#111;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 8px 18px rgba(0,0,0,.12)}
+    .ghost{border:2px dashed rgba(255,255,255,.25);padding:10px;border-radius:12px;color:var(--muted);text-align:center}
+    table{width:100%;border-collapse:collapse;background:#fff;color:#111;border-radius:18px;overflow:hidden}
+    th,td{padding:14px;border-bottom:1px solid #e7edf5;text-align:left;vertical-align:top}
+    th{background:#f5f8fc}
+    .footer-space{height:30px}
+    @media(max-width:1100px){
+      .kpis,.grid-3,.grid-2,.kanban{grid-template-columns:1fr}
+      .hero h2{font-size:40px}
     }
-
-    function authHeaders() {
-      return {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + getToken()
-      };
-    }
-
-    // 🔥 TEST BACKEND CONNECTION
-    function testAPI() {
-      fetch(API_BASE + "/api/protected", {
-        method: "GET",
-        headers: authHeaders()
-      })
-      .then(res => res.json())
-      .then(data => {
-        alert("Backend Connected: " + JSON.stringify(data));
-      })
-      .catch(err => {
-        alert("Error: " + err);
-      });
-    }
-
-    // 🚪 LOGOUT
-    function logout() {
-      localStorage.removeItem("token");
-      window.location.href = "login.html";
-    }
-  </script>
-
+  </style>
 </head>
+<body>
+  <div class="topbar">
+    <h1>HospiceLink Pro Demo</h1>
+    <a class="btn btn-blue" href="index.html">Back to Website</a>
+  </div>
 
-<body style="font-family: Arial; padding: 20px;">
+  <div class="hero">
+    <h2>Marketing CRM Demo</h2>
+    <p>This CRM is built for hospice marketers who need everything required to be successful in the field: prospects, status tracking, referral sources, marketer notes, pipeline visibility, facility visits, pending follow-ups, admissions, and assigned marketer workflows. The real login is provided after purchase. This page is a public live demo.</p>
+  </div>
 
-  <h1>HospiceLink Pro Dashboard</h1>
+  <section class="kpis">
+    <div class="kpi"><span>New Prospects</span><strong>24</strong></div>
+    <div class="kpi"><span>Facility Visits</span><strong>11</strong></div>
+    <div class="kpi"><span>Pending Follow-Ups</span><strong>8</strong></div>
+    <div class="kpi"><span>Admissions</span><strong>6</strong></div>
+    <div class="kpi"><span>Assigned Marketers</span><strong>4</strong></div>
+  </section>
 
-  <button onclick="logout()">Logout</button>
-  <button onclick="testAPI()">Test Backend</button>
+  <section class="section">
+    <h3>Prospects</h3>
+    <div class="grid-2">
+      <div class="card">
+        <h4>Add Prospect</h4>
+        <p><strong>Status dropdown:</strong> Inquiry, Pending Admission, Lost, Admitted</p>
+        <p><strong>Referral Source dropdown:</strong> choose existing business name or add new</p>
+        <p><strong>Assigned Marketer dropdown:</strong> choose marketer or type new marketer</p>
+      </div>
+      <div class="card">
+        <h4>Prospect Table</h4>
+        <table>
+          <tr><th>Name</th><th>Status</th><th>Referral Source</th><th>Assigned Marketer</th></tr>
+          <tr><td>Mary Thomas</td><td><span class="pill pill-yellow">Inquiry</span></td><td>Baylor Scott & White</td><td>Ericka</td></tr>
+          <tr><td>James Carter</td><td><span class="pill pill-green">Pending Admission</span></td><td>Medical City</td><td>Tonya</td></tr>
+          <tr><td>Ruth Daniels</td><td><span class="pill pill-red">Lost</span></td><td>Park Manor</td><td>Ericka</td></tr>
+          <tr><td>Willie Grant</td><td><span class="pill pill-green">Admitted</span></td><td>NorthPark Rehab</td><td>Shae</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
 
-  <hr><br>
+  <section class="section">
+    <h3>Referral Sources</h3>
+    <div class="grid-2">
+      <div class="card">
+        <h4>Referral Source Status</h4>
+        <p>Each referral business can be marked with a <strong>Ref Status</strong> dropdown:</p>
+        <p><span class="pill pill-green">Green</span> sending referrals</p>
+        <p><span class="pill pill-red">Red</span> no referrals</p>
+      </div>
+      <div class="card">
+        <h4>Referral Source Table</h4>
+        <table>
+          <tr><th>Business</th><th>Ref Status</th></tr>
+          <tr><td>Medical City McKinney</td><td><span class="pill pill-green">Green</span></td></tr>
+          <tr><td>Encompass North Dallas</td><td><span class="pill pill-green">Green</span></td></tr>
+          <tr><td>Park Manor</td><td><span class="pill pill-red">Red</span></td></tr>
+          <tr><td>Baylor Scott & White</td><td><span class="pill pill-green">Green</span></td></tr>
+        </table>
+      </div>
+    </div>
 
-  <h2>Welcome to your CRM</h2>
-  <p>This dashboard is now connected to your real backend.</p>
+    <div class="admin-box">
+      <div class="admin-title">
+        <span class="pill pill-yellow">Admin View Only</span>
+      </div>
+      <p class="admin-note">User view hides this panel.</p>
+      <div class="grid-2">
+        <div class="card"><h4>Add Referral Source</h4><p>Admins can add a new referral business name and assign Green or Red status.</p></div>
+        <div class="card"><h4>Delete Referral Source</h4><p>Admins can remove old sources from the master list.</p></div>
+      </div>
+    </div>
+  </section>
 
-  <br><br>
+  <section class="section">
+    <h3>Notes</h3>
+    <div class="grid-2">
+      <div class="card">
+        <h4>Required Note Entry</h4>
+        <p>Name dropdown or add new name first time</p>
+        <p>Date picker required for every note</p>
+        <p>Time field required for every note</p>
+        <p><strong>Next Step dropdown:</strong></p>
+        <p>Immediate Family Outreach (Call/Text), Schedule On-Site Visit, Conduct Bedside Presentation, Request Clinical Records (H&amp;P), RN Assessment Requested, RN Assessment Scheduled, Obtain Physician Order for Eval, Insurance Verification in Progress, CM Follow-Up (Status Update), Overcoming Family Hesitation, Other</p>
+      </div>
+      <div class="card">
+        <h4>Recent Notes</h4>
+        <table>
+          <tr><th>Name</th><th>Date</th><th>Time</th><th>Next Step</th><th>Note</th></tr>
+          <tr><td>Ericka</td><td>2026-04-13</td><td>10:30 AM</td><td>Schedule On-Site Visit</td><td>Spoke with daughter. Requested tour this week.</td></tr>
+          <tr><td>Tonya</td><td>2026-04-13</td><td>1:15 PM</td><td>Insurance Verification in Progress</td><td>Waiting on policy details.</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
 
-  <h3>Next Step:</h3>
-  <p>We will now connect this to real Prospects, Notes, and Referrals.</p>
+  <section class="section">
+    <h3>Pipeline</h3>
+    <div class="kanban">
+      <div class="col">
+        <h4>Inquiry</h4>
+        <div class="task"><strong>Mary Thomas</strong><br>Baylor Scott & White<br>Assigned: Ericka</div>
+        <div class="ghost">Drag card here</div>
+      </div>
+      <div class="col">
+        <h4>Pending Admission</h4>
+        <div class="task"><strong>James Carter</strong><br>Medical City<br>Assigned: Tonya</div>
+        <div class="ghost">Drag card here</div>
+      </div>
+      <div class="col">
+        <h4>Lost</h4>
+        <div class="task"><strong>Ruth Daniels</strong><br>Park Manor<br>Assigned: Ericka</div>
+        <div class="ghost">Drag card here</div>
+      </div>
+      <div class="col">
+        <h4>Admitted</h4>
+        <div class="task"><strong>Willie Grant</strong><br>NorthPark Rehab<br>Assigned: Shae</div>
+        <div class="ghost">Drag card here</div>
+      </div>
+    </div>
+  </section>
 
+  <div class="footer-space"></div>
 </body>
 </html>
