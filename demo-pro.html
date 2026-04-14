@@ -1,4 +1,9 @@
-<!DOCTYPE html>
+<script>
+if (!localStorage.getItem("token")) {
+  alert("You must login first");
+  window.location.href = "login.html";
+}
+</script><!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
