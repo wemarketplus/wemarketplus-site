@@ -1,60 +1,1093 @@
 <!DOCTYPE html>
-    :root{--bg:#081426;--panel:#10203a;--panel2:#0d1b31;--line:rgba(255,255,255,.10);--text:#f4f8ff;--muted:#c9d6ea;--blue:#49b6ff;--green:#8cff66;--green-soft:#d8ffe2;--red-soft:#ffd9d9;--red:#8f1f1f;--yellow-soft:#fff3cf;--yellow:#7a5a00;--purple-soft:#efe5ff;--purple:#5b3aa0}
-    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-    .layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}.sidebar{background:#071120;border-right:1px solid var(--line);padding:24px 18px;position:sticky;top:0;height:100vh}
-    .brand h1{font-size:20px;margin:0 0 6px}.brand p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
-    .nav{display:grid;gap:10px;margin-top:24px}.nav a{text-decoration:none;color:var(--text);padding:12px 14px;border-radius:12px;border:1px solid transparent;font-weight:700}.nav a.active,.nav a:hover{background:#10203a;border-color:var(--line)}
-    .main{padding:28px 28px 40px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:24px}.topbar h2{margin:0;font-size:34px}.topbar p{margin:6px 0 0;color:var(--muted)}
-    .btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:999px;padding:12px 18px;font-weight:800;text-decoration:none;cursor:pointer}.btn-blue{background:var(--blue);color:#081426}.btn-green{background:var(--green);color:#081426}.btn-small{padding:8px 12px;font-size:13px}
-    .hero,.section{background:linear-gradient(180deg,#0f1f39,#0b1730);border:1px solid var(--line);border-radius:22px;padding:24px;margin-bottom:22px}.section{background:var(--panel2);padding:22px}
-    .hero h3{font-size:46px;margin:0 0 10px;color:var(--green);line-height:1.05}.hero p{margin:0;color:#d9e5f6;font-size:18px;line-height:1.7}.section h3{margin:0 0 16px;font-size:28px}
-    .kpis,.grid-3,.grid-2,.note-form-grid,.form-row{display:grid;gap:16px}.kpis{grid-template-columns:repeat(5,1fr)}.grid-3{grid-template-columns:repeat(3,1fr)}.grid-2{grid-template-columns:repeat(2,1fr)}.form-row{grid-template-columns:repeat(4,1fr)}
-    .kpi{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}.kpi span{display:block;color:var(--muted);font-size:14px;margin-bottom:10px}.kpi strong{font-size:38px;line-height:1}
-    .card,.note-box,.note-form-wrap{background:#fff;color:#111;border-radius:20px;padding:20px}.card h4,.note-box h4{margin:0 0 10px}.card p,.note-box p{margin:0;line-height:1.6}
-    .mini-actions,.card-meta,.note-actions,.footer-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    .pill,.card-tag,.stage-count{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800}.pill-green{background:var(--green-soft);color:#136c32}.pill-red{background:var(--red-soft);color:var(--red)}.pill-yellow{background:var(--yellow-soft);color:var(--yellow)}.pill-blue{background:#dff1ff;color:#0f5c8a}.pill-purple{background:var(--purple-soft);color:var(--purple)}
-    .table-wrap{overflow:auto;border-radius:18px} table{width:100%;border-collapse:collapse;background:#fff;color:#111;border-radius:18px;overflow:hidden} th,td{padding:14px;border-bottom:1px solid #e7edf5;text-align:left;vertical-align:top;font-size:14px} th{background:#f4f8fc;font-size:13px;text-transform:uppercase;letter-spacing:.03em}
-    .field label,.note-form-wrap label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}.field input,.field select,.field textarea,.note-form-wrap input,.note-form-wrap select,.note-form-wrap textarea{width:100%;border:1px solid #d7e0ec;border-radius:12px;padding:12px;font:inherit}.field textarea,.note-form-wrap textarea{min-height:110px;resize:vertical}
-    .note-help{color:#5a6678;font-size:13px;margin-top:4px;line-height:1.5}.admin-banner{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}.admin-note{margin:0 0 18px;color:var(--muted);font-size:15px;line-height:1.6}
-    .pipeline{display:grid;grid-template-columns:repeat(4,minmax(240px,1fr));gap:18px;align-items:start}.stage{background:linear-gradient(180deg,#10203a,#0c172c);border:1px solid var(--line);border-radius:20px;padding:14px;min-height:320px;box-shadow:0 14px 30px rgba(0,0,0,.18)}.stage-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.08)}.stage-title{display:flex;align-items:center;gap:10px}.stage-dot{width:12px;height:12px;border-radius:999px}.dot-inquiry{background:#6ec5ff}.dot-visit{background:#ffd36e}.dot-pending{background:#ffb36e}.dot-closed{background:#8cff66}.stage h4{margin:0;font-size:17px}.stage-body{display:grid;gap:12px}
-    .lead-card{position:relative;background:#fff;color:#111;border-radius:16px;padding:14px 14px 12px;box-shadow:0 12px 24px rgba(0,0,0,.12);border:1px solid rgba(0,0,0,.06)}.lead-card::before{content:"⋮⋮";position:absolute;top:10px;right:12px;color:#9aa5b5;font-size:13px;letter-spacing:1px}.lead-card strong{display:block;margin-bottom:6px;font-size:15px;padding-right:24px}.lead-card small{color:#444;line-height:1.5;display:block;margin-bottom:8px}.card-tag{background:#eef4fb;color:#36506d;font-size:11px;padding:5px 8px}
-    @media (max-width:1100px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.kpis,.grid-3,.grid-2,.pipeline,.form-row,.note-form-grid{grid-template-columns:1fr}}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HospiceLink Max Demo</title>
+  <style>
+    :root{
+      --bg:#081426;
+      --panel:#10203a;
+      --panel2:#0d1b31;
+      --line:rgba(255,255,255,.10);
+      --text:#f4f8ff;
+      --muted:#c9d6ea;
+      --blue:#49b6ff;
+      --green:#8cff66;
+      --green-soft:#d8ffe2;
+      --red-soft:#ffd9d9;
+      --red:#8f1f1f;
+      --yellow-soft:#fff3cf;
+      --yellow:#7a5a00;
+      --purple-soft:#efe5ff;
+      --purple:#5b3aa0;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:Arial,Helvetica,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:260px 1fr;
+      min-height:100vh;
+    }
+
+    .sidebar{
+      background:#071120;
+      border-right:1px solid var(--line);
+      padding:24px 18px;
+      position:sticky;
+      top:0;
+      height:100vh;
+    }
+
+    .brand{
+      margin-bottom:24px;
+    }
+
+    .brand h1{
+      font-size:20px;
+      margin:0 0 6px;
+    }
+
+    .brand p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .nav{
+      display:grid;
+      gap:10px;
+      margin-top:24px;
+    }
+
+    .nav a{
+      text-decoration:none;
+      color:var(--text);
+      padding:12px 14px;
+      border-radius:12px;
+      background:transparent;
+      border:1px solid transparent;
+      font-weight:700;
+    }
+
+    .nav a.active,
+    .nav a:hover{
+      background:#10203a;
+      border-color:var(--line);
+    }
+
+    .main{
+      padding:28px 28px 40px;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-bottom:24px;
+    }
+
+    .topbar h2{
+      margin:0;
+      font-size:34px;
+    }
+
+    .topbar p{
+      margin:6px 0 0;
+      color:var(--muted);
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:none;
+      border-radius:999px;
+      padding:12px 18px;
+      font-weight:800;
+      text-decoration:none;
+      cursor:pointer;
+    }
+
+    .btn-blue{background:var(--blue);color:#081426}
+    .btn-green{background:var(--green);color:#081426}
+    .btn-dark{background:#122440;color:#fff;border:1px solid var(--line)}
+    .btn-small{padding:8px 12px;font-size:13px}
+
+    .hero{
+      background:linear-gradient(180deg,#0f1f39,#0b1730);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:24px;
+      margin-bottom:22px;
+    }
+
+    .hero h3{
+      font-size:46px;
+      margin:0 0 10px;
+      color:var(--green);
+      line-height:1.05;
+    }
+
+    .hero p{
+      margin:0;
+      color:#d9e5f6;
+      font-size:18px;
+      line-height:1.7;
+    }
+
+    .kpis{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:16px;
+      margin-bottom:22px;
+    }
+
+    .kpi{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+    }
+
+    .kpi span{
+      display:block;
+      color:var(--muted);
+      font-size:14px;
+      margin-bottom:10px;
+    }
+
+    .kpi strong{
+      font-size:38px;
+      line-height:1;
+    }
+
+    .section{
+      background:var(--panel2);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:22px;
+      margin-bottom:22px;
+    }
+
+    .section h3{
+      margin:0 0 16px;
+      font-size:28px;
+    }
+
+    .grid-3{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:18px;
+    }
+
+    .card{
+      background:#fff;
+      color:#111;
+      border-radius:20px;
+      padding:20px;
+    }
+
+    .card h4{
+      margin:0 0 10px;
+      font-size:18px;
+    }
+
+    .card p{
+      margin:0;
+      line-height:1.6;
+    }
+
+    .mini-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .pill{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+    }
+
+    .pill-green{background:var(--green-soft);color:#136c32}
+    .pill-red{background:var(--red-soft);color:var(--red)}
+    .pill-yellow{background:var(--yellow-soft);color:var(--yellow)}
+    .pill-blue{background:#dff1ff;color:#0f5c8a}
+    .pill-purple{background:var(--purple-soft);color:var(--purple)}
+
+    .table-wrap{
+      overflow:auto;
+      border-radius:18px;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      background:#fff;
+      color:#111;
+      border-radius:18px;
+      overflow:hidden;
+    }
+
+    th,td{
+      padding:14px;
+      border-bottom:1px solid #e7edf5;
+      text-align:left;
+      vertical-align:top;
+      font-size:14px;
+    }
+
+    th{
+      background:#f4f8fc;
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:.03em;
+    }
+
+    .pipeline{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(240px,1fr));
+      gap:18px;
+      align-items:start;
+    }
+
+    .stage{
+      background:linear-gradient(180deg,#10203a,#0c172c);
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:14px;
+      min-height:320px;
+      box-shadow:0 14px 30px rgba(0,0,0,.18);
+    }
+
+    .stage-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:14px;
+      padding-bottom:10px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+
+    .stage-title{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .stage-dot{
+      width:12px;
+      height:12px;
+      border-radius:999px;
+    }
+
+    .stage-count{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:28px;
+      height:28px;
+      padding:0 8px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      color:#fff;
+      font-size:12px;
+      font-weight:800;
+    }
+
+    .stage h4{
+      margin:0;
+      font-size:17px;
+    }
+
+    .stage-body{
+      display:grid;
+      gap:12px;
+    }
+
+    .lead-card{
+      position:relative;
+      background:#fff;
+      color:#111;
+      border-radius:16px;
+      padding:14px 14px 12px;
+      box-shadow:0 12px 24px rgba(0,0,0,.12);
+      border:1px solid rgba(0,0,0,.06);
+      cursor:grab;
+      transition:transform .18s ease, box-shadow .18s ease;
+    }
+
+    .lead-card:hover{
+      transform:translateY(-2px);
+      box-shadow:0 16px 28px rgba(0,0,0,.16);
+    }
+
+    .lead-card::before{
+      content:"⋮⋮";
+      position:absolute;
+      top:10px;
+      right:12px;
+      color:#9aa5b5;
+      font-size:13px;
+      letter-spacing:1px;
+    }
+
+    .lead-card strong{
+      display:block;
+      margin-bottom:6px;
+      font-size:15px;
+      padding-right:24px;
+    }
+
+    .lead-card small{
+      color:#444;
+      line-height:1.5;
+      display:block;
+      margin-bottom:8px;
+    }
+
+    .card-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:8px;
+    }
+
+    .card-tag{
+      display:inline-block;
+      padding:5px 8px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      background:#eef4fb;
+      color:#36506d;
+    }
+
+    .dot-inquiry{background:#6ec5ff}
+    .dot-visit{background:#ffd36e}
+    .dot-pending{background:#ffb36e}
+    .dot-closed{background:#8cff66}
+
+    .split{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:18px;
+    }
+
+    .note-box{
+      background:#fff;
+      color:#111;
+      border-radius:18px;
+      padding:18px;
+      margin-bottom:14px;
+    }
+
+    .note-box:last-child{margin-bottom:0}
+
+    .note-box h4{
+      margin:0 0 8px;
+      font-size:16px;
+    }
+
+    .note-box p{
+      margin:0;
+      line-height:1.6;
+    }
+
+    .note-form-wrap{
+      background:#fff;
+      color:#111;
+      border-radius:18px;
+      padding:18px;
+      margin-bottom:18px;
+    }
+
+    .note-form-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+    }
+
+    .note-form-grid .full{
+      grid-column:1 / -1;
+    }
+
+    .note-form-wrap label{
+      display:block;
+      font-size:13px;
+      font-weight:700;
+      margin-bottom:6px;
+    }
+
+    .note-form-wrap input,
+    .note-form-wrap select,
+    .note-form-wrap textarea{
+      width:100%;
+      border:1px solid #d7e0ec;
+      border-radius:12px;
+      padding:12px;
+      font:inherit;
+    }
+
+    .note-form-wrap textarea{
+      min-height:110px;
+      resize:vertical;
+    }
+
+    .note-help{
+      color:#5a6678;
+      font-size:13px;
+      margin-top:4px;
+      line-height:1.5;
+    }
+
+    .note-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .admin-banner{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+
+    .admin-note{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.6;
+    }
+
+    .footer-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+
+    @media (max-width:1100px){
+      .kpis,.grid-3,.grid-2,.pipeline,.split,.note-form-grid{
+        grid-template-columns:1fr;
+      }
+      .layout{
+        grid-template-columns:1fr;
+      }
+      .sidebar{
+        position:relative;
+        height:auto;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="layout">
     <aside class="sidebar">
-      <div class="brand"><h1>HospiceLink Pro</h1><p>Marketing CRM Demo</p></div>
+      <div class="brand">
+        <h1>HospiceLink Max</h1>
+        <p>Advanced Marketing CRM Demo</p>
+      </div>
+
       <nav class="nav">
-        <a href="#dashboard" class="active">Dashboard</a><a href="#users">Admin / Users</a><a href="#prospects">Prospects</a><a href="#referrals">Referral Sources</a><a href="#pipeline">Pipeline</a><a href="#visits">Facility Visits</a><a href="#followups">Follow-Ups</a><a href="#notes">Notes</a>
+        <a href="#dashboard" class="active">Dashboard</a>
+        <a href="#users">Admin / Users</a>
+        <a href="#prospects">Prospects</a>
+        <a href="#referrals">Referral Sources</a>
+        <a href="#pipeline">Pipeline</a>
+        <a href="#territory">Territory View</a>
+        <a href="#productivity">Productivity</a>
+        <a href="#automation">Automation</a>
+        <a href="#nextsteps">Next Steps</a>
+        <a href="#notes">Notes</a>
       </nav>
-      <div class="footer-actions"><a href="index.html#pricing" class="btn btn-blue btn-small">Back to Website</a></div>
+
+      <div class="footer-actions">
+        <a href="index.html#pricing" class="btn btn-blue btn-small">Back to Website</a>
+      </div>
     </aside>
+
     <main class="main">
-      <div class="topbar" id="dashboard"><div><h2>HospiceLink Pro Demo</h2><p>Built for marketers only. Everything a marketer needs to be successful in the field.</p></div><a href="index.html#pricing" class="btn btn-blue">Back to Website</a></div>
-      <section class="hero"><h3>Marketing CRM Dashboard</h3><p>This demo shows admin-only user controls, subscription seat limits, prospect intake with required dropdowns, referral source status tracking, marketer notes with required next steps, pipeline movement, facility visits, pending follow-ups, and admissions visibility.</p></section>
-      <section class="kpis"><div class="kpi"><span>New Prospects</span><strong>24</strong></div><div class="kpi"><span>Facility Visits</span><strong>11</strong></div><div class="kpi"><span>Pending Follow-Ups</span><strong>8</strong></div><div class="kpi"><span>Admissions</span><strong>6</strong></div><div class="kpi"><span>User Seats</span><strong>8 / 10</strong></div></section>
-      <section class="section" id="users"><div class="admin-banner"><h3 style="margin:0;">Admin User Controls</h3><span class="pill pill-purple">Admin View Only</span></div><p class="admin-note">User view hides this panel. Only the Admin account holder for the company subscription can see seat limits, add users, delete users, and manage subscription-level CRM access.</p><div class="grid-3"><div class="card"><h4>Admin Access Only</h4><p>Only the Admin account holder can view and manage user controls. Standard users do not have access to seat limits, user creation, or user deletion.</p><div class="mini-actions"><span class="pill pill-blue">Admin Only</span></div></div><div class="card"><h4>Add / Delete Users</h4><p>Admin can add users, delete users, assign roles, and manage who can access the CRM under the company subscription.</p><div class="mini-actions"><span class="pill pill-green">Add User</span><span class="pill pill-red">Delete User</span></div></div><div class="card"><h4>Seat Limits</h4><p>Admin can view seat limits and only add as many users as the purchased subscription allows.</p><div class="mini-actions"><span class="pill pill-yellow">Seats Used: 8 / 10</span></div></div></div></section>
-      <section class="section" id="prospects"><h3>Prospects</h3><div class="note-form-wrap" style="margin-bottom:20px;"><div class="form-row"><div class="field"><label for="prospectName">Prospect Name</label><input id="prospectName" type="text" placeholder="Enter prospect name"></div><div class="field"><label for="prospectStatus">Status</label><select id="prospectStatus"><option>Inquiry</option><option>Pending Admission</option><option>Lost</option><option>Admitted</option></select></div><div class="field"><label for="prospectReferralSourceSelect">Referral Source</label><select id="prospectReferralSourceSelect"></select><div class="note-help">Select a saved referral business name or add a new one below.</div></div><div class="field"><label for="prospectAssignedMarketerSelect">Assigned Marketer</label><select id="prospectAssignedMarketerSelect"></select><div class="note-help">Select a saved marketer name or add a new one below.</div></div><div class="field"><label for="newReferralSourceInput">Add Referral Source</label><input id="newReferralSourceInput" type="text" placeholder="Enter referral business name"></div><div class="field"><label for="newAssignedMarketerInput">Add Assigned Marketer</label><input id="newAssignedMarketerInput" type="text" placeholder="Enter marketer name"></div><div class="field"><label for="refStatusSelect">Ref Status</label><select id="refStatusSelect"><option>Green</option><option>Red</option></select></div><div class="field"><label for="prospectNextStep">Next Step Summary</label><input id="prospectNextStep" type="text" placeholder="Enter next step summary"></div></div><div class="note-actions"><button class="btn btn-green" type="button" onclick="saveProspect('pro')">Add Prospect</button></div></div><div class="table-wrap"><table><thead><tr><th>Prospect</th><th>Status</th><th>Referral Source</th><th>Ref Status</th><th>Assigned Marketer</th><th>Next Step</th></tr></thead><tbody id="prospectsTableBody"><tr><td>Mary J.</td><td><span class="pill pill-blue">Inquiry</span></td><td>North Dallas Rehab</td><td><span class="pill pill-green">Green</span></td><td>Ericka</td><td>Call family to schedule consult</td></tr><tr><td>John T.</td><td><span class="pill pill-yellow">Pending Admission</span></td><td>Baylor</td><td><span class="pill pill-green">Green</span></td><td>Ericka</td><td>Collect signed admission packet</td></tr><tr><td>Lisa W.</td><td><span class="pill pill-red">Lost</span></td><td>Physician Office</td><td><span class="pill pill-red">Red</span></td><td>Ericka</td><td>Re-engage source in 30 days</td></tr><tr><td>Robert H.</td><td><span class="pill pill-green">Admitted</span></td><td>Encompass</td><td><span class="pill pill-green">Green</span></td><td>Ericka</td><td>Move to admission archive</td></tr></tbody></table></div></section>
-      <section class="section" id="referrals"><h3>Referral Sources</h3><div class="grid-3"><div class="card"><h4>North Dallas Rehab</h4><p>Status: <span class="pill pill-green">Green - Sending Referrals</span></p></div><div class="card"><h4>Physician Office</h4><p>Status: <span class="pill pill-red">Red - No Referrals</span></p></div><div class="card"><h4>Baylor</h4><p>Status: <span class="pill pill-green">Green - Sending Referrals</span></p></div></div><div class="section" style="margin-top:18px; background:#0f1c34;"><div class="admin-banner"><h3 style="margin:0;">Referral Source Management</h3><span class="pill pill-purple">Admin View Only</span></div><p class="admin-note">User view hides this panel. Only the Admin account holder can add or delete referral sources for the company CRM.</p><div class="grid-3"><div class="card"><h4>Add Referral Source</h4><p>Admin can add new referral sources to the CRM and assign them to the marketer’s active territory.</p><div class="mini-actions"><span class="pill pill-green">Add Referral</span></div></div><div class="card"><h4>Delete Referral Source</h4><p>Admin can remove inactive, duplicate, or closed referral sources from the CRM.</p><div class="mini-actions"><span class="pill pill-red">Delete Referral</span></div></div><div class="card"><h4>Referral Status Tracking</h4><p>Referral sources are visibly marked red for no referrals and green for active referral partners.</p><div class="mini-actions"><span class="pill pill-green">Green = Sending</span><span class="pill pill-red">Red = No Referrals</span></div></div></div></div></section>
-      <section class="section" id="pipeline"><h3>Pipeline</h3><div class="pipeline"><div class="stage"><div class="stage-header"><div class="stage-title"><span class="stage-dot dot-inquiry"></span><h4>Inquiry</h4></div><span class="stage-count">2</span></div><div class="stage-body"><div class="lead-card"><strong>Mary J.</strong><small>Referral source: North Dallas Rehab</small><div class="card-meta"><span class="card-tag">New lead</span><span class="card-tag">Family pending</span></div></div><div class="lead-card"><strong>Kevin R.</strong><small>Referral source: Hospital CM</small><div class="card-meta"><span class="card-tag">Needs outreach</span></div></div></div></div><div class="stage"><div class="stage-header"><div class="stage-title"><span class="stage-dot dot-visit"></span><h4>Visit Scheduled</h4></div><span class="stage-count">1</span></div><div class="stage-body"><div class="lead-card"><strong>Tina P.</strong><small>Visit booked for Thursday at 2 PM</small><div class="card-meta"><span class="card-tag">Consult set</span></div></div></div></div><div class="stage"><div class="stage-header"><div class="stage-title"><span class="stage-dot dot-pending"></span><h4>Pending Admission</h4></div><span class="stage-count">1</span></div><div class="stage-body"><div class="lead-card"><strong>John T.</strong><small>Waiting on final signatures</small><div class="card-meta"><span class="card-tag">Docs pending</span><span class="card-tag">High priority</span></div></div></div></div><div class="stage"><div class="stage-header"><div class="stage-title"><span class="stage-dot dot-closed"></span><h4>Admitted / Lost</h4></div><span class="stage-count">2</span></div><div class="stage-body"><div class="lead-card"><strong>Robert H.</strong><small>Admitted this week</small><div class="card-meta"><span class="card-tag">Closed won</span></div></div><div class="lead-card"><strong>Lisa W.</strong><small>Lost to competitor</small><div class="card-meta"><span class="card-tag">Closed lost</span></div></div></div></div></div></section>
-      <section class="section split" id="visits"><div><h3>Facility Visits</h3><div class="table-wrap"><table><thead><tr><th>Facility</th><th>Visited By</th><th>Date</th><th>Outcome</th></tr></thead><tbody><tr><td>North Dallas Rehab</td><td>Ericka</td><td>04/10</td><td>Met with DON, requested lunch next week</td></tr><tr><td>Baylor</td><td>Ericka</td><td>04/11</td><td>Spoke with case manager about active referrals</td></tr><tr><td>Encompass</td><td>Ericka</td><td>04/12</td><td>Delivered materials and scheduled return visit</td></tr></tbody></table></div></div><div id="followups"><h3>Pending Follow-Ups</h3><div class="note-box"><h4>North Dallas Rehab</h4><p>Follow up Thursday with lunch details and referral update.</p></div><div class="note-box"><h4>John T. Family</h4><p>Confirm receipt of admission documents by end of day.</p></div><div class="note-box"><h4>Physician Office</h4><p>Reconnect in 30 days to reactivate relationship.</p></div></div></section>
-      <section class="section" id="notes"><h3>Marketer Notes</h3><div class="note-form-wrap"><div class="note-form-grid"><div><label for="noteNameSelect">Select Name</label><select id="noteNameSelect"><option value="">Select a saved name</option></select><div class="note-help">If you have noted before, your name will appear here.</div></div><div><label for="noteNewName">First Time? Add Name</label><input id="noteNewName" type="text" placeholder="Enter your name to save it for next time"><div class="note-help">New names will be saved and repopulated in the dropdown next time.</div></div><div><label for="noteDate">Date</label><input id="noteDate" type="date" required></div><div><label for="noteTime">Time</label><input id="noteTime" type="time" required></div><div><label for="noteNextStep">Next Step</label><select id="noteNextStep"><option>Immediate Family Outreach (Call/Text)</option><option>Schedule On-Site Visit</option><option>Conduct Bedside Presentation</option><option>Request Clinical Records (H&amp;P)</option><option>RN Assessment Requested</option><option>RN Assessment Scheduled</option><option>Obtain Physician Order for Eval</option><option>Insurance Verification in Progress</option><option>CM Follow-Up (Status Update)</option><option>Overcoming Family Hesitation</option><option>Other</option></select></div><div class="full"><label for="noteText">Note</label><textarea id="noteText" placeholder="Enter note details here..." required></textarea></div></div><div class="note-actions"><button class="btn btn-green" type="button" onclick="saveDemoNote('pro')">Add Note</button></div></div><div id="notesList"><div class="grid-2"><div class="note-box"><h4>Ericka — 2026-04-12 at 09:15 AM</h4><p><strong>Next Step:</strong> Immediate Family Outreach (Call/Text)</p><p>Met with DON. They want quicker response time updates and stronger family communication.</p></div><div class="note-box"><h4>Ericka — 2026-04-11 at 02:30 PM</h4><p><strong>Next Step:</strong> Request Clinical Records (H&amp;P)</p><p>Baylor requested a one-page hospice eligibility sheet for discharge planning support.</p></div></div></div></section>
+      <div class="topbar" id="dashboard">
+        <div>
+          <h2>HospiceLink Max Demo</h2>
+          <p>Built for advanced hospice marketers only. High-visibility field performance and growth tracking.</p>
+        </div>
+        <a href="index.html#pricing" class="btn btn-blue">Back to Website</a>
+      </div>
+
+      <section class="hero">
+        <h3>Advanced Marketing Command Center</h3>
+        <p>
+          This demo shows admin-only user controls, subscription seat limits, prospect management,
+          referral source tracking, marketer notes, pipeline movement, territory visibility,
+          productivity tracking, automation concepts, account visit tracking, mileage logging,
+          admissions, and next-step follow-through.
+        </p>
+      </section>
+
+      <section class="kpis">
+        <div class="kpi"><span>Accounts Visited</span><strong>13</strong></div>
+        <div class="kpi"><span>Miles Logged</span><strong>128</strong></div>
+        <div class="kpi"><span>Admissions</span><strong>7</strong></div>
+        <div class="kpi"><span>Open Tasks</span><strong>15</strong></div>
+        <div class="kpi"><span>User Seats</span><strong>18 / 20</strong></div>
+      </section>
+
+      <section class="section" id="users">
+        <div class="admin-banner">
+          <h3 style="margin:0;">Admin User Controls</h3>
+          <span class="pill pill-purple">Admin View Only</span>
+        </div>
+
+        <p class="admin-note">
+          User view hides this panel. Only the Admin account holder can see seat limits, add users,
+          delete users, and control subscription access for the advanced marketing CRM.
+        </p>
+
+        <div class="grid-3">
+          <div class="card">
+            <h4>Admin Access Only</h4>
+            <p>
+              Only the Admin account holder can view seat limits, add users, delete users, and control subscription access.
+              Standard CRM users cannot see this information.
+            </p>
+            <div class="mini-actions">
+              <span class="pill pill-blue">Admin Only</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <h4>Add / Delete Users</h4>
+            <p>
+              Admin can add or delete marketers and manage access to the advanced marketing CRM.
+            </p>
+            <div class="mini-actions">
+              <span class="pill pill-green">Add User</span>
+              <span class="pill pill-red">Delete User</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <h4>Seat Limits</h4>
+            <p>
+              Admin can view the subscription seat limit and only add as many users as the plan allows.
+            </p>
+            <div class="mini-actions">
+              <span class="pill pill-yellow">Seats Used: 18 / 20</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="prospects">
+        <h3>Prospect Management</h3>
+        <div class="grid-3">
+          <div class="card">
+            <h4>Add / Delete Prospects</h4>
+            <p>Create, edit, or remove prospect records with referral source, family contact, assigned marketer, and account notes.</p>
+          </div>
+          <div class="card">
+            <h4>Prospect Status</h4>
+            <p>Track status by Inquiry, Visit Scheduled, Pending Admission, Admitted, or Lost.</p>
+          </div>
+          <div class="card">
+            <h4>Admissions Visibility</h4>
+            <p>See which prospects converted, who closed them, and which account or territory produced the admission.</p>
+          </div>
+        </div>
+
+        <div class="table-wrap" style="margin-top:18px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Prospect</th>
+                <th>Status</th>
+                <th>Referral Source</th>
+                <th>Assigned Marketer</th>
+                <th>Next Step</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Encompass Referral - Maria T.</td>
+                <td><span class="pill pill-blue">Inquiry</span></td>
+                <td>Encompass</td>
+                <td>Ericka</td>
+                <td>Book family consult</td>
+              </tr>
+              <tr>
+                <td>Baylor Referral - James R.</td>
+                <td><span class="pill pill-yellow">Pending Admission</span></td>
+                <td>Baylor McKinney</td>
+                <td>Ericka</td>
+                <td>Collect final signatures</td>
+              </tr>
+              <tr>
+                <td>North Park Referral - Linda S.</td>
+                <td><span class="pill pill-red">Lost</span></td>
+                <td>North Park</td>
+                <td>Ericka</td>
+                <td>Re-engage source in 30 days</td>
+              </tr>
+              <tr>
+                <td>Lewisville Rehab Referral - Henry P.</td>
+                <td><span class="pill pill-green">Admitted</span></td>
+                <td>Lewisville Rehab</td>
+                <td>Ericka</td>
+                <td>Archive to admissions history</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" id="referrals">
+        <h3>Referral Sources</h3>
+
+        <div class="grid-3">
+          <div class="card">
+            <h4>Encompass</h4>
+            <p>Status: <span class="pill pill-green">Green - Sending Referrals</span></p>
+          </div>
+          <div class="card">
+            <h4>North Park</h4>
+            <p>Status: <span class="pill pill-red">Red - No Referrals</span></p>
+          </div>
+          <div class="card">
+            <h4>Baylor McKinney</h4>
+            <p>Status: <span class="pill pill-green">Green - Sending Referrals</span></p>
+          </div>
+        </div>
+
+        <div class="section" style="margin-top:18px; background:#0f1c34;">
+          <div class="admin-banner">
+            <h3 style="margin:0;">Referral Source Management</h3>
+            <span class="pill pill-purple">Admin View Only</span>
+          </div>
+
+          <p class="admin-note">
+            User view hides this panel. Only the Admin account holder can add or delete referral sources for the company CRM.
+          </p>
+
+          <div class="grid-3">
+            <div class="card">
+              <h4>Add Referral Source</h4>
+              <p>Admin can add new referral sources and assign them to high-priority territories and automation workflows.</p>
+              <div class="mini-actions">
+                <span class="pill pill-green">Add Referral</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <h4>Delete Referral Source</h4>
+              <p>Admin can delete inactive, duplicate, or low-value referral sources from the system.</p>
+              <div class="mini-actions">
+                <span class="pill pill-red">Delete Referral</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <h4>Referral Status Tracking</h4>
+              <p>Referral partners are color-coded so marketers can quickly identify active versus cold accounts.</p>
+              <div class="mini-actions">
+                <span class="pill pill-green">Green = Sending</span>
+                <span class="pill pill-red">Red = No Referrals</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="pipeline">
+        <h3>Pipeline</h3>
+        <div class="pipeline">
+          <div class="stage">
+            <div class="stage-header">
+              <div class="stage-title">
+                <span class="stage-dot dot-inquiry"></span>
+                <h4>Inquiry</h4>
+              </div>
+              <span class="stage-count">2</span>
+            </div>
+            <div class="stage-body">
+              <div class="lead-card">
+                <strong>Maria T.</strong>
+                <small>Source: Encompass</small>
+                <div class="card-meta">
+                  <span class="card-tag">High-value account</span>
+                </div>
+              </div>
+              <div class="lead-card">
+                <strong>Kevin H.</strong>
+                <small>Source: Assisted Living ED</small>
+                <div class="card-meta">
+                  <span class="card-tag">Warm lead</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stage">
+            <div class="stage-header">
+              <div class="stage-title">
+                <span class="stage-dot dot-visit"></span>
+                <h4>Visit Scheduled</h4>
+              </div>
+              <span class="stage-count">1</span>
+            </div>
+            <div class="stage-body">
+              <div class="lead-card">
+                <strong>Carla B.</strong>
+                <small>Consult set for Thursday at 1 PM</small>
+                <div class="card-meta">
+                  <span class="card-tag">Priority visit</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stage">
+            <div class="stage-header">
+              <div class="stage-title">
+                <span class="stage-dot dot-pending"></span>
+                <h4>Pending Admission</h4>
+              </div>
+              <span class="stage-count">1</span>
+            </div>
+            <div class="stage-body">
+              <div class="lead-card">
+                <strong>James R.</strong>
+                <small>Waiting on signed admission packet</small>
+                <div class="card-meta">
+                  <span class="card-tag">Revenue opportunity</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stage">
+            <div class="stage-header">
+              <div class="stage-title">
+                <span class="stage-dot dot-closed"></span>
+                <h4>Admitted / Lost</h4>
+              </div>
+              <span class="stage-count">2</span>
+            </div>
+            <div class="stage-body">
+              <div class="lead-card">
+                <strong>Henry P.</strong>
+                <small>Admitted this week</small>
+                <div class="card-meta">
+                  <span class="card-tag">Closed won</span>
+                </div>
+              </div>
+              <div class="lead-card">
+                <strong>Linda S.</strong>
+                <small>Lost to competitor</small>
+                <div class="card-meta">
+                  <span class="card-tag">Closed lost</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section split" id="territory">
+        <div>
+          <h3>Territory View</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Territory</th>
+                  <th>Primary Accounts</th>
+                  <th>Visits This Week</th>
+                  <th>Admissions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>North Dallas</td>
+                  <td>Encompass, Baylor, ALF Network</td>
+                  <td>5</td>
+                  <td>3</td>
+                </tr>
+                <tr>
+                  <td>McKinney / Plano</td>
+                  <td>Hospital CMs, Rehab Network</td>
+                  <td>4</td>
+                  <td>2</td>
+                </tr>
+                <tr>
+                  <td>Lewisville / Denton</td>
+                  <td>SNFs, Physician Groups</td>
+                  <td>4</td>
+                  <td>2</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="productivity">
+          <h3>Productivity Tracking</h3>
+          <div class="note-box">
+            <h4>Ericka</h4>
+            <p><strong>Accounts visited:</strong> 13</p>
+            <p><strong>Follow-ups completed:</strong> 11</p>
+            <p><strong>Admissions influenced:</strong> 7</p>
+          </div>
+          <div class="note-box">
+            <h4>Top Performing Account</h4>
+            <p>Encompass generated 3 qualified referrals this week.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="automation">
+        <h3>Automation Concepts</h3>
+        <div class="grid-3">
+          <div class="card">
+            <h4>Auto Follow-Up</h4>
+            <p>Automatically generate tasks after every facility visit or prospect status change.</p>
+          </div>
+          <div class="card">
+            <h4>Touch Cadence</h4>
+            <p>Schedule recurring account touchpoints so no referral source goes cold.</p>
+          </div>
+          <div class="card">
+            <h4>Reminder Triggers</h4>
+            <p>Prompt marketers when paperwork is pending, follow-ups are overdue, or pipeline stages stall.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section split" id="nextsteps">
+        <div>
+          <h3>Accounts Visited & Miles Logged</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Account</th>
+                  <th>Visit Type</th>
+                  <th>Outcome</th>
+                  <th>Miles</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Encompass</td>
+                  <td>Lunch & Learn</td>
+                  <td>3 active referrals discussed</td>
+                  <td>18.2</td>
+                </tr>
+                <tr>
+                  <td>Baylor McKinney</td>
+                  <td>Case Manager Visit</td>
+                  <td>Referral review scheduled</td>
+                  <td>27.4</td>
+                </tr>
+                <tr>
+                  <td>North Park</td>
+                  <td>Marketing Drop</td>
+                  <td>Reconnect next month</td>
+                  <td>21.1</td>
+                </tr>
+                <tr>
+                  <td>Lewisville Rehab</td>
+                  <td>Follow-Up Visit</td>
+                  <td>2 new family consults</td>
+                  <td>32.0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <h3>Next-Step Table</h3>
+          <div class="note-box">
+            <h4>Encompass</h4>
+            <p>Send one-page eligibility guide and confirm next in-service date.</p>
+          </div>
+          <div class="note-box">
+            <h4>Baylor McKinney</h4>
+            <p>Review open referrals with case manager Friday morning.</p>
+          </div>
+          <div class="note-box">
+            <h4>North Park</h4>
+            <p>Rebuild relationship with DON after 30-day pause.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="notes">
+        <h3>Marketer Notes</h3>
+
+        <div class="note-form-wrap">
+          <div class="note-form-grid">
+            <div>
+              <label for="noteNameSelect">Select Name</label>
+              <select id="noteNameSelect">
+                <option value="">Select a saved name</option>
+              </select>
+              <div class="note-help">If you have noted before, your name will appear here.</div>
+            </div>
+
+            <div>
+              <label for="noteNewName">First Time? Add Name</label>
+              <input id="noteNewName" type="text" placeholder="Enter your name to save it for next time">
+              <div class="note-help">New names will be saved and repopulated in the dropdown next time.</div>
+            </div>
+
+            <div>
+              <label for="noteDate">Date</label>
+              <input id="noteDate" type="date" required>
+            </div>
+
+            <div>
+              <label for="noteTime">Time</label>
+              <input id="noteTime" type="time" required>
+            </div>
+
+            <div class="full">
+              <label for="noteText">Note</label>
+              <textarea id="noteText" placeholder="Enter note details here..." required></textarea>
+            </div>
+          </div>
+
+          <div class="note-actions">
+            <button class="btn btn-green" type="button" onclick="saveDemoNote('max')">Add Note</button>
+          </div>
+        </div>
+
+        <div id="notesList">
+          <div class="grid-2">
+            <div class="note-box">
+              <h4>Ericka — 2026-04-12 at 09:10 AM</h4>
+              <p>Encompass wants faster communication after evaluation visits and more family-facing materials.</p>
+            </div>
+            <div class="note-box">
+              <h4>Ericka — 2026-04-11 at 01:15 PM</h4>
+              <p>Baylor case managers are responsive. Need same-day referral acknowledgment.</p>
+            </div>
+            <div class="note-box">
+              <h4>Ericka — 2026-04-10 at 03:45 PM</h4>
+              <p>North Park referral stream cooled. Need value-based reintroduction and stronger visibility.</p>
+            </div>
+            <div class="note-box">
+              <h4>Ericka — 2026-04-09 at 04:50 PM</h4>
+              <p>Henry P. admitted this week. Source attributed to Lewisville Rehab follow-up campaign.</p>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
+
   <script>
-    function formatTimeTo12Hour(time24) { if (!time24) return ""; const [hourStr, minute] = time24.split(":"); let hour = parseInt(hourStr, 10); const ampm = hour >= 12 ? "PM" : "AM"; hour = hour % 12 || 12; return `${hour}:${minute} ${ampm}`; }
-    function pillForStatus(status) { if (status === "Inquiry") return '<span class="pill pill-blue">Inquiry</span>'; if (status === "Pending Admission") return '<span class="pill pill-yellow">Pending Admission</span>'; if (status === "Lost") return '<span class="pill pill-red">Lost</span>'; return '<span class="pill pill-green">Admitted</span>'; }
-    function pillForRefStatus(status) { return status === "Red" ? '<span class="pill pill-red">Red</span>' : '<span class="pill pill-green">Green</span>'; }
-    function getSavedArray(key, defaults=[]) { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : defaults; }
-    function setSavedArray(key, arr) { localStorage.setItem(key, JSON.stringify(arr)); }
-    function populateSelect(selectId, values) { const select = document.getElementById(selectId); if (!select) return; select.innerHTML = ""; values.forEach(v => { const opt = document.createElement("option"); opt.value = v; opt.textContent = v; select.appendChild(opt); }); if (values.length) select.value = values[0]; }
-    function initializeProspectDropdowns(crmKey) { const sourcesKey = `crmReferralSources_${crmKey}`; const marketersKey = `crmAssignedMarketers_${crmKey}`; const sources = getSavedArray(sourcesKey, ["North Dallas Rehab", "Baylor", "Physician Office", "Encompass"]); const marketers = getSavedArray(marketersKey, ["Ericka"]); setSavedArray(sourcesKey, sources); setSavedArray(marketersKey, marketers); populateSelect("prospectReferralSourceSelect", sources); populateSelect("prospectAssignedMarketerSelect", marketers); }
-    function saveProspect(crmKey) { const name = document.getElementById("prospectName").value.trim(); const status = document.getElementById("prospectStatus").value; const newSource = document.getElementById("newReferralSourceInput").value.trim(); const newMarketer = document.getElementById("newAssignedMarketerInput").value.trim(); const refStatus = document.getElementById("refStatusSelect").value; const nextStep = document.getElementById("prospectNextStep").value.trim(); const sourcesKey = `crmReferralSources_${crmKey}`; const marketersKey = `crmAssignedMarketers_${crmKey}`; let sources = getSavedArray(sourcesKey, ["North Dallas Rehab", "Baylor", "Physician Office", "Encompass"]); let marketers = getSavedArray(marketersKey, ["Ericka"]); if (newSource && !sources.includes(newSource)) sources.push(newSource); if (newMarketer && !marketers.includes(newMarketer)) marketers.push(newMarketer); setSavedArray(sourcesKey, sources); setSavedArray(marketersKey, marketers); initializeProspectDropdowns(crmKey); const source = newSource || document.getElementById("prospectReferralSourceSelect").value; const marketer = newMarketer || document.getElementById("prospectAssignedMarketerSelect").value; if (!name || !status || !source || !marketer || !nextStep) { alert("Prospect name, status, referral source, assigned marketer, and next step are required."); return; } const tbody = document.getElementById("prospectsTableBody"); const row = document.createElement("tr"); row.innerHTML = `<td>${name}</td><td>${pillForStatus(status)}</td><td>${source}</td><td>${pillForRefStatus(refStatus)}</td><td>${marketer}</td><td>${nextStep}</td>`; tbody.prepend(row); document.getElementById("prospectName").value = ""; document.getElementById("newReferralSourceInput").value = ""; document.getElementById("newAssignedMarketerInput").value = ""; document.getElementById("prospectNextStep").value = ""; }
-    function loadSavedNames(crmKey) { const select = document.getElementById("noteNameSelect"); if (!select) return; const saved = JSON.parse(localStorage.getItem(`crmNoteNames_${crmKey}`) || "[]"); select.innerHTML = '<option value="">Select a saved name</option>'; saved.forEach(name => { const option = document.createElement("option"); option.value = name; option.textContent = name; select.appendChild(option); }); }
-    function saveNameIfNeeded(crmKey, name) { if (!name) return; const saved = JSON.parse(localStorage.getItem(`crmNoteNames_${crmKey}`) || "[]"); if (!saved.includes(name)) { saved.push(name); localStorage.setItem(`crmNoteNames_${crmKey}`, JSON.stringify(saved)); } }
-    function saveDemoNote(crmKey) { const select = document.getElementById("noteNameSelect"); const newNameInput = document.getElementById("noteNewName"); const dateInput = document.getElementById("noteDate"); const timeInput = document.getElementById("noteTime"); const nextStepInput = document.getElementById("noteNextStep"); const textInput = document.getElementById("noteText"); const notesList = document.getElementById("notesList"); const selectedName = select ? select.value.trim() : ""; const newName = newNameInput ? newNameInput.value.trim() : ""; const finalName = newName || selectedName; const dateValue = dateInput ? dateInput.value : ""; const timeValue = timeInput ? timeInput.value : ""; const nextStepValue = nextStepInput ? nextStepInput.value : ""; const noteValue = textInput ? textInput.value.trim() : ""; if (!finalName || !dateValue || !timeValue || !nextStepValue || !noteValue) { alert("Name, date, time, next step, and note are required for every note."); return; } saveNameIfNeeded(crmKey, finalName); loadSavedNames(crmKey); const wrapper = notesList.querySelector(".grid-2") || notesList; const noteBox = document.createElement("div"); noteBox.className = "note-box"; noteBox.innerHTML = `<h4>${finalName} — ${dateValue} at ${formatTimeTo12Hour(timeValue)}</h4><p><strong>Next Step:</strong> ${nextStepValue}</p><p>${noteValue}</p>`; wrapper.prepend(noteBox); if (newNameInput) newNameInput.value = ""; if (select) select.value = finalName; if (dateInput) dateInput.value = ""; if (timeInput) timeInput.value = ""; if (textInput) textInput.value = ""; }
-    (function initDemo() { loadSavedNames("pro"); initializeProspectDropdowns("pro"); })();
+    function formatTimeTo12Hour(time24) {
+      if (!time24) return "";
+      const [hourStr, minute] = time24.split(":");
+      let hour = parseInt(hourStr, 10);
+      const ampm = hour >= 12 ? "PM" : "AM";
+      hour = hour % 12 || 12;
+      return `${hour}:${minute} ${ampm}`;
+    }
+
+    function loadSavedNames(crmKey) {
+      const select = document.getElementById("noteNameSelect");
+      if (!select) return;
+      const saved = JSON.parse(localStorage.getItem(`crmNoteNames_${crmKey}`) || "[]");
+      select.innerHTML = '<option value="">Select a saved name</option>';
+      saved.forEach(name => {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        select.appendChild(option);
+      });
+    }
+
+    function saveNameIfNeeded(crmKey, name) {
+      if (!name) return;
+      const saved = JSON.parse(localStorage.getItem(`crmNoteNames_${crmKey}`) || "[]");
+      if (!saved.includes(name)) {
+        saved.push(name);
+        localStorage.setItem(`crmNoteNames_${crmKey}`, JSON.stringify(saved));
+      }
+    }
+
+    function saveDemoNote(crmKey) {
+      const select = document.getElementById("noteNameSelect");
+      const newNameInput = document.getElementById("noteNewName");
+      const dateInput = document.getElementById("noteDate");
+      const timeInput = document.getElementById("noteTime");
+      const textInput = document.getElementById("noteText");
+      const notesList = document.getElementById("notesList");
+
+      const selectedName = select ? select.value.trim() : "";
+      const newName = newNameInput ? newNameInput.value.trim() : "";
+      const finalName = newName || selectedName;
+      const dateValue = dateInput ? dateInput.value : "";
+      const timeValue = timeInput ? timeInput.value : "";
+      const noteValue = textInput ? textInput.value.trim() : "";
+
+      if (!finalName || !dateValue || !timeValue || !noteValue) {
+        alert("Name, date, time, and note are required for every note.");
+        return;
+      }
+
+      saveNameIfNeeded(crmKey, finalName);
+      loadSavedNames(crmKey);
+
+      const wrapper = notesList.querySelector(".grid-2") || notesList;
+      const noteBox = document.createElement("div");
+      noteBox.className = "note-box";
+      noteBox.innerHTML = `
+        <h4>${finalName} — ${dateValue} at ${formatTimeTo12Hour(timeValue)}</h4>
+        <p>${noteValue}</p>
+      `;
+      wrapper.prepend(noteBox);
+
+      if (newNameInput) newNameInput.value = "";
+      if (select) select.value = finalName;
+      if (dateInput) dateInput.value = "";
+      if (timeInput) timeInput.value = "";
+      if (textInput) textInput.value = "";
+    }
+
+    (function initDemoNotes() {
+      loadSavedNames("max");
+    })();
   </script>
 </body>
 </html>
