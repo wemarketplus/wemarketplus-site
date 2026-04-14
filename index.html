@@ -1,53 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>We Market Plus CRM</title>
+<script>
+const API_BASE = "https://hospicelink-crm.onrender.com";
 
-  <style>
-    body {
-      font-family: Arial;
-      text-align: center;
-      padding: 60px;
-      background: #f4f6f9;
-    }
+function saveToken(token) {
+  localStorage.setItem("token", token);
+}
 
-    h1 {
-      font-size: 40px;
-    }
+function getToken() {
+  return localStorage.getItem("token");
+}
 
-    .btn {
-      display: inline-block;
-      padding: 15px 25px;
-      margin: 10px;
-      background: #4f46e5;
-      color: white;
-      text-decoration: none;
-      border-radius: 10px;
-      font-size: 18px;
-    }
-
-    .btn:hover {
-      background: #3730a3;
-    }
-  </style>
-</head>
-
-<body>
-
-  <h1>We Market Plus CRM</h1>
-  <p>Login to access your HospiceLink dashboards</p>
-
-  <br><br>
-
-  <a href="login.html" class="btn">Login</a>
-
-  <br><br>
-
-  <h3>Demo Dashboards</h3>
-
-  <a href="demo-pro.html" class="btn">Pro Dashboard</a>
-  <a href="demo-gold.html" class="btn">Gold Dashboard</a>
-  <a href="demo-max.html" class="btn">Max Dashboard</a>
-
-</body>
-</html>
+function authHeaders() {
+  return {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + getToken()
+  };
+}
+</script>
