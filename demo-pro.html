@@ -15,7 +15,7 @@
     html{scroll-behavior:smooth}
     body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
     .layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
-    .sidebar{background:#071120;border-right:1px solid var(--line);padding:24px 18px;position:sticky;top:0;height:100vh}
+    .sidebar{background:#071120;border-right:1px solid var(--line);padding:24px 18px;position:sticky;top:0;height:100vh;overflow-y:auto}
     .brand h1{font-size:20px;margin:0 0 6px}
     .brand p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
     .nav{display:grid;gap:10px;margin-top:24px}
@@ -28,6 +28,7 @@
     .btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:999px;padding:12px 18px;font-weight:800;text-decoration:none;cursor:pointer}
     .btn-blue{background:var(--blue);color:#081426}
     .btn-green{background:var(--green);color:#081426}
+    .btn-red{background:#e05555;color:#fff}
     .btn-small{padding:8px 12px;font-size:13px}
     .hero,.section{background:linear-gradient(180deg,#0f1f39,#0b1730);border:1px solid var(--line);border-radius:22px;padding:24px;margin-bottom:22px}
     .section{background:var(--panel2);padding:22px}
@@ -41,7 +42,7 @@
     .form-grid{grid-template-columns:repeat(4,1fr)}
     .kpi{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}
     .kpi span{display:block;color:var(--muted);font-size:14px;margin-bottom:10px}
-    .kpi strong{font-size:38px;line-height:1}
+    .kpi strong{font-size:32px;line-height:1}
     .card,.box,.form-wrap{background:#fff;color:#111;border-radius:20px;padding:20px}
     .card h4,.box h4{margin:0 0 10px}
     .card p,.box p{margin:0;line-height:1.6}
@@ -66,10 +67,14 @@
     .lead{background:#fff;color:#111;border-radius:14px;padding:12px;margin-bottom:12px}
     .lead:last-child{margin-bottom:0}
     .footer-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+    .dashboard-totals{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+    .dash-stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center}
+    .dash-stat span{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
+    .dash-stat strong{font-size:26px}
     @media (max-width:1100px){
       .layout{grid-template-columns:1fr}
       .sidebar{position:relative;height:auto}
-      .kpis,.grid-3,.grid-2,.form-grid,.pipeline{grid-template-columns:1fr}
+      .kpis,.grid-3,.grid-2,.form-grid,.pipeline,.dashboard-totals{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -106,14 +111,28 @@
         <p>Includes prospects intake, referral source management, pipeline visibility, and required notes with next-step tracking.</p>
       </section>
 
-      <section class="kpis">
-        <div class="kpi"><span>New Prospects</span><strong>24</strong></div>
-        <div class="kpi"><span>Referral Sources</span><strong>18</strong></div>
-        <div class="kpi"><span>Pending Follow-Ups</span><strong>8</strong></div>
-        <div class="kpi"><span>Admissions</span><strong>6</strong></div>
-        <div class="kpi"><span>Facility Visits</span><strong>11</strong></div>
+      <!-- DASHBOARD KPIs -->
+      <section class="kpis" id="kpi-row">
+        <div class="kpi"><span>New Prospects</span><strong id="kpiProspects">0</strong></div>
+        <div class="kpi"><span>Referral Sources</span><strong id="kpiReferrals">0</strong></div>
+        <div class="kpi"><span>Pending Follow-Ups</span><strong id="kpiPending">0</strong></div>
+        <div class="kpi"><span>Admissions</span><strong id="kpiAdmissions">0</strong></div>
+        <div class="kpi"><span>Notes Logged</span><strong id="kpiNotes">0</strong></div>
       </section>
 
+      <!-- DASHBOARD TOTALS BY STATUS / REFERRAL COLOR -->
+      <div class="dashboard-totals" id="dashTotals">
+        <div class="dash-stat"><span>Inquiry</span><strong id="dtInquiry">0</strong></div>
+        <div class="dash-stat"><span>Pending Admission</span><strong id="dtPending">0</strong></div>
+        <div class="dash-stat"><span>Admitted</span><strong id="dtAdmitted">0</strong></div>
+        <div class="dash-stat"><span>Lost</span><strong id="dtLost">0</strong></div>
+        <div class="dash-stat"><span>🟢 Green Referral Sources</span><strong id="dtGreenRef">0</strong></div>
+        <div class="dash-stat"><span>🔴 Red Referral Sources</span><strong id="dtRedRef">0</strong></div>
+        <div class="dash-stat"><span>Pipeline Total</span><strong id="dtPipeline">0</strong></div>
+        <div class="dash-stat"><span>Family Notes</span><strong id="dtNotes">0</strong></div>
+      </div>
+
+      <!-- PROSPECTS -->
       <section class="section" id="prospects">
         <h3>Prospects</h3>
         <div class="form-wrap">
@@ -134,16 +153,25 @@
             <div class="field">
               <label for="prospectReferralSourceSelect">Referral Source</label>
               <select id="prospectReferralSourceSelect"></select>
-              <div class="hint">Select a saved referral business name or add one under Referral Sources.</div>
+              <div class="hint">Select a saved referral business name or add one under Referral Sources tab.</div>
             </div>
             <div class="field">
               <label for="prospectAssignedMarketerSelect">Assigned Marketer</label>
               <select id="prospectAssignedMarketerSelect"></select>
-              <div class="hint">Select a saved marketer name or type one below.</div>
             </div>
             <div class="field">
-              <label for="newAssignedMarketerInput">Add Assigned Marketer</label>
-              <input id="newAssignedMarketerInput" type="text" placeholder="Enter marketer name">
+              <label for="newAssignedMarketerInput">Add New Marketer Name</label>
+              <input id="newAssignedMarketerInput" type="text" placeholder="Enter marketer name to add">
+            </div>
+            <div class="field">
+              <label for="prospectPosition">Position</label>
+              <select id="prospectPosition">
+                <option value="">-- Select Position --</option>
+                <option>Nurse</option>
+                <option>Caregiver</option>
+                <option>Marketer</option>
+                <option>Other</option>
+              </select>
             </div>
             <div class="field">
               <label for="prospectRefStatus">Ref Status</label>
@@ -159,6 +187,7 @@
           </div>
           <div class="mini-actions">
             <button class="btn btn-green" type="button" onclick="saveProspect()">Add Prospect</button>
+            <button class="btn btn-red" type="button" onclick="deleteSelectedProspect()">Delete Prospect</button>
           </div>
         </div>
 
@@ -166,22 +195,43 @@
           <table>
             <thead>
               <tr>
+                <th>Select</th>
                 <th>Prospect</th>
                 <th>Status</th>
                 <th>Referral Source</th>
                 <th>Ref Status</th>
                 <th>Assigned Marketer</th>
+                <th>Position</th>
                 <th>Next Step</th>
               </tr>
             </thead>
             <tbody id="prospectTableBody">
-              <tr><td>Mary J.</td><td><span class="pill pill-blue">Inquiry</span></td><td>North Dallas Rehab</td><td><span class="pill pill-green">Green</span></td><td>Ericka</td><td>Call family to schedule consult</td></tr>
-              <tr><td>John T.</td><td><span class="pill pill-yellow">Pending Admission</span></td><td>Baylor</td><td><span class="pill pill-green">Green</span></td><td>Ericka</td><td>Collect signed admission packet</td></tr>
+              <tr>
+                <td><input type="radio" name="selectedProspect" value="Mary J."></td>
+                <td>Mary J.</td>
+                <td><span class="pill pill-blue">Inquiry</span></td>
+                <td>North Dallas Rehab</td>
+                <td><span class="pill pill-green">Green</span></td>
+                <td>Ericka</td>
+                <td>Marketer</td>
+                <td>Call family to schedule consult</td>
+              </tr>
+              <tr>
+                <td><input type="radio" name="selectedProspect" value="John T."></td>
+                <td>John T.</td>
+                <td><span class="pill pill-yellow">Pending Admission</span></td>
+                <td>Baylor</td>
+                <td><span class="pill pill-green">Green</span></td>
+                <td>Ericka</td>
+                <td>Marketer</td>
+                <td>Collect signed admission packet</td>
+              </tr>
             </tbody>
           </table>
         </div>
       </section>
 
+      <!-- REFERRAL SOURCES (Add/Delete here only) -->
       <section class="section" id="referrals">
         <h3>Referral Sources</h3>
         <div class="form-wrap">
@@ -200,7 +250,7 @@
           </div>
           <div class="mini-actions">
             <button class="btn btn-green" type="button" onclick="addReferralSource()">Add Referral Source</button>
-            <button class="btn btn-blue" type="button" onclick="deleteSelectedReferralSource()">Delete Selected Referral Source</button>
+            <button class="btn btn-red" type="button" onclick="deleteSelectedReferralSource()">Delete Selected Referral Source</button>
           </div>
         </div>
 
@@ -213,38 +263,44 @@
                 <th>Ref Status</th>
               </tr>
             </thead>
-            <tbody id="referralTableBody">
-              <tr><td><input type="radio" name="selectedReferral" value="North Dallas Rehab"></td><td>North Dallas Rehab</td><td><span class="pill pill-green">Green</span></td></tr>
-              <tr><td><input type="radio" name="selectedReferral" value="Baylor"></td><td>Baylor</td><td><span class="pill pill-green">Green</span></td></tr>
-              <tr><td><input type="radio" name="selectedReferral" value="Physician Office"></td><td>Physician Office</td><td><span class="pill pill-red">Red</span></td></tr>
-            </tbody>
+            <tbody id="referralTableBody"></tbody>
           </table>
         </div>
       </section>
 
+      <!-- PIPELINE -->
       <section class="section" id="pipeline">
         <h3>Pipeline</h3>
-        <div class="pipeline">
+        <div class="pipeline" id="pipelineBoard">
           <div class="stage">
             <h4>Inquiry</h4>
-            <div class="lead"><strong>Mary J.</strong><div>Source: North Dallas Rehab</div></div>
-            <div class="lead"><strong>Kevin R.</strong><div>Source: Hospital CM</div></div>
+            <div id="pipeInquiry">
+              <div class="lead"><strong>Mary J.</strong><div>Source: North Dallas Rehab</div></div>
+              <div class="lead"><strong>Kevin R.</strong><div>Source: Hospital CM</div></div>
+            </div>
           </div>
           <div class="stage">
             <h4>Pending Admission</h4>
-            <div class="lead"><strong>John T.</strong><div>Waiting on signatures</div></div>
+            <div id="pipePending">
+              <div class="lead"><strong>John T.</strong><div>Waiting on signatures</div></div>
+            </div>
           </div>
           <div class="stage">
             <h4>Admitted</h4>
-            <div class="lead"><strong>Robert H.</strong><div>Admitted this week</div></div>
+            <div id="pipeAdmitted">
+              <div class="lead"><strong>Robert H.</strong><div>Admitted this week</div></div>
+            </div>
           </div>
           <div class="stage">
             <h4>Lost</h4>
-            <div class="lead"><strong>Lisa W.</strong><div>Lost to competitor</div></div>
+            <div id="pipeLost">
+              <div class="lead"><strong>Lisa W.</strong><div>Lost to competitor</div></div>
+            </div>
           </div>
         </div>
       </section>
 
+      <!-- NOTES -->
       <section class="section" id="notes">
         <h3>Notes</h3>
         <div class="form-wrap">
@@ -259,6 +315,16 @@
             <div class="field">
               <label for="noteNewName">First Time? Add Name</label>
               <input id="noteNewName" type="text" placeholder="Enter your name">
+            </div>
+            <div class="field">
+              <label for="notePosition">Position</label>
+              <select id="notePosition">
+                <option value="">-- Select Position --</option>
+                <option>Nurse</option>
+                <option>Caregiver</option>
+                <option>Marketer</option>
+                <option>Other</option>
+              </select>
             </div>
             <div class="field">
               <label for="noteDate">Date</label>
@@ -297,6 +363,7 @@
         <div class="grid-2" id="notesList" style="margin-top:18px;">
           <div class="box">
             <h4>Ericka — 2026-04-12 at 09:15 AM</h4>
+            <p><strong>Position:</strong> Marketer</p>
             <p><strong>Next Step:</strong> Immediate Family Outreach (Call/Text)</p>
             <p>Met with DON. They want quicker response time updates and stronger family communication.</p>
           </div>
@@ -306,83 +373,96 @@
   </div>
 
   <script>
-    const PRO_REFERRAL_KEY = "pro_referrals_v1";
-    const PRO_MARKETER_KEY = "pro_marketers_v1";
-    const PRO_NOTE_NAMES_KEY = "pro_note_names_v1";
+    const PRO_REFERRAL_KEY   = "pro_referrals_v2";
+    const PRO_MARKETER_KEY   = "pro_marketers_v2";
+    const PRO_NOTE_NAMES_KEY = "pro_note_names_v2";
+    const PRO_PROSPECTS_KEY  = "pro_prospects_v2";
+    const PRO_NOTES_KEY      = "pro_notes_count_v2";
 
+    /* ── helpers ── */
     function getStore(key, fallback) {
-      const raw = localStorage.getItem(key);
-      return raw ? JSON.parse(raw) : fallback;
+      try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; }
+      catch(e){ return fallback; }
     }
-
     function setStore(key, value) {
-      localStorage.setItem(key, JSON.stringify(value));
+      try { localStorage.setItem(key, JSON.stringify(value)); } catch(e){}
     }
 
-    function loadReferralSources() {
-      const refs = getStore(PRO_REFERRAL_KEY, [
+    /* ── dashboard update ── */
+    function updateDashboard() {
+      const refs      = getStore(PRO_REFERRAL_KEY, getDefaultRefs());
+      const prospects = getStore(PRO_PROSPECTS_KEY, getDefaultProspects());
+      const notesCount = getStore(PRO_NOTES_KEY, 1);
+
+      const greenRefs = refs.filter(r => r.status === "Green").length;
+      const redRefs   = refs.filter(r => r.status === "Red").length;
+      const inquiry   = prospects.filter(p => p.status === "Inquiry").length;
+      const pending   = prospects.filter(p => p.status === "Pending Admission").length;
+      const admitted  = prospects.filter(p => p.status === "Admitted").length;
+      const lost      = prospects.filter(p => p.status === "Lost").length;
+
+      document.getElementById("kpiProspects").textContent  = prospects.length;
+      document.getElementById("kpiReferrals").textContent  = refs.length;
+      document.getElementById("kpiPending").textContent    = pending;
+      document.getElementById("kpiAdmissions").textContent = admitted;
+      document.getElementById("kpiNotes").textContent      = notesCount;
+
+      document.getElementById("dtInquiry").textContent  = inquiry;
+      document.getElementById("dtPending").textContent  = pending;
+      document.getElementById("dtAdmitted").textContent = admitted;
+      document.getElementById("dtLost").textContent     = lost;
+      document.getElementById("dtGreenRef").textContent = greenRefs;
+      document.getElementById("dtRedRef").textContent   = redRefs;
+      document.getElementById("dtPipeline").textContent = prospects.length;
+      document.getElementById("dtNotes").textContent    = notesCount;
+    }
+
+    /* ── default data ── */
+    function getDefaultRefs() {
+      return [
         { name: "North Dallas Rehab", status: "Green" },
         { name: "Baylor", status: "Green" },
         { name: "Physician Office", status: "Red" }
-      ]);
+      ];
+    }
+    function getDefaultProspects() {
+      return [
+        { name: "Mary J.", status: "Inquiry", source: "North Dallas Rehab", refStatus: "Green", marketer: "Ericka", position: "Marketer", nextStep: "Call family to schedule consult" },
+        { name: "John T.", status: "Pending Admission", source: "Baylor", refStatus: "Green", marketer: "Ericka", position: "Marketer", nextStep: "Collect signed admission packet" }
+      ];
+    }
+
+    /* ── referral sources ── */
+    function loadReferralSources() {
+      const refs = getStore(PRO_REFERRAL_KEY, getDefaultRefs());
       setStore(PRO_REFERRAL_KEY, refs);
 
       const select = document.getElementById("prospectReferralSourceSelect");
-      const table = document.getElementById("referralTableBody");
+      const table  = document.getElementById("referralTableBody");
 
       select.innerHTML = "";
-      table.innerHTML = "";
+      table.innerHTML  = "";
 
       refs.forEach(ref => {
         const opt = document.createElement("option");
-        opt.value = ref.name;
-        opt.textContent = ref.name;
+        opt.value = ref.name; opt.textContent = ref.name;
         select.appendChild(opt);
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td><input type="radio" name="selectedReferral" value="${ref.name}"></td>
           <td>${ref.name}</td>
-          <td><span class="pill ${ref.status === 'Green' ? 'pill-green' : 'pill-red'}">${ref.status}</span></td>
-        `;
+          <td><span class="pill ${ref.status === 'Green' ? 'pill-green' : 'pill-red'}">${ref.status}</span></td>`;
         table.appendChild(tr);
       });
-    }
-
-    function loadMarketers() {
-      const marketers = getStore(PRO_MARKETER_KEY, ["Ericka"]);
-      setStore(PRO_MARKETER_KEY, marketers);
-      const select = document.getElementById("prospectAssignedMarketerSelect");
-      select.innerHTML = "";
-      marketers.forEach(name => {
-        const opt = document.createElement("option");
-        opt.value = name;
-        opt.textContent = name;
-        select.appendChild(opt);
-      });
-    }
-
-    function loadNoteNames() {
-      const names = getStore(PRO_NOTE_NAMES_KEY, ["Ericka"]);
-      setStore(PRO_NOTE_NAMES_KEY, names);
-      const select = document.getElementById("noteNameSelect");
-      select.innerHTML = '<option value="">Select a saved name</option>';
-      names.forEach(name => {
-        const opt = document.createElement("option");
-        opt.value = name;
-        opt.textContent = name;
-        select.appendChild(opt);
-      });
+      updateDashboard();
     }
 
     function addReferralSource() {
-      const name = document.getElementById("referralNameInput").value.trim();
+      const name   = document.getElementById("referralNameInput").value.trim();
       const status = document.getElementById("referralStatusInput").value;
-      if (!name) {
-        alert("Referral business name is required.");
-        return;
-      }
-      const refs = getStore(PRO_REFERRAL_KEY, []);
+      if (!name) { alert("Referral business name is required."); return; }
+      const refs = getStore(PRO_REFERRAL_KEY, getDefaultRefs());
       if (!refs.find(r => r.name.toLowerCase() === name.toLowerCase())) {
         refs.push({ name, status });
         setStore(PRO_REFERRAL_KEY, refs);
@@ -393,92 +473,139 @@
 
     function deleteSelectedReferralSource() {
       const selected = document.querySelector('input[name="selectedReferral"]:checked');
-      if (!selected) {
-        alert("Select a referral source to delete.");
-        return;
-      }
-      const refs = getStore(PRO_REFERRAL_KEY, []);
+      if (!selected) { alert("Select a referral source to delete."); return; }
+      const refs    = getStore(PRO_REFERRAL_KEY, getDefaultRefs());
       const updated = refs.filter(r => r.name !== selected.value);
       setStore(PRO_REFERRAL_KEY, updated);
       loadReferralSources();
     }
 
+    /* ── marketers ── */
+    function loadMarketers() {
+      const marketers = getStore(PRO_MARKETER_KEY, ["Ericka"]);
+      setStore(PRO_MARKETER_KEY, marketers);
+      const select = document.getElementById("prospectAssignedMarketerSelect");
+      select.innerHTML = "";
+      marketers.forEach(name => {
+        const opt = document.createElement("option");
+        opt.value = name; opt.textContent = name;
+        select.appendChild(opt);
+      });
+    }
+
+    /* ── note names ── */
+    function loadNoteNames() {
+      const names = getStore(PRO_NOTE_NAMES_KEY, ["Ericka"]);
+      setStore(PRO_NOTE_NAMES_KEY, names);
+      const select = document.getElementById("noteNameSelect");
+      select.innerHTML = '<option value="">Select a saved name</option>';
+      names.forEach(name => {
+        const opt = document.createElement("option");
+        opt.value = name; opt.textContent = name;
+        select.appendChild(opt);
+      });
+    }
+
+    /* ── prospect table render ── */
+    function renderProspectsTable() {
+      const prospects = getStore(PRO_PROSPECTS_KEY, getDefaultProspects());
+      const tbody = document.getElementById("prospectTableBody");
+      tbody.innerHTML = "";
+      prospects.forEach(p => {
+        const statusClass = p.status === "Inquiry" ? "pill-blue" : p.status === "Pending Admission" ? "pill-yellow" : p.status === "Lost" ? "pill-red" : "pill-green";
+        const refClass    = p.refStatus === "Green" ? "pill-green" : "pill-red";
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><input type="radio" name="selectedProspect" value="${p.name}"></td>
+          <td>${p.name}</td>
+          <td><span class="pill ${statusClass}">${p.status}</span></td>
+          <td>${p.source}</td>
+          <td><span class="pill ${refClass}">${p.refStatus}</span></td>
+          <td>${p.marketer}</td>
+          <td>${p.position || ""}</td>
+          <td>${p.nextStep}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    /* ── add prospect ── */
     function saveProspect() {
-      const name = document.getElementById("prospectName").value.trim();
-      const status = document.getElementById("prospectStatus").value;
-      const source = document.getElementById("prospectReferralSourceSelect").value;
-      const newMarketer = document.getElementById("newAssignedMarketerInput").value.trim();
-      const marketerSelect = document.getElementById("prospectAssignedMarketerSelect");
-      const marketer = newMarketer || marketerSelect.value;
-      const refStatus = document.getElementById("prospectRefStatus").value;
-      const nextStep = document.getElementById("prospectNextStep").value.trim();
+      const name       = document.getElementById("prospectName").value.trim();
+      const status     = document.getElementById("prospectStatus").value;
+      const source     = document.getElementById("prospectReferralSourceSelect").value;
+      const newMarketer= document.getElementById("newAssignedMarketerInput").value.trim();
+      const marketer   = newMarketer || document.getElementById("prospectAssignedMarketerSelect").value;
+      const position   = document.getElementById("prospectPosition").value;
+      const refStatus  = document.getElementById("prospectRefStatus").value;
+      const nextStep   = document.getElementById("prospectNextStep").value.trim();
 
       if (!name || !status || !source || !marketer || !nextStep) {
-        alert("Prospect Name, Status, Referral Source, Assigned Marketer, Ref Status, and Next Step Summary are required.");
+        alert("Prospect Name, Status, Referral Source, Assigned Marketer, and Next Step are required.");
         return;
       }
-
       if (newMarketer) {
         const marketers = getStore(PRO_MARKETER_KEY, ["Ericka"]);
-        if (!marketers.includes(newMarketer)) {
-          marketers.push(newMarketer);
-          setStore(PRO_MARKETER_KEY, marketers);
-          loadMarketers();
-        }
+        if (!marketers.includes(newMarketer)) { marketers.push(newMarketer); setStore(PRO_MARKETER_KEY, marketers); loadMarketers(); }
       }
 
-      const row = document.createElement("tr");
-      const statusClass = status === "Inquiry" ? "pill-blue" : status === "Pending Admission" ? "pill-yellow" : status === "Lost" ? "pill-red" : "pill-green";
-      const refClass = refStatus === "Green" ? "pill-green" : "pill-red";
-      row.innerHTML = `
-        <td>${name}</td>
-        <td><span class="pill ${statusClass}">${status}</span></td>
-        <td>${source}</td>
-        <td><span class="pill ${refClass}">${refStatus}</span></td>
-        <td>${marketer}</td>
-        <td>${nextStep}</td>
-      `;
-      document.getElementById("prospectTableBody").prepend(row);
+      const prospects = getStore(PRO_PROSPECTS_KEY, getDefaultProspects());
+      prospects.unshift({ name, status, source, refStatus, marketer, position, nextStep });
+      setStore(PRO_PROSPECTS_KEY, prospects);
+      renderProspectsTable();
+      updateDashboard();
 
       document.getElementById("prospectName").value = "";
       document.getElementById("newAssignedMarketerInput").value = "";
       document.getElementById("prospectNextStep").value = "";
     }
 
+    /* ── delete prospect ── */
+    function deleteSelectedProspect() {
+      const selected = document.querySelector('input[name="selectedProspect"]:checked');
+      if (!selected) { alert("Select a prospect to delete."); return; }
+      const prospects = getStore(PRO_PROSPECTS_KEY, getDefaultProspects());
+      const updated   = prospects.filter(p => p.name !== selected.value);
+      setStore(PRO_PROSPECTS_KEY, updated);
+      renderProspectsTable();
+      updateDashboard();
+    }
+
+    /* ── add note ── */
     function saveNote() {
       const selectedName = document.getElementById("noteNameSelect").value.trim();
-      const newName = document.getElementById("noteNewName").value.trim();
-      const finalName = newName || selectedName;
-      const date = document.getElementById("noteDate").value;
-      const time = document.getElementById("noteTime").value;
-      const nextStep = document.getElementById("noteNextStep").value;
-      const note = document.getElementById("noteText").value.trim();
+      const newName      = document.getElementById("noteNewName").value.trim();
+      const finalName    = newName || selectedName;
+      const position     = document.getElementById("notePosition").value;
+      const date         = document.getElementById("noteDate").value;
+      const time         = document.getElementById("noteTime").value;
+      const nextStep     = document.getElementById("noteNextStep").value;
+      const note         = document.getElementById("noteText").value.trim();
 
-      if (!finalName || !date || !time || !nextStep || !note) {
-        alert("Name, Date, Time, Next Step, and Note are required.");
+      if (!finalName || !position || !date || !time || !nextStep || !note) {
+        alert("Name, Position, Date, Time, Next Step, and Note are all required.");
         return;
       }
 
       const names = getStore(PRO_NOTE_NAMES_KEY, ["Ericka"]);
-      if (!names.includes(finalName)) {
-        names.push(finalName);
-        setStore(PRO_NOTE_NAMES_KEY, names);
-        loadNoteNames();
-      }
+      if (!names.includes(finalName)) { names.push(finalName); setStore(PRO_NOTE_NAMES_KEY, names); loadNoteNames(); }
+
+      const count = getStore(PRO_NOTES_KEY, 1) + 1;
+      setStore(PRO_NOTES_KEY, count);
 
       const box = document.createElement("div");
       box.className = "box";
       box.innerHTML = `
         <h4>${finalName} — ${date} at ${formatTime(time)}</h4>
+        <p><strong>Position:</strong> ${position}</p>
         <p><strong>Next Step:</strong> ${nextStep}</p>
-        <p>${note}</p>
-      `;
+        <p>${note}</p>`;
       document.getElementById("notesList").prepend(box);
 
       document.getElementById("noteNewName").value = "";
-      document.getElementById("noteDate").value = "";
-      document.getElementById("noteTime").value = "";
-      document.getElementById("noteText").value = "";
+      document.getElementById("noteDate").value    = "";
+      document.getElementById("noteTime").value    = "";
+      document.getElementById("noteText").value    = "";
+      updateDashboard();
     }
 
     function formatTime(time24) {
@@ -489,9 +616,12 @@
       return `${hour}:${minute} ${ampm}`;
     }
 
+    /* ── init ── */
     loadReferralSources();
     loadMarketers();
     loadNoteNames();
+    renderProspectsTable();
+    updateDashboard();
   </script>
 </body>
 </html>
