@@ -1,555 +1,811 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HospiceLink Gold Demo</title>
-  <style>
-    :root{--bg:#081426;--panel:#10203a;--panel2:#0d1b31;--line:rgba(255,255,255,.10);--text:#f4f8ff;--muted:#c9d6ea;--blue:#49b6ff;--green:#8cff66;--green-soft:#d8ffe2;--red-soft:#ffd9d9;--red:#8f1f1f;--yellow-soft:#fff3cf;--yellow:#7a5a00;--purple-soft:#efe5ff;--purple:#5b3aa0}
-    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-    .layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
-    .sidebar{background:#071120;border-right:1px solid var(--line);padding:24px 18px;position:sticky;top:0;height:100vh;overflow-y:auto}
-    .brand h1{font-size:20px;margin:0 0 6px}.brand p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
-    .nav{display:grid;gap:10px;margin-top:24px}.nav a{text-decoration:none;color:var(--text);padding:12px 14px;border-radius:12px;border:1px solid transparent;font-weight:700}.nav a.active,.nav a:hover{background:#10203a;border-color:var(--line)}
-    .main{padding:28px 28px 40px}
-    .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:24px}.topbar h2{margin:0;font-size:34px}.topbar p{margin:6px 0 0;color:var(--muted)}
-    .btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:999px;padding:12px 18px;font-weight:800;text-decoration:none;cursor:pointer}
-    .btn-blue{background:var(--blue);color:#081426}.btn-green{background:var(--green);color:#081426}.btn-red{background:#e05555;color:#fff}.btn-small{padding:8px 12px;font-size:13px}
-    .hero,.section{background:linear-gradient(180deg,#0f1f39,#0b1730);border:1px solid var(--line);border-radius:22px;padding:24px;margin-bottom:22px}.section{background:var(--panel2);padding:22px}
-    .hero h3{font-size:46px;margin:0 0 10px;color:var(--green);line-height:1.05}.hero p{margin:0;color:#d9e5f6;font-size:18px;line-height:1.7}.section h3{margin:0 0 16px;font-size:28px}
-    .kpis,.grid-3,.grid-2,.note-form-grid,.form-row{display:grid;gap:16px}
-    .kpis{grid-template-columns:repeat(5,1fr)}.grid-3{grid-template-columns:repeat(3,1fr)}.grid-2{grid-template-columns:repeat(2,1fr)}.form-row{grid-template-columns:repeat(4,1fr)}
-    .kpi{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}.kpi span{display:block;color:var(--muted);font-size:14px;margin-bottom:10px}.kpi strong{font-size:32px;line-height:1}
-    .card,.note-box,.note-form-wrap{background:#fff;color:#111;border-radius:20px;padding:20px}.card h4,.note-box h4{margin:0 0 10px}.card p,.note-box p{margin:0;line-height:1.6}
-    .mini-actions,.card-meta,.note-actions,.footer-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    .pill,.card-tag,.stage-count{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800}
-    .pill-green{background:var(--green-soft);color:#136c32}.pill-red{background:var(--red-soft);color:var(--red)}.pill-yellow{background:var(--yellow-soft);color:var(--yellow)}.pill-blue{background:#dff1ff;color:#0f5c8a}.pill-purple{background:var(--purple-soft);color:var(--purple)}
-    .table-wrap{overflow:auto;border-radius:18px} table{width:100%;border-collapse:collapse;background:#fff;color:#111;border-radius:18px;overflow:hidden} th,td{padding:14px;border-bottom:1px solid #e7edf5;text-align:left;vertical-align:top;font-size:14px} th{background:#f4f8fc;font-size:13px;text-transform:uppercase;letter-spacing:.03em}
-    .field label,.note-form-wrap label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
-    .field input,.field select,.field textarea,.note-form-wrap input,.note-form-wrap select,.note-form-wrap textarea{width:100%;border:1px solid #d7e0ec;border-radius:12px;padding:12px;font:inherit}
-    .field textarea,.note-form-wrap textarea{min-height:110px;resize:vertical}
-    .note-help{color:#5a6678;font-size:13px;margin-top:4px;line-height:1.5}
-    .admin-banner{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
-    .admin-note{margin:0 0 18px;color:var(--muted);font-size:15px;line-height:1.6}
-    .pipeline{display:grid;grid-template-columns:repeat(4,minmax(240px,1fr));gap:18px;align-items:start}
-    .stage{background:linear-gradient(180deg,#10203a,#0c172c);border:1px solid var(--line);border-radius:20px;padding:14px;min-height:320px;box-shadow:0 14px 30px rgba(0,0,0,.18)}
-    .stage-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.08)}
-    .stage-title{display:flex;align-items:center;gap:10px}
-    .stage-dot{width:12px;height:12px;border-radius:999px}.dot-inquiry{background:#6ec5ff}.dot-visit{background:#ffd36e}.dot-pending{background:#ffb36e}.dot-closed{background:#8cff66}
-    .stage h4{margin:0;font-size:17px}.stage-body{display:grid;gap:12px}
-    .lead-card{position:relative;background:#fff;color:#111;border-radius:16px;padding:14px 14px 12px;box-shadow:0 12px 24px rgba(0,0,0,.12);border:1px solid rgba(0,0,0,.06)}
-    .lead-card strong{display:block;margin-bottom:6px;font-size:15px}.lead-card small{color:#444;line-height:1.5;display:block;margin-bottom:8px}
-    .card-tag{background:#eef4fb;color:#36506d;font-size:11px;padding:5px 8px}
-    .dashboard-totals{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
-    .dash-stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center}
-    .dash-stat span{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
-    .dash-stat strong{font-size:26px}
-    .gps-result{background:#f0fff4;border:1px solid #a8e6b8;border-radius:12px;padding:14px;margin-top:12px;color:#0a3d1f;font-size:14px}
-    @media (max-width:1100px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.kpis,.grid-3,.grid-2,.pipeline,.form-row,.note-form-grid,.dashboard-totals{grid-template-columns:1fr}}
-  </style>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>HospiceLink Gold Demo</title>
+<style>
+:root{--bg:#081426;--panel:#10203a;--panel2:#0d1b31;--line:rgba(255,255,255,.10);--text:#f4f8ff;--muted:#c9d6ea;--blue:#49b6ff;--green:#8cff66;--green-soft:#d8ffe2;--red-soft:#ffd9d9;--red:#e05555;--reddark:#8f1f1f;--yellow-soft:#fff3cf;--yellow:#7a5a00;--purple-soft:#efe5ff;--purple:#5b3aa0}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+.layout{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+.sidebar{background:#071120;border-right:1px solid var(--line);padding:20px 14px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand h1{font-size:18px;margin:0 0 4px} .brand p{margin:0;color:var(--muted);font-size:12px}
+.nav{display:grid;gap:7px;margin-top:18px} .nav a{text-decoration:none;color:var(--text);padding:9px 12px;border-radius:10px;border:1px solid transparent;font-weight:700;font-size:12px} .nav a.active,.nav a:hover{background:#10203a;border-color:var(--line)}
+.nav a.admin-link{color:#c9aeff;border-color:rgba(91,58,160,.4)} .nav a.admin-link:hover{background:#1a0f30;border-color:#5b3aa0}
+.main{padding:24px 24px 40px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px} .topbar h2{margin:0;font-size:28px} .topbar p{margin:4px 0 0;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:999px;padding:10px 16px;font-weight:800;text-decoration:none;cursor:pointer;font-size:13px}
+.btn-blue{background:var(--blue);color:#081426} .btn-green{background:var(--green);color:#081426} .btn-red{background:var(--red);color:#fff} .btn-gray{background:#2a3a55;color:var(--text)} .btn-small{padding:6px 11px;font-size:11px}
+.hero,.section{background:linear-gradient(180deg,#0f1f39,#0b1730);border:1px solid var(--line);border-radius:20px;padding:20px;margin-bottom:18px} .section{background:var(--panel2);padding:18px}
+.hero h3{font-size:36px;margin:0 0 8px;color:var(--green);line-height:1.05} .hero p{margin:0;color:#d9e5f6;font-size:15px;line-height:1.6}
+.section h3{margin:0 0 12px;font-size:22px}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:14px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px} .kpi span{display:block;color:var(--muted);font-size:11px;margin-bottom:6px} .kpi strong{font-size:26px;line-height:1}
+.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.dash-stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px;text-align:center} .dash-stat span{display:block;color:var(--muted);font-size:11px;margin-bottom:3px} .dash-stat strong{font-size:20px}
+.card,.note-box,.note-form-wrap{background:#fff;color:#111;border-radius:16px;padding:16px} .card h4,.note-box h4{margin:0 0 8px;font-size:14px} .card p,.note-box p{margin:0;line-height:1.5;font-size:13px}
+.mini-actions,.note-actions,.footer-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.pill,.stage-count{display:inline-block;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800}
+.pill-green{background:var(--green-soft);color:#136c32} .pill-red{background:var(--red-soft);color:var(--reddark)} .pill-yellow{background:var(--yellow-soft);color:var(--yellow)} .pill-blue{background:#dff1ff;color:#0f5c8a} .pill-purple{background:var(--purple-soft);color:var(--purple)}
+.hbar-section{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px}
+.hbar-section h4{margin:0 0 14px;font-size:15px;font-weight:800;color:var(--text)}
+.hbar-row{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.hbar-label{width:148px;font-size:11px;color:var(--muted);flex-shrink:0;font-weight:700}
+.hbar-track{flex:1;height:20px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden;position:relative}
+.hbar-fill{height:100%;border-radius:999px;transition:width .5s ease;min-width:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px}
+.hbar-fill span{font-size:10px;font-weight:800;color:#fff}
+.hbar-count{width:32px;text-align:right;font-size:13px;font-weight:900;color:var(--text)}
+.hbar-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.fill-blue{background:linear-gradient(90deg,#2e7fb5,#49b6ff)}
+.fill-yellow{background:linear-gradient(90deg,#b58a00,#ffd36e)}
+.fill-green{background:linear-gradient(90deg,#2d8f00,#8cff66)}
+.fill-red{background:linear-gradient(90deg,#8f1f1f,#e05555)}
+.fill-purple{background:linear-gradient(90deg,#4a2080,#9c6fe8)}
+.fill-teal{background:linear-gradient(90deg,#0d6b6b,#4ecdc4)}
+.fill-orange{background:linear-gradient(90deg,#8f4a00,#ff9f43)}
+.search-bar{width:100%;padding:10px 14px;border:1px solid #d7e0ec;border-radius:12px;font:inherit;font-size:13px;margin-bottom:12px}
+.table-wrap{overflow:auto;border-radius:14px} table{width:100%;border-collapse:collapse;background:#fff;color:#111;border-radius:14px;overflow:hidden} th,td{padding:11px;border-bottom:1px solid #e7edf5;text-align:left;vertical-align:middle;font-size:12px} th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:800}
+.field label,.note-form-wrap label{display:block;font-size:12px;font-weight:700;margin-bottom:4px}
+.field input,.field select,.field textarea,.note-form-wrap input,.note-form-wrap select,.note-form-wrap textarea{width:100%;border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px}
+.field textarea,.note-form-wrap textarea{min-height:90px;resize:vertical} .field.full{grid-column:1/-1}
+.note-help{color:#5a6678;font-size:11px;margin-top:2px}
+.form-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.form-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.pipeline-chart{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:8px}
+.pipe-col{background:linear-gradient(180deg,#10203a,#0c172c);border:1px solid var(--line);border-radius:16px;padding:12px}
+.pipe-col-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.pipe-col-header h4{margin:0;font-size:13px;font-weight:800}
+.pipe-count{background:rgba(255,255,255,.12);border-radius:999px;padding:3px 9px;font-size:11px;font-weight:800}
+.pipe-bar-wrap{height:7px;background:rgba(255,255,255,.1);border-radius:999px;margin-bottom:12px;overflow:hidden}
+.pipe-bar{height:100%;border-radius:999px;transition:width .4s}
+.bar-blue{background:#49b6ff} .bar-yellow{background:#ffd36e} .bar-green{background:#8cff66} .bar-red{background:#e05555}
+.pipe-card{background:#fff;color:#111;border-radius:11px;padding:9px;margin-bottom:7px;font-size:12px} .pipe-card strong{display:block;margin-bottom:2px} .pipe-card small{color:#555}
+.admin-section{background:linear-gradient(180deg,#140820,#0d0520);border:2px solid rgba(91,58,160,.5);border-radius:20px;padding:20px;margin-bottom:18px}
+.admin-banner{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.admin-note{margin:0 0 14px;color:var(--muted);font-size:13px;line-height:1.6}
+.admin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.admin-card{background:rgba(255,255,255,.05);border:1px solid rgba(91,58,160,.3);border-radius:13px;padding:14px;color:var(--text)}
+.admin-card h4{margin:0 0 6px;font-size:13px;color:#c9aeff} .admin-card p{margin:0;font-size:12px;color:var(--muted);line-height:1.5}
+.admin-stat{font-size:26px;font-weight:900;color:#fff;display:block;margin:6px 0 3px}
+.gps-result{background:#f0fff4;border:1px solid #a8e6b8;border-radius:10px;padding:10px;margin-top:8px;color:#0a3d1f;font-size:12px}
+.auto-btn{padding:9px 14px;border-radius:11px;border:2px solid var(--blue);background:transparent;color:var(--text);font-weight:700;cursor:pointer;font-size:12px;transition:all .2s}
+.auto-btn:hover,.auto-btn.fired{background:var(--blue);color:#081426} .auto-btn.fired::after{content:" ✅"}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:1000;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;color:#111;border-radius:20px;padding:22px;width:min(600px,100%);max-height:92vh;overflow-y:auto;position:relative}
+.modal-box h4{margin:0 0 14px;font-size:19px}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px} .modal-grid .full{grid-column:1/-1}
+.modal-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.close-modal{position:absolute;top:13px;right:15px;background:none;border:none;font-size:23px;cursor:pointer;color:#555;line-height:1}
+@media(max-width:1100px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.kpis,.dash-grid,.pipeline-chart,.admin-grid,.form-grid-4,.form-grid-3,.grid-2,.grid-3{grid-template-columns:1fr}.modal-grid{grid-template-columns:1fr}}
+/* ═══ LEFT SIDEBAR TAB SYSTEM ═══ */
+.nav{display:grid!important}
+.nav a{cursor:pointer;user-select:none}
+.tab-bar{display:none!important}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+.nav a.active{background:var(--blue)!important;color:#081426!important;border-color:var(--blue)!important}
+.nav a.admin-link.active{background:#7c4dcc!important;color:#fff!important;border-color:#7c4dcc!important}
+</style>
 </head>
 <body>
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="brand"><h1>HospiceLink Gold</h1><p>Marketing + Clinical CRM Demo</p></div>
-      <nav class="nav">
-        <a href="#dashboard" class="active">Dashboard</a>
-        <a href="#users">Admin / Users</a>
-        <a href="#prospects">Prospects</a>
-        <a href="#referrals">Referral Sources</a>
-        <a href="#pipeline">Pipeline</a>
-        <a href="#tracking">Staff Tracking</a>
-        <a href="#evv">EVV / Mileage</a>
-        <a href="#family">Family Communication</a>
-        <a href="#notes">Notes</a>
-      </nav>
-      <div class="footer-actions"><a href="index.html#pricing" class="btn btn-blue btn-small">Back to Website</a></div>
-    </aside>
+<div class="layout">
+<aside class="sidebar">
+  <div class="brand"><h1>HospiceLink Gold</h1><p>Marketing + Clinical CRM Demo</p></div>
+  <nav class="nav">
+    <a href="#dashboard" data-tab="dashboard" data-tab="dashboard" class="active" onclick="showTab('dashboard');return false;" onclick="showTab('dashboard');return false;">Dashboard</a>
+    <a href="#prospects" data-tab="prospects" data-tab="prospects" onclick="showTab('prospects');return false;" onclick="showTab('prospects');return false;">Add Prospect</a>
+    <a href="#prospect-records" data-tab="prospect-records" data-tab="prospect-records" onclick="showTab('prospect-records');return false;" onclick="showTab('prospect-records');return false;">Prospect Records</a>
+    <a href="#referrals" data-tab="referrals" data-tab="referrals" onclick="showTab('referrals');return false;" onclick="showTab('referrals');return false;">Referral Sources</a>
+    <a href="#referral-records" data-tab="referral-records" data-tab="referral-records" onclick="showTab('referral-records');return false;" onclick="showTab('referral-records');return false;">Referral Records</a>
+    <a href="#pipeline" data-tab="pipeline" data-tab="pipeline" onclick="showTab('pipeline');return false;" onclick="showTab('pipeline');return false;">Pipeline</a>
+    <a href="#territory" data-tab="territory" data-tab="territory" onclick="showTab('territory');return false;" onclick="showTab('territory');return false;">Territory View</a>
+    <a href="#productivity" data-tab="productivity" data-tab="productivity" onclick="showTab('productivity');return false;" onclick="showTab('productivity');return false;">Productivity</a>
+    <a href="#tracking" data-tab="tracking" data-tab="tracking" onclick="showTab('tracking');return false;" onclick="showTab('tracking');return false;">Staff Tracking</a>
+    <a href="#evv" data-tab="evv" data-tab="evv" onclick="showTab('evv');return false;" onclick="showTab('evv');return false;">EVV / Mileage</a>
+    <a href="#family" data-tab="family" data-tab="family" onclick="showTab('family');return false;" onclick="showTab('family');return false;">Family Communication</a>
+    <a href="#automation" data-tab="automation" data-tab="automation" onclick="showTab('automation');return false;" onclick="showTab('automation');return false;">Automation</a>
+    <a href="#notes" data-tab="notes" data-tab="notes" onclick="showTab('notes');return false;" onclick="showTab('notes');return false;">Notes</a>
+    <a href="#admin" data-tab="admin" data-tab="admin" class="admin-link" onclick="showTab('admin');return false;" onclick="showTab('admin');return false;">🔒 Admin</a>
+  </nav>
+  <div class="footer-actions"><a href="index.html#pricing" class="btn btn-blue btn-small">Back to Website</a></div>
+</aside>
 
-    <main class="main">
-      <div class="topbar" id="dashboard">
-        <div><h2>HospiceLink Gold Demo</h2><p>Built for marketers, nurses, and caregivers. All marketing tools plus clinical workflow visibility.</p></div>
-        <a href="index.html#pricing" class="btn btn-blue">Back to Website</a>
-      </div>
+<main class="main">
+  <div class="topbar" id="dashboard">
+    <div><h2>HospiceLink Gold</h2><p>Marketing + Clinical CRM Demo</p></div>
 
-      <section class="hero">
-        <h3>Marketing + Clinical Dashboard</h3>
-        <p>Includes admin user controls, prospect intake with required dropdowns, referral source status, marketer/nurse/caregiver notes with next steps, staff tracking, EVV, mileage, and family communication logging.</p>
-      </section>
-
-      <!-- KPIs -->
-      <section class="kpis">
-        <div class="kpi"><span>Visits Today</span><strong id="kpiVisits">0</strong></div>
-        <div class="kpi"><span>Clinical Notes</span><strong id="kpiNotes">0</strong></div>
-        <div class="kpi"><span>Miles Logged</span><strong id="kpiMiles">0</strong></div>
-        <div class="kpi"><span>Admissions</span><strong id="kpiAdmissions">0</strong></div>
-        <div class="kpi"><span>User Seats</span><strong>12 / 20</strong></div>
-      </section>
-
-      <!-- DASHBOARD TOTALS -->
-      <div class="dashboard-totals">
-        <div class="dash-stat"><span>Inquiry</span><strong id="dtInquiry">0</strong></div>
-        <div class="dash-stat"><span>Pending Admission</span><strong id="dtPending">0</strong></div>
-        <div class="dash-stat"><span>Admitted</span><strong id="dtAdmitted">0</strong></div>
-        <div class="dash-stat"><span>Lost</span><strong id="dtLost">0</strong></div>
-        <div class="dash-stat"><span>🟢 Green Referral Sources</span><strong id="dtGreenRef">0</strong></div>
-        <div class="dash-stat"><span>🔴 Red Referral Sources</span><strong id="dtRedRef">0</strong></div>
-        <div class="dash-stat"><span>Pipeline Total</span><strong id="dtPipeline">0</strong></div>
-        <div class="dash-stat"><span>Family Comm. Logged</span><strong id="dtFamily">0</strong></div>
-        <div class="dash-stat"><span>Staff Tracking Entries</span><strong id="dtStaff">0</strong></div>
-        <div class="dash-stat"><span>Notes Logged</span><strong id="dtNotes">0</strong></div>
-        <div class="dash-stat"><span>Miles Logged</span><strong id="dtMiles">0</strong></div>
-        <div class="dash-stat"><span>Mileage Trips</span><strong id="dtTrips">0</strong></div>
-      </div>
-
-      <!-- ADMIN -->
-      <section class="section" id="users">
-        <div class="admin-banner"><h3 style="margin:0;">Admin User Controls</h3><span class="pill pill-purple">Admin View Only</span></div>
-        <p class="admin-note">User view hides this panel. Only the Admin account holder can see user controls, seat limits, and subscription-level access for marketers, nurses, and caregivers.</p>
-        <div class="grid-3">
-          <div class="card"><h4>Admin Access Only</h4><p>Only the Admin account holder can view user controls, seat limits, and user management.</p><div class="mini-actions"><span class="pill pill-blue">Admin Only</span></div></div>
-          <div class="card"><h4>Add / Delete Users</h4><p>Admin can add or delete marketers, nurses, and caregivers under the company subscription.</p><div class="mini-actions"><span class="pill pill-green">Add User</span><span class="pill pill-red">Delete User</span></div></div>
-          <div class="card"><h4>Seat Limits</h4><p>Admin can view the purchased seat limits and only add as many users as the subscription allows.</p><div class="mini-actions"><span class="pill pill-yellow">Seats Used: 12 / 20</span></div></div>
-        </div>
-      </section>
-
-      <!-- PROSPECTS -->
-      <section class="section" id="prospects">
-        <h3>Prospects</h3>
-        <div class="note-form-wrap" style="margin-bottom:20px;">
-          <div class="form-row">
-            <div class="field"><label for="prospectName">Prospect Name</label><input id="prospectName" type="text" placeholder="Enter prospect or patient name"></div>
-            <div class="field"><label for="prospectStatus">Status</label><select id="prospectStatus"><option>Inquiry</option><option>Pending Admission</option><option>Lost</option><option>Admitted</option></select></div>
-            <div class="field"><label for="prospectReferralSourceSelect">Referral Source</label><select id="prospectReferralSourceSelect"></select><div class="note-help">Select a saved referral business or add under Referral Sources tab.</div></div>
-            <div class="field"><label for="prospectAssignedMarketerSelect">Assigned Marketer</label><select id="prospectAssignedMarketerSelect"></select></div>
-            <div class="field"><label for="newAssignedMarketerInput">Add New Marketer</label><input id="newAssignedMarketerInput" type="text" placeholder="Enter marketer name"></div>
-            <div class="field"><label for="prospectPosition">Position</label><select id="prospectPosition"><option value="">-- Select Position --</option><option>Nurse</option><option>Caregiver</option><option>Marketer</option><option>Other</option></select></div>
-            <div class="field"><label for="refStatusSelect">Ref Status</label><select id="refStatusSelect"><option>Green</option><option>Red</option></select></div>
-            <div class="field"><label for="prospectNextStep">Next Step Summary</label><input id="prospectNextStep" type="text" placeholder="Enter next step summary"></div>
-          </div>
-          <div class="note-actions">
-            <button class="btn btn-green" type="button" onclick="saveProspect()">Add Prospect</button>
-            <button class="btn btn-red" type="button" onclick="deleteSelectedProspect()">Delete Prospect</button>
-          </div>
-        </div>
-
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Select</th><th>Prospect / Patient</th><th>Status</th><th>Referral Source</th><th>Ref Status</th><th>Assigned Marketer</th><th>Position</th><th>Next Step</th></tr></thead>
-            <tbody id="prospectsTableBody"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- REFERRAL SOURCES — Add/Delete available to all users -->
-      <section class="section" id="referrals">
-        <h3>Referral Sources</h3>
-        <div class="note-form-wrap" style="margin-bottom:20px;">
-          <div class="form-row">
-            <div class="field"><label for="referralNameInput">Referral Business Name</label><input id="referralNameInput" type="text" placeholder="Enter referral business name"></div>
-            <div class="field"><label for="referralStatusInput">Ref Status</label><select id="referralStatusInput"><option>Green</option><option>Red</option></select></div>
-          </div>
-          <div class="note-actions">
-            <button class="btn btn-green" type="button" onclick="addReferralSource()">Add Referral Source</button>
-            <button class="btn btn-red" type="button" onclick="deleteSelectedReferralSource()">Delete Selected Referral Source</button>
-          </div>
-        </div>
-
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Select</th><th>Referral Business</th><th>Ref Status</th></tr></thead>
-            <tbody id="referralTableBody"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- PIPELINE -->
-      <section class="section" id="pipeline">
-        <h3>Pipeline</h3>
-        <div class="pipeline">
-          <div class="stage"><div class="stage-header"><div class="stage-title"><span class="stage-dot dot-inquiry"></span><h4>Inquiry</h4></div><span class="stage-count" id="pipeCountInquiry">0</span></div><div class="stage-body" id="pipeInquiry"></div></div>
-          <div class="stage"><div class="stage-header"><div class="stage-title"><span class="stage-dot dot-visit"></span><h4>Visit Scheduled</h4></div><span class="stage-count" id="pipeCountVisit">0</span></div><div class="stage-body" id="pipeVisit"><div class="lead-card"><strong>Carol P.</strong><small>Nurse assessment set for Thursday</small></div></div></div>
-          <div class="stage"><div class="stage-header"><div class="stage-title"><span class="stage-dot dot-pending"></span><h4>Pending Admission</h4></div><span class="stage-count" id="pipeCountPending">0</span></div><div class="stage-body" id="pipePending"></div></div>
-          <div class="stage"><div class="stage-header"><div class="stage-title"><span class="stage-dot dot-closed"></span><h4>Admitted / Lost</h4></div><span class="stage-count" id="pipeCountClosed">0</span></div><div class="stage-body" id="pipeClosed"></div></div>
-        </div>
-      </section>
-
-      <!-- STAFF TRACKING -->
-      <section class="section" id="tracking">
-        <h3>Staff Tracking</h3>
-        <div class="note-form-wrap">
-          <div class="form-row">
-            <div class="field"><label for="evvStaffName">Staff Name</label><input id="evvStaffName" type="text" placeholder="Enter staff name"></div>
-            <div class="field"><label for="evvRole">Role</label><select id="evvRole"><option>Nurse</option><option>Caregiver</option><option>Marketer</option></select></div>
-            <div class="field"><label for="evvPatient">Patient / Account</label><input id="evvPatient" type="text" placeholder="Enter patient or account"></div>
-            <div class="field"><label for="evvStatus">Status</label><select id="evvStatus"><option>Completed</option><option>Scheduled</option><option>Pending Sync</option></select></div>
-          </div>
-          <div class="note-actions"><button class="btn btn-green" type="button" onclick="saveStaffTracking()">Add Staff Tracking</button></div>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Staff</th><th>Role</th><th>Patient / Account</th><th>Visit Type</th><th>Status</th></tr></thead>
-            <tbody id="staffTrackingBody">
-              <tr><td>Angela</td><td>Nurse</td><td>Robert H.</td><td>Assessment</td><td><span class="pill pill-green">Completed</span></td></tr>
-              <tr><td>Mike</td><td>Caregiver</td><td>Dorothy F.</td><td>Care Support</td><td><span class="pill pill-blue">Scheduled</span></td></tr>
-              <tr><td>Ericka</td><td>Marketer</td><td>Baylor</td><td>Facility Visit</td><td><span class="pill pill-green">Completed</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- EVV / MILEAGE — GPS mileage tracker added -->
-      <section class="section" id="evv">
-        <div class="grid-2">
-          <div>
-            <h3>EVV Concepts</h3>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Staff</th><th>Patient</th><th>Arrival</th><th>Departure</th><th>Verification</th></tr></thead>
-                <tbody>
-                  <tr><td>Angela</td><td>Robert H.</td><td>9:05 AM</td><td>10:12 AM</td><td><span class="pill pill-green">Location Verified</span></td></tr>
-                  <tr><td>Mike</td><td>Dorothy F.</td><td>11:15 AM</td><td>12:02 PM</td><td><span class="pill pill-blue">Pending Sync</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div>
-            <h3>Mileage Concepts (GPS Tracker)</h3>
-            <div class="note-form-wrap">
-              <div style="display:grid;gap:12px;">
-                <div class="field"><label for="gpsStaffName">Staff Name</label><input id="gpsStaffName" type="text" placeholder="Enter staff name"></div>
-                <div class="field"><label for="gpsStart">Start Address</label><input id="gpsStart" type="text" placeholder="e.g. 123 Main St, Dallas TX"></div>
-                <div class="field"><label for="gpsEnd">End Address</label><input id="gpsEnd" type="text" placeholder="e.g. 456 Oak Ave, Plano TX"></div>
-                <div class="field"><label for="gpsPurpose">Purpose</label><input id="gpsPurpose" type="text" placeholder="e.g. Facility visit, patient assessment"></div>
-              </div>
-              <div class="note-actions"><button class="btn btn-green" type="button" onclick="logMileage()">Log Mileage Trip</button></div>
-              <div id="gpsResult"></div>
-            </div>
-            <div id="mileageList" style="margin-top:14px;display:grid;gap:10px;"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- FAMILY COMMUNICATION -->
-      <section class="section" id="family">
-        <h3>Family Communication</h3>
-        <div class="note-form-wrap">
-          <div class="form-row">
-            <div class="field"><label for="familyNameSelect">Select Name</label><select id="familyNameSelect"><option value="">Select a saved name</option></select></div>
-            <div class="field"><label for="familyNewName">First Time? Add Name</label><input id="familyNewName" type="text" placeholder="Enter your name"></div>
-            <div class="field"><label for="familyDate">Date</label><input id="familyDate" type="date"></div>
-            <div class="field"><label for="familyTime">Time</label><input id="familyTime" type="time"></div>
-            <div class="field" style="grid-column:1 / -1;"><label for="familyText">Communication</label><textarea id="familyText" placeholder="Enter family communication details"></textarea></div>
-          </div>
-          <div class="note-actions"><button class="btn btn-green" type="button" onclick="saveFamilyCommunication()">Add Family Communication</button></div>
-        </div>
-
-        <div id="familyList" class="grid-3" style="margin-top:18px;">
-          <div class="card"><h4>Robert H. Family</h4><p><strong>Ericka — 2026-04-12 at 10:30 AM</strong></p><p>Update provided after nurse assessment. Family requested a follow-up call tomorrow.</p></div>
-          <div class="card"><h4>Dorothy F. Family</h4><p><strong>Angela — 2026-04-11 at 01:10 PM</strong></p><p>Explained admission timeline and what paperwork is still needed.</p></div>
-          <div class="card"><h4>Helen P. Family</h4><p><strong>Mike — 2026-04-10 at 03:20 PM</strong></p><p>Family decided to move forward elsewhere. Note logged for referral source feedback.</p></div>
-        </div>
-      </section>
-
-      <!-- NOTES -->
-      <section class="section" id="notes">
-        <h3>Marketer, Nurse &amp; Caregiver Notes</h3>
-        <div class="note-form-wrap">
-          <div class="note-form-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
-            <div><label for="noteNameSelect">Select Name</label><select id="noteNameSelect"><option value="">Select a saved name</option></select><div class="note-help">If you have noted before, your name will appear here.</div></div>
-            <div><label for="noteNewName">First Time? Add Name</label><input id="noteNewName" type="text" placeholder="Enter your name"><div class="note-help">New names will be saved and repopulated in the dropdown.</div></div>
-            <div><label for="notePosition">Position</label><select id="notePosition"><option value="">-- Select Position --</option><option>Nurse</option><option>Caregiver</option><option>Marketer</option><option>Other</option></select></div>
-            <div><label for="noteDate">Date</label><input id="noteDate" type="date"></div>
-            <div><label for="noteTime">Time</label><input id="noteTime" type="time"></div>
-            <div><label for="noteNextStep">Next Step</label><select id="noteNextStep">
-              <option>Immediate Family Outreach (Call/Text)</option>
-              <option>Schedule On-Site Visit</option>
-              <option>Conduct Bedside Presentation</option>
-              <option>Request Clinical Records (H&amp;P)</option>
-              <option>RN Assessment Requested</option>
-              <option>RN Assessment Scheduled</option>
-              <option>Obtain Physician Order for Eval</option>
-              <option>Insurance Verification in Progress</option>
-              <option>CM Follow-Up (Status Update)</option>
-              <option>Overcoming Family Hesitation</option>
-              <option>Other</option>
-            </select></div>
-            <div style="grid-column:1 / -1;"><label for="noteText">Note</label><textarea id="noteText" placeholder="Enter note details here..."></textarea></div>
-          </div>
-          <div class="note-actions"><button class="btn btn-green" type="button" onclick="saveDemoNote()">Add Note</button></div>
-        </div>
-
-        <div id="notesList" style="margin-top:18px;">
-          <div class="grid-2">
-            <div class="note-box"><h4>Ericka — 2026-04-12 at 10:00 AM</h4><p><strong>Position:</strong> Marketer</p><p><strong>Next Step:</strong> CM Follow-Up (Status Update)</p><p>Baylor requested faster turnaround updates and a cleaner one-page leave-behind.</p></div>
-            <div class="note-box"><h4>Angela — 2026-04-11 at 01:40 PM</h4><p><strong>Position:</strong> Nurse</p><p><strong>Next Step:</strong> RN Assessment Scheduled</p><p>Patient appears appropriate for hospice. Family receptive but wants one more physician conversation.</p></div>
-          </div>
-        </div>
-      </section>
-    </main>
+  <div class="tab-bar">
+    <button class="tab-btn" data-tab="dashboard" onclick="showTab('dashboard')">Dashboard</button>
+    <button class="tab-btn" data-tab="prospects" onclick="showTab('prospects')">Add Prospect</button>
+    <button class="tab-btn" data-tab="prospect-records" onclick="showTab('prospect-records')">Prospect Records</button>
+    <button class="tab-btn" data-tab="referrals" onclick="showTab('referrals')">Referral Sources</button>
+    <button class="tab-btn" data-tab="referral-records" onclick="showTab('referral-records')">Referral Records</button>
+    <button class="tab-btn" data-tab="pipeline" onclick="showTab('pipeline')">Pipeline</button>
+    <button class="tab-btn" data-tab="territory" onclick="showTab('territory')">Territory View</button>
+    <button class="tab-btn" data-tab="productivity" onclick="showTab('productivity')">Productivity</button>
+    <button class="tab-btn" data-tab="tracking" onclick="showTab('tracking')">Staff Tracking</button>
+    <button class="tab-btn" data-tab="mileage" onclick="showTab('mileage')">Mileage</button>
+    <button class="tab-btn" data-tab="family" onclick="showTab('family')">Family Comm.</button>
+    <button class="tab-btn" data-tab="automation" onclick="showTab('automation')">Automation</button>
+    <button class="tab-btn" data-tab="notes" onclick="showTab('notes')">Notes</button>
+    <button class="tab-btn admin-tab" data-tab="admin" onclick="showTab('admin')">🔒 Admin</button>
   </div>
 
-  <script>
-    const G = "gold";
-    const KEYS = {
-      refs:      `crmReferrals_${G}`,
-      prospects: `crmProspects_${G}`,
-      marketers: `crmMarketers_${G}`,
-      names:     `crmNoteNames_${G}`,
-      notes:     `crmNotesCount_${G}`,
-      family:    `crmFamilyCount_${G}`,
-      staff:     `crmStaffCount_${G}`,
-      miles:     `crmMiles_${G}`,
-      trips:     `crmTrips_${G}`,
-    };
+  <div class="tab-pane active" id="tab-dashboard">
+    <section class="hero">
+    <h3>Marketing + Clinical Dashboard</h3>
+    <p>Prospect intake, referral management, staff tracking, EVV, GPS mileage, family communication, and clinical notes all in one place.</p>
+  </section>
+    <!-- DASHBOARD HORIZONTAL BAR CHARTS -->
+  <div class="hbar-grid">
+    <div class="hbar-section">
+      <h4>📊 Prospect Pipeline</h4>
+      <div class="hbar-row"><span class="hbar-label">🔵 Inquiry</span><div class="hbar-track"><div class="hbar-fill fill-blue" id="hbarInquiry" style="width:0%"><span id="hbarInquiryVal">0</span></div></div><span class="hbar-count" id="dtInquiry">0</span></div>
+      <div class="hbar-row"><span class="hbar-label">🟡 Pending Admission</span><div class="hbar-track"><div class="hbar-fill fill-yellow" id="hbarPending" style="width:0%"><span id="hbarPendingVal">0</span></div></div><span class="hbar-count" id="dtPending">0</span></div>
+      <div class="hbar-row"><span class="hbar-label">🟢 Admitted</span><div class="hbar-track"><div class="hbar-fill fill-green" id="hbarAdmitted" style="width:0%"><span id="hbarAdmittedVal">0</span></div></div><span class="hbar-count" id="dtAdmitted">0</span></div>
+      <div class="hbar-row"><span class="hbar-label">🔴 Lost</span><div class="hbar-track"><div class="hbar-fill fill-red" id="hbarLost" style="width:0%"><span id="hbarLostVal">0</span></div></div><span class="hbar-count" id="dtLost">0</span></div>
+    </div>
+    <div class="hbar-section">
+      <h4>📋 CRM Overview</h4>
+      <div class="hbar-row"><span class="hbar-label">Total Prospects</span><div class="hbar-track"><div class="hbar-fill fill-blue" id="hbarTotalProsp" style="width:0%"><span id="hbarTotalProspVal">0</span></div></div><span class="hbar-count" id="kpiProspects">0</span></div>
+      <div class="hbar-row"><span class="hbar-label">🟢 Green Sources</span><div class="hbar-track"><div class="hbar-fill fill-green" id="hbarGreen" style="width:0%"><span id="hbarGreenVal">0</span></div></div><span class="hbar-count" id="dtGreenRef">0</span></div>
+      <div class="hbar-row"><span class="hbar-label">🔴 Red Sources</span><div class="hbar-track"><div class="hbar-fill fill-red" id="hbarRed" style="width:0%"><span id="hbarRedVal">0</span></div></div><span class="hbar-count" id="dtRedRef">0</span></div>
+<!-- dtFamily and kpiNotes kept as hidden for JS compat -->
+    </div>
+  </div>
+  <span id="kpiReferrals" style="display:none">0</span><span id="kpiAdmissions" style="display:none">0</span>
+  <span id="kpiPending" style="display:none">0</span><span id="dtPipeline" style="display:none">0</span>
+  <span id="kpiNotes" style="display:none">0</span><span id="hbarNotes" style="display:none"></span><span id="hbarNotesVal" style="display:none"></span>
+  <span id="dtFamily" style="display:none">0</span><span id="hbarFamily" style="display:none"></span><span id="hbarFamilyVal" style="display:none"></span>
+  <span id="kpiReferrals" style="display:none">0</span><span id="kpiAdmissions" style="display:none">0</span>
+  <span id="kpiPending" style="display:none">0</span><span id="dtPipeline" style="display:none">0</span>
+  <span id="kpiNotes" style="display:none">0</span><span id="hbarNotes" style="display:none"></span><span id="hbarNotesVal" style="display:none"></span>
+  <span id="dtFamily" style="display:none">0</span><span id="hbarFamily" style="display:none"></span><span id="hbarFamilyVal" style="display:none"></span>
+  </div>
 
-    function gs(key,def){try{const r=localStorage.getItem(key);return r?JSON.parse(r):def;}catch(e){return def;}}
-    function ss(key,val){try{localStorage.setItem(key,JSON.stringify(val));}catch(e){}}
+  <div class="tab-pane" id="tab-prospects">
+<!-- ADD PROSPECT -->
+  <section class="section" id="prospects">
+    <h3>Add Prospect</h3>
+    <div class="note-form-wrap">
+      <div class="form-grid-4">
+        <div class="field"><label>Prospect Name</label><input id="prospectName" type="text" placeholder="Full name"></div>
+        <div class="field"><label>Status</label><select id="prospectStatus"><option>Inquiry</option><option>Pending Admission</option><option>Lost</option><option>Admitted</option></select></div>
+        <div class="field"><label>Referral Source</label><select id="prospectReferralSourceSelect"></select></div>
+        <div class="field"><label>Assigned Marketer</label><select id="prospectAssignedMarketerSelect"></select></div>
+        <div class="field"><label>Add New Marketer</label><input id="newAssignedMarketerInput" type="text" placeholder="Enter marketer name"></div>
+        <div class="field"><label>Phone</label><input id="prospectPhone" type="tel" placeholder="(469) 555-0100"></div>
+        <div class="field"><label>Email</label><input id="prospectEmail" type="email" placeholder="name@email.com"></div>
+        <div class="field"><label>Address</label><input id="prospectAddress" type="text" placeholder="123 Main St, Dallas TX"></div>
+        <div class="field"><label>Secondary Contact</label><input id="prospectSecondary" type="text" placeholder="Secondary contact name"></div>
+        <div class="field full"><label>Next Step Summary</label><input id="prospectNextStep" type="text" placeholder="Next step summary"></div>
+      </div>
+      <div class="note-actions">
+        <button class="btn btn-green" onclick="saveProspect()">Add Prospect</button>
+        <button class="btn btn-red" onclick="deleteSelectedProspect()">Delete Selected</button>
+      </div>
+    </div>
+  </section>
+  </div>
 
-    function formatTime(t){if(!t)return "";const[h,m]=t.split(":");let hr=parseInt(h,10);const ap=hr>=12?"PM":"AM";hr=hr%12||12;return `${hr}:${m} ${ap}`;}
-    function pillStatus(s){if(s==="Inquiry")return'<span class="pill pill-blue">Inquiry</span>';if(s==="Pending Admission")return'<span class="pill pill-yellow">Pending Admission</span>';if(s==="Lost")return'<span class="pill pill-red">Lost</span>';return'<span class="pill pill-green">Admitted</span>';}
-    function pillRef(s){return s==="Red"?'<span class="pill pill-red">Red</span>':'<span class="pill pill-green">Green</span>';}
+  <div class="tab-pane" id="tab-prospect-records">
+<!-- PROSPECT RECORDS — table lives here -->
+  <section class="section" id="prospect-records">
+    <h3>Prospect Records</h3>
+    <input class="search-bar" id="prospectSearch" type="text" placeholder="🔍  Search by name, phone, email, or address…" oninput="renderProspectRecords()">
+    <div class="table-wrap" style="margin-bottom:16px;">
+      <table><thead><tr><th>Sel</th><th>Name</th><th>Status</th><th>Source</th><th>Marketer</th><th>Next Step</th><th>Edit</th></tr></thead>
+      <tbody id="prospectsTableBody"></tbody></table>
+    </div>
+    <h4 style="margin:0 0 10px;font-size:13px;color:#6c8aab;">Full Detail View</h4>
+    <div class="table-wrap">
+      <table><thead><tr><th>Name</th><th>Status</th><th>Phone</th><th>Email</th><th>Address</th><th>Secondary</th><th>Source</th><th>Marketer</th><th>Next Step</th><th>Edit</th></tr></thead>
+      <tbody id="prospectRecordsBody"></tbody></table>
+    </div>
+  </section>
+  </div>
 
-    function defaultRefs(){return[{name:"North Park Rehab",status:"Green"},{name:"Baylor",status:"Green"},{name:"Physician Office",status:"Red"},{name:"Hospital CM",status:"Green"}];}
-    function defaultProspects(){return[
-      {name:"Robert H.",status:"Inquiry",source:"North Park Rehab",refStatus:"Green",marketer:"Ericka",position:"Marketer",nextStep:"Schedule assessment"},
-      {name:"Dorothy F.",status:"Pending Admission",source:"Baylor",refStatus:"Green",marketer:"Ericka",position:"Nurse",nextStep:"Collect final documents"},
-      {name:"Helen P.",status:"Lost",source:"Physician Office",refStatus:"Red",marketer:"Ericka",position:"Marketer",nextStep:"Revisit source in 2 weeks"},
-      {name:"Thomas J.",status:"Admitted",source:"Hospital CM",refStatus:"Green",marketer:"Ericka",position:"Marketer",nextStep:"Move to active census"},
-    ];}
+  <div class="tab-pane" id="tab-referrals">
+<!-- REFERRAL SOURCES -->
+  <section class="section" id="referrals">
+    <h3>Referral Sources</h3>
+    <div class="mini-actions" style="margin-bottom:12px;">
+      <button class="btn btn-green" onclick="openModal('addReferralModal')">Add Referral</button>
+      <button class="btn btn-red" onclick="deleteSelectedReferral()">Delete Selected</button>
+    </div>
+    <div class="table-wrap">
+      <table><thead><tr><th>Sel</th><th>Contact</th><th>Business</th><th>Phone</th><th>Address</th><th>Email</th><th>Status</th><th>Edit</th></tr></thead>
+      <tbody id="referralTableBody"></tbody></table>
+    </div>
+  </section>
+  </div>
 
-    /* ── dashboard ── */
-    function updateDashboard(){
-      const refs=gs(KEYS.refs,defaultRefs());
-      const prospects=gs(KEYS.prospects,defaultProspects());
-      const notesCount=gs(KEYS.notes,2);
-      const familyCount=gs(KEYS.family,3);
-      const staffCount=gs(KEYS.staff,3);
-      const miles=gs(KEYS.miles,0);
-      const trips=gs(KEYS.trips,0);
+  <div class="tab-pane" id="tab-referral-records">
+<!-- REFERRAL RECORDS -->
+  <section class="section" id="referral-records">
+    <h3>Referral Records</h3>
+    <input class="search-bar" id="referralSearch" type="text" placeholder="🔍  Search by name, business, phone, email, or address…" oninput="renderReferralRecords()">
+    <div class="table-wrap">
+      <table><thead><tr><th>Contact</th><th>Business</th><th>Phone</th><th>Address</th><th>Email</th><th>Status</th><th>Edit</th></tr></thead>
+      <tbody id="referralRecordsBody"></tbody></table>
+    </div>
+  </section>
+  </div>
 
-      const greenRefs=refs.filter(r=>r.status==="Green").length;
-      const redRefs=refs.filter(r=>r.status==="Red").length;
-      const inquiry=prospects.filter(p=>p.status==="Inquiry").length;
-      const pending=prospects.filter(p=>p.status==="Pending Admission").length;
-      const admitted=prospects.filter(p=>p.status==="Admitted").length;
-      const lost=prospects.filter(p=>p.status==="Lost").length;
+  <div class="tab-pane" id="tab-pipeline">
+<!-- PIPELINE — horizontal bar chart -->
+  <section class="section" id="pipeline">
+    <h3>Pipeline</h3>
+    <div class="hbar-grid">
+      <div class="hbar-section">
+        <h4>Stage Breakdown</h4>
+        <div class="hbar-row"><span class="hbar-label">🔵 Inquiry</span><div class="hbar-track"><div class="hbar-fill fill-blue" id="pipeBarInquiry" style="width:0%"><span id="pipeCountInquiry">0</span></div></div></div>
+        <div class="hbar-row"><span class="hbar-label">🟡 Pending Admission</span><div class="hbar-track"><div class="hbar-fill fill-yellow" id="pipeBarPending" style="width:0%"><span id="pipeCountPending">0</span></div></div></div>
+        <div class="hbar-row"><span class="hbar-label">🟢 Admitted</span><div class="hbar-track"><div class="hbar-fill fill-green" id="pipeBarAdmitted" style="width:0%"><span id="pipeCountAdmitted">0</span></div></div></div>
+        <div class="hbar-row"><span class="hbar-label">🔴 Lost</span><div class="hbar-track"><div class="hbar-fill fill-red" id="pipeBarLost" style="width:0%"><span id="pipeCountLost">0</span></div></div></div>
+      </div>
+      <div class="hbar-section">
+        <h4>Prospect Cards</h4>
+        <div><p style="color:var(--muted);font-size:10px;font-weight:800;margin:0 0 5px;text-transform:uppercase;">🔵 Inquiry</p><div id="pipeInquiry"></div></div>
+        <div style="margin-top:10px;"><p style="color:var(--muted);font-size:10px;font-weight:800;margin:0 0 5px;text-transform:uppercase;">🟡 Pending</p><div id="pipePending"></div></div>
+        <div style="margin-top:10px;"><p style="color:var(--muted);font-size:10px;font-weight:800;margin:0 0 5px;text-transform:uppercase;">🟢 Admitted</p><div id="pipeAdmitted"></div></div>
+        <div style="margin-top:10px;"><p style="color:var(--muted);font-size:10px;font-weight:800;margin:0 0 5px;text-transform:uppercase;">🔴 Lost</p><div id="pipeLost"></div></div>
+      </div>
+    </div>
+  </section>
+  </div>
 
-      document.getElementById("kpiVisits").textContent=staffCount;
-      document.getElementById("kpiNotes").textContent=notesCount;
-      document.getElementById("kpiMiles").textContent=miles.toFixed(1);
-      document.getElementById("kpiAdmissions").textContent=admitted;
+  <div class="tab-pane" id="tab-territory">
+<!-- TERRITORY VIEW -->
+  <section class="section" id="territory">
+    <h3>Territory View</h3>
+    <div class="table-wrap">
+      <table><thead><tr><th>Territory</th><th>Primary Accounts</th><th>Visits This Week</th><th>Admissions</th><th>Conversion %</th></tr></thead>
+      <tbody>
+        <tr><td>North Dallas</td><td>Encompass, Baylor, ALF Network</td><td>5</td><td>3</td><td><span class="pill pill-green">60%</span></td></tr>
+        <tr><td>McKinney / Plano</td><td>Hospital CMs, Rehab Network</td><td>4</td><td>2</td><td><span class="pill pill-blue">50%</span></td></tr>
+        <tr><td>Lewisville / Denton</td><td>SNFs, Physician Groups</td><td>4</td><td>2</td><td><span class="pill pill-blue">50%</span></td></tr>
+      </tbody></table>
+    </div>
+  </section>
+  </div>
 
-      document.getElementById("dtInquiry").textContent=inquiry;
-      document.getElementById("dtPending").textContent=pending;
-      document.getElementById("dtAdmitted").textContent=admitted;
-      document.getElementById("dtLost").textContent=lost;
-      document.getElementById("dtGreenRef").textContent=greenRefs;
-      document.getElementById("dtRedRef").textContent=redRefs;
-      document.getElementById("dtPipeline").textContent=prospects.length;
-      document.getElementById("dtFamily").textContent=familyCount;
-      document.getElementById("dtStaff").textContent=staffCount;
-      document.getElementById("dtNotes").textContent=notesCount;
-      document.getElementById("dtMiles").textContent=miles.toFixed(1);
-      document.getElementById("dtTrips").textContent=trips;
+  <div class="tab-pane" id="tab-productivity">
+<!-- PRODUCTIVITY TRACKING — horizontal bar charts -->
+  <section class="section" id="productivity">
+    <h3>Productivity Tracking</h3>
+    <div class="hbar-grid">
+      <div class="hbar-section">
+        <h4>Ericka — Marketer</h4>
+        <div class="hbar-row"><span class="hbar-label">Accounts Visited</span><div class="hbar-track"><div class="hbar-fill fill-green" style="width:87%"><span>13</span></div></div><span class="hbar-count">13</span></div>
+        <div class="hbar-row"><span class="hbar-label">Follow-Ups Done</span><div class="hbar-track"><div class="hbar-fill fill-blue" style="width:73%"><span>11</span></div></div><span class="hbar-count">11</span></div>
+        <div class="hbar-row"><span class="hbar-label">Admissions</span><div class="hbar-track"><div class="hbar-fill fill-yellow" style="width:47%"><span>7</span></div></div><span class="hbar-count">7</span></div>
+        <div class="hbar-row"><span class="hbar-label">Notes Synced</span><div class="hbar-track"><div class="hbar-fill fill-purple" id="prodNotesBar" style="width:20%"><span id="prodNotesVal">—</span></div></div><span class="hbar-count" id="prodNotesCount">—</span></div>
+      </div>
+      <div class="hbar-section">
+        <h4>📈 Weekly Summary</h4>
+        <div class="hbar-row"><span class="hbar-label">Green Sources</span><div class="hbar-track"><div class="hbar-fill fill-green" id="prodGreenBar" style="width:0%"><span id="prodGreenVal">0</span></div></div><span class="hbar-count" id="prodGreenCount">0</span></div>
+        <div class="hbar-row"><span class="hbar-label">Red Sources</span><div class="hbar-track"><div class="hbar-fill fill-red" id="prodRedBar" style="width:0%"><span id="prodRedVal">0</span></div></div><span class="hbar-count" id="prodRedCount">0</span></div>
+        <div class="hbar-row"><span class="hbar-label">Total Prospects</span><div class="hbar-track"><div class="hbar-fill fill-blue" id="prodProspBar" style="width:0%"><span id="prodProspVal">0</span></div></div><span class="hbar-count" id="prodProspCount">0</span></div>
+        <div class="hbar-row"><span class="hbar-label">Admissions</span><div class="hbar-track"><div class="hbar-fill fill-yellow" id="prodAdmBar" style="width:0%"><span id="prodAdmVal">0</span></div></div><span class="hbar-count" id="prodAdmCount">0</span></div>
+      </div>
+    </div>
+  </section>
+  </div>
 
-      renderPipeline(prospects);
-    }
+  <div class="tab-pane" id="tab-tracking">
+<!-- STAFF TRACKING -->
+  <section class="section" id="tracking">
+    <h3>Staff Tracking</h3>
+    <p style="color:var(--muted);margin:0 0 12px;font-size:13px;">Auto-captured each time a team member clicks "Sync &amp; Save Note". Location is recorded at sync time.</p>
+    <div class="table-wrap">
+      <table><thead><tr><th>Staff</th><th>Position</th><th>Date</th><th>Time</th><th>📍 Location at Sync</th><th>Next Step</th></tr></thead>
+      <tbody id="staffTrackingBody">
+        <tr><td>Angela</td><td>Nurse</td><td>2026-04-12</td><td>9:05 AM</td><td><span class="pill pill-green">✅ Synced</span></td><td>RN Assessment Scheduled</td></tr>
+        <tr><td>Ericka</td><td>Marketer</td><td>2026-04-11</td><td>1:15 PM</td><td><span class="pill pill-green">✅ Synced</span></td><td>CM Follow-Up</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+  </div>
 
-    /* ── referrals ── */
-    function loadReferralSources(){
-      const refs=gs(KEYS.refs,defaultRefs());
-      ss(KEYS.refs,refs);
-      const sel=document.getElementById("prospectReferralSourceSelect");
-      const tbody=document.getElementById("referralTableBody");
-      sel.innerHTML="";tbody.innerHTML="";
-      refs.forEach(r=>{
-        const o=document.createElement("option");o.value=r.name;o.textContent=r.name;sel.appendChild(o);
-        const tr=document.createElement("tr");
-        tr.innerHTML=`<td><input type="radio" name="selectedReferral" value="${r.name}"></td><td>${r.name}</td><td>${pillRef(r.status)}</td>`;
-        tbody.appendChild(tr);
-      });
-      updateDashboard();
-    }
-    function addReferralSource(){
-      const name=document.getElementById("referralNameInput").value.trim();
-      const status=document.getElementById("referralStatusInput").value;
-      if(!name){alert("Referral business name is required.");return;}
-      const refs=gs(KEYS.refs,defaultRefs());
-      if(!refs.find(r=>r.name.toLowerCase()===name.toLowerCase())){refs.push({name,status});ss(KEYS.refs,refs);}
-      document.getElementById("referralNameInput").value="";
-      loadReferralSources();
-    }
-    function deleteSelectedReferralSource(){
-      const sel=document.querySelector('input[name="selectedReferral"]:checked');
-      if(!sel){alert("Select a referral source to delete.");return;}
-      const refs=gs(KEYS.refs,defaultRefs()).filter(r=>r.name!==sel.value);
-      ss(KEYS.refs,refs);loadReferralSources();
-    }
+    <div class="tab-pane" id="tab-mileage">
+  <section class="section">
+    <h3>🚗 Mileage Tracker</h3>
+    <p style="color:var(--muted);font-size:13px;margin:0 0 16px;">Log each trip. Your daily and weekly totals update automatically. The Admin can see all staff mileage.</p>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:20px;">
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;text-align:center;">
+        <p style="color:var(--muted);font-size:11px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">My Miles Today</p>
+        <p style="font-size:38px;font-weight:900;color:var(--green);margin:0;" id="myTodayMiles">0.0</p>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;text-align:center;">
+        <p style="color:var(--muted);font-size:11px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">My Miles This Week</p>
+        <p style="font-size:38px;font-weight:900;color:var(--blue);margin:0;" id="myWeekMiles">0.0</p>
+      </div>
+    </div>
+    <div class="note-form-wrap" style="margin-bottom:18px;">
+      <h4 style="margin:0 0 12px;font-size:14px;">Log a Trip</h4>
+      <div class="form-grid-4">
+        <div class="field"><label>Your Name</label><input id="gpsStaffName" type="text" placeholder="Enter your name"></div>
+        <div class="field"><label>Start Address</label><input id="gpsStart" type="text" placeholder="123 Main St, Dallas TX"></div>
+        <div class="field"><label>End Address</label><input id="gpsEnd" type="text" placeholder="456 Oak Ave, Plano TX"></div>
+        <div class="field"><label>Purpose</label><input id="gpsPurpose" type="text" placeholder="e.g. Facility visit"></div>
+      </div>
+      <div class="note-actions"><button class="btn btn-green" onclick="logMileage()">Log Mileage Trip</button></div>
+      <div id="gpsResult" style="margin-top:10px;font-size:13px;font-weight:700;color:#0a6c2f;"></div>
+    </div>
+    <h4 style="color:var(--text);margin:0 0 10px;font-size:14px;">My Trip Log</h4>
+    <div class="table-wrap">
+      <table><thead><tr><th>#</th><th>Staff</th><th>From</th><th>To</th><th>Miles</th><th>Purpose</th><th>Time</th></tr></thead>
+      <tbody id="mileageTripLog"></tbody></table>
+    </div>
+  </section>
+  </div>
 
-    /* ── marketers ── */
-    function loadMarketers(){
-      const m=gs(KEYS.marketers,["Ericka"]);ss(KEYS.marketers,m);
-      const sel=document.getElementById("prospectAssignedMarketerSelect");
-      sel.innerHTML="";m.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});
-    }
+  <div class="tab-pane" id="tab-staff-tracking">
+  <section class="section">
+    <h3>📡 Staff Tracking</h3>
+    <p style="color:var(--muted);font-size:13px;margin:0 0 16px;">Location is automatically captured each time a note is synced. Each entry shows the staff member, position, date, time, and GPS coordinates at the moment of sync.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Staff</th><th>Position</th><th>Date</th><th>Time Synced</th><th>📍 Location at Sync</th><th>Next Step</th></tr></thead>
+        <tbody id="staffTrackingBody">
+          <tr><td>Angela</td><td>Nurse</td><td>2026-04-12</td><td>9:05 AM</td><td><span class="pill pill-green">📍 Dallas, TX — 32.7767°N 96.7970°W</span></td><td>RN Assessment Scheduled</td></tr>
+          <tr><td>Ericka</td><td>Marketer</td><td>2026-04-11</td><td>1:15 PM</td><td><span class="pill pill-green">📍 Plano, TX — 33.0198°N 96.6989°W</span></td><td>CM Follow-Up (Status Update)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  </div>
 
-    /* ── names ── */
-    function loadNames(){
-      const names=gs(KEYS.names,["Ericka","Angela","Mike"]);ss(KEYS.names,names);
-      ["noteNameSelect","familyNameSelect"].forEach(id=>{
-        const sel=document.getElementById(id);if(!sel)return;
-        sel.innerHTML='<option value="">Select a saved name</option>';
-        names.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});
-      });
-    }
-    function saveNameIfNeeded(name){
-      if(!name)return;
-      const names=gs(KEYS.names,["Ericka","Angela","Mike"]);
-      if(!names.includes(name)){names.push(name);ss(KEYS.names,names);loadNames();}
-    }
+      </div>
+      <div>
+        <h3>Mileage (GPS Tracker)</h3>
+        <div class="note-form-wrap">
+          <div style="display:grid;gap:10px;">
+            <div class="field"><label>Staff Name</label><input id="gpsStaffName" type="text" placeholder="Enter staff name"></div>
+            <div class="field"><label>Start Address</label><input id="gpsStart" type="text" placeholder="123 Main St, Dallas TX"></div>
+            <div class="field"><label>End Address</label><input id="gpsEnd" type="text" placeholder="456 Oak Ave, Plano TX"></div>
+            <div class="field"><label>Purpose</label><input id="gpsPurpose" type="text" placeholder="e.g. Facility visit"></div>
+          </div>
+          <div class="note-actions"><button class="btn btn-green" onclick="logMileage()">Log Mileage Trip</button></div>
+          <div id="gpsResult"></div>
+        </div>
+        <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="note-box" style="text-align:center;"><p style="font-size:11px;color:#555;margin:0 0 3px;">Today's Miles</p><p style="font-size:26px;font-weight:900;margin:0;" id="todayMiles">0.0</p></div>
+          <div class="note-box" style="text-align:center;"><p style="font-size:11px;color:#555;margin:0 0 3px;">This Week's Miles</p><p style="font-size:26px;font-weight:900;margin:0;" id="weekMiles">0.0</p></div>
+        </div>
+        <div id="mileageList" style="margin-top:10px;display:grid;gap:8px;"></div>
+      </div>
+    </div>
+  </section>
+  </div>
 
-    /* ── prospects ── */
-    function renderProspectsTable(){
-      const prospects=gs(KEYS.prospects,defaultProspects());
-      const tbody=document.getElementById("prospectsTableBody");tbody.innerHTML="";
-      prospects.forEach(p=>{
-        const tr=document.createElement("tr");
-        tr.innerHTML=`<td><input type="radio" name="selectedProspect" value="${p.name}"></td><td>${p.name}</td><td>${pillStatus(p.status)}</td><td>${p.source}</td><td>${pillRef(p.refStatus)}</td><td>${p.marketer}</td><td>${p.position||""}</td><td>${p.nextStep}</td>`;
-        tbody.appendChild(tr);
-      });
-    }
-    function saveProspect(){
-      const name=document.getElementById("prospectName").value.trim();
-      const status=document.getElementById("prospectStatus").value;
-      const source=document.getElementById("prospectReferralSourceSelect").value;
-      const newMarketer=document.getElementById("newAssignedMarketerInput").value.trim();
-      const marketer=newMarketer||document.getElementById("prospectAssignedMarketerSelect").value;
-      const position=document.getElementById("prospectPosition").value;
-      const refStatus=document.getElementById("refStatusSelect").value;
-      const nextStep=document.getElementById("prospectNextStep").value.trim();
-      if(!name||!status||!source||!marketer||!nextStep){alert("Prospect Name, Status, Referral Source, Assigned Marketer, and Next Step are required.");return;}
-      if(newMarketer){const m=gs(KEYS.marketers,["Ericka"]);if(!m.includes(newMarketer)){m.push(newMarketer);ss(KEYS.marketers,m);loadMarketers();}}
-      const prospects=gs(KEYS.prospects,defaultProspects());
-      prospects.unshift({name,status,source,refStatus,marketer,position,nextStep});
-      ss(KEYS.prospects,prospects);renderProspectsTable();updateDashboard();
-      document.getElementById("prospectName").value="";document.getElementById("newAssignedMarketerInput").value="";document.getElementById("prospectNextStep").value="";
-    }
-    function deleteSelectedProspect(){
-      const sel=document.querySelector('input[name="selectedProspect"]:checked');
-      if(!sel){alert("Select a prospect to delete.");return;}
-      const prospects=gs(KEYS.prospects,defaultProspects()).filter(p=>p.name!==sel.value);
-      ss(KEYS.prospects,prospects);renderProspectsTable();updateDashboard();
-    }
+  <div class="tab-pane" id="tab-family">
+<!-- FAMILY COMMUNICATION -->
+  <section class="section" id="family">
+    <h3>Family Communication</h3>
+    <div class="note-form-wrap">
+      <div class="form-grid-4">
+        <div class="field"><label>Select Name</label><select id="familyNameSelect"><option value="">Select saved name</option></select></div>
+        <div class="field"><label>First Time? Add Name</label><input id="familyNewName" type="text" placeholder="Enter your name"></div>
+        <div class="field"><label>Date</label><input id="familyDate" type="date"></div>
+        <div class="field"><label>Time</label><input id="familyTime" type="time"></div>
+        <div class="field full"><label>Communication</label><textarea id="familyText" placeholder="Enter family communication details"></textarea></div>
+      </div>
+      <div class="note-actions"><button class="btn btn-green" onclick="saveFamilyCommunication()">Add Family Communication</button></div>
+    </div>
+    <div id="familyList" class="grid-3" style="margin-top:14px;">
+      <div class="card"><h4>Robert H. Family</h4><p><strong>Ericka — 2026-04-12 at 10:30 AM</strong></p><p>Update provided after nurse assessment.</p></div>
+      <div class="card"><h4>Dorothy F. Family</h4><p><strong>Angela — 2026-04-11 at 01:10 PM</strong></p><p>Explained admission timeline and paperwork needed.</p></div>
+    </div>
+  </section>
+  </div>
 
-    /* ── pipeline ── */
-    function renderPipeline(prospects){
-      const inquiry=prospects.filter(p=>p.status==="Inquiry");
-      const pending=prospects.filter(p=>p.status==="Pending Admission");
-      const closed=prospects.filter(p=>p.status==="Admitted"||p.status==="Lost");
-      const render=(el,arr)=>{el.innerHTML="";arr.forEach(p=>{const d=document.createElement("div");d.className="lead-card";d.innerHTML=`<strong>${p.name}</strong><small>Source: ${p.source}</small>`;el.appendChild(d);});};
-      render(document.getElementById("pipeInquiry"),inquiry);
-      render(document.getElementById("pipePending"),pending);
-      render(document.getElementById("pipeClosed"),closed);
-      document.getElementById("pipeCountInquiry").textContent=inquiry.length;
-      document.getElementById("pipeCountPending").textContent=pending.length;
-      document.getElementById("pipeCountClosed").textContent=closed.length;
-    }
+  <div class="tab-pane" id="tab-automation">
+<!-- AUTOMATION -->
+  <section class="section" id="automation">
+    <h3>Automation</h3>
+    <p style="color:var(--muted);margin:0 0 14px;font-size:13px;">Click a button to trigger an automation action. Each fires once and logs a timestamped confirmation.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="auto-btn" onclick="fireAuto(this,'Auto Follow-Up Task Created')">🔁 Auto Follow-Up</button>
+      <button class="auto-btn" onclick="fireAuto(this,'Touch Cadence Scheduled')">📅 Touch Cadence</button>
+      <button class="auto-btn" onclick="fireAuto(this,'Reminder Triggered')">🔔 Trigger Reminder</button>
+      <button class="auto-btn" onclick="fireAuto(this,'Paperwork Alert Sent')">📄 Paperwork Alert</button>
+      <button class="auto-btn" onclick="fireAuto(this,'Overdue Follow-Up Alert Sent')">⚠️ Overdue Alert</button>
+    </div>
+    <div id="autoLog" style="margin-top:12px;display:grid;gap:7px;"></div>
+  </section>
+  </div>
 
-    /* ── staff tracking ── */
-    function saveStaffTracking(){
-      const staff=document.getElementById("evvStaffName").value.trim();
-      const role=document.getElementById("evvRole").value;
-      const patient=document.getElementById("evvPatient").value.trim();
-      const status=document.getElementById("evvStatus").value;
-      if(!staff||!role||!patient){alert("Staff name, role, and patient/account are required.");return;}
-      const body=document.getElementById("staffTrackingBody");
-      const statusPill=status==="Completed"?'<span class="pill pill-green">Completed</span>':status==="Scheduled"?'<span class="pill pill-blue">Scheduled</span>':'<span class="pill pill-yellow">Pending Sync</span>';
+  <div class="tab-pane" id="tab-notes">
+<!-- NOTES -->
+  <section class="section" id="notes">
+    <h3>Notes</h3>
+    <div class="note-form-wrap">
+      <div class="form-grid-3">
+        <div><label for="noteNameSelect">Select Name</label><select id="noteNameSelect"><option value="">Select saved name</option></select><div class="note-help">Previous noters appear here.</div></div>
+        <div><label for="noteNewName">First Time? Add Name</label><input id="noteNewName" type="text" placeholder="Enter your name"></div>
+        <div><label for="notePosition">Position</label><select id="notePosition"><option value="">-- Select --</option><option>Nurse</option><option>Caregiver</option><option>Marketer</option><option>Other</option></select></div>
+        <div><label for="noteDate">Date</label><input id="noteDate" type="date"></div>
+        <div><label for="noteTime">Time</label><input id="noteTime" type="time"></div>
+        <div><label for="noteNextStep">Next Step</label><select id="noteNextStep">
+          <option>Immediate Family Outreach (Call/Text)</option><option>Schedule On-Site Visit</option><option>Conduct Bedside Presentation</option>
+          <option>Request Clinical Records (H&amp;P)</option><option>RN Assessment Requested</option><option>RN Assessment Scheduled</option>
+          <option>Obtain Physician Order for Eval</option><option>Insurance Verification in Progress</option>
+          <option>CM Follow-Up (Status Update)</option><option>Overcoming Family Hesitation</option><option>Other</option>
+        </select></div>
+        <div style="grid-column:1/-1;"><label for="noteText">Note</label><textarea id="noteText" placeholder="Enter note details here…"></textarea></div>
+      </div>
+      <div class="note-actions"><button class="btn btn-green" onclick="saveDemoNote()">Sync &amp; Save Note</button></div>
+      <div id="syncStatus" style="margin-top:8px;font-size:12px;color:#0a6c2f;font-weight:700;"></div>
+    </div>
+    <div id="notesList" style="margin-top:14px;">
+      <div class="grid-2">
+        <div class="note-box"><h4>Ericka — 2026-04-12 at 10:00 AM</h4><p><strong>Position:</strong> Marketer</p><p><strong>Next Step:</strong> CM Follow-Up (Status Update)</p><p>Baylor requested faster turnaround updates.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">✅ Synced — Location Captured</p></div>
+        <div class="note-box"><h4>Angela — 2026-04-11 at 01:40 PM</h4><p><strong>Position:</strong> Nurse</p><p><strong>Next Step:</strong> RN Assessment Scheduled</p><p>Patient appropriate for hospice. Family receptive.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">✅ Synced — Location Captured</p></div>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <div class="tab-pane" id="tab-admin">
+<!-- ADMIN ONLY -->
+  <section class="admin-section" id="admin">
+    <div class="admin-banner"><h3 style="margin:0;color:#c9aeff;">🔒 Admin Only</h3><span class="pill pill-purple">Admin View Only</span></div>
+    <p class="admin-note">This section is hidden from standard users. Only the Admin account holder can view seat limits, manage users, review EVV data, mileage, staff tracking entries, and notes totals. The subscription supports as many admins/users as desired, but active access is limited to the purchased seat count. Users can be assigned any title the purchaser chooses.</p>
+    <div class="admin-grid">
+      <div class="admin-card"><h4>👥 User Management</h4><p>Admin manages user access and subscription seat limits. Users can be assigned any title.</p><div class="mini-actions" style="margin-top:10px;"><button class="btn btn-green btn-small">+ Add User</button><button class="btn btn-red btn-small">− Remove User</button></div></div>
+      <div class="admin-card"><h4>🪑 Seat Limits</h4><p>Subscription seat count controls how many users can be active at one time.</p><span class="admin-stat">12 / 20</span><p style="font-size:11px;">Seats in use / Total purchased</p></div>
+      <div class="admin-card"><h4>📝 Notes Synced</h4><p>Total notes synced across all team members. Staff receive a success prompt only when location is captured.</p><span class="admin-stat" id="adminNotes">0</span></div>
+      <div class="admin-card"><h4>📍 Miles Logged</h4><p>Total mileage captured via GPS when notes are synced. User only gets a "Successful" prompt when location is captured.</p><span class="admin-stat" id="adminMiles">0.0 mi</span></div>
+      <div class="admin-card"><h4>📡 Staff Tracking Entries</h4><p>Auto-captured location entries — each logged when a note is synced by any team member.</p><span class="admin-stat" id="adminStaff">0</span></div>
+      <div class="admin-card" style="grid-column:1/-1;">
+        <h4>📍 All Staff Mileage (Admin View)</h4>
+        <p style="margin-bottom:12px;">Admin can see every team member's daily and weekly mileage totals below.</p>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;">
+          <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;">
+            <p style="font-size:10px;color:var(--muted);margin:0 0 4px;font-weight:800;text-transform:uppercase;">All Staff Today</p>
+            <p style="font-size:22px;font-weight:900;color:var(--green);margin:0;" id="adminAllTodayMiles">0.0 mi</p>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;">
+            <p style="font-size:10px;color:var(--muted);margin:0 0 4px;font-weight:800;text-transform:uppercase;">All Staff This Week</p>
+            <p style="font-size:22px;font-weight:900;color:var(--blue);margin:0;" id="adminAllWeekMiles">0.0 mi</p>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;">
+            <p style="font-size:10px;color:var(--muted);margin:0 0 4px;font-weight:800;text-transform:uppercase;">Total Trips Logged</p>
+            <p style="font-size:22px;font-weight:900;color:#ffd36e;margin:0;" id="adminTotalTrips">0</p>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;">
+            <p style="font-size:10px;color:var(--muted);margin:0 0 4px;font-weight:800;text-transform:uppercase;">Staff Active Today</p>
+            <p style="font-size:22px;font-weight:900;color:#c9aeff;margin:0;" id="adminStaffLoggedToday">0</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Staff Name</th><th>Miles Today</th><th>Miles This Week</th><th>Total Trips</th><th>Last Trip</th></tr></thead>
+          <tbody id="adminMileageTable"><tr><td colspan="5" style="text-align:center;color:#888;">No trips logged yet.</td></tr></tbody></table>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:16px;">
+      <h4 style="color:#c9aeff;margin:0 0 10px;">Current Users</h4>
+      <div class="table-wrap">
+        <table><thead><tr><th>Name</th><th>Title / Role</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="adminUserBody">
+          <tr><td>Ericka</td><td>Marketer</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-red btn-small">Remove</button></td></tr>
+          <tr><td>Angela</td><td>Nurse</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-red btn-small">Remove</button></td></tr>
+          <tr><td>Admin</td><td>Administrator</td><td><span class="pill pill-purple">Admin</span></td><td>—</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </section>
+  </div>
+
+</main>
+</div>
+
+<!-- ADD REFERRAL MODAL -->
+<div class="modal-overlay" id="addReferralModal">
+  <div class="modal-box"><button class="close-modal" onclick="closeModal('addReferralModal')">&times;</button>
+    <h4>Add Referral Source</h4>
+    <div class="modal-grid">
+      <div class="field"><label>Contact Name</label><input id="refContactName" type="text" placeholder="e.g. Jane Smith"></div>
+      <div class="field"><label>Business / Facility</label><input id="refBusiness" type="text" placeholder="e.g. North Park Rehab"></div>
+      <div class="field"><label>Phone</label><input id="refPhone" type="tel" placeholder="(469) 555-0100"></div>
+      <div class="field"><label>Email</label><input id="refEmail" type="email" placeholder="jane@facility.com"></div>
+      <div class="field full"><label>Address</label><input id="refAddress" type="text" placeholder="123 Main St, Dallas TX"></div>
+      <div class="field"><label>Ref Status</label><select id="refStatus"><option value="Green">🟢 Green — Sending Referrals</option><option value="Red">🔴 Red — No Referrals Yet</option></select></div>
+    </div>
+    <div class="modal-actions"><button class="btn btn-green" onclick="saveReferralFromModal()">Save Referral</button><button class="btn btn-gray" onclick="closeModal('addReferralModal')">Cancel</button></div>
+  </div>
+</div>
+
+<!-- EDIT REFERRAL MODAL -->
+<div class="modal-overlay" id="editReferralModal">
+  <div class="modal-box"><button class="close-modal" onclick="closeModal('editReferralModal')">&times;</button>
+    <h4>Edit Referral Source</h4><input type="hidden" id="editRefIndex">
+    <div class="modal-grid">
+      <div class="field"><label>Contact Name</label><input id="editRefContactName" type="text"></div>
+      <div class="field"><label>Business / Facility</label><input id="editRefBusiness" type="text"></div>
+      <div class="field"><label>Phone</label><input id="editRefPhone" type="tel"></div>
+      <div class="field"><label>Email</label><input id="editRefEmail" type="email"></div>
+      <div class="field full"><label>Address</label><input id="editRefAddress" type="text"></div>
+      <div class="field"><label>Ref Status</label><select id="editRefStatus"><option value="Green">🟢 Green — Sending Referrals</option><option value="Red">🔴 Red — No Referrals Yet</option></select></div>
+    </div>
+    <div class="modal-actions"><button class="btn btn-green" onclick="saveEditReferral()">Save Changes</button><button class="btn btn-gray" onclick="closeModal('editReferralModal')">Cancel</button></div>
+  </div>
+</div>
+
+<!-- EDIT PROSPECT MODAL -->
+<div class="modal-overlay" id="editProspectModal">
+  <div class="modal-box"><button class="close-modal" onclick="closeModal('editProspectModal')">&times;</button>
+    <h4>Edit Prospect</h4><input type="hidden" id="editProspIndex">
+    <div class="modal-grid">
+      <div class="field"><label>Name</label><input id="editProspName" type="text"></div>
+      <div class="field"><label>Status</label><select id="editProspStatus"><option>Inquiry</option><option>Pending Admission</option><option>Lost</option><option>Admitted</option></select></div>
+      <div class="field"><label>Phone</label><input id="editProspPhone" type="tel"></div>
+      <div class="field"><label>Email</label><input id="editProspEmail" type="email"></div>
+      <div class="field full"><label>Address</label><input id="editProspAddress" type="text"></div>
+      <div class="field"><label>Secondary Contact</label><input id="editProspSecondary" type="text"></div>
+      <div class="field"><label>Assigned Marketer</label><input id="editProspMarketer" type="text"></div>
+      <div class="field full"><label>Next Step</label><input id="editProspNextStep" type="text"></div>
+    </div>
+    <div class="modal-actions"><button class="btn btn-green" onclick="saveEditProspect()">Save Changes</button><button class="btn btn-gray" onclick="closeModal('editProspectModal')">Cancel</button></div>
+  </div>
+</div>
+
+<script>
+const G="gold";
+const K={refs:`crmRefs_${G}`,prsp:`crmProsp_${G}`,mkt:`crmMkt_${G}`,names:`crmNames_${G}`,notes:`crmNotes_${G}`,family:`crmFamily_${G}`,staff:`crmStaff_${G}`,miles:`crmMiles_${G}`,trips:`crmTrips_${G}`,todayMi:`crmTodayMi_${G}`,weekMi:`crmWeekMi_${G}`,todayDate:`crmTodayDate_${G}`};
+function gs(k,d){try{const r=localStorage.getItem(k);return r?JSON.parse(r):d;}catch(e){return d;}}
+function ss(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function fmt(t){if(!t)return"";const[h,m]=t.split(":");let hr=parseInt(h,10);const ap=hr>=12?"PM":"AM";hr=hr%12||12;return`${hr}:${m} ${ap}`;}
+function pSt(s){const m={Inquiry:"pill-blue","Pending Admission":"pill-yellow",Lost:"pill-red",Admitted:"pill-green"};return`<span class="pill ${m[s]||'pill-blue'}">${s}</span>`;}
+function pRef(s){return s==="Red"?'<span class="pill pill-red">🔴 Red</span>':'<span class="pill pill-green">🟢 Green</span>';}
+function openModal(id){document.getElementById(id).classList.add("open");}
+function closeModal(id){document.getElementById(id).classList.remove("open");}
+function defRefs(){return[{contactName:"Sarah M.",business:"North Park Rehab",phone:"(214)555-0110",email:"sarah@npr.com",address:"100 Rehab Way, Dallas TX",status:"Green"},{contactName:"Dr. Patel",business:"Baylor",phone:"(214)555-0122",email:"patel@baylor.com",address:"3500 Gaston Ave, Dallas TX",status:"Green"},{contactName:"Office Mgr",business:"Physician Office",phone:"(972)555-0133",email:"mgr@po.com",address:"900 Medical Dr, Plano TX",status:"Red"},{contactName:"CM Team",business:"Hospital CM",phone:"(214)555-0144",email:"cm@hospital.com",address:"1200 Hospital Blvd, Dallas TX",status:"Green"}];}
+function defProsp(){return[{name:"Robert H.",status:"Inquiry",source:"North Park Rehab",marketer:"Ericka",phone:"(214)555-2001",email:"robert@email.com",address:"400 Pine St, Dallas TX",secondary:"Linda H.",nextStep:"Schedule assessment"},{name:"Dorothy F.",status:"Pending Admission",source:"Baylor",marketer:"Ericka",phone:"(214)555-2002",email:"dorothy@email.com",address:"700 Maple Ave, Dallas TX",secondary:"",nextStep:"Collect final documents"},{name:"Helen P.",status:"Lost",source:"Physician Office",marketer:"Ericka",phone:"(214)555-2003",email:"helen@email.com",address:"300 Cedar Rd, Plano TX",secondary:"",nextStep:"Revisit source in 2 weeks"},{name:"Thomas J.",status:"Admitted",source:"Hospital CM",marketer:"Ericka",phone:"(214)555-2004",email:"thomas@email.com",address:"600 Oak Blvd, Dallas TX",secondary:"Mary J.",nextStep:"Move to active census"}];}
+
+function updateDashboard(){
+  checkDayReset();
+  const refs=gs(K.refs,defRefs());const prsp=gs(K.prsp,defProsp());
+  const nc=gs(K.notes,2);const fc=gs(K.family,2);const sc=gs(K.staff,2);
+  const tm=parseFloat(gs(K.miles,0)||0);const td=parseFloat(gs(K.todayMi,0)||0);const wk=parseFloat(gs(K.weekMi,0)||0);
+  const gr=refs.filter(r=>r.status==="Green").length;const rr=refs.filter(r=>r.status==="Red").length;
+  const inq=prsp.filter(p=>p.status==="Inquiry").length;const pnd=prsp.filter(p=>p.status==="Pending Admission").length;
+  const adm=prsp.filter(p=>p.status==="Admitted").length;const lst=prsp.filter(p=>p.status==="Lost").length;
+  document.getElementById("kpiProspects").textContent=prsp.length;
+  document.getElementById("kpiReferrals").textContent=refs.length;
+  document.getElementById("kpiAdmissions").textContent=adm;
+  document.getElementById("kpiPending").textContent=pnd;
+  document.getElementById("dtInquiry").textContent=inq;document.getElementById("dtPending").textContent=pnd;
+  document.getElementById("dtAdmitted").textContent=adm;document.getElementById("dtLost").textContent=lst;
+  document.getElementById("dtGreenRef").textContent=gr;document.getElementById("dtRedRef").textContent=rr;
+  document.getElementById("dtPipeline").textContent=prsp.length;document.getElementById("dtFamily").textContent=fc;
+  document.getElementById("adminNotes").textContent=nc;
+  document.getElementById("adminMiles").textContent=tm.toFixed(1)+" mi";
+  document.getElementById("adminStaff").textContent=sc;
+  document.getElementById("todayMiles").textContent=td.toFixed(1);
+  document.getElementById("weekMiles").textContent=wk.toFixed(1);
+  // horizontal bar updates
+  const maxP=prsp.length||1;const maxR=Math.max(refs.length,1);
+  function setHbar(id,val,max){const el=document.getElementById(id);if(el){el.style.width=Math.min(100,Math.round((val/max)*100))+"%";const v=document.getElementById(id.replace("Bar","Val")||id+"Val");if(v)v.textContent=val;}const c=document.getElementById(id.replace("Bar","Count")||id+"Count");if(c)c.textContent=val;}
+  [["hbarInquiry",inq,maxP],["hbarPending",pnd,maxP],["hbarAdmitted",adm,maxP],["hbarLost",lst,maxP],
+   ["hbarTotalProsp",prsp.length,maxP],["hbarGreen",gr,maxR],["hbarRed",rr,maxR],["hbarNotes",nc,Math.max(nc,10)],["hbarFamily",fc,Math.max(fc,10)]].forEach(([id,val,max])=>{
+    const el=document.getElementById(id);if(el){el.style.width=Math.min(100,Math.round((val/max)*100))+"%";const v=document.getElementById(id+"Val");if(v)v.textContent=val;}const c=document.getElementById(id.replace("hbar","kpi").replace("hbar","dt"));if(c)c.textContent=val;
+  });
+  // productivity bars
+  ["prodGreenBar","prodRedBar","prodProspBar","prodAdmBar"].forEach((id,i)=>{
+    const vals=[gr,rr,prsp.length,adm];const maxes=[maxR,maxR,maxP,maxP];const val=vals[i];const mx=maxes[i]||1;
+    const el=document.getElementById(id);if(el){el.style.width=Math.min(100,Math.round((val/mx)*100))+"%";const v=document.getElementById(id.replace("Bar","Val"));if(v)v.textContent=val;}
+    const c=document.getElementById(id.replace("Bar","Count"));if(c)c.textContent=val;
+  });
+  const pnEl=document.getElementById("prodNotesBar");if(pnEl){pnEl.style.width=Math.min(100,Math.round((nc/Math.max(nc,20))*100))+"%";}
+  const pnV=document.getElementById("prodNotesVal");if(pnV)pnV.textContent=nc;
+  const pnC=document.getElementById("prodNotesCount");if(pnC)pnC.textContent=nc;
+  renderPipeline(prsp);renderProspectRecords();renderReferralRecords();
+}
+
+function loadReferralSources(){
+  const refs=gs(K.refs,defRefs());ss(K.refs,refs);
+  const sel=document.getElementById("prospectReferralSourceSelect");const tb=document.getElementById("referralTableBody");
+  sel.innerHTML="";tb.innerHTML="";
+  refs.forEach((r,i)=>{
+    const o=document.createElement("option");o.value=r.business;o.textContent=r.business;sel.appendChild(o);
+    const tr=document.createElement("tr");tr.innerHTML=`<td><input type="radio" name="selRef" value="${i}"></td><td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${r.address||"—"}</td><td>${r.email||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button></td>`;
+    tb.appendChild(tr);
+  });updateDashboard();
+}
+function renderReferralRecords(){
+  const refs=gs(K.refs,defRefs());const q=(document.getElementById("referralSearch")||{value:""}).value.toLowerCase();
+  const tb=document.getElementById("referralRecordsBody");tb.innerHTML="";
+  refs.filter(r=>{if(!q)return true;return[r.contactName,r.business,r.phone,r.email,r.address].some(v=>(v||"").toLowerCase().includes(q));}).forEach((r,_)=>{
+    const i=gs(K.refs,defRefs()).indexOf(r);const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${r.address||"—"}</td><td>${r.email||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button></td>`;
+    tb.appendChild(tr);
+  });
+}
+function saveReferralFromModal(){
+  const cn=document.getElementById("refContactName").value.trim();const biz=document.getElementById("refBusiness").value.trim();
+  if(!cn||!biz){alert("Contact name and business name are required.");return;}
+  const refs=gs(K.refs,defRefs());
+  refs.push({contactName:cn,business:biz,phone:document.getElementById("refPhone").value.trim(),email:document.getElementById("refEmail").value.trim(),address:document.getElementById("refAddress").value.trim(),status:document.getElementById("refStatus").value});
+  ss(K.refs,refs);closeModal("addReferralModal");
+  ["refContactName","refBusiness","refPhone","refEmail","refAddress"].forEach(id=>document.getElementById(id).value="");
+  loadReferralSources();
+}
+function deleteSelectedReferral(){const sel=document.querySelector('input[name="selRef"]:checked');if(!sel){alert("Select a referral to delete.");return;}const refs=gs(K.refs,defRefs());refs.splice(parseInt(sel.value),1);ss(K.refs,refs);loadReferralSources();}
+function openEditReferral(i){const refs=gs(K.refs,defRefs());const r=refs[i];document.getElementById("editRefIndex").value=i;document.getElementById("editRefContactName").value=r.contactName||"";document.getElementById("editRefBusiness").value=r.business||"";document.getElementById("editRefPhone").value=r.phone||"";document.getElementById("editRefEmail").value=r.email||"";document.getElementById("editRefAddress").value=r.address||"";document.getElementById("editRefStatus").value=r.status||"Green";openModal("editReferralModal");}
+function saveEditReferral(){const i=parseInt(document.getElementById("editRefIndex").value);const refs=gs(K.refs,defRefs());refs[i]={contactName:document.getElementById("editRefContactName").value.trim(),business:document.getElementById("editRefBusiness").value.trim(),phone:document.getElementById("editRefPhone").value.trim(),email:document.getElementById("editRefEmail").value.trim(),address:document.getElementById("editRefAddress").value.trim(),status:document.getElementById("editRefStatus").value};ss(K.refs,refs);closeModal("editReferralModal");loadReferralSources();}
+
+function loadMarketers(){const m=gs(K.mkt,["Ericka"]);ss(K.mkt,m);const sel=document.getElementById("prospectAssignedMarketerSelect");sel.innerHTML="";m.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});}
+function loadNames(){
+  const names=gs(K.names,["Ericka","Angela","Mike"]);ss(K.names,names);
+  ["noteNameSelect","familyNameSelect"].forEach(id=>{const sel=document.getElementById(id);if(!sel)return;sel.innerHTML='<option value="">Select saved name</option>';names.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});});
+}
+function saveNameIfNeeded(name){if(!name)return;const names=gs(K.names,["Ericka","Angela","Mike"]);if(!names.includes(name)){names.push(name);ss(K.names,names);loadNames();}}
+
+function renderProspectsTable(){
+  const prsp=gs(K.prsp,defProsp());const tb=document.getElementById("prospectsTableBody");tb.innerHTML="";
+  prsp.forEach((p,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td><input type="radio" name="selProsp" value="${i}"></td><td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.source||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">Edit</button></td>`;tb.appendChild(tr);});
+}
+function renderProspectRecords(){
+  const prsp=gs(K.prsp,defProsp());const q=(document.getElementById("prospectSearch")||{value:""}).value.toLowerCase();
+  const tb=document.getElementById("prospectRecordsBody");tb.innerHTML="";
+  prsp.filter(p=>{if(!q)return true;return[p.name,p.phone,p.email,p.address,p.secondary].some(v=>(v||"").toLowerCase().includes(q));}).forEach((p,_)=>{
+    const i=gs(K.prsp,defProsp()).indexOf(p);const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.phone||"—"}</td><td>${p.email||"—"}</td><td>${p.address||"—"}</td><td>${p.secondary||"—"}</td><td>${p.source||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">Edit</button></td>`;
+    tb.appendChild(tr);
+  });
+}
+function saveProspect(){
+  const name=document.getElementById("prospectName").value.trim();const status=document.getElementById("prospectStatus").value;const source=document.getElementById("prospectReferralSourceSelect").value;const nm=document.getElementById("newAssignedMarketerInput").value.trim();const marketer=nm||document.getElementById("prospectAssignedMarketerSelect").value;const nextStep=document.getElementById("prospectNextStep").value.trim();const phone=document.getElementById("prospectPhone").value.trim();const email=document.getElementById("prospectEmail").value.trim();const address=document.getElementById("prospectAddress").value.trim();const secondary=document.getElementById("prospectSecondary").value.trim();
+  if(!name||!status||!marketer||!nextStep){alert("Name, Status, Marketer, and Next Step are required.");return;}
+  if(nm){const m=gs(K.mkt,["Ericka"]);if(!m.includes(nm)){m.push(nm);ss(K.mkt,m);loadMarketers();}}
+  const prsp=gs(K.prsp,defProsp());prsp.unshift({name,status,source,marketer,nextStep,phone,email,address,secondary});ss(K.prsp,prsp);renderProspectsTable();updateDashboard();
+  ["prospectName","newAssignedMarketerInput","prospectNextStep","prospectPhone","prospectEmail","prospectAddress","prospectSecondary"].forEach(id=>document.getElementById(id).value="");
+}
+function deleteSelectedProspect(){const sel=document.querySelector('input[name="selProsp"]:checked');if(!sel){alert("Select a prospect to delete.");return;}const prsp=gs(K.prsp,defProsp());prsp.splice(parseInt(sel.value),1);ss(K.prsp,prsp);renderProspectsTable();updateDashboard();}
+function openEditProspect(i){const prsp=gs(K.prsp,defProsp());const p=prsp[i];document.getElementById("editProspIndex").value=i;document.getElementById("editProspName").value=p.name||"";document.getElementById("editProspStatus").value=p.status||"Inquiry";document.getElementById("editProspPhone").value=p.phone||"";document.getElementById("editProspEmail").value=p.email||"";document.getElementById("editProspAddress").value=p.address||"";document.getElementById("editProspSecondary").value=p.secondary||"";document.getElementById("editProspMarketer").value=p.marketer||"";document.getElementById("editProspNextStep").value=p.nextStep||"";openModal("editProspectModal");}
+function saveEditProspect(){const i=parseInt(document.getElementById("editProspIndex").value);const prsp=gs(K.prsp,defProsp());prsp[i].name=document.getElementById("editProspName").value.trim();prsp[i].status=document.getElementById("editProspStatus").value;prsp[i].phone=document.getElementById("editProspPhone").value.trim();prsp[i].email=document.getElementById("editProspEmail").value.trim();prsp[i].address=document.getElementById("editProspAddress").value.trim();prsp[i].secondary=document.getElementById("editProspSecondary").value.trim();prsp[i].marketer=document.getElementById("editProspMarketer").value.trim();prsp[i].nextStep=document.getElementById("editProspNextStep").value.trim();ss(K.prsp,prsp);closeModal("editProspectModal");renderProspectsTable();updateDashboard();}
+
+function renderPipeline(prsp){
+  const groups={Inquiry:[],["Pending Admission"]:[],Admitted:[],Lost:[]};prsp.forEach(p=>{if(groups[p.status])groups[p.status].push(p);});const total=prsp.length||1;
+  [["Inquiry","pipeInquiry","pipeCountInquiry","pipeBarInquiry"],["Pending Admission","pipePending","pipeCountPending","pipeBarPending"],["Admitted","pipeAdmitted","pipeCountAdmitted","pipeBarAdmitted"],["Lost","pipeLost","pipeCountLost","pipeBarLost"]].forEach(([status,bodyId,countId,barId])=>{
+    const arr=groups[status];
+    const bar=document.getElementById(barId);if(bar){bar.style.width=Math.round((arr.length/total)*100)+"%";const sp=bar.querySelector("span");if(sp)sp.textContent=arr.length;}
+    const cEl=document.getElementById(countId);if(cEl)cEl.textContent=arr.length;
+    const el=document.getElementById(bodyId);if(el){el.innerHTML="";arr.forEach(p=>{const d=document.createElement("div");d.className="pipe-card";d.innerHTML=`<strong>${p.name}</strong><small>${p.source||"—"}</small>`;el.appendChild(d);});}
+  });
+}
+
+
+function saveFamilyCommunication(){
+  const sn=document.getElementById("familyNameSelect").value.trim();const nn=document.getElementById("familyNewName").value.trim();const fn=nn||sn;const dt=document.getElementById("familyDate").value;const ti=document.getElementById("familyTime").value;const tx=document.getElementById("familyText").value.trim();
+  if(!fn||!dt||!ti||!tx){alert("Name, date, time, and communication text are required.");return;}
+  saveNameIfNeeded(fn);const list=document.getElementById("familyList");const c=document.createElement("div");c.className="card";c.innerHTML=`<h4>Family Communication</h4><p><strong>${fn} — ${dt} at ${fmt(ti)}</strong></p><p>${tx}</p>`;list.prepend(c);
+  const cnt=gs(K.family,2)+1;ss(K.family,cnt);["familyNewName","familyDate","familyTime","familyText"].forEach(id=>document.getElementById(id).value="");updateDashboard();
+}
+
+function fireAuto(btn,msg){btn.classList.add("fired");btn.disabled=true;const log=document.getElementById("autoLog");const d=document.createElement("div");d.style.cssText="background:#fff;color:#111;border-radius:9px;padding:9px 13px;font-size:12px;";d.textContent=`✅ ${msg} — ${new Date().toLocaleTimeString()}`;log.prepend(d);}
+
+function saveDemoNote(){
+  const sn=document.getElementById("noteNameSelect").value.trim();const nn=document.getElementById("noteNewName").value.trim();const fn=nn||sn;const pos=document.getElementById("notePosition").value;const dt=document.getElementById("noteDate").value;const ti=document.getElementById("noteTime").value;const ns=document.getElementById("noteNextStep").value;const nt=document.getElementById("noteText").value.trim();
+  if(!fn||!pos||!dt||!ti||!ns||!nt){alert("Name, Position, Date, Time, Next Step, and Note are required.");return;}
+  saveNameIfNeeded(fn);
+  const tb=document.getElementById("staffTrackingBody");
+  const tr=document.createElement("tr");
+  const nowStr=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'})+' '+new Date().toLocaleTimeString();
+  const locLabel='📍 '+nowStr+' — GPS Captured';
+  tr.innerHTML=`<td>${fn}</td><td>${pos}</td><td>${dt}</td><td>${fmt(ti)}</td><td><span style="font-size:11px;color:#136c32;font-weight:700;">${locLabel}</span></td><td>${ns}</td>`;
+  tb.prepend(tr);
+  const sc=gs(K.staff,2)+1;ss(K.staff,sc);const cnt=gs(K.notes,2)+1;ss(K.notes,cnt);
+  const wrapper=document.getElementById("notesList").querySelector(".grid-2")||document.getElementById("notesList");const box=document.createElement("div");box.className="note-box";box.innerHTML=`<h4>${fn} — ${dt} at ${fmt(ti)}</h4><p><strong>Position:</strong> ${pos}</p><p><strong>Next Step:</strong> ${ns}</p><p>${nt}</p><p style="color:#0a6c2f;font-size:11px;margin-top:6px;font-weight:700;">✅ Note Synced Successfully — Location Captured</p>`;wrapper.prepend(box);
+  document.getElementById("syncStatus").textContent="✅ Sync successful — note and location saved at "+new Date().toLocaleTimeString();
+  ["noteNewName","noteDate","noteTime","noteText"].forEach(id=>document.getElementById(id).value="");updateDashboard();
+}
+
+
+function checkDayReset(){
+  const today=new Date().toDateString();
+  if(gs(K.todayDate,"")!==today){ss(K.todayDate,today);ss(K.todayMi,0);}
+}
+function estimateMiles(s,e){
+  const seed=(s+e).split("").reduce((a,c)=>a+c.charCodeAt(0),0);
+  return+(8+(seed%40)+Math.random()*5).toFixed(1);
+}
+function logMileage(){
+  const staff=document.getElementById("gpsStaffName").value.trim();
+  const start=document.getElementById("gpsStart").value.trim();
+  const end=document.getElementById("gpsEnd").value.trim();
+  const purpose=document.getElementById("gpsPurpose").value.trim();
+  if(!staff||!start||!end){alert("Your name, start address, and end address are required.");return;}
+  const miles=estimateMiles(start,end);
+  const now=new Date();
+  const todayStr=now.toDateString();
+  const timeStr=now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const totalMiles=parseFloat(gs(K.miles,0))+miles;
+  const trips=gs(K.trips,[]);
+  const tripNum=trips.length+1;
+  const todayMi=parseFloat(gs(K.todayMi,0))+miles;
+  const weekMi=parseFloat(gs(K.weekMi,0))+miles;
+  ss(K.miles,totalMiles);ss(K.todayMi,todayMi);ss(K.weekMi,weekMi);
+  trips.push({staff,start,end,miles,purpose,time:timeStr,date:todayStr,tripNum});
+  ss(K.trips,trips);
+  const res=document.getElementById("gpsResult");
+  if(res)res.textContent=`✅ ${miles} miles logged — ${start} → ${end}  (Trip #${tripNum})`;
+  updateMileageTotals();
+  const tbody=document.getElementById("mileageTripLog");
+  if(tbody){
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${tripNum}</td><td>${staff}</td><td>${start}</td><td>${end}</td><td><strong>${miles}</strong></td><td>${purpose||"—"}</td><td>${timeStr}</td>`;
+    tbody.prepend(tr);
+  }
+  ["gpsStaffName","gpsStart","gpsEnd","gpsPurpose"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
+  updateDashboard();
+}
+function updateMileageTotals(){
+  checkDayReset();
+  const todayMi=parseFloat(gs(K.todayMi,0)||0);
+  const weekMi=parseFloat(gs(K.weekMi,0)||0);
+  const td=document.getElementById("myTodayMiles");if(td)td.textContent=todayMi.toFixed(1);
+  const wk=document.getElementById("myWeekMiles");if(wk)wk.textContent=weekMi.toFixed(1);
+  const trips=gs(K.trips,[]);
+  const todayStr=new Date().toDateString();
+  const todayTrips=trips.filter(t=>t.date===todayStr);
+  const todayTotal=todayTrips.reduce((a,t)=>a+parseFloat(t.miles),0);
+  const weekTotal=trips.reduce((a,t)=>a+parseFloat(t.miles),0);
+  const staffToday=new Set(todayTrips.map(t=>t.staff)).size;
+  const aat=document.getElementById("adminAllTodayMiles");if(aat)aat.textContent=todayTotal.toFixed(1)+" mi";
+  const aaw=document.getElementById("adminAllWeekMiles");if(aaw)aaw.textContent=weekTotal.toFixed(1)+" mi";
+  const att=document.getElementById("adminTotalTrips");if(att)att.textContent=trips.length;
+  const ast=document.getElementById("adminStaffLoggedToday");if(ast)ast.textContent=staffToday;
+  const adminTbl=document.getElementById("adminMileageTable");
+  if(adminTbl&&trips.length>0){
+    const staffMap={};
+    trips.forEach(t=>{
+      if(!staffMap[t.staff])staffMap[t.staff]={today:0,week:0,count:0,last:"—"};
+      staffMap[t.staff].week+=parseFloat(t.miles);
+      staffMap[t.staff].count++;
+      staffMap[t.staff].last=t.time;
+      if(t.date===todayStr)staffMap[t.staff].today+=parseFloat(t.miles);
+    });
+    adminTbl.innerHTML="";
+    Object.entries(staffMap).forEach(([name,d])=>{
       const tr=document.createElement("tr");
-      tr.innerHTML=`<td>${staff}</td><td>${role}</td><td>${patient}</td><td>Manual Entry</td><td>${statusPill}</td>`;
-      body.prepend(tr);
-      const count=gs(KEYS.staff,3)+1;ss(KEYS.staff,count);
-      document.getElementById("evvStaffName").value="";document.getElementById("evvPatient").value="";
-      updateDashboard();
-    }
+      tr.innerHTML=`<td><strong>${name}</strong></td><td>${d.today.toFixed(1)} mi</td><td>${d.week.toFixed(1)} mi</td><td>${d.count}</td><td>${d.last}</td>`;
+      adminTbl.appendChild(tr);
+    });
+  }
+}
+function getLocationString(){
+  const lats=["32.7767","32.8140","32.9482","33.0198","32.6762","32.8468"];
+  const lngs=["96.7970","96.9489","97.0641","96.6989","97.2830","96.8508"];
+  const areas=["Dallas, TX","Irving, TX","Fort Worth, TX","McKinney, TX","Arlington, TX","Plano, TX"];
+  const i=Math.floor(Math.random()*lats.length);
+  return `${areas[i]} — ${lats[i]}°N ${lngs[i]}°W`;
+}
+function addStaffTrackingEntry(fn,pos,dt,ti,ns){
+  const loc=getLocationString();
+  const tbody=document.getElementById("staffTrackingBody");if(!tbody)return;
+  const tr=document.createElement("tr");
+  tr.innerHTML=`<td><strong>${fn}</strong></td><td>${pos}</td><td>${dt}</td><td>${fmt(ti)||new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})}</td><td><span class="pill pill-green">📍 ${loc}</span></td><td>${ns}</td>`;
+  tbody.prepend(tr);
+}
 
-    /* ── GPS mileage ── */
-    function estimateMiles(start, end) {
-      // Estimate distance based on address string length as a demo approximation
-      const seed = (start + end).split("").reduce((a,c)=>a+c.charCodeAt(0),0);
-      return (8 + (seed % 40) + Math.random() * 5).toFixed(1);
-    }
-    function logMileage(){
-      const staff=document.getElementById("gpsStaffName").value.trim();
-      const start=document.getElementById("gpsStart").value.trim();
-      const end=document.getElementById("gpsEnd").value.trim();
-      const purpose=document.getElementById("gpsPurpose").value.trim();
-      if(!staff||!start||!end){alert("Staff name, start address, and end address are required.");return;}
-      const miles=parseFloat(estimateMiles(start,end));
-      const totalMiles=parseFloat(gs(KEYS.miles,0))+miles;
-      const trips=gs(KEYS.trips,0)+1;
-      ss(KEYS.miles,totalMiles);ss(KEYS.trips,trips);
+(function init(){showTab('dashboard');checkDayReset();loadReferralSources();loadMarketers();loadNames();renderProspectsTable();updateDashboard();updateMileageTotals();})();
 
-      const result=document.getElementById("gpsResult");
-      result.innerHTML=`<div class="gps-result">✅ <strong>${miles} miles</strong> logged for ${staff} | ${start} → ${end}<br><small>${purpose||"No purpose noted"} — Trip #${trips}</small></div>`;
+/* ═══ TAB SYSTEM ═══ */
+function showTab(id){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'));
+  const pane=document.getElementById('tab-'+id);
+  if(pane)pane.classList.add('active');
+  const link=document.querySelector('.nav a[data-tab="'+id+'"]');
+  if(link)link.classList.add('active');
+  window.scrollTo(0,0);
+}
 
-      const list=document.getElementById("mileageList");
-      const box=document.createElement("div");box.className="note-box";
-      box.innerHTML=`<h4>Trip #${trips} — ${staff}</h4><p><strong>From:</strong> ${start}</p><p><strong>To:</strong> ${end}</p><p><strong>Miles:</strong> ${miles} | <strong>Purpose:</strong> ${purpose||"—"}</p>`;
-      list.prepend(box);
-
-      document.getElementById("gpsStaffName").value="";document.getElementById("gpsStart").value="";document.getElementById("gpsEnd").value="";document.getElementById("gpsPurpose").value="";
-      updateDashboard();
-    }
-
-    /* ── family communication ── */
-    function saveFamilyCommunication(){
-      const sel=document.getElementById("familyNameSelect");
-      const newName=document.getElementById("familyNewName").value.trim();
-      const finalName=newName||sel.value.trim();
-      const date=document.getElementById("familyDate").value;
-      const time=document.getElementById("familyTime").value;
-      const text=document.getElementById("familyText").value.trim();
-      if(!finalName||!date||!time||!text){alert("Name, date, time, and communication text are required.");return;}
-      saveNameIfNeeded(finalName);
-      const list=document.getElementById("familyList");
-      const card=document.createElement("div");card.className="card";
-      card.innerHTML=`<h4>Family Communication</h4><p><strong>${finalName} — ${date} at ${formatTime(time)}</strong></p><p>${text}</p>`;
-      list.prepend(card);
-      const count=gs(KEYS.family,3)+1;ss(KEYS.family,count);
-      document.getElementById("familyNewName").value="";document.getElementById("familyDate").value="";document.getElementById("familyTime").value="";document.getElementById("familyText").value="";
-      updateDashboard();
-    }
-
-    /* ── notes ── */
-    function saveDemoNote(){
-      const sel=document.getElementById("noteNameSelect");
-      const newName=document.getElementById("noteNewName").value.trim();
-      const finalName=newName||sel.value.trim();
-      const position=document.getElementById("notePosition").value;
-      const date=document.getElementById("noteDate").value;
-      const time=document.getElementById("noteTime").value;
-      const nextStep=document.getElementById("noteNextStep").value;
-      const noteText=document.getElementById("noteText").value.trim();
-      if(!finalName||!position||!date||!time||!nextStep||!noteText){alert("Name, Position, Date, Time, Next Step, and Note are all required.");return;}
-      saveNameIfNeeded(finalName);
-      const wrapper=document.getElementById("notesList").querySelector(".grid-2")||document.getElementById("notesList");
-      const box=document.createElement("div");box.className="note-box";
-      box.innerHTML=`<h4>${finalName} — ${date} at ${formatTime(time)}</h4><p><strong>Position:</strong> ${position}</p><p><strong>Next Step:</strong> ${nextStep}</p><p>${noteText}</p>`;
-      wrapper.prepend(box);
-      const count=gs(KEYS.notes,2)+1;ss(KEYS.notes,count);
-      document.getElementById("noteNewName").value="";document.getElementById("noteDate").value="";document.getElementById("noteTime").value="";document.getElementById("noteText").value="";
-      updateDashboard();
-    }
-
-    /* ── init ── */
-    (function init(){
-      loadReferralSources();
-      loadMarketers();
-      loadNames();
-      renderProspectsTable();
-      updateDashboard();
-    })();
-  </script>
-</body>
-</html>
+</script>
