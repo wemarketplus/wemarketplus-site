@@ -86,10 +86,21 @@
       filter:blur(18px);pointer-events:none;
     }
     .crm-card:hover{transform:translateY(-8px) scale(1.01);border-color:rgba(73,182,255,.58)}
+    /* Gold card — premium glow */
+    .crm-card.gold-card{
+      border-color:rgba(255,215,0,.45);
+      box-shadow:0 25px 60px rgba(255,200,0,.18), 0 0 40px rgba(255,200,0,.10);
+    }
+    .crm-card.gold-card::before{
+      background:linear-gradient(135deg, rgba(255,215,0,.8), rgba(140,255,102,.5), rgba(255,215,0,.3));
+    }
+    .crm-card.gold-card:hover{border-color:rgba(255,215,0,.75)}
     .badge{
-      position:absolute;top:16px;right:16px;background:linear-gradient(90deg, var(--blue), var(--green));
+      position:absolute;top:16px;right:16px;
       color:#06111d;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:900;
     }
+    .badge-popular{background:linear-gradient(90deg,var(--blue),var(--green))}
+    .badge-gold{background:linear-gradient(90deg,#ffd700,#ffec6e);color:#3a2800}
     .logo-wrap{
       height:220px;display:flex;align-items:center;justify-content:center;
       border:1px solid rgba(255,255,255,.09);border-radius:24px;background:rgba(255,255,255,.04);
@@ -97,8 +108,19 @@
     }
     .logo-wrap img{max-width:100%;max-height:100%;object-fit:contain}
     .crm-card h4{margin:0 0 8px;font-size:34px}
-    .crm-sub{margin:0 0 14px;color:#eaf1fb;font-size:17px;line-height:1.6;font-weight:700}
-    .crm-desc{margin:0 0 18px;color:var(--muted);font-size:15px;line-height:1.7;min-height:260px}
+    .crm-sub{margin:0 0 6px;color:#eaf1fb;font-size:17px;line-height:1.6;font-weight:700}
+    .crm-tier-label{
+      display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:900;
+      margin-bottom:12px;
+    }
+    .tier-starter{background:rgba(73,182,255,.15);color:#49b6ff;border:1px solid rgba(73,182,255,.3)}
+    .tier-professional{background:rgba(140,255,102,.12);color:#8cff66;border:1px solid rgba(140,255,102,.3)}
+    .tier-enterprise{background:rgba(255,215,0,.15);color:#ffd700;border:1px solid rgba(255,215,0,.35)}
+    .crm-desc{margin:0 0 18px;color:var(--muted);font-size:15px;line-height:1.7;min-height:220px}
+    .feature-check-list{margin:0 0 18px;padding:0;list-style:none;display:grid;gap:6px}
+    .feature-check-list li{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:flex-start}
+    .feature-check-list li span.ck{color:#8cff66;font-size:14px;flex-shrink:0;margin-top:1px}
+    .feature-check-list li span.ck-gold{color:#ffd700}
     .card-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
     .price-list{border-top:1px solid rgba(255,255,255,.08);margin-top:12px}
     .price-row{
@@ -108,8 +130,8 @@
     .price-row:last-child{border-bottom:none}
     .price-name{font-size:16px;font-weight:800}
     .price-amt{font-size:18px;font-weight:900;white-space:nowrap}
+    .price-amt.gold-price{color:#ffd700}
     footer{max-width:1240px;margin:0 auto;padding:34px 24px 54px;color:var(--muted);text-align:center}
-
     .modal{
       position:fixed;inset:0;display:none;align-items:center;justify-content:center;
       z-index:9999;background:rgba(0,0,0,.74);padding:18px;
@@ -132,7 +154,6 @@
     .agree-item input{margin-top:3px}
     .agree-item strong{display:block;margin-bottom:6px}
     .msg{margin-top:12px;min-height:20px;font-size:14px;font-weight:800;color:#ff9696}
-
     @media (max-width:1100px){
       .crm-grid,.feature-grid,.legal-grid,.contact-grid{grid-template-columns:1fr}
     }
@@ -156,7 +177,6 @@
         <p>Connect. Grow. Succeed.</p>
       </div>
     </div>
-
     <div class="nav-links">
       <a href="#homepage">Homepage</a>
       <a href="#features">Features</a>
@@ -172,8 +192,8 @@
     <div class="pill">Hospice CRM Platform by We Market Plus LLC</div>
     <h2>Connect. Grow. Succeed.</h2>
     <p>
-      Choose the package you want, watch the live demo, review the agreements, and continue to checkout.
-      Each package has its own Subscribe button.
+      The only CRM built specifically for hospice teams. Choose your tier, watch the live demo,
+      review the agreements, and subscribe. Three tiers — one platform.
     </p>
     <div class="hero-actions">
       <a href="#pricing" class="btn btn-blue">View Pricing</a>
@@ -184,165 +204,206 @@
   <section class="section" id="features">
     <h3>Platform Highlights</h3>
     <p class="lead">
-      These are positioned as fully built out hospice CRM SaaS systems with marketing workflow, notes,
-      GPS and mileage where applicable, admin control, subscription control, and compliance-focused structure.
+      Built by hospice industry professionals. Every feature maps directly to real workflows —
+      from first referral call to admission, clinical note, and family communication.
     </p>
-
     <div class="feature-grid">
       <div class="feature-box">
         <h4>Marketing Workflow</h4>
         <p>
-          Inquiry → Visit → Admit → Lost tracking, referral source management, notes, reminders, touch logs,
-          conversion visibility, competitor tracking concepts, and territory management.
+          Inquiry → Visit → Admit → Lost tracking, referral source management, notes, reminders,
+          touch logs, conversion visibility, territory management, and productivity dashboards.
         </p>
       </div>
-
       <div class="feature-box">
-        <h4>Compliance & Billing Controls</h4>
+        <h4>Compliance & Admin Controls</h4>
         <p>
-          Terms, Privacy, BAA acknowledgment, and nonpayment suspension language before checkout.
-          Backend seat-cap and suspension logic can control actual CRM access after purchase.
+          Terms, Privacy, and BAA acknowledgment before checkout. Role-based access control,
+          seat-cap enforcement, HIPAA audit logs, and suspension logic for nonpayment.
         </p>
       </div>
-
       <div class="feature-box">
-        <h4>GPS, Mileage & Care Support</h4>
+        <h4>GPS, EVV & Clinical Tools</h4>
         <p>
-          GPS check-in concepts, EVV concepts, mileage tracking, commuter deduction concepts, clinical note concepts,
-          family logs, and admin reporting support for the higher-tier products.
+          GPS check-in, EVV mileage tracking, voice-to-note, clinical notes, family communication
+          logs, real-time staff location maps, and admin reporting on the higher-tier products.
         </p>
       </div>
     </div>
   </section>
 
- <section class="section" id="pricing">
-  <h3>Choose Your CRM</h3>
-  <p class="lead">Each CRM is designed for a different role. Click Demo to preview exactly what each system does.</p>
+  <!-- ═══ PRICING SECTION ═══ -->
+  <section class="section" id="pricing">
+    <h3>Choose Your CRM</h3>
+    <p class="lead">Three tiers built for different roles. Click Demo to see exactly what each system includes before you subscribe.</p>
 
-  <div class="crm-grid">
+    <div class="crm-grid">
 
-    <article class="crm-card">
-      <h4>HospiceLink Pro</h4>
-      <p class="crm-sub">Marketing CRM</p>
-      <p class="crm-desc">
-        Built for marketers only. Includes everything a marketer needs to be successful in the field, including prospect management, prospect statuses, referral source tracking, marketer notes, pipeline visibility, facility visits, pending follow-ups, admissions tracking, and admin user controls with subscription-based user limits.
-      </p>
-
-      <div class="card-actions">
-        <a href="demo-pro.html" class="btn btn-blue btn-small">Demo</a>
-      </div>
-
-      <div class="price-list">
-        <div class="price-row">
-          <div class="price-name">0–5 Users</div>
-          <div class="price-amt">$99/mo</div>
-          <a href="https://buy.stripe.com/6oU3cw4VW1fp6Ld6hffEk00" class="btn btn-green btn-small">Subscribe</a>
+      <!-- ── PRO ── -->
+      <article class="crm-card">
+        <span class="badge badge-popular">Starter</span>
+        <h4>HospiceLink Pro</h4>
+        <p class="crm-sub">Marketing CRM</p>
+        <span class="crm-tier-label tier-starter">Starter Plan</span>
+        <p class="crm-desc">
+          Built for marketers in the field. Everything a hospice marketer needs to manage prospects,
+          track referral sources, log visits, and drive admissions — with full admin control.
+        </p>
+        <ul class="feature-check-list">
+          <li><span class="ck">✓</span>Prospect & pipeline management</li>
+          <li><span class="ck">✓</span>Referral source tracking</li>
+          <li><span class="ck">✓</span>Territory view</li>
+          <li><span class="ck">✓</span>Productivity tracking</li>
+          <li><span class="ck">✓</span>Automation (follow-ups, alerts)</li>
+          <li><span class="ck">✓</span>Notes & GPS sync</li>
+          <li><span class="ck">✓</span>AI assistant</li>
+          <li><span class="ck">✓</span>Admin edit / delete all records</li>
+        </ul>
+        <div class="card-actions">
+          <a href="demo-pro.html" class="btn btn-blue btn-small">Demo</a>
         </div>
-        <div class="price-row">
-          <div class="price-name">5–10 Users</div>
-          <div class="price-amt">$199/mo</div>
-          <a href="https://buy.stripe.com/aFa5kEagg2jt9Xp0WVfEk01" class="btn btn-green btn-small">Subscribe</a>
+        <div class="price-list">
+          <div class="price-row">
+            <div class="price-name">0–5 Users</div>
+            <div class="price-amt">$149/mo</div>
+            <button onclick="startSubscribe('HospiceLink Pro','0–5 Users','$149/mo','STRIPE_PRO_0_5')" class="btn btn-green btn-small">Subscribe</button>
+          </div>
+          <div class="price-row">
+            <div class="price-name">5–10 Users</div>
+            <div class="price-amt">$249/mo</div>
+            <button onclick="startSubscribe('HospiceLink Pro','5–10 Users','$249/mo','STRIPE_PRO_5_10')" class="btn btn-green btn-small">Subscribe</button>
+          </div>
+          <div class="price-row">
+            <div class="price-name">10–20 Users</div>
+            <div class="price-amt">$349/mo</div>
+            <button onclick="startSubscribe('HospiceLink Pro','10–20 Users','$349/mo','STRIPE_PRO_10_20')" class="btn btn-green btn-small">Subscribe</button>
+          </div>
+          <div class="price-row">
+            <div class="price-name">Unlimited Users</div>
+            <div class="price-amt">$449/mo</div>
+            <button onclick="startSubscribe('HospiceLink Pro','Unlimited Users','$449/mo','STRIPE_PRO_UNLIMITED')" class="btn btn-green btn-small">Subscribe</button>
+          </div>
         </div>
-        <div class="price-row">
-          <div class="price-name">10–20 Users</div>
-          <div class="price-amt">$250/mo</div>
-          <a href="https://buy.stripe.com/6oU8wQfAA7DN2uX497fEk02" class="btn btn-green btn-small">Subscribe</a>
-        </div>
-        <div class="price-row">
-          <div class="price-name">Unlimited Users</div>
-          <div class="price-amt">$299/mo</div>
-          <a href="https://buy.stripe.com/dRmeVe0FGe2bedF20ZfEk03" class="btn btn-green btn-small">Subscribe</a>
-        </div>
-      </div>
-    </article>
+      </article>
 
-    <article class="crm-card">
-      <h4>HospiceLink Gold</h4>
-      <p class="crm-sub">Marketing + Clinical CRM</p>
-      <p class="crm-desc">
-        Built for marketers, Nurses, and Caregivers. Includes all marketing tools plus caregiver tracking, EVV concepts, mileage tracking, patient/staff tables, family communication, and clinical notes.
-      </p>
-
-      <div class="card-actions">
-        <a href="demo-gold.html" class="btn btn-blue btn-small">Demo</a>
-      </div>
-
-      <div class="price-list">
-        <div class="price-row">
-          <div class="price-name">0–10 Users</div>
-          <div class="price-amt">$250/mo</div>
-          <a href="https://buy.stripe.com/bJe00k3RSgaj1qT353fEk05" class="btn btn-green btn-small">Subscribe</a>
+      <!-- ── MAX ── -->
+      <article class="crm-card">
+        <span class="badge badge-popular">Professional</span>
+        <h4>HospiceLink Max</h4>
+        <p class="crm-sub">Marketing + Clinical CRM</p>
+        <span class="crm-tier-label tier-professional">Professional Plan</span>
+        <p class="crm-desc">
+          Built for multi-role hospice teams — marketers, nurses, and caregivers. Adds EVV/GPS mileage
+          tracking, family communication, SMS & email, clinical workflows, and staff tracking.
+        </p>
+        <ul class="feature-check-list">
+          <li><span class="ck">✓</span>Everything in Pro</li>
+          <li><span class="ck">✓</span>EVV / GPS mileage tracking</li>
+          <li><span class="ck">✓</span>Live GPS route map</li>
+          <li><span class="ck">✓</span>Family communication log</li>
+          <li><span class="ck">✓</span>SMS & email from CRM</li>
+          <li><span class="ck">✓</span>Clinical notes (nurse / caregiver)</li>
+          <li><span class="ck">✓</span>Staff tracking (admin only)</li>
+          <li><span class="ck">✓</span>Marketer → nurse → caregiver workflow</li>
+        </ul>
+        <div class="card-actions">
+          <a href="demo-max.html" class="btn btn-blue btn-small">Demo</a>
         </div>
-        <div class="price-row">
-          <div class="price-name">10–20 Users</div>
-          <div class="price-amt">$349/mo</div>
-          <a href="https://buy.stripe.com/9B614odsscY79Xp9trfEk06" class="btn btn-green btn-small">Subscribe</a>
+        <div class="price-list">
+          <div class="price-row">
+            <div class="price-name">0–10 Users</div>
+            <div class="price-amt">$449/mo</div>
+            <button onclick="startSubscribe('HospiceLink Max','0–10 Users','$449/mo','STRIPE_MAX_0_10')" class="btn btn-green btn-small">Subscribe</button>
+          </div>
+          <div class="price-row">
+            <div class="price-name">10–20 Users</div>
+            <div class="price-amt">$649/mo</div>
+            <button onclick="startSubscribe('HospiceLink Max','10–20 Users','$649/mo','STRIPE_MAX_10_20')" class="btn btn-green btn-small">Subscribe</button>
+          </div>
+          <div class="price-row">
+            <div class="price-name">Unlimited Users</div>
+            <div class="price-amt">$849/mo</div>
+            <button onclick="startSubscribe('HospiceLink Max','Unlimited Users','$849/mo','STRIPE_MAX_UNLIMITED')" class="btn btn-green btn-small">Subscribe</button>
+          </div>
         </div>
-        <div class="price-row">
-          <div class="price-name">Unlimited Users</div>
-          <div class="price-amt">$449/mo</div>
-          <a href="https://buy.stripe.com/6oUaEY3RS7DNb1t6hffEk07" class="btn btn-green btn-small">Subscribe</a>
-        </div>
-      </div>
-    </article>
+      </article>
 
-    <article class="crm-card">
-      <h4>HospiceLink Max</h4>
-      <p class="crm-sub">Advanced Marketing CRM</p>
-      <p class="crm-desc">
-        Built for advanced hospice marketers only. Includes everything a marketer needs to be successful in the field, plus territory view, productivity tracking, automation concepts, account visits, miles logged, admissions, next-step visibility, and admin controls with subscription-based user limits.
-      </p>
-
-      <div class="card-actions">
-        <a href="demo-max.html" class="btn btn-blue btn-small">Demo</a>
-      </div>
-
-      <div class="price-list">
-        <div class="price-row">
-          <div class="price-name">0–10 Users</div>
-          <div class="price-amt">$199/mo</div>
-          <a href="https://buy.stripe.com/6oU6oI744gajfhJeNLfEk08" class="btn btn-green btn-small">Subscribe</a>
+      <!-- ── GOLD ── -->
+      <article class="crm-card gold-card">
+        <span class="badge badge-gold">🏆 Most Powerful</span>
+        <h4>HospiceLink Gold</h4>
+        <p class="crm-sub">Enterprise CRM — Gold Standard</p>
+        <span class="crm-tier-label tier-enterprise">Enterprise Plan</span>
+        <p class="crm-desc">
+          The most complete hospice CRM available. Everything in Max plus advanced AI, revenue intelligence,
+          territory heat maps, real-time staff location, voice-to-note, HIPAA audit logs,
+          full automation engine, EHR integrations, and white-label option.
+        </p>
+        <ul class="feature-check-list">
+          <li><span class="ck ck-gold">✓</span>Everything in Max</li>
+          <li><span class="ck ck-gold">✓</span>Advanced AI command center</li>
+          <li><span class="ck ck-gold">✓</span>Revenue intelligence dashboard</li>
+          <li><span class="ck ck-gold">✓</span>Territory heat maps</li>
+          <li><span class="ck ck-gold">✓</span>Real-time staff location map</li>
+          <li><span class="ck ck-gold">✓</span>Voice-to-note transcription</li>
+          <li><span class="ck ck-gold">✓</span>Marketer leaderboard</li>
+          <li><span class="ck ck-gold">✓</span>HIPAA audit logs</li>
+          <li><span class="ck ck-gold">✓</span>Full automation engine</li>
+          <li><span class="ck ck-gold">✓</span>EHR / billing integrations</li>
+          <li><span class="ck ck-gold">✓</span>White-label option</li>
+        </ul>
+        <div class="card-actions">
+          <a href="demo-gold.html" class="btn btn-blue btn-small">Demo</a>
         </div>
-        <div class="price-row">
-          <div class="price-name">10–20 Users</div>
-          <div class="price-amt">$299/mo</div>
-          <a href="https://buy.stripe.com/00w6oI1JKe2b8Tl8pnfEk09" class="btn btn-green btn-small">Subscribe</a>
+        <div class="price-list">
+          <div class="price-row">
+            <div class="price-name">0–10 Users</div>
+            <div class="price-amt gold-price">$749/mo</div>
+            <button onclick="startSubscribe('HospiceLink Gold','0–10 Users','$749/mo','STRIPE_GOLD_0_10')" class="btn btn-green btn-small">Subscribe</button>
+          </div>
+          <div class="price-row">
+            <div class="price-name">10–20 Users</div>
+            <div class="price-amt gold-price">$999/mo</div>
+            <button onclick="startSubscribe('HospiceLink Gold','10–20 Users','$999/mo','STRIPE_GOLD_10_20')" class="btn btn-green btn-small">Subscribe</button>
+          </div>
+          <div class="price-row">
+            <div class="price-name">Unlimited Users</div>
+            <div class="price-amt gold-price">$1,299/mo</div>
+            <button onclick="startSubscribe('HospiceLink Gold','Unlimited Users','$1,299/mo','STRIPE_GOLD_UNLIMITED')" class="btn btn-green btn-small">Subscribe</button>
+          </div>
         </div>
-        <div class="price-row">
-          <div class="price-name">Unlimited Users</div>
-          <div class="price-amt">$399/mo</div>
-          <a href="https://buy.stripe.com/6oU6oI6008HRedFaxvfEk0a" class="btn btn-green btn-small">Subscribe</a>
-        </div>
-      </div>
-    </article>
+      </article>
 
-  </div>
-</section>
-<section class="section" id="why-us">
-  <h3>Why We Market Plus?</h3>
-  <div class="feature-grid">
-    <div class="feature-box">
-      <h4>Hospice-Centric Design</h4>
-      <p>
-        Unlike generic CRMs, our platform is built by industry professionals who understand the nuances of referral tracking, facility visits, and clinical documentation.
-      </p>
     </div>
+  </section>
 
-    <div class="feature-box">
-      <h4>Scalable Solutions</h4>
-      <p>
-        Transition seamlessly from a marketing-only focus to a full clinical workflow as your agency grows.
-      </p>
+  <section class="section" id="why-us">
+    <h3>Why We Market Plus?</h3>
+    <div class="feature-grid">
+      <div class="feature-box">
+        <h4>Hospice-Centric Design</h4>
+        <p>
+          Unlike generic CRMs, our platform is built by industry professionals who understand referral
+          tracking, facility visits, clinical documentation, and the unique hospice sales cycle.
+        </p>
+      </div>
+      <div class="feature-box">
+        <h4>Scalable Solutions</h4>
+        <p>
+          Start with Pro and scale to Gold as your agency grows. Transition seamlessly from a
+          marketing-only focus to a full enterprise clinical workflow platform.
+        </p>
+      </div>
+      <div class="feature-box">
+        <h4>Revenue & Accountability</h4>
+        <p>
+          Real-time performance dashboards show admissions per marketer, conversion by referral source,
+          revenue intelligence, and territory heat maps — so you always know where the money is.
+        </p>
+      </div>
     </div>
+  </section>
 
-    <div class="feature-box">
-      <h4>Actionable Insights</h4>
-      <p>
-        Gain visibility into your pipeline and marketer productivity to ensure no referral source is left untapped.
-      </p>
-    </div>
-  </div>
-</section>
   <section class="section" id="contact">
     <h3>Contact</h3>
     <div class="contact-grid">
@@ -357,96 +418,69 @@
   </section>
 
   <section class="section" id="terms">
-  <h3>Subscription Terms of Service</h3>
-  <div class="legal-grid">
-    <div class="legal-box" style="grid-column:1 / -1;">
-      <h4>1. Subscription and Billing</h4>
-      <p>
-        By subscribing to a We Market Plus LLC CRM plan, you agree to a recurring monthly billing cycle based on your selected tier. All fees are billed in advance and are non-refundable. We Market Plus LLC reserves the right to modify subscription fees with a 30-day notice.
-      </p>
-
-      <h4>2. License Grant and Restrictions</h4>
-      <p>
-        Access to the CRM is provided as a non-exclusive, non-transferable, revocable license. This software is licensed, not sold. Usage is strictly limited to the number of user accounts defined by your purchased tier (for example, 0–5, 5–10, or 10–20 users).
-      </p>
-
-      <h4>3. Prohibited Use</h4>
-      <p>
-        Users are prohibited from white-labeling, reselling, or sublicensing the platform without express written consent, attempting to reverse-engineer or circumvent security protocols, or exceeding the designated user limits of the selected plan.
-      </p>
-
-      <h4>4. Account Standing and Termination</h4>
-      <p>
-        Continued access to the CRM is contingent upon the account remaining in good standing. We Market Plus LLC reserves the right to suspend or terminate services immediately in the event of non-payment, failed billing, or a violation of these terms.
-      </p>
+    <h3>Subscription Terms of Service</h3>
+    <div class="legal-grid">
+      <div class="legal-box" style="grid-column:1 / -1;">
+        <h4>1. Subscription and Billing</h4>
+        <p>By subscribing to a We Market Plus LLC CRM plan, you agree to a recurring monthly billing cycle based on your selected tier. All fees are billed in advance and are non-refundable. We Market Plus LLC reserves the right to modify subscription fees with a 30-day notice.</p>
+        <h4>2. License Grant and Restrictions</h4>
+        <p>Access to the CRM is provided as a non-exclusive, non-transferable, revocable license. This software is licensed, not sold. Usage is strictly limited to the number of user accounts defined by your purchased tier.</p>
+        <h4>3. Prohibited Use</h4>
+        <p>Users are prohibited from white-labeling (except on Gold Enterprise plan), reselling, or sublicensing the platform without express written consent, attempting to reverse-engineer or circumvent security protocols, or exceeding the designated user limits of the selected plan.</p>
+        <h4>4. Account Standing and Termination</h4>
+        <p>Continued access to the CRM is contingent upon the account remaining in good standing. We Market Plus LLC reserves the right to suspend or terminate services immediately in the event of non-payment, failed billing, or a violation of these terms.</p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
   <section class="section" id="privacy">
-  <h3>Privacy Policy</h3>
-  <div class="legal-grid">
-    <div class="legal-box" style="grid-column:1 / -1;">
-      <h4>1. Commitment to Data Integrity</h4>
-      <p>
-        We Market Plus LLC prioritizes the confidentiality and security of your business data. We collect only the information necessary to provide and improve our services, including account credentials and billing information.
-      </p>
-
-      <h4>2. User Responsibilities</h4>
-      <p>
-        While our platform provides the tools for hospice management, subscribers are solely responsible for ensuring their specific use of the platform, including the entry of patient or employee data, complies with federal and state regulations.
-      </p>
-
-      <h4>3. Security Disclaimer</h4>
-      <p>
-        This platform is designed as a workflow and business optimization tool. Users are advised that production-grade security, end-to-end encryption, and comprehensive audit logging must be verified and configured in alignment with your organization's internal compliance standards before the processing of Protected Health Information (PHI).
-      </p>
+    <h3>Privacy Policy</h3>
+    <div class="legal-grid">
+      <div class="legal-box" style="grid-column:1 / -1;">
+        <h4>1. Commitment to Data Integrity</h4>
+        <p>We Market Plus LLC prioritizes the confidentiality and security of your business data. We collect only the information necessary to provide and improve our services, including account credentials and billing information.</p>
+        <h4>2. User Responsibilities</h4>
+        <p>While our platform provides the tools for hospice management, subscribers are solely responsible for ensuring their specific use of the platform complies with federal and state regulations.</p>
+        <h4>3. Security Disclaimer</h4>
+        <p>This platform is designed as a workflow and business optimization tool. Users are advised that production-grade security, end-to-end encryption, and comprehensive audit logging must be verified in alignment with your organization's internal compliance standards before processing Protected Health Information (PHI).</p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
   <section class="section" id="baa">
-  <h3>Business Associate Agreement (BAA)</h3>
-  <div class="legal-grid">
-    <div class="legal-box" style="grid-column:1 / -1;">
-      <h4>BAA Acknowledgment & Compliance</h4>
-      <p>
-        In compliance with the Health Insurance Portability and Accountability Act (HIPAA), We Market Plus LLC provides a standard Business Associate Agreement (BAA) for clients utilizing our "Marketing + Clinical" or "Advanced" tiers for regulated data.
-      </p>
-      <p>
-        <strong>Requirement:</strong> Execution of the BAA is mandatory prior to the storage or transmission of any Protected Health Information (PHI) within the platform.
-      </p>
-      <p>
-        <strong>Acceptance:</strong> By proceeding to checkout and utilizing the service, the customer acknowledges their status as a Covered Entity (or Business Associate) and agrees to be bound by the terms of the We Market Plus LLC BAA.
-      </p>
+    <h3>Business Associate Agreement (BAA)</h3>
+    <div class="legal-grid">
+      <div class="legal-box" style="grid-column:1 / -1;">
+        <h4>BAA Acknowledgment & Compliance</h4>
+        <p>In compliance with HIPAA, We Market Plus LLC provides a standard Business Associate Agreement (BAA) for clients utilizing our Max or Gold tiers for regulated data.</p>
+        <p><strong>Requirement:</strong> Execution of the BAA is mandatory prior to the storage or transmission of any Protected Health Information (PHI) within the platform.</p>
+        <p><strong>Acceptance:</strong> By proceeding to checkout and utilizing the service, the customer acknowledges their status as a Covered Entity (or Business Associate) and agrees to be bound by the terms of the We Market Plus LLC BAA.</p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
   <footer style="text-align:center; padding:30px 20px; color:#c7d3e8;">
-  <p>© 2026 We Market Plus LLC. All Rights Reserved.</p>
+    <p>© 2026 We Market Plus LLC. All Rights Reserved.</p>
+    <p style="margin-top:10px;">
+      <a href="#terms" style="color:#c7d3e8; margin:0 10px;">Terms of Service</a>
+      <a href="#privacy" style="color:#c7d3e8; margin:0 10px;">Privacy Policy</a>
+      <a href="#baa" style="color:#c7d3e8; margin:0 10px;">HIPAA Compliance / BAA</a>
+      <a href="#contact" style="color:#c7d3e8; margin:0 10px;">Support / Contact Us</a>
+    </p>
+  </footer>
 
-  <p style="margin-top:10px;">
-    <a href="#terms" style="color:#c7d3e8; margin:0 10px;">Terms of Service</a>
-    <a href="#privacy" style="color:#c7d3e8; margin:0 10px;">Privacy Policy</a>
-    <a href="#baa" style="color:#c7d3e8; margin:0 10px;">HIPAA Compliance / BAA</a>
-    <a href="#contact" style="color:#c7d3e8; margin:0 10px;">Support / Contact Us</a>
-  </p>
-</footer>
-
+  <!-- SUBSCRIBE MODAL -->
   <div class="modal" id="subscribeModal">
     <div class="modal-box">
       <div class="modal-head">
         <h4>Before You Continue</h4>
         <button class="close-btn" onclick="closeModal('subscribeModal')">&times;</button>
       </div>
-
       <p id="subscribeSummary" class="lead" style="font-size:18px; margin-bottom:8px;"></p>
-
       <div class="agreement-list">
         <label class="agree-item">
           <input type="checkbox" class="consent-check">
-          <div><strong>Terms of Service</strong>I agree to the monthly subscription terms.</div>
+          <div><strong>Terms of Service</strong>I agree to the monthly subscription terms, including billing, user limits, and cancellation policy.</div>
         </label>
         <label class="agree-item">
           <input type="checkbox" class="consent-check">
@@ -458,21 +492,38 @@
         </label>
         <label class="agree-item">
           <input type="checkbox" class="consent-check">
-          <div><strong>Automatic Suspension for Nonpayment</strong>I understand that if the subscription is not paid, CRM access may be suspended until the account is current.</div>
+          <div><strong>Automatic Suspension for Nonpayment</strong>I understand that if the subscription is not paid, CRM access will be suspended until the account is brought current.</div>
         </label>
       </div>
-
       <div style="display:flex; gap:12px; flex-wrap:wrap;">
-        <button class="btn btn-green" onclick="continueToStripe()">Continue to Stripe</button>
+        <button class="btn btn-green" onclick="continueToStripe()">Continue to Stripe ➤</button>
         <button class="btn btn-dark" onclick="closeModal('subscribeModal')">Cancel</button>
       </div>
-
       <div class="msg" id="subscribeMsg"></div>
     </div>
   </div>
 
   <script>
     let pendingStripeLink = "";
+
+    // ── STRIPE PAYMENT LINKS ──────────────────────────────────
+    // REPLACE each "STRIPE_XXXXX" below with your actual Stripe payment link URL
+    // after you create the new payment links in Stripe dashboard
+    const STRIPE_LINKS = {
+      // Pro
+      STRIPE_PRO_0_5:       "https://buy.stripe.com/REPLACE_PRO_0_5",
+      STRIPE_PRO_5_10:      "https://buy.stripe.com/REPLACE_PRO_5_10",
+      STRIPE_PRO_10_20:     "https://buy.stripe.com/REPLACE_PRO_10_20",
+      STRIPE_PRO_UNLIMITED: "https://buy.stripe.com/REPLACE_PRO_UNLIMITED",
+      // Max
+      STRIPE_MAX_0_10:      "https://buy.stripe.com/REPLACE_MAX_0_10",
+      STRIPE_MAX_10_20:     "https://buy.stripe.com/REPLACE_MAX_10_20",
+      STRIPE_MAX_UNLIMITED: "https://buy.stripe.com/REPLACE_MAX_UNLIMITED",
+      // Gold
+      STRIPE_GOLD_0_10:     "https://buy.stripe.com/REPLACE_GOLD_0_10",
+      STRIPE_GOLD_10_20:    "https://buy.stripe.com/REPLACE_GOLD_10_20",
+      STRIPE_GOLD_UNLIMITED:"https://buy.stripe.com/REPLACE_GOLD_UNLIMITED",
+    };
 
     function openModal(id){
       document.getElementById(id).classList.add("show");
@@ -486,14 +537,12 @@
     }
 
     window.addEventListener("click", function(e){
-      if(e.target.classList.contains("modal")){
-        closeModal(e.target.id);
-      }
+      if(e.target.classList.contains("modal")) closeModal(e.target.id);
     });
 
-    function startSubscribe(crm, users, price, stripeLink){
-      pendingStripeLink = stripeLink;
-      document.getElementById("subscribeSummary").textContent = `${crm} | ${users} | ${price}`;
+    function startSubscribe(crm, users, price, linkKey){
+      pendingStripeLink = STRIPE_LINKS[linkKey] || "";
+      document.getElementById("subscribeSummary").textContent = crm + " | " + users + " | " + price;
       document.querySelectorAll(".consent-check").forEach(c => c.checked = false);
       document.getElementById("subscribeMsg").textContent = "";
       openModal("subscribeModal");
@@ -501,20 +550,16 @@
 
     function continueToStripe(){
       const checks = [...document.querySelectorAll(".consent-check")];
-      const allChecked = checks.every(c => c.checked);
-
-      if(!allChecked){
+      if(!checks.every(c => c.checked)){
         document.getElementById("subscribeMsg").textContent =
-          "Please accept all required agreements before continuing to Stripe.";
+          "Please accept all required agreements before continuing.";
         return;
       }
-
-      if(!pendingStripeLink){
+      if(!pendingStripeLink || pendingStripeLink.includes("REPLACE")){
         document.getElementById("subscribeMsg").textContent =
-          "This Stripe link has not been added yet.";
+          "Payment link coming soon — contact us at Info@wemarketpluscom.org to subscribe.";
         return;
       }
-
       window.open(pendingStripeLink, "_blank");
     }
   </script>
