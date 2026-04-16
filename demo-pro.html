@@ -1,841 +1,489 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>HospiceLink Pro Demo</title>
-<style>
-:root{--bg:#081426;--panel:#10203a;--panel2:#0d1b31;--line:rgba(255,255,255,.10);--text:#f4f8ff;--muted:#c9d6ea;--blue:#49b6ff;--green:#8cff66;--green-soft:#d8ffe2;--red-soft:#ffd9d9;--red:#e05555;--reddark:#8f1f1f;--yellow-soft:#fff3cf;--yellow:#7a5a00;--purple-soft:#efe5ff;--purple:#5b3aa0}
-*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-.layout{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
-.sidebar{background:#071120;border-right:1px solid var(--line);padding:20px 14px;position:sticky;top:0;height:100vh;overflow-y:auto}
-.brand h1{font-size:18px;margin:0 0 4px} .brand p{margin:0;color:var(--muted);font-size:12px}
-.nav{display:grid;gap:8px;margin-top:20px}
-.nav a{text-decoration:none;color:var(--text);padding:10px 12px;border-radius:10px;border:1px solid transparent;font-weight:700;font-size:13px}
-.nav a.active,.nav a:hover{background:#10203a;border-color:var(--line)}
-.nav a.admin-link{color:#c9aeff;border-color:rgba(91,58,160,.4)}
-.nav a.admin-link:hover,.nav a.admin-link.active{background:#1a0f30;border-color:#5b3aa0}
-.main{padding:24px 24px 40px}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
-.topbar h2{margin:0;font-size:30px} .topbar p{margin:4px 0 0;color:var(--muted)}
-.btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:999px;padding:10px 16px;font-weight:800;text-decoration:none;cursor:pointer;font-size:13px}
-.btn-blue{background:var(--blue);color:#081426} .btn-green{background:var(--green);color:#081426}
-.btn-red{background:var(--red);color:#fff} .btn-purple{background:#7c4dcc;color:#fff}
-.btn-gray{background:#2a3a55;color:var(--text)} .btn-small{padding:7px 12px;font-size:12px}
-.hero,.section{background:linear-gradient(180deg,#0f1f39,#0b1730);border:1px solid var(--line);border-radius:20px;padding:22px;margin-bottom:20px}
-.section{background:var(--panel2);padding:20px}
-.hero h3{font-size:38px;margin:0 0 8px;color:var(--green);line-height:1.05} .hero p{margin:0;color:#d9e5f6;font-size:16px;line-height:1.6}
-.section h3{margin:0 0 14px;font-size:24px}
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:18px}
-.kpi{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
-.kpi span{display:block;color:var(--muted);font-size:12px;margin-bottom:8px} .kpi strong{font-size:28px;line-height:1}
-.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-.dash-stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
-.dash-stat span{display:block;color:var(--muted);font-size:11px;margin-bottom:4px} .dash-stat strong{font-size:22px}
-/* horizontal bar chart dashboard */
-.hbar-section{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:20px}
-.hbar-section h4{margin:0 0 16px;font-size:16px;font-weight:800;color:var(--text)}
-.hbar-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.hbar-label{width:140px;font-size:12px;color:var(--muted);flex-shrink:0;font-weight:700}
-.hbar-track{flex:1;height:22px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden;position:relative}
-.hbar-fill{height:100%;border-radius:999px;transition:width .5s ease;min-width:4px}
-.hbar-val{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:800;color:#fff}
-.hbar-count{width:36px;text-align:right;font-size:13px;font-weight:900;color:var(--text)}
-.hbar-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.fill-blue{background:linear-gradient(90deg,#2e7fb5,#49b6ff)}
-.fill-yellow{background:linear-gradient(90deg,#b58a00,#ffd36e)}
-.fill-green{background:linear-gradient(90deg,#2d8f00,#8cff66)}
-.fill-red{background:linear-gradient(90deg,#8f1f1f,#e05555)}
-.fill-purple{background:linear-gradient(90deg,#4a2080,#9c6fe8)}
-.fill-teal{background:linear-gradient(90deg,#0d6b6b,#4ecdc4)}
-.card,.box,.form-wrap{background:#fff;color:#111;border-radius:18px;padding:18px}
-.card h4,.box h4{margin:0 0 8px;font-size:15px} .card p,.box p{margin:0;line-height:1.5;font-size:14px}
-.mini-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.pill{display:inline-block;padding:5px 10px;border-radius:999px;font-size:11px;font-weight:800}
-.pill-green{background:var(--green-soft);color:#136c32} .pill-red{background:var(--red-soft);color:var(--reddark)}
-.pill-yellow{background:var(--yellow-soft);color:var(--yellow)} .pill-blue{background:#dff1ff;color:#0f5c8a}
-.pill-purple{background:var(--purple-soft);color:var(--purple)}
-.search-bar{width:100%;padding:11px 16px;border:1px solid #d7e0ec;border-radius:12px;font:inherit;font-size:14px;margin-bottom:14px}
-.table-wrap{overflow:auto;border-radius:16px}
-table{width:100%;border-collapse:collapse;background:#fff;color:#111;border-radius:16px;overflow:hidden}
-th,td{padding:12px;border-bottom:1px solid #e7edf5;text-align:left;vertical-align:middle;font-size:13px}
-th{background:#f4f8fc;font-size:11px;text-transform:uppercase;letter-spacing:.04em;font-weight:800}
-.field label{display:block;font-size:12px;font-weight:700;margin-bottom:5px}
-.field input,.field select,.field textarea{width:100%;border:1px solid #d7e0ec;border-radius:10px;padding:10px;font:inherit;font-size:13px}
-.field textarea{min-height:90px;resize:vertical} .field.full{grid-column:1/-1}
-.hint{color:#5a6678;font-size:12px;margin-top:3px}
-.form-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.form-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-/* Pipeline chart */
-.pipeline-chart{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:10px}
-.pipe-col{background:linear-gradient(180deg,#10203a,#0c172c);border:1px solid var(--line);border-radius:18px;padding:14px}
-.pipe-col-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.pipe-col-header h4{margin:0;font-size:14px;font-weight:800}
-.pipe-count{background:rgba(255,255,255,.12);border-radius:999px;padding:3px 10px;font-size:12px;font-weight:800}
-.pipe-bar-wrap{height:8px;background:rgba(255,255,255,.1);border-radius:999px;margin-bottom:14px;overflow:hidden}
-.pipe-bar{height:100%;border-radius:999px;transition:width .4s}
-.bar-blue{background:#49b6ff} .bar-yellow{background:#ffd36e} .bar-green{background:#8cff66} .bar-red{background:#e05555}
-.pipe-card{background:#fff;color:#111;border-radius:12px;padding:10px;margin-bottom:8px;font-size:13px}
-.pipe-card strong{display:block;margin-bottom:2px} .pipe-card small{color:#555}
-/* Admin section */
-.admin-section{background:linear-gradient(180deg,#140820,#0d0520);border:2px solid rgba(91,58,160,.5);border-radius:20px;padding:22px;margin-bottom:20px}
-.admin-banner{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
-.admin-note{margin:0 0 16px;color:var(--muted);font-size:14px;line-height:1.6}
-.admin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.admin-card{background:rgba(255,255,255,.05);border:1px solid rgba(91,58,160,.3);border-radius:14px;padding:16px;color:var(--text)}
-.admin-card h4{margin:0 0 8px;font-size:14px;color:#c9aeff} .admin-card p{margin:0;font-size:13px;color:var(--muted);line-height:1.5}
-.admin-stat{font-size:28px;font-weight:900;color:#fff;display:block;margin:8px 0 4px}
-.user-table-wrap{margin-top:14px}
-/* modals */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;align-items:center;justify-content:center;padding:16px}
-.modal-overlay.open{display:flex}
-.modal-box{background:#fff;color:#111;border-radius:20px;padding:24px;width:min(600px,100%);max-height:92vh;overflow-y:auto;position:relative}
-.modal-box h4{margin:0 0 16px;font-size:20px}
-.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px} .modal-grid .full{grid-column:1/-1}
-.modal-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
-.close-modal{position:absolute;top:14px;right:16px;background:none;border:none;font-size:24px;cursor:pointer;color:#555;line-height:1}
-/* footer */
-.footer-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-@media(max-width:1100px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.kpis,.dash-grid,.pipeline-chart,.admin-grid,.form-grid-4,.form-grid-3,.form-grid-2{grid-template-columns:1fr}.modal-grid{grid-template-columns:1fr}}
-/* ═══ LEFT SIDEBAR TAB SYSTEM ═══ */
-.nav{display:grid!important}
-.nav a{cursor:pointer;user-select:none}
-.tab-bar{display:none!important}
-.tab-pane{display:none}
-.tab-pane.active{display:block}
-.nav a.active{background:var(--blue)!important;color:#081426!important;border-color:var(--blue)!important}
-.nav a.admin-link.active{background:#7c4dcc!important;color:#fff!important;border-color:#7c4dcc!important}
-</style>
-</head>
-<body>
-<div class="layout">
-<aside class="sidebar">
-  <div class="brand"><h1>HospiceLink Pro</h1><p>Marketing CRM Demo</p></div>
-  <nav class="nav">
-    <a href="#dashboard" data-tab="dashboard" class="active" onclick="showTab('dashboard');return false;">Dashboard</a>
-    <a href="#prospects" data-tab="prospects" onclick="showTab('prospects');return false;">Prospects</a>
-    <a href="#prospect-records" data-tab="prospect-records" onclick="showTab('prospect-records');return false;">Prospect Records</a>
-    <a href="#referrals" data-tab="referrals" onclick="showTab('referrals');return false;">Referral Sources</a>
-    <a href="#referral-records" data-tab="referral-records" onclick="showTab('referral-records');return false;">Referral Records</a>
-    <a href="#pipeline" data-tab="pipeline" onclick="showTab('pipeline');return false;">Pipeline</a>
-    <a href="#notes" data-tab="notes" onclick="showTab('notes');return false;">Notes</a>
-    <a href="#admin" data-tab="admin" class="admin-link" onclick="showTab('admin');return false;">🔒 Admin</a>
-  </nav>
-  <div class="footer-actions"><a href="index.html#pricing" class="btn btn-blue btn-small">Back to Website</a></div>
-</aside>
+import { useState } from "react";
 
-<main class="main">
-  <div class="topbar" id="dashboard">
-    <div><h2>HospiceLink Pro</h2><p>Marketing CRM Demo</p></div>
+const INITIAL_PROSPECTS = [
+  { id: 1, name: "Mary J.", status: "Inquiry", phone: "(214)555-1001", email: "mary@email.com", referralSource: "North Dallas Rehab", address: "500 S. T." },
+  { id: 2, name: "John T.", status: "Pending Admission", phone: "(214)555-1002", email: "john@email.com", referralSource: "Baylor", address: "800 A. D." },
+];
 
-  <div class="tab-bar">
-    <button class="tab-btn" data-tab="dashboard" onclick="showTab('dashboard')">Dashboard</button>
-    <button class="tab-btn" data-tab="prospects" onclick="showTab('prospects')">Add Prospect</button>
-    <button class="tab-btn" data-tab="prospect-records" onclick="showTab('prospect-records')">Prospect Records</button>
-    <button class="tab-btn" data-tab="referrals" onclick="showTab('referrals')">Referral Sources</button>
-    <button class="tab-btn" data-tab="referral-records" onclick="showTab('referral-records')">Referral Records</button>
-    <button class="tab-btn" data-tab="pipeline" onclick="showTab('pipeline')">Pipeline</button>
-    <button class="tab-btn" data-tab="mileage" onclick="showTab('mileage')">Mileage</button>
-    <button class="tab-btn" data-tab="staff-tracking" onclick="showTab('staff-tracking')">Staff Tracking</button>
-    <button class="tab-btn" data-tab="notes" onclick="showTab('notes')">Notes</button>
-    <button class="tab-btn admin-tab" data-tab="admin" onclick="showTab('admin')">🔒 Admin</button>
-  </div>
+const INITIAL_REFERRALS = [
+  { id: 1, name: "Sarah M.", business: "North Dallas Rehab", phone: "(214)555-0110", address: "100 Rehab Way, Dallas TX" },
+  { id: 2, name: "Dr. Patel", business: "Baylor", phone: "(214)555-0122", address: "3500 Gaston Ave, Dallas TX" },
+];
 
-  <div class="tab-pane active" id="tab-dashboard">
-    <section class="hero">
-    <h3>Marketing CRM Dashboard</h3>
-    <p>Prospects intake, referral source management, pipeline visibility, and required notes with next-step tracking.</p>
-  </section>
-    <!-- DASHBOARD HORIZONTAL BAR CHARTS -->
-  <div class="hbar-grid" style="margin-bottom:20px;">
-    <div class="hbar-section">
-      <h4>📊 Prospect Pipeline</h4>
-      <div class="hbar-row"><span class="hbar-label">🔵 Inquiry</span><div class="hbar-track"><div class="hbar-fill fill-blue" id="hbarInquiry" style="width:0%"><span class="hbar-val" id="hbarInquiryVal">0</span></div></div><span class="hbar-count" id="dtInquiry">0</span></div>
-      <div class="hbar-row"><span class="hbar-label">🟡 Pending Admission</span><div class="hbar-track"><div class="hbar-fill fill-yellow" id="hbarPending" style="width:0%"><span class="hbar-val" id="hbarPendingVal">0</span></div></div><span class="hbar-count" id="dtPending">0</span></div>
-      <div class="hbar-row"><span class="hbar-label">🟢 Admitted</span><div class="hbar-track"><div class="hbar-fill fill-green" id="hbarAdmitted" style="width:0%"><span class="hbar-val" id="hbarAdmittedVal">0</span></div></div><span class="hbar-count" id="dtAdmitted">0</span></div>
-      <div class="hbar-row"><span class="hbar-label">🔴 Lost</span><div class="hbar-track"><div class="hbar-fill fill-red" id="hbarLost" style="width:0%"><span class="hbar-val" id="hbarLostVal">0</span></div></div><span class="hbar-count" id="dtLost">0</span></div>
-    </div>
-    <div class="hbar-section">
-      <h4>📋 CRM Overview</h4>
-      <div class="hbar-row"><span class="hbar-label">Total Prospects</span><div class="hbar-track"><div class="hbar-fill fill-blue" id="hbarTotalProsp" style="width:0%"><span class="hbar-val" id="hbarTotalProspVal">0</span></div></div><span class="hbar-count" id="kpiProspects">0</span></div>
-      <div class="hbar-row"><span class="hbar-label">🟢 Green Sources</span><div class="hbar-track"><div class="hbar-fill fill-green" id="hbarGreen" style="width:0%"><span class="hbar-val" id="hbarGreenVal">0</span></div></div><span class="hbar-count" id="dtGreenRef">0</span></div>
-      <div class="hbar-row"><span class="hbar-label">🔴 Red Sources</span><div class="hbar-track"><div class="hbar-fill fill-red" id="hbarRed" style="width:0%"><span class="hbar-val" id="hbarRedVal">0</span></div></div><span class="hbar-count" id="dtRedRef">0</span></div>
-      <div class="hbar-row"><span class="hbar-label">Referral Sources</span><div class="hbar-track"><div class="hbar-fill fill-teal" id="hbarRefs" style="width:0%"><span class="hbar-val" id="hbarRefsVal">0</span></div></div><span class="hbar-count" id="kpiReferrals">0</span></div>
-    </div>
-  </div>
-  <!-- hidden ids for compat -->
-  <span id="kpiPending" style="display:none">0</span>
-  <span id="kpiAdmissions" style="display:none">0</span>
-  <span id="dtPipeline" style="display:none">0</span>
-  <span id="dtNotes" style="display:none">0</span>
-  <span id="kpiNotes" style="display:none">0</span>
-  <span id="hbarNotes" style="display:none"></span>
-  <span id="hbarNotesVal" style="display:none"></span>
-  <span id="kpiPending" style="display:none">0</span>
-  <span id="kpiAdmissions" style="display:none">0</span>
-  <span id="dtPipeline" style="display:none">0</span>
-  <span id="dtNotes" style="display:none">0</span>
-  <span id="kpiNotes" style="display:none">0</span><span id="hbarNotes" style="display:none"></span><span id="hbarNotesVal" style="display:none"></span>
-  </div>
+const STATUS_COLORS = {
+  "Inquiry": { bg: "#e0f2fe", text: "#0369a1" },
+  "Pending Admission": { bg: "#fef9c3", text: "#854d0e" },
+  "Admitted": { bg: "#dcfce7", text: "#166534" },
+  "Discharged": { bg: "#f3e8ff", text: "#6b21a8" },
+};
 
-  <div class="tab-pane" id="tab-prospects">
-<!-- ADD PROSPECT -->
-  <section class="section" id="prospects">
-    <h3>Add Prospect</h3>
-    <div class="form-wrap">
-      <div class="form-grid-4">
-        <div class="field"><label>Prospect Name</label><input id="prospectName" type="text" placeholder="Full name"></div>
-        <div class="field"><label>Status</label><select id="prospectStatus"><option>Inquiry</option><option>Pending Admission</option><option>Lost</option><option>Admitted</option></select></div>
-        <div class="field"><label>Referral Source</label><select id="prospectReferralSourceSelect"></select></div>
-        <div class="field"><label>Assigned Marketer</label><select id="prospectAssignedMarketerSelect"></select></div>
-        <div class="field"><label>Add New Marketer</label><input id="newAssignedMarketerInput" type="text" placeholder="Enter marketer name"></div>
-        <div class="field"><label>Phone</label><input id="prospectPhone" type="tel" placeholder="(469) 555-0100"></div>
-        <div class="field"><label>Email</label><input id="prospectEmail" type="email" placeholder="name@email.com"></div>
-        <div class="field"><label>Address</label><input id="prospectAddress" type="text" placeholder="123 Main St, Dallas TX"></div>
-        <div class="field"><label>Secondary Contact Name</label><input id="prospectSecondary" type="text" placeholder="Secondary contact name"></div>
-        <div class="field full"><label>Next Step Summary</label><input id="prospectNextStep" type="text" placeholder="Enter next step summary"></div>
-      </div>
-      <div class="mini-actions">
-        <button class="btn btn-green" onclick="saveProspect()">Add Prospect</button>
-        <button class="btn btn-red" onclick="deleteSelectedProspect()">Delete Selected</button>
+const NAV_ITEMS = ["Prospect Records", "Referral Sources", "Referral Records", "Pipeline", "Notes"];
+
+const ROLES = { admin: "Admin", user: "Marketer" };
+
+// ── Modal ────────────────────────────────────────────────────────────────────
+function Modal({ title, onClose, children }) {
+  return (
+    <div style={{ position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:16 }}>
+      <div style={{ background:"#1e2a3a",borderRadius:14,padding:24,width:"100%",maxWidth:420,boxShadow:"0 20px 60px rgba(0,0,0,.6)" }}>
+        <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18 }}>
+          <h3 style={{ margin:0,color:"#e2e8f0",fontSize:17,fontWeight:700 }}>{title}</h3>
+          <button onClick={onClose} style={{ background:"none",border:"none",color:"#94a3b8",fontSize:22,cursor:"pointer",lineHeight:1 }}>×</button>
+        </div>
+        {children}
       </div>
     </div>
-  </section>
-  </div>
+  );
+}
 
-  <div class="tab-pane" id="tab-prospect-records">
-<!-- PROSPECT RECORDS (searchable) — includes the prospect table -->
-  <section class="section" id="prospect-records">
-    <h3>Prospect Records</h3>
-    <input class="search-bar" id="prospectSearch" type="text" placeholder="🔍  Search by name, phone, email, or address…" oninput="renderProspectRecords()">
-    <!-- Quick-view table matching the prospect list (Sel / Name / Status / Referral Source / Marketer / Next Step / Edit) -->
-    <div class="table-wrap" style="margin-bottom:16px;">
-      <table><thead><tr><th>Sel</th><th>Name</th><th>Status</th><th>Referral Source</th><th>Marketer</th><th>Next Step</th><th>Edit</th></tr></thead>
-      <tbody id="prospectTableBody"></tbody></table>
+function Field({ label, value, onChange, type="text", options }) {
+  const inputStyle = { width:"100%",background:"#0f1929",border:"1px solid #334155",borderRadius:8,padding:"9px 12px",color:"#e2e8f0",fontSize:14,boxSizing:"border-box",marginTop:4 };
+  return (
+    <div style={{ marginBottom:14 }}>
+      <label style={{ color:"#94a3b8",fontSize:12,fontWeight:600,textTransform:"uppercase",letterSpacing:.5 }}>{label}</label><br/>
+      {options ? (
+        <select value={value} onChange={e=>onChange(e.target.value)} style={inputStyle}>
+          {options.map(o=><option key={o}>{o}</option>)}
+        </select>
+      ) : (
+        <input type={type} value={value} onChange={e=>onChange(e.target.value)} style={inputStyle}/>
+      )}
     </div>
-    <h4 style="margin:0 0 10px;font-size:14px;color:#6c8aab;">Full Detail View</h4>
-    <div class="table-wrap">
-      <table><thead><tr><th>Name</th><th>Status</th><th>Phone</th><th>Email</th><th>Address</th><th>Secondary Contact</th><th>Referral Source</th><th>Marketer</th><th>Next Step</th><th>Edit</th></tr></thead>
-      <tbody id="prospectRecordsBody"></tbody></table>
-    </div>
-  </section>
-  </div>
+  );
+}
 
-  <div class="tab-pane" id="tab-referrals">
-<!-- ADD REFERRAL SOURCE -->
-  <section class="section" id="referrals">
-    <h3>Referral Sources</h3>
-    <div class="mini-actions" style="margin-bottom:14px;">
-      <button class="btn btn-green" onclick="openModal('addReferralModal')">Add Referral</button>
-      <button class="btn btn-red" onclick="deleteSelectedReferral()">Delete Selected</button>
-    </div>
-    <div class="table-wrap">
-      <table><thead><tr><th>Sel</th><th>Contact Name</th><th>Business</th><th>Phone</th><th>Address</th><th>Email</th><th>Status</th><th>Edit</th></tr></thead>
-      <tbody id="referralTableBody"></tbody></table>
-    </div>
-  </section>
-  </div>
+function Btn({ children, onClick, color="#2563eb", textColor="#fff", small }) {
+  return (
+    <button onClick={onClick} style={{ background:color,color:textColor,border:"none",borderRadius:8,padding:small?"7px 14px":"10px 18px",fontWeight:700,fontSize:small?12:14,cursor:"pointer",whiteSpace:"nowrap" }}>
+      {children}
+    </button>
+  );
+}
 
-  <div class="tab-pane" id="tab-referral-records">
-<!-- REFERRAL RECORDS (searchable) -->
-  <section class="section" id="referral-records">
-    <h3>Referral Records</h3>
-    <input class="search-bar" id="referralSearch" type="text" placeholder="🔍  Search by name, business, phone, email, or address…" oninput="renderReferralRecords()">
-    <div class="table-wrap">
-      <table><thead><tr><th>Contact Name</th><th>Business</th><th>Phone</th><th>Address</th><th>Email</th><th>Status</th><th>Edit</th></tr></thead>
-      <tbody id="referralRecordsBody"></tbody></table>
-    </div>
-  </section>
-  </div>
+// ── Prospect Section ─────────────────────────────────────────────────────────
+function ProspectRecords() {
+  const [prospects, setProspects] = useState(INITIAL_PROSPECTS);
+  const [selected, setSelected] = useState([]);
+  const [search, setSearch] = useState("");
+  const [showAdd, setShowAdd] = useState(false);
+  const [editTarget, setEditTarget] = useState(null);
+  const [form, setForm] = useState({ name:"",status:"Inquiry",phone:"",email:"",referralSource:"",address:"" });
 
-  <div class="tab-pane" id="tab-pipeline">
-<!-- PIPELINE — horizontal bar chart -->
-  <section class="section" id="pipeline">
-    <h3>Pipeline</h3>
-    <div class="hbar-grid">
-      <div class="hbar-section">
-        <h4>Stage Breakdown</h4>
-        <div class="hbar-row"><span class="hbar-label">🔵 Inquiry</span><div class="hbar-track"><div class="hbar-fill fill-blue" id="pipeBarInquiry" style="width:0%"><span class="hbar-val" id="pipeCountInquiry">0</span></div></div></div>
-        <div class="hbar-row"><span class="hbar-label">🟡 Pending Admission</span><div class="hbar-track"><div class="hbar-fill fill-yellow" id="pipeBarPending" style="width:0%"><span class="hbar-val" id="pipeCountPending">0</span></div></div></div>
-        <div class="hbar-row"><span class="hbar-label">🟢 Admitted</span><div class="hbar-track"><div class="hbar-fill fill-green" id="pipeBarAdmitted" style="width:0%"><span class="hbar-val" id="pipeCountAdmitted">0</span></div></div></div>
-        <div class="hbar-row"><span class="hbar-label">🔴 Lost</span><div class="hbar-track"><div class="hbar-fill fill-red" id="pipeBarLost" style="width:0%"><span class="hbar-val" id="pipeCountLost">0</span></div></div></div>
+  const filtered = prospects.filter(p =>
+    [p.name,p.phone,p.email,p.address].some(v=>v.toLowerCase().includes(search.toLowerCase()))
+  );
+
+  const openAdd = () => { setForm({ name:"",status:"Inquiry",phone:"",email:"",referralSource:"",address:"" }); setShowAdd(true); setEditTarget(null); };
+  const openEdit = (p) => { setForm({...p}); setEditTarget(p.id); setShowAdd(true); };
+
+  const save = () => {
+    if (!form.name.trim()) return;
+    if (editTarget) {
+      setProspects(ps=>ps.map(p=>p.id===editTarget?{...form,id:editTarget}:p));
+    } else {
+      setProspects(ps=>[...ps,{...form,id:Date.now()}]);
+    }
+    setShowAdd(false);
+  };
+
+  const deleteSelected = () => {
+    if (!selected.length) return;
+    setProspects(ps=>ps.filter(p=>!selected.includes(p.id)));
+    setSelected([]);
+  };
+
+  const toggle = (id) => setSelected(s=>s.includes(id)?s.filter(x=>x!==id):[...s,id]);
+
+  return (
+    <div>
+      <div style={{ display:"flex",gap:10,marginBottom:16,flexWrap:"wrap" }}>
+        <Btn onClick={openAdd} color="#16a34a">+ Add Prospect</Btn>
+        <Btn onClick={deleteSelected} color={selected.length?"#b91c1c":"#475569"}>Delete Selected {selected.length?`(${selected.length})`:""}</Btn>
       </div>
-      <div class="hbar-section">
-        <h4>Prospect Cards</h4>
-        <div style="display:grid;gap:8px;">
-          <div><p style="color:var(--muted);font-size:11px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">🔵 Inquiry</p><div id="pipeInquiry" style="display:grid;gap:6px;"></div></div>
-          <div><p style="color:var(--muted);font-size:11px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">🟡 Pending</p><div id="pipePending" style="display:grid;gap:6px;"></div></div>
-          <div><p style="color:var(--muted);font-size:11px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">🟢 Admitted</p><div id="pipeAdmitted" style="display:grid;gap:6px;"></div></div>
-          <div><p style="color:var(--muted);font-size:11px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">🔴 Lost</p><div id="pipeLost" style="display:grid;gap:6px;"></div></div>
+
+      <input
+        placeholder="Search by name, phone, email, or address…"
+        value={search} onChange={e=>setSearch(e.target.value)}
+        style={{ width:"100%",background:"#fff",border:"1px solid #cbd5e1",borderRadius:10,padding:"10px 14px",fontSize:14,boxSizing:"border-box",marginBottom:16 }}
+      />
+
+      {/* Single unified table */}
+      <div style={{ background:"#fff",borderRadius:12,overflow:"auto",boxShadow:"0 1px 4px rgba(0,0,0,.08)" }}>
+        <table style={{ width:"100%",borderCollapse:"collapse",fontSize:13 }}>
+          <thead>
+            <tr style={{ background:"#f1f5f9" }}>
+              {["","Name","Status","Phone","Email","Address","Referral Source","Actions"].map(h=>(
+                <th key={h} style={{ padding:"10px 12px",textAlign:"left",fontWeight:700,fontSize:11,color:"#64748b",textTransform:"uppercase",letterSpacing:.4,whiteSpace:"nowrap" }}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map(p=>(
+              <tr key={p.id} style={{ borderTop:"1px solid #f1f5f9" }}>
+                <td style={{ padding:"10px 12px" }}>
+                  <input type="checkbox" checked={selected.includes(p.id)} onChange={()=>toggle(p.id)}/>
+                </td>
+                <td style={{ padding:"10px 12px",fontWeight:600,color:"#1e293b",whiteSpace:"nowrap" }}>{p.name}</td>
+                <td style={{ padding:"10px 12px" }}>
+                  <span style={{ background:STATUS_COLORS[p.status]?.bg||"#e2e8f0",color:STATUS_COLORS[p.status]?.text||"#334155",borderRadius:20,padding:"3px 10px",fontWeight:700,fontSize:11,whiteSpace:"nowrap" }}>{p.status}</span>
+                </td>
+                <td style={{ padding:"10px 12px",color:"#2563eb",textDecoration:"underline",whiteSpace:"nowrap" }}>{p.phone}</td>
+                <td style={{ padding:"10px 12px",color:"#2563eb",textDecoration:"underline",whiteSpace:"nowrap" }}>{p.email}</td>
+                <td style={{ padding:"10px 12px",color:"#475569" }}>{p.address}</td>
+                <td style={{ padding:"10px 12px",color:"#475569",whiteSpace:"nowrap" }}>{p.referralSource}</td>
+                <td style={{ padding:"10px 12px" }}>
+                  <button onClick={()=>openEdit(p)} style={{ background:"none",border:"1px solid #3b82f6",color:"#3b82f6",borderRadius:6,padding:"4px 10px",fontSize:12,cursor:"pointer",fontWeight:600 }}>Edit</button>
+                </td>
+              </tr>
+            ))}
+            {!filtered.length && <tr><td colSpan={8} style={{ padding:20,textAlign:"center",color:"#94a3b8" }}>No prospects found.</td></tr>}
+          </tbody>
+        </table>
+      </div>
+
+      {showAdd && (
+        <Modal title={editTarget?"Edit Prospect":"Add Prospect"} onClose={()=>setShowAdd(false)}>
+          <Field label="Full Name" value={form.name} onChange={v=>setForm(f=>({...f,name:v}))}/>
+          <Field label="Status" value={form.status} onChange={v=>setForm(f=>({...f,status:v}))} options={Object.keys(STATUS_COLORS)}/>
+          <Field label="Phone" value={form.phone} onChange={v=>setForm(f=>({...f,phone:v}))} type="tel"/>
+          <Field label="Email" value={form.email} onChange={v=>setForm(f=>({...f,email:v}))} type="email"/>
+          <Field label="Referral Source" value={form.referralSource} onChange={v=>setForm(f=>({...f,referralSource:v}))}/>
+          <Field label="Address" value={form.address} onChange={v=>setForm(f=>({...f,address:v}))}/>
+          <div style={{ display:"flex",gap:10,justifyContent:"flex-end",marginTop:4 }}>
+            <Btn onClick={()=>setShowAdd(false)} color="#334155">Cancel</Btn>
+            <Btn onClick={save} color="#2563eb">{editTarget?"Save Changes":"Add Prospect"}</Btn>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+// ── Referral Sources Section ─────────────────────────────────────────────────
+function ReferralSources() {
+  const [referrals, setReferrals] = useState(INITIAL_REFERRALS);
+  const [selected, setSelected] = useState([]);
+  const [showAdd, setShowAdd] = useState(false);
+  const [editTarget, setEditTarget] = useState(null);
+  const [form, setForm] = useState({ name:"",business:"",phone:"",address:"" });
+
+  const openAdd = () => { setForm({ name:"",business:"",phone:"",address:"" }); setEditTarget(null); setShowAdd(true); };
+  const openEdit = (r) => { setForm({...r}); setEditTarget(r.id); setShowAdd(true); };
+
+  const save = () => {
+    if (!form.name.trim()) return;
+    if (editTarget) {
+      setReferrals(rs=>rs.map(r=>r.id===editTarget?{...form,id:editTarget}:r));
+    } else {
+      setReferrals(rs=>[...rs,{...form,id:Date.now()}]);
+    }
+    setShowAdd(false);
+  };
+
+  const deleteSelected = () => {
+    if (!selected.length) return;
+    setReferrals(rs=>rs.filter(r=>!selected.includes(r.id)));
+    setSelected([]);
+  };
+
+  const toggle = (id) => setSelected(s=>s.includes(id)?s.filter(x=>x!==id):[...s,id]);
+
+  return (
+    <div>
+      <div style={{ display:"flex",gap:10,marginBottom:16,flexWrap:"wrap" }}>
+        <Btn onClick={openAdd} color="#16a34a">+ Add Referral</Btn>
+        <Btn onClick={deleteSelected} color={selected.length?"#b91c1c":"#475569"}>Delete Selected {selected.length?`(${selected.length})`:""}</Btn>
+      </div>
+
+      <div style={{ background:"#fff",borderRadius:12,overflow:"auto",boxShadow:"0 1px 4px rgba(0,0,0,.08)" }}>
+        <table style={{ width:"100%",borderCollapse:"collapse",fontSize:13 }}>
+          <thead>
+            <tr style={{ background:"#f1f5f9" }}>
+              {["","Contact Name","Business","Phone","Address","Actions"].map(h=>(
+                <th key={h} style={{ padding:"10px 12px",textAlign:"left",fontWeight:700,fontSize:11,color:"#64748b",textTransform:"uppercase",letterSpacing:.4 }}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {referrals.map(r=>(
+              <tr key={r.id} style={{ borderTop:"1px solid #f1f5f9" }}>
+                <td style={{ padding:"10px 12px" }}>
+                  <input type="checkbox" checked={selected.includes(r.id)} onChange={()=>toggle(r.id)}/>
+                </td>
+                <td style={{ padding:"10px 12px",fontWeight:600,color:"#1e293b" }}>{r.name}</td>
+                <td style={{ padding:"10px 12px",color:"#475569" }}>{r.business}</td>
+                <td style={{ padding:"10px 12px",color:"#2563eb",textDecoration:"underline" }}>{r.phone}</td>
+                <td style={{ padding:"10px 12px",color:"#475569" }}>{r.address}</td>
+                <td style={{ padding:"10px 12px" }}>
+                  <button onClick={()=>openEdit(r)} style={{ background:"none",border:"1px solid #3b82f6",color:"#3b82f6",borderRadius:6,padding:"4px 10px",fontSize:12,cursor:"pointer",fontWeight:600 }}>Edit</button>
+                </td>
+              </tr>
+            ))}
+            {!referrals.length && <tr><td colSpan={6} style={{ padding:20,textAlign:"center",color:"#94a3b8" }}>No referral sources.</td></tr>}
+          </tbody>
+        </table>
+      </div>
+
+      {showAdd && (
+        <Modal title={editTarget?"Edit Referral Source":"Add Referral Source"} onClose={()=>setShowAdd(false)}>
+          <Field label="Contact Name" value={form.name} onChange={v=>setForm(f=>({...f,name:v}))}/>
+          <Field label="Business / Organization" value={form.business} onChange={v=>setForm(f=>({...f,business:v}))}/>
+          <Field label="Phone" value={form.phone} onChange={v=>setForm(f=>({...f,phone:v}))} type="tel"/>
+          <Field label="Address" value={form.address} onChange={v=>setForm(f=>({...f,address:v}))}/>
+          <div style={{ display:"flex",gap:10,justifyContent:"flex-end",marginTop:4 }}>
+            <Btn onClick={()=>setShowAdd(false)} color="#334155">Cancel</Btn>
+            <Btn onClick={save} color="#2563eb">{editTarget?"Save Changes":"Add Referral"}</Btn>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+// ── Mileage Section (Max/Gold only) ─────────────────────────────────────────
+const INITIAL_TRIPS = [
+  { id:1,staff:"Ericka",date:"2026-04-16",miles:12.4,note:"Visit to North Dallas Rehab" },
+  { id:2,staff:"Ericka",date:"2026-04-15",miles:8.1,note:"Baylor follow-up" },
+];
+
+function MileageSection({ role }) {
+  const [trips, setTrips] = useState(INITIAL_TRIPS);
+  const [showAdd, setShowAdd] = useState(false);
+  const [form, setForm] = useState({ miles:"",note:"",date:new Date().toISOString().slice(0,10) });
+  const currentUser = role==="admin" ? null : "Ericka";
+
+  const today = new Date().toISOString().slice(0,10);
+  const startOfWeek = (() => {
+    const d = new Date(); d.setDate(d.getDate()-d.getDay()); return d.toISOString().slice(0,10);
+  })();
+
+  const myTrips = currentUser ? trips.filter(t=>t.staff===currentUser) : trips;
+  const todayMiles = myTrips.filter(t=>t.date===today).reduce((s,t)=>s+t.miles,0);
+  const weekMiles  = myTrips.filter(t=>t.date>=startOfWeek).reduce((s,t)=>s+t.miles,0);
+
+  // Admin: per-staff breakdown
+  const staffNames = [...new Set(trips.map(t=>t.staff))];
+  const staffStats = staffNames.map(name=>({
+    name,
+    today: trips.filter(t=>t.staff===name&&t.date===today).reduce((s,t)=>s+t.miles,0),
+    week:  trips.filter(t=>t.staff===name&&t.date>=startOfWeek).reduce((s,t)=>s+t.miles,0),
+    total: trips.filter(t=>t.staff===name).length,
+    last:  trips.filter(t=>t.staff===name).sort((a,b)=>b.date.localeCompare(a.date))[0]?.date||"—",
+  }));
+
+  const addTrip = () => {
+    if (!form.miles) return;
+    setTrips(ts=>[...ts,{ id:Date.now(),staff:currentUser||"Admin",date:form.date,miles:parseFloat(form.miles),note:form.note }]);
+    setShowAdd(false);
+    setForm({ miles:"",note:"",date:new Date().toISOString().slice(0,10) });
+  };
+
+  const StatCard = ({ label, value, unit, color }) => (
+    <div style={{ background:"#1e2a3a",borderRadius:12,padding:"14px 16px",textAlign:"center",minWidth:90 }}>
+      <div style={{ fontSize:11,fontWeight:700,color:"#94a3b8",textTransform:"uppercase",letterSpacing:.5,marginBottom:6 }}>{label}</div>
+      <div style={{ fontSize:28,fontWeight:900,color }}>{value}</div>
+      {unit && <div style={{ fontSize:13,fontWeight:700,color,opacity:.7 }}>{unit}</div>}
+    </div>
+  );
+
+  return (
+    <div>
+      {/* My / All summary */}
+      <div style={{ background:"#111827",borderRadius:14,padding:18,marginBottom:20 }}>
+        <div style={{ color:"#a78bfa",fontWeight:700,marginBottom:12,fontSize:15 }}>
+          {role==="admin" ? "📍 All Staff Mileage (Admin View)" : "🚗 My Mileage"}
+        </div>
+        <div style={{ display:"flex",gap:12,flexWrap:"wrap" }}>
+          <StatCard label={role==="admin"?"All Staff Today":"My Today"} value={todayMiles.toFixed(1)} unit="mi" color="#4ade80"/>
+          <StatCard label={role==="admin"?"All Staff This Week":"My This Week"} value={weekMiles.toFixed(1)} unit="mi" color="#60a5fa"/>
+          <StatCard label="Total Trips" value={myTrips.length} color="#facc15"/>
+          {role==="admin" && <StatCard label="Staff Logged Today" value={staffNames.filter(n=>trips.some(t=>t.staff===n&&t.date===today)).length} color="#c084fc"/>}
         </div>
       </div>
-    </div>
-  </section>
-  </div>
 
-  <div class="tab-pane" id="tab-mileage">
-  <section class="section">
-    <h3>🚗 Mileage Tracker</h3>
-    <p style="color:var(--muted);font-size:13px;margin:0 0 16px;">Log each trip. Your daily and weekly totals update automatically. The Admin can see all staff mileage.</p>
-    <!-- USER personal totals -->
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:20px;">
-      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;text-align:center;">
-        <p style="color:var(--muted);font-size:11px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">My Miles Today</p>
-        <p style="font-size:38px;font-weight:900;color:var(--green);margin:0;" id="myTodayMiles">0.0</p>
-      </div>
-      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;text-align:center;">
-        <p style="color:var(--muted);font-size:11px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">My Miles This Week</p>
-        <p style="font-size:38px;font-weight:900;color:var(--blue);margin:0;" id="myWeekMiles">0.0</p>
-      </div>
-    </div>
-    <!-- Log a trip form -->
-    <div class="form-wrap" style="margin-bottom:18px;">
-      <h4 style="margin:0 0 14px;font-size:15px;">Log a Trip</h4>
-      <div class="form-grid-4">
-        <div class="field"><label>Your Name</label><input id="gpsStaffName" type="text" placeholder="Enter your name"></div>
-        <div class="field"><label>Start Address</label><input id="gpsStart" type="text" placeholder="123 Main St, Dallas TX"></div>
-        <div class="field"><label>End Address</label><input id="gpsEnd" type="text" placeholder="456 Oak Ave, Plano TX"></div>
-        <div class="field"><label>Purpose</label><input id="gpsPurpose" type="text" placeholder="e.g. Facility visit"></div>
-      </div>
-      <div class="mini-actions"><button class="btn btn-green" onclick="logMileage()">Log Mileage Trip</button></div>
-      <div id="gpsResult" style="margin-top:10px;font-size:13px;font-weight:700;color:#0a6c2f;"></div>
-    </div>
-    <!-- My trip log -->
-    <h4 style="color:var(--text);margin:0 0 10px;font-size:14px;">My Trip Log</h4>
-    <div class="table-wrap">
-      <table><thead><tr><th>#</th><th>Staff</th><th>From</th><th>To</th><th>Miles</th><th>Purpose</th><th>Time</th></tr></thead>
-      <tbody id="mileageTripLog"></tbody></table>
-    </div>
-  </section>
-  </div>
+      {/* Admin: per-staff table */}
+      {role==="admin" && (
+        <div style={{ background:"#fff",borderRadius:12,overflow:"auto",marginBottom:20,boxShadow:"0 1px 4px rgba(0,0,0,.08)" }}>
+          <table style={{ width:"100%",borderCollapse:"collapse",fontSize:13 }}>
+            <thead>
+              <tr style={{ background:"#f1f5f9" }}>
+                {["Staff Name","Miles Today","Miles This Week","Total Trips","Last Trip"].map(h=>(
+                  <th key={h} style={{ padding:"10px 12px",textAlign:"left",fontWeight:700,fontSize:11,color:"#64748b",textTransform:"uppercase",letterSpacing:.4 }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {staffStats.map(s=>(
+                <tr key={s.name} style={{ borderTop:"1px solid #f1f5f9" }}>
+                  <td style={{ padding:"10px 12px",fontWeight:700,color:"#1e293b" }}>{s.name}</td>
+                  <td style={{ padding:"10px 12px",color:"#16a34a",fontWeight:700 }}>{s.today.toFixed(1)} mi</td>
+                  <td style={{ padding:"10px 12px",color:"#2563eb",fontWeight:700 }}>{s.week.toFixed(1)} mi</td>
+                  <td style={{ padding:"10px 12px",color:"#475569" }}>{s.total}</td>
+                  <td style={{ padding:"10px 12px",color:"#475569" }}>{s.last}</td>
+                </tr>
+              ))}
+              {!staffStats.length && <tr><td colSpan={5} style={{ padding:20,textAlign:"center",color:"#94a3b8" }}>No trips logged yet.</td></tr>}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-  <div class="tab-pane" id="tab-staff-tracking">
-  <section class="section">
-    <h3>📡 Staff Tracking</h3>
-    <p style="color:var(--muted);font-size:13px;margin:0 0 16px;">Location is automatically captured each time a note is synced. Each entry below shows the staff member, position, date, time, and GPS location at the moment of sync.</p>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Staff</th><th>Position</th><th>Date</th><th>Time Synced</th><th>📍 Location at Sync</th><th>Next Step</th></tr></thead>
-        <tbody id="staffTrackingBody">
-          <tr><td>Ericka</td><td>Marketer</td><td>2026-04-12</td><td>9:15 AM</td><td><span class="pill pill-green">📍 Dallas, TX — 32.7767°N 96.7970°W</span></td><td>Immediate Family Outreach (Call/Text)</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-  </div>
-
-  <div class="tab-pane" id="tab-notes">
-<!-- NOTES -->
-  <section class="section" id="notes">
-    <h3>Notes</h3>
-    <div class="form-wrap">
-      <div class="form-grid-4">
-        <div class="field"><label>Select Name</label><select id="noteNameSelect"><option value="">Select saved name</option></select><div class="hint">Previous noters appear here.</div></div>
-        <div class="field"><label>First Time? Add Name</label><input id="noteNewName" type="text" placeholder="Enter your name"></div>
-        <div class="field"><label>Position</label><select id="notePosition"><option value="">-- Select --</option><option>Nurse</option><option>Caregiver</option><option>Marketer</option><option>Other</option></select></div>
-        <div class="field"><label>Date</label><input id="noteDate" type="date"></div>
-        <div class="field"><label>Time</label><input id="noteTime" type="time"></div>
-        <div class="field"><label>Next Step</label><select id="noteNextStep">
-          <option>Immediate Family Outreach (Call/Text)</option><option>Schedule On-Site Visit</option><option>Conduct Bedside Presentation</option>
-          <option>Request Clinical Records (H&amp;P)</option><option>RN Assessment Requested</option><option>RN Assessment Scheduled</option>
-          <option>Obtain Physician Order for Eval</option><option>Insurance Verification in Progress</option>
-          <option>CM Follow-Up (Status Update)</option><option>Overcoming Family Hesitation</option><option>Other</option>
-        </select></div>
-        <div class="field full"><label>Note</label><textarea id="noteText" placeholder="Enter note details…"></textarea></div>
-      </div>
-      <div class="mini-actions"><button class="btn btn-green" onclick="saveNote()">Sync &amp; Save Note</button></div>
-      <div id="syncStatus" style="margin-top:8px;font-size:12px;color:#0a6c2f;font-weight:700;"></div>
-    </div>
-    <div id="notesList" style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-      <div class="box"><h4>Ericka — 2026-04-12 at 09:15 AM</h4><p><strong>Position:</strong> Marketer</p><p><strong>Next Step:</strong> Immediate Family Outreach (Call/Text)</p><p>Met with DON. Quicker response time updates needed.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">✅ Synced</p></div>
-    </div>
-  </section>
-  </div>
-
-  <div class="tab-pane" id="tab-admin">
-<!-- ADMIN ONLY -->
-  <section class="admin-section" id="admin">
-    <div class="admin-banner">
-      <h3 style="margin:0;color:#c9aeff;">🔒 Admin Only</h3>
-      <span class="pill pill-purple">Admin View Only</span>
-    </div>
-    <p class="admin-note">This section is hidden from standard users. Only the Admin account holder can view seat limits, manage users, review mileage, staff tracking entries, and notes totals. The subscription supports as many admins/users as desired, but access is limited to the purchased seat count.</p>
-    <div class="admin-grid">
-      <div class="admin-card">
-        <h4>👥 User Management</h4>
-        <p>Admin manages user access and subscription seat limits. Users can be assigned any title the purchaser chooses.</p>
-        <div class="mini-actions" style="margin-top:10px;"><button class="btn btn-green btn-small">+ Add User</button><button class="btn btn-red btn-small">− Remove User</button></div>
-      </div>
-      <div class="admin-card">
-        <h4>🪑 Seat Limits</h4>
-        <p>Subscription seat count controls how many users can access the CRM at one time.</p>
-        <span class="admin-stat" id="adminSeats">12 / 20</span>
-        <p style="font-size:11px;">Seats in use / Total purchased</p>
-      </div>
-      <div class="admin-card">
-        <h4>📝 Notes Synced (Total)</h4>
-        <p>Total notes synced across all team members.</p>
-        <span class="admin-stat" id="adminNotes">0</span>
-      </div>
-      <div class="admin-card">
-        <h4>📡 Staff Tracking Entries</h4>
-        <p>Auto-captured location entries — each logged when a note is synced with GPS location.</p>
-        <span class="admin-stat" id="adminStaff">0</span>
-      </div>
-    </div>
-          <div class="admin-card" style="grid-column:1/-1;">
-        <h4>📍 All Staff Mileage (Admin View)</h4>
-        <p style="margin-bottom:12px;">Admin can see every team member's daily and weekly mileage totals below.</p>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;">
-          <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;">
-            <p style="font-size:10px;color:var(--muted);margin:0 0 4px;font-weight:800;text-transform:uppercase;">All Staff Today</p>
-            <p style="font-size:24px;font-weight:900;color:var(--green);margin:0;" id="adminAllTodayMiles">0.0 mi</p>
+      {/* Log a trip (non-admin / marketer) */}
+      {role!=="admin" && (
+        <>
+          <Btn onClick={()=>setShowAdd(true)} color="#7c3aed">+ Log Trip</Btn>
+          <div style={{ background:"#fff",borderRadius:12,overflow:"auto",marginTop:16,boxShadow:"0 1px 4px rgba(0,0,0,.08)" }}>
+            <table style={{ width:"100%",borderCollapse:"collapse",fontSize:13 }}>
+              <thead>
+                <tr style={{ background:"#f1f5f9" }}>
+                  {["Date","Miles","Note"].map(h=>(
+                    <th key={h} style={{ padding:"10px 12px",textAlign:"left",fontWeight:700,fontSize:11,color:"#64748b",textTransform:"uppercase",letterSpacing:.4 }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {myTrips.sort((a,b)=>b.date.localeCompare(a.date)).map(t=>(
+                  <tr key={t.id} style={{ borderTop:"1px solid #f1f5f9" }}>
+                    <td style={{ padding:"10px 12px",color:"#475569" }}>{t.date}</td>
+                    <td style={{ padding:"10px 12px",fontWeight:700,color:"#16a34a" }}>{t.miles} mi</td>
+                    <td style={{ padding:"10px 12px",color:"#64748b" }}>{t.note}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;">
-            <p style="font-size:10px;color:var(--muted);margin:0 0 4px;font-weight:800;text-transform:uppercase;">All Staff This Week</p>
-            <p style="font-size:24px;font-weight:900;color:var(--blue);margin:0;" id="adminAllWeekMiles">0.0 mi</p>
+        </>
+      )}
+
+      {showAdd && (
+        <Modal title="Log a Trip" onClose={()=>setShowAdd(false)}>
+          <Field label="Date" value={form.date} onChange={v=>setForm(f=>({...f,date:v}))} type="date"/>
+          <Field label="Miles" value={form.miles} onChange={v=>setForm(f=>({...f,miles:v}))} type="number"/>
+          <Field label="Note (optional)" value={form.note} onChange={v=>setForm(f=>({...f,note:v}))}/>
+          <div style={{ display:"flex",gap:10,justifyContent:"flex-end",marginTop:4 }}>
+            <Btn onClick={()=>setShowAdd(false)} color="#334155">Cancel</Btn>
+            <Btn onClick={addTrip} color="#7c3aed">Log Trip</Btn>
           </div>
-          <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;">
-            <p style="font-size:10px;color:var(--muted);margin:0 0 4px;font-weight:800;text-transform:uppercase;">Total Trips Logged</p>
-            <p style="font-size:24px;font-weight:900;color:#ffd36e;margin:0;" id="adminTotalTrips">0</p>
-          </div>
-          <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;">
-            <p style="font-size:10px;color:var(--muted);margin:0 0 4px;font-weight:800;text-transform:uppercase;">Staff Logged Today</p>
-            <p style="font-size:24px;font-weight:900;color:#c9aeff;margin:0;" id="adminStaffLoggedToday">0</p>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+// ── Admin Panel ──────────────────────────────────────────────────────────────
+function AdminPanel({ users, onRemove }) {
+  return (
+    <div>
+      <div style={{ background:"#fff",borderRadius:12,overflow:"auto",boxShadow:"0 1px 4px rgba(0,0,0,.08)" }}>
+        <table style={{ width:"100%",borderCollapse:"collapse",fontSize:13 }}>
+          <thead>
+            <tr style={{ background:"#f1f5f9" }}>
+              {["Name","Title / Role","Status","Action"].map(h=>(
+                <th key={h} style={{ padding:"10px 12px",textAlign:"left",fontWeight:700,fontSize:11,color:"#64748b",textTransform:"uppercase",letterSpacing:.4 }}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {users.map(u=>(
+              <tr key={u.name} style={{ borderTop:"1px solid #f1f5f9" }}>
+                <td style={{ padding:"10px 12px",fontWeight:700,color:"#1e293b" }}>{u.name}</td>
+                <td style={{ padding:"10px 12px",color:"#475569" }}>{u.role}</td>
+                <td style={{ padding:"10px 12px" }}>
+                  <span style={{ background:u.status==="Admin"?"#ede9fe":u.status==="Active"?"#dcfce7":"#f1f5f9",color:u.status==="Admin"?"#6d28d9":u.status==="Active"?"#16a34a":"#64748b",borderRadius:20,padding:"3px 10px",fontWeight:700,fontSize:11 }}>{u.status}</span>
+                </td>
+                <td style={{ padding:"10px 12px" }}>
+                  {u.status!=="Admin" ? (
+                    <Btn onClick={()=>onRemove(u.name)} color="#b91c1c" small>Remove</Btn>
+                  ) : <span style={{ color:"#94a3b8" }}>—</span>}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+// ── Main App ─────────────────────────────────────────────────────────────────
+export default function HospiceLinkPro() {
+  const [activeNav, setActiveNav] = useState("Prospect Records");
+  const [tier] = useState("pro"); // "pro" | "max" | "gold"
+  const [role, setRole] = useState("admin"); // "admin" | "user"
+  const [users, setUsers] = useState([
+    { name:"Ericka", role:"Marketer", status:"Active" },
+    { name:"Admin",  role:"Administrator", status:"Admin" },
+  ]);
+  const [navOpen, setNavOpen] = useState(false);
+
+  const removeUser = (name) => setUsers(us=>us.filter(u=>u.name!==name));
+
+  const allNavItems = [
+    ...NAV_ITEMS,
+    ...(tier!=="pro" ? ["Mileage"] : []),
+    ...(role==="admin" ? ["🔒 Admin"] : []),
+  ];
+
+  const renderSection = () => {
+    switch (activeNav) {
+      case "Prospect Records":   return <ProspectRecords/>;
+      case "Referral Sources":   return <ReferralSources/>;
+      case "Mileage":            return tier!=="pro" ? <MileageSection role={role}/> : null;
+      case "🔒 Admin":           return role==="admin" ? <AdminPanel users={users} onRemove={removeUser}/> : null;
+      default: return <div style={{ color:"#94a3b8",padding:24,textAlign:"center" }}>Section coming soon.</div>;
+    }
+  };
+
+  return (
+    <div style={{ minHeight:"100vh",background:"#0f172a",fontFamily:"'Segoe UI',system-ui,sans-serif" }}>
+      {/* Top bar */}
+      <div style={{ background:"#0f172a",borderBottom:"1px solid #1e293b",padding:"14px 20px",display:"flex",alignItems:"center",justifyContent:"space-between" }}>
+        <div>
+          <div style={{ color:"#e2e8f0",fontWeight:900,fontSize:22,letterSpacing:-.5 }}>HospiceLink <span style={{ color:"#3b82f6" }}>Pro</span></div>
+          <div style={{ color:"#64748b",fontSize:12 }}>Marketing CRM Demo</div>
+        </div>
+        <div style={{ display:"flex",alignItems:"center",gap:10 }}>
+          {/* Role switcher for demo */}
+          <select value={role} onChange={e=>setRole(e.target.value)} style={{ background:"#1e293b",border:"1px solid #334155",color:"#e2e8f0",borderRadius:8,padding:"6px 10px",fontSize:12,cursor:"pointer" }}>
+            <option value="admin">👑 Admin</option>
+            <option value="user">🧑 Marketer</option>
+          </select>
+          <button onClick={()=>setNavOpen(o=>!o)} style={{ background:"#1e293b",border:"1px solid #334155",color:"#e2e8f0",borderRadius:8,padding:"8px 12px",cursor:"pointer",fontSize:18,lineHeight:1 }}>☰</button>
+        </div>
+      </div>
+
+      {/* Slide-out nav */}
+      {navOpen && (
+        <div style={{ position:"fixed",inset:0,zIndex:500 }} onClick={()=>setNavOpen(false)}>
+          <div style={{ position:"absolute",top:0,right:0,bottom:0,width:220,background:"#1e293b",padding:"20px 0",boxShadow:"-4px 0 20px rgba(0,0,0,.5)" }} onClick={e=>e.stopPropagation()}>
+            {allNavItems.map(item=>(
+              <button key={item} onClick={()=>{ setActiveNav(item); setNavOpen(false); }} style={{ display:"block",width:"100%",textAlign:"left",background:activeNav===item?"#0f172a":"none",border:"none",color:activeNav===item?"#60a5fa":"#cbd5e1",padding:"13px 20px",fontSize:14,fontWeight:activeNav===item?700:500,cursor:"pointer" }}>
+                {item}
+              </button>
+            ))}
           </div>
         </div>
-        <div class="table-wrap">
-          <table><thead><tr><th>Staff Name</th><th>Miles Today</th><th>Miles This Week</th><th>Total Trips</th><th>Last Trip</th></tr></thead>
-          <tbody id="adminMileageTable"><tr><td colspan="5" style="text-align:center;color:#888;">No trips logged yet. Trips appear here when staff log mileage.</td></tr></tbody></table>
-        </div>
+      )}
+
+      {/* Horizontal nav (wider screens) */}
+      <div style={{ background:"#1e293b",padding:"0 20px",display:"flex",gap:4,overflowX:"auto" }}>
+        {allNavItems.map(item=>(
+          <button key={item} onClick={()=>setActiveNav(item)} style={{ background:"none",border:"none",borderBottom:`2px solid ${activeNav===item?"#3b82f6":"transparent"}`,color:activeNav===item?"#60a5fa":"#94a3b8",padding:"12px 14px",fontSize:13,fontWeight:activeNav===item?700:500,cursor:"pointer",whiteSpace:"nowrap",transition:"color .15s" }}>
+            {item}
+          </button>
+        ))}
       </div>
-    <div style="height:1px;">  <span id="adminMiles" style="display:none">0</span>
-    <!-- User list -->
-    <div class="user-table-wrap">
-      <h4 style="color:#c9aeff;margin:18px 0 10px;">Current Users</h4>
-      <div class="table-wrap">
-        <table><thead><tr><th>Name</th><th>Title / Role</th><th>Status</th><th>Action</th></tr></thead>
-        <tbody id="adminUserBody">
-          <tr><td>Ericka</td><td>Marketer</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-red btn-small">Remove</button></td></tr>
-          <tr><td>Admin</td><td>Administrator</td><td><span class="pill pill-purple">Admin</span></td><td>—</td></tr>
-        </tbody></table>
+
+      {/* Content */}
+      <div style={{ padding:20,maxWidth:900,margin:"0 auto" }}>
+        <h2 style={{ color:"#e2e8f0",fontWeight:800,fontSize:20,marginBottom:20 }}>{activeNav}</h2>
+        {renderSection()}
+      </div>
+
+      {/* Tier note */}
+      <div style={{ textAlign:"center",padding:"12px 20px",color:"#475569",fontSize:11 }}>
+        Current tier: <strong style={{ color:"#60a5fa" }}>{tier.toUpperCase()}</strong> — Mileage tracking available on Max & Gold plans only
       </div>
     </div>
-  </section>
-  </div>
-
-</main>
-</div>
-
-<!-- ADD REFERRAL MODAL -->
-<div class="modal-overlay" id="addReferralModal">
-  <div class="modal-box">
-    <button class="close-modal" onclick="closeModal('addReferralModal')">&times;</button>
-    <h4>Add Referral Source</h4>
-    <div class="modal-grid">
-      <div class="field"><label>Contact Name</label><input id="refContactName" type="text" placeholder="e.g. Jane Smith"></div>
-      <div class="field"><label>Business / Facility</label><input id="refBusiness" type="text" placeholder="e.g. North Dallas Rehab"></div>
-      <div class="field"><label>Phone</label><input id="refPhone" type="tel" placeholder="(469) 555-0100"></div>
-      <div class="field"><label>Email</label><input id="refEmail" type="email" placeholder="jane@facility.com"></div>
-      <div class="field full"><label>Address</label><input id="refAddress" type="text" placeholder="123 Main St, Dallas TX 75201"></div>
-      <div class="field"><label>Ref Status</label><select id="refStatus"><option value="Green">🟢 Green — Sending Referrals</option><option value="Red">🔴 Red — No Referrals Yet</option></select></div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-green" onclick="saveReferralFromModal()">Save Referral</button>
-      <button class="btn btn-gray" onclick="closeModal('addReferralModal')">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- EDIT REFERRAL MODAL -->
-<div class="modal-overlay" id="editReferralModal">
-  <div class="modal-box">
-    <button class="close-modal" onclick="closeModal('editReferralModal')">&times;</button>
-    <h4>Edit Referral Source</h4>
-    <input type="hidden" id="editRefIndex">
-    <div class="modal-grid">
-      <div class="field"><label>Contact Name</label><input id="editRefContactName" type="text"></div>
-      <div class="field"><label>Business / Facility</label><input id="editRefBusiness" type="text"></div>
-      <div class="field"><label>Phone</label><input id="editRefPhone" type="tel"></div>
-      <div class="field"><label>Email</label><input id="editRefEmail" type="email"></div>
-      <div class="field full"><label>Address</label><input id="editRefAddress" type="text"></div>
-      <div class="field"><label>Ref Status</label><select id="editRefStatus"><option value="Green">🟢 Green — Sending Referrals</option><option value="Red">🔴 Red — No Referrals Yet</option></select></div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-green" onclick="saveEditReferral()">Save Changes</button>
-      <button class="btn btn-gray" onclick="closeModal('editReferralModal')">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- EDIT PROSPECT MODAL -->
-<div class="modal-overlay" id="editProspectModal">
-  <div class="modal-box">
-    <button class="close-modal" onclick="closeModal('editProspectModal')">&times;</button>
-    <h4>Edit Prospect</h4>
-    <input type="hidden" id="editProspIndex">
-    <div class="modal-grid">
-      <div class="field"><label>Name</label><input id="editProspName" type="text"></div>
-      <div class="field"><label>Status</label><select id="editProspStatus"><option>Inquiry</option><option>Pending Admission</option><option>Lost</option><option>Admitted</option></select></div>
-      <div class="field"><label>Phone</label><input id="editProspPhone" type="tel"></div>
-      <div class="field"><label>Email</label><input id="editProspEmail" type="email"></div>
-      <div class="field full"><label>Address</label><input id="editProspAddress" type="text"></div>
-      <div class="field"><label>Secondary Contact</label><input id="editProspSecondary" type="text"></div>
-      <div class="field"><label>Assigned Marketer</label><input id="editProspMarketer" type="text"></div>
-      <div class="field full"><label>Next Step</label><input id="editProspNextStep" type="text"></div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-green" onclick="saveEditProspect()">Save Changes</button>
-      <button class="btn btn-gray" onclick="closeModal('editProspectModal')">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<script>
-const P="pro";
-const K={refs:`crmRefs_${P}`,prsp:`crmProsp_${P}`,mkt:`crmMkt_${P}`,names:`crmNames_${P}`,notes:`crmNotes_${P}`,miles:`crmMiles_${P}`,staff:`crmStaff_${P}`,todayMi:`crmTodayMi_${P}`,weekMi:`crmWeekMi_${P}`,trips:`crmTrips_${P}`,todayDate:`crmTodayDate_${P}`};
-
-function gs(k,d){try{const r=localStorage.getItem(k);return r?JSON.parse(r):d;}catch(e){return d;}}
-function ss(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
-function fmt(t){if(!t)return"";const[h,m]=t.split(":");let hr=parseInt(h,10);const ap=hr>=12?"PM":"AM";hr=hr%12||12;return`${hr}:${m} ${ap}`;}
-function pSt(s){const m={Inquiry:"pill-blue","Pending Admission":"pill-yellow",Lost:"pill-red",Admitted:"pill-green"};return`<span class="pill ${m[s]||'pill-blue'}">${s}</span>`;}
-function pRef(s){return s==="Red"?'<span class="pill pill-red">🔴 Red</span>':'<span class="pill pill-green">🟢 Green</span>';}
-
-function openModal(id){document.getElementById(id).classList.add("open");}
-function closeModal(id){document.getElementById(id).classList.remove("open");}
-
-function defRefs(){return[
-  {contactName:"Sarah M.",business:"North Dallas Rehab",phone:"(214)555-0110",email:"sarah@ndr.com",address:"100 Rehab Way, Dallas TX",status:"Green"},
-  {contactName:"Dr. Patel",business:"Baylor",phone:"(214)555-0122",email:"patel@baylor.com",address:"3500 Gaston Ave, Dallas TX",status:"Green"},
-  {contactName:"Office Mgr",business:"Physician Office",phone:"(972)555-0133",email:"mgr@physoffice.com",address:"900 Medical Dr, Plano TX",status:"Red"}
-];}
-function defProsp(){return[
-  {name:"Mary J.",status:"Inquiry",source:"North Dallas Rehab",marketer:"Ericka",phone:"(214)555-1001",email:"mary@email.com",address:"500 Oak St, Dallas TX",secondary:"Tom J.",nextStep:"Call family to schedule consult"},
-  {name:"John T.",status:"Pending Admission",source:"Baylor",marketer:"Ericka",phone:"(214)555-1002",email:"john@email.com",address:"800 Elm Ave, Dallas TX",secondary:"",nextStep:"Collect signed admission packet"}
-];}
-
-/* ── dashboard ── */
-function updateDashboard(){
-  const refs=gs(K.refs,defRefs());const prsp=gs(K.prsp,defProsp());
-  const nc=gs(K.notes,1);const gr=refs.filter(r=>r.status==="Green").length;const rr=refs.filter(r=>r.status==="Red").length;
-  const inq=prsp.filter(p=>p.status==="Inquiry").length;const pnd=prsp.filter(p=>p.status==="Pending Admission").length;
-  const adm=prsp.filter(p=>p.status==="Admitted").length;const lst=prsp.filter(p=>p.status==="Lost").length;
-  document.getElementById("kpiProspects").textContent=prsp.length;
-  document.getElementById("kpiReferrals").textContent=refs.length;
-  document.getElementById("kpiPending").textContent=pnd;
-  document.getElementById("kpiAdmissions").textContent=adm;
-  document.getElementById("kpiNotes").textContent=nc;
-  document.getElementById("dtInquiry").textContent=inq;
-  document.getElementById("dtPending").textContent=pnd;
-  document.getElementById("dtAdmitted").textContent=adm;
-  document.getElementById("dtLost").textContent=lst;
-  document.getElementById("dtGreenRef").textContent=gr;
-  document.getElementById("dtRedRef").textContent=rr;
-  document.getElementById("dtPipeline").textContent=prsp.length;
-  document.getElementById("dtNotes").textContent=nc;
-  document.getElementById("adminNotes").textContent=nc;
-  document.getElementById("adminMiles").textContent=parseFloat(gs(K.miles,0)).toFixed(1)+" mi";
-  document.getElementById("adminStaff").textContent=gs(K.staff,0);
-  // horizontal bar chart updates
-  const maxP=prsp.length||1; const maxR=refs.length||1;
-  const hbars=[["hbarInquiry",inq,maxP],["hbarPending",pnd,maxP],["hbarAdmitted",adm,maxP],["hbarLost",lst,maxP],
-               ["hbarTotalProsp",prsp.length,prsp.length||1],["hbarGreen",gr,maxR],["hbarRed",rr,maxR],["hbarNotes",nc,Math.max(nc,10)],["hbarRefs",refs.length,maxR]];
-  hbars.forEach(([id,val,max])=>{const el=document.getElementById(id);if(el){el.style.width=Math.min(100,Math.round((val/(max||1))*100))+"%";const vEl=document.getElementById(id+"Val");if(vEl)vEl.textContent=val;}});
-  renderPipeline(prsp);renderProspectRecords();renderReferralRecords();
+  );
 }
-
-/* ── referrals ── */
-function loadReferralSources(){
-  const refs=gs(K.refs,defRefs());ss(K.refs,refs);
-  const sel=document.getElementById("prospectReferralSourceSelect");
-  const tb=document.getElementById("referralTableBody");
-  sel.innerHTML="";tb.innerHTML="";
-  refs.forEach((r,i)=>{
-    const o=document.createElement("option");o.value=r.business;o.textContent=r.business;sel.appendChild(o);
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td><input type="radio" name="selRef" value="${i}"></td><td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${r.address||"—"}</td><td>${r.email||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button></td>`;
-    tb.appendChild(tr);
-  });
-  updateDashboard();
-}
-function renderReferralRecords(){
-  const refs=gs(K.refs,defRefs());
-  const q=(document.getElementById("referralSearch")||{value:""}).value.toLowerCase();
-  const tb=document.getElementById("referralRecordsBody");tb.innerHTML="";
-  refs.filter(r=>{
-    if(!q)return true;
-    return[r.contactName,r.business,r.phone,r.email,r.address].some(v=>(v||"").toLowerCase().includes(q));
-  }).forEach((r,i)=>{
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${r.address||"—"}</td><td>${r.email||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${gs(K.refs,defRefs()).indexOf(r)})">Edit</button></td>`;
-    tb.appendChild(tr);
-  });
-}
-function saveReferralFromModal(){
-  const cn=document.getElementById("refContactName").value.trim();const biz=document.getElementById("refBusiness").value.trim();
-  if(!cn||!biz){alert("Contact name and business name are required.");return;}
-  const refs=gs(K.refs,defRefs());
-  refs.push({contactName:cn,business:biz,phone:document.getElementById("refPhone").value.trim(),email:document.getElementById("refEmail").value.trim(),address:document.getElementById("refAddress").value.trim(),status:document.getElementById("refStatus").value});
-  ss(K.refs,refs);closeModal("addReferralModal");
-  ["refContactName","refBusiness","refPhone","refEmail","refAddress"].forEach(id=>document.getElementById(id).value="");
-  loadReferralSources();
-}
-function deleteSelectedReferral(){
-  const sel=document.querySelector('input[name="selRef"]:checked');if(!sel){alert("Select a referral to delete.");return;}
-  const refs=gs(K.refs,defRefs());refs.splice(parseInt(sel.value),1);ss(K.refs,refs);loadReferralSources();
-}
-function openEditReferral(i){
-  const refs=gs(K.refs,defRefs());const r=refs[i];
-  document.getElementById("editRefIndex").value=i;
-  document.getElementById("editRefContactName").value=r.contactName||"";
-  document.getElementById("editRefBusiness").value=r.business||"";
-  document.getElementById("editRefPhone").value=r.phone||"";
-  document.getElementById("editRefEmail").value=r.email||"";
-  document.getElementById("editRefAddress").value=r.address||"";
-  document.getElementById("editRefStatus").value=r.status||"Green";
-  openModal("editReferralModal");
-}
-function saveEditReferral(){
-  const i=parseInt(document.getElementById("editRefIndex").value);
-  const refs=gs(K.refs,defRefs());
-  refs[i]={contactName:document.getElementById("editRefContactName").value.trim(),business:document.getElementById("editRefBusiness").value.trim(),phone:document.getElementById("editRefPhone").value.trim(),email:document.getElementById("editRefEmail").value.trim(),address:document.getElementById("editRefAddress").value.trim(),status:document.getElementById("editRefStatus").value};
-  ss(K.refs,refs);closeModal("editReferralModal");loadReferralSources();
-}
-
-/* ── prospects ── */
-function loadMarketers(){
-  const m=gs(K.mkt,["Ericka"]);ss(K.mkt,m);
-  const sel=document.getElementById("prospectAssignedMarketerSelect");sel.innerHTML="";
-  m.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});
-}
-function renderProspectsTable(){
-  const prsp=gs(K.prsp,defProsp());const tb=document.getElementById("prospectTableBody");tb.innerHTML="";
-  prsp.forEach((p,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td><input type="radio" name="selProsp" value="${i}"></td><td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.source||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">Edit</button></td>`;tb.appendChild(tr);});
-}
-function renderProspectRecords(){
-  const prsp=gs(K.prsp,defProsp());
-  const q=(document.getElementById("prospectSearch")||{value:""}).value.toLowerCase();
-  const tb=document.getElementById("prospectRecordsBody");tb.innerHTML="";
-  prsp.filter(p=>{
-    if(!q)return true;
-    return[p.name,p.phone,p.email,p.address,p.secondary].some(v=>(v||"").toLowerCase().includes(q));
-  }).forEach((p,i)=>{
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.phone||"—"}</td><td>${p.email||"—"}</td><td>${p.address||"—"}</td><td>${p.secondary||"—"}</td><td>${p.source||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${gs(K.prsp,defProsp()).indexOf(p)})">Edit</button></td>`;
-    tb.appendChild(tr);
-  });
-}
-function saveProspect(){
-  const name=document.getElementById("prospectName").value.trim();
-  const status=document.getElementById("prospectStatus").value;
-  const source=document.getElementById("prospectReferralSourceSelect").value;
-  const nm=document.getElementById("newAssignedMarketerInput").value.trim();
-  const marketer=nm||document.getElementById("prospectAssignedMarketerSelect").value;
-  const nextStep=document.getElementById("prospectNextStep").value.trim();
-  const phone=document.getElementById("prospectPhone").value.trim();
-  const email=document.getElementById("prospectEmail").value.trim();
-  const address=document.getElementById("prospectAddress").value.trim();
-  const secondary=document.getElementById("prospectSecondary").value.trim();
-  if(!name||!status||!marketer||!nextStep){alert("Name, Status, Marketer, and Next Step are required.");return;}
-  if(nm){const m=gs(K.mkt,["Ericka"]);if(!m.includes(nm)){m.push(nm);ss(K.mkt,m);loadMarketers();}}
-  const prsp=gs(K.prsp,defProsp());prsp.unshift({name,status,source,marketer,nextStep,phone,email,address,secondary});ss(K.prsp,prsp);
-  renderProspectsTable();updateDashboard();
-  ["prospectName","newAssignedMarketerInput","prospectNextStep","prospectPhone","prospectEmail","prospectAddress","prospectSecondary"].forEach(id=>document.getElementById(id).value="");
-}
-function deleteSelectedProspect(){
-  const sel=document.querySelector('input[name="selProsp"]:checked');if(!sel){alert("Select a prospect to delete.");return;}
-  const prsp=gs(K.prsp,defProsp());prsp.splice(parseInt(sel.value),1);ss(K.prsp,prsp);renderProspectsTable();updateDashboard();
-}
-function openEditProspect(i){
-  const prsp=gs(K.prsp,defProsp());const p=prsp[i];
-  document.getElementById("editProspIndex").value=i;
-  document.getElementById("editProspName").value=p.name||"";
-  document.getElementById("editProspStatus").value=p.status||"Inquiry";
-  document.getElementById("editProspPhone").value=p.phone||"";
-  document.getElementById("editProspEmail").value=p.email||"";
-  document.getElementById("editProspAddress").value=p.address||"";
-  document.getElementById("editProspSecondary").value=p.secondary||"";
-  document.getElementById("editProspMarketer").value=p.marketer||"";
-  document.getElementById("editProspNextStep").value=p.nextStep||"";
-  openModal("editProspectModal");
-}
-function saveEditProspect(){
-  const i=parseInt(document.getElementById("editProspIndex").value);
-  const prsp=gs(K.prsp,defProsp());
-  prsp[i].name=document.getElementById("editProspName").value.trim();
-  prsp[i].status=document.getElementById("editProspStatus").value;
-  prsp[i].phone=document.getElementById("editProspPhone").value.trim();
-  prsp[i].email=document.getElementById("editProspEmail").value.trim();
-  prsp[i].address=document.getElementById("editProspAddress").value.trim();
-  prsp[i].secondary=document.getElementById("editProspSecondary").value.trim();
-  prsp[i].marketer=document.getElementById("editProspMarketer").value.trim();
-  prsp[i].nextStep=document.getElementById("editProspNextStep").value.trim();
-  ss(K.prsp,prsp);closeModal("editProspectModal");renderProspectsTable();updateDashboard();
-}
-
-/* ── pipeline ── */
-function renderPipeline(prsp){
-  const groups={Inquiry:[],["Pending Admission"]:[],Admitted:[],Lost:[]};
-  prsp.forEach(p=>{if(groups[p.status])groups[p.status].push(p);});
-  const total=prsp.length||1;
-  [["Inquiry","pipeInquiry","pipeCountInquiry","pipeBarInquiry"],
-   ["Pending Admission","pipePending","pipeCountPending","pipeBarPending"],
-   ["Admitted","pipeAdmitted","pipeCountAdmitted","pipeBarAdmitted"],
-   ["Lost","pipeLost","pipeCountLost","pipeBarLost"]].forEach(([status,bodyId,countId,barId])=>{
-    const arr=groups[status];
-    const bar=document.getElementById(barId);if(bar){bar.style.width=Math.round((arr.length/total)*100)+"%";bar.textContent=arr.length;}
-    const countEl=document.getElementById(countId);if(countEl)countEl.textContent=arr.length;
-    const el=document.getElementById(bodyId);if(el){el.innerHTML="";arr.forEach(p=>{const d=document.createElement("div");d.className="pipe-card";d.innerHTML=`<strong>${p.name}</strong><small>Source: ${p.source||"—"}</small>`;el.appendChild(d);});}
-  });
-}
-
-/* ── note names ── */
-function loadNoteNames(){
-  const names=gs(K.names,["Ericka"]);ss(K.names,names);
-  const sel=document.getElementById("noteNameSelect");sel.innerHTML='<option value="">Select saved name</option>';
-  names.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});
-}
-
-/* ── notes ── */
-function saveNote(){
-  const sn=document.getElementById("noteNameSelect").value.trim();const nn=document.getElementById("noteNewName").value.trim();const fn=nn||sn;
-  const pos=document.getElementById("notePosition").value;const dt=document.getElementById("noteDate").value;const ti=document.getElementById("noteTime").value;
-  const ns=document.getElementById("noteNextStep").value;const nt=document.getElementById("noteText").value.trim();
-  if(!fn||!pos||!dt||!ti||!ns||!nt){alert("Name, Position, Date, Time, Next Step, and Note are required.");return;}
-  const names=gs(K.names,["Ericka"]);if(!names.includes(fn)){names.push(fn);ss(K.names,names);loadNoteNames();}
-  const cnt=gs(K.notes,1)+1;ss(K.notes,cnt);
-  const sc=gs(K.staff,0)+1;ss(K.staff,sc);
-  const locStr=getLocationString();
-  const box=document.createElement("div");box.className="box";
-  box.innerHTML=`<h4>${fn} — ${dt} at ${fmt(ti)}</h4><p><strong>Position:</strong> ${pos}</p><p><strong>Next Step:</strong> ${ns}</p><p>${nt}</p><p style="color:#0a6c2f;font-size:11px;margin-top:6px;font-weight:700;">✅ Synced — 📍 ${locStr}</p>`;
-  document.getElementById("notesList").prepend(box);
-  document.getElementById("syncStatus").textContent="✅ Sync successful — location captured: "+locStr;
-  addStaffTrackingEntry(fn,pos,dt,ti,ns);
-  updateMileageTotals();
-  ["noteNewName","noteDate","noteTime","noteText"].forEach(id=>document.getElementById(id).value="");
-  updateDashboard();
-}
-
-
-/* ── MILEAGE & STAFF TRACKING ── */
-function checkDayReset(){
-  const today=new Date().toDateString();
-  if(gs(K.todayDate||'crmTodayDate_pro',"")!==today){
-    ss(K.todayDate||'crmTodayDate_pro',today);
-    ss(K.todayMi||'crmTodayMi_pro',0);
-    // reset per-staff today on day change
-    const trips=gs(K.trips||'crmTrips_pro',[]);
-    ss(K.trips||'crmTrips_pro',trips);
-  }
-}
-function estimateMiles(s,e){
-  const seed=(s+e).split("").reduce((a,c)=>a+c.charCodeAt(0),0);
-  return+(8+(seed%40)+Math.random()*5).toFixed(1);
-}
-function logMileage(){
-  const staff=document.getElementById("gpsStaffName").value.trim();
-  const start=document.getElementById("gpsStart").value.trim();
-  const end=document.getElementById("gpsEnd").value.trim();
-  const purpose=document.getElementById("gpsPurpose").value.trim();
-  if(!staff||!start||!end){alert("Your name, start address, and end address are required.");return;}
-  const miles=estimateMiles(start,end);
-  const now=new Date();
-  const todayStr=now.toDateString();
-  const timeStr=now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-  // update running totals
-  const totalMiles=parseFloat(gs(K.miles,0))+miles;
-  const tripNum=gs(K.trips,[]).length+1;
-  const todayMi=parseFloat(gs(K.todayMi,0))+miles;
-  const weekMi=parseFloat(gs(K.weekMi,0))+miles;
-  ss(K.miles,totalMiles);
-  ss(K.todayMi,todayMi);
-  ss(K.weekMi,weekMi);
-  // store trip record
-  const trips=gs(K.trips,[]);
-  trips.push({staff,start,end,miles,purpose,time:timeStr,date:todayStr,tripNum});
-  ss(K.trips,trips);
-  // show result
-  const res=document.getElementById("gpsResult");
-  if(res)res.textContent=`✅ ${miles} miles logged — ${start} → ${end}  (Trip #${tripNum})`;
-  // update personal totals display
-  updateMileageTotals();
-  // add row to my trip log
-  const tbody=document.getElementById("mileageTripLog");
-  if(tbody){
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${tripNum}</td><td>${staff}</td><td>${start}</td><td>${end}</td><td><strong>${miles}</strong></td><td>${purpose||"—"}</td><td>${timeStr}</td>`;
-    tbody.prepend(tr);
-  }
-  ["gpsStaffName","gpsStart","gpsEnd","gpsPurpose"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
-  updateDashboard();
-}
-function updateMileageTotals(){
-  checkDayReset();
-  const todayMi=parseFloat(gs(K.todayMi,0)||0);
-  const weekMi=parseFloat(gs(K.weekMi,0)||0);
-  const td=document.getElementById("myTodayMiles");if(td)td.textContent=todayMi.toFixed(1);
-  const wk=document.getElementById("myWeekMiles");if(wk)wk.textContent=weekMi.toFixed(1);
-  // Admin all-staff totals
-  const trips=gs(K.trips,[]);
-  const todayStr=new Date().toDateString();
-  const todayTrips=trips.filter(t=>t.date===todayStr);
-  const todayTotalMi=todayTrips.reduce((a,t)=>a+parseFloat(t.miles),0);
-  const weekTotalMi=trips.reduce((a,t)=>a+parseFloat(t.miles),0);
-  const staffToday=new Set(todayTrips.map(t=>t.staff)).size;
-  const aat=document.getElementById("adminAllTodayMiles");if(aat)aat.textContent=todayTotalMi.toFixed(1)+" mi";
-  const aaw=document.getElementById("adminAllWeekMiles");if(aaw)aaw.textContent=weekTotalMi.toFixed(1)+" mi";
-  const att=document.getElementById("adminTotalTrips");if(att)att.textContent=trips.length;
-  const ast=document.getElementById("adminStaffLoggedToday");if(ast)ast.textContent=staffToday;
-  // Build per-staff admin table
-  const adminTbl=document.getElementById("adminMileageTable");
-  if(adminTbl&&trips.length>0){
-    const staffMap={};
-    trips.forEach(t=>{
-      if(!staffMap[t.staff])staffMap[t.staff]={today:0,week:0,count:0,last:"—"};
-      staffMap[t.staff].week+=parseFloat(t.miles);
-      staffMap[t.staff].count++;
-      staffMap[t.staff].last=t.time+" on "+t.date.slice(0,10);
-      if(t.date===todayStr)staffMap[t.staff].today+=parseFloat(t.miles);
-    });
-    adminTbl.innerHTML="";
-    Object.entries(staffMap).forEach(([name,d])=>{
-      const tr=document.createElement("tr");
-      tr.innerHTML=`<td><strong>${name}</strong></td><td>${d.today.toFixed(1)} mi</td><td>${d.week.toFixed(1)} mi</td><td>${d.count}</td><td>${d.last}</td>`;
-      adminTbl.appendChild(tr);
-    });
-  }
-}
-
-/* ── STAFF TRACKING LOCATION HELPER ── */
-function getLocationString(){
-  // Demo: simulate GPS coordinates near Dallas TX area
-  const lats=["32.7767","32.8140","32.9482","33.0198","32.6762","32.8468"];
-  const lngs=["96.7970","96.9489","97.0641","96.6989","97.2830","96.8508"];
-  const areas=["Dallas, TX","Irving, TX","Fort Worth, TX","McKinney, TX","Arlington, TX","Plano, TX"];
-  const i=Math.floor(Math.random()*lats.length);
-  return `${areas[i]} — ${lats[i]}°N ${lngs[i]}°W`;
-}
-function addStaffTrackingEntry(fn, pos, dt, ti, ns){
-  const loc=getLocationString();
-  const tbody=document.getElementById("staffTrackingBody");
-  if(!tbody)return;
-  const tr=document.createElement("tr");
-  tr.innerHTML=`<td><strong>${fn}</strong></td><td>${pos}</td><td>${dt}</td><td>${fmt(ti)||new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</td><td><span class="pill pill-green">📍 ${loc}</span></td><td>${ns}</td>`;
-  tbody.prepend(tr);
-}
-
-
-function showTab(id){
-  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'));
-  const pane=document.getElementById('tab-'+id);
-  if(pane)pane.classList.add('active');
-  const link=document.querySelector('.nav a[data-tab="'+id+'"]');
-  if(link)link.classList.add('active');
-  window.scrollTo(0,0);
-}
-(function init(){showTab('dashboard');checkDayReset();loadReferralSources();loadMarketers();loadNoteNames();renderProspectsTable();updateDashboard();updateMileageTotals();})();
-</script>
-</body>
-</html>
