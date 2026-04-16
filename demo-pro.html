@@ -164,13 +164,8 @@
   <div class="topbar"><div><h2>Prospect Records</h2></div></div>
   <section class="section">
     <input class="search-bar" id="prospectSearch" type="text" placeholder="🔍  Search by name, phone, email, or address…" oninput="renderProspectRecords()">
-    <div class="table-wrap" style="margin-bottom:16px;">
-      <table><thead><tr><th>Sel</th><th>Name</th><th>Status</th><th>Source</th><th>Marketer</th><th>Next Step</th><th>Actions</th></tr></thead>
-      <tbody id="prospectsTableBody"></tbody></table>
-    </div>
-    <h4 style="margin:0 0 10px;font-size:13px;color:#6c8aab;">Full Detail View</h4>
     <div class="table-wrap">
-      <table><thead><tr><th>Name</th><th>Status</th><th>Phone</th><th>Email</th><th>Address</th><th>Secondary</th><th>Source</th><th>Marketer</th><th>Next Step</th><th>Actions</th></tr></thead>
+      <table><thead><tr><th>Sel</th><th>Name</th><th>Status</th><th>Phone</th><th>Email</th><th>Address</th><th>Secondary</th><th>Source</th><th>Marketer</th><th>Next Step</th><th>Actions</th></tr></thead>
       <tbody id="prospectRecordsBody"></tbody></table>
     </div>
   </section>
@@ -428,8 +423,35 @@ function updateDashboard(){
   renderPipeline(prsp);renderProspectRecords();renderReferralRecords();renderAdminProspects();renderAdminReferrals();
 }
 
-function loadReferralSources(){const refs=gs(K.refs,defRefs());ss(K.refs,refs);const sel=document.getElementById("prospectReferralSourceSelect");const tb=document.getElementById("referralTableBody");sel.innerHTML="";tb.innerHTML="";refs.forEach((r,i)=>{const o=document.createElement("option");o.value=r.business;o.textContent=r.business;sel.appendChild(o);const tr=document.createElement("tr");tr.innerHTML=`<td><input type="radio" name="selRef" value="${i}"></td><td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${r.address||"—"}</td><td>${r.email||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button></td>`;tb.appendChild(tr);});updateDashboard();}
-function renderReferralRecords(){const refs=gs(K.refs,defRefs());const q=(document.getElementById("referralSearch")||{value:""}).value.toLowerCase();const tb=document.getElementById("referralRecordsBody");tb.innerHTML="";refs.filter(r=>{if(!q)return true;return[r.contactName,r.business,r.phone,r.email,r.address].some(v=>(v||"").toLowerCase().includes(q));}).forEach((r,_,arr)=>{const i=arr.indexOf(r);const tr=document.createElement("tr");tr.innerHTML=`<td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${r.address||"—"}</td><td>${r.email||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button></td>`;tb.appendChild(tr);});}
+function loadReferralSources(){
+  const refs=gs(K.refs,defRefs());ss(K.refs,refs);
+  const sel=document.getElementById("prospectReferralSourceSelect");
+  const tb=document.getElementById("referralTableBody");
+  sel.innerHTML="";tb.innerHTML="";
+  refs.forEach((r,i)=>{
+    const o=document.createElement("option");o.value=r.business;o.textContent=r.business;sel.appendChild(o);
+    const smsBtn=r.phone?`<button class="btn btn-small" style="background:#7c3aed;color:#fff;padding:5px 9px;font-size:11px;" onclick="sendContactSMS('${r.phone}','${r.contactName} (${r.business})','referral')">📱 Text</button>`:'';
+    const emailBtn=r.email?`<button class="btn btn-small" style="background:#2563eb;color:#fff;padding:5px 9px;font-size:11px;" onclick="sendContactEmail('${r.email}','${r.contactName} (${r.business})','referral')">📧 Email</button>`:'';
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td><input type="radio" name="selRef" value="${i}"></td><td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}<br>${smsBtn}</td><td>${r.address||"—"}</td><td>${r.email||"—"}<br>${emailBtn}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button></td>`;
+    tb.appendChild(tr);
+  });
+  updateDashboard();
+}
+function renderReferralRecords(){
+  const refs=gs(K.refs,defRefs());
+  const q=(document.getElementById("referralSearch")||{value:""}).value.toLowerCase();
+  const tb=document.getElementById("referralRecordsBody");tb.innerHTML="";
+  refs.filter(r=>{if(!q)return true;return[r.contactName,r.business,r.phone,r.email,r.address].some(v=>(v||"").toLowerCase().includes(q));})
+  .forEach((r,_,arr)=>{
+    const i=arr.indexOf(r);
+    const smsBtn=r.phone?`<button class="btn btn-small" style="background:#7c3aed;color:#fff;padding:5px 9px;font-size:11px;" onclick="sendContactSMS('${r.phone}','${r.contactName} (${r.business})','referral')">📱 Text</button>`:'';
+    const emailBtn=r.email?`<button class="btn btn-small" style="background:#2563eb;color:#fff;padding:5px 9px;font-size:11px;" onclick="sendContactEmail('${r.email}','${r.contactName} (${r.business})','referral')">📧 Email</button>`:'';
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}<br>${smsBtn}</td><td>${r.address||"—"}</td><td>${r.email||"—"}<br>${emailBtn}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button></td>`;
+    tb.appendChild(tr);
+  });
+}
 function saveReferralFromModal(){const cn=document.getElementById("refContactName").value.trim();const biz=document.getElementById("refBusiness").value.trim();if(!cn||!biz){alert("Contact name and business name are required.");return;}const refs=gs(K.refs,defRefs());refs.push({contactName:cn,business:biz,phone:document.getElementById("refPhone").value.trim(),email:document.getElementById("refEmail").value.trim(),address:document.getElementById("refAddress").value.trim(),status:document.getElementById("refStatus").value});ss(K.refs,refs);closeModal("addReferralModal");["refContactName","refBusiness","refPhone","refEmail","refAddress"].forEach(id=>document.getElementById(id).value="");loadReferralSources();}
 function deleteSelectedReferral(){const sel=document.querySelector('input[name="selRef"]:checked');if(!sel){alert("Select a referral to delete.");return;}const refs=gs(K.refs,defRefs());refs.splice(parseInt(sel.value),1);ss(K.refs,refs);loadReferralSources();}
 function openEditReferral(i){const refs=gs(K.refs,defRefs());const r=refs[i];document.getElementById("editRefIndex").value=i;document.getElementById("editRefContactName").value=r.contactName||"";document.getElementById("editRefBusiness").value=r.business||"";document.getElementById("editRefPhone").value=r.phone||"";document.getElementById("editRefEmail").value=r.email||"";document.getElementById("editRefAddress").value=r.address||"";document.getElementById("editRefStatus").value=r.status||"Green";openModal("editReferralModal");}
@@ -437,8 +459,20 @@ function saveEditReferral(){const i=parseInt(document.getElementById("editRefInd
 function loadMarketers(){const m=gs(K.mkt,["Ericka"]);ss(K.mkt,m);const sel=document.getElementById("prospectAssignedMarketerSelect");sel.innerHTML="";m.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});}
 function loadNames(){const names=gs(K.names,["Ericka","Angela"]);ss(K.names,names);const sel=document.getElementById("noteNameSelect");if(!sel)return;sel.innerHTML='<option value="">Select saved name</option>';names.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});}
 function saveNameIfNeeded(name){if(!name)return;const names=gs(K.names,["Ericka","Angela"]);if(!names.includes(name)){names.push(name);ss(K.names,names);loadNames();}}
-function renderProspectsTable(){const prsp=gs(K.prsp,defProsp());const tb=document.getElementById("prospectsTableBody");tb.innerHTML="";prsp.forEach((p,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td><input type="radio" name="selProsp" value="${i}"></td><td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.source||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">Edit</button> <button class="btn btn-red btn-small" onclick="adminDeleteProspect(${i})">Del</button></td>`;tb.appendChild(tr);});}
-function renderProspectRecords(){const prsp=gs(K.prsp,defProsp());const q=(document.getElementById("prospectSearch")||{value:""}).value.toLowerCase();const tb=document.getElementById("prospectRecordsBody");tb.innerHTML="";prsp.filter(p=>{if(!q)return true;return[p.name,p.phone,p.email,p.address,p.secondary].some(v=>(v||"").toLowerCase().includes(q));}).forEach((p,_,arr)=>{const i=arr.indexOf(p);const tr=document.createElement("tr");tr.innerHTML=`<td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.phone||"—"}</td><td>${p.email||"—"}</td><td>${p.address||"—"}</td><td>${p.secondary||"—"}</td><td>${p.source||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">Edit</button> <button class="btn btn-red btn-small" onclick="adminDeleteProspect(${i})">Del</button></td>`;tb.appendChild(tr);});}
+function renderProspectsTable(){renderProspectRecords();}
+function renderProspectRecords(){
+  const prsp=gs(K.prsp,defProsp());
+  const q=(document.getElementById("prospectSearch")||{value:""}).value.toLowerCase();
+  const tb=document.getElementById("prospectRecordsBody");tb.innerHTML="";
+  prsp.filter(p=>{if(!q)return true;return[p.name,p.phone,p.email,p.address,p.secondary].some(v=>(v||"").toLowerCase().includes(q));})
+  .forEach((p,_,arr)=>{
+    const i=arr.indexOf(p);const tr=document.createElement("tr");
+    const smsBtn=p.phone?`<button class="btn btn-small" style="background:#7c3aed;color:#fff;padding:5px 9px;font-size:11px;" onclick="sendContactSMS('${p.phone}','${p.name}','prospect')">📱 Text</button>`:'';
+    const emailBtn=p.email?`<button class="btn btn-small" style="background:#2563eb;color:#fff;padding:5px 9px;font-size:11px;" onclick="sendContactEmail('${p.email}','${p.name}','prospect')">📧 Email</button>`:'';
+    tr.innerHTML=`<td><input type="radio" name="selProsp" value="${i}"></td><td style="font-weight:700">${p.name}</td><td>${pSt(p.status)}</td><td>${p.phone||"—"}<br>${smsBtn}</td><td>${p.email||"—"}<br>${emailBtn}</td><td>${p.address||"—"}</td><td>${p.secondary||"—"}</td><td>${p.source||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">Edit</button> <button class="btn btn-red btn-small" onclick="adminDeleteProspect(${i})">Del</button></td>`;
+    tb.appendChild(tr);
+  });
+}
 function renderAdminProspects(){const prsp=gs(K.prsp,defProsp());const tb=document.getElementById("adminProspectBody");if(!tb)return;tb.innerHTML="";prsp.forEach((p,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.phone||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">Edit</button> <button class="btn btn-red btn-small" onclick="adminDeleteProspect(${i})">Delete</button></td>`;tb.appendChild(tr);});}
 function renderAdminReferrals(){const refs=gs(K.refs,defRefs());const tb=document.getElementById("adminReferralBody");if(!tb)return;tb.innerHTML="";refs.forEach((r,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button> <button class="btn btn-red btn-small" onclick="adminDeleteReferral(${i})">Delete</button></td>`;tb.appendChild(tr);});}
 function adminDeleteProspect(i){if(!confirm("Delete this prospect?"))return;const prsp=gs(K.prsp,defProsp());prsp.splice(i,1);ss(K.prsp,prsp);renderProspectsTable();updateDashboard();}
@@ -509,6 +543,45 @@ async function askAI(msg){
     tDiv.textContent = '⚠️ AI is in demo mode. In the live CRM, this connects to Claude AI for real-time insights and recommendations.';
   }
   messages.scrollTop = messages.scrollHeight;
+}
+
+/* ── SMS / EMAIL WITH AUTO-NOTE LOGGING ── */
+function autoLogCommunication(contactName, method, messagePreview, contactType){
+  // Auto-add to notes list
+  const notesList = document.getElementById("notesList");
+  if(!notesList) return;
+  const wrapper = notesList.querySelector(".grid-2") || notesList;
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  const timeStr = now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const box = document.createElement("div");
+  box.className = "note-box";
+  box.style.borderLeft = "4px solid " + (method==='SMS' ? '#7c3aed' : '#2563eb');
+  box.innerHTML = `<h4 style="color:#${method==='SMS'?'7c3aed':'2563eb'}">${method==='SMS'?'📱':'📧'} ${method} sent to ${contactName}</h4>
+    <p><strong>Date:</strong> ${dateStr} at ${timeStr}</p>
+    <p><strong>Contact type:</strong> ${contactType==='prospect'?'Prospect':'Referral Source'}</p>
+    <p><strong>Message:</strong> ${messagePreview}</p>
+    <p style="color:#0a6c2f;font-size:11px;margin-top:6px;font-weight:700;">✅ Auto-logged to Notes</p>`;
+  wrapper.prepend(box);
+  // Increment note count
+  const cnt = gs(K.notes, 0) + 1; ss(K.notes, cnt);
+  updateDashboard();
+}
+
+function sendContactSMS(phone, contactName, contactType){
+  const msg = prompt(`📱 Text message to ${contactName} (${phone}):\n\nType your message:`, `Hi ${contactName}, this is your HospiceLink team. `);
+  if(!msg) return;
+  window.open(`sms:${phone}?&body=${encodeURIComponent(msg)}`);
+  autoLogCommunication(contactName, 'SMS', msg.slice(0,80)+(msg.length>80?'…':''), contactType);
+}
+
+function sendContactEmail(email, contactName, contactType){
+  const subject = prompt(`📧 Email to ${contactName} (${email}):\n\nSubject line:`, `Follow-up from HospiceLink`);
+  if(!subject) return;
+  const body = prompt(`Message body:`, `Dear ${contactName},\n\n`);
+  if(!body) return;
+  window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+  autoLogCommunication(contactName, 'Email', subject, contactType);
 }
 
 (function init(){showTab('dashboard');loadReferralSources();loadMarketers();loadNames();renderProspectsTable();updateDashboard();})();
