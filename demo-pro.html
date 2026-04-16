@@ -13,21 +13,18 @@
 .nav a{text-decoration:none;color:var(--text);padding:9px 12px;border-radius:10px;border:1px solid transparent;font-weight:700;font-size:12px;cursor:pointer;user-select:none}
 .nav a:hover{background:#10203a;border-color:var(--line)}
 .nav a.active{background:var(--blue)!important;color:#081426!important;border-color:var(--blue)!important}
-.nav a.admin-link{color:#c9aeff;border-color:rgba(91,58,160,.4)}
-.nav a.admin-link:hover{background:#1a0f30;border-color:#5b3aa0}
+.nav a.admin-link{color:#c9aeff;border-color:rgba(91,58,160,.4)} .nav a.admin-link:hover{background:#1a0f30;border-color:#5b3aa0}
 .nav a.admin-link.active{background:#7c4dcc!important;color:#fff!important;border-color:#7c4dcc!important}
+.nav a.ai-link{color:#f9c74f;border-color:rgba(249,199,79,.3)} .nav a.ai-link:hover{background:#1a1500;border-color:#f9c74f}
+.nav a.ai-link.active{background:#b8860b!important;color:#fff!important;border-color:#f9c74f!important}
 .main{padding:24px 24px 40px}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px}
-.topbar h2{margin:0;font-size:28px} .topbar p{margin:4px 0 0;color:var(--muted)}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px} .topbar h2{margin:0;font-size:28px} .topbar p{margin:4px 0 0;color:var(--muted)}
 .btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:999px;padding:10px 16px;font-weight:800;text-decoration:none;cursor:pointer;font-size:13px}
 .btn-blue{background:var(--blue);color:#081426} .btn-green{background:var(--green);color:#081426} .btn-red{background:var(--red);color:#fff} .btn-gray{background:#2a3a55;color:var(--text)} .btn-small{padding:6px 11px;font-size:11px}
-.hero,.section{background:linear-gradient(180deg,#0f1f39,#0b1730);border:1px solid var(--line);border-radius:20px;padding:20px;margin-bottom:18px}
-.section{background:var(--panel2);padding:18px}
-.hero h3{font-size:36px;margin:0 0 8px;color:var(--green);line-height:1.05}
-.hero p{margin:0;color:#d9e5f6;font-size:15px;line-height:1.6}
+.hero,.section{background:linear-gradient(180deg,#0f1f39,#0b1730);border:1px solid var(--line);border-radius:20px;padding:20px;margin-bottom:18px} .section{background:var(--panel2);padding:18px}
+.hero h3{font-size:36px;margin:0 0 8px;color:var(--green);line-height:1.05} .hero p{margin:0;color:#d9e5f6;font-size:15px;line-height:1.6}
 .section h3{margin:0 0 12px;font-size:22px}
-.card,.note-box,.note-form-wrap{background:#fff;color:#111;border-radius:16px;padding:16px}
-.card h4,.note-box h4{margin:0 0 8px;font-size:14px} .card p,.note-box p{margin:0;line-height:1.5;font-size:13px}
+.card,.note-box,.note-form-wrap{background:#fff;color:#111;border-radius:16px;padding:16px} .card h4,.note-box h4{margin:0 0 8px;font-size:14px} .card p,.note-box p{margin:0;line-height:1.5;font-size:13px}
 .mini-actions,.note-actions,.footer-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .pill{display:inline-block;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800}
 .pill-green{background:var(--green-soft);color:#136c32} .pill-red{background:var(--red-soft);color:var(--reddark)} .pill-yellow{background:var(--yellow-soft);color:var(--yellow)} .pill-blue{background:#dff1ff;color:#0f5c8a} .pill-purple{background:var(--purple-soft);color:var(--purple)}
@@ -40,16 +37,11 @@
 .hbar-fill span{font-size:10px;font-weight:800;color:#fff}
 .hbar-count{width:32px;text-align:right;font-size:13px;font-weight:900;color:var(--text)}
 .hbar-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
-.fill-blue{background:linear-gradient(90deg,#2e7fb5,#49b6ff)}
-.fill-yellow{background:linear-gradient(90deg,#b58a00,#ffd36e)}
-.fill-green{background:linear-gradient(90deg,#2d8f00,#8cff66)}
-.fill-red{background:linear-gradient(90deg,#8f1f1f,#e05555)}
+.fill-blue{background:linear-gradient(90deg,#2e7fb5,#49b6ff)} .fill-yellow{background:linear-gradient(90deg,#b58a00,#ffd36e)}
+.fill-green{background:linear-gradient(90deg,#2d8f00,#8cff66)} .fill-red{background:linear-gradient(90deg,#8f1f1f,#e05555)}
 .fill-purple{background:linear-gradient(90deg,#4a2080,#9c6fe8)}
 .search-bar{width:100%;padding:10px 14px;border:1px solid #d7e0ec;border-radius:12px;font:inherit;font-size:13px;margin-bottom:12px}
-.table-wrap{overflow:auto;border-radius:14px}
-table{width:100%;border-collapse:collapse;background:#fff;color:#111;border-radius:14px;overflow:hidden}
-th,td{padding:11px;border-bottom:1px solid #e7edf5;text-align:left;vertical-align:middle;font-size:12px}
-th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:800}
+.table-wrap{overflow:auto;border-radius:14px} table{width:100%;border-collapse:collapse;background:#fff;color:#111;border-radius:14px;overflow:hidden} th,td{padding:11px;border-bottom:1px solid #e7edf5;text-align:left;vertical-align:middle;font-size:12px} th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:800}
 .field label,.note-form-wrap label{display:block;font-size:12px;font-weight:700;margin-bottom:4px}
 .field input,.field select,.field textarea,.note-form-wrap input,.note-form-wrap select,.note-form-wrap textarea{width:100%;border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px}
 .field textarea,.note-form-wrap textarea{min-height:90px;resize:vertical} .field.full{grid-column:1/-1}
@@ -75,15 +67,21 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
 .modal-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 .close-modal{position:absolute;top:13px;right:15px;background:none;border:none;font-size:23px;cursor:pointer;color:#555;line-height:1}
 .tab-pane{display:none} .tab-pane.active{display:block}
+/* AI Chat */
+.ai-chat-wrap{background:#0a1628;border:1px solid rgba(249,199,79,.25);border-radius:16px;overflow:hidden}
+.ai-messages{min-height:300px;max-height:420px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.ai-msg{padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%}
+.ai-msg.user{background:#1e3a5f;color:#e2e8f0;align-self:flex-end}
+.ai-msg.assistant{background:#1a2a1a;color:#c8f7c5;border:1px solid rgba(140,255,102,.2);align-self:flex-start}
+.ai-msg.thinking{color:#94a3b8;font-style:italic}
+.ai-input-row{display:flex;gap:8px;padding:12px;border-top:1px solid rgba(255,255,255,.08)}
+.ai-input-row input{flex:1;background:#0f1929;border:1px solid #334155;border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:13px}
+.ai-input-row button{background:#f9c74f;color:#000;border:none;border-radius:8px;padding:10px 16px;font-weight:800;cursor:pointer;font-size:13px;white-space:nowrap}
+.ai-suggestion-chips{display:flex;gap:8px;flex-wrap:wrap;padding:8px 12px 0}
+.ai-chip{background:rgba(249,199,79,.12);border:1px solid rgba(249,199,79,.3);color:#f9c74f;padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;cursor:pointer}
+.ai-chip:hover{background:rgba(249,199,79,.25)}
 @media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.hbar-grid,.form-grid-4,.form-grid-3,.grid-2,.grid-3,.admin-grid{grid-template-columns:1fr}.modal-grid{grid-template-columns:1fr}}
 </style>
-
-<style>
-.editable-row td { cursor: default; }
-.edit-inline-btn { background:none;border:1px solid #3b82f6;color:#3b82f6;border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;font-weight:700;margin-right:4px;}
-.delete-inline-btn { background:none;border:1px solid #e05555;color:#e05555;border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;font-weight:700;}
-</style>
-
 </head>
 <body>
 <div class="layout">
@@ -100,7 +98,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
     <a data-tab="productivity" onclick="showTab('productivity');return false;">Productivity</a>
     <a data-tab="automation" onclick="showTab('automation');return false;">Automation</a>
     <a data-tab="notes" onclick="showTab('notes');return false;">Notes</a>
-    <a data-tab="ai" onclick="showTab('ai');return false;">🤖 AI Assistant</a>
+    <a data-tab="ai" class="ai-link" onclick="showTab('ai');return false;">🤖 AI Assistant</a>
     <a data-tab="admin" class="admin-link" onclick="showTab('admin');return false;">🔒 Admin</a>
   </nav>
   <div class="footer-actions" style="margin-top:20px;"><a href="index.html#pricing" class="btn btn-blue btn-small">Back to Website</a></div>
@@ -113,7 +111,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
   <div class="topbar"><div><h2>HospiceLink Pro</h2><p>Marketing CRM Demo</p></div></div>
   <section class="hero">
     <h3>Marketing CRM Command Center</h3>
-    <p>Prospect intake, referral management, pipeline tracking, territory view, productivity tracking, and automation — all in one place.</p>
+    <p>Prospect intake, referral management, pipeline tracking, territory view, productivity tracking, automation, and AI-powered insights — all in one place.</p>
   </section>
   <div class="hbar-grid">
     <div class="hbar-section">
@@ -133,6 +131,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
   <span id="kpiReferrals" style="display:none">0</span><span id="kpiAdmissions" style="display:none">0</span>
   <span id="kpiPending" style="display:none">0</span><span id="dtPipeline" style="display:none">0</span>
   <span id="kpiNotes" style="display:none">0</span><span id="dtFamily" style="display:none">0</span>
+  <span id="todayMiles" style="display:none">0</span><span id="weekMiles" style="display:none">0</span>
 </div>
 
 <!-- ADD PROSPECT -->
@@ -166,12 +165,12 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
   <section class="section">
     <input class="search-bar" id="prospectSearch" type="text" placeholder="🔍  Search by name, phone, email, or address…" oninput="renderProspectRecords()">
     <div class="table-wrap" style="margin-bottom:16px;">
-      <table><thead><tr><th>Sel</th><th>Name</th><th>Status</th><th>Source</th><th>Marketer</th><th>Next Step</th><th>Edit</th></tr></thead>
+      <table><thead><tr><th>Sel</th><th>Name</th><th>Status</th><th>Source</th><th>Marketer</th><th>Next Step</th><th>Actions</th></tr></thead>
       <tbody id="prospectsTableBody"></tbody></table>
     </div>
     <h4 style="margin:0 0 10px;font-size:13px;color:#6c8aab;">Full Detail View</h4>
     <div class="table-wrap">
-      <table><thead><tr><th>Name</th><th>Status</th><th>Phone</th><th>Email</th><th>Address</th><th>Secondary</th><th>Source</th><th>Marketer</th><th>Next Step</th><th>Edit</th></tr></thead>
+      <table><thead><tr><th>Name</th><th>Status</th><th>Phone</th><th>Email</th><th>Address</th><th>Secondary</th><th>Source</th><th>Marketer</th><th>Next Step</th><th>Actions</th></tr></thead>
       <tbody id="prospectRecordsBody"></tbody></table>
     </div>
   </section>
@@ -186,7 +185,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
       <button class="btn btn-red" onclick="deleteSelectedReferral()">Delete Selected</button>
     </div>
     <div class="table-wrap">
-      <table><thead><tr><th>Sel</th><th>Contact</th><th>Business</th><th>Phone</th><th>Address</th><th>Email</th><th>Status</th><th>Edit</th></tr></thead>
+      <table><thead><tr><th>Sel</th><th>Contact</th><th>Business</th><th>Phone</th><th>Address</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead>
       <tbody id="referralTableBody"></tbody></table>
     </div>
   </section>
@@ -198,7 +197,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
   <section class="section">
     <input class="search-bar" id="referralSearch" type="text" placeholder="🔍  Search by name, business, phone, email, or address…" oninput="renderReferralRecords()">
     <div class="table-wrap">
-      <table><thead><tr><th>Contact</th><th>Business</th><th>Phone</th><th>Address</th><th>Email</th><th>Status</th><th>Edit</th></tr></thead>
+      <table><thead><tr><th>Contact</th><th>Business</th><th>Phone</th><th>Address</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead>
       <tbody id="referralRecordsBody"></tbody></table>
     </div>
   </section>
@@ -287,18 +286,18 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
   <section class="section">
     <div class="note-form-wrap">
       <div class="form-grid-3">
-        <div><label for="noteNameSelect">Select Name</label><select id="noteNameSelect"><option value="">Select saved name</option></select><div class="note-help">Previous noters appear here.</div></div>
-        <div><label for="noteNewName">First Time? Add Name</label><input id="noteNewName" type="text" placeholder="Enter your name"></div>
-        <div><label for="notePosition">Position</label><select id="notePosition"><option value="">-- Select --</option><option>Nurse</option><option>Caregiver</option><option>Marketer</option><option>Other</option></select></div>
-        <div><label for="noteDate">Date</label><input id="noteDate" type="date"></div>
-        <div><label for="noteTime">Time</label><input id="noteTime" type="time"></div>
-        <div><label for="noteNextStep">Next Step</label><select id="noteNextStep">
+        <div><label>Select Name</label><select id="noteNameSelect"><option value="">Select saved name</option></select><div class="note-help">Previous noters appear here.</div></div>
+        <div><label>First Time? Add Name</label><input id="noteNewName" type="text" placeholder="Enter your name"></div>
+        <div><label>Position</label><select id="notePosition"><option value="">-- Select --</option><option>Nurse</option><option>Caregiver</option><option>Marketer</option><option>Other</option></select></div>
+        <div><label>Date</label><input id="noteDate" type="date"></div>
+        <div><label>Time</label><input id="noteTime" type="time"></div>
+        <div><label>Next Step</label><select id="noteNextStep">
           <option>Immediate Family Outreach (Call/Text)</option><option>Schedule On-Site Visit</option><option>Conduct Bedside Presentation</option>
-          <option>Request Clinical Records (H&amp;P)</option><option>RN Assessment Requested</option><option>RN Assessment Scheduled</option>
+          <option>Request Clinical Records (H&P)</option><option>RN Assessment Requested</option><option>RN Assessment Scheduled</option>
           <option>Obtain Physician Order for Eval</option><option>Insurance Verification in Progress</option>
           <option>CM Follow-Up (Status Update)</option><option>Overcoming Family Hesitation</option><option>Other</option>
         </select></div>
-        <div style="grid-column:1/-1;"><label for="noteText">Note</label><textarea id="noteText" placeholder="Enter note details here…"></textarea></div>
+        <div style="grid-column:1/-1;"><label>Note</label><textarea id="noteText" placeholder="Enter note details here…"></textarea></div>
       </div>
       <div class="note-actions"><button class="btn btn-green" onclick="saveDemoNote()">Sync &amp; Save Note</button></div>
       <div id="syncStatus" style="margin-top:8px;font-size:12px;color:#0a6c2f;font-weight:700;"></div>
@@ -312,16 +311,70 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
   </section>
 </div>
 
+<!-- AI ASSISTANT -->
+<div class="tab-pane" id="tab-ai">
+  <div class="topbar"><div><h2>🤖 AI Assistant</h2><p>Powered by Claude — Ask anything about your CRM data, strategy, or next steps</p></div></div>
+  <section class="section" style="padding:0;overflow:hidden;">
+    <div class="ai-chat-wrap">
+      <div style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;">
+        <div style="width:10px;height:10px;background:#8cff66;border-radius:50%;"></div>
+        <span style="color:#c9d6ea;font-size:13px;font-weight:700;">HospiceLink AI — Marketing CRM Assistant</span>
+      </div>
+      <div class="ai-suggestion-chips">
+        <span class="ai-chip" onclick="askAI('Which of my referral sources has the highest conversion rate?')">Top referral sources?</span>
+        <span class="ai-chip" onclick="askAI('What should my marketer focus on today to hit admission goals?')">Daily priorities?</span>
+        <span class="ai-chip" onclick="askAI('Draft a follow-up message for a pending admission prospect')">Draft follow-up</span>
+        <span class="ai-chip" onclick="askAI('How do I improve my territory conversion rates?')">Improve conversions</span>
+      </div>
+      <div class="ai-messages" id="aiMessages">
+        <div class="ai-msg assistant">👋 Hi! I'm your HospiceLink AI assistant. I can help you analyze your CRM data, draft communications, suggest strategies, and more. What would you like to know?</div>
+      </div>
+      <div class="ai-input-row">
+        <input type="text" id="aiInput" placeholder="Ask me anything about your CRM, prospects, or strategy…" onkeydown="if(event.key==='Enter')sendAI()">
+        <button onclick="sendAI()">Send ➤</button>
+      </div>
+    </div>
+  </section>
+</div>
+
 <!-- ADMIN — includes Staff Tracking (admin-only) -->
 <div class="tab-pane" id="tab-admin">
   <div class="topbar"><div><h2>🔒 Admin</h2></div></div>
   <section class="admin-section">
     <div class="admin-banner"><h3 style="margin:0;color:#c9aeff;">🔒 Admin Only</h3><span class="pill pill-purple">Admin View Only</span></div>
-    <p class="admin-note">This section is hidden from standard users. Only the Admin account holder can view seat limits, manage users, review staff tracking entries, and notes totals.</p>
+    <p class="admin-note">Full system control. Admin can view, edit, and delete ALL records across all users. Staff cannot see this section.</p>
     <div class="admin-grid">
-      <div class="admin-card"><h4>👥 User Management</h4><p>Admin manages user access and subscription seat limits.</p><div class="mini-actions" style="margin-top:10px;"><button class="btn btn-green btn-small">+ Add User</button><button class="btn btn-red btn-small">− Remove User</button></div></div>
-      <div class="admin-card"><h4>🪑 Seat Limits</h4><p>Subscription seat count controls active users.</p><span class="admin-stat">8 / 10</span><p style="font-size:11px;">Seats in use / Total purchased</p></div>
-      <div class="admin-card"><h4>📝 Notes Synced</h4><p>Total notes synced across all team members.</p><span class="admin-stat" id="adminNotes">0</span></div>
+      <div class="admin-card"><h4>👥 User Management</h4><p>Manage users, roles, and access.</p><div class="mini-actions" style="margin-top:10px;"><button class="btn btn-green btn-small">+ Add User</button><button class="btn btn-red btn-small">− Remove User</button></div></div>
+      <div class="admin-card"><h4>🪑 Seat Limits</h4><p>Active users vs purchased seats.</p><span class="admin-stat">8 / 10</span><p style="font-size:11px;">Seats in use / Total purchased</p></div>
+      <div class="admin-card"><h4>📝 Notes Synced</h4><p>Total notes across all users.</p><span class="admin-stat" id="adminNotes">0</span></div>
+    </div>
+    <!-- Admin: All Prospects (edit/delete) -->
+    <div style="margin-top:20px;">
+      <h4 style="color:#c9aeff;margin:0 0 10px;">📋 All Prospect Records (Admin Edit/Delete)</h4>
+      <div class="table-wrap">
+        <table><thead><tr><th>Name</th><th>Status</th><th>Phone</th><th>Marketer</th><th>Next Step</th><th>Admin Actions</th></tr></thead>
+        <tbody id="adminProspectBody"></tbody></table>
+      </div>
+    </div>
+    <!-- Admin: All Referrals (edit/delete) -->
+    <div style="margin-top:20px;">
+      <h4 style="color:#c9aeff;margin:0 0 10px;">📋 All Referral Sources (Admin Edit/Delete)</h4>
+      <div class="table-wrap">
+        <table><thead><tr><th>Contact</th><th>Business</th><th>Phone</th><th>Status</th><th>Admin Actions</th></tr></thead>
+        <tbody id="adminReferralBody"></tbody></table>
+      </div>
+    </div>
+    <!-- Staff Tracking -->
+    <div style="margin-top:24px;">
+      <h4 style="color:#c9aeff;margin:0 0 10px;">📍 Staff Tracking</h4>
+      <p style="color:var(--muted);font-size:13px;margin:0 0 12px;">Auto-captured each time a team member syncs a note. Location recorded at sync time.</p>
+      <div class="table-wrap">
+        <table><thead><tr><th>Staff</th><th>Position</th><th>Date</th><th>Time</th><th>📍 Location at Sync</th><th>Next Step</th></tr></thead>
+        <tbody id="staffTrackingBody">
+          <tr><td>Angela</td><td>Nurse</td><td>2026-04-12</td><td>9:05 AM</td><td><span class="pill pill-green">✅ Synced</span></td><td>RN Assessment Scheduled</td></tr>
+          <tr><td>Ericka</td><td>Marketer</td><td>2026-04-11</td><td>1:15 PM</td><td><span class="pill pill-green">✅ Synced</span></td><td>CM Follow-Up</td></tr>
+        </tbody></table>
+      </div>
     </div>
     <div style="margin-top:16px;">
       <h4 style="color:#c9aeff;margin:0 0 10px;">Current Users</h4>
@@ -333,107 +386,16 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
         </tbody></table>
       </div>
     </div>
-    <!-- STAFF TRACKING — Admin eyes only -->
-    <div style="margin-top:24px;">
-      <h4 style="color:#c9aeff;margin:0 0 10px;">📍 Staff Tracking</h4>
-      <p style="color:var(--muted);font-size:13px;margin:0 0 12px;">Auto-captured each time a team member clicks "Sync &amp; Save Note". Location is recorded at sync time.</p>
-      <div class="table-wrap">
-        <table><thead><tr><th>Staff</th><th>Position</th><th>Date</th><th>Time</th><th>📍 Location at Sync</th><th>Next Step</th></tr></thead>
-        <tbody id="staffTrackingBody">
-          <tr><td>Angela</td><td>Nurse</td><td>2026-04-12</td><td>9:05 AM</td><td><span class="pill pill-green">✅ Synced</span></td><td>RN Assessment Scheduled</td></tr>
-          <tr><td>Ericka</td><td>Marketer</td><td>2026-04-11</td><td>1:15 PM</td><td><span class="pill pill-green">✅ Synced</span></td><td>CM Follow-Up</td></tr>
-        </tbody></table>
-      </div>
-    </div>
   </section>
 </div>
-
-
-<!-- AI ASSISTANT TAB -->
-<div class="tab-pane" id="tab-ai">
-  <div class="topbar"><div><h2>🤖 AI Assistant</h2><p>Powered by Claude — your CRM intelligence layer</p></div></div>
-  <section class="section">
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;">
-      <button class="ai-quick-btn" onclick="aiQuick('Summarize all current prospects and their statuses')">📋 Summarize Prospects</button>
-      <button class="ai-quick-btn" onclick="aiQuick('Which referral sources are performing best and which need attention?')">📊 Referral Analysis</button>
-      <button class="ai-quick-btn" onclick="aiQuick('What follow-up actions should I prioritize today based on the pipeline?')">🎯 Today\'s Priorities</button>
-      <button class="ai-quick-btn" onclick="aiQuick('Draft a professional follow-up message for a hospital case manager referral source')">✉️ Draft Follow-Up</button>
-      <button class="ai-quick-btn" onclick="aiQuick('What are best practices for hospice marketing and increasing admissions?')">💡 Marketing Tips</button>
-      <button class="ai-quick-btn" onclick="aiQuick('Generate a weekly activity report summary for the admin')">📈 Weekly Report</button>
-    </div>
-    <div style="background:#fff;border-radius:16px;padding:20px;margin-bottom:16px;">
-      <div id="aiChatHistory" style="min-height:200px;max-height:420px;overflow-y:auto;margin-bottom:16px;display:flex;flex-direction:column;gap:12px;"></div>
-      <div style="display:flex;gap:10px;align-items:flex-end;">
-        <textarea id="aiInput" placeholder="Ask anything about your CRM data, prospects, strategy..." 
-          style="flex:1;border:1px solid #d7e0ec;border-radius:12px;padding:12px;font:inherit;font-size:13px;resize:none;min-height:52px;max-height:120px;"
-          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAiMessage();}"></textarea>
-        <button onclick="sendAiMessage()" class="btn btn-green" id="aiSendBtn" style="height:52px;padding:0 20px;border-radius:12px;">Send</button>
-      </div>
-      <div id="aiThinking" style="display:none;color:#64748b;font-size:12px;margin-top:8px;">🤔 Claude is thinking...</div>
-    </div>
-    <div style="background:var(--panel);border-radius:12px;padding:14px;">
-      <p style="color:var(--muted);font-size:12px;margin:0;"><strong style="color:var(--text);">💡 What AI can help with:</strong> Prospect analysis, follow-up drafting, referral source insights, admission strategy, note summaries, compliance guidance, marketing scripts, and performance coaching.</p>
-    </div>
-  </section>
-</div>
-
-<style>
-.ai-quick-btn{background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:12px;padding:12px 14px;font-size:12px;font-weight:700;cursor:pointer;text-align:left;transition:all .2s;}
-.ai-quick-btn:hover{background:var(--blue);color:#081426;border-color:var(--blue);}
-.ai-msg-user{background:var(--blue);color:#081426;border-radius:16px 16px 4px 16px;padding:12px 16px;font-size:13px;align-self:flex-end;max-width:80%;}
-.ai-msg-bot{background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:16px 16px 16px 4px;padding:12px 16px;font-size:13px;align-self:flex-start;max-width:85%;line-height:1.6;}
-</style>
 
 </main>
 </div>
 
-<!-- ADD REFERRAL MODAL -->
-<div class="modal-overlay" id="addReferralModal">
-  <div class="modal-box"><button class="close-modal" onclick="closeModal('addReferralModal')">&times;</button>
-    <h4>Add Referral Source</h4>
-    <div class="modal-grid">
-      <div class="field"><label>Contact Name</label><input id="refContactName" type="text" placeholder="e.g. Jane Smith"></div>
-      <div class="field"><label>Business / Facility</label><input id="refBusiness" type="text" placeholder="e.g. North Park Rehab"></div>
-      <div class="field"><label>Phone</label><input id="refPhone" type="tel" placeholder="(469) 555-0100"></div>
-      <div class="field"><label>Email</label><input id="refEmail" type="email" placeholder="jane@facility.com"></div>
-      <div class="field full"><label>Address</label><input id="refAddress" type="text" placeholder="123 Main St, Dallas TX"></div>
-      <div class="field"><label>Ref Status</label><select id="refStatus"><option value="Green">🟢 Green — Sending Referrals</option><option value="Red">🔴 Red — No Referrals Yet</option></select></div>
-    </div>
-    <div class="modal-actions"><button class="btn btn-green" onclick="saveReferralFromModal()">Save Referral</button><button class="btn btn-gray" onclick="closeModal('addReferralModal')">Cancel</button></div>
-  </div>
-</div>
-<!-- EDIT REFERRAL MODAL -->
-<div class="modal-overlay" id="editReferralModal">
-  <div class="modal-box"><button class="close-modal" onclick="closeModal('editReferralModal')">&times;</button>
-    <h4>Edit Referral Source</h4><input type="hidden" id="editRefIndex">
-    <div class="modal-grid">
-      <div class="field"><label>Contact Name</label><input id="editRefContactName" type="text"></div>
-      <div class="field"><label>Business / Facility</label><input id="editRefBusiness" type="text"></div>
-      <div class="field"><label>Phone</label><input id="editRefPhone" type="tel"></div>
-      <div class="field"><label>Email</label><input id="editRefEmail" type="email"></div>
-      <div class="field full"><label>Address</label><input id="editRefAddress" type="text"></div>
-      <div class="field"><label>Ref Status</label><select id="editRefStatus"><option value="Green">🟢 Green — Sending Referrals</option><option value="Red">🔴 Red — No Referrals Yet</option></select></div>
-    </div>
-    <div class="modal-actions"><button class="btn btn-green" onclick="saveEditReferral()">Save Changes</button><button class="btn btn-gray" onclick="closeModal('editReferralModal')">Cancel</button></div>
-  </div>
-</div>
-<!-- EDIT PROSPECT MODAL -->
-<div class="modal-overlay" id="editProspectModal">
-  <div class="modal-box"><button class="close-modal" onclick="closeModal('editProspectModal')">&times;</button>
-    <h4>Edit Prospect</h4><input type="hidden" id="editProspIndex">
-    <div class="modal-grid">
-      <div class="field"><label>Name</label><input id="editProspName" type="text"></div>
-      <div class="field"><label>Status</label><select id="editProspStatus"><option>Inquiry</option><option>Pending Admission</option><option>Lost</option><option>Admitted</option></select></div>
-      <div class="field"><label>Phone</label><input id="editProspPhone" type="tel"></div>
-      <div class="field"><label>Email</label><input id="editProspEmail" type="email"></div>
-      <div class="field full"><label>Address</label><input id="editProspAddress" type="text"></div>
-      <div class="field"><label>Secondary Contact</label><input id="editProspSecondary" type="text"></div>
-      <div class="field"><label>Assigned Marketer</label><input id="editProspMarketer" type="text"></div>
-      <div class="field full"><label>Next Step</label><input id="editProspNextStep" type="text"></div>
-    </div>
-    <div class="modal-actions"><button class="btn btn-green" onclick="saveEditProspect()">Save Changes</button><button class="btn btn-gray" onclick="closeModal('editProspectModal')">Cancel</button></div>
-  </div>
-</div>
+<!-- MODALS -->
+<div class="modal-overlay" id="addReferralModal"><div class="modal-box"><button class="close-modal" onclick="closeModal('addReferralModal')">&times;</button><h4>Add Referral Source</h4><div class="modal-grid"><div class="field"><label>Contact Name</label><input id="refContactName" type="text" placeholder="e.g. Jane Smith"></div><div class="field"><label>Business / Facility</label><input id="refBusiness" type="text" placeholder="e.g. North Park Rehab"></div><div class="field"><label>Phone</label><input id="refPhone" type="tel" placeholder="(469) 555-0100"></div><div class="field"><label>Email</label><input id="refEmail" type="email" placeholder="jane@facility.com"></div><div class="field full"><label>Address</label><input id="refAddress" type="text" placeholder="123 Main St, Dallas TX"></div><div class="field"><label>Ref Status</label><select id="refStatus"><option value="Green">🟢 Green — Sending Referrals</option><option value="Red">🔴 Red — No Referrals Yet</option></select></div></div><div class="modal-actions"><button class="btn btn-green" onclick="saveReferralFromModal()">Save Referral</button><button class="btn btn-gray" onclick="closeModal('addReferralModal')">Cancel</button></div></div></div>
+<div class="modal-overlay" id="editReferralModal"><div class="modal-box"><button class="close-modal" onclick="closeModal('editReferralModal')">&times;</button><h4>Edit Referral Source</h4><input type="hidden" id="editRefIndex"><div class="modal-grid"><div class="field"><label>Contact Name</label><input id="editRefContactName" type="text"></div><div class="field"><label>Business / Facility</label><input id="editRefBusiness" type="text"></div><div class="field"><label>Phone</label><input id="editRefPhone" type="tel"></div><div class="field"><label>Email</label><input id="editRefEmail" type="email"></div><div class="field full"><label>Address</label><input id="editRefAddress" type="text"></div><div class="field"><label>Ref Status</label><select id="editRefStatus"><option value="Green">🟢 Green — Sending Referrals</option><option value="Red">🔴 Red — No Referrals Yet</option></select></div></div><div class="modal-actions"><button class="btn btn-green" onclick="saveEditReferral()">Save Changes</button><button class="btn btn-gray" onclick="closeModal('editReferralModal')">Cancel</button></div></div></div>
+<div class="modal-overlay" id="editProspectModal"><div class="modal-box"><button class="close-modal" onclick="closeModal('editProspectModal')">&times;</button><h4>Edit Prospect</h4><input type="hidden" id="editProspIndex"><div class="modal-grid"><div class="field"><label>Name</label><input id="editProspName" type="text"></div><div class="field"><label>Status</label><select id="editProspStatus"><option>Inquiry</option><option>Pending Admission</option><option>Lost</option><option>Admitted</option></select></div><div class="field"><label>Phone</label><input id="editProspPhone" type="tel"></div><div class="field"><label>Email</label><input id="editProspEmail" type="email"></div><div class="field full"><label>Address</label><input id="editProspAddress" type="text"></div><div class="field"><label>Secondary Contact</label><input id="editProspSecondary" type="text"></div><div class="field"><label>Assigned Marketer</label><input id="editProspMarketer" type="text"></div><div class="field full"><label>Next Step</label><input id="editProspNextStep" type="text"></div></div><div class="modal-actions"><button class="btn btn-green" onclick="saveEditProspect()">Save Changes</button><button class="btn btn-gray" onclick="closeModal('editProspectModal')">Cancel</button></div></div></div>
 
 <script>
 const G="pro";
@@ -445,218 +407,111 @@ function pSt(s){const m={Inquiry:"pill-blue","Pending Admission":"pill-yellow",L
 function pRef(s){return s==="Red"?'<span class="pill pill-red">🔴 Red</span>':'<span class="pill pill-green">🟢 Green</span>';}
 function openModal(id){document.getElementById(id).classList.add("open");}
 function closeModal(id){document.getElementById(id).classList.remove("open");}
+function showTab(id){document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'));const pane=document.getElementById('tab-'+id);if(pane)pane.classList.add('active');const link=document.querySelector('.nav a[data-tab="'+id+'"]');if(link)link.classList.add('active');window.scrollTo(0,0);}
 function defRefs(){return[{contactName:"Sarah M.",business:"North Park Rehab",phone:"(214)555-0110",email:"sarah@npr.com",address:"100 Rehab Way, Dallas TX",status:"Green"},{contactName:"Dr. Patel",business:"Baylor",phone:"(214)555-0122",email:"patel@baylor.com",address:"3500 Gaston Ave, Dallas TX",status:"Green"},{contactName:"Office Mgr",business:"Physician Office",phone:"(972)555-0133",email:"mgr@po.com",address:"900 Medical Dr, Plano TX",status:"Red"},{contactName:"CM Team",business:"Hospital CM",phone:"(214)555-0144",email:"cm@hospital.com",address:"1200 Hospital Blvd, Dallas TX",status:"Green"}];}
 function defProsp(){return[{name:"Mary J.",status:"Inquiry",source:"North Park Rehab",marketer:"Ericka",phone:"(214)555-2001",email:"mary@email.com",address:"500 S. T., Dallas TX",secondary:"",nextStep:"Schedule assessment"},{name:"John T.",status:"Pending Admission",source:"Baylor",marketer:"Ericka",phone:"(214)555-2002",email:"john@email.com",address:"800 A. D., Dallas TX",secondary:"",nextStep:"Collect final documents"}];}
 
-function showTab(id){
-  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'));
-  const pane=document.getElementById('tab-'+id);if(pane)pane.classList.add('active');
-  const link=document.querySelector('.nav a[data-tab="'+id+'"]');if(link)link.classList.add('active');
-  window.scrollTo(0,0);
-}
-
 function updateDashboard(){
-  const refs=gs(K.refs,defRefs());const prsp=gs(K.prsp,defProsp());
-  const nc=gs(K.notes,2);
+  const refs=gs(K.refs,defRefs());const prsp=gs(K.prsp,defProsp());const nc=gs(K.notes,2);
   const gr=refs.filter(r=>r.status==="Green").length;const rr=refs.filter(r=>r.status==="Red").length;
   const inq=prsp.filter(p=>p.status==="Inquiry").length;const pnd=prsp.filter(p=>p.status==="Pending Admission").length;
   const adm=prsp.filter(p=>p.status==="Admitted").length;const lst=prsp.filter(p=>p.status==="Lost").length;
   const maxP=prsp.length||1;const maxR=Math.max(refs.length,1);
-  function setH(fillId,valId,countId,val,max){
-    const f=document.getElementById(fillId);if(f)f.style.width=Math.min(100,Math.round((val/max)*100))+"%";
-    const v=document.getElementById(valId);if(v)v.textContent=val;
-    const c=document.getElementById(countId);if(c)c.textContent=val;
-  }
-  setH("hbarInquiry","hbarInquiryVal","dtInquiry",inq,maxP);
-  setH("hbarPending","hbarPendingVal","dtPending",pnd,maxP);
-  setH("hbarAdmitted","hbarAdmittedVal","dtAdmitted",adm,maxP);
-  setH("hbarLost","hbarLostVal","dtLost",lst,maxP);
+  function setH(fid,vid,cid,val,max){const f=document.getElementById(fid);if(f)f.style.width=Math.min(100,Math.round((val/max)*100))+"%";const v=document.getElementById(vid);if(v)v.textContent=val;const c=document.getElementById(cid);if(c)c.textContent=val;}
+  setH("hbarInquiry","hbarInquiryVal","dtInquiry",inq,maxP);setH("hbarPending","hbarPendingVal","dtPending",pnd,maxP);
+  setH("hbarAdmitted","hbarAdmittedVal","dtAdmitted",adm,maxP);setH("hbarLost","hbarLostVal","dtLost",lst,maxP);
   setH("hbarTotalProsp","hbarTotalProspVal","kpiProspects",prsp.length,maxP);
-  setH("hbarGreen","hbarGreenVal","dtGreenRef",gr,maxR);
-  setH("hbarRed","hbarRedVal","dtRedRef",rr,maxR);
-  // productivity bars
-  const pairs=[["prodGreenBar","prodGreenVal","prodGreenCount",gr,maxR],["prodRedBar","prodRedVal","prodRedCount",rr,maxR],["prodProspBar","prodProspVal","prodProspCount",prsp.length,maxP],["prodAdmBar","prodAdmVal","prodAdmCount",adm,maxP]];
-  pairs.forEach(([b,v,c,val,max])=>{const f=document.getElementById(b);if(f)f.style.width=Math.min(100,Math.round((val/max)*100))+"%";const ve=document.getElementById(v);if(ve)ve.textContent=val;const ce=document.getElementById(c);if(ce)ce.textContent=val;});
-  const pnC=document.getElementById("prodNotesCount");if(pnC)pnC.textContent=nc;
-  const pnV=document.getElementById("prodNotesVal");if(pnV)pnV.textContent=nc;
+  setH("hbarGreen","hbarGreenVal","dtGreenRef",gr,maxR);setH("hbarRed","hbarRedVal","dtRedRef",rr,maxR);
+  [["prodGreenBar","prodGreenVal","prodGreenCount",gr,maxR],["prodRedBar","prodRedVal","prodRedCount",rr,maxR],["prodProspBar","prodProspVal","prodProspCount",prsp.length,maxP],["prodAdmBar","prodAdmVal","prodAdmCount",adm,maxP]].forEach(([b,v,c,val,max])=>{setH(b,v,c,val,max);});
+  const pnC=document.getElementById("prodNotesCount");if(pnC)pnC.textContent=nc;const pnV=document.getElementById("prodNotesVal");if(pnV)pnV.textContent=nc;
   const an=document.getElementById("adminNotes");if(an)an.textContent=nc;
-  renderPipeline(prsp);renderProspectRecords();renderReferralRecords();
+  renderPipeline(prsp);renderProspectRecords();renderReferralRecords();renderAdminProspects();renderAdminReferrals();
 }
 
-function loadReferralSources(){
-  const refs=gs(K.refs,defRefs());ss(K.refs,refs);
-  const sel=document.getElementById("prospectReferralSourceSelect");const tb=document.getElementById("referralTableBody");
-  sel.innerHTML="";tb.innerHTML="";
-  refs.forEach((r,i)=>{
-    const o=document.createElement("option");o.value=r.business;o.textContent=r.business;sel.appendChild(o);
-    const tr=document.createElement("tr");tr.innerHTML=`<td><input type="radio" name="selRef" value="${i}"></td><td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${r.address||"—"}</td><td>${r.email||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button></td>`;
-    tb.appendChild(tr);
-  });updateDashboard();
-}
-function renderReferralRecords(){
-  const refs=gs(K.refs,defRefs());const q=(document.getElementById("referralSearch")||{value:""}).value.toLowerCase();
-  const tb=document.getElementById("referralRecordsBody");tb.innerHTML="";
-  refs.filter(r=>{if(!q)return true;return[r.contactName,r.business,r.phone,r.email,r.address].some(v=>(v||"").toLowerCase().includes(q));}).forEach((r,_,arr)=>{
-    const i=arr.indexOf(r);const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${r.address||"—"}</td><td>${r.email||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button></td>`;
-    tb.appendChild(tr);
-  });
-}
-function saveReferralFromModal(){
-  const cn=document.getElementById("refContactName").value.trim();const biz=document.getElementById("refBusiness").value.trim();
-  if(!cn||!biz){alert("Contact name and business name are required.");return;}
-  const refs=gs(K.refs,defRefs());
-  refs.push({contactName:cn,business:biz,phone:document.getElementById("refPhone").value.trim(),email:document.getElementById("refEmail").value.trim(),address:document.getElementById("refAddress").value.trim(),status:document.getElementById("refStatus").value});
-  ss(K.refs,refs);closeModal("addReferralModal");
-  ["refContactName","refBusiness","refPhone","refEmail","refAddress"].forEach(id=>document.getElementById(id).value="");
-  loadReferralSources();
-}
+function loadReferralSources(){const refs=gs(K.refs,defRefs());ss(K.refs,refs);const sel=document.getElementById("prospectReferralSourceSelect");const tb=document.getElementById("referralTableBody");sel.innerHTML="";tb.innerHTML="";refs.forEach((r,i)=>{const o=document.createElement("option");o.value=r.business;o.textContent=r.business;sel.appendChild(o);const tr=document.createElement("tr");tr.innerHTML=`<td><input type="radio" name="selRef" value="${i}"></td><td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${r.address||"—"}</td><td>${r.email||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button></td>`;tb.appendChild(tr);});updateDashboard();}
+function renderReferralRecords(){const refs=gs(K.refs,defRefs());const q=(document.getElementById("referralSearch")||{value:""}).value.toLowerCase();const tb=document.getElementById("referralRecordsBody");tb.innerHTML="";refs.filter(r=>{if(!q)return true;return[r.contactName,r.business,r.phone,r.email,r.address].some(v=>(v||"").toLowerCase().includes(q));}).forEach((r,_,arr)=>{const i=arr.indexOf(r);const tr=document.createElement("tr");tr.innerHTML=`<td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${r.address||"—"}</td><td>${r.email||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button></td>`;tb.appendChild(tr);});}
+function saveReferralFromModal(){const cn=document.getElementById("refContactName").value.trim();const biz=document.getElementById("refBusiness").value.trim();if(!cn||!biz){alert("Contact name and business name are required.");return;}const refs=gs(K.refs,defRefs());refs.push({contactName:cn,business:biz,phone:document.getElementById("refPhone").value.trim(),email:document.getElementById("refEmail").value.trim(),address:document.getElementById("refAddress").value.trim(),status:document.getElementById("refStatus").value});ss(K.refs,refs);closeModal("addReferralModal");["refContactName","refBusiness","refPhone","refEmail","refAddress"].forEach(id=>document.getElementById(id).value="");loadReferralSources();}
 function deleteSelectedReferral(){const sel=document.querySelector('input[name="selRef"]:checked');if(!sel){alert("Select a referral to delete.");return;}const refs=gs(K.refs,defRefs());refs.splice(parseInt(sel.value),1);ss(K.refs,refs);loadReferralSources();}
 function openEditReferral(i){const refs=gs(K.refs,defRefs());const r=refs[i];document.getElementById("editRefIndex").value=i;document.getElementById("editRefContactName").value=r.contactName||"";document.getElementById("editRefBusiness").value=r.business||"";document.getElementById("editRefPhone").value=r.phone||"";document.getElementById("editRefEmail").value=r.email||"";document.getElementById("editRefAddress").value=r.address||"";document.getElementById("editRefStatus").value=r.status||"Green";openModal("editReferralModal");}
 function saveEditReferral(){const i=parseInt(document.getElementById("editRefIndex").value);const refs=gs(K.refs,defRefs());refs[i]={contactName:document.getElementById("editRefContactName").value.trim(),business:document.getElementById("editRefBusiness").value.trim(),phone:document.getElementById("editRefPhone").value.trim(),email:document.getElementById("editRefEmail").value.trim(),address:document.getElementById("editRefAddress").value.trim(),status:document.getElementById("editRefStatus").value};ss(K.refs,refs);closeModal("editReferralModal");loadReferralSources();}
-
 function loadMarketers(){const m=gs(K.mkt,["Ericka"]);ss(K.mkt,m);const sel=document.getElementById("prospectAssignedMarketerSelect");sel.innerHTML="";m.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});}
-function loadNames(){
-  const names=gs(K.names,["Ericka","Angela"]);ss(K.names,names);
-  const sel=document.getElementById("noteNameSelect");if(!sel)return;
-  sel.innerHTML='<option value="">Select saved name</option>';names.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});
-}
+function loadNames(){const names=gs(K.names,["Ericka","Angela"]);ss(K.names,names);const sel=document.getElementById("noteNameSelect");if(!sel)return;sel.innerHTML='<option value="">Select saved name</option>';names.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});}
 function saveNameIfNeeded(name){if(!name)return;const names=gs(K.names,["Ericka","Angela"]);if(!names.includes(name)){names.push(name);ss(K.names,names);loadNames();}}
-
-function renderProspectsTable(){
-  const prsp=gs(K.prsp,defProsp());const tb=document.getElementById("prospectsTableBody");tb.innerHTML="";
-  prsp.forEach((p,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td><input type="radio" name="selProsp" value="${i}"></td><td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.source||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">Edit</button> <button class="btn btn-red btn-small" onclick="adminDeleteProspect(${i})">Delete</button></td>`;tb.appendChild(tr);});
-}
-function renderProspectRecords(){
-  const prsp=gs(K.prsp,defProsp());const q=(document.getElementById("prospectSearch")||{value:""}).value.toLowerCase();
-  const tb=document.getElementById("prospectRecordsBody");tb.innerHTML="";
-  prsp.filter(p=>{if(!q)return true;return[p.name,p.phone,p.email,p.address,p.secondary].some(v=>(v||"").toLowerCase().includes(q));}).forEach((p,_,arr)=>{
-    const i=arr.indexOf(p);const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.phone||"—"}</td><td>${p.email||"—"}</td><td>${p.address||"—"}</td><td>${p.secondary||"—"}</td><td>${p.source||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">Edit</button></td>`;
-    tb.appendChild(tr);
-  });
-}
-function saveProspect(){
-  const name=document.getElementById("prospectName").value.trim();const status=document.getElementById("prospectStatus").value;const source=document.getElementById("prospectReferralSourceSelect").value;const nm=document.getElementById("newAssignedMarketerInput").value.trim();const marketer=nm||document.getElementById("prospectAssignedMarketerSelect").value;const nextStep=document.getElementById("prospectNextStep").value.trim();const phone=document.getElementById("prospectPhone").value.trim();const email=document.getElementById("prospectEmail").value.trim();const address=document.getElementById("prospectAddress").value.trim();const secondary=document.getElementById("prospectSecondary").value.trim();
-  if(!name||!status||!marketer||!nextStep){alert("Name, Status, Marketer, and Next Step are required.");return;}
-  if(nm){const m=gs(K.mkt,["Ericka"]);if(!m.includes(nm)){m.push(nm);ss(K.mkt,m);loadMarketers();}}
-  const prsp=gs(K.prsp,defProsp());prsp.unshift({name,status,source,marketer,nextStep,phone,email,address,secondary});ss(K.prsp,prsp);renderProspectsTable();updateDashboard();
-  ["prospectName","newAssignedMarketerInput","prospectNextStep","prospectPhone","prospectEmail","prospectAddress","prospectSecondary"].forEach(id=>document.getElementById(id).value="");
-}
-function deleteSelectedProspect(){const sel=document.querySelector('input[name="selProsp"]:checked');if(!sel){alert("Select a prospect to delete.");return;}const prsp=gs(K.prsp,defProsp());prsp.splice(parseInt(sel.value),1);ss(K.prsp,prsp);renderProspectsTable();updateDashboard();}
+function renderProspectsTable(){const prsp=gs(K.prsp,defProsp());const tb=document.getElementById("prospectsTableBody");tb.innerHTML="";prsp.forEach((p,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td><input type="radio" name="selProsp" value="${i}"></td><td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.source||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">Edit</button> <button class="btn btn-red btn-small" onclick="adminDeleteProspect(${i})">Del</button></td>`;tb.appendChild(tr);});}
+function renderProspectRecords(){const prsp=gs(K.prsp,defProsp());const q=(document.getElementById("prospectSearch")||{value:""}).value.toLowerCase();const tb=document.getElementById("prospectRecordsBody");tb.innerHTML="";prsp.filter(p=>{if(!q)return true;return[p.name,p.phone,p.email,p.address,p.secondary].some(v=>(v||"").toLowerCase().includes(q));}).forEach((p,_,arr)=>{const i=arr.indexOf(p);const tr=document.createElement("tr");tr.innerHTML=`<td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.phone||"—"}</td><td>${p.email||"—"}</td><td>${p.address||"—"}</td><td>${p.secondary||"—"}</td><td>${p.source||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">Edit</button> <button class="btn btn-red btn-small" onclick="adminDeleteProspect(${i})">Del</button></td>`;tb.appendChild(tr);});}
+function renderAdminProspects(){const prsp=gs(K.prsp,defProsp());const tb=document.getElementById("adminProspectBody");if(!tb)return;tb.innerHTML="";prsp.forEach((p,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.phone||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">Edit</button> <button class="btn btn-red btn-small" onclick="adminDeleteProspect(${i})">Delete</button></td>`;tb.appendChild(tr);});}
+function renderAdminReferrals(){const refs=gs(K.refs,defRefs());const tb=document.getElementById("adminReferralBody");if(!tb)return;tb.innerHTML="";refs.forEach((r,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button> <button class="btn btn-red btn-small" onclick="adminDeleteReferral(${i})">Delete</button></td>`;tb.appendChild(tr);});}
+function adminDeleteProspect(i){if(!confirm("Delete this prospect?"))return;const prsp=gs(K.prsp,defProsp());prsp.splice(i,1);ss(K.prsp,prsp);renderProspectsTable();updateDashboard();}
+function adminDeleteReferral(i){if(!confirm("Delete this referral source?"))return;const refs=gs(K.refs,defRefs());refs.splice(i,1);ss(K.refs,refs);loadReferralSources();}
+function saveProspect(){const name=document.getElementById("prospectName").value.trim();const status=document.getElementById("prospectStatus").value;const source=document.getElementById("prospectReferralSourceSelect").value;const nm=document.getElementById("newAssignedMarketerInput").value.trim();const marketer=nm||document.getElementById("prospectAssignedMarketerSelect").value;const nextStep=document.getElementById("prospectNextStep").value.trim();const phone=document.getElementById("prospectPhone").value.trim();const email=document.getElementById("prospectEmail").value.trim();const address=document.getElementById("prospectAddress").value.trim();const secondary=document.getElementById("prospectSecondary").value.trim();if(!name||!status||!marketer||!nextStep){alert("Name, Status, Marketer, and Next Step are required.");return;}if(nm){const m=gs(K.mkt,["Ericka"]);if(!m.includes(nm)){m.push(nm);ss(K.mkt,m);loadMarketers();}}const prsp=gs(K.prsp,defProsp());prsp.unshift({name,status,source,marketer,nextStep,phone,email,address,secondary});ss(K.prsp,prsp);renderProspectsTable();updateDashboard();["prospectName","newAssignedMarketerInput","prospectNextStep","prospectPhone","prospectEmail","prospectAddress","prospectSecondary"].forEach(id=>document.getElementById(id).value="");}
+function deleteSelectedProspect(){const sel=document.querySelector('input[name="selProsp"]:checked');if(!sel){alert("Select a prospect to delete.");return;}adminDeleteProspect(parseInt(sel.value));}
 function openEditProspect(i){const prsp=gs(K.prsp,defProsp());const p=prsp[i];document.getElementById("editProspIndex").value=i;document.getElementById("editProspName").value=p.name||"";document.getElementById("editProspStatus").value=p.status||"Inquiry";document.getElementById("editProspPhone").value=p.phone||"";document.getElementById("editProspEmail").value=p.email||"";document.getElementById("editProspAddress").value=p.address||"";document.getElementById("editProspSecondary").value=p.secondary||"";document.getElementById("editProspMarketer").value=p.marketer||"";document.getElementById("editProspNextStep").value=p.nextStep||"";openModal("editProspectModal");}
 function saveEditProspect(){const i=parseInt(document.getElementById("editProspIndex").value);const prsp=gs(K.prsp,defProsp());prsp[i].name=document.getElementById("editProspName").value.trim();prsp[i].status=document.getElementById("editProspStatus").value;prsp[i].phone=document.getElementById("editProspPhone").value.trim();prsp[i].email=document.getElementById("editProspEmail").value.trim();prsp[i].address=document.getElementById("editProspAddress").value.trim();prsp[i].secondary=document.getElementById("editProspSecondary").value.trim();prsp[i].marketer=document.getElementById("editProspMarketer").value.trim();prsp[i].nextStep=document.getElementById("editProspNextStep").value.trim();ss(K.prsp,prsp);closeModal("editProspectModal");renderProspectsTable();updateDashboard();}
+function renderPipeline(prsp){const groups={Inquiry:[],["Pending Admission"]:[],Admitted:[],Lost:[]};prsp.forEach(p=>{if(groups[p.status])groups[p.status].push(p);});const total=prsp.length||1;[["Inquiry","pipeInquiry","pipeCountInquiry","pipeBarInquiry"],["Pending Admission","pipePending","pipeCountPending","pipeBarPending"],["Admitted","pipeAdmitted","pipeCountAdmitted","pipeBarAdmitted"],["Lost","pipeLost","pipeCountLost","pipeBarLost"]].forEach(([status,bodyId,countId,barId])=>{const arr=groups[status];const bar=document.getElementById(barId);if(bar){bar.style.width=Math.round((arr.length/total)*100)+"%";const sp=bar.querySelector("span");if(sp)sp.textContent=arr.length;}const cEl=document.getElementById(countId);if(cEl)cEl.textContent=arr.length;const el=document.getElementById(bodyId);if(el){el.innerHTML="";arr.forEach(p=>{const d=document.createElement("div");d.style.cssText="background:#fff;color:#111;border-radius:11px;padding:9px;margin-bottom:7px;font-size:12px;";d.innerHTML=`<strong>${p.name}</strong><br><small style="color:#555">${p.source||"—"}</small>`;el.appendChild(d);});}});}
+function fireAuto(btn,msg){btn.classList.add("fired");btn.disabled=true;const log=document.getElementById("autoLog");const d=document.createElement("div");d.style.cssText="background:#fff;color:#111;border-radius:9px;padding:9px 13px;font-size:12px;";d.textContent=`✅ ${msg} — ${new Date().toLocaleTimeString()}`;log.prepend(d);}
+function saveDemoNote(){const sn=document.getElementById("noteNameSelect").value.trim();const nn=document.getElementById("noteNewName").value.trim();const fn=nn||sn;const pos=document.getElementById("notePosition").value;const dt=document.getElementById("noteDate").value;const ti=document.getElementById("noteTime").value;const ns=document.getElementById("noteNextStep").value;const nt=document.getElementById("noteText").value.trim();if(!fn||!pos||!dt||!ti||!ns||!nt){alert("Name, Position, Date, Time, Next Step, and Note are required.");return;}saveNameIfNeeded(fn);const tb=document.getElementById("staffTrackingBody");if(tb){const tr=document.createElement("tr");tr.innerHTML=`<td>${fn}</td><td>${pos}</td><td>${dt}</td><td>${fmt(ti)}</td><td><span class="pill pill-green">📍 GPS Captured</span></td><td>${ns}</td>`;tb.prepend(tr);}const sc=gs(K.staff,2)+1;ss(K.staff,sc);const cnt=gs(K.notes,2)+1;ss(K.notes,cnt);const wrapper=document.getElementById("notesList").querySelector(".grid-2")||document.getElementById("notesList");const box=document.createElement("div");box.className="note-box";box.innerHTML=`<h4>${fn} — ${dt} at ${fmt(ti)}</h4><p><strong>Position:</strong> ${pos}</p><p><strong>Next Step:</strong> ${ns}</p><p>${nt}</p><p style="color:#0a6c2f;font-size:11px;margin-top:6px;font-weight:700;">✅ Note Synced Successfully — Location Captured</p>`;wrapper.prepend(box);document.getElementById("syncStatus").textContent="✅ Sync successful — note and location saved at "+new Date().toLocaleTimeString();["noteNewName","noteDate","noteTime","noteText"].forEach(id=>document.getElementById(id).value="");updateDashboard();}
 
-function renderPipeline(prsp){
-  const groups={Inquiry:[],["Pending Admission"]:[],Admitted:[],Lost:[]};prsp.forEach(p=>{if(groups[p.status])groups[p.status].push(p);});const total=prsp.length||1;
-  [["Inquiry","pipeInquiry","pipeCountInquiry","pipeBarInquiry"],["Pending Admission","pipePending","pipeCountPending","pipeBarPending"],["Admitted","pipeAdmitted","pipeCountAdmitted","pipeBarAdmitted"],["Lost","pipeLost","pipeCountLost","pipeBarLost"]].forEach(([status,bodyId,countId,barId])=>{
-    const arr=groups[status];
-    const bar=document.getElementById(barId);if(bar){bar.style.width=Math.round((arr.length/total)*100)+"%";const sp=bar.querySelector("span");if(sp)sp.textContent=arr.length;}
-    const cEl=document.getElementById(countId);if(cEl)cEl.textContent=arr.length;
-    const el=document.getElementById(bodyId);if(el){el.innerHTML="";arr.forEach(p=>{const d=document.createElement("div");d.style.cssText="background:#fff;color:#111;border-radius:11px;padding:9px;margin-bottom:7px;font-size:12px;";d.innerHTML=`<strong>${p.name}</strong><br><small style="color:#555">${p.source||"—"}</small>`;el.appendChild(d);});}
-  });
+/* ── AI ASSISTANT ── */
+const AI_SYSTEM = `You are an AI assistant for HospiceLink Pro, a hospice marketing CRM. You help marketers and administrators:
+- Analyze prospect pipeline data and referral source performance
+- Draft professional follow-up messages and communication templates
+- Suggest strategies for improving admission rates and territory performance
+- Answer questions about hospice marketing best practices
+- Help prioritize daily tasks and accounts to visit
+- Interpret CRM data trends
+
+Be concise, actionable, and professional. Keep responses under 200 words unless drafting a document.`;
+
+let aiHistory = [];
+
+async function sendAI(){
+  const input = document.getElementById('aiInput');
+  const msg = input.value.trim();
+  if(!msg) return;
+  input.value = '';
+  askAI(msg);
 }
 
-function fireAuto(btn,msg){btn.classList.add("fired");btn.disabled=true;const log=document.getElementById("autoLog");const d=document.createElement("div");d.style.cssText="background:#fff;color:#111;border-radius:9px;padding:9px 13px;font-size:12px;";d.textContent=`✅ ${msg} — ${new Date().toLocaleTimeString()}`;log.prepend(d);}
+async function askAI(msg){
+  const messages = document.getElementById('aiMessages');
+  // Add user message
+  const uDiv = document.createElement('div');
+  uDiv.className = 'ai-msg user';
+  uDiv.textContent = msg;
+  messages.appendChild(uDiv);
+  // Thinking indicator
+  const tDiv = document.createElement('div');
+  tDiv.className = 'ai-msg thinking';
+  tDiv.textContent = 'Thinking…';
+  messages.appendChild(tDiv);
+  messages.scrollTop = messages.scrollHeight;
 
-function saveDemoNote(){
-  const sn=document.getElementById("noteNameSelect").value.trim();const nn=document.getElementById("noteNewName").value.trim();const fn=nn||sn;const pos=document.getElementById("notePosition").value;const dt=document.getElementById("noteDate").value;const ti=document.getElementById("noteTime").value;const ns=document.getElementById("noteNextStep").value;const nt=document.getElementById("noteText").value.trim();
-  if(!fn||!pos||!dt||!ti||!ns||!nt){alert("Name, Position, Date, Time, Next Step, and Note are required.");return;}
-  saveNameIfNeeded(fn);
-  const tb=document.getElementById("staffTrackingBody");
-  if(tb){const tr=document.createElement("tr");const nowStr=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'})+' '+new Date().toLocaleTimeString();tr.innerHTML=`<td>${fn}</td><td>${pos}</td><td>${dt}</td><td>${fmt(ti)}</td><td><span style="font-size:11px;color:#136c32;font-weight:700;">📍 ${nowStr} — GPS Captured</span></td><td>${ns}</td>`;tb.prepend(tr);}
-  const sc=gs(K.staff,2)+1;ss(K.staff,sc);const cnt=gs(K.notes,2)+1;ss(K.notes,cnt);
-  const wrapper=document.getElementById("notesList").querySelector(".grid-2")||document.getElementById("notesList");const box=document.createElement("div");box.className="note-box";box.innerHTML=`<h4>${fn} — ${dt} at ${fmt(ti)}</h4><p><strong>Position:</strong> ${pos}</p><p><strong>Next Step:</strong> ${ns}</p><p>${nt}</p><p style="color:#0a6c2f;font-size:11px;margin-top:6px;font-weight:700;">✅ Note Synced Successfully — Location Captured</p>`;wrapper.prepend(box);
-  document.getElementById("syncStatus").textContent="✅ Sync successful — note and location saved at "+new Date().toLocaleTimeString();
-  ["noteNewName","noteDate","noteTime","noteText"].forEach(id=>document.getElementById(id).value="");
-  updateDashboard();
+  aiHistory.push({role:'user', content: msg});
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: AI_SYSTEM,
+        messages: aiHistory
+      })
+    });
+    const data = await response.json();
+    const reply = data.content?.[0]?.text || 'Sorry, I could not get a response.';
+    aiHistory.push({role:'assistant', content: reply});
+    tDiv.className = 'ai-msg assistant';
+    tDiv.textContent = reply;
+  } catch(e) {
+    tDiv.className = 'ai-msg assistant';
+    tDiv.textContent = '⚠️ AI is in demo mode. In the live CRM, this connects to Claude AI for real-time insights and recommendations.';
+  }
+  messages.scrollTop = messages.scrollHeight;
 }
 
 (function init(){showTab('dashboard');loadReferralSources();loadMarketers();loadNames();renderProspectsTable();updateDashboard();})();
-
-/* ═══ AI ASSISTANT ═══ */
-const AI_HISTORY = [];
-function getCRMContext() {
-  const prsp = gs(K.prsp, defProsp());
-  const refs = gs(K.refs, defRefs());
-  const notes = gs(K.notes, 2);
-  const inq = prsp.filter(p=>p.status==="Inquiry").length;
-  const pnd = prsp.filter(p=>p.status==="Pending Admission").length;
-  const adm = prsp.filter(p=>p.status==="Admitted").length;
-  const lst = prsp.filter(p=>p.status==="Lost").length;
-  const gr = refs.filter(r=>r.status==="Green").length;
-  const rr = refs.filter(r=>r.status==="Red").length;
-  return `You are an AI assistant embedded in HospiceLink CRM — a hospice marketing and clinical CRM system. 
-Current CRM snapshot:
-- Total Prospects: ${prsp.length} (Inquiry: ${inq}, Pending Admission: ${pnd}, Admitted: ${adm}, Lost: ${lst})
-- Referral Sources: ${refs.length} total (${gr} Green/active, ${rr} Red/inactive)
-- Notes Synced: ${notes}
-- Prospect names: ${prsp.slice(0,5).map(p=>p.name+" ("+p.status+")").join(", ")}
-- Top referral sources: ${refs.slice(0,4).map(r=>r.business+" ["+r.status+"]").join(", ")}
-
-You help hospice marketers, nurses, and admins with: prospect follow-up strategy, referral source analysis, note drafting, compliance guidance, admission optimization, and performance coaching. Be concise, practical, and actionable. Use bullet points when listing items.`;
-}
-async function sendAiMessage() {
-  const input = document.getElementById("aiInput");
-  const msg = input.value.trim();
-  if (!msg) return;
-  input.value = "";
-  appendAiMsg(msg, "user");
-  document.getElementById("aiThinking").style.display = "block";
-  document.getElementById("aiSendBtn").disabled = true;
-  AI_HISTORY.push({ role: "user", content: msg });
-  try {
-    const resp = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        system: getCRMContext(),
-        messages: AI_HISTORY.slice(-10)
-      })
-    });
-    const data = await resp.json();
-    const reply = data.content?.[0]?.text || "Sorry, I couldn't process that. Please try again.";
-    AI_HISTORY.push({ role: "assistant", content: reply });
-    appendAiMsg(reply, "bot");
-  } catch(e) {
-    appendAiMsg("⚠️ AI connection error. Check your API key configuration.", "bot");
-  }
-  document.getElementById("aiThinking").style.display = "none";
-  document.getElementById("aiSendBtn").disabled = false;
-}
-function appendAiMsg(text, role) {
-  const hist = document.getElementById("aiChatHistory");
-  const div = document.createElement("div");
-  div.className = role === "user" ? "ai-msg-user" : "ai-msg-bot";
-  div.textContent = text;
-  hist.appendChild(div);
-  hist.scrollTop = hist.scrollHeight;
-}
-function aiQuick(prompt) {
-  document.getElementById("aiInput").value = prompt;
-  sendAiMessage();
-  showTab("ai");
-}
-/* ═══ ADMIN: Edit/Delete ALL records ═══ */
-function adminDeleteProspect(i) {
-  if (!confirm("Delete this prospect?")) return;
-  const prsp = gs(K.prsp, defProsp());
-  prsp.splice(i, 1);
-  ss(K.prsp, prsp);
-  renderProspectsTable();
-  updateDashboard();
-}
-function adminDeleteReferral(i) {
-  if (!confirm("Delete this referral source?")) return;
-  const refs = gs(K.refs, defRefs());
-  refs.splice(i, 1);
-  ss(K.refs, refs);
-  loadReferralSources();
-}
-
 </script>
 </body>
 </html>
