@@ -93,7 +93,7 @@
 <body>
 <div class="layout">
 <aside class="sidebar">
-  <div class="brand"><h1>HospiceLink Gold</h1><p>Marketing + Clinical CRM Demo</p></div>
+  <div class="brand"><h1>HospiceLink Gold</h1><p>Enterprise CRM — Gold Standard</p></div>
   <nav class="nav">
     <a data-tab="dashboard" class="active" onclick="showTab('dashboard');return false;">Dashboard</a>
     <a data-tab="prospects" onclick="showTab('prospects');return false;">Add Prospect</a>
@@ -103,11 +103,14 @@
     <a data-tab="pipeline" onclick="showTab('pipeline');return false;">Pipeline</a>
     <a data-tab="territory" onclick="showTab('territory');return false;">Territory View</a>
     <a data-tab="productivity" onclick="showTab('productivity');return false;">Productivity</a>
+    <a data-tab="revenue" onclick="showTab('revenue');return false;">💰 Revenue Intelligence</a>
+    <a data-tab="leaderboard" onclick="showTab('leaderboard');return false;">🏆 Leaderboard</a>
     <a data-tab="evv" onclick="showTab('evv');return false;">EVV / Mileage</a>
     <a data-tab="family" onclick="showTab('family');return false;">Family Communication</a>
     <a data-tab="automation" onclick="showTab('automation');return false;">Automation</a>
-    <a data-tab="notes" onclick="showTab('notes');return false;">Notes</a>
-    <a data-tab="ai" class="ai-link" onclick="showTab('ai');return false;">🤖 AI Assistant</a>
+    <a data-tab="notes" onclick="showTab('notes');return false;">Notes + Voice</a>
+    <a data-tab="hipaa" onclick="showTab('hipaa');return false;">🔐 HIPAA Audit Log</a>
+    <a data-tab="ai" class="ai-link" onclick="showTab('ai');return false;">🤖 AI Command Center</a>
     <a data-tab="admin" class="admin-link" onclick="showTab('admin');return false;">🔒 Admin</a>
   </nav>
   <div class="footer-actions" style="margin-top:20px;"><a href="index.html#pricing" class="btn btn-blue btn-small">Back to Website</a></div>
@@ -117,10 +120,10 @@
 
 <!-- DASHBOARD -->
 <div class="tab-pane active" id="tab-dashboard">
-  <div class="topbar"><div><h2>HospiceLink Gold</h2><p>Marketing + Clinical CRM Demo</p></div></div>
+  <div class="topbar"><div><h2>HospiceLink Gold</h2><p>Enterprise CRM — Gold Standard Suite</p></div></div>
   <section class="hero">
-    <h3>Marketing + Clinical Dashboard</h3>
-    <p>Prospect intake, referral management, staff tracking, EVV, GPS mileage, family communication, and clinical notes all in one place.</p>
+    <h3>Gold Standard Command Center</h3>
+    <p>The most complete hospice CRM available. Advanced AI, revenue intelligence, territory heat maps, real-time staff tracking, voice-to-note, HIPAA audit logs, and full automation — everything in one enterprise platform.</p>
   </section>
   <div class="hbar-grid">
     <div class="hbar-section">
@@ -364,7 +367,11 @@
         </select></div>
         <div style="grid-column:1/-1;"><label for="noteText">Note</label><textarea id="noteText" placeholder="Enter note details here…"></textarea></div>
       </div>
-      <div class="note-actions"><button class="btn btn-green" onclick="saveDemoNote()">Sync &amp; Save Note</button></div>
+      <div class="note-actions">
+        <button class="btn btn-green" onclick="saveDemoNote()">Sync &amp; Save Note</button>
+        <button class="btn btn-blue" id="voiceBtn" onclick="toggleVoice()" style="display:inline-flex;align-items:center;gap:6px;">🎤 Voice Note</button>
+      </div>
+      <div id="voiceStatus" style="margin-top:8px;font-size:12px;color:#7c3aed;font-weight:700;display:none;">🔴 Recording… speak your note now</div>
       <div id="syncStatus" style="margin-top:8px;font-size:12px;color:#0a6c2f;font-weight:700;"></div>
     </div>
     <div id="notesList" style="margin-top:14px;">
@@ -384,7 +391,7 @@
     <p class="admin-note">This section is hidden from standard users. Only the Admin account holder can view seat limits, manage users, review EVV data, mileage, staff tracking entries, and notes totals.</p>
     <div class="admin-grid">
       <div class="admin-card"><h4>👥 User Management</h4><p>Admin manages user access and subscription seat limits.</p><div class="mini-actions" style="margin-top:10px;"><button class="btn btn-green btn-small">+ Add User</button><button class="btn btn-red btn-small">− Remove User</button></div></div>
-      <div class="admin-card"><h4>🪑 Seat Limits</h4><p>Subscription seat count controls active users.</p><span class="admin-stat">12 / 20</span><p style="font-size:11px;">Seats in use / Total purchased</p></div>
+      <div class="admin-card"><h4>🪑 Seat Limits</h4><p>Subscription seat count controls active users.</p><span class="admin-stat">18 / 20</span><p style="font-size:11px;">Seats in use / Total purchased</p></div>
       <div class="admin-card"><h4>📝 Notes Synced</h4><p>Total notes synced across all team members.</p><span class="admin-stat" id="adminNotes">0</span></div>
       <div class="admin-card"><h4>📍 Miles Logged</h4><p>Total mileage captured via GPS.</p><span class="admin-stat" id="adminMiles">0.0 mi</span></div>
       <div class="admin-card"><h4>📡 Staff Tracking Entries</h4><p>Auto-captured location entries at note sync time.</p><span class="admin-stat" id="adminStaff">0</span></div>
@@ -487,7 +494,7 @@
     <div class="ai-chat-wrap">
       <div style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;">
         <div style="width:10px;height:10px;background:#8cff66;border-radius:50%;"></div>
-        <span style="color:#c9d6ea;font-size:13px;font-weight:700;">HospiceLink AI — Gold Clinical + Marketing Assistant</span>
+        <span style="color:#c9d6ea;font-size:13px;font-weight:700;">HospiceLink Gold AI — Enterprise Command Center</span>
       </div>
       <div class="ai-suggestion-chips">
         <span class="ai-chip" onclick="askAI('Which referral source is converting best this week?')">Best referral source?</span>
@@ -503,6 +510,126 @@
         <input type="text" id="aiInput" placeholder="Ask me anything…" onkeydown="if(event.key==='Enter')sendAI()">
         <button onclick="sendAI()">Send ➤</button>
       </div>
+    </div>
+  </section>
+</div>
+<!-- REVENUE INTELLIGENCE TAB -->
+<div class="tab-pane" id="tab-revenue">
+  <div class="topbar"><div><h2>💰 Revenue Intelligence</h2><p>Executive-level financial insights and forecasting</p></div></div>
+  <section class="section">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;"><p style="color:var(--muted);font-size:10px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">Revenue Per Source</p><p style="font-size:26px;font-weight:900;color:var(--green);margin:0;">$4,200</p><p style="color:var(--muted);font-size:11px;margin:4px 0 0;">avg / referral source</p></div>
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;"><p style="color:var(--muted);font-size:10px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">Cost Per Admission</p><p style="font-size:26px;font-weight:900;color:var(--blue);margin:0;">$312</p><p style="color:var(--muted);font-size:11px;margin:4px 0 0;">avg marketing cost</p></div>
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;"><p style="color:var(--muted);font-size:10px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">Forecasted Admits</p><p style="font-size:26px;font-weight:900;color:#ffd36e;margin:0;">14</p><p style="color:var(--muted);font-size:11px;margin:4px 0 0;">this month (projected)</p></div>
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;"><p style="color:var(--muted);font-size:10px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">Lost Opportunity</p><p style="font-size:26px;font-weight:900;color:var(--red);margin:0;">$18,900</p><p style="color:var(--muted);font-size:11px;margin:4px 0 0;">from unconverted leads</p></div>
+    </div>
+    <div class="hbar-grid">
+      <div class="hbar-section">
+        <h4>💵 Revenue by Referral Source</h4>
+        <div class="hbar-row"><span class="hbar-label">Baylor Hospital</span><div class="hbar-track"><div class="hbar-fill fill-green" style="width:90%"><span>$12,600</span></div></div><span class="hbar-count" style="width:60px;font-size:11px;">$12,600</span></div>
+        <div class="hbar-row"><span class="hbar-label">North Park Rehab</span><div class="hbar-track"><div class="hbar-fill fill-blue" style="width:72%"><span>$9,800</span></div></div><span class="hbar-count" style="width:60px;font-size:11px;">$9,800</span></div>
+        <div class="hbar-row"><span class="hbar-label">Hospital CM Team</span><div class="hbar-track"><div class="hbar-fill fill-yellow" style="width:55%"><span>$7,400</span></div></div><span class="hbar-count" style="width:60px;font-size:11px;">$7,400</span></div>
+        <div class="hbar-row"><span class="hbar-label">Physician Office</span><div class="hbar-track"><div class="hbar-fill fill-red" style="width:28%"><span>$3,200</span></div></div><span class="hbar-count" style="width:60px;font-size:11px;">$3,200</span></div>
+      </div>
+      <div class="hbar-section">
+        <h4>📈 Conversion Rate by Marketer</h4>
+        <div class="hbar-row"><span class="hbar-label">Ericka</span><div class="hbar-track"><div class="hbar-fill fill-green" style="width:78%"><span>78%</span></div></div><span class="hbar-count">78%</span></div>
+        <div class="hbar-row"><span class="hbar-label">Mike</span><div class="hbar-track"><div class="hbar-fill fill-blue" style="width:64%"><span>64%</span></div></div><span class="hbar-count">64%</span></div>
+        <div class="hbar-row"><span class="hbar-label">Angela</span><div class="hbar-track"><div class="hbar-fill fill-yellow" style="width:51%"><span>51%</span></div></div><span class="hbar-count">51%</span></div>
+        <div class="hbar-row"><span class="hbar-label">Team Avg</span><div class="hbar-track"><div class="hbar-fill fill-purple" style="width:64%"><span>64%</span></div></div><span class="hbar-count">64%</span></div>
+      </div>
+    </div>
+    <div class="hbar-section" style="margin-top:14px;">
+      <h4>📅 Monthly Admission Forecast</h4>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:12px;">
+        <div style="text-align:center;"><div style="height:80px;background:var(--panel2);border-radius:8px;display:flex;align-items:flex-end;justify-content:center;padding:6px;"><div style="background:#49b6ff;border-radius:4px;width:100%;height:60%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#081426;">11</div></div><p style="color:var(--muted);font-size:10px;margin:4px 0 0;">Nov</p></div>
+        <div style="text-align:center;"><div style="height:80px;background:var(--panel2);border-radius:8px;display:flex;align-items:flex-end;justify-content:center;padding:6px;"><div style="background:#49b6ff;border-radius:4px;width:100%;height:75%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#081426;">13</div></div><p style="color:var(--muted);font-size:10px;margin:4px 0 0;">Dec</p></div>
+        <div style="text-align:center;"><div style="height:80px;background:var(--panel2);border-radius:8px;display:flex;align-items:flex-end;justify-content:center;padding:6px;"><div style="background:#49b6ff;border-radius:4px;width:100%;height:65%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#081426;">12</div></div><p style="color:var(--muted);font-size:10px;margin:4px 0 0;">Jan</p></div>
+        <div style="text-align:center;"><div style="height:80px;background:var(--panel2);border-radius:8px;display:flex;align-items:flex-end;justify-content:center;padding:6px;"><div style="background:#8cff66;border-radius:4px;width:100%;height:82%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#081426;">15</div></div><p style="color:var(--muted);font-size:10px;margin:4px 0 0;">Feb</p></div>
+        <div style="text-align:center;"><div style="height:80px;background:var(--panel2);border-radius:8px;display:flex;align-items:flex-end;justify-content:center;padding:6px;"><div style="background:#8cff66;border-radius:4px;width:100%;height:88%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#081426;">16</div></div><p style="color:var(--muted);font-size:10px;margin:4px 0 0;">Mar</p></div>
+        <div style="text-align:center;"><div style="height:80px;background:var(--panel2);border-radius:8px;display:flex;align-items:flex-end;justify-content:center;padding:6px;"><div style="background:#ffd36e;border-radius:4px;width:100%;height:78%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#081426;">14 ↗</div></div><p style="color:var(--muted);font-size:10px;margin:4px 0 0;">Apr ✦</p></div>
+      </div>
+      <p style="color:var(--muted);font-size:11px;margin:10px 0 0;">✦ Projected based on current pipeline velocity</p>
+    </div>
+  </section>
+</div>
+
+<!-- LEADERBOARD TAB -->
+<div class="tab-pane" id="tab-leaderboard">
+  <div class="topbar"><div><h2>🏆 Marketer Leaderboard</h2><p>Live performance rankings across your team</p></div></div>
+  <section class="section">
+    <div style="display:grid;gap:12px;">
+      <div style="background:linear-gradient(135deg,#1a2a10,#0d1b07);border:1px solid rgba(140,255,102,.3);border-radius:16px;padding:18px;display:flex;align-items:center;gap:16px;">
+        <div style="font-size:32px;">🥇</div>
+        <div style="flex:1;">
+          <div style="color:#8cff66;font-weight:900;font-size:18px;">Ericka</div>
+          <div style="color:var(--muted);font-size:12px;">Marketer · North Dallas Territory</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center;">
+          <div><div style="font-size:20px;font-weight:900;color:#8cff66;">15</div><div style="font-size:10px;color:var(--muted);">Admissions</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#49b6ff;">78%</div><div style="font-size:10px;color:var(--muted);">Conv. Rate</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#ffd36e;">42</div><div style="font-size:10px;color:var(--muted);">Visits</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#c9aeff;">$62k</div><div style="font-size:10px;color:var(--muted);">Revenue</div></div>
+        </div>
+      </div>
+      <div style="background:var(--panel);border:1px solid rgba(255,215,0,.2);border-radius:16px;padding:18px;display:flex;align-items:center;gap:16px;">
+        <div style="font-size:32px;">🥈</div>
+        <div style="flex:1;">
+          <div style="color:#e2e8f0;font-weight:900;font-size:18px;">Mike</div>
+          <div style="color:var(--muted);font-size:12px;">Marketer · McKinney / Plano Territory</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center;">
+          <div><div style="font-size:20px;font-weight:900;color:#8cff66;">11</div><div style="font-size:10px;color:var(--muted);">Admissions</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#49b6ff;">64%</div><div style="font-size:10px;color:var(--muted);">Conv. Rate</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#ffd36e;">35</div><div style="font-size:10px;color:var(--muted);">Visits</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#c9aeff;">$45k</div><div style="font-size:10px;color:var(--muted);">Revenue</div></div>
+        </div>
+      </div>
+      <div style="background:var(--panel);border:1px solid rgba(180,130,70,.2);border-radius:16px;padding:18px;display:flex;align-items:center;gap:16px;">
+        <div style="font-size:32px;">🥉</div>
+        <div style="flex:1;">
+          <div style="color:#e2e8f0;font-weight:900;font-size:18px;">Angela</div>
+          <div style="color:var(--muted);font-size:12px;">Nurse · Lewisville / Denton Territory</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center;">
+          <div><div style="font-size:20px;font-weight:900;color:#8cff66;">8</div><div style="font-size:10px;color:var(--muted);">Admissions</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#49b6ff;">51%</div><div style="font-size:10px;color:var(--muted);">Conv. Rate</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#ffd36e;">28</div><div style="font-size:10px;color:var(--muted);">Visits</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#c9aeff;">$33k</div><div style="font-size:10px;color:var(--muted);">Revenue</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;">
+      <p style="color:var(--muted);font-size:12px;margin:0;">🔔 <strong style="color:var(--text);">Goal Alert:</strong> Ericka is 3 admissions ahead of monthly goal. Mike needs 4 more to hit target. Angela is 7 behind — recommend scheduling a strategy review.</p>
+    </div>
+  </section>
+</div>
+
+<!-- HIPAA AUDIT LOG TAB -->
+<div class="tab-pane" id="tab-hipaa">
+  <div class="topbar"><div><h2>🔐 HIPAA Audit Log</h2><p>Full compliance trail — every action logged automatically</p></div></div>
+  <section class="section">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;"><p style="color:var(--muted);font-size:10px;font-weight:800;margin:0 0 4px;text-transform:uppercase;">Events Today</p><p style="font-size:26px;font-weight:900;color:var(--blue);margin:0;">47</p></div>
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;"><p style="color:var(--muted);font-size:10px;font-weight:800;margin:0 0 4px;text-transform:uppercase;">Users Active</p><p style="font-size:26px;font-weight:900;color:var(--green);margin:0;">3</p></div>
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;"><p style="color:var(--muted);font-size:10px;font-weight:800;margin:0 0 4px;text-transform:uppercase;">Compliance Score</p><p style="font-size:26px;font-weight:900;color:#8cff66;margin:0;">98%</p></div>
+    </div>
+    <div class="table-wrap">
+      <table id="auditLogTable">
+        <thead><tr><th>Time</th><th>User</th><th>Role</th><th>Action</th><th>Record</th><th>IP Address</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>9:14 AM</td><td>Ericka</td><td>Marketer</td><td>Viewed prospect</td><td>Mary J.</td><td>192.168.1.42</td><td><span class="pill pill-green">OK</span></td></tr>
+          <tr><td>9:11 AM</td><td>Angela</td><td>Nurse</td><td>Added note</td><td>Thomas J.</td><td>192.168.1.55</td><td><span class="pill pill-green">OK</span></td></tr>
+          <tr><td>9:05 AM</td><td>Ericka</td><td>Marketer</td><td>Synced note + GPS</td><td>Dorothy F.</td><td>192.168.1.42</td><td><span class="pill pill-green">OK</span></td></tr>
+          <tr><td>8:58 AM</td><td>Admin</td><td>Admin</td><td>Edited prospect</td><td>Helen P.</td><td>192.168.1.10</td><td><span class="pill pill-green">OK</span></td></tr>
+          <tr><td>8:45 AM</td><td>Mike</td><td>Marketer</td><td>Login</td><td>—</td><td>192.168.1.67</td><td><span class="pill pill-green">OK</span></td></tr>
+          <tr><td>8:30 AM</td><td>Unknown</td><td>—</td><td>Failed login attempt</td><td>—</td><td>203.45.12.88</td><td><span class="pill pill-red">⚠️ Flag</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:10px;">
+      <button class="btn btn-blue btn-small" onclick="alert('Audit log exported to CSV — in live CRM this downloads automatically')">📥 Export Log (CSV)</button>
+      <button class="btn btn-gray btn-small" onclick="alert('Report sent to compliance officer — in live CRM this emails automatically')">📧 Email Compliance Report</button>
     </div>
   </section>
 </div>
@@ -527,6 +654,19 @@ function pSt(s){const m={Inquiry:"pill-blue","Pending Admission":"pill-yellow",L
 function pRef(s){return s==="Red"?'<span class="pill pill-red">🔴 Red</span>':'<span class="pill pill-green">🟢 Green</span>';}
 function openModal(id){document.getElementById(id).classList.add("open");}
 function closeModal(id){document.getElementById(id).classList.remove("open");}
+/* ── VOICE TO NOTE (Gold exclusive) ── */
+let voiceRecognition=null,isRecording=false;
+function toggleVoice(){
+  const btn=document.getElementById('voiceBtn');const status=document.getElementById('voiceStatus');const ta=document.getElementById('noteText');
+  if(!('webkitSpeechRecognition' in window)&&!('SpeechRecognition' in window)){alert('Voice notes work in Chrome or Edge. In the live CRM, voice notes also work via the mobile app.');return;}
+  if(isRecording){if(voiceRecognition)voiceRecognition.stop();isRecording=false;btn.innerHTML='🎤 Voice Note';btn.style.background='';status.style.display='none';return;}
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;voiceRecognition=new SR();
+  voiceRecognition.continuous=true;voiceRecognition.interimResults=true;voiceRecognition.lang='en-US';
+  voiceRecognition.onresult=(e)=>{let t='';for(let i=e.resultIndex;i<e.results.length;i++)t+=e.results[i][0].transcript;ta.value=t;};
+  voiceRecognition.onerror=()=>{alert('Voice error — try again or type manually.');isRecording=false;btn.innerHTML='🎤 Voice Note';status.style.display='none';};
+  voiceRecognition.start();isRecording=true;btn.innerHTML='⏹ Stop';btn.style.background='#e05555';status.style.display='block';
+}
+
 function showTab(id){document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'));const pane=document.getElementById('tab-'+id);if(pane)pane.classList.add('active');const link=document.querySelector('.nav a[data-tab="'+id+'"]');if(link)link.classList.add('active');window.scrollTo(0,0);if(id==='evv')setTimeout(initMap,150);}
 function defRefs(){return[{contactName:"Sarah M.",business:"North Park Rehab",phone:"(214)555-0110",email:"sarah@npr.com",address:"100 Rehab Way, Dallas TX",status:"Green"},{contactName:"Dr. Patel",business:"Baylor",phone:"(214)555-0122",email:"patel@baylor.com",address:"3500 Gaston Ave, Dallas TX",status:"Green"},{contactName:"Office Mgr",business:"Physician Office",phone:"(972)555-0133",email:"mgr@po.com",address:"900 Medical Dr, Plano TX",status:"Red"},{contactName:"CM Team",business:"Hospital CM",phone:"(214)555-0144",email:"cm@hospital.com",address:"1200 Hospital Blvd, Dallas TX",status:"Green"}];}
 function defProsp(){return[{name:"Robert H.",status:"Inquiry",source:"North Park Rehab",marketer:"Ericka",phone:"(214)555-2001",email:"robert@email.com",address:"400 Pine St, Dallas TX",secondary:"Linda H.",nextStep:"Schedule assessment"},{name:"Dorothy F.",status:"Pending Admission",source:"Baylor",marketer:"Ericka",phone:"(214)555-2002",email:"dorothy@email.com",address:"700 Maple Ave, Dallas TX",secondary:"",nextStep:"Collect final documents"},{name:"Helen P.",status:"Lost",source:"Physician Office",marketer:"Ericka",phone:"(214)555-2003",email:"helen@email.com",address:"300 Cedar Rd, Plano TX",secondary:"",nextStep:"Revisit source in 2 weeks"},{name:"Thomas J.",status:"Admitted",source:"Hospital CM",marketer:"Ericka",phone:"(214)555-2004",email:"thomas@email.com",address:"600 Oak Blvd, Dallas TX",secondary:"Mary J.",nextStep:"Move to active census"}];}
