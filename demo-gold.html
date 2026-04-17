@@ -1,3 +1,21 @@
+<!--
+================================================================
+  © 2026 We Market Plus LLC. All Rights Reserved.
+  Product: HospiceLink CRM
+  Owner:   We Market Plus LLC
+  Contact: Info@wemarketpluscom.org | +1 (469) 793-0673
+  
+  PROPRIETARY AND CONFIDENTIAL
+  This software and its contents are the exclusive property 
+  of We Market Plus LLC. Unauthorized copying, reproduction,
+  modification, distribution, or use of this software, in 
+  whole or in part, is strictly prohibited without express 
+  written consent from We Market Plus LLC.
+  
+  Protected under U.S. Copyright Law (17 U.S.C. § 101 et seq.)
+  Trademark pending: HospiceLink™, We Market Plus™
+================================================================
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -89,6 +107,43 @@
 .delete-inline-btn { background:none;border:1px solid #e05555;color:#e05555;border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;font-weight:700;}
 </style>
 
+
+<script>
+// ── COPYRIGHT PROTECTION — We Market Plus LLC © 2026 ──────────
+(function(){
+  // Disable right-click
+  document.addEventListener('contextmenu', function(e){
+    e.preventDefault();
+    return false;
+  });
+  // Disable Ctrl+U (view source), Ctrl+S (save), Ctrl+Shift+I (devtools)
+  document.addEventListener('keydown', function(e){
+    if(
+      (e.ctrlKey && e.key === 'u') ||
+      (e.ctrlKey && e.key === 's') ||
+      (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+      (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+      (e.ctrlKey && e.shiftKey && e.key === 'C') ||
+      e.key === 'F12'
+    ){
+      e.preventDefault();
+      return false;
+    }
+  });
+  // Disable text selection
+  document.addEventListener('selectstart', function(e){
+    e.preventDefault();
+    return false;
+  });
+  // Watermark overlay
+  document.addEventListener('DOMContentLoaded', function(){
+    const wm = document.createElement('div');
+    wm.style.cssText = 'position:fixed;bottom:12px;right:14px;z-index:99999;pointer-events:none;opacity:0.35;font-size:11px;font-weight:800;color:#49b6ff;font-family:Arial,sans-serif;letter-spacing:.05em;user-select:none;';
+    wm.textContent = '© 2026 We Market Plus LLC';
+    document.body.appendChild(wm);
+  });
+})();
+</script>
 </head>
 <body>
 <div class="layout">
