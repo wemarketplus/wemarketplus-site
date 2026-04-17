@@ -978,5 +978,105 @@ function adminDeleteReferral(i) {
 }
 
 </script>
+
+
+<style>
+.ow-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:99998;display:flex;align-items:center;justify-content:center;padding:20px;}
+.ow-box{background:linear-gradient(180deg,#0d1b2e,#08111f);border:1px solid rgba(73,182,255,.3);border-radius:24px;padding:36px;width:min(540px,100%);position:relative;box-shadow:0 30px 80px rgba(0,0,0,.6);}
+.ow-dots{display:flex;gap:6px;justify-content:center;margin-bottom:20px;}
+.ow-dot{width:8px;height:8px;border-radius:50%;background:rgba(73,182,255,.2);transition:all .3s;}
+.ow-dot.active{background:#49b6ff;width:24px;border-radius:4px;}
+.ow-icon{font-size:40px;text-align:center;margin-bottom:12px;}
+.ow-title{font-size:20px;font-weight:900;color:#fff;text-align:center;margin-bottom:10px;}
+.ow-desc{font-size:14px;color:rgba(180,210,255,.75);text-align:center;line-height:1.7;margin-bottom:16px;}
+.ow-hl{background:rgba(73,182,255,.1);border:1px solid rgba(73,182,255,.2);border-radius:10px;padding:10px 14px;margin-bottom:18px;font-size:12px;color:#49b6ff;line-height:1.6;text-align:left;}
+.ow-btns{display:flex;gap:10px;justify-content:center;}
+.ow-next{background:linear-gradient(90deg,#42b7ff,#6ed6ff);color:#07111f;border:none;border-radius:999px;padding:12px 30px;font-size:14px;font-weight:900;cursor:pointer;}
+.ow-skip{background:transparent;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.45);border-radius:999px;padding:12px 20px;font-size:13px;cursor:pointer;}
+.ow-prog{font-size:11px;color:rgba(180,200,255,.35);text-align:center;margin-top:12px;}
+.help-fab{position:fixed;bottom:20px;right:20px;z-index:9997;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#0d2040,#1a3a60);border:1px solid rgba(73,182,255,.4);color:#49b6ff;font-size:18px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.4);}
+.help-panel{position:fixed;bottom:74px;right:20px;z-index:9997;width:300px;background:linear-gradient(180deg,#0d1b2e,#08111f);border:1px solid rgba(73,182,255,.2);border-radius:18px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.5);display:none;max-height:65vh;overflow-y:auto;}
+.help-panel.open{display:block;}
+.hp-title{font-size:14px;font-weight:900;color:#fff;margin-bottom:3px;}
+.hp-sub{font-size:11px;color:rgba(180,200,255,.45);margin-bottom:14px;}
+.hp-item{padding:9px 11px;border-radius:9px;margin-bottom:5px;background:rgba(255,255,255,.03);border:1px solid rgba(73,182,255,.07);}
+.hp-name{font-size:11px;font-weight:700;color:#49b6ff;margin-bottom:3px;}
+.hp-desc{font-size:11px;color:rgba(180,200,255,.6);line-height:1.45;}
+.hp-sms{background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:11px;margin-top:10px;}
+.hp-sms-t{font-size:11px;font-weight:700;color:#a78bfa;margin-bottom:5px;}
+.hp-sms-d{font-size:11px;color:rgba(180,200,255,.6);line-height:1.5;}
+</style>
+
+<button class="help-fab" onclick="toggleHelp()">?</button>
+<div class="help-panel" id="helpPanel">
+  <div class="hp-title">HospiceLink Gold Guide</div>
+  <div class="hp-sub">What each tab does</div>
+  <div class="hp-item"><div class="hp-name">Dashboard</div><div class="hp-desc">Your Gold enterprise command center — full pipeline, staff activity, revenue snapshot, and CRM overview.</div></div><div class="hp-item"><div class="hp-name">Add Prospect</div><div class="hp-desc">Add a new prospect with full contact info, referral source, assigned marketer, and next step.</div></div><div class="hp-item"><div class="hp-name">Prospect Records</div><div class="hp-desc">Full prospect table with search. Use 📱 Text and 📧 Email buttons — messages open in your SMS/email app and auto-log to Notes.</div></div><div class="hp-item"><div class="hp-name">Referral Sources</div><div class="hp-desc">All referral partners with green/red status. Text or email any contact directly — auto-logs to Notes.</div></div><div class="hp-item"><div class="hp-name">Referral Records</div><div class="hp-desc">Searchable log of all referral source activity.</div></div><div class="hp-item"><div class="hp-name">Pipeline</div><div class="hp-desc">Visual funnel: Inquiry → Pending Admission → Admitted → Lost.</div></div><div class="hp-item"><div class="hp-name">Territory View</div><div class="hp-desc">Map of your coverage area and prospect locations.</div></div><div class="hp-item"><div class="hp-name">Productivity</div><div class="hp-desc">Marketer visit and activity tracking.</div></div><div class="hp-item"><div class="hp-name">💰 Revenue Intelligence</div><div class="hp-desc">Revenue by referral source, cost per admission, monthly forecasts, conversion rates by marketer.</div></div><div class="hp-item"><div class="hp-name">🏆 Leaderboard</div><div class="hp-desc">Live marketer rankings by admissions, conversion rate, visits, and revenue generated.</div></div><div class="hp-item"><div class="hp-name">EVV / Mileage</div><div class="hp-desc">Log trips with start/end address. GPS map shows route. Tracks mileage for compliance and tax deductions.</div></div><div class="hp-item"><div class="hp-name">Family Communication</div><div class="hp-desc">Log all family conversations with timestamps. Keeps a compliance record of every family touchpoint.</div></div><div class="hp-item"><div class="hp-name">Automation</div><div class="hp-desc">Set up automatic follow-up reminders and alerts.</div></div><div class="hp-item"><div class="hp-name">Notes + Voice</div><div class="hp-desc">Field notes with GPS sync. Click 🎤 Voice Note to speak instead of type. Works in Chrome and Edge.</div></div><div class="hp-item"><div class="hp-name">🔐 HIPAA Audit Log</div><div class="hp-desc">Every CRM action logged — who, what, when, from which IP. Export compliance reports with one click.</div></div><div class="hp-item"><div class="hp-name">🤖 AI Command Center</div><div class="hp-desc">Advanced AI for revenue analysis, territory strategy, team coaching, and executive reporting.</div></div><div class="hp-item"><div class="hp-name">🔒 Admin</div><div class="hp-desc">Edit/delete any record system-wide. Manage staff, view activity, control all settings.</div></div>
+  <div class="hp-sms">
+    <div class="hp-sms-t">📱 How SMS & Email Auto-Logging Works</div>
+    <div class="hp-sms-d">
+      On any Prospect or Referral Source record, click the <strong style="color:#a78bfa">📱 Text</strong> or <strong style="color:#a78bfa">📧 Email</strong> button.<br><br>
+      1. A popup opens — type your message<br>
+      2. Your phone's SMS app or email client opens with it pre-filled<br>
+      3. Send from your device<br>
+      4. <strong style="color:#8cff66">It automatically logs to your Notes tab</strong> with the date, time, contact name, and message preview.<br><br>
+      No manual logging needed — ever.
+    </div>
+  </div>
+</div>
+<div class="ow-overlay" id="owOverlay" style="display:none">
+  <div class="ow-box">
+    <div class="ow-dots" id="owDots"></div>
+    <div class="ow-icon" id="owIcon"></div>
+    <div class="ow-title" id="owTitle"></div>
+    <div class="ow-desc" id="owDesc"></div>
+    <div class="ow-hl" id="owHl" style="display:none"></div>
+    <div class="ow-btns">
+      <button class="ow-skip" onclick="owSkip()">Skip Tour</button>
+      <button class="ow-next" id="owNext" onclick="owNextStep()">Next →</button>
+    </div>
+    <div class="ow-prog" id="owProg"></div>
+  </div>
+</div>
+<script>
+const OW_GOLD_STEPS=[{"icon": "👋", "title": "Welcome to HospiceLink Gold!", "desc": "The most complete hospice CRM available. Let's tour your enterprise command center.", "highlight": ""}, {"icon": "📋", "title": "Prospects & Referral Sources", "desc": "Full prospect pipeline and referral management. 📱 Text and 📧 Email buttons on every record auto-log to Notes.", "highlight": "💡 Every communication is automatically logged — date, time, contact, and message preview"}, {"icon": "📍", "title": "EVV & GPS Mileage", "desc": "Log trips with GPS route tracking. Mileage auto-calculated for compliance and IRS deduction tracking.", "highlight": "📍 Sidebar → EVV / Mileage"}, {"icon": "💰", "title": "Revenue Intelligence", "desc": "See revenue per referral source, cost per admission, monthly forecasts, and conversion rates by marketer.", "highlight": "📍 Sidebar → 💰 Revenue Intelligence — your financial command center"}, {"icon": "🏆", "title": "Leaderboard", "desc": "Live marketer rankings by admissions, conversion rate, visits, and revenue. Drive performance with transparency.", "highlight": "📍 Sidebar → 🏆 Leaderboard"}, {"icon": "🎤", "title": "Voice-to-Note", "desc": "In the Notes tab, click the 🎤 Voice Note button. Speak your note — it transcribes automatically. Works in Chrome and Edge.", "highlight": "📍 Sidebar → Notes + Voice → click 🎤 Voice Note button"}, {"icon": "🔐", "title": "HIPAA Audit Log", "desc": "Every action in the CRM is logged with user, timestamp, and IP address. Export compliance reports with one click.", "highlight": "📍 Sidebar → 🔐 HIPAA Audit Log"}, {"icon": "🤖", "title": "AI Command Center", "desc": "Advanced AI for revenue analysis, territory strategy, team performance coaching, and executive reporting.", "highlight": "📍 Sidebar → 🤖 AI Command Center"}, {"icon": "🎉", "title": "You're all set!", "desc": "Your Gold CRM is ready. Click ? anytime for help on any feature.", "highlight": "📞 Need help? Info@wemarketpluscom.org | (469) 793-0673"}];
+let owIdx=0;
+function owInit(){
+  if(!localStorage.getItem('hl_tour_gold')){
+    document.getElementById('owOverlay').style.display='flex';
+    owRender(0);
+  }
+}
+function owRender(i){
+  const s=OW_GOLD_STEPS[i];
+  const total=OW_GOLD_STEPS.length;
+  document.getElementById('owDots').innerHTML=OW_GOLD_STEPS.map((_,j)=>`<div class="ow-dot ${j===i?'active':''}"></div>`).join('');
+  document.getElementById('owIcon').textContent=s.icon;
+  document.getElementById('owTitle').textContent=s.title;
+  document.getElementById('owDesc').textContent=s.desc;
+  const hl=document.getElementById('owHl');
+  if(s.highlight){hl.textContent=s.highlight;hl.style.display='block';}else{hl.style.display='none';}
+  document.getElementById('owNext').textContent=i===total-1?"Let's Go! 🚀":"Next →";
+  document.getElementById('owProg').textContent=`Step ${i+1} of ${total}`;
+}
+function owNextStep(){
+  if(owIdx<OW_GOLD_STEPS.length-1){owIdx++;owRender(owIdx);}
+  else{owSkip();}
+}
+function owSkip(){
+  localStorage.setItem('hl_tour_gold','1');
+  document.getElementById('owOverlay').style.display='none';
+}
+function toggleHelp(){
+  document.getElementById('helpPanel').classList.toggle('open');
+}
+document.addEventListener('click',function(e){
+  const p=document.getElementById('helpPanel');
+  const b=document.querySelector('.help-fab');
+  if(p&&b&&!p.contains(e.target)&&!b.contains(e.target))p.classList.remove('open');
+});
+setTimeout(owInit,1800);
+</script>
+
 </body>
 </html>
