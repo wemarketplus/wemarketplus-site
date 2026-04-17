@@ -670,5 +670,105 @@ function sendContactEmail(email, contactName, contactType){
 
 (function init(){showTab('dashboard');loadReferralSources();loadMarketers();loadNames();renderProspectsTable();updateDashboard();})();
 </script>
+
+
+<style>
+.ow-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:99998;display:flex;align-items:center;justify-content:center;padding:20px;}
+.ow-box{background:linear-gradient(180deg,#0d1b2e,#08111f);border:1px solid rgba(73,182,255,.3);border-radius:24px;padding:36px;width:min(540px,100%);position:relative;box-shadow:0 30px 80px rgba(0,0,0,.6);}
+.ow-dots{display:flex;gap:6px;justify-content:center;margin-bottom:20px;}
+.ow-dot{width:8px;height:8px;border-radius:50%;background:rgba(73,182,255,.2);transition:all .3s;}
+.ow-dot.active{background:#49b6ff;width:24px;border-radius:4px;}
+.ow-icon{font-size:40px;text-align:center;margin-bottom:12px;}
+.ow-title{font-size:20px;font-weight:900;color:#fff;text-align:center;margin-bottom:10px;}
+.ow-desc{font-size:14px;color:rgba(180,210,255,.75);text-align:center;line-height:1.7;margin-bottom:16px;}
+.ow-hl{background:rgba(73,182,255,.1);border:1px solid rgba(73,182,255,.2);border-radius:10px;padding:10px 14px;margin-bottom:18px;font-size:12px;color:#49b6ff;line-height:1.6;text-align:left;}
+.ow-btns{display:flex;gap:10px;justify-content:center;}
+.ow-next{background:linear-gradient(90deg,#42b7ff,#6ed6ff);color:#07111f;border:none;border-radius:999px;padding:12px 30px;font-size:14px;font-weight:900;cursor:pointer;}
+.ow-skip{background:transparent;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.45);border-radius:999px;padding:12px 20px;font-size:13px;cursor:pointer;}
+.ow-prog{font-size:11px;color:rgba(180,200,255,.35);text-align:center;margin-top:12px;}
+.help-fab{position:fixed;bottom:20px;right:20px;z-index:9997;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#0d2040,#1a3a60);border:1px solid rgba(73,182,255,.4);color:#49b6ff;font-size:18px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.4);}
+.help-panel{position:fixed;bottom:74px;right:20px;z-index:9997;width:300px;background:linear-gradient(180deg,#0d1b2e,#08111f);border:1px solid rgba(73,182,255,.2);border-radius:18px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.5);display:none;max-height:65vh;overflow-y:auto;}
+.help-panel.open{display:block;}
+.hp-title{font-size:14px;font-weight:900;color:#fff;margin-bottom:3px;}
+.hp-sub{font-size:11px;color:rgba(180,200,255,.45);margin-bottom:14px;}
+.hp-item{padding:9px 11px;border-radius:9px;margin-bottom:5px;background:rgba(255,255,255,.03);border:1px solid rgba(73,182,255,.07);}
+.hp-name{font-size:11px;font-weight:700;color:#49b6ff;margin-bottom:3px;}
+.hp-desc{font-size:11px;color:rgba(180,200,255,.6);line-height:1.45;}
+.hp-sms{background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:11px;margin-top:10px;}
+.hp-sms-t{font-size:11px;font-weight:700;color:#a78bfa;margin-bottom:5px;}
+.hp-sms-d{font-size:11px;color:rgba(180,200,255,.6);line-height:1.5;}
+</style>
+
+<button class="help-fab" onclick="toggleHelp()">?</button>
+<div class="help-panel" id="helpPanel">
+  <div class="hp-title">HospiceLink Pro Guide</div>
+  <div class="hp-sub">What each tab does</div>
+  <div class="hp-item"><div class="hp-name">Dashboard</div><div class="hp-desc">Your CRM overview — prospect pipeline, referral source stats, and activity summary at a glance.</div></div><div class="hp-item"><div class="hp-name">Add Prospect</div><div class="hp-desc">Add a new prospect (potential patient or family). Fill in contact info, status, referral source, and assigned marketer.</div></div><div class="hp-item"><div class="hp-name">Prospect Records</div><div class="hp-desc">Full table of all prospects. Search, edit, or delete any record. Use 📱 Text and 📧 Email buttons to contact them — auto-logs to Notes.</div></div><div class="hp-item"><div class="hp-name">Referral Sources</div><div class="hp-desc">All your referral partners. Green = actively sending referrals. Red = not sending yet. Text or email them directly from here.</div></div><div class="hp-item"><div class="hp-name">Referral Records</div><div class="hp-desc">Detailed log of all referral activity with search and filter.</div></div><div class="hp-item"><div class="hp-name">Pipeline</div><div class="hp-desc">Visual funnel showing how many prospects are at each stage: Inquiry, Pending Admission, Admitted, Lost.</div></div><div class="hp-item"><div class="hp-name">Territory View</div><div class="hp-desc">Map view of your coverage area and prospect locations.</div></div><div class="hp-item"><div class="hp-name">Productivity</div><div class="hp-desc">Track marketer activity — visits, calls, notes, and follow-ups.</div></div><div class="hp-item"><div class="hp-name">Automation</div><div class="hp-desc">Set up automatic follow-up reminders and alerts based on prospect status changes.</div></div><div class="hp-item"><div class="hp-name">Notes + Voice (Gold)</div><div class="hp-desc">Log field notes with GPS location. Click 🎤 Voice Note to speak your note instead of typing. Auto-syncs to dashboard.</div></div><div class="hp-item"><div class="hp-name">🤖 AI Assistant</div><div class="hp-desc">Ask Claude AI anything — follow-up scripts, referral analysis, admission strategies, weekly reports. It knows your CRM data.</div></div><div class="hp-item"><div class="hp-name">🔒 Admin</div><div class="hp-desc">Admin only. Edit or delete any record in the system. Manage staff accounts and view full CRM activity.</div></div>
+  <div class="hp-sms">
+    <div class="hp-sms-t">📱 How SMS & Email Auto-Logging Works</div>
+    <div class="hp-sms-d">
+      On any Prospect or Referral Source record, click the <strong style="color:#a78bfa">📱 Text</strong> or <strong style="color:#a78bfa">📧 Email</strong> button.<br><br>
+      1. A popup opens — type your message<br>
+      2. Your phone's SMS app or email client opens with it pre-filled<br>
+      3. Send from your device<br>
+      4. <strong style="color:#8cff66">It automatically logs to your Notes tab</strong> with the date, time, contact name, and message preview.<br><br>
+      No manual logging needed — ever.
+    </div>
+  </div>
+</div>
+<div class="ow-overlay" id="owOverlay" style="display:none">
+  <div class="ow-box">
+    <div class="ow-dots" id="owDots"></div>
+    <div class="ow-icon" id="owIcon"></div>
+    <div class="ow-title" id="owTitle"></div>
+    <div class="ow-desc" id="owDesc"></div>
+    <div class="ow-hl" id="owHl" style="display:none"></div>
+    <div class="ow-btns">
+      <button class="ow-skip" onclick="owSkip()">Skip Tour</button>
+      <button class="ow-next" id="owNext" onclick="owNextStep()">Next →</button>
+    </div>
+    <div class="ow-prog" id="owProg"></div>
+  </div>
+</div>
+<script>
+const OW_PRO_STEPS=[{"icon": "👋", "title": "Welcome to HospiceLink Pro!", "desc": "You're in your marketing CRM. Let's take a 60-second tour so you know where everything is.", "highlight": ""}, {"icon": "➕", "title": "Add Prospect", "desc": "Every new patient lead goes here first. Add their info, assign a marketer, and set the next step.", "highlight": "📍 Sidebar → Add Prospect"}, {"icon": "📋", "title": "Prospect Records", "desc": "See all prospects in one table. Use the 📱 Text and 📧 Email buttons to contact them directly — it auto-logs to your Notes tab.", "highlight": "💡 SMS/Email auto-logs to Notes — you never have to manually track a communication again"}, {"icon": "🤝", "title": "Referral Sources", "desc": "Track every hospital, rehab, and doctor sending you referrals. Green = active. Red = not sending yet. Text or email them right from here.", "highlight": "💡 All messages sent from Referral Sources auto-log to Notes with date, time, and message preview"}, {"icon": "📊", "title": "Pipeline & Productivity", "desc": "Pipeline shows your funnel (Inquiry → Visit → Admit → Lost). Productivity tracks marketer activity and visits.", "highlight": "📍 Sidebar → Pipeline | Productivity"}, {"icon": "🤖", "title": "AI Assistant", "desc": "Your built-in AI powered by Claude. Ask for follow-up scripts, referral strategies, prospect analysis, or weekly reports.", "highlight": "📍 Sidebar → 🤖 AI Assistant — try asking: 'Which referral sources need attention this week?'"}, {"icon": "🔒", "title": "Admin Panel", "desc": "Admin accounts can edit or delete any record in the CRM. Manage your team and control all settings here.", "highlight": "📍 Sidebar → 🔒 Admin"}, {"icon": "🎉", "title": "You're all set!", "desc": "Start by adding your first prospect or referral source. Click the ? button anytime for help on any tab.", "highlight": "📞 Need help? Info@wemarketpluscom.org | (469) 793-0673"}];
+let owIdx=0;
+function owInit(){
+  if(!localStorage.getItem('hl_tour_pro')){
+    document.getElementById('owOverlay').style.display='flex';
+    owRender(0);
+  }
+}
+function owRender(i){
+  const s=OW_PRO_STEPS[i];
+  const total=OW_PRO_STEPS.length;
+  document.getElementById('owDots').innerHTML=OW_PRO_STEPS.map((_,j)=>`<div class="ow-dot ${j===i?'active':''}"></div>`).join('');
+  document.getElementById('owIcon').textContent=s.icon;
+  document.getElementById('owTitle').textContent=s.title;
+  document.getElementById('owDesc').textContent=s.desc;
+  const hl=document.getElementById('owHl');
+  if(s.highlight){hl.textContent=s.highlight;hl.style.display='block';}else{hl.style.display='none';}
+  document.getElementById('owNext').textContent=i===total-1?"Let's Go! 🚀":"Next →";
+  document.getElementById('owProg').textContent=`Step ${i+1} of ${total}`;
+}
+function owNextStep(){
+  if(owIdx<OW_PRO_STEPS.length-1){owIdx++;owRender(owIdx);}
+  else{owSkip();}
+}
+function owSkip(){
+  localStorage.setItem('hl_tour_pro','1');
+  document.getElementById('owOverlay').style.display='none';
+}
+function toggleHelp(){
+  document.getElementById('helpPanel').classList.toggle('open');
+}
+document.addEventListener('click',function(e){
+  const p=document.getElementById('helpPanel');
+  const b=document.querySelector('.help-fab');
+  if(p&&b&&!p.contains(e.target)&&!b.contains(e.target))p.classList.remove('open');
+});
+setTimeout(owInit,1800);
+</script>
+
 </body>
 </html>
