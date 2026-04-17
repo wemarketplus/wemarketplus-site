@@ -933,5 +933,103 @@ function adminDeleteReferral(i) {
 })();
 </script>
 
+
+<style>
+.help-fab{position:fixed;bottom:20px;right:20px;z-index:9997;width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#0d2040,#1a3a60);border:2px solid rgba(73,182,255,.5);color:#49b6ff;font-size:20px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(0,0,0,.5);}
+.help-panel{position:fixed;bottom:76px;right:20px;z-index:9997;width:300px;background:linear-gradient(180deg,#0d1b2e,#08111f);border:1px solid rgba(73,182,255,.25);border-radius:18px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.6);display:none;max-height:70vh;overflow-y:auto;}
+.help-panel.open{display:block;}
+.hp-title{font-size:14px;font-weight:900;color:#fff;margin-bottom:3px;}
+.hp-sub{font-size:11px;color:rgba(180,200,255,.45);margin-bottom:14px;}
+.hp-item{padding:9px 11px;border-radius:9px;margin-bottom:5px;background:rgba(255,255,255,.03);border:1px solid rgba(73,182,255,.08);}
+.hp-name{font-size:11px;font-weight:700;color:#49b6ff;margin-bottom:3px;}
+.hp-desc{font-size:11px;color:rgba(180,200,255,.6);line-height:1.45;}
+.hp-sms{background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:11px;margin-top:10px;}
+.hp-sms-t{font-size:11px;font-weight:700;color:#a78bfa;margin-bottom:5px;}
+.hp-sms-d{font-size:11px;color:rgba(180,200,255,.6);line-height:1.5;}
+</style>
+
+<button class="help-fab" onclick="toggleHelpPanel()" title="Help Guide">?</button>
+
+<div class="help-panel" id="helpPanel">
+  <div class="hp-title">HospiceLink Max Guide</div>
+  <div class="hp-sub">What each tab does</div>
+  <div class="hp-item"><div class="hp-name">Dashboard</div><div class="hp-desc">Full team overview — pipeline, staff activity, mileage, and CRM stats.</div></div><div class="hp-item"><div class="hp-name">Add Prospect</div><div class="hp-desc">Add new prospects with full contact, referral source, and marketer assignment.</div></div><div class="hp-item"><div class="hp-name">Prospect Records</div><div class="hp-desc">Full prospect table. 📱 Text and 📧 Email auto-log to Notes.</div></div><div class="hp-item"><div class="hp-name">Referral Sources</div><div class="hp-desc">Referral partner management. Text or email directly from the record.</div></div><div class="hp-item"><div class="hp-name">Referral Records</div><div class="hp-desc">Searchable referral activity log.</div></div><div class="hp-item"><div class="hp-name">Pipeline</div><div class="hp-desc">Visual prospect funnel by stage.</div></div><div class="hp-item"><div class="hp-name">Territory View</div><div class="hp-desc">Map view of coverage area.</div></div><div class="hp-item"><div class="hp-name">Productivity</div><div class="hp-desc">Marketer visit and activity tracking.</div></div><div class="hp-item"><div class="hp-name">EVV / Mileage</div><div class="hp-desc">Log trips, GPS route tracking, mileage for compliance and taxes.</div></div><div class="hp-item"><div class="hp-name">Family Communication</div><div class="hp-desc">Timestamped log of all family conversations for compliance.</div></div><div class="hp-item"><div class="hp-name">Automation</div><div class="hp-desc">Automatic follow-up reminders and status alerts.</div></div><div class="hp-item"><div class="hp-name">Notes</div><div class="hp-desc">Field notes with GPS sync. SMS/email communications auto-log here.</div></div><div class="hp-item"><div class="hp-name">🤖 AI Assistant</div><div class="hp-desc">Ask Claude AI for scripts, analysis, and marketing strategies.</div></div><div class="hp-item"><div class="hp-name">🔒 Admin</div><div class="hp-desc">Edit/delete any record. Manage staff. Admin only.</div></div>
+  <div class="hp-sms">
+    <div class="hp-sms-t">📱 SMS & Email Auto-Logging</div>
+    <div class="hp-sms-d">
+      On any Prospect or Referral Source record, click <strong style="color:#a78bfa">📱 Text</strong> or <strong style="color:#a78bfa">📧 Email</strong>.<br><br>
+      1. Type your message in the popup<br>
+      2. Your phone SMS or email app opens pre-filled<br>
+      3. Send from your device<br>
+      4. <strong style="color:#8cff66">Auto-logged to Notes</strong> with date, time, contact and message.<br><br>
+      No manual logging ever needed.
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleHelpPanel(){
+  document.getElementById('helpPanel').classList.toggle('open');
+}
+document.addEventListener('click',function(e){
+  const p=document.getElementById('helpPanel');
+  const b=document.querySelector('.help-fab');
+  if(p&&b&&!p.contains(e.target)&&!b.contains(e.target))p.classList.remove('open');
+});
+</script>
+
+
+<style>
+.ow-overlay2{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:99998;display:flex;align-items:center;justify-content:center;padding:20px;}
+.ow-box2{background:linear-gradient(180deg,#0d1b2e,#08111f);border:1px solid rgba(73,182,255,.3);border-radius:24px;padding:32px;width:min(520px,100%);box-shadow:0 30px 80px rgba(0,0,0,.6);}
+.ow-dot{width:8px;height:8px;border-radius:50%;background:rgba(73,182,255,.2);transition:all .3s;display:inline-block;margin:0 3px;}
+.ow-dot.active{background:#49b6ff;width:24px;border-radius:4px;}
+</style>
+<div class="ow-overlay2" id="owOverlay_max" style="display:none">
+  <div class="ow-box2">
+    <div style="text-align:center;margin-bottom:16px;" id="owDots_max"></div>
+    <div style="font-size:38px;text-align:center;margin-bottom:12px;" id="owIcon_max"></div>
+    <div style="font-size:20px;font-weight:900;color:#fff;text-align:center;margin-bottom:10px;" id="owTitle_max"></div>
+    <div style="font-size:14px;color:rgba(180,210,255,.75);text-align:center;line-height:1.7;margin-bottom:16px;" id="owDesc_max"></div>
+    <div id="owHl_max" style="display:none;background:rgba(73,182,255,.1);border:1px solid rgba(73,182,255,.2);border-radius:10px;padding:10px 14px;margin-bottom:18px;font-size:12px;color:#49b6ff;line-height:1.6;"></div>
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <button onclick="owSkip_max()" style="background:transparent;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.45);border-radius:999px;padding:11px 20px;font-size:13px;cursor:pointer;">Skip</button>
+      <button id="owNext_max" onclick="owNext_max()" style="background:linear-gradient(90deg,#42b7ff,#6ed6ff);color:#07111f;border:none;border-radius:999px;padding:11px 28px;font-size:14px;font-weight:900;cursor:pointer;">Next →</button>
+    </div>
+    <div style="font-size:11px;color:rgba(180,200,255,.35);text-align:center;margin-top:12px;" id="owProg_max"></div>
+  </div>
+</div>
+
+<script>
+const OW_STEPS_max = [{"icon": "👋", "title": "Welcome to HospiceLink Max!", "desc": "Your professional multi-role CRM. Let's take a quick tour.", "highlight": ""}, {"icon": "📋", "title": "Prospects & Referrals", "desc": "Manage your full pipeline and referral partners. 📱 Text and 📧 Email auto-log to Notes.", "highlight": "💡 Every SMS and email auto-logs to Notes"}, {"icon": "📍", "title": "EVV / Mileage", "desc": "Log every field visit. GPS map shows your route and calculates mileage automatically.", "highlight": "📍 Sidebar → EVV / Mileage"}, {"icon": "👨‍👩‍👧", "title": "Family Communication", "desc": "Log every family conversation with timestamps for compliance and continuity.", "highlight": "📍 Sidebar → Family Communication"}, {"icon": "🤖", "title": "AI Assistant", "desc": "Ask Claude AI for scripts, analysis, and marketing strategies.", "highlight": "📍 Sidebar → 🤖 AI Assistant"}, {"icon": "🎉", "title": "You're all set!", "desc": "Click ? anytime for help on any feature.", "highlight": "📞 Info@wemarketpluscom.org | (469) 793-0673"}];
+let owIdx_max = 0;
+function owInit_max(){
+  if(!localStorage.getItem('hl_tour_max_KEY')){
+    document.getElementById('owOverlay_max').style.display='flex';
+    owRender_max(0);
+  }
+}
+function owRender_max(i){
+  const s=OW_STEPS_max[i];const total=OW_STEPS_max.length;
+  document.getElementById('owDots_max').innerHTML=OW_STEPS_max.map((_,j)=>`<div class="ow-dot ${j===i?'active':''}"></div>`).join('');
+  document.getElementById('owIcon_max').textContent=s.icon;
+  document.getElementById('owTitle_max').textContent=s.title;
+  document.getElementById('owDesc_max').textContent=s.desc;
+  const hl=document.getElementById('owHl_max');
+  if(s.highlight){hl.textContent=s.highlight;hl.style.display='block';}else{hl.style.display='none';}
+  document.getElementById('owNext_max').textContent=i===total-1?"Let's Go! 🚀":"Next →";
+  document.getElementById('owProg_max').textContent=`Step ${i+1} of ${total}`;
+}
+function owNext_max(){
+  if(owIdx_max<OW_STEPS_max.length-1){owIdx_max++;owRender_max(owIdx_max);}
+  else{owSkip_max();}
+}
+function owSkip_max(){
+  localStorage.setItem('hl_tour_max_KEY','1');
+  document.getElementById('owOverlay_max').style.display='none';
+}
+setTimeout(owInit_max,1500);
+</script>
+
 </body>
 </html>
