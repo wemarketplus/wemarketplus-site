@@ -268,6 +268,50 @@
     <h3>Choose Your CRM</h3>
     <p class="lead">Three tiers built for different roles. Click Demo to see exactly what each system includes before you subscribe.</p>
 
+    <!-- ROI MESSAGING -->
+    <div style="background:linear-gradient(135deg,rgba(140,255,102,.07),rgba(73,182,255,.05));border:1px solid rgba(140,255,102,.2);border-radius:20px;padding:28px 32px;margin-bottom:36px;">
+      <p style="font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#8cff66;margin:0 0 16px;">💡 What This System Does For Your Agency</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+        <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;">
+          <p style="font-size:22px;font-weight:900;color:#8cff66;margin:0 0 4px;">20–40%</p>
+          <p style="font-size:13px;color:#c7d3e8;margin:0;">Increase in hospice referrals</p>
+        </div>
+        <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;">
+          <p style="font-size:22px;font-weight:900;color:#49b6ff;margin:0 0 4px;">80%</p>
+          <p style="font-size:13px;color:#c7d3e8;margin:0;">Reduction in missed follow-ups</p>
+        </div>
+        <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;">
+          <p style="font-size:22px;font-weight:900;color:#ffd700;margin:0 0 4px;">30+ min</p>
+          <p style="font-size:13px;color:#c7d3e8;margin:0;">Saved daily per marketer (Gold)</p>
+        </div>
+        <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;">
+          <p style="font-size:22px;font-weight:900;color:#8cff66;margin:0 0 4px;">0</p>
+          <p style="font-size:13px;color:#c7d3e8;margin:0;">Spreadsheets needed — ever again</p>
+        </div>
+        <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;">
+          <p style="font-size:22px;font-weight:900;color:#49b6ff;margin:0 0 4px;">Real-time</p>
+          <p style="font-size:13px;color:#c7d3e8;margin:0;">Marketer performance tracking</p>
+        </div>
+        <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;">
+          <p style="font-size:22px;font-weight:900;color:#ffd700;margin:0 0 4px;">$0</p>
+          <p style="font-size:13px;color:#c7d3e8;margin:0;">Lost to cold referral sources you didn't know about</p>
+        </div>
+      </div>
+      <p style="color:#94a3b8;font-size:12px;margin:16px 0 0;text-align:center;">You are not buying software. You are buying outcomes. Every dollar spent here drives admits.</p>
+    </div>
+
+    <!-- ANNUAL SAVINGS TOGGLE -->
+    <div style="text-align:center;margin-bottom:28px;">
+      <div style="display:inline-flex;align-items:center;gap:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:10px 20px;">
+        <span id="billMonthly" style="font-size:14px;font-weight:800;color:#fff;">Monthly</span>
+        <div onclick="toggleBilling()" style="width:48px;height:26px;background:#49b6ff;border-radius:999px;cursor:pointer;position:relative;transition:background .2s;" id="billingToggle">
+          <div id="billingDot" style="position:absolute;top:3px;left:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:left .2s;"></div>
+        </div>
+        <span id="billAnnual" style="font-size:14px;font-weight:800;color:#8cff66;">Annual <span style="background:rgba(140,255,102,.15);border:1px solid rgba(140,255,102,.3);border-radius:999px;padding:2px 8px;font-size:11px;">Save 20%</span></span>
+      </div>
+      <p id="annualNote" style="color:#8cff66;font-size:12px;font-weight:700;margin:8px 0 0;display:none;">🎉 Annual pricing shown — billed once per year. Contact us to get started: <a href="mailto:info@wemarketplus.com" style="color:#8cff66;">info@wemarketplus.com</a></p>
+    </div>
+
     <div class="crm-grid">
 
       <!-- ── PRO ── -->
@@ -319,15 +363,15 @@
           </div>
           <div class="price-row">
             <div class="price-name">Unlimited Users</div>
-            <div class="price-amt">$449/mo</div>
-            <button onclick="startSubscribe('HospiceLink Pro','Unlimited Users','$449/mo','STRIPE_PRO_UNLIMITED')" class="btn btn-green btn-small">Subscribe</button>
+            <div class="price-amt">$499/mo</div>
+            <button onclick="startSubscribe('HospiceLink Pro','Unlimited Users','$499/mo','STRIPE_PRO_UNLIMITED')" class="btn btn-green btn-small">Subscribe</button>
           </div>
         </div>
       </article>
 
       <!-- ── MAX ── -->
       <article class="crm-card">
-        <span class="badge badge-popular">Professional</span>
+        <span class="badge badge-popular">⭐ Best Value</span>
         <h4>HospiceLink Max</h4>
         <p class="crm-sub">Clinical + Marketing CRM — For Full Hospice Teams</p>
         <span class="crm-tier-label tier-professional">Professional Plan</span>
@@ -359,8 +403,8 @@
           </div>
           <div class="price-row">
             <div class="price-name">10–20 Users</div>
-            <div class="price-amt">$899/mo</div>
-            <button onclick="startSubscribe('HospiceLink Max','10–20 Users','$899/mo','STRIPE_MAX_10_20')" class="btn btn-green btn-small">Subscribe</button>
+            <div class="price-amt">$749/mo</div>
+            <button onclick="startSubscribe('HospiceLink Max','10–20 Users','$749/mo','STRIPE_MAX_10_20')" class="btn btn-green btn-small">Subscribe</button>
           </div>
           <div class="price-row">
             <div class="price-name">Unlimited Users</div>
@@ -372,7 +416,7 @@
 
       <!-- ── GOLD ── -->
       <article class="crm-card gold-card">
-        <span class="badge badge-gold">🏆 Most Powerful</span>
+        <span class="badge badge-gold">🏆 Enterprise</span>
         <h4>HospiceLink Gold</h4>
         <p class="crm-sub">Enterprise CRM — Gold Standard Suite</p>
         <span class="crm-tier-label tier-enterprise">Enterprise Plan</span>
@@ -393,14 +437,18 @@
           <li><span class="ck">✓</span>🤖 AI command center — revenue, territory, team coaching</li>
           <li><span class="ck">✓</span>🔒 Enterprise admin: seat management + user roles <span style="font-size:10px;background:rgba(91,58,160,.15);color:#c9aeff;border-radius:4px;padding:1px 5px;font-weight:700;margin-left:4px;">Admin</span></li>
         </ul>
+        <div style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:12px;margin-bottom:14px;">
+          <p style="color:#ffd700;font-size:12px;font-weight:700;margin:0 0 4px;">🚀 White-Glove Onboarding</p>
+          <p style="color:#c9a800;font-size:11px;margin:0;">One-time $500 setup fee — includes full data migration, team training, and custom playbook. <strong style="color:#ffd700;">Waived during launch promo.</strong></p>
+        </div>
         <div class="card-actions">
           <a href="demo-gold.html" class="btn btn-blue btn-small">Demo</a>
         </div>
         <div class="price-list">
           <div class="price-row">
             <div class="price-name">0–10 Users</div>
-            <div class="price-amt gold-price">$749/mo</div>
-            <button onclick="startSubscribe('HospiceLink Gold','0–10 Users','$749/mo','STRIPE_GOLD_0_10')" class="btn btn-green btn-small">Subscribe</button>
+            <div class="price-amt gold-price">$899/mo</div>
+            <button onclick="startSubscribe('HospiceLink Gold','0–10 Users','$899/mo','STRIPE_GOLD_0_10')" class="btn btn-green btn-small">Subscribe</button>
           </div>
           <div class="price-row">
             <div class="price-name">10–20 Users</div>
@@ -560,6 +608,43 @@
 
   <script>
     let pendingStripeLink = "";
+    let isAnnual = false;
+
+    const ANNUAL_PRICES = {
+      STRIPE_PRO_0_5:        { monthly: "$149/mo", annual: "$119/mo", label: "$119/mo (billed $1,428/yr)" },
+      STRIPE_PRO_5_10:       { monthly: "$249/mo", annual: "$199/mo", label: "$199/mo (billed $2,388/yr)" },
+      STRIPE_PRO_10_20:      { monthly: "$349/mo", annual: "$279/mo", label: "$279/mo (billed $3,348/yr)" },
+      STRIPE_PRO_UNLIMITED:  { monthly: "$499/mo", annual: "$399/mo", label: "$399/mo (billed $4,788/yr)" },
+      STRIPE_MAX_0_10:       { monthly: "$449/mo", annual: "$359/mo", label: "$359/mo (billed $4,308/yr)" },
+      STRIPE_MAX_10_20:      { monthly: "$749/mo", annual: "$599/mo", label: "$599/mo (billed $7,188/yr)" },
+      STRIPE_MAX_UNLIMITED:  { monthly: "$999/mo", annual: "$799/mo", label: "$799/mo (billed $9,588/yr)" },
+      STRIPE_GOLD_0_10:      { monthly: "$899/mo", annual: "$719/mo", label: "$719/mo (billed $8,628/yr)" },
+      STRIPE_GOLD_10_20:     { monthly: "$1,299/mo", annual: "$1,039/mo", label: "$1,039/mo (billed $12,468/yr)" },
+      STRIPE_GOLD_UNLIMITED: { monthly: "$1,999/mo", annual: "$1,599/mo", label: "$1,599/mo (billed $19,188/yr)" },
+    };
+
+    function toggleBilling(){
+      isAnnual = !isAnnual;
+      const dot = document.getElementById('billingDot');
+      const note = document.getElementById('annualNote');
+      const toggle = document.getElementById('billingToggle');
+      if(isAnnual){
+        dot.style.left = '25px';
+        toggle.style.background = '#8cff66';
+        note.style.display = 'block';
+      } else {
+        dot.style.left = '3px';
+        toggle.style.background = '#49b6ff';
+        note.style.display = 'none';
+      }
+      // Update all price displays
+      document.querySelectorAll('[data-price-key]').forEach(function(el){
+        const key = el.getAttribute('data-price-key');
+        if(ANNUAL_PRICES[key]){
+          el.textContent = isAnnual ? ANNUAL_PRICES[key].annual : ANNUAL_PRICES[key].monthly;
+        }
+      });
+    }
 
     // ── STRIPE PAYMENT LINKS ──────────────────────────────────
     // REPLACE each "STRIPE_XXXXX" below with your actual Stripe payment link URL
@@ -572,12 +657,12 @@
       STRIPE_PRO_UNLIMITED: "https://buy.stripe.com/7sY7sM4VWcY72uXgVTfEk0l",
       // Max
       STRIPE_MAX_0_10:      "https://buy.stripe.com/7sY7sM9cc6zJ1qT7ljfEk0d",
-      STRIPE_MAX_10_20:     "https://buy.stripe.com/5kQ4gA2NOf6f9Xp5dbfEk0c",
-      STRIPE_MAX_UNLIMITED: "https://buy.stripe.com/aFa00k8881fpglNcFDfEk0b",
+      STRIPE_MAX_10_20:     "https://buy.stripe.com/dRmcN67446zJ4D55dbfEk0m",
+      STRIPE_MAX_UNLIMITED: "https://buy.stripe.com/5kQfZiaggcY79Xp0WVfEk0n",
       // Gold
-      STRIPE_GOLD_0_10:     "https://buy.stripe.com/bJeaEYcoobU34D5axvfEk0f",
-      STRIPE_GOLD_10_20:    "https://buy.stripe.com/9B64gA6003nx4D55dbfEk0g",
-      STRIPE_GOLD_UNLIMITED:"https://buy.stripe.com/28E9AUgEE5vFb1t353fEk0h",
+      STRIPE_GOLD_0_10:     "https://buy.stripe.com/dRm00k9ccbU3edF8pnfEk0o",
+      STRIPE_GOLD_10_20:    "https://buy.stripe.com/dRm5kE2NO4rB1qT20ZfEk0q",
+      STRIPE_GOLD_UNLIMITED:"https://buy.stripe.com/00wcN61JKf6f6Ld497fEk0p",
     };
 
     function openModal(id){
