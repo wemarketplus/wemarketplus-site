@@ -500,8 +500,8 @@
     </div>
     <div id="notesList" style="margin-top:14px;">
       <div class="grid-2">
-        <div class="note-box"><h4>Ericka — 2026-04-12 at 10:00 AM</h4><p><strong>Position:</strong> Marketer</p><p><strong>Next Step:</strong> CM Follow-Up (Status Update)</p><p>Baylor requested faster turnaround updates.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">✅ Synced — Location Captured</p></div>
-        <div class="note-box"><h4>Angela — 2026-04-11 at 01:40 PM</h4><p><strong>Position:</strong> Nurse</p><p><strong>Next Step:</strong> RN Assessment Scheduled</p><p>Patient appropriate for hospice. Family receptive.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">✅ Synced — Location Captured</p></div>
+        <div class="note-box"><h4>Ericka — 2026-04-12 at 10:00 AM</h4><p><strong>Position:</strong> Marketer</p><p><strong>Next Step:</strong> CM Follow-Up (Status Update)</p><p><strong>Next Step Due Date:</strong> <span style="color:#f9c74f;font-weight:700;">2026-04-19</span></p><p>Baylor requested faster turnaround updates.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">✅ Synced — GPS Captured</p></div>
+        <div class="note-box"><h4>Angela — 2026-04-11 at 01:40 PM</h4><p><strong>Position:</strong> Nurse</p><p><strong>Next Step:</strong> RN Assessment Scheduled</p><p><strong>Next Step Due Date:</strong> <span style="color:#f9c74f;font-weight:700;">2026-04-14</span></p><p>Patient appropriate for hospice. Family receptive.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">✅ Synced — GPS Captured</p></div>
       </div>
     </div>
   </section>
@@ -878,11 +878,40 @@
 <div class="tab-pane" id="tab-revenue">
   <div class="topbar"><div><h2>💰 Revenue Intelligence</h2><p><span class="pill pill-purple" style="font-size:11px;">🔒 Admin Only</span> Executive-level financial insights and forecasting</p></div></div>
   <section class="section">
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
-      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;"><p style="color:var(--muted);font-size:10px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">Revenue Per Source</p><p style="font-size:26px;font-weight:900;color:var(--green);margin:0;">$4,200</p><p style="color:var(--muted);font-size:11px;margin:4px 0 0;">avg / referral source</p></div>
-      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;"><p style="color:var(--muted);font-size:10px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">Cost Per Admission</p><p style="font-size:26px;font-weight:900;color:var(--blue);margin:0;">$312</p><p style="color:var(--muted);font-size:11px;margin:4px 0 0;">avg marketing cost</p></div>
-      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;"><p style="color:var(--muted);font-size:10px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">Forecasted Admits</p><p style="font-size:26px;font-weight:900;color:#ffd36e;margin:0;" id="revForecast">14</p><p style="color:var(--muted);font-size:11px;margin:4px 0 0;">this month (projected)</p></div>
-      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;"><p style="color:var(--muted);font-size:10px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">Lost Opportunity</p><p style="font-size:26px;font-weight:900;color:var(--red);margin:0;" id="revLost">$18,900</p><p style="color:var(--muted);font-size:11px;margin:4px 0 0;">from unconverted leads</p></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;">
+        <p style="color:var(--muted);font-size:10px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">Revenue Per Source</p>
+        <p style="font-size:22px;font-weight:900;color:var(--green);margin:0;" id="revPerSource">$—</p>
+        <p style="color:var(--muted);font-size:11px;margin:4px 0 0;">avg / referral source</p>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;">
+        <p style="color:var(--muted);font-size:10px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">Cost Per Admission</p>
+        <p style="font-size:13px;color:var(--muted);margin:4px 0 4px;">Monthly cost ÷ admissions</p>
+        <div style="display:flex;gap:4px;align-items:center;justify-content:center;margin-bottom:6px;">
+          <span style="color:var(--muted);font-size:11px;">$/mo:</span>
+          <input id="revMonthlyCost" type="number" placeholder="e.g. 3000" style="width:80px;background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:6px;padding:3px 6px;color:var(--text);font-size:12px;" oninput="calcRevIntel()">
+        </div>
+        <p style="font-size:20px;font-weight:900;color:var(--blue);margin:0;" id="revCostPerAdmit">$—</p>
+        <p style="color:var(--muted);font-size:11px;margin:4px 0 0;">per admission</p>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;">
+        <p style="color:var(--muted);font-size:10px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">Forecasted Admits</p>
+        <p style="font-size:26px;font-weight:900;color:#ffd36e;margin:0;" id="revForecast">—</p>
+        <p style="color:var(--muted);font-size:11px;margin:4px 0 0;">this month (projected)</p>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;">
+        <p style="color:var(--muted);font-size:10px;font-weight:800;margin:0 0 6px;text-transform:uppercase;">Lost Opportunity</p>
+        <div style="display:flex;gap:4px;align-items:center;justify-content:center;margin-bottom:6px;">
+          <span style="color:var(--muted);font-size:11px;">$/admit:</span>
+          <input id="revPerAdmit" type="number" placeholder="e.g. 4200" style="width:80px;background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:6px;padding:3px 6px;color:var(--text);font-size:12px;" oninput="calcRevIntel()">
+        </div>
+        <p style="font-size:20px;font-weight:900;color:var(--red);margin:0;" id="revLost">$—</p>
+        <p style="color:var(--muted);font-size:11px;margin:4px 0 0;">from unconverted leads</p>
+      </div>
+    </div>
+    <div style="background:rgba(91,58,160,.08);border:1px solid rgba(91,58,160,.2);border-radius:12px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <span style="color:#c9aeff;font-size:13px;">🔒 <strong>Admin:</strong> Enter your Revenue/Admit and Monthly Cost above, then save.</span>
+      <button id="revSaveBtn" onclick="saveRevSettings()" style="background:linear-gradient(90deg,#7c3aed,#a855f7);color:#fff;border:none;padding:7px 16px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">💾 Save Settings</button>
     </div>
     <div class="hbar-grid">
       <div class="hbar-section">
@@ -1009,7 +1038,45 @@ function pSt(s){const m={Inquiry:"pill-blue","Pending Admission":"pill-yellow",L
 function pRef(s){return s==="Red"?'<span class="pill pill-red">🔴 Red</span>':'<span class="pill pill-green">🟢 Green</span>';}
 function openModal(id){document.getElementById(id).classList.add("open");}
 function closeModal(id){document.getElementById(id).classList.remove("open");}
-function showTab(id){document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'));const pane=document.getElementById('tab-'+id);if(pane)pane.classList.add('active');const link=document.querySelector('.nav a[data-tab="'+id+'"]');if(link)link.classList.add('active');window.scrollTo(0,0);}
+
+function calcRevIntel(){
+  var prsp=gs(K.prsp,defProsp?defProsp():[]);
+  var admitted=prsp.filter(function(p){return p.status==='Admitted';}).length;
+  var lost=prsp.filter(function(p){return p.status==='Lost';}).length;
+  var sources={};
+  prsp.forEach(function(p){if(p.source)sources[p.source]=(sources[p.source]||0)+1;});
+  var sourceCount=Object.keys(sources).length||1;
+  var saved=gs('hl_rev_settings',{});
+  var rpaEl=document.getElementById('revPerAdmit');
+  var mcEl=document.getElementById('revMonthlyCost');
+  if(rpaEl&&saved.rpa&&!rpaEl.value)rpaEl.value=saved.rpa;
+  if(mcEl&&saved.mc&&!mcEl.value)mcEl.value=saved.mc;
+  var fEl=document.getElementById('revForecast');
+  if(fEl)fEl.textContent=admitted>0?Math.round(admitted*1.15):'—';
+  var rpa=parseFloat((rpaEl||{}).value)||0;
+  var mc=parseFloat((mcEl||{}).value)||0;
+  var rpsEl=document.getElementById('revPerSource');
+  var rlEl=document.getElementById('revLost');
+  var rcaEl=document.getElementById('revCostPerAdmit');
+  if(rpa>0&&admitted>0){
+    if(rpsEl)rpsEl.textContent='$'+Math.round(rpa*admitted/sourceCount).toLocaleString();
+    if(rlEl)rlEl.textContent='$'+(lost*rpa).toLocaleString();
+  } else {
+    if(rpsEl)rpsEl.textContent=rpa===0?'Enter $/admit →':'—';
+    if(rlEl&&rpa===0)rlEl.textContent='Enter $/admit →';
+  }
+  if(mc>0&&admitted>0){if(rcaEl)rcaEl.textContent='$'+Math.round(mc/admitted).toLocaleString();}
+  else{if(rcaEl)rcaEl.textContent=admitted>0?'Enter cost →':'—';}
+}
+function saveRevSettings(){
+  var rpa=document.getElementById('revPerAdmit')?document.getElementById('revPerAdmit').value:'';
+  var mc=document.getElementById('revMonthlyCost')?document.getElementById('revMonthlyCost').value:'';
+  ss('hl_rev_settings',{rpa:rpa,mc:mc});
+  calcRevIntel();
+  var btn=document.getElementById('revSaveBtn');
+  if(btn){btn.textContent='✅ Saved!';setTimeout(function(){btn.textContent='💾 Save Settings';},2000);}
+}
+function showTab(id){document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'));const pane=document.getElementById('tab-'+id);if(pane)pane.classList.add('active');const link=document.querySelector('.nav a[data-tab="'+id+'"]');if(link)link.classList.add('active');window.scrollTo(0,0);if(id==='revenue')calcRevIntel();}
 function defRefs(){return[{contactName:"Sarah M.",business:"North Park Rehab",phone:"(214)555-0110",email:"sarah@npr.com",address:"100 Rehab Way, Dallas TX",status:"Green"},{contactName:"Dr. Patel",business:"Baylor",phone:"(214)555-0122",email:"patel@baylor.com",address:"3500 Gaston Ave, Dallas TX",status:"Green"},{contactName:"Office Mgr",business:"Physician Office",phone:"(972)555-0133",email:"mgr@po.com",address:"900 Medical Dr, Plano TX",status:"Red"},{contactName:"CM Team",business:"Hospital CM",phone:"(214)555-0144",email:"cm@hospital.com",address:"1200 Hospital Blvd, Dallas TX",status:"Green"}];}
 function defProsp(){return[{name:"Robert H.",status:"Inquiry",source:"North Park Rehab",marketer:"Ericka",phone:"(214)555-2001",email:"robert@email.com",address:"400 Pine St, Dallas TX",secondary:"Linda H.",nextStep:"Schedule assessment"},{name:"Dorothy F.",status:"Pending Admission",source:"Baylor",marketer:"Ericka",phone:"(214)555-2002",email:"dorothy@email.com",address:"700 Maple Ave, Dallas TX",secondary:"",nextStep:"Collect final documents"},{name:"Helen P.",status:"Lost",source:"Physician Office",marketer:"Ericka",phone:"(214)555-2003",email:"helen@email.com",address:"300 Cedar Rd, Plano TX",secondary:"",nextStep:"Revisit source in 2 weeks"},{name:"Thomas J.",status:"Admitted",source:"Hospital CM",marketer:"Ericka",phone:"(214)555-2004",email:"thomas@email.com",address:"600 Oak Blvd, Dallas TX",secondary:"Mary J.",nextStep:"Move to active census"}];}
 function checkDayReset(){const today=new Date().toDateString();if(gs(K.todayDate,"")!==today){ss(K.todayDate,today);ss(K.todayMi,0);}}
@@ -1060,7 +1127,7 @@ function fireAuto(btn,msg){btn.classList.add("fired");btn.disabled=true;const lo
 function estimateMiles(s,e){const seed=(s+e).split("").reduce((a,c)=>a+c.charCodeAt(0),0);return+(8+(seed%40)+Math.random()*5).toFixed(1);}
 function logMileage(){const staff=document.getElementById("gpsStaffName").value.trim();const start=document.getElementById("gpsStart").value.trim();const end=document.getElementById("gpsEnd").value.trim();const purpose=document.getElementById("gpsPurpose").value.trim();if(!staff||!start||!end){alert("Your name, start address, and end address are required.");return;}const miles=estimateMiles(start,end);const now=new Date();const todayStr=now.toDateString();const timeStr=now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});const totalMiles=parseFloat(gs(K.miles,0))+miles;const trips=gs(K.trips,[]);const tripNum=trips.length+1;const todayMi=parseFloat(gs(K.todayMi,0))+miles;const weekMi=parseFloat(gs(K.weekMi,0))+miles;ss(K.miles,totalMiles);ss(K.todayMi,todayMi);ss(K.weekMi,weekMi);trips.push({staff,start,end,miles,purpose,time:timeStr,date:todayStr,tripNum});ss(K.trips,trips);const res=document.getElementById("gpsResult");if(res)res.textContent=`✅ ${miles} miles logged — ${start} → ${end} (Trip #${tripNum})`;updateMileageTotals();const tbody=document.getElementById("mileageTripLog");if(tbody){const tr=document.createElement("tr");tr.innerHTML=`<td>${tripNum}</td><td>${staff}</td><td>${start}</td><td>${end}</td><td><strong>${miles}</strong></td><td>${purpose||"—"}</td><td>${timeStr}</td>`;tbody.prepend(tr);}["gpsStaffName","gpsStart","gpsEnd","gpsPurpose"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});updateDashboard();}
 function updateMileageTotals(){checkDayReset();const todayMi=parseFloat(gs(K.todayMi,0)||0);const weekMi=parseFloat(gs(K.weekMi,0)||0);const td=document.getElementById("myTodayMiles");if(td)td.textContent=todayMi.toFixed(1);const wk=document.getElementById("myWeekMiles");if(wk)wk.textContent=weekMi.toFixed(1);const trips=gs(K.trips,[]);const todayStr=new Date().toDateString();const todayTrips=trips.filter(t=>t.date===todayStr);const todayTotal=todayTrips.reduce((a,t)=>a+parseFloat(t.miles),0);const weekTotal=trips.reduce((a,t)=>a+parseFloat(t.miles),0);const staffToday=new Set(todayTrips.map(t=>t.staff)).size;const aat=document.getElementById("adminAllTodayMiles");if(aat)aat.textContent=todayTotal.toFixed(1)+" mi";const aaw=document.getElementById("adminAllWeekMiles");if(aaw)aaw.textContent=weekTotal.toFixed(1)+" mi";const att=document.getElementById("adminTotalTrips");if(att)att.textContent=trips.length;const ast=document.getElementById("adminStaffLoggedToday");if(ast)ast.textContent=staffToday;const adminTbl=document.getElementById("adminMileageTable");if(adminTbl&&trips.length>0){const staffMap={};trips.forEach(t=>{if(!staffMap[t.staff])staffMap[t.staff]={today:0,week:0,count:0,last:"—"};staffMap[t.staff].week+=parseFloat(t.miles);staffMap[t.staff].count++;staffMap[t.staff].last=t.time;if(t.date===todayStr)staffMap[t.staff].today+=parseFloat(t.miles);});adminTbl.innerHTML="";Object.entries(staffMap).forEach(([name,d])=>{const tr=document.createElement("tr");tr.innerHTML=`<td><strong>${name}</strong></td><td>${d.today.toFixed(1)} mi</td><td>${d.week.toFixed(1)} mi</td><td>${d.count}</td><td>${d.last}</td>`;adminTbl.appendChild(tr);});}}
-(function init(){showTab('dashboard');checkDayReset();loadReferralSources();loadMarketers();loadNames();renderProspectsTable();updateDashboard();updateMileageTotals();})();
+document.addEventListener('DOMContentLoaded',function(){showTab('dashboard');checkDayReset();if(typeof loadReferralSources==='function')loadReferralSources();if(typeof loadMarketers==='function')loadMarketers();if(typeof loadNames==='function')loadNames();if(typeof renderProspectsTable==='function')renderProspectsTable();if(typeof updateDashboard==='function')updateDashboard();if(typeof updateMileageTotals==='function')updateMileageTotals();});
 
 function filterProspectsByStatus(s){document.querySelectorAll('#prospectRecordsBody tr').forEach(function(r){r.style.display=(!s||r.textContent.includes(s))?'':'none';});}
 function exportProspectsCSV(){var prsp=gs(K.prsp,defProsp());var rows=[['Name','Status','Phone','Email','Address','Secondary','Source','Marketer','Next Step','Due Date']];prsp.forEach(function(p){rows.push([p.name||'',p.status||'',p.phone||'',p.email||'',p.address||'',p.secondary||'',p.source||'',p.marketer||'',p.nextStep||'',p.nextStepDate||'']);});var csv=rows.map(function(r){return r.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"';}).join(',');}).join('\n');var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='prospects.csv';a.click();}
@@ -1582,7 +1649,7 @@ function saveDemoNote(){
       +"<p><strong>Date/Time:</strong> "+dt+" at "+ti+"</p>"
       +(prospect?"<p><strong>Prospect:</strong> "+prospect+"</p>":"")
       +"<p><strong>Next Step:</strong> "+ns+"</p>"
-      +(nd?"<p><strong>New Due Date:</strong> <span style='color:#f9c74f;font-weight:700;'>"+nd+"</span> — Reminder re-queued ✅</p>":"")
+      +(nd?"<p><strong>Next Step Due Date:</strong> <span style='color:#f9c74f;font-weight:700;'>"+nd+"</span> — Reminder re-queued ✅</p>":"<p style='color:#94a3b8;font-size:12px;'>📅 No due date set for this step — go to Reminders to add one.</p>")
       +"<p>"+nt+"</p>"
       +"<p style='color:#6c8aab;font-size:11px;margin-top:6px;'>✅ Synced — GPS Captured | "+nowStr+"</p>";
     w.prepend(b);
