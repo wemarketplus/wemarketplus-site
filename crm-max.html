@@ -185,6 +185,8 @@
               <option value="Admission Paperwork in Progress">Admission Paperwork in Progress</option>
               <option value="CM Follow-Up (Status Update)">CM Follow-Up (Status Update)</option>
               <option value="Overcoming Family Hesitation">Overcoming Family Hesitation</option>
+              <option value="Other">Other</option>
+              
             </select>
           <div id="prospectStepDescBox" style="display:none;background:#fffbeb;border:1px solid rgba(249,199,79,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:#334155;line-height:1.6;margin-top:6px;"></div>
         </div>
@@ -866,7 +868,10 @@ function loadMarketers(){const m=gs(K.mkt,["Ericka"]);ss(K.mkt,m);const sel=docu
 function loadNames(){const names=gs(K.names,["Ericka","Angela"]);ss(K.names,names);const sel=document.getElementById("noteNameSelect");if(!sel)return;sel.innerHTML='<option value="">Select saved name</option>';names.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});}
 function saveNameIfNeeded(name){if(!name)return;const names=gs(K.names,["Ericka","Angela"]);if(!names.includes(name)){names.push(name);ss(K.names,names);loadNames();}}
 function renderProspectsTable(){const prsp=gs(K.prsp,defProsp());const tb=document.getElementById("prospectsTableBody");tb.innerHTML="";prsp.forEach((p,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td><input type="radio" name="selProsp" value="${i}"></td><td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.source||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">✏️ Edit</button></td>`;tb.appendChild(tr);});}
-function renderProspectRecords(){const prsp=gs(K.prsp,defProsp());const q=(document.getElementById("prospectSearch")||{value:""}).value.toLowerCase();const tb=document.getElementById("prospectRecordsBody");tb.innerHTML="";prsp.filter(p=>{if(!q)return true;return[p.name,p.phone,p.email,p.address,p.secondary].some(v=>(v||"").toLowerCase().includes(q));}).forEach((p,_,arr)=>{const i=arr.indexOf(p);const tr=document.createElement("tr");tr.innerHTML=`<td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.phone||"—"}</td><td>${p.email||"—"}</td><td>${p.address||"—"}</td><td>${p.secondary||"—"}</td><td>${p.source||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">✏️ Edit</button></td>`;tb.appendChild(tr);});}
+function renderProspectRecords(){const prsp=gs(K.prsp,defProsp());const q=(document.getElementById("prospectSearch")||{value:""}).value.toLowerCase();const tb=document.getElementById("prospectRecordsBody");tb.innerHTML="";prsp.filter(p=>{if(!q)return true;return[p.name,p.phone,p.email,p.address,p.secondary].some(v=>(v||"").toLowerCase().includes(q));}).forEach((p,_,arr)=>{const i=arr.indexOf(p);const tr=document.createElement("tr");const sB=p.phone?`<button class="btn btn-small" style="background:#7c3aed;color:#fff;padding:3px 8px;font-size:10px;margin-left:3px;border-radius:6px;" onclick="sendContactSMS('${p.phone}','${p.name}','prospect')">📱 Text</button>`:'';
+    const eB=p.email?`<button class="btn btn-small" style="background:#2563eb;color:#fff;padding:3px 8px;font-size:10px;margin-left:3px;border-radius:6px;" onclick="sendContactEmail('${p.email}','${p.name}','prospect')">📧 Email</button>`:'';
+    const cB=p.phone?`<button class="btn btn-small" style="background:#059669;color:#fff;padding:3px 8px;font-size:10px;margin-left:3px;border-radius:6px;" onclick="callContact('${p.phone}','${p.name}')">📞 Call</button>`:'';
+    tr.innerHTML=`<td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.phone||"—"} ${sB} ${cB}</td><td>${p.email||"—"} ${eB}</td><td>${p.address||"—"}</td><td>${p.secondary||"—"}</td><td>${p.source||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">✏️ Edit</button></td>`;tb.appendChild(tr);});}
 function renderAdminProspects(){const prsp=gs(K.prsp,defProsp());const tb=document.getElementById("adminProspectBody");if(!tb)return;tb.innerHTML="";prsp.forEach((p,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.phone||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">Edit</button></td>`;tb.appendChild(tr);});}
 function renderAdminReferrals(){const refs=gs(K.refs,defRefs());const tb=document.getElementById("adminReferralBody");if(!tb)return;tb.innerHTML="";refs.forEach((r,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button> <button class="btn btn-red btn-small" onclick="adminDeleteReferral(${i})">Delete</button></td>`;tb.appendChild(tr);});}
 function adminDeleteProspect(i){if(!confirm("Delete this prospect?"))return;const prsp=gs(K.prsp,defProsp());prsp.splice(i,1);ss(K.prsp,prsp);renderProspectsTable();updateDashboard();}
@@ -1178,6 +1183,12 @@ function autoLogCommunication(n,m,prev,ct){
   w.prepend(b);
   var cnt=gs(K.notes,0)+1;ss(K.notes,cnt);
   if(typeof updateDashboard==="function")updateDashboard();
+}
+function callContact(phone,name){
+  if(confirm("📞 Call "+name+" at "+phone+"?\n\nTap OK to open your phone dialer.")){
+    window.open("tel:"+phone);
+    autoLogCommunication(name,"Call","Outbound call to "+phone,"prospect");
+  }
 }
 function sendContactSMS(phone,name,ct){
   var msg=prompt("📱 Text to "+name+" ("+phone+"):
