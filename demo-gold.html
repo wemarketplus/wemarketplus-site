@@ -175,6 +175,8 @@
               <option value="Admission Paperwork in Progress">Admission Paperwork in Progress</option>
               <option value="CM Follow-Up (Status Update)">CM Follow-Up (Status Update)</option>
               <option value="Overcoming Family Hesitation">Overcoming Family Hesitation</option>
+              <option value="Other">Other</option>
+              
             </select>
           <div id="prospectStepDescBox" style="display:none;background:#fffbeb;border:1px solid rgba(249,199,79,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:#334155;line-height:1.6;margin-top:6px;"></div>
         </div>
@@ -481,6 +483,8 @@
               <option value="Admission Paperwork in Progress">Admission Paperwork in Progress</option>
               <option value="CM Follow-Up (Status Update)">CM Follow-Up (Status Update)</option>
               <option value="Overcoming Family Hesitation">Overcoming Family Hesitation</option>
+              <option value="Other">Other</option>
+              
             </select>
           <div id="noteStepDescBox" style="display:none;background:#fffbeb;border:1px solid rgba(249,199,79,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:#334155;line-height:1.6;margin-top:6px;"></div>
         </div>
@@ -807,9 +811,9 @@
 
 <!-- NOTIFICATIONS -->
 <div class="tab-pane" id="tab-notifications">
-  <div class="topbar"><div><h2>🔔 Notifications</h2><p><span class="pill pill-purple" style="font-size:11px;">🔒 Admin Only</span> Real-time alerts on admits, losses, and overdue follow-ups</p></div></div>
+  <div class="topbar"><div><h2>🔔 Notifications</h2><p>Real-time alerts and team communications — visible to all team members</p></div></div>
   <section class="section">
-    <div style="background:rgba(91,58,160,.08);border:1px solid rgba(91,58,160,.2);border-radius:12px;padding:14px;margin-bottom:16px;"><p style="color:#c9aeff;font-size:13px;margin:0;"><strong>🔒 Admin Only:</strong> Configure where and when you receive real-time alerts. Marketers see a badge — only you get the text/email.</p></div>
+    <div style="background:rgba(91,58,160,.08);border:1px solid rgba(91,58,160,.2);border-radius:12px;padding:14px;margin-bottom:16px;"><p style="color:#c9aeff;font-size:13px;margin:0;"><strong>📢 Team Visibility:</strong> All sent texts, emails, and calls are logged here and visible to the whole team. Admin configures alert channels below.</p></div>
     <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px;">
       <h4 style="color:var(--text);margin:0 0 14px;">Alert Channels</h4>
       <div style="display:grid;gap:12px;">
@@ -1040,10 +1044,11 @@ function loadMarketers(){const m=gs(K.mkt,["Ericka"]);ss(K.mkt,m);const sel=docu
 function loadNames(){const names=gs(K.names,["Ericka","Angela","Mike"]);ss(K.names,names);["noteNameSelect","familyNameSelect"].forEach(id=>{const sel=document.getElementById(id);if(!sel)return;sel.innerHTML='<option value="">Select saved name</option>';names.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});});}
 function saveNameIfNeeded(name){if(!name)return;const names=gs(K.names,["Ericka","Angela","Mike"]);if(!names.includes(name)){names.push(name);ss(K.names,names);loadNames();}}
 function renderProspectsTable(){const prsp=gs(K.prsp,defProsp());const tb=document.getElementById("prospectsTableBody");tb.innerHTML="";prsp.forEach((p,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td><input type="radio" name="selProsp" value="${i}"></td><td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.source||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">Edit</button></td>`;tb.appendChild(tr);});}
-function renderProspectRecords(){const prsp=gs(K.prsp,defProsp());const q=(document.getElementById("prospectSearch")||{value:""}).value.toLowerCase();const tb=document.getElementById("prospectRecordsBody");tb.innerHTML="";prsp.filter(p=>{if(!q)return true;return[p.name,p.phone,p.email,p.address,p.secondary].some(v=>(v||"").toLowerCase().includes(q));}).forEach((p,_,arr)=>{const i=arr.indexOf(p);const tr=document.createElement("tr");const sB=p.phone?`<button class="btn btn-small" style="background:#7c3aed;color:#fff;padding:3px 7px;font-size:10px;margin-left:4px;" onclick="sendContactSMS('${p.phone}','${p.name}','prospect')">📱</button>`:'';
-    const eB=p.email?`<button class="btn btn-small" style="background:#2563eb;color:#fff;padding:3px 7px;font-size:10px;margin-left:4px;" onclick="sendContactEmail('${p.email}','${p.name}','prospect')">📧</button>`:'';
+function renderProspectRecords(){const prsp=gs(K.prsp,defProsp());const q=(document.getElementById("prospectSearch")||{value:""}).value.toLowerCase();const tb=document.getElementById("prospectRecordsBody");tb.innerHTML="";prsp.filter(p=>{if(!q)return true;return[p.name,p.phone,p.email,p.address,p.secondary].some(v=>(v||"").toLowerCase().includes(q));}).forEach((p,_,arr)=>{const i=arr.indexOf(p);const tr=document.createElement("tr");const sB=p.phone?`<button class="btn btn-small" style="background:#7c3aed;color:#fff;padding:3px 8px;font-size:10px;margin-left:3px;border-radius:6px;" onclick="sendContactSMS('${p.phone}','${p.name}','prospect')" title="Text ${p.name}">📱 Text</button>`:'';
+    const eB=p.email?`<button class="btn btn-small" style="background:#2563eb;color:#fff;padding:3px 8px;font-size:10px;margin-left:3px;border-radius:6px;" onclick="sendContactEmail('${p.email}','${p.name}','prospect')" title="Email ${p.name}">📧 Email</button>`:'';
+    const cB=p.phone?`<button class="btn btn-small" style="background:#059669;color:#fff;padding:3px 8px;font-size:10px;margin-left:3px;border-radius:6px;" onclick="callContact('${p.phone}','${p.name}')" title="Call ${p.name}">📞 Call</button>`:'';
     const due=p.nextStepDate?`<span style="font-size:11px;font-weight:700;color:${new Date(p.nextStepDate)<new Date()?'#dc2626':'#3b82f6'}">${p.nextStepDate}</span>`:'—';
-    tr.innerHTML=`<td><input type="radio" name="selProsp" value="${i}"></td><td style="font-weight:700">${p.name}</td><td>${pSt(p.status)}</td><td>${p.phone||'—'} ${sB}</td><td>${p.email||'—'} ${eB}</td><td>${p.address||'—'}</td><td>${p.secondary||'—'}</td><td>${p.source||'—'}</td><td>${p.marketer||'—'}</td><td>${p.nextStep||'—'}</td><td>${due}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">✏️ Edit</button></td>`;tb.appendChild(tr);});}
+    tr.innerHTML=`<td><input type="radio" name="selProsp" value="${i}"></td><td style="font-weight:700">${p.name}</td><td>${pSt(p.status)}</td><td>${p.phone||'—'} ${sB} ${cB}</td><td>${p.email||'—'} ${eB}</td><td>${p.address||'—'}</td><td>${p.secondary||'—'}</td><td>${p.source||'—'}</td><td>${p.marketer||'—'}</td><td>${p.nextStep||'—'}</td><td>${due}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">✏️ Edit</button></td>`;tb.appendChild(tr);});}
 
 function deleteSelectedProspect(){const sel=document.querySelector('input[name="selProsp"]:checked');if(!sel){alert("Select a prospect to delete.");return;}const prsp=gs(K.prsp,defProsp());prsp.splice(parseInt(sel.value),1);ss(K.prsp,prsp);renderProspectsTable();updateDashboard();}
 function openEditProspect(i){const prsp=gs(K.prsp,defProsp());const p=prsp[i];document.getElementById("editProspIndex").value=i;document.getElementById("editProspName").value=p.name||"";document.getElementById("editProspStatus").value=p.status||"Inquiry";document.getElementById("editProspPhone").value=p.phone||"";document.getElementById("editProspEmail").value=p.email||"";document.getElementById("editProspAddress").value=p.address||"";document.getElementById("editProspSecondary").value=p.secondary||"";document.getElementById("editProspMarketer").value=p.marketer||"";document.getElementById("editProspNextStep").value=p.nextStep||"";openModal("editProspectModal");}
@@ -1335,6 +1340,12 @@ function autoLogCommunication(n,m,prev,ct){
   w.prepend(b);
   var cnt=gs(K.notes,0)+1;ss(K.notes,cnt);
   if(typeof updateDashboard==="function")updateDashboard();
+}
+function callContact(phone,name){
+  if(confirm("📞 Call "+name+" at "+phone+"?\n\nTap OK to open your phone dialer.")){
+    window.open("tel:"+phone);
+    autoLogCommunication(name,"Call","Outbound call to "+phone,"prospect");
+  }
 }
 function sendContactSMS(phone,name,ct){
   var msg=prompt("📱 Text to "+name+" ("+phone+"):
