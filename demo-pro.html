@@ -437,8 +437,8 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
     </div>
     <div id="notesList" style="margin-top:14px;">
       <div class="grid-2">
-        <div class="note-box"><h4>Ericka — 2026-04-12 at 10:00 AM</h4><p><strong>Position:</strong> Marketer</p><p><strong>Next Step:</strong> CM Follow-Up (Status Update)</p><p>Baylor requested faster turnaround updates.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">✅ Synced — Location Captured</p></div>
-        <div class="note-box"><h4>Angela — 2026-04-11 at 01:40 PM</h4><p><strong>Position:</strong> Nurse</p><p><strong>Next Step:</strong> RN Assessment Scheduled</p><p>Patient appropriate for hospice. Family receptive.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">✅ Synced — Location Captured</p></div>
+        <div class="note-box"><h4>Ericka — 2026-04-12 at 10:00 AM</h4><p><strong>Position:</strong> Marketer</p><p><strong>Next Step:</strong> CM Follow-Up (Status Update)</p><p><strong>Next Step Due Date:</strong> <span style="color:#f9c74f;font-weight:700;">2026-04-19</span></p><p>Baylor requested faster turnaround updates.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">✅ Synced — GPS Captured</p></div>
+        <div class="note-box"><h4>Angela — 2026-04-11 at 01:40 PM</h4><p><strong>Position:</strong> Nurse</p><p><strong>Next Step:</strong> RN Assessment Scheduled</p><p><strong>Next Step Due Date:</strong> <span style="color:#f9c74f;font-weight:700;">2026-04-14</span></p><p>Patient appropriate for hospice. Family receptive.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">✅ Synced — GPS Captured</p></div>
       </div>
     </div>
   </section>
@@ -1313,7 +1313,7 @@ function saveDemoNote(){
       +"<p><strong>Date/Time:</strong> "+dt+" at "+ti+"</p>"
       +(prospect?"<p><strong>Prospect:</strong> "+prospect+"</p>":"")
       +"<p><strong>Next Step:</strong> "+ns+"</p>"
-      +(nd?"<p><strong>New Due Date:</strong> <span style='color:#f9c74f;font-weight:700;'>"+nd+"</span> — Reminder re-queued ✅</p>":"")
+      +(nd?"<p><strong>Next Step Due Date:</strong> <span style='color:#f9c74f;font-weight:700;'>"+nd+"</span> — Reminder re-queued ✅</p>":"<p style='color:#94a3b8;font-size:12px;'>📅 No due date set for this step — go to Reminders to add one.</p>")
       +"<p>"+nt+"</p>"
       +"<p style='color:#6c8aab;font-size:11px;margin-top:6px;'>✅ Synced — GPS Captured | "+nowStr+"</p>";
     w.prepend(b);
