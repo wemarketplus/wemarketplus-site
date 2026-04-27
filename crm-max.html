@@ -114,7 +114,7 @@
   <button onclick="logout()" style="display:block;width:100%;margin-top:8px;background:rgba(224,85,85,.12);border:1px solid rgba(224,85,85,.3);color:#ff8080;border-radius:12px;padding:11px;font-size:13px;font-weight:800;cursor:pointer;">🚪 Logout</button>
 
   </nav>
-  <div class="footer-actions" style="margin-top:20px;"><a href="https://wemarketpluscom.org" class="btn btn-blue btn-small">Back to Website</a></div>
+  
 </aside>
 
 <main class="main">
@@ -239,8 +239,12 @@
   <section class="section">
     <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How to use Referral Sources:</strong> This is your account list — every hospital, rehab, SNF, and physician office you call on. <strong>Green</strong> = they're actively sending you referrals. <strong>Red</strong> = they haven't sent yet — these are your priority targets to visit. Click <strong>📱 Text</strong> or <strong>📧 Email</strong> on any source to contact them — the message auto-logs to your Notes tab.</p></div>
     <div class="mini-actions" style="margin-bottom:12px;">
-      <button class="btn btn-green" onclick="showTab('referral-records')">Add Referral Source</button>
+      <button class="btn btn-green" onclick="openModal('addReferralModal')">Add Referral</button>
       
+    </div>
+    <div class="table-wrap">
+      <table><thead><tr><th>Sel</th><th>Contact</th><th>Business</th><th>Phone</th><th>Address</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="referralTableBody"></tbody></table>
     </div>
   </section>
 </div>
@@ -287,8 +291,7 @@
   </section>
 </div>
 
-
-<!-- !-- PIPELINE -->
+<!-- PIPELINE -->
 <div class="tab-pane" id="tab-pipeline">
   <div class="topbar"><div><h2>Pipeline</h2></div></div>
   <section class="section">
@@ -489,7 +492,7 @@
     <div class="admin-banner"><h3 style="margin:0;color:#c9aeff;">🔒 Admin Only</h3><span class="pill pill-purple">Admin View Only</span></div>
     <p class="admin-note">Full system control. Admin can view, edit, and delete ALL records across all users. Staff cannot see this section.</p>
     <div class="admin-grid">
-      <div class="admin-card"><h4>👥 User Management</h4><p>Manage users, roles, and access.</p><div class="mini-actions" style="margin-top:10px;"><button class="btn btn-green btn-small" onclick="openModal('inviteUserModal')">+ Add User</button><button class="btn btn-red btn-small" onclick="openRemoveUserModal()">− Remove User</button></div></div>
+      <div class="admin-card"><h4>👥 User Management</h4><p>Manage users, roles, and access.</p><div class="mini-actions" style="margin-top:10px;"><button class="btn btn-green btn-small" onclick="document.getElementById('inviteUserModal').style.display='flex'">+ Add User</button><button class="btn btn-red btn-small" onclick="document.getElementById('removeUserModal').style.display='flex'">− Remove User</button></div></div>
       <div class="admin-card"><h4>🪑 Seat Limits</h4><p>Active users vs purchased seats.</p><span class="admin-stat">8 / 10</span><p style="font-size:11px;">Seats in use / Total purchased</p></div>
       <div class="admin-card"><h4>📝 Notes Synced</h4><p>Total notes across all users.</p><span class="admin-stat" id="adminNotes">0</span></div>
     </div>
@@ -832,6 +835,27 @@
 </div>
 
 <!-- MODALS -->
+<div class="modal-overlay" id="addReferralModal"><div class="modal-box"><button class="close-modal" onclick="closeModal('addReferralModal')">&times;</button><h4>Add Referral Source</h4><div class="modal-grid"><div class="field"><label>Contact Name</label><input id="refContactName" type="text" placeholder="e.g. Jane Smith"></div><div class="field"><label>Business / Facility</label><input id="refBusiness" type="text" placeholder="e.g. North Park Rehab"></div><div class="field"><label>Phone</label><input id="refPhone" type="tel" placeholder="(469) 555-0100"></div><div class="field"><label>Email</label><input id="refEmail" type="email" placeholder="jane@facility.com"></div><div class="field full"><label>Address</label><input id="refAddress" type="text" placeholder="123 Main St, Dallas TX"></div><div class="field"><label>Ref Status</label><select id="refStatus"><option value="Green">🟢 Green — Sending Referrals</option><option value="Red">🔴 Red — No Referrals Yet</option></select></div></div><div class="field">
+          <label>Next Step <span style="color:#dc2626;">*</span></label>
+          <select id="refNextStep" onchange="showReferralStepDesc(this.value)" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;">
+              <option value="">— Select next step —</option>
+              <option value="Initial Contact Made">Initial Contact Made</option>
+              <option value="Dropped Off Materials">Dropped Off Materials</option>
+              <option value="Schedule Follow-Up Visit">Schedule Follow-Up Visit</option>
+              <option value="Needs Assessment Conversation">Needs Assessment Conversation</option>
+              <option value="First Referral Received">First Referral Received</option>
+              <option value="Active Referral Partner — Maintain">Active Referral Partner — Maintain</option>
+              <option value="Re-Engagement Needed (30+ days cold)">Re-Engagement Needed (30+ days cold)</option>
+              <option value="Key Decision Maker Meeting">Key Decision Maker Meeting</option>
+            </select>
+          <div id="refStepDescBox" style="display:none;background:#fffbeb;border:1px solid rgba(249,199,79,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:#334155;line-height:1.6;margin-top:6px;"></div>
+        </div>
+        <div class="field">
+          <label>📅 Next Touch Date <span style="color:#dc2626;">*</span></label>
+          <input id="refNextTouchDate" type="date" style="border:2px solid rgba(249,199,79,.4);border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;background:#fffbeb;">
+          <div style="font-size:11px;color:#f59e0b;margin-top:3px;font-weight:700;">⚡ Queues reminder in Reminders tab</div>
+        </div>
+    <div class="modal-actions"><button class="btn btn-green" onclick="saveReferralFromModal()">Save Referral + Queue Reminder</button><button class="btn btn-gray" onclick="closeModal('addReferralModal')">Cancel</button></div></div></div>
 <div class="modal-overlay" id="editReferralModal"><div class="modal-box"><button class="close-modal" onclick="closeModal('editReferralModal')">&times;</button><h4>Edit Referral Source</h4><input type="hidden" id="editRefIndex"><div class="modal-grid"><div class="field"><label>Contact Name</label><input id="editRefContactName" type="text"></div><div class="field"><label>Business / Facility</label><input id="editRefBusiness" type="text"></div><div class="field"><label>Phone</label><input id="editRefPhone" type="tel"></div><div class="field"><label>Email</label><input id="editRefEmail" type="email"></div><div class="field full"><label>Address</label><input id="editRefAddress" type="text"></div><div class="field"><label>Ref Status</label><select id="editRefStatus"><option value="Green">🟢 Green — Sending Referrals</option><option value="Red">🔴 Red — No Referrals Yet</option></select></div></div><div class="modal-actions"><button class="btn btn-green" onclick="saveEditReferral()">Save Changes</button><button class="btn btn-gray" onclick="closeModal('editReferralModal')">Cancel</button></div></div></div>
 <div class="modal-overlay" id="editProspectModal"><div class="modal-box"><button class="close-modal" onclick="closeModal('editProspectModal')">&times;</button><h4>Edit Prospect</h4><input type="hidden" id="editProspIndex"><div class="modal-grid"><div class="field"><label>Name</label><input id="editProspName" type="text"></div><div class="field"><label>Status</label><select id="editProspStatus"><option>Inquiry</option><option>Pending Admission</option><option>Lost</option><option>Admitted</option></select></div><div class="field"><label>Phone</label><input id="editProspPhone" type="tel"></div><div class="field"><label>Email</label><input id="editProspEmail" type="email"></div><div class="field full"><label>Address</label><input id="editProspAddress" type="text"></div><div class="field"><label>Secondary Contact</label><input id="editProspSecondary" type="text"></div><div class="field"><label>Assigned Marketer</label><input id="editProspMarketer" type="text"></div><div class="field full"><label>Next Step</label><input id="editProspNextStep" type="text"></div></div><div class="modal-actions"><button class="btn btn-green" onclick="saveEditProspect()">Save Changes</button><button class="btn btn-gray" onclick="closeModal('editProspectModal')">Cancel</button></div></div></div>
 
@@ -1740,7 +1764,7 @@ function saveCompleteStep(name,type){
 
 
 /* ── INIT NOTE PROSPECT SELECT ── */
-function initNoteProspectSelect(){ /* replaced by typeahead */ }
+function initNoteProspectSelect(){ /* typeahead active */ }
 
 function filterNoteProspects(val) {
   var drop = document.getElementById("noteProspectDropdown");
@@ -1752,7 +1776,7 @@ function filterNoteProspects(val) {
   var refs = gs(K.refs, typeof defRefs === "function" ? defRefs() : []);
   var all = [];
   prsp.forEach(function(p) {
-    if (p.name) all.push({ label: p.name + " (Prospect \u2013 " + (p.status || "") + ")", value: p.name });
+    if (p.name) all.push({ label: p.name + " (Prospect)", value: p.name });
   });
   refs.forEach(function(r) {
     var nm = r.contactName || r.contact || r.name || "";
@@ -1763,7 +1787,7 @@ function filterNoteProspects(val) {
   var matches = all.filter(function(x) { return x.label.toLowerCase().indexOf(q) >= 0; });
   var gen = document.createElement("div");
   gen.style.cssText = "padding:9px 12px;font-size:12px;cursor:pointer;border-bottom:1px solid #f0f4f8;color:#555;";
-  gen.textContent = "\u2014 General note (no specific person) \u2014";
+  gen.textContent = "\u2014 General note \u2014";
   gen.onmousedown = function(e) {
     e.preventDefault();
     document.getElementById("noteProspectSearch").value = "";
@@ -1778,7 +1802,7 @@ function filterNoteProspects(val) {
     nd.textContent = "No matches found";
     drop.appendChild(nd);
   } else {
-    matches.slice(0, 12).forEach(function(m) {
+    matches.slice(0, 10).forEach(function(m) {
       var d = document.createElement("div");
       d.style.cssText = "padding:9px 12px;font-size:12px;cursor:pointer;border-bottom:1px solid #f0f4f8;";
       d.textContent = m.label;
@@ -1800,12 +1824,121 @@ function filterNoteProspects(val) {
 document.addEventListener("click", function(e) {
   var drop = document.getElementById("noteProspectDropdown");
   var inp  = document.getElementById("noteProspectSearch");
-  if (drop && inp && !inp.contains(e.target) && !drop.contains(e.target)) {
-    drop.style.display = "none";
-  }
+  if (drop && inp && !inp.contains(e.target) && !drop.contains(e.target)) drop.style.display = "none";
 });
+
+// ── CRM PATCH ──
+function openModal(id){var el=document.getElementById(id);if(!el)return;if(el.classList&&el.classList.contains('modal-overlay')){el.classList.add('open');}else{el.style.display='flex';}}
+function closeModal(id){var el=document.getElementById(id);if(!el)return;if(el.classList&&el.classList.contains('modal-overlay')){el.classList.remove('open');}else{el.style.display='none';}}
+function openRemoveUserModal(){document.getElementById('removeUserModal').style.display='flex';}
+
+async function doSendInvite(){
+  var firstName=(document.getElementById('invFirstName')||{value:''}).value.trim();
+  var email=(document.getElementById('invEmail2')||{value:''}).value.trim();
+  var role=(document.getElementById('invRole2')||{value:'marketer'}).value;
+  var msg=document.getElementById('inviteMsg2');
+  if(!firstName||!email){msg.style.color='#dc2626';msg.textContent='First name and email are required.';return;}
+  msg.style.color='#64748b';msg.textContent='Sending invite...';
+  try{
+    var res=await fetch('https://wemarketplus-backend-1.onrender.com/api/users/invite',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+(localStorage.getItem('hl_token')||'')},body:JSON.stringify({firstName,email,role})});
+    var data=await res.json();
+    if(res.ok){msg.style.color='#166534';msg.textContent='\u2705 Invite sent to '+email+'!';document.getElementById('invFirstName').value='';document.getElementById('invEmail2').value='';setTimeout(function(){document.getElementById('inviteUserModal').style.display='none';msg.textContent='';},3000);}
+    else{msg.style.color='#dc2626';msg.textContent='\u274C '+(data.message||'Error. Email Info@wemarketpluscom.org');}
+  }catch(e){msg.style.color='#dc2626';msg.textContent='\u274C Connection error. Email Info@wemarketpluscom.org to add '+email+'.';}
+}
+
+async function doRemoveUser(){
+  var email=(document.getElementById('removeEmail2')||{value:''}).value.trim();
+  var msg=document.getElementById('removeMsg2');
+  if(!email){msg.textContent='Email is required.';return;}
+  if(!confirm('Remove '+email+'? Access revoked immediately.'))return;
+  msg.style.color='#64748b';msg.textContent='Removing...';
+  try{
+    var res=await fetch('https://wemarketplus-backend-1.onrender.com/api/team/remove',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+(localStorage.getItem('hl_token')||'')},body:JSON.stringify({email})});
+    var data=await res.json();
+    if(res.ok){msg.style.color='#166534';msg.textContent='\u2705 '+email+' removed.';setTimeout(function(){document.getElementById('removeUserModal').style.display='none';document.getElementById('removeEmail2').value='';msg.textContent='';},2500);}
+    else{msg.style.color='#dc2626';msg.textContent='\u274C '+(data.message||'Error. Email Info@wemarketpluscom.org');}
+  }catch(e){msg.style.color='#dc2626';msg.textContent='\u274C Connection error. Email Info@wemarketpluscom.org.';}
+}
+
+saveReferralFromModal=function(){
+  var cn=(document.getElementById('refContactName')||{value:''}).value.trim();
+  var biz=(document.getElementById('refBusiness')||{value:''}).value.trim();
+  if(!cn||!biz){alert('Contact name and business name are required.');return;}
+  var nextStep=(document.getElementById('refNextStep')||{value:''}).value;
+  var nextTouchDate=(document.getElementById('refNextTouchDate')||{value:''}).value||'';
+  if(!nextStep){alert('Please select a Next Step.');return;}
+  if(!nextTouchDate){alert('Please set a Next Touch Date.');return;}
+  var refs=gs(K.refs,defRefs());
+  refs.push({contactName:cn,business:biz,phone:(document.getElementById('refPhone')||{value:''}).value.trim(),email:(document.getElementById('refEmail')||{value:''}).value.trim(),address:(document.getElementById('refAddress')||{value:''}).value.trim(),status:(document.getElementById('refStatus')||{value:'Red'}).value,nextStep:nextStep,nextTouchDate:nextTouchDate});
+  ss(K.refs,refs);
+  if(typeof loadReferralSources==='function')loadReferralSources();
+  if(typeof renderReferralRecords==='function')renderReferralRecords();
+  if(typeof renderReminders==='function')renderReminders();
+  ['refContactName','refBusiness','refPhone','refEmail','refAddress'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  var rns=document.getElementById('refNextStep');if(rns)rns.value='';
+  var rnd=document.getElementById('refNextTouchDate');if(rnd)rnd.value='';
+  var rss=document.getElementById('refSaveStatus');if(rss){rss.textContent='\u2705 '+cn+' saved!';setTimeout(function(){rss.textContent='';},4000);}
+  if(typeof showTab==='function')showTab('referrals');
+};
+
+function initAutoProspectSelect(){
+  var sel=document.getElementById('autoProspectSelect');if(!sel)return;
+  var prsp=gs(K.prsp,defProsp());
+  sel.innerHTML='<option value="">\u2014 Select a prospect \u2014</option>';
+  prsp.forEach(function(p,i){var o=document.createElement('option');o.value=i;o.textContent=p.name+' ('+p.status+')';sel.appendChild(o);});
+}
+function fireAutoForProspect(btn,msg){
+  var sel=document.getElementById('autoProspectSelect');var prosp='';
+  if(sel&&sel.value!==''){var prsp=gs(K.prsp,defProsp());var p=prsp[parseInt(sel.value)];if(p)prosp=' for '+p.name;}
+  btn.textContent='\u2705 Done';btn.disabled=true;
+  var log=document.getElementById('autoLog');
+  if(log){var d=document.createElement('div');d.style.cssText='background:#fff;color:#111;border-radius:9px;padding:9px 13px;font-size:12px;margin-bottom:6px;';d.textContent='\u2705 '+msg+prosp+' \u2014 '+new Date().toLocaleTimeString();log.prepend(d);}
+}
+
+var aiHist=[];
+sendAI=async function(msg){
+  var inp=document.getElementById('aiIn');
+  if(!msg){msg=inp?inp.value.trim():'';if(!msg)return;if(inp)inp.value='';}
+  var c=document.getElementById('aiMsgs');if(!c)return;
+  var u=document.createElement('div');u.style.cssText='padding:10px 14px;border-radius:12px;font-size:13px;max-width:80%;background:#1e3a5f;color:#e2e8f0;align-self:flex-end;margin:4px 0;';u.textContent=msg;c.appendChild(u);
+  var t=document.createElement('div');t.style.cssText='padding:10px 14px;border-radius:12px;font-size:13px;color:#94a3b8;font-style:italic;align-self:flex-start;margin:4px 0;';t.textContent='Thinking...';c.appendChild(t);c.scrollTop=c.scrollHeight;
+  aiHist.push({role:'user',content:msg});
+  try{
+    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:'You are an AI assistant for HospiceLink, a hospice marketing CRM. Be concise and practical.',messages:aiHist.slice(-10)})});
+    var d=await r.json();var rep=(d.content&&d.content[0])?d.content[0].text:null;if(!rep)throw new Error('empty');
+    aiHist.push({role:'assistant',content:rep});
+    t.style.cssText='padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%;background:#1a2a1a;color:#c8f7c5;border:1px solid rgba(140,255,102,.2);align-self:flex-start;margin:4px 0;';t.textContent=rep;
+  }catch(e){
+    t.style.cssText='padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%;background:#1a2a1a;color:#c8f7c5;align-self:flex-start;margin:4px 0;';
+    t.textContent='\u26A0\uFE0F AI temporarily unavailable. Try again in a moment.';
+  }
+  c.scrollTop=c.scrollHeight;
+};
+
+var _st0=typeof showTab==='function'?showTab:function(){};
+showTab=function(id){_st0(id);if(id==='automation')setTimeout(initAutoProspectSelect,100);};
+setTimeout(initAutoProspectSelect,1500);
 
 </script>
 
+<div id="inviteUserModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#0d1b2e;border:1px solid rgba(73,182,255,.3);border-radius:20px;padding:28px;width:min(440px,90vw);">
+    <h3 style="color:#fff;margin:0 0 14px;font-size:18px;">Invite Team Member</h3>
+    <div style="margin-bottom:10px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:4px;">FIRST NAME *</label><input id="invFirstName" type="text" placeholder="First name" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px;color:#f0f5ff;font-size:13px;box-sizing:border-box;outline:none;"></div>
+    <div style="margin-bottom:10px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:4px;">EMAIL *</label><input id="invEmail2" type="email" placeholder="team@agency.com" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px;color:#f0f5ff;font-size:13px;box-sizing:border-box;outline:none;"></div>
+    <div style="margin-bottom:14px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:4px;">ROLE</label><select id="invRole2" style="width:100%;background:rgba(20,8,32,.9);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px;color:#f0f5ff;font-size:13px;box-sizing:border-box;outline:none;"><option value="marketer">Marketer</option><option value="nurse">Nurse</option><option value="caregiver">Caregiver</option><option value="admin">Admin</option></select></div>
+    <div id="inviteMsg2" style="min-height:16px;font-size:12px;font-weight:700;margin-bottom:10px;"></div>
+    <div style="display:flex;gap:10px;"><button onclick="doSendInvite()" style="flex:1;background:linear-gradient(90deg,#82f86b,#b8ff79);color:#08101b;border:none;border-radius:10px;padding:11px;font-size:13px;font-weight:800;cursor:pointer;">Send Invite</button><button onclick="document.getElementById('inviteUserModal').style.display='none'" style="flex:1;background:rgba(255,255,255,.06);color:#8a9dc0;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;">Cancel</button></div>
+  </div>
+</div>
+<div id="removeUserModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#0d1b2e;border:1px solid rgba(255,107,107,.3);border-radius:20px;padding:28px;width:min(440px,90vw);">
+    <h3 style="color:#fff;margin:0 0 14px;font-size:18px;">Remove Team Member</h3>
+    <div style="margin-bottom:10px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:4px;">EMAIL *</label><input id="removeEmail2" type="email" placeholder="team@agency.com" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px;color:#f0f5ff;font-size:13px;box-sizing:border-box;outline:none;"></div>
+    <div id="removeMsg2" style="min-height:16px;font-size:12px;font-weight:700;margin-bottom:10px;"></div>
+    <div style="display:flex;gap:10px;"><button onclick="doRemoveUser()" style="flex:1;background:#dc2626;color:#fff;border:none;border-radius:10px;padding:11px;font-size:13px;font-weight:800;cursor:pointer;">Remove Access</button><button onclick="document.getElementById('removeUserModal').style.display='none'" style="flex:1;background:rgba(255,255,255,.06);color:#8a9dc0;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;">Cancel</button></div>
+  </div>
+</div>
 </body>
 </html>
