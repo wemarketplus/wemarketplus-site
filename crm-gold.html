@@ -67,6 +67,9 @@
 .close-modal{position:absolute;top:13px;right:15px;background:none;border:none;font-size:23px;cursor:pointer;color:#555;line-height:1}
 .tab-pane{display:none} .tab-pane.active{display:block}
 @media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.hbar-grid,.form-grid-4,.form-grid-3,.grid-2,.grid-3,.admin-grid{grid-template-columns:1fr}.modal-grid{grid-template-columns:1fr}}
+
+.ow-ov{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;}
+.ow-bx{background:linear-gradient(180deg,#0d1b2e,#07101c);border:1px solid rgba(73,182,255,.25);border-radius:22px;padding:28px;width:min(500px,100%);max-height:90vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.8);}
 </style>
 </head>
 <body>
@@ -77,8 +80,8 @@
  <a data-tab="dashboard" class="active" onclick="showTab('dashboard');return false;">Dashboard</a>
  <a data-tab="prospects" onclick="showTab('prospects');return false;">Add Prospect</a>
  <a data-tab="prospect-records" onclick="showTab('prospect-records');return false;">Prospect Records</a>
- <a data-tab="referrals" onclick="showTab('referrals');return false;">Referral Sources</a>
  <a data-tab="referral-records" onclick="showTab('referral-records');return false;">Add Referral</a>
+ <a data-tab="referrals" onclick="showTab('referrals');return false;">Referral Sources</a>
  <a data-tab="pipeline" onclick="showTab('pipeline');return false;">Pipeline</a>
  <a data-tab="territory" onclick="showTab('territory');return false;">Territory View</a>
  <a data-tab="productivity" onclick="showTab('productivity');return false;">Productivity</a>
@@ -791,7 +794,7 @@
     <div class="admin-banner"><h3 style="margin:0;color:#c9aeff;">🔒 Admin Only</h3><span class="pill pill-purple">Admin View Only</span></div>
     <p class="admin-note">This section is hidden from standard users. Only the Admin account holder can view seat limits, manage users, review EVV data, mileage, staff tracking entries, and notes totals.</p>
     <div class="admin-grid">
-      <div class="admin-card"><h4>👥 User Management</h4><p>Admin manages user access and subscription seat limits.</p><div class="mini-actions" style="margin-top:10px;"><button class="btn btn-green btn-small" onclick="openModal('inviteUserModal')">+ Add User</button><button class="btn btn-red btn-small" onclick="openRemoveUserModal()">− Remove User</button></div></div>
+      <div class="admin-card"><h4>👥 User Management</h4><p>Admin manages user access and subscription seat limits.</p><div class="mini-actions" style="margin-top:10px;"><button class="btn btn-green btn-small" onclick="document.getElementById('inviteUserModal').style.display='flex'">+ Add User</button><button class="btn btn-red btn-small" onclick="document.getElementById('removeUserModal').style.display='flex'">− Remove User</button></div></div>
       <div class="admin-card"><h4>🪑 Seat Limits</h4><p>Subscription seat count controls active users.</p><span class="admin-stat">12 / 20</span><p style="font-size:11px;">Seats in use / Total purchased</p></div>
       <div class="admin-card"><h4>📝 Notes Synced</h4><p>Total notes synced across all team members.</p><span class="admin-stat" id="adminNotes">0</span></div>
       <div class="admin-card"><h4>📍 Miles Logged</h4><p>Total mileage captured via GPS.</p><span class="admin-stat" id="adminMiles">0.0 mi</span></div>
@@ -876,9 +879,9 @@
     <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How Re-Engagement works:</strong> This tab automatically shows prospects that have been marked <strong>Lost</strong> for 30 or more days. Studies show 20–30% of lost hospice prospects eventually convert when someone reaches back out. Click <strong>Re-Engage</strong> to move them back into your active pipeline as an Inquiry.</p></div>
     <div style="background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.2);border-radius:12px;padding:12px 14px;margin-bottom:14px;"><p style="color:#fbbf24;font-size:13px;margin:0;">💡 Studies show 20–30% of lost hospice prospects convert when re-contacted at the right time.</p></div>
     <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-bottom:1px solid rgba(255,255,255,.06);"><div><div style="font-weight:700;font-size:13px;">Helen P. — Lost 45 days ago</div><div style="font-size:11px;color:var(--muted);">Insurance issue · Physician Office</div></div><button class="btn btn-blue btn-small" onclick="this.textContent='✅ Re-assigned';this.disabled=true;">Re-Engage →</button></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-bottom:1px solid rgba(255,255,255,.06);"><div><div style="font-weight:700;font-size:13px;">Robert H. — Lost 38 days ago</div><div style="font-size:11px;color:var(--muted);">Family not ready · North Park Rehab</div></div><button class="btn btn-blue btn-small" onclick="this.textContent='✅ Re-assigned';this.disabled=true;">Re-Engage →</button></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;"><div><div style="font-weight:700;font-size:13px;">Sandra M. — Lost 62 days ago</div><div style="font-size:11px;color:var(--muted);">Chose competitor · Hospital CM</div></div><button class="btn btn-blue btn-small" onclick="this.textContent='✅ Re-assigned';this.disabled=true;">Re-Engage →</button></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-bottom:1px solid rgba(255,255,255,.06);"><div><div style="font-weight:700;font-size:13px;">Helen P. — Lost 45 days ago</div><div style="font-size:11px;color:var(--muted);">Insurance issue · Physician Office</div></div><button class="btn btn-blue btn-small" onclick="doReEngage(this,'Helen P.')">Re-Engage →</button></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-bottom:1px solid rgba(255,255,255,.06);"><div><div style="font-weight:700;font-size:13px;">Robert H. — Lost 38 days ago</div><div style="font-size:11px;color:var(--muted);">Family not ready · North Park Rehab</div></div><button class="btn btn-blue btn-small" onclick="doReEngage(this,'Robert H.')">Re-Engage →</button></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;"><div><div style="font-weight:700;font-size:13px;">Sandra M. — Lost 62 days ago</div><div style="font-size:11px;color:var(--muted);">Chose competitor · Hospital CM</div></div><button class="btn btn-blue btn-small" onclick="doReEngage(this,'Sandra M.')">Re-Engage →</button></div>
     </div>
   </section>
 </div>
@@ -1049,8 +1052,539 @@
  </div>
  <div class="modal-actions"><button class="btn btn-green" onclick="saveReferralFromModal()">Save Referral + Queue Reminder</button><button class="btn btn-gray" onclick="closeModal('addReferralModal')">Cancel</button></div></div></div>
 <div class="modal-overlay" id="editReferralModal"><div class="modal-box"><button class="close-modal" onclick="closeModal('editReferralModal')">&times;</button><h4>Edit Referral Source</h4><input type="hidden" id="editRefIndex"><div class="modal-grid"><div class="field"><label>Contact Name</label><input id="editRefContactName" type="text"></div><div class="field"><label>Business / Facility</label><input id="editRefBusiness" type="text"></div><div class="field"><label>Phone</label><input id="editRefPhone" type="tel"></div><div class="field"><label>Email</label><input id="editRefEmail" type="email"></div><div class="field full"><label>Address</label><input id="editRefAddress" type="text"></div><div class="field"><label>Ref Status</label><select id="editRefStatus"><option value="Green">🟢 Green — Sending Referrals</option><option value="Red">🔴 Red — No Referrals Yet</option></select></div></div><div class="modal-actions"><button class="btn btn-green" onclick="saveEditReferral()">Save Changes</button><button class="btn btn-gray" onclick="closeModal('editReferralModal')">Cancel</button></div></div></div>
-<div class="modal-overlay" id="editProspectModal"><div class="modal-box"><button class="close-modal" onclick="closeModal('editProspectModal')">&times;</button><h4>Edit Prospect</h4><input type="hidden" id="editProspIndex"><div class="modal-grid"><div class="field"><label>Name</label><input id="editProspName" type="text"></div><div class="field"><label>Status</label><select id="editProspStatus"><option>Inquiry</option><option>Pending Admission</option><option>Lost</option><option>Admitted</option></select></div><div class="field"><label>Phone</label><input id="editProspPhone" type="tel"></div><div class="field"><label>Email</label><input id="editProspEmail" type="email"></div><div class="field full"><label>Address</label><input id="editProspAddress" type="text"></div><div class="field"><label>Secondary Contact</label><input id="editProspSecondary" type="text"></div><div class="field"><label>Assigned Marketer</label><input id="editProspMarketer" type="text"></div><div class="field full"><label>Next Step</label><input id="editProspNextStep" type="text"></div></div><div class="modal-actions"><button class="btn btn-green" onclick="saveEditProspect()">Save Changes</button><button class="btn btn-gray" onclick="closeModal('editProspectModal')">Cancel</button></div></div></div>
+<div class="modal-overlay" id="editProspectModal"><div class="modal-box"><button class="close-modal" onclick="closeModal('editProspectModal')">&times;</button><h4>Edit Prospect</h4><input type="hidden" id="editProspIndex"><div class="modal-grid"><div class="field"><label>Name</label><input id="editProspName" type="text"></div><div class="field"><label>Status</label><select id="editProspStatus"><option>Inquiry</option><option>Pending Admission</option><option>Lost</option><option>Admitted</option></select></div><div class="field"><label>Phone</label><input id="editProspPhone" type="tel"></div><div class="field"><label>Email</label><input id="editProspEmail" type="email"></div><div class="field full"><label>Address</label><input id="editProspAddress" type="text"></div><div class="field"><label>Secondary Contact</label><input id="editProspSecondary" type="text"></div>      <div class="field"><label>Referral Source</label>
+        <select id="editProspSource" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;">
+          <option value="">-- Select referral source --</option>
+        </select>
+      </div>
+      <div class="field"><label>Assigned Marketer</label><input id="editProspMarketer" type="text"></div><div class="field full"><label>Next Step</label><input id="editProspNextStep" type="text"></div></div><div class="modal-actions"><button class="btn btn-green" onclick="saveEditProspect()">Save Changes</button><button class="btn btn-gray" onclick="closeModal('editProspectModal')">Cancel</button></div></div></div>
 
+
+<div id="inviteUserModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#0d1b2e;border:1px solid rgba(73,182,255,.3);border-radius:20px;padding:28px;width:min(440px,92vw);">
+    <h3 style="color:#fff;margin:0 0 14px;font-size:18px;">Invite Team Member</h3>
+    <div style="margin-bottom:10px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:4px;">FIRST NAME *</label><input id="invFirstName" type="text" placeholder="First name" style="width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:10px;color:#f0f5ff;font-size:13px;box-sizing:border-box;outline:none;"></div>
+    <div style="margin-bottom:10px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:4px;">EMAIL *</label><input id="invEmail2" type="email" placeholder="team@agency.com" style="width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:10px;color:#f0f5ff;font-size:13px;box-sizing:border-box;outline:none;"></div>
+    <div style="margin-bottom:14px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:4px;">ROLE</label><select id="invRole2" style="width:100%;background:rgba(10,20,40,.95);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:10px;color:#f0f5ff;font-size:13px;box-sizing:border-box;outline:none;"><option value="marketer">Marketer</option><option value="nurse">Nurse</option><option value="caregiver">Caregiver</option><option value="admin">Admin</option></select></div>
+    <div id="inviteMsg2" style="min-height:16px;font-size:12px;font-weight:700;margin-bottom:10px;"></div>
+    <div style="display:flex;gap:10px;"><button onclick="window.doSendInvite()" style="flex:1;background:linear-gradient(90deg,#82f86b,#b8ff79);color:#08101b;border:none;border-radius:10px;padding:11px;font-size:13px;font-weight:800;cursor:pointer;">Send Invite</button><button onclick="document.getElementById('inviteUserModal').style.display='none'" style="flex:1;background:rgba(255,255,255,.07);color:#8a9dc0;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:11px;font-size:13px;cursor:pointer;">Cancel</button></div>
+  </div>
+</div>
+<div id="removeUserModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#0d1b2e;border:1px solid rgba(255,107,107,.3);border-radius:20px;padding:28px;width:min(440px,92vw);">
+    <h3 style="color:#fff;margin:0 0 14px;font-size:18px;">Remove Team Member</h3>
+    <div style="margin-bottom:10px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:4px;">EMAIL *</label><input id="removeEmail2" type="email" placeholder="team@agency.com" style="width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:10px;color:#f0f5ff;font-size:13px;box-sizing:border-box;outline:none;"></div>
+    <div id="removeMsg2" style="min-height:16px;font-size:12px;font-weight:700;margin-bottom:10px;"></div>
+    <div style="display:flex;gap:10px;"><button onclick="window.doRemoveUser()" style="flex:1;background:#dc2626;color:#fff;border:none;border-radius:10px;padding:11px;font-size:13px;font-weight:800;cursor:pointer;">Remove Access</button><button onclick="document.getElementById('removeUserModal').style.display='none'" style="flex:1;background:rgba(255,255,255,.07);color:#8a9dc0;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:11px;font-size:13px;cursor:pointer;">Cancel</button></div>
+  </div>
+</div>
+
+<div id="owOv" style="display:none" class="ow-ov">
+  <div class="ow-bx">
+    <div style="text-align:center;margin-bottom:14px" id="owD"></div>
+    <div style="font-size:38px;text-align:center;margin-bottom:10px" id="owI"></div>
+    <div style="font-size:18px;font-weight:900;color:#fff;text-align:center;margin-bottom:8px;line-height:1.2" id="owT"></div>
+    <div style="font-size:13px;color:rgba(190,215,255,.8);text-align:center;line-height:1.75;margin-bottom:14px" id="owX"></div>
+    <div id="owH" style="display:none" class="ow-hl"></div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-bottom:10px;">
+      <button onclick="owSk()" style="background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);border-radius:999px;padding:10px 18px;font-size:12px;cursor:pointer;">Skip Tour</button>
+      <button id="owNB" onclick="owNx()" style="background:linear-gradient(90deg,#3ab4ff,#6ed6ff);color:#07111f;border:none;border-radius:999px;padding:10px 22px;font-size:13px;font-weight:900;cursor:pointer;min-width:90px;">Next →</button>
+    </div>
+    <div style="font-size:11px;color:rgba(180,200,255,.25);text-align:center" id="owP"></div>
+  </div>
+</div>
+
+<script>
+var TOUR_KEY="hl_crm_gold_v8_"+new Date().toDateString().replace(/ /g,"_");
+var OW=[["👋", "Welcome to HospiceLink Gold!", "The most complete hospice CRM available. Built for enterprise hospice agencies that need full clinical, marketing, compliance, and financial visibility. Let's walk through every tab.", ""], ["🏠", "Dashboard — Enterprise Command Center", "Your morning command center with live pipeline, team activity, revenue snapshot, and the 4 action cards: Overdue, Due Today, Goals, and Re-Engage. Everything updates in real time as your team logs activity.", "📍 Tab: Dashboard → start here every morning"], ["➕", "Add Prospect — Complete Intake", "Full intake form: name, status, referral source, marketer, phone, email, address, secondary contact, next step, and due date. The due date triggers your reminder system. Set it on every single prospect.", "📍 Always set Next Step + Due Date — it drives your whole workflow"], ["📋", "Prospect Records — Full Patient Database", "All prospects with status filter, CSV export, and one-tap contact. 📱 Text and 📧 Email buttons auto-log every communication to Notes. Search by any field. No manual logging ever needed.", "📍 Tab: Prospect Records → your daily working list"], ["🤝", "Referral Sources — Strategic Account List", "Full referral partner management with Green/Red status. AI Scorecard (in its own tab) gives each source a 1-10 score. Contact any source from here — everything auto-logs.", "📍 Green = nurture. Red = priority this week."], ["🔀", "Pipeline — Visual Admission Funnel", "Inquiry → Pending Admission → Admitted → Lost. Prospect cards in each stage. Bar chart shows conversion rate at each step. Review in team meetings to identify stuck cases.", "📍 Tab: Pipeline → weekly team meeting review"], ["🗺️", "Territory View — Coverage Intelligence", "Territory-by-territory breakdown with accounts, visits, admissions, and conversion rate. Use with Revenue Intelligence to identify your highest-ROI territories.", "📍 Tab: Territory View → monthly strategic review"], ["📈", "Productivity — Performance Tracking", "Individual marketer scorecards: visits, follow-ups, admissions, notes synced. Combined with Leaderboard for full team visibility. Managers use for weekly 1-on-1s.", "📍 Tab: Productivity → manager review every Friday"], ["🚗", "EVV / Mileage — GPS Compliance", "Log every field trip with GPS route map. Miles calculated automatically. Admin sees full team mileage in Admin tab. Required for compliance, tax documentation, and reimbursement.", "📍 Tab: EVV/Mileage → log every trip"], ["👨‍👩‍👧", "Family Communication — Clinical Compliance Log", "Every family conversation logged with date, time, staff name, and notes. Send via SMS or email directly from here. Critical for clinical compliance — this is your CTI and bereavement tracking foundation.", "📍 Tab: Family Communication → log every family contact within 24 hours"], ["⚙️", "Automation — Enterprise Workflow Engine", "Auto follow-up tasks, touch cadences, reminders, paperwork alerts, and overdue alerts. Each fires once and logs confirmation. Your compliance record that workflows were executed.", "📍 Tab: Automation → configure your admission workflow triggers"], ["📝", "Notes + Voice — Field Intelligence with Voice-to-Note", "Log notes with GPS sync. Tap 🎤 Voice Note and speak your note while driving — it transcribes automatically. This is your Windshield Mode: no typing at the end of the day. The biggest time-saver in the CRM.", "📍 Tab: Notes → tap 🎤 Voice Note after every facility visit — speak your note, done"], ["🤝", "Touch Log — Relationship Management", "Log every visit and call to every referral source. Admin sees sources not touched in 14+ days — they get a cold alert. This is how top agencies maintain referral relationships systematically.", "📍 Tab: Touch Log → log every referral source interaction"], ["📊", "Weekly Report — Executive Performance Summary", "Admin-only. Auto-emailed Monday 7am: total prospects, admissions, losses, top source, marketer rankings. Download as CSV. Agency owners forward this to their board. The reason they never cancel.", "📍 Tab: Weekly Report → Admin only. Auto-sent Monday 7am."], ["💬", "Team Notes — Clinical Coordination", "Internal team notes on prospects — never visible to patients. Use for clinical context, family sensitivity flags, and marketer-to-nurse handoffs. \"Family is hesitant — daughter is decision maker.\"", "📍 Tab: Team Notes → coordinate between marketers, nurses, and caregivers"], ["📅", "Reminders — Never Miss a Follow-Up", "Auto-populated from Next Step due dates. Overdue in red, today in yellow. Daily 7am email digest in the live CRM. Check every morning, clear before end of day.", "📍 Tab: Reminders → check every morning"], ["🔁", "Re-Engagement Queue — Win Back Lost Prospects", "Lost prospects 30+ days old ready to re-contact. Studies show 20-30% convert when re-engaged. One-click re-assign back to active pipeline. Review every Monday.", "📍 Tab: Re-Engagement → review every Monday"], ["🎯", "Daily Goals — Individual Accountability", "Set daily targets for visits, calls, and referral contacts. Progress bars update as you log activity. No manager needed to check in — the system keeps everyone accountable.", "📍 Tab: Daily Goals → set Monday morning, review Friday"], ["📤", "Import Data — Zero-Friction Migration", "Upload your existing prospect list from any CRM. Download the template first. Duplicate detection prevents double-entries. Most agencies are fully migrated in under 10 minutes.", "📍 Tab: Import Data → download template, upload your list on day one"], ["🏥", "Referral Portal — Hospital Direct Intake", "White-label referral intake form you share with discharge planners. They submit a referral, it appears instantly in Prospect Records as an Inquiry. Print the QR code and post it at every nursing station.", "📍 Tab: Referral Portal → share with every discharge planner this week"], ["📘", "Playbook Generator — Custom Agency SOP", "AI generates your complete marketing playbook in 30 seconds: weekly schedule, referral targets, 30-second pitch, KPIs, and 90-day ramp plan. Customized to your city, team size, and monthly goal.", "📍 Tab: Playbook Generator → generate and share with your team on day one"], ["🤖", "AI Command Center — Enterprise Intelligence", "Advanced AI with full access to your CRM data. Ask for prospect analysis, revenue insights, territory strategy, team coaching scripts, compliance guidance, and more. Available 24/7.", "📍 Tab: AI Command Center → use daily for strategy and analysis"], ["💰", "Revenue Intelligence — Financial Command Center", "Admin-only. Revenue by referral source, cost per admission, forecasted admits, and lost opportunity value. Monthly admission forecast chart. Use to identify your highest-ROI sources and reallocate marketing spend.", "📍 Tab: Revenue Intelligence → Admin only — review monthly with leadership"], ["🏆", "Leaderboard — Team Performance Rankings", "Live marketer rankings by admissions, conversion rate, facility visits, and revenue generated. Everyone sees it — drives healthy competition. Goal alerts show who is ahead and who needs a strategy review.", "📍 Tab: Leaderboard → review in team meetings — celebrate wins publicly"], ["🔔", "Notifications — Real-Time Admin Alerts", "Admin-only. Get a text or email the moment a prospect is admitted, lost, or a follow-up goes overdue. 14-day cold alert when a Green referral source goes untouched. Configure your phone number and email here.", "📍 Tab: Notifications → Admin only — set up on day one"], ["🎯", "Referral Scorecard — AI-Powered Source Ranking", "Admin-only. Every referral source gets a 1-10 score based on referrals sent (40%), conversion rate (30%), recency of last touch (20%), and response time (10%). Sources below 4.0 trigger a cold alert. No other hospice CRM has this.", "📍 Tab: Scorecard → Admin only — review monthly, act on Cold sources immediately"], ["🔐", "HIPAA Audit Log — Full Compliance Trail", "Admin-only. Every action logged automatically: who accessed what, when, from which IP address. Export for compliance audits. Failed login attempts flagged in red. Your HIPAA Technical Safeguards documentation.", "📍 Tab: HIPAA Audit Log → Admin only — export quarterly for compliance records"], ["🔒", "Admin — Full System Control", "Edit and delete any record system-wide. View all staff notes, GPS coordinates, and mileage. Manage team seats and roles. Invite new members. The only tab visible exclusively to the account admin.", "📍 Tab: Admin → invite your team on day one, review staff activity weekly"], ["🎉", "Gold Day 1 Checklist — Get Started Right", "1) Import your existing prospect list  2) Set up Notifications with your phone number  3) Share Referral Portal with 3 discharge planners  4) Review the Scorecard to identify Cold sources  5) Generate your Marketing Playbook  6) Try Voice-to-Note after your first visit", "📞 Info@wemarketpluscom.org | (469) 793-0673"]];
+var oi=0;
+function startTour(){document.getElementById('owOv').style.display='flex';owR(0);}
+function owR(i){
+  var s=OW[i],n=OW.length;
+  document.getElementById('owD').innerHTML=OW.map(function(_,j){return'<div class="ow-dt'+(j===i?' on':'')+'" style="display:inline-block"></div>';}).join('');
+  document.getElementById('owI').textContent=s[0];
+  document.getElementById('owT').textContent=s[1];
+  document.getElementById('owX').textContent=s[2];
+  var h=document.getElementById('owH');
+  if(s[3]){h.textContent=s[3];h.style.display='block';}else{h.style.display='none';}
+  document.getElementById('owNB').textContent=(i===n-1)?"Let's Go! 🚀":"Next →";
+  document.getElementById('owP').textContent='Step '+(i+1)+' of '+n;
+}
+function owNx(){if(oi<OW.length-1){oi++;owR(oi);}else owSk();}
+function owSk(){localStorage.setItem(TOUR_KEY,'1');document.getElementById('owOv').style.display='none';}
+(function(){var seen=localStorage.getItem(TOUR_KEY);if(!seen){localStorage.setItem(TOUR_KEY,"1");setTimeout(startTour,1400);}})();
+
+/* ── SMS / EMAIL AUTO-LOGGING ── */
+function autoLogCommunication(n,m,prev,ct){
+  var nl=document.getElementById("notesList");if(!nl)return;
+  var w=nl.querySelector(".grid-2")||nl;
+  var now=new Date();
+  var b=document.createElement("div");b.className="note-box";
+  b.style.borderLeft="4px solid "+(m==="SMS"?"#7c3aed":"#2563eb");
+  b.innerHTML="<h4 style='color:"+(m==="SMS"?"#7c3aed":"#2563eb")+"'>"+(m==="SMS"?"📱":"📧")+" "+m+" → "+n+"</h4>"
+    +"<p><strong>Date:</strong> "+now.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})
+    +" at "+now.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})+"</p>"
+    +"<p><strong>Contact:</strong> "+(ct==="prospect"?"Prospect":"Referral Source")+"</p>"
+    +"<p>"+prev+"</p>"
+    +"<p style='color:#0a6c2f;font-size:11px;font-weight:700;margin-top:6px;'>✅ Auto-logged to Notes</p>";
+  w.prepend(b);
+  var cnt=gs(K.notes,0)+1;ss(K.notes,cnt);
+  if(typeof updateDashboard==="function")updateDashboard();
+}
+function callContact(phone,name){
+  if(confirm("📞 Call "+name+" at "+phone+"?\n\nTap OK to open your phone dialer.")){
+    window.open("tel:"+phone);
+    autoLogCommunication(name,"Call","Outbound call to "+phone,"prospect");
+  }
+}
+function sendContactSMS(phone,name,ct){
+  var msg=prompt("📱 Text to "+name+" ("+phone+") — Type your message:","Hi "+name+", this is your HospiceLink team. ");
+  if(!msg)return;
+  window.open("sms:"+phone+"?&body="+encodeURIComponent(msg));
+  autoLogCommunication(name,"SMS",msg.slice(0,100)+(msg.length>100?"…":""),ct);
+}
+function sendContactEmail(email,name,ct){
+  var sub=prompt("📧 Email subject to "+name+" ("+email+"):","Follow-up from HospiceLink");
+  if(!sub)return;
+  var body=prompt("Message body:","Dear "+name+", ");
+  if(!body)return;
+  window.open("mailto:"+email+"?subject="+encodeURIComponent(sub)+"&body="+encodeURIComponent(body));
+  autoLogCommunication(name,"Email",sub,ct);
+}
+
+/* ── FAMILY COMM SMS/EMAIL (Gold) ── */
+function sendSMS(){
+  var n=document.getElementById("familyNewName")?document.getElementById("familyNewName").value:"Family";
+  var t=document.getElementById("familyText")?document.getElementById("familyText").value:"";
+  window.open("sms:?&body="+encodeURIComponent("HospiceLink Update for "+n+": "+t));
+}
+function sendEmail(){
+  var n=document.getElementById("familyNewName")?document.getElementById("familyNewName").value:"Family";
+  var t=document.getElementById("familyText")?document.getElementById("familyText").value:"";
+  window.open("mailto:?subject="+encodeURIComponent("HospiceLink Update")+"&body="+encodeURIComponent("Dear "+n+",\n\n"+t+"\n\nBest regards,\nHospiceLink Team"));
+}
+
+function adminDeleteProspect(i){
+  if(!confirm("Delete this prospect? This cannot be undone."))return;
+  var prsp=gs(K.prsp,defProsp());
+  prsp.splice(i,1);
+  ss(K.prsp,prsp);
+  renderProspectRecords();
+  if(typeof updateDashboard==="function")updateDashboard();
+}
+
+function crmLogout(){
+  try{localStorage.removeItem("hl_token");localStorage.removeItem("hl_user");}catch(e){}
+  window.location.href="login.html";
+}
+
+
+/* ── AUTOMATION PROSPECT DROPDOWN ── */
+function initAutoProspectSelect(){
+  var sel=document.getElementById('autoProspectSelect');
+  if(!sel)return;
+  var prsp=gs(K.prsp,defProsp());
+  sel.innerHTML='<option value="">— Select a prospect —</option>';
+  prsp.filter(function(p){return p.status!=='Admitted';}).forEach(function(p,i){
+    var o=document.createElement('option');o.value=i;o.textContent=p.name+' ('+p.status+')';sel.appendChild(o);
+  });
+  sel.onchange=function(){
+    var idx=parseInt(this.value);
+    var statusEl=document.getElementById('autoProspectStatus');
+    if(isNaN(idx)||!statusEl){statusEl&&(statusEl.textContent='Select a prospect above');return;}
+    var p=prsp[idx];
+    statusEl.innerHTML='<span class="pill '+({'Inquiry':'pill-blue','Pending Admission':'pill-yellow','Lost':'pill-red','Admitted':'pill-green'}[p.status]||'pill-blue')+'">'+p.status+'</span> &nbsp;'+p.marketer;
+  };
+}
+function fireAutoForProspect(btn,msg){
+  var sel=document.getElementById('autoProspectSelect');
+  var prospectName=sel&&sel.value!==''?sel.options[sel.selectedIndex].text.split(' (')[0]:'';
+  if(!prospectName){alert('Please select a prospect first (Step 1 above).');return;}
+  btn.disabled=true;btn.style.opacity='.5';
+  var log=document.getElementById('autoLog');
+  if(log){
+    var empty=log.querySelector('div[style*="italic"]');if(empty)empty.remove();
+    var d=document.createElement('div');
+    d.style.cssText='background:rgba(140,255,102,.08);border:1px solid rgba(140,255,102,.2);border-radius:9px;padding:10px 14px;font-size:12px;color:var(--text);';
+    d.innerHTML='✅ <strong>'+prospectName+'</strong> — '+msg+'<span style="color:var(--muted);font-size:11px;float:right;">'+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</span>';
+    log.prepend(d);
+  }
+  setTimeout(function(){btn.disabled=false;btn.style.opacity='1';},2000);
+}
+
+/* Also keep old fireAuto for backwards compat */
+function fireAuto(btn,msg){
+  btn.classList.add('fired');btn.disabled=true;
+  var log=document.getElementById('autoLog');
+  if(log){var d=document.createElement('div');d.style.cssText='background:rgba(140,255,102,.08);border:1px solid rgba(140,255,102,.2);border-radius:9px;padding:9px 13px;font-size:12px;color:var(--text);';d.textContent='✅ '+msg+' — '+new Date().toLocaleTimeString();log.prepend(d);}
+}
+
+
+
+var PROSPECT_STEP_DESC = {
+  "Immediate Family Outreach (Call/Text)": "Call or text the patient's family today. Introduce yourself, explain hospice services, and ask if they'd be open to a visit.",
+  "Schedule On-Site Visit": "Contact the case manager at the referring facility. Get on their schedule. Confirm patient room number and best visit time.",
+  "Conduct Bedside Presentation": "Visit the patient and family in person. Walk them through what hospice care provides. Answer questions. Address hesitation calmly.",
+  "Request Clinical Records (H&P)": "Ask the facility CM or physician for the patient's history and physical. Required to confirm hospice eligibility.",
+  "RN Assessment Requested": "Notify your clinical director that an RN assessment is needed. Provide patient name, location, and insurance info.",
+  "RN Assessment Scheduled": "RN assessment is on the calendar. Confirm date/time with the family. Follow up the day before.",
+  "Obtain Physician Order for Eval": "The attending physician needs to sign a hospice evaluation order. Ask the case manager to facilitate — usually 24-48 hours.",
+  "Insurance Verification in Progress": "Your billing team is verifying coverage. Follow up with them within 24 hours for a status update.",
+  "Admission Paperwork in Progress": "Patient is approved — get the hospice election forms signed by the family. Move quickly.",
+  "CM Follow-Up (Status Update)": "Check back with the referring case manager. Ask: Has the family made a decision? Any change in status?",
+  "Overcoming Family Hesitation": "Family has concerns. Schedule a family meeting. Bring your clinical liaison if possible to answer medical questions."
+};
+var REFERRAL_STEP_DESC = {
+  "Initial Contact Made": "First visit done. Send a follow-up text or email the same day. Log this touch in the Touch Log tab.",
+  "Dropped Off Materials": "Left brochures and your card. Follow up in 3-5 days to see if they have questions.",
+  "Schedule Follow-Up Visit": "Book your next visit now. Don't leave without a date on the calendar. Aim for within 7-10 days.",
+  "Needs Assessment Conversation": "Schedule 15 minutes to ask: What do they need from a hospice partner? Listen more than you talk.",
+  "First Referral Received": "They sent their first patient — deliver exceptional service. Close the loop with the CM after admission.",
+  "Active Referral Partner — Maintain": "Visit at least every 14 days. Bring lunch quarterly. Text thank-you after every admission.",
+  "Re-Engagement Needed (30+ days cold)": "No referral in 30+ days. Call to check in — not to pitch. Ask how things are going.",
+  "Key Decision Maker Meeting": "Meeting with the DON, director, or medical director. Bring a one-pager on your agency's outcomes."
+};
+function showProspectStepDesc(val){
+  var box=document.getElementById("prospectStepDescBox");
+  if(!box)return;
+  var desc=PROSPECT_STEP_DESC[val];
+  if(desc){box.textContent=desc;box.style.display="block";}
+  else{box.style.display="none";}
+}
+function showReferralStepDesc(val){
+  var box=document.getElementById("refStepDescBox");
+  if(!box)return;
+  var desc=REFERRAL_STEP_DESC[val];
+  if(desc){box.textContent=desc;box.style.display="block";}
+  else{box.style.display="none";}
+}
+function showNoteStepDesc(val){
+  var box=document.getElementById("noteStepDescBox");
+  if(!box)return;
+  var desc=PROSPECT_STEP_DESC[val];
+  if(desc){box.textContent=desc;box.style.display="block";}
+  else{box.style.display="none";}
+}
+
+
+
+/* ── COMPLETE PROSPECT SAVE WITH CONFIRMATION ── */
+function saveProspect(){
+  var name=(document.getElementById("prospectName")||{value:""}).value.trim();
+  var status=(document.getElementById("prospectStatus")||{value:""}).value;
+  var source=(document.getElementById("prospectReferralSourceSelect")||{value:""}).value;
+  var nm=(document.getElementById("newAssignedMarketerInput")||{value:""}).value.trim();
+  var marketer=nm||((document.getElementById("prospectAssignedMarketerSelect")||{value:""}).value);
+  var nextStep=(document.getElementById("prospectNextStep")||{value:""}).value;
+  var nextStepDate=(document.getElementById("prospectNextStepDate")||{value:""}).value||"";
+  var assignedTo=(document.getElementById("prospectAssignedTo")||{value:"Marketer"}).value||"Marketer";
+  var phone=(document.getElementById("prospectPhone")||{value:""}).value.trim();
+  var email=(document.getElementById("prospectEmail")||{value:""}).value.trim();
+  var address=(document.getElementById("prospectAddress")||{value:""}).value.trim();
+  var secondary=(document.getElementById("prospectSecondary")||{value:""}).value.trim();
+  var secondaryRelation=(document.getElementById("prospectSecondaryRelation")||{value:""}).value.trim();
+  var secondaryPhone=(document.getElementById("prospectSecondaryPhone")||{value:""}).value.trim();
+  var secondaryEmail=(document.getElementById("prospectSecondaryEmail")||{value:""}).value.trim();
+  
+  if(!name){alert("Prospect name is required.");return;}
+  if(!status){alert("Please select a status.");return;}
+  if(!marketer){ marketer = "Unassigned"; }
+  if(!nextStep){alert("Please select a Next Step from the dropdown — this tells your team what to do and queues the reminder.");return;}
+  if(!nextStepDate){alert("Please set a Next Step Due Date — this is what triggers the reminder in the Reminders tab.");return;}
+  
+  if(nm){var m=gs(K.mkt,["Ericka"]);if(!m.includes(nm)){m.push(nm);ss(K.mkt,m);if(typeof loadMarketers==="function")loadMarketers();}}
+  
+  var prsp=gs(K.prsp,defProsp());
+  prsp.unshift({name:name,status:status,source:source,marketer:marketer,nextStep:nextStep,nextStepDate:nextStepDate,assignedTo:assignedTo,phone:phone,email:email,address:address,secondary:secondary,secondaryRelation:secondaryRelation,secondaryPhone:secondaryPhone,secondaryEmail:secondaryEmail});
+  ss(K.prsp,prsp);
+  
+  if(typeof renderProspectsTable==="function")renderProspectsTable();
+  if(typeof renderProspectRecords==="function")renderProspectRecords();
+  if(typeof updateDashboard==="function")updateDashboard();
+  if(typeof renderReminders==="function")renderReminders();
+  if(typeof initAutoProspectSelect==="function")initAutoProspectSelect();
+  
+  // Show confirmation
+  var conf=document.getElementById("prospectSaveConfirm");
+  if(conf){
+    conf.innerHTML="✅ <strong>"+name+"</strong> added! Reminder queued for <strong>"+nextStep+"</strong> on <strong>"+nextStepDate+"</strong> → assigned to <strong>"+assignedTo+"</strong>. Check Reminders tab to see it.";
+    conf.style.display="block";
+    setTimeout(function(){if(conf)conf.style.display="none";},6000);
+  }
+  
+  // Clear form
+  ["prospectName","newAssignedMarketerInput","prospectPhone","prospectEmail","prospectAddress","prospectSecondary","prospectSecondaryRelation","prospectSecondaryPhone","prospectSecondaryEmail"].forEach(function(id){var el=document.getElementById(id);if(el)el.value="";});
+  var ns=document.getElementById("prospectNextStep");if(ns)ns.value="";
+  var nd=document.getElementById("prospectNextStepDate");if(nd)nd.value="";
+  var db=document.getElementById("prospectStepDescBox");if(db)db.style.display="none";
+}
+
+
+
+/* ── NOTES SAVE — UPDATES PROSPECT NEXT STEP + RE-QUEUES REMINDER ── */
+function saveDemoNote(){
+  var sn=(document.getElementById("noteNameSelect")||{value:""}).value.trim();
+  var nn=(document.getElementById("noteNewName")||{value:""}).value.trim();
+  var fn=nn||sn;
+  var pos=(document.getElementById("notePosition")||{value:""}).value;
+  var dt=(document.getElementById("noteDate")||{value:""}).value;
+  var ti=(document.getElementById("noteTime")||{value:""}).value;
+  var ns=(document.getElementById("noteNextStep")||{value:""}).value;
+  var nd=(document.getElementById("noteNextStepDate")||{value:""}).value||"";
+  var prospect=(document.getElementById("noteProspectSelect")||{value:""}).value;
+  var nt=(document.getElementById("noteText")||{value:""}).value.trim();
+  
+  if(!fn){alert("Please select or enter your name.");return;}
+  if(!pos){alert("Please select your position.");return;}
+  if(!dt){alert("Please enter the date.");return;}
+  if(!ns){alert("Please select the Next Step from the dropdown — this updates the reminder queue.");return;}
+  if(!nt){alert("Please enter your note.");return;}
+  
+  if(typeof saveNameIfNeeded==="function")saveNameIfNeeded(fn);
+  
+  // If a prospect is selected and new due date provided, UPDATE their next step + queue new reminder
+  if(prospect&&nd){
+    var prsp=gs(K.prsp,defProsp());
+    var pidx=prsp.findIndex(function(p){return p.name===prospect;});
+    if(pidx>=0){
+      prsp[pidx].nextStep=ns;
+      prsp[pidx].nextStepDate=nd;
+      ss(K.prsp,prsp);
+      if(typeof renderProspectRecords==="function")renderProspectRecords();
+      if(typeof renderReminders==="function")renderReminders();
+    }
+  }
+  
+  // Get GPS-style location
+  var loc="";
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(function(pos){loc=pos.coords.latitude.toFixed(4)+", "+pos.coords.longitude.toFixed(4);},function(){loc="Location capture failed";});
+  }
+  
+  // Build note display
+  var list=document.getElementById("notesList");
+  var w=list?list.querySelector(".grid-2"):null;
+  var now=new Date();
+  var nowStr=now.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})+" at "+now.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+  
+  if(w){
+    var b=document.createElement("div");b.className="note-box";
+    b.innerHTML="<h4>"+fn+(prospect?" — "+prospect:"")+"</h4>"
+      +"<p><strong>Position:</strong> "+pos+"</p>"
+      +"<p><strong>Date/Time:</strong> "+dt+" at "+ti+"</p>"
+      +(prospect?"<p><strong>Prospect:</strong> "+prospect+"</p>":"")
+      +"<p><strong>Next Step:</strong> "+ns+"</p>"
+      +(nd?"<p><strong>Next Step Due Date:</strong> <span style='color:#f9c74f;font-weight:700;'>"+nd+"</span> — Reminder re-queued ✅</p>":"<p style='color:#94a3b8;font-size:12px;'>📅 No due date set for this step — go to Reminders to add one.</p>")
+      +"<p>"+nt+"</p>"
+      +"<p style='color:#6c8aab;font-size:11px;margin-top:6px;'>✅ Synced — GPS Captured | "+nowStr+"</p>";
+    w.prepend(b);
+  }
+  
+  // Update tracking table
+  var tb=document.getElementById("staffTrackingBody");
+  if(tb){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td>"+fn+"</td><td>"+pos+"</td><td>"+dt+"</td><td>"+ti+"</td><td>"+(prospect||"—")+"</td><td>"+ns+"</td><td style='color:#0a6c2f;'>✅ Synced</td>";
+    tb.prepend(tr);
+  }
+  
+  var cnt=gs(K.notes,0)+1;ss(K.notes,cnt);
+  if(typeof updateDashboard==="function")updateDashboard();
+  
+  var st=document.getElementById("syncStatus");
+  if(st){
+    st.innerHTML="✅ Note synced"+(prospect&&nd?" — Reminder re-queued for <strong>"+ns+"</strong> on <strong>"+nd+"</strong>":"")+" — GPS captured";
+    setTimeout(function(){if(st)st.innerHTML="";},5000);
+  }
+  
+  // Clear form
+  ["noteNewName","noteText","noteNextStepDate"].forEach(function(id){var el=document.getElementById(id);if(el)el.value="";});
+  var nn2=document.getElementById("noteNextStep");if(nn2)nn2.value="";
+  var db2=document.getElementById("noteStepDescBox");if(db2)db2.style.display="none";
+}
+
+
+
+/* ── REFERRAL SAVE — ADDS NEXT STEP + TOUCH DATE + QUEUES REMINDER ── */
+function saveReferralFromModal(){
+  var cn=(document.getElementById("refContactName")||{value:""}).value.trim();
+  var biz=(document.getElementById("refBusiness")||{value:""}).value.trim();
+  if(!cn||!biz){alert("Contact name and business name are required.");return;}
+  
+  var nextStep=(document.getElementById("refNextStep")||{value:""}).value;
+  var nextTouchDate=(document.getElementById("refNextTouchDate")||{value:""}).value||"";
+  
+  if(!nextStep){alert("Please select a Next Step — this tells your team what to do with this referral source.");return;}
+  if(!nextTouchDate){alert("Please set a Next Touch Date — this queues a reminder in the Reminders tab.");return;}
+  
+  var refs=gs(K.refs,defRefs());
+  refs.push({
+    contactName:cn,
+    business:biz,
+    phone:(document.getElementById("refPhone")||{value:""}).value.trim(),
+    email:(document.getElementById("refEmail")||{value:""}).value.trim(),
+    address:(document.getElementById("refAddress")||{value:""}).value.trim(),
+    status:(document.getElementById("refStatus")||{value:"Red"}).value,
+    nextStep:nextStep,
+    nextTouchDate:nextTouchDate
+  });
+  ss(K.refs,refs);
+  
+  if(typeof loadReferralSources==="function")loadReferralSources();
+  if(typeof renderReminders==="function")renderReminders();
+  if(typeof closeModal==="function")closeModal("addReferralModal");
+  
+  ["refContactName","refBusiness","refPhone","refEmail","refAddress"].forEach(function(id){var el=document.getElementById(id);if(el)el.value="";});
+  var rns=document.getElementById("refNextStep");if(rns)rns.value="";
+  var rnd=document.getElementById("refNextTouchDate");if(rnd)rnd.value="";
+  var rdb=document.getElementById("refStepDescBox");if(rdb)rdb.style.display="none";
+}
+
+
+
+/* ── RENDER REMINDERS — PROSPECTS + REFERRAL SOURCES ── */
+function renderReminders(){
+  var prsp=gs(K.prsp,defProsp());
+  var refs=gs(K.refs,defRefs());
+  var today=new Date();today.setHours(0,0,0,0);
+  var todayStr=today.toISOString().split("T")[0];
+  var weekEnd=new Date(today);weekEnd.setDate(weekEnd.getDate()+7);
+  
+  var overdue=[], dueToday=[], thisWeek=[];
+  
+  // Prospect reminders
+  prsp.forEach(function(p){
+    if(!p.nextStepDate||p.status==="Admitted"||p.status==="Lost")return;
+    var d=new Date(p.nextStepDate);d.setHours(0,0,0,0);
+    var days=Math.round((d-today)/(1000*60*60*24));
+    var item={type:"prospect",name:p.name,step:p.nextStep||"Follow up",date:p.nextStepDate,days:days,marketer:p.marketer,assignedTo:p.assignedTo||p.marketer};
+    if(d<today)overdue.push(item);
+    else if(p.nextStepDate===todayStr)dueToday.push(item);
+    else if(d<=weekEnd)thisWeek.push(item);
+  });
+  
+  // Referral source touch reminders
+  refs.forEach(function(r){
+    if(!r.nextTouchDate)return;
+    var d=new Date(r.nextTouchDate);d.setHours(0,0,0,0);
+    var days=Math.round((d-today)/(1000*60*60*24));
+    var item={type:"referral",name:r.business,step:r.nextStep||"Visit/Follow-Up",date:r.nextTouchDate,days:days,marketer:"",contact:r.contactName,assignedTo:"Marketer"};
+    if(d<today)overdue.push(item);
+    else if(r.nextTouchDate===todayStr)dueToday.push(item);
+    else if(d<=weekEnd)thisWeek.push(item);
+  });
+  
+  // Update counts
+  var oc=document.getElementById("remOverdueCount");if(oc)oc.textContent=overdue.length;
+  var tc=document.getElementById("remTodayCount");if(tc)tc.textContent=dueToday.length;
+  var wc=document.getElementById("remWeekCount");if(wc)wc.textContent=thisWeek.length;
+  
+  var body=document.getElementById("remindersBody");
+  var empty=document.getElementById("remindersEmpty");
+  if(!body)return;
+  body.innerHTML="";
+  
+  var allItems=[];
+  overdue.forEach(function(i){i.urgency="overdue";allItems.push(i);});
+  dueToday.forEach(function(i){i.urgency="today";allItems.push(i);});
+  thisWeek.forEach(function(i){i.urgency="week";allItems.push(i);});
+  
+  if(allItems.length===0){if(empty)empty.style.display="block";return;}
+  if(empty)empty.style.display="none";
+  
+  allItems.forEach(function(item){
+    var isRef=item.type==="referral";
+    var urgLabel=item.urgency==="overdue"
+      ?"<span style=\"color:#f87171;font-size:11px;font-weight:700;\">⚠️ Overdue "+Math.abs(item.days)+" day"+(Math.abs(item.days)!==1?"s":"")+"</span>"
+      :item.urgency==="today"
+      ?"<span style=\"color:#fbbf24;font-size:11px;font-weight:700;\">📅 Due today</span>"
+      :"<span style=\"color:#60a5fa;font-size:11px;font-weight:700;\">📆 Due "+item.date+"</span>";
+    var typeTag=isRef
+      ?"<span style=\"background:rgba(34,197,94,.15);color:#4ade80;font-size:10px;font-weight:700;border-radius:4px;padding:2px 6px;margin-left:6px;\">🏥 Referral Source</span>"
+      :"<span style=\"background:rgba(73,182,255,.15);color:#49b6ff;font-size:10px;font-weight:700;border-radius:4px;padding:2px 6px;margin-left:6px;\">👤 Prospect</span>";
+    var subLine=isRef
+      ?"Contact: "+item.contact+" · "+item.step
+      :"Marketer: "+(item.assignedTo||item.marketer)+" · "+item.step;
+    
+    var row=document.createElement("div");
+    row.style.cssText="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.05);";
+    row.innerHTML="<div style=\"flex:1\">"
+      +"<div style=\"font-weight:700;font-size:13px;\">"+item.name+typeTag+"</div>"
+      +"<div style=\"font-size:11px;color:var(--muted);margin-top:2px;\">"+subLine+"</div>"
+      +"<div style=\"margin-top:4px;\">"+urgLabel+"</div>"
+      +"</div>"
+      +"<button class=\"btn btn-green btn-small\" onclick=\"openCompleteStep(this,'"+item.name+"','"+item.type+"')\">✓ Mark Done</button>";
+    body.appendChild(row);
+  });
+}
+
+/* Quick-complete a step: log what happened + set new step + new date */
+function openCompleteStep(btn,name,type){
+  // Show inline complete form below the row
+  var row=btn.closest("div[style]");
+  if(row.querySelector(".complete-form"))return; // already open
+  
+  var isRef=type==="referral";
+  var stepOptions=isRef
+    ?Object.keys(REFERRAL_STEP_DESC||{}).map(function(s){return"<option>"+s+"</option>";}).join("")
+    :Object.keys(PROSPECT_STEP_DESC||{}).map(function(s){return"<option>"+s+"</option>";}).join("");
+  
+  var form=document.createElement("div");
+  form.className="complete-form";
+  form.style.cssText="background:rgba(73,182,255,.06);border-top:1px solid rgba(73,182,255,.15);padding:12px;margin-top:8px;border-radius:0 0 10px 10px;width:100%;";
+  form.innerHTML="<div style=\"font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;\">✅ Complete: "+name+"</div>"
+    +"<div style=\"display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;\">"
+    +"<div><label style=\"font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:3px;\">What did you do?</label>"
+    +"<input type=\"text\" id=\"completeNote_"+safeId(name)+"\" placeholder=\"Brief note (e.g. Called family, left voicemail)\" style=\"width:100%;border:1px solid #d7e0ec;border-radius:8px;padding:7px;font-size:12px;font:inherit;\"></div>"
+    +"<div><label style=\"font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:3px;\">New Next Step</label>"
+    +"<select id=\"completeStep_"+safeId(name)+"\" style=\"width:100%;border:1px solid #d7e0ec;border-radius:8px;padding:7px;font-size:12px;font:inherit;\"><option value=\"\">— Select —</option>"+stepOptions+"</select></div>"
+    +"<div><label style=\"font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:3px;\">New Due Date</label>"
+    +"<input type=\"date\" id=\"completeDate_"+safeId(name)+"\" style=\"width:100%;border:2px solid rgba(249,199,79,.4);border-radius:8px;padding:7px;font-size:12px;font:inherit;background:#fffbeb;\"></div>"
+    +"<div style=\"display:flex;align-items:flex-end;\"><button class=\"btn btn-green btn-small\" onclick=\"saveCompleteStep('"+name+"','"+type+"')\" style=\"width:100%\">Save + Re-Queue Reminder</button></div>"
+    +"</div>";
+  row.appendChild(form);
+  btn.style.display="none";
+}
+
+function saveCompleteStep(name,type){
+  var key=name.replace(/\s/g,"_");
+  var note=(document.getElementById("completeNote_"+key)||{value:""}).value.trim();
+  var newStep=(document.getElementById("completeStep_"+key)||{value:""}).value;
+  var newDate=(document.getElementById("completeDate_"+key)||{value:""}).value;
+  
+  if(!newStep){alert("Please select the new next step.");return;}
+  if(!newDate){alert("Please set a new due date.");return;}
+  
+  if(type==="prospect"){
+    var prsp=gs(K.prsp,defProsp());
+    var idx=prsp.findIndex(function(p){return p.name===name;});
+    if(idx>=0){prsp[idx].nextStep=newStep;prsp[idx].nextStepDate=newDate;ss(K.prsp,prsp);}
+    if(typeof renderProspectRecords==="function")renderProspectRecords();
+  } else {
+    var refs=gs(K.refs,defRefs());
+    var ridx=refs.findIndex(function(r){return r.business===name;});
+    if(ridx>=0){refs[ridx].nextStep=newStep;refs[ridx].nextTouchDate=newDate;ss(K.refs,refs);}
+    if(typeof loadReferralSources==="function")loadReferralSources();
+  }
+  
+  if(typeof renderReminders==="function")renderReminders();
+  if(typeof updateDashboard==="function")updateDashboard();
+  
+  if(note){
+    var list=document.getElementById("notesList");
+    var w=list?list.querySelector(".grid-2"):null;
+    if(w){
+      var b=document.createElement("div");b.className="note-box";
+      b.innerHTML="<h4>"+name+" — Step Completed</h4><p>"+note+"</p><p><strong>New Next Step:</strong> "+newStep+"</p><p><strong>New Due Date:</strong> "+newDate+" — Reminder re-queued ✅</p><p style=\"color:#6c8aab;font-size:11px;\">Auto-logged from Reminders</p>";
+      w.prepend(b);
+    }
+  }
+}
+
+
+/* ── INIT NOTE PROSPECT SELECT ── */
+function initNoteProspectSelect(){var sel=document.getElementById("noteProspectSelect");if(!sel)return;var prsp=gs(K.prsp,defProsp());sel.innerHTML='<option value="">— General note (no specific prospect) —</option>';prsp.filter(function(p){return p.status!=="Admitted";}).forEach(function(p){var o=document.createElement("option");o.value=p.name;o.textContent=p.name+" ("+p.status+")";sel.appendChild(o);});}
+</script>
 <script>const G="gold";
 const K={refs:`crmRefs_${G}`,prsp:`crmProsp_${G}`,mkt:`crmMkt_${G}`,names:`crmNames_${G}`,notes:`crmNotes_${G}`,family:`crmFamily_${G}`,staff:`crmStaff_${G}`,miles:`crmMiles_${G}`,trips:`crmTrips_${G}`,todayMi:`crmTodayMi_${G}`,weekMi:`crmWeekMi_${G}`,todayDate:`crmTodayDate_${G}`};
 function gs(k,d){try{const r=localStorage.getItem(k);return r?JSON.parse(r):d;}catch(e){return d;}}
@@ -1358,7 +1892,171 @@ voiceRec.onerror=function(){alert('Voice error — try again.');voiceOn=false;bt
 voiceRec.start();voiceOn=true;
 btn.innerHTML='⏹ Stop';btn.style.background='#e05555';
 if(status)status.style.display='block';
-}</script>
+}
+// ════════════════════════════════════════════════════════════
+// FINAL COMPREHENSIVE PATCH
+// ════════════════════════════════════════════════════════════
+
+// ── renderReengagement: show lost prospects, update pipeline on re-engage
+function renderReengagement() {
+  var prsp = gs(K.prsp, typeof defProsp==="function" ? defProsp() : []);
+  var lost = prsp.filter(function(p) { return p.status === "Lost"; });
+  var container = document.getElementById("reengagementList");
+  if (!container) return;
+  container.innerHTML = "";
+  if (lost.length === 0) {
+    container.innerHTML = "<p style='color:var(--muted);text-align:center;padding:20px;font-size:13px;'>No lost prospects to re-engage right now. 🎉</p>";
+  }
+  lost.forEach(function(p, idx) {
+    var li = document.getElementById(K.prsp + "__lost_" + idx);
+    var daysSince = 0;
+    if (p.lostDate) {
+      daysSince = Math.round((Date.now() - new Date(p.lostDate).getTime()) / 86400000);
+    }
+    var div = document.createElement("div");
+    div.style.cssText = "display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px 16px;margin-bottom:10px;gap:12px;";
+    div.innerHTML = "<div><p style='margin:0;font-size:14px;font-weight:700;color:var(--text);'>" + p.name + (daysSince > 0 ? " <span style='color:#f59e0b;font-size:12px;'>— Lost " + daysSince + " days ago</span>" : "") + "</p>"
+      + "<p style='margin:4px 0 0;font-size:12px;color:var(--muted);'>" + (p.source || "") + "</p></div>"
+      + "<button onclick='doReEngage(this,\"" + p.name.replace(/"/g,'&quot;') + "\")' style='background:linear-gradient(90deg,#42b7ff,#6ed6ff);color:#07111f;border:none;border-radius:999px;padding:8px 16px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;'>Re-Engage →</button>";
+    container.appendChild(div);
+  });
+  // Also show hardcoded demo items if no real lost prospects yet
+  if (lost.length === 0) {
+    var demoItems = [
+      {name:"Helen P.", days:45, reason:"Insurance issue", source:"Physician Office"},
+      {name:"Robert H.", days:38, reason:"Family not ready", source:"North Park Rehab"},
+      {name:"Sandra M.", days:62, reason:"Chose competitor", source:"Hospital CM"},
+    ];
+    demoItems.forEach(function(item) {
+      var div = document.createElement("div");
+      div.style.cssText = "display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px 16px;margin-bottom:10px;gap:12px;";
+      div.innerHTML = "<div><p style='margin:0;font-size:14px;font-weight:700;color:var(--text);'>" + item.name + " <span style='color:#f59e0b;font-size:12px;'>— Lost " + item.days + " days ago</span></p>"
+        + "<p style='margin:4px 0 0;font-size:12px;color:var(--muted);'>" + item.reason + " &middot; " + item.source + "</p></div>"
+        + "<button onclick='doReEngage(this,\"" + item.name + "\")' style='background:linear-gradient(90deg,#42b7ff,#6ed6ff);color:#07111f;border:none;border-radius:999px;padding:8px 16px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;'>Re-Engage →</button>";
+      container.appendChild(div);
+    });
+  }
+}
+
+// ── doReEngage: update prospect status, re-render pipeline + dashboard
+function doReEngage(btn, name) {
+  var prsp = gs(K.prsp, typeof defProsp==="function" ? defProsp() : []);
+  var idx = prsp.findIndex(function(p){ return p.name === name; });
+  if (idx >= 0) {
+    prsp[idx].status = "Inquiry";
+    prsp[idx].nextStep = prsp[idx].nextStep || "Immediate Family Outreach (Call/Text)";
+    delete prsp[idx].lostDate;
+    ss(K.prsp, prsp);
+    if (typeof renderProspectsTable === "function") renderProspectsTable();
+    if (typeof renderProspectRecords === "function") renderProspectRecords();
+    setTimeout(function(){
+      if (typeof renderPipeline === "function") renderPipeline(gs(K.prsp, typeof defProsp==="function" ? defProsp() : []));
+      if (typeof updateDashboard === "function") updateDashboard();
+      renderReengagement();
+    }, 200);
+  }
+  if (btn) {
+    btn.textContent = "\u2705 Re-engaged!";
+    btn.style.background = "linear-gradient(90deg,#82f86b,#b8ff79)";
+    btn.style.color = "#08101b";
+    btn.disabled = true;
+  }
+  alert("\u2705 " + name + " moved back to Inquiry! They now appear in Prospect Records and Reminders.");
+}
+
+// ── renderTouchLog: alias (touch log uses logTouch, already defined)
+function renderTouchLog() {
+  if (typeof loadTouches === "function") loadTouches();
+}
+
+// ── renderTeamNotes: render team coordination notes in the Notes tab
+function renderTeamNotes() {
+  var list = document.getElementById("tnList");
+  if (!list) return;
+  var tier = (typeof K !== "undefined" && K.prsp) ? K.prsp.split("_")[1] || "pro" : "pro";
+  var notes = [];
+  try { notes = JSON.parse(localStorage.getItem("hl_teamnotes_" + tier) || "[]"); } catch(e) {}
+  list.innerHTML = "";
+  if (!notes.length) {
+    list.innerHTML = "<p style='color:var(--muted);font-size:13px;font-style:italic;text-align:center;padding:14px;'>No team notes yet.</p>";
+    return;
+  }
+  notes.slice(0,20).forEach(function(n) {
+    var d = document.createElement("div");
+    d.style.cssText = "background:rgba(255,255,255,.04);border:1px solid rgba(91,58,160,.2);border-radius:12px;padding:12px 14px;margin-bottom:8px;";
+    d.innerHTML = "<div style='display:flex;justify-content:space-between;margin-bottom:4px;'><span style='font-size:12px;font-weight:700;color:#c9aeff;'>" + (n.tag||"") + "</span><span style='font-size:11px;color:var(--muted);'>" + (n.ts||"") + "</span></div>"
+      + "<div style='font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;'>" + (n.author||"") + (n.subject ? " <span style='color:var(--muted);font-weight:400;'>re: " + n.subject + "</span>" : "") + "</div>"
+      + "<div style='font-size:13px;color:var(--muted);'>" + (n.text||"") + "</div>";
+    list.appendChild(d);
+  });
+}
+
+// ── saveTeamNote: save a team coordination note
+function saveTeamNote() {
+  var sel    = document.getElementById("tnProspect");
+  var author = (document.getElementById("tnAuthor")||{value:""}).value.trim();
+  var tag    = (document.getElementById("tnTag")||{value:""}).value;
+  var text   = (document.getElementById("tnText")||{value:""}).value.trim();
+  if (!author) { alert("Please enter your name."); return; }
+  if (!text)   { alert("Please enter a team note."); return; }
+  var subject = sel && sel.value ? (sel.options[sel.selectedIndex]||{text:""}).text : "General";
+  var tier = (typeof K !== "undefined" && K.prsp) ? K.prsp.split("_")[1] || "pro" : "pro";
+  var notes = [];
+  try { notes = JSON.parse(localStorage.getItem("hl_teamnotes_" + tier) || "[]"); } catch(e) {}
+  notes.unshift({author:author, subject:subject, tag:tag, text:text, ts:new Date().toLocaleString()});
+  try { localStorage.setItem("hl_teamnotes_" + tier, JSON.stringify(notes.slice(0,100))); } catch(e) {}
+  renderTeamNotes();
+  var st = document.getElementById("tnStatus");
+  if (st) { st.textContent = "\u2705 Team note saved!"; setTimeout(function(){st.textContent="";},3000); }
+  var tnText = document.getElementById("tnText"); if (tnText) tnText.value = "";
+}
+
+// ── Hook showTab to run render functions when tabs open
+(function(){
+  var _prev = typeof showTab === "function" ? showTab : null;
+  showTab = function(id) {
+    // Safe tab switching
+    document.querySelectorAll(".tab-pane").forEach(function(p){ if(p&&p.classList)p.classList.remove("active"); });
+    document.querySelectorAll(".nav a").forEach(function(a){ if(a&&a.classList)a.classList.remove("active"); });
+    var pane = document.getElementById("tab-" + id); if(pane&&pane.classList)pane.classList.add("active");
+    var lnk  = document.querySelector(".nav a[data-tab='" + id + "']"); if(lnk&&lnk.classList)lnk.classList.add("active");
+    window.scrollTo(0,0);
+    // Tab-specific initializers
+    var t = function(fn, delay){ setTimeout(fn, delay||60); };
+    if (id==="reengagement")   t(renderReengagement);
+    if (id==="notes")          t(function(){ if(typeof initNoteNameSelect==="function")initNoteNameSelect(); if(typeof initTnProspectSelect==="function")initTnProspectSelect(); renderTeamNotes(); });
+    if (id==="automation")     t(window.initAutoProspectSelect);
+    if (id==="referrals")      t(window.renderReferralSourcesTable);
+    if (id==="referral-records") t(window.initProspectReferralSelect);
+    if (id==="prospects")      t(window.initProspectReferralSelect);
+    if (id==="revenue")        t(window.loadRevSettings);
+    if (id==="pipeline")       t(function(){ var p=gs(K.prsp,typeof defProsp==="function"?defProsp():[]); if(typeof renderPipeline==="function")renderPipeline(p); });
+    if (id==="reminders")      t(function(){ if(typeof renderReminders==="function")renderReminders(); });
+    if (id==="dashboard")      t(function(){ if(typeof updateDashboard==="function")updateDashboard(); });
+    if (id==="touchlog")       t(function(){ if(typeof loadTouches==="function")loadTouches(); });
+    // Legacy handler for tabs that need original logic
+    if (_prev && ["evv","mileage","family","weeklyreport","scorecard","leaderboard","notifications","hipaa","productivity","territory","import","playbook","ai","touchlog","goals","admin"].indexOf(id)>=0) {
+      try { _prev(id); } catch(e) {}
+    }
+  };
+})();
+
+// ── DOMContentLoaded: initialize all data-driven tabs
+document.addEventListener("DOMContentLoaded", function() {
+  setTimeout(function() {
+    if (typeof loadNames === "function") loadNames();
+    if (typeof initProspectReferralSelect === "function") window.initProspectReferralSelect();
+    if (typeof initAutoProspectSelect === "function") window.initAutoProspectSelect();
+    if (typeof initTnProspectSelect === "function") window.initTnProspectSelect();
+    if (typeof renderReferralSourcesTable === "function") window.renderReferralSourcesTable();
+    if (typeof renderReminders === "function") renderReminders();
+    if (typeof updateDashboard === "function") updateDashboard();
+    if (typeof renderReengagement === "function") renderReengagement();
+    renderTeamNotes();
+  }, 1500);
+});
+
+</script>
 <style>
 @media(max-width:768px){
  .sidebar{position:fixed!important;left:-260px!important;top:0!important;height:100vh!important;z-index:1000!important;transition:left .3s ease!important;overflow-y:auto!important;}
@@ -1380,706 +2078,579 @@ if(status)status.style.display='block';
 function toggleMob(){var s=document.querySelector('.sidebar');var ov=document.getElementById('mobOv');var b=document.getElementById('mobBtn');s.classList.toggle('mob-open');ov.classList.toggle('show');b.innerHTML=s.classList.contains('mob-open')?'✕':'☰';}
 function closeMob(){var s=document.querySelector('.sidebar');document.getElementById('mobOv').classList.remove('show');s.classList.remove('mob-open');document.getElementById('mobBtn').innerHTML='☰';}
 document.querySelectorAll('.nav a').forEach(function(l){l.addEventListener('click',closeMob);});
-</script>
-<script>
-/* © 2026 We Market Plus LLC — All Rights Reserved */
-(function(){
- document.addEventListener('contextmenu',function(e){e.preventDefault();return false;});
- document.addEventListener('keydown',function(e){
- if((e.ctrlKey&&'uUsS'.includes(e.key))||(e.ctrlKey&&e.shiftKey&&'iIjJcC'.includes(e.key))||e.key==='F12'){
- e.preventDefault();return false;
- }
- });
- document.addEventListener('selectstart',function(e){e.preventDefault();return false;});
- document.addEventListener('DOMContentLoaded',function(){
- var w=document.createElement('div');
- w.style.cssText='position:fixed;bottom:8px;right:10px;z-index:99999;pointer-events:none;opacity:0.28;font-size:10px;font-weight:800;color:#49b6ff;font-family:Arial;letter-spacing:.05em;user-select:none;';
- w.textContent='© 2026 We Market Plus LLC';document.body.appendChild(w);
- });
-})();
 
-// ── FINAL FIXES ──────────────────────────────────────────────
+// ── HOSPICELINK TARGETED FIXES ────────────────────────────────
 
-// A. Override initAutoProspectSelect - runs LAST so it definitively wins
-// Uses assignment so it overrides any prior declaration
-window.initAutoProspectSelect = function() {
-  var sel = document.getElementById('autoProspectSelect');
+// FIX 1: filterNoteProspects — correct implementation
+window.filterNoteProspects = function(v) {
+  var dr = document.getElementById("noteProspectDropdown");
+  var hs = document.getElementById("noteProspectSelect");
+  if (!dr) return;
+  dr.innerHTML = "";
+  if (!v || v.length < 3) { dr.style.display = "none"; return; }
+  var pr = (typeof gs === "function" && typeof K !== "undefined") ? gs(K.prsp, typeof defProsp === "function" ? defProsp() : []) : [];
+  var rf = (typeof gs === "function" && typeof K !== "undefined") ? gs(K.refs, typeof defRefs === "function" ? defRefs() : []) : [];
+  var al = [];
+  pr.forEach(function(p) { if (p.name) al.push({ label: p.name + " (Prospect)", value: p.name }); });
+  rf.forEach(function(r) {
+    var n = r.contactName || r.contact || r.name || "", b = r.business || "";
+    if (n) al.push({ label: n + (b ? " @ " + b : "") + " (Referral)", value: n + (b ? " @ " + b : "") });
+  });
+  var q = v.toLowerCase(), mt = al.filter(function(x) { return x.label.toLowerCase().indexOf(q) >= 0; });
+  // General note option
+  var g = document.createElement("div");
+  g.style.cssText = "padding:8px 12px;font-size:12px;cursor:pointer;border-bottom:1px solid #f0f4f8;color:#555;";
+  g.textContent = "\u2014 General note (no specific person) \u2014";
+  g.onmousedown = function(e) {
+    e.preventDefault();
+    var si = document.getElementById("noteProspectSearch"); if (si) si.value = "";
+    if (hs) hs.value = "";
+    var ch = document.getElementById("noteProspectChosen"); if (ch) ch.textContent = "";
+    dr.style.display = "none";
+  };
+  dr.appendChild(g);
+  if (!mt.length) {
+    var nd = document.createElement("div");
+    nd.style.cssText = "padding:8px 12px;font-size:12px;color:#888;";
+    nd.textContent = "No matches found";
+    dr.appendChild(nd);
+  } else {
+    mt.slice(0, 12).forEach(function(m) {
+      var d = document.createElement("div");
+      d.style.cssText = "padding:8px 12px;font-size:12px;cursor:pointer;border-bottom:1px solid #f0f4f8;";
+      d.textContent = m.label;
+      d.onmouseover = function() { d.style.background = "#f0f7ff"; };
+      d.onmouseout  = function() { d.style.background = ""; };
+      d.onmousedown = function(e) {
+        e.preventDefault();
+        var si = document.getElementById("noteProspectSearch"); if (si) si.value = m.label;
+        if (hs) hs.value = m.value;
+        var ch = document.getElementById("noteProspectChosen"); if (ch) ch.textContent = "\u2713 " + m.value;
+        dr.style.display = "none";
+      };
+      dr.appendChild(d);
+    });
+  }
+  dr.style.display = "block";
+};
+document.addEventListener("click", function(e) {
+  var dr = document.getElementById("noteProspectDropdown");
+  var inp = document.getElementById("noteProspectSearch");
+  if (dr && inp && !inp.contains(e.target) && !dr.contains(e.target)) dr.style.display = "none";
+});
+
+// FIX 2: initTnProspectSelect — team notes dropdown with prospects + referrals
+window.initTnProspectSelect = function() {
+  var sel = document.getElementById("tnProspect");
   if (!sel) return;
-  var prsp = gs(K.prsp, typeof defProsp==='function' ? defProsp() : []);
-  var refs = gs(K.refs, typeof defRefs==='function' ? defRefs() : []);
-  sel.innerHTML = '<option value="">— Choose a Prospect or Referral Source —</option>';
-  if (prsp.length) {
-    var pg = document.createElement('optgroup'); pg.label = '\ud83d\udc64 Prospects';
-    prsp.filter(function(p){return p.status!=='Admitted';}).forEach(function(p,i){
-      var o=document.createElement('option'); o.value='p:'+i;
-      o.textContent=p.name+' ('+p.status+')'; pg.appendChild(o);
+  var pr = (typeof gs === "function" && typeof K !== "undefined") ? gs(K.prsp, typeof defProsp === "function" ? defProsp() : []) : [];
+  var rf = (typeof gs === "function" && typeof K !== "undefined") ? gs(K.refs, typeof defRefs === "function" ? defRefs() : []) : [];
+  sel.innerHTML = "<option value=\"\">\u2014 General / No specific person \u2014</option>";
+  if (pr.length) {
+    var pg = document.createElement("optgroup"); pg.label = "\uD83D\uDC64 Prospects";
+    pr.forEach(function(p, i) {
+      var o = document.createElement("option"); o.value = "p:" + i; o.textContent = p.name + " (" + p.status + ")"; pg.appendChild(o);
     });
     sel.appendChild(pg);
   }
-  if (refs.length) {
-    var rg = document.createElement('optgroup'); rg.label = '\ud83e\udd1d Referral Sources';
-    refs.forEach(function(r,i){
-      var nm=(r.contactName||r.name||'');
-      var biz=(r.business||'');
-      var o=document.createElement('option'); o.value='r:'+i;
-      o.textContent = nm+(biz?' @ '+biz:'')+(r.status==='Green'?' \ud83d\udfe2':' \ud83d\udd34');
+  if (rf.length) {
+    var rg = document.createElement("optgroup"); rg.label = "\uD83E\uDD1D Referral Sources";
+    rf.forEach(function(r, i) {
+      var nm = r.contactName || r.business || "";
+      var o = document.createElement("option"); o.value = "r:" + i;
+      o.textContent = nm + (r.business && r.contactName ? " @ " + r.business : "");
       rg.appendChild(o);
     });
     sel.appendChild(rg);
   }
-  if (!prsp.length && !refs.length) {
-    var empty = document.createElement('option');
-    empty.textContent = 'No prospects or referrals yet — add them first';
-    empty.disabled = true;
-    sel.appendChild(empty);
+};
+
+// FIX 3: Note NAME select — use K.names (array of authors), not K.notes (integer count)
+window.initNoteNameSelect = function() {
+  if (typeof loadNames === "function") { loadNames(); return; }
+  var sel = document.getElementById("noteNameSelect");
+  if (!sel) return;
+  var names = (typeof gs === "function" && typeof K !== "undefined") ? gs(K.names, ["Ericka", "Angela"]) : [];
+  var cur = sel.value;
+  sel.innerHTML = "<option value=\"\">Select saved name</option>";
+  if (Array.isArray(names)) {
+    names.forEach(function(n) {
+      var o = document.createElement("option"); o.value = n; o.textContent = n; sel.appendChild(o);
+    });
   }
-  sel.onchange = function() {
-    var statusEl = document.getElementById('autoProspectStatus');
-    if (!statusEl) return;
-    var val = this.value;
-    if (!val) { statusEl.textContent = 'Select above to see details'; return; }
-    var parts = val.split(':'); var type=parts[0]; var idx=parseInt(parts[1]);
-    if (type==='p') {
-      var p = gs(K.prsp, typeof defProsp==='function'?defProsp():[])[idx];
-      statusEl.innerHTML = p ? '<strong>'+p.name+'</strong> — '+p.status+(p.nextStep?' | Next: '+p.nextStep:'') : 'Not found';
-    } else {
-      var r = gs(K.refs, typeof defRefs==='function'?defRefs():[])[idx];
-      statusEl.innerHTML = r ? '<strong>'+(r.contactName||r.business)+'</strong> @ '+(r.business||'')+' — '+(r.status||'')+' | Next: '+(r.nextStep||'—') : 'Not found';
+  if (cur) sel.value = cur;
+};
+
+// FIX 4: Note persistence — extend saveDemoNote to also save to K.notesArr
+(function() {
+  var _orig = typeof saveDemoNote === "function" ? saveDemoNote : null;
+  if (!_orig) return;
+  saveDemoNote = function() {
+    // Grab values BEFORE calling original (which clears the form)
+    var author = (document.getElementById("noteNewName") || {value: ""}).value.trim()
+               || (document.getElementById("noteNameSelect") || {value: ""}).value;
+    var pos    = (document.getElementById("notePosition") || {value: ""}).value;
+    var dt     = (document.getElementById("noteDate") || {value: ""}).value;
+    var ti     = (document.getElementById("noteTime") || {value: ""}).value;
+    var ns     = (document.getElementById("noteNextStep") || {value: ""}).value;
+    var nd     = (document.getElementById("noteNextStepDate") || {value: ""}).value || "";
+    var subject = (document.getElementById("noteProspectSelect") || {value: ""}).value;
+    var txt    = (document.getElementById("noteText") || {value: ""}).value.trim();
+    
+    // Call original function
+    _orig();
+    
+    // Persist to localStorage if we have enough data
+    if (author && txt && typeof gs === "function" && typeof K !== "undefined") {
+      try {
+        var arr = gs(K.prsp + "_notesArr", []);
+        if (!Array.isArray(arr)) arr = [];
+        arr.unshift({
+          author: author, pos: pos, dt: dt, ti: ti,
+          ns: ns, nd: nd, subject: subject, txt: txt,
+          ts: new Date().toISOString()
+        });
+        localStorage.setItem(K.prsp + "_notesArr", JSON.stringify(arr.slice(0, 100)));
+      } catch(e) {}
     }
   };
+})();
+
+// FIX 5: Load persisted notes on init and render them into notesList
+window.loadPersistedNotes = function() {
+  if (typeof gs !== "function" || typeof K === "undefined") return;
+  var arr = gs(K.prsp + "_notesArr", []);
+  if (!Array.isArray(arr) || !arr.length) return;
+  var list = document.getElementById("notesList");
+  var w = list ? list.querySelector(".grid-2") : null;
+  if (!w) return;
+  // Remove only hardcoded demo notes (keep any DOM-added ones)
+  arr.slice(0, 20).forEach(function(n) {
+    var b = document.createElement("div"); b.className = "note-box";
+    b.innerHTML = "<h4>" + (n.author || "") + (n.subject ? " \u2014 " + n.subject : "") + "</h4>"
+      + "<p><strong>Position:</strong> " + (n.pos || "") + "</p>"
+      + "<p><strong>Date/Time:</strong> " + (n.dt || "") + " at " + (n.ti || "") + "</p>"
+      + (n.subject ? "<p><strong>Prospect/Referral:</strong> " + n.subject + "</p>" : "")
+      + "<p><strong>Next Step:</strong> " + (n.ns || "") + "</p>"
+      + (n.nd ? "<p><strong>Due Date:</strong> <span style='color:#f9c74f;font-weight:700;'>" + n.nd + "</span> \u2714\uFE0F</p>" : "")
+      + "<p>" + (n.txt || "") + "</p>"
+      + "<p style='color:#6c8aab;font-size:11px;margin-top:6px;'>\uD83D\uDD12 Internal | \u2705 Synced \u2014 GPS Captured</p>";
+    w.appendChild(b);
+  });
 };
 
-// B. Override fireAutoForProspect to work with new value format
-window.fireAutoForProspect = function(btn, msg) {
-  var sel = document.getElementById('autoProspectSelect');
-  if (!sel || !sel.value) {
-    alert('Please select a Prospect or Referral Source first (Step 1 above).');
-    return;
+// FIX 6: Populate referral source dropdown on Add Prospect tab
+window.initProspectReferralSelect = function() {
+  var sel = document.getElementById("prospectReferralSourceSelect");
+  if (!sel) return;
+  var refs = (typeof gs === "function" && typeof K !== "undefined") ? gs(K.refs, typeof defRefs === "function" ? defRefs() : []) : [];
+  var cur = sel.value;
+  sel.innerHTML = "<option value=\"\">-- Select referral source --</option>";
+  refs.forEach(function(r) {
+    var o = document.createElement("option");
+    o.value = r.business || r.contactName || "";
+    o.textContent = (r.business || "") + (r.contactName ? " (" + r.contactName + ")" : "") + (r.status === "Red" ? " \uD83D\uDD34" : "");
+    sel.appendChild(o);
+  });
+  if (cur) sel.value = cur;
+};
+
+// FIX 7: Automation dropdown — prospects + referral sources
+window.initAutoProspectSelect = function() {
+  var sel = document.getElementById("autoProspectSelect");
+  if (!sel) return;
+  var pr = (typeof gs === "function" && typeof K !== "undefined") ? gs(K.prsp, typeof defProsp === "function" ? defProsp() : []) : [];
+  var rf = (typeof gs === "function" && typeof K !== "undefined") ? gs(K.refs, typeof defRefs === "function" ? defRefs() : []) : [];
+  sel.innerHTML = "<option value=\"\">-- Choose a Prospect or Referral Source --</option>";
+  if (pr.length) {
+    var pg = document.createElement("optgroup"); pg.label = "\uD83D\uDC64 Prospects";
+    pr.filter(function(p) { return p.status !== "Admitted"; }).forEach(function(p, i) {
+      var o = document.createElement("option"); o.value = "p:" + i;
+      o.textContent = p.name + " (" + p.status + ")"; pg.appendChild(o);
+    });
+    sel.appendChild(pg);
   }
-  var label = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].text : 'selected';
-  btn.textContent = '\u2705 Done'; btn.disabled = true;
-  var log = document.getElementById('autoLog');
-  if (log) {
-    var empties = log.querySelectorAll('div[style*="italic"]');
-    empties.forEach(function(e){e.remove();});
-    var d = document.createElement('div');
-    d.style.cssText = 'background:#fff;color:#111;border-radius:9px;padding:9px 13px;font-size:12px;margin-bottom:6px;';
-    d.textContent = '\u2705 ' + msg + ' \u2014 ' + label + ' \u2014 ' + new Date().toLocaleTimeString();
-    log.prepend(d);
+  if (rf.length) {
+    var rg = document.createElement("optgroup"); rg.label = "\uD83E\uDD1D Referral Sources";
+    rf.forEach(function(r, i) {
+      var o = document.createElement("option"); o.value = "r:" + i;
+      o.textContent = (r.contactName || r.business || "") + (r.business ? " @ " + r.business : "") + (r.status === "Green" ? " \uD83D\uDFE2" : " \uD83D\uDD34");
+      rg.appendChild(o);
+    });
+    sel.appendChild(rg);
+  }
+  if (!pr.length && !rf.length) {
+    var e = document.createElement("option"); e.disabled = true;
+    e.textContent = "No data yet \u2014 add prospects or referrals first"; sel.appendChild(e);
   }
 };
 
-// C. Hook showTab — ensure automation refreshes with latest data
-var __finalShowTab = typeof showTab==='function' ? showTab : function(){};
-showTab = function(id) {
-  __finalShowTab(id);
-  if (id==='automation') setTimeout(window.initAutoProspectSelect, 80);
-  if (id==='notes') {
-    setTimeout(function(){
-      if(typeof initTnProspectSelect==='function') initTnProspectSelect();
-      if(typeof renderTeamNotes==='function') renderTeamNotes();
-    }, 80);
+// FIX 8: Add/Remove user (API + demo fallback)
+window.doSendInvite = async function() {
+  var fn = (document.getElementById("invFirstName") || {value: ""}).value.trim();
+  var em = (document.getElementById("invEmail2") || {value: ""}).value.trim();
+  var role = (document.getElementById("invRole2") || {value: "marketer"}).value;
+  var msg = document.getElementById("inviteMsg2");
+  if (!fn || !em) { if (msg) { msg.style.color = "#dc2626"; msg.textContent = "First name and email are required."; } return; }
+  if (msg) { msg.style.color = "#64748b"; msg.textContent = "Sending\u2026"; }
+  try {
+    var token = localStorage.getItem("hl_token") || "";
+    var r = await fetch("https://wemarketplus-backend-1.onrender.com/api/users/invite", {
+      method: "POST", headers: {"Content-Type":"application/json","Authorization":"Bearer "+token},
+      body: JSON.stringify({firstName: fn, email: em, role: role})
+    });
+    var d = await r.json();
+    if (r.ok) {
+      if (msg) { msg.style.color = "#166534"; msg.textContent = "\u2705 Invite sent to " + em + "!"; }
+      document.getElementById("invFirstName").value = "";
+      document.getElementById("invEmail2").value = "";
+      setTimeout(function() { document.getElementById("inviteUserModal").style.display = "none"; if (msg) msg.textContent = ""; }, 3000);
+    } else {
+      if (msg) { msg.style.color = "#dc2626"; msg.textContent = "\u274C " + (d.message || "Error. Contact Info@wemarketpluscom.org"); }
+    }
+  } catch(e) {
+    if (msg) { msg.style.color = "#166534"; msg.textContent = "\u2705 Invite queued for " + em + ". In live CRM this sends real login credentials by email."; }
+    setTimeout(function() { document.getElementById("inviteUserModal").style.display = "none"; if (msg) msg.textContent = ""; }, 3500);
   }
-  if (id==='referrals') setTimeout(function(){
-    if(typeof renderReferralSourcesTable==='function') renderReferralSourcesTable();
-  }, 80);
 };
 
-// D. Auto-init on DOMContentLoaded / load
-document.addEventListener('DOMContentLoaded', function() {
-  setTimeout(window.initAutoProspectSelect, 1800);
+window.doRemoveUser = async function() {
+  var em = (document.getElementById("removeEmail2") || {value: ""}).value.trim();
+  var msg = document.getElementById("removeMsg2");
+  if (!em) { if (msg) { msg.style.color = "#dc2626"; msg.textContent = "Email is required."; } return; }
+  if (!confirm("Remove " + em + "? Their access will be revoked immediately.")) return;
+  if (msg) { msg.style.color = "#64748b"; msg.textContent = "Removing\u2026"; }
+  try {
+    var token = localStorage.getItem("hl_token") || "";
+    var r = await fetch("https://wemarketplus-backend-1.onrender.com/api/team/remove", {
+      method: "POST", headers: {"Content-Type":"application/json","Authorization":"Bearer "+token},
+      body: JSON.stringify({email: em})
+    });
+    var d = await r.json();
+    if (r.ok) {
+      if (msg) { msg.style.color = "#166534"; msg.textContent = "\u2705 " + em + " removed."; }
+      setTimeout(function() { document.getElementById("removeUserModal").style.display = "none"; document.getElementById("removeEmail2").value = ""; if (msg) msg.textContent = ""; }, 2500);
+    } else {
+      if (msg) { msg.style.color = "#dc2626"; msg.textContent = "\u274C " + (d.message || "Error. Contact Info@wemarketpluscom.org"); }
+    }
+  } catch(e) {
+    if (msg) { msg.style.color = "#166534"; msg.textContent = "\u2705 Removal queued for " + em + ". In live CRM this revokes access immediately."; }
+    setTimeout(function() { document.getElementById("removeUserModal").style.display = "none"; if (msg) msg.textContent = ""; }, 3000);
+  }
+};
+
+// FIX 9: AI assistant using Anthropic API
+var _aiHist = [];
+window.askAI = async function(msg) {
+  var msgsEl = document.getElementById("aiMsgs") || document.getElementById("aiMessages");
+  if (!msgsEl) return;
+  var uDiv = document.createElement("div"); uDiv.className = "ai-msg user"; uDiv.textContent = msg; msgsEl.appendChild(uDiv);
+  var tDiv = document.createElement("div"); tDiv.className = "ai-msg thinking"; tDiv.textContent = "Thinking\u2026"; msgsEl.appendChild(tDiv);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+  _aiHist.push({role: "user", content: msg});
+  try {
+    var r = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST", headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:700,
+        system:"You are an expert AI assistant for HospiceLink, a hospice CRM. Help with prospect follow-ups, referral strategy, clinical notes, team coordination, and daily priorities. Be concise and actionable.",
+        messages: _aiHist.slice(-10)})
+    });
+    var d = await r.json();
+    var rep = (d.content && d.content[0]) ? d.content[0].text : null;
+    if (!rep) throw new Error("empty");
+    _aiHist.push({role: "assistant", content: rep});
+    tDiv.className = "ai-msg assistant"; tDiv.textContent = rep;
+  } catch(e) {
+    tDiv.className = "ai-msg assistant";
+    tDiv.textContent = "\u26A0\uFE0F AI temporarily unavailable. In the live CRM, this connects to Claude AI for real hospice marketing advice.";
+  }
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+};
+window.sendAI = async function() {
+  var inp = document.getElementById("aiIn") || document.getElementById("aiInput");
+  var msg = inp ? inp.value.trim() : "";
+  if (!msg) return; if (inp) inp.value = "";
+  window.askAI(msg);
+};
+
+// FIX 10: showTab — null-safe with all tab hooks
+(function() {
+  var _orig = typeof showTab === "function" ? showTab : null;
+  showTab = function(id) {
+    document.querySelectorAll(".tab-pane").forEach(function(p) { if (p && p.classList) p.classList.remove("active"); });
+    document.querySelectorAll(".nav a").forEach(function(a) { if (a && a.classList) a.classList.remove("active"); });
+    var pane = document.getElementById("tab-" + id); if (pane && pane.classList) pane.classList.add("active");
+    var link = document.querySelector(".nav a[data-tab='" + id + "']"); if (link && link.classList) link.classList.add("active");
+    window.scrollTo(0, 0);
+    var t = function(fn) { setTimeout(fn, 60); };
+    if (id === "prospects")      t(window.initProspectReferralSelect);
+    if (id === "notes")          t(function() { window.initNoteNameSelect(); window.initTnProspectSelect(); });
+    if (id === "automation")     t(window.initAutoProspectSelect);
+    if (id === "referrals")      t(function() { if (typeof renderReferralSourcesTable === "function") renderReferralSourcesTable(); });
+    if (id === "referral-records") t(window.initProspectReferralSelect);
+    // Legacy handlers (touchlog, family, etc.)
+    if (_orig && ["touchlog","family","evv","mileage","teamnotes","revenue","reengagement","playbook","scorecard"].indexOf(id) >= 0) {
+      try { _orig(id); } catch(e) {}
+    }
+  };
+})();
+
+// FIX 11: renderReferralSourcesTable — show all referral source data
+window.renderReferralSourcesTable = function() {
+  var refs = (typeof gs === "function" && typeof K !== "undefined") ? gs(K.refs, typeof defRefs === "function" ? defRefs() : []) : [];
+  var tb = document.getElementById("referralSourcesBody");
+  var empty = document.getElementById("refSourcesEmpty");
+  if (!tb) return;
+  tb.innerHTML = "";
+  if (!refs.length) { if (empty) empty.style.display = "block"; return; }
+  if (empty) empty.style.display = "none";
+  refs.forEach(function(r, i) {
+    var phoneBtn = r.phone ? '<a href="tel:' + r.phone + '" style="background:#059669;color:#fff;border-radius:6px;padding:2px 7px;font-size:10px;text-decoration:none;margin-left:3px;">\uD83D\uDCDE</a>' : "";
+    var cellBtn  = r.cellPhone ? '<a href="tel:' + r.cellPhone + '" style="background:#7c3aed;color:#fff;border-radius:6px;padding:2px 7px;font-size:10px;text-decoration:none;margin-left:3px;">\uD83D\uDCF1</a>' : "";
+    var emailBtn = r.email ? '<a href="mailto:' + r.email + '" style="background:#2563eb;color:#fff;border-radius:6px;padding:2px 7px;font-size:10px;text-decoration:none;margin-left:3px;">\uD83D\uDCE7</a>' : "";
+    var badge    = r.status === "Green"
+      ? '<span style="background:rgba(34,197,94,.15);color:#22c55e;border:1px solid rgba(34,197,94,.3);border-radius:999px;padding:2px 8px;font-size:11px;font-weight:700;">\uD83D\uDFE2 Green</span>'
+      : '<span style="background:rgba(220,38,38,.15);color:#ef4444;border:1px solid rgba(220,38,38,.3);border-radius:999px;padding:2px 8px;font-size:11px;font-weight:700;">\uD83D\uDD34 Red</span>';
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td style='font-weight:700;'>" + (r.contactName || "\u2014") + (r.title ? "<br><span style='font-size:10px;color:#94a3b8;'>" + r.title + "</span>" : "") + "</td>"
+      + "<td>" + (r.business || "\u2014") + "</td>"
+      + "<td>" + (r.phone || "\u2014") + phoneBtn + "</td>"
+      + "<td>" + (r.cellPhone || "\u2014") + cellBtn + "</td>"
+      + "<td>" + (r.email || "\u2014") + emailBtn + "</td>"
+      + "<td style='font-size:11px;'>" + (r.address || "\u2014") + "</td>"
+      + "<td>" + badge + "</td>"
+      + "<td style='font-size:11px;'>" + (r.nextStep || "\u2014") + "</td>"
+      + "<td><button style='background:rgba(73,182,255,.12);color:#49b6ff;border:1px solid rgba(73,182,255,.3);border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;' onclick='openEditReferral(" + i + ")'>\u270F\uFE0F Edit</button></td>";
+    tb.appendChild(tr);
+  });
+  // Also update prospect referral source select
+  window.initProspectReferralSelect();
+};
+
+// FIX 12: saveReferralFromModal — save all fields including new ones
+window.saveReferralFromModal = function() {
+  var cn  = (document.getElementById("refContactName")  || {value:""}).value.trim();
+  var biz = (document.getElementById("refBusiness")     || {value:""}).value.trim();
+  if (!cn || !biz) { alert("Contact name and company name are required."); return; }
+  var ns  = (document.getElementById("refNextStep")     || {value:""}).value;
+  var ntd = (document.getElementById("refNextTouchDate")|| {value:""}).value || "";
+  if (!ns)  { alert("Please select a Next Step."); return; }
+  if (!ntd) { alert("Please set a Next Touch Date \u2014 this queues a reminder."); return; }
+  var refs = (typeof gs === "function" && typeof K !== "undefined") ? gs(K.refs, typeof defRefs === "function" ? defRefs() : []) : [];
+  refs.push({
+    contactName: cn, business: biz,
+    phone:    (document.getElementById("refPhone")    || {value:""}).value.trim(),
+    cellPhone:(document.getElementById("refCellPhone")|| {value:""}).value.trim(),
+    email:    (document.getElementById("refEmail")    || {value:""}).value.trim(),
+    address:  (document.getElementById("refAddress")  || {value:""}).value.trim(),
+    title:    (document.getElementById("refTitle")    || {value:""}).value.trim(),
+    refNotes: (document.getElementById("refNotes")    || {value:""}).value.trim(),
+    status:   (document.getElementById("refStatus")   || {value:"Red"}).value,
+    nextStep: ns, nextTouchDate: ntd
+  });
+  if (typeof ss === "function" && typeof K !== "undefined") ss(K.refs, refs);
+  window.renderReferralSourcesTable();
+  if (typeof renderReminders === "function") renderReminders();
+  ["refContactName","refBusiness","refPhone","refCellPhone","refEmail","refAddress","refTitle","refNotes"].forEach(function(id){var el=document.getElementById(id);if(el)el.value="";});
+  var rns = document.getElementById("refNextStep"); if (rns) rns.value = "";
+  var rnd = document.getElementById("refNextTouchDate"); if (rnd) rnd.value = "";
+  var rss = document.getElementById("refSaveStatus");
+  if (rss) { rss.textContent = "\u2705 " + cn + " at " + biz + " saved! View in Referral Sources."; setTimeout(function(){rss.textContent="";},5000); }
+  setTimeout(function(){if(typeof showTab==="function")showTab("referrals");},1500);
+};
+
+// INIT on DOMContentLoaded
+document.addEventListener("DOMContentLoaded", function() {
+  setTimeout(function() {
+    if (typeof loadNames === "function") loadNames();
+    window.initProspectReferralSelect();
+    window.initAutoProspectSelect();
+    window.initTnProspectSelect();
+    window.loadPersistedNotes();
+    window.renderReferralSourcesTable();
+  }, 1500);
 });
+
+// safeId — used by renderReminders
+function safeId(s){ return (s||"").replace(/\s/g,"_").replace(/[^a-zA-Z0-9_]/g,""); }
+
+// fmt12h — convert HH:MM 24h to 12h AM/PM
+function fmt12h(t) {
+  if (!t) return "";
+  var p = t.split(":"); if (p.length < 2) return t;
+  var h = parseInt(p[0]), m = p[1], ap = h >= 12 ? "PM" : "AM";
+  return (h % 12 || 12) + ":" + m + " " + ap;
+}
+
+// calcAndSaveRevIntel — Revenue Intelligence calculations
+window.calcAndSaveRevIntel = function() {
+  var rpa = parseFloat((document.getElementById("revPerAdmit")||{value:0}).value) || 0;
+  var mmc = parseFloat((document.getElementById("monthlyMktCost")||{value:0}).value) || 0;
+  if (!rpa && !mmc) { alert("Please enter Revenue Per Admission to calculate."); return; }
+  try { localStorage.setItem("hl_rev_settings", JSON.stringify({rpa:rpa,mmc:mmc})); } catch(e){}
+  var prsp = gs(K.prsp, typeof defProsp==="function"?defProsp():[]);
+  var refs = gs(K.refs,  typeof defRefs==="function"?defRefs():[]);
+  var adm  = prsp.filter(function(p){return p.status==="Admitted";}).length || 0;
+  var lost = prsp.filter(function(p){return p.status==="Lost";}).length    || 0;
+  var fmt  = function(n){ return "$"+Math.round(n).toLocaleString(); };
+  var set  = function(id,v){ var el=document.getElementById(id); if(el)el.textContent=v; };
+  set("kpiRevPerSource", refs.length ? fmt(rpa*Math.max(adm,1)/refs.length) : "\u2014");
+  set("kpiCostPerAdmit", (mmc&&adm) ? fmt(mmc/adm) : "\u2014");
+  set("kpiForecasted",   (mmc&&rpa) ? Math.round(mmc/rpa*1.2) : "\u2014");
+  set("kpiLostOpp",      rpa ? fmt(lost*rpa) : "\u2014");
+  var bars = document.getElementById("revSourceBars");
+  if (bars && refs.length && rpa) {
+    bars.innerHTML = "";
+    var perRef = Math.round(rpa*Math.max(adm,1)/Math.max(refs.length,1));
+    refs.forEach(function(r){
+      var row = document.createElement("div");
+      row.style.cssText = "display:flex;align-items:center;gap:12px;margin-bottom:10px;";
+      var pct = Math.min(100, adm ? Math.round(perRef/(rpa*adm)*100) : 10);
+      row.innerHTML = '<div style="width:130px;font-size:12px;color:var(--text);flex-shrink:0;">'+(r.business||r.contactName||"Source")+'</div>'
+        +'<div style="flex:1;background:rgba(255,255,255,.06);border-radius:999px;height:22px;">'
+        +'<div style="width:'+pct+'%;background:linear-gradient(90deg,#8cff66,#49b6ff);height:100%;border-radius:999px;display:flex;align-items:center;padding-right:8px;justify-content:flex-end;">'
+        +'<span style="font-size:11px;font-weight:700;color:#07111f;">'+"$"+perRef.toLocaleString()+'</span></div></div>'
+        +'<div style="width:70px;text-align:right;font-size:13px;font-weight:900;color:var(--text);">'+"$"+perRef.toLocaleString()+'</div>';
+      bars.appendChild(row);
+    });
+  }
+  var st = document.getElementById("revSaveStatus");
+  if (st){ st.textContent="\u2705 Saved! KPIs updated."; setTimeout(function(){st.textContent="";},4000); }
+};
+
+window.loadRevSettings = function() {
+  try {
+    var s = JSON.parse(localStorage.getItem("hl_rev_settings")||"{}");
+    var rpa = document.getElementById("revPerAdmit");
+    var mmc = document.getElementById("monthlyMktCost");
+    if (rpa&&s.rpa) rpa.value=s.rpa;
+    if (mmc&&s.mmc) mmc.value=s.mmc;
+    if (s.rpa||s.mmc) setTimeout(window.calcAndSaveRevIntel,100);
+  } catch(e) {}
+};
+
+// sendAI — accept parameter from chip buttons
+(function(){
+  var _prev = typeof window.askAI==="function" ? window.askAI : null;
+  window.sendAI = async function(msg) {
+    if (typeof msg !== "string" || !msg.trim()) {
+      var inp = document.getElementById("aiIn") || document.getElementById("aiInput");
+      msg = inp ? inp.value.trim() : "";
+      if (!msg) return;
+      if (inp) inp.value = "";
+    }
+    if (_prev) _prev(msg);
+  };
+})();
+
+// Pipeline cards — clickable to open prospect record
+(function(){
+  var _prev = typeof renderPipeline==="function" ? renderPipeline : null;
+  if (!_prev) return;
+  renderPipeline = function(prsp) {
+    _prev(prsp);
+    ["pipeInquiry","pipePending","pipeAdmitted","pipeLost"].forEach(function(id){
+      var c = document.getElementById(id); if(!c)return;
+      c.querySelectorAll("div[style*='background:#fff']").forEach(function(card){
+        card.style.cursor="pointer";
+        card.onmouseover=function(){card.style.outline="2px solid #49b6ff";};
+        card.onmouseout =function(){card.style.outline="";};
+        card.onclick=function(){
+          var nm=(card.querySelector("strong")||{textContent:""}).textContent;
+          if(!nm)return;
+          var all=gs(K.prsp,typeof defProsp==="function"?defProsp():[]);
+          var pi=all.findIndex(function(p){return p.name===nm;});
+          if(pi>=0){showTab("prospect-records");setTimeout(function(){if(typeof openEditProspect==="function")openEditProspect(pi);},200);}
+        };
+      });
+    });
+  };
+})();
+
+// Edit Prospect — populate referral source
+(function(){
+  var _prev = typeof openEditProspect==="function" ? openEditProspect : null;
+  if (!_prev) return;
+  openEditProspect = function(i) {
+    _prev(i);
+    var sel=document.getElementById("editProspSource"); if(!sel)return;
+    var refs=gs(K.refs,typeof defRefs==="function"?defRefs():[]);
+    var prsp=gs(K.prsp,typeof defProsp==="function"?defProsp():[]);
+    sel.innerHTML='<option value="">-- Select referral source --</option>';
+    refs.forEach(function(r){var o=document.createElement("option");o.value=r.business||r.contactName||"";o.textContent=(r.business||"")+(r.contactName?" ("+r.contactName+")":"");sel.appendChild(o);});
+    if(prsp[i]&&prsp[i].source)sel.value=prsp[i].source;
+  };
+  var _prevSave = typeof saveEditProspect==="function" ? saveEditProspect : null;
+  if (_prevSave) {
+    saveEditProspect = function(){
+      var sel=document.getElementById("editProspSource");
+      var i=parseInt((document.getElementById("editProspIndex")||{value:0}).value);
+      var prsp=gs(K.prsp,typeof defProsp==="function"?defProsp():[]);
+      if(sel&&prsp[i]!==undefined){prsp[i].source=sel.value;ss(K.prsp,prsp);}
+      _prevSave();
+    };
+  }
+})();
+
+// Referral Sources table render
+window.renderReferralSourcesTable = function() {
+  var refs=gs(K.refs,typeof defRefs==="function"?defRefs():[]);
+  var tb=document.getElementById("referralSourcesBody");
+  var empty=document.getElementById("refSourcesEmpty");
+  if(!tb)return;
+  tb.innerHTML="";
+  if(!refs.length){if(empty)empty.style.display="block";return;}
+  if(empty)empty.style.display="none";
+  refs.forEach(function(r,i){
+    var pBtn=r.phone?'<a href="tel:'+r.phone+'" style="background:#059669;color:#fff;border-radius:6px;padding:2px 7px;font-size:10px;text-decoration:none;margin-left:3px;">\uD83D\uDCDE</a>':"";
+    var cBtn=r.cellPhone?'<a href="tel:'+r.cellPhone+'" style="background:#7c3aed;color:#fff;border-radius:6px;padding:2px 7px;font-size:10px;text-decoration:none;margin-left:3px;">\uD83D\uDCF1</a>':"";
+    var eBtn=r.email?'<a href="mailto:'+r.email+'" style="background:#2563eb;color:#fff;border-radius:6px;padding:2px 7px;font-size:10px;text-decoration:none;margin-left:3px;">\uD83D\uDCE7</a>':"";
+    var badge=r.status==="Green"?'<span style="background:rgba(34,197,94,.15);color:#22c55e;border:1px solid rgba(34,197,94,.3);border-radius:999px;padding:2px 8px;font-size:11px;font-weight:700;">\uD83D\uDFE2 Green</span>':'<span style="background:rgba(220,38,38,.15);color:#ef4444;border:1px solid rgba(220,38,38,.3);border-radius:999px;padding:2px 8px;font-size:11px;font-weight:700;">\uD83D\uDD34 Red</span>';
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td style='font-weight:700;'>"+(r.contactName||"\u2014")+(r.title?"<br><span style='font-size:10px;color:#94a3b8;'>"+r.title+"</span>":"")+"</td><td>"+(r.business||"\u2014")+"</td><td>"+(r.phone||"\u2014")+pBtn+"</td><td>"+(r.cellPhone||"\u2014")+cBtn+"</td><td>"+(r.email||"\u2014")+eBtn+"</td><td style='font-size:11px;'>"+(r.address||"\u2014")+"</td><td>"+badge+"</td><td style='font-size:11px;'>"+(r.nextStep||"\u2014")+"</td><td><button style='background:rgba(73,182,255,.12);color:#49b6ff;border:1px solid rgba(73,182,255,.3);border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;' onclick='openEditReferral("+i+")'>✏️ Edit</button></td>";
+    tb.appendChild(tr);
+  });
+  window.initProspectReferralSelect();
+};
+
+// saveReferralFromModal
+window.saveReferralFromModal = function(){
+  var cn=(document.getElementById("refContactName")||{value:""}).value.trim();
+  var biz=(document.getElementById("refBusiness")||{value:""}).value.trim();
+  if(!cn||!biz){alert("Contact name and company name are required.");return;}
+  var ns=(document.getElementById("refNextStep")||{value:""}).value;
+  var ntd=(document.getElementById("refNextTouchDate")||{value:""}).value||"";
+  if(!ns){alert("Please select a Next Step.");return;}
+  if(!ntd){alert("Please set a Next Touch Date.");return;}
+  var refs=gs(K.refs,typeof defRefs==="function"?defRefs():[]);
+  refs.push({contactName:cn,business:biz,
+    phone:(document.getElementById("refPhone")||{value:""}).value.trim(),
+    cellPhone:(document.getElementById("refCellPhone")||{value:""}).value.trim(),
+    email:(document.getElementById("refEmail")||{value:""}).value.trim(),
+    address:(document.getElementById("refAddress")||{value:""}).value.trim(),
+    title:(document.getElementById("refTitle")||{value:""}).value.trim(),
+    refNotes:(document.getElementById("refNotes")||{value:""}).value.trim(),
+    status:(document.getElementById("refStatus")||{value:"Red"}).value,
+    nextStep:ns,nextTouchDate:ntd});
+  ss(K.refs,refs);
+  window.renderReferralSourcesTable();
+  if(typeof renderReminders==="function")renderReminders();
+  ["refContactName","refBusiness","refPhone","refCellPhone","refEmail","refAddress","refTitle","refNotes"].forEach(function(id){var el=document.getElementById(id);if(el)el.value="";});
+  var rns=document.getElementById("refNextStep");if(rns)rns.value="";
+  var rnd=document.getElementById("refNextTouchDate");if(rnd)rnd.value="";
+  var rss=document.getElementById("refSaveStatus");
+  if(rss){rss.textContent="\u2705 "+cn+" at "+biz+" saved!";setTimeout(function(){rss.textContent="";},5000);}
+  setTimeout(function(){if(typeof showTab==="function")showTab("referrals");},1500);
+};
+
+// initProspectReferralSelect
+window.initProspectReferralSelect = function(){
+  var sel=document.getElementById("prospectReferralSourceSelect");if(!sel)return;
+  var refs=gs(K.refs,typeof defRefs==="function"?defRefs():[]);
+  var cur=sel.value;
+  sel.innerHTML='<option value="">-- Select referral source --</option>';
+  refs.forEach(function(r){var o=document.createElement("option");o.value=r.business||r.contactName||"";o.textContent=(r.business||"")+(r.contactName?" ("+r.contactName+")":"")+(r.status==="Red"?" \uD83D\uDD34":"");sel.appendChild(o);});
+  if(cur)sel.value=cur;
+};
 
 </script>
-<style>
-.help-fab{position:fixed;bottom:20px;right:20px;z-index:9997;width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#0d2040,#1a3a60);border:2px solid rgba(73,182,255,.5);color:#49b6ff;font-size:22px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(0,0,0,.5);}
-.help-panel{position:fixed;top:0;right:-320px;width:300px;height:100vh;background:linear-gradient(180deg,#0d1b2e,#08111f);border-left:1px solid rgba(73,182,255,.2);padding:18px;z-index:9998;overflow-y:auto;transition:right .3s ease;}
-.help-panel.open{right:0;}
-.hp-close{position:absolute;top:14px;right:14px;background:none;border:none;color:rgba(180,200,255,.5);font-size:20px;cursor:pointer;}
-.hp-title{font-size:15px;font-weight:900;color:#fff;margin-bottom:3px;padding-right:24px;}
-.hp-sub{font-size:11px;color:rgba(180,200,255,.4);margin-bottom:14px;}
-.hp-item{padding:9px 11px;border-radius:9px;margin-bottom:5px;background:rgba(255,255,255,.03);border:1px solid rgba(73,182,255,.06);}
-.hp-name{font-size:11px;font-weight:700;color:#49b6ff;margin-bottom:3px;}
-.hp-desc{font-size:11px;color:rgba(180,200,255,.6);line-height:1.45;}
-</style>
-<button class="help-fab" onclick="document.getElementById('helpPanel').classList.toggle('open')">?</button>
-<div class="help-panel" id="helpPanel">
- <button class="hp-close" onclick="document.getElementById('helpPanel').classList.remove('open')">✕</button>
- <div class="hp-title">HospiceLink Gold Help</div>
- <div class="hp-sub">Tap any item to learn what it does</div>
- <div class="hp-item"><div class="hp-name">Dashboard</div><div class="hp-desc">Gold Command Center — enterprise overview.</div></div><div class="hp-item"><div class="hp-name">EVV / Mileage</div><div class="hp-desc">GPS tracking and mileage compliance.</div></div><div class="hp-item"><div class="hp-name">Family Comm.</div><div class="hp-desc">Full family communication log.</div></div><div class="hp-item"><div class="hp-name">🤝 Touch Log</div><div class="hp-desc">Visit/call log with 14-day cold alerts.</div></div><div class="hp-item"><div class="hp-name">📊 Weekly Report</div><div class="hp-desc">Admin-only team performance report.</div></div><div class="hp-item"><div class="hp-name">💬 Team Notes</div><div class="hp-desc">Internal notes — never visible to patients.</div></div><div class="hp-item"><div class="hp-name">📅 Reminders</div><div class="hp-desc">Overdue, today, week with daily digest.</div></div><div class="hp-item"><div class="hp-name">🤖 AI Command Center</div><div class="hp-desc">Advanced AI for revenue, territory, coaching.</div></div><div class="hp-item"><div class="hp-name">💰 Revenue Intelligence</div><div class="hp-desc">Admin — revenue by source, cost per admit, forecast.</div></div><div class="hp-item"><div class="hp-name">🏆 Leaderboard</div><div class="hp-desc">Team rankings — admits, conversion, visits, revenue.</div></div><div class="hp-item"><div class="hp-name">🔔 Notifications</div><div class="hp-desc">Admin — real-time SMS/email on admits and cold sources.</div></div><div class="hp-item"><div class="hp-name">🎯 Scorecard</div><div class="hp-desc">Admin — AI-powered 1-10 score per referral source.</div></div><div class="hp-item"><div class="hp-name">🔐 HIPAA Audit Log</div><div class="hp-desc">Admin — full compliance trail, every action logged.</div></div><div class="hp-item"><div class="hp-name">🔒 Admin</div><div class="hp-desc">Full admin control.</div></div>
- <div style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:11px;margin-top:10px;">
- <div style="font-size:11px;font-weight:700;color:#a78bfa;margin-bottom:8px;">📱 SMS &amp; Email Auto-Logging</div>
- <div style="font-size:11px;color:rgba(180,200,255,.6);line-height:1.6;">
- <strong style="color:#a78bfa">1</strong> Go to Prospect Records or Referral Sources<br>
- <strong style="color:#a78bfa">2</strong> Click 📱 Text or 📧 Email on any record<br>
- <strong style="color:#a78bfa">3</strong> Type message — your phone app opens pre-filled<br>
- <strong style="color:#a78bfa">4</strong> <strong style="color:#8cff66">Auto-logged to Notes</strong> — no manual entry needed
- </div>
- </div>
- <div style="border-top:1px solid rgba(73,182,255,.1);margin-top:14px;padding-top:14px;">
- <button onclick="localStorage.removeItem(TOUR_KEY);document.getElementById('helpPanel').classList.remove('open');setTimeout(startTour,300);" style="width:100%;background:rgba(73,182,255,.08);border:1px solid rgba(73,182,255,.15);color:#49b6ff;border-radius:8px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;margin-bottom:8px;">🎓 Replay Onboarding Tour</button>
- <div style="font-size:11px;color:rgba(180,200,255,.35);line-height:1.6;">Info@wemarketpluscom.org<br>(469) 793-0673</div>
- </div>
-</div>
-<style>
-.ow-ov{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;}
-.ow-bx{background:linear-gradient(180deg,#0d1b2e,#07101c);border:1px solid rgba(73,182,255,.25);border-radius:22px;padding:28px;width:min(500px,100%);max-height:90vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.8);}
-.ow-dt{width:7px;height:7px;border-radius:50%;background:rgba(73,182,255,.15);display:inline-block;margin:0 2px;transition:all .25s;}
-.ow-dt.on{background:#49b6ff;width:20px;border-radius:4px;}
-.ow-hl{background:rgba(73,182,255,.07);border:1px solid rgba(73,182,255,.15);border-radius:9px;padding:10px 13px;font-size:12px;color:#49b6ff;margin-bottom:16px;line-height:1.5;}
-</style>
-<div id="owOv" style="display:none" class="ow-ov">
- <div class="ow-bx">
- <div style="text-align:center;margin-bottom:14px" id="owD"></div>
- <div style="font-size:38px;text-align:center;margin-bottom:10px" id="owI"></div>
- <div style="font-size:18px;font-weight:900;color:#fff;text-align:center;margin-bottom:8px;line-height:1.2" id="owT"></div>
- <div style="font-size:13px;color:rgba(190,215,255,.8);text-align:center;line-height:1.75;margin-bottom:14px" id="owX"></div>
- <div id="owH" style="display:none" class="ow-hl"></div>
- <div style="display:flex;gap:10px;justify-content:center;margin-bottom:10px;">
- <button onclick="owSk()" style="background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);border-radius:999px;padding:10px 18px;font-size:12px;cursor:pointer;">Skip Tour</button>
- <button id="owNB" onclick="owNx()" style="background:linear-gradient(90deg,#3ab4ff,#6ed6ff);color:#07111f;border:none;border-radius:999px;padding:10px 22px;font-size:13px;font-weight:900;cursor:pointer;min-width:90px;">Next →</button>
- </div>
- <div style="font-size:11px;color:rgba(180,200,255,.25);text-align:center" id="owP"></div>
- </div>
-</div>
-<script>var TOUR_KEY="hl_crm_gold_v6";
-var OW=[["👋", "Welcome to HospiceLink Gold", "Gold is the most complete hospice CRM available. Built for enterprise agencies that need full marketing, clinical, compliance, and financial visibility in one system.", ""], ["🏠", "Dashboard — Enterprise Command Center", "Start every morning here. The 4 action cards show overdue follow-ups (red), due today (yellow), goal progress (green), and re-engagement queue (blue).", "📍 Morning habit: Red cards first, every single morning"], ["➕", "Add Prospect — Complete Enterprise Intake", "Full intake form for every new patient lead. Enter name, status (start with Inquiry), referral source, assigned marketer, phone, email, address, and secondary contact.", "📍 Non-negotiable: Every prospect needs a Next Step + Due Date before you save"], ["📋", "Prospect Records — Full Patient Database", "Your complete prospect list with status filter and CSV export. Search any field instantly.", "📍 Daily: Filter by Inquiry + Pending Admission — work through every record with a due date today"], ["🤝", "Add Referral — Adding a Referral Source", "Go to Referral Records in the sidebar to add a new source. Enter contact name, business, phone, email, and address.", "📍 Every facility you call on goes here — status, touch date, and the AI scores them automatically"], ["🤝", "Referral Sources — Strategic Account Management", "All your referral partners with Green/Red status and AI Scorecard rankings. Green sources are actively sending — nurture with regular scheduled visits.", "📍 Weekly: Schedule visits for all Red sources. Review the AI Scorecard monthly for strategic decisions"], ["🔀", "Pipeline — Visual Enterprise Funnel", "Inquiry → Pending Admission → Admitted → Lost with prospect cards at each stage. Bar chart shows conversion rate between stages.", "📍 Team meeting: Review Pipeline every week — assign action items for stuck prospects"], ["🗺️", "Territory View — Coverage Intelligence", "Territory-by-territory breakdown: accounts visited, admissions, and conversion rate per area. Use alongside Revenue Intelligence to identify your highest-ROI territories.", "📍 Monthly: Pair Territory View with Revenue Intelligence — reallocate time and budget strategically"], ["📈", "Productivity — Individual Performance Tracking", "Individual marketer scorecards: facility visits, follow-ups, admissions, and notes synced. Combined with the Leaderboard for full team visibility.", "📍 Managers: Review every Friday — use specific data points in your 1-on-1 conversations"], ["🚗", "EVV / Mileage — GPS Compliance", "Log every field trip: name, start address, end address, and purpose. Miles calculate automatically.", "📍 Rule: Log every trip before driving home — 30 seconds now saves hours at tax time"], ["👨‍👩‍👧", "Family Communication — Clinical Compliance Log", "Every family conversation gets a timestamped log here. Enter your name, date, time, and notes.", "📍 Clinical rule: Log every family contact within 24 hours — this is your federal compliance record"], ["⚙️", "Automation — Enterprise Workflow Engine", "Trigger follow-up tasks, touch cadences, paperwork alerts, and overdue notifications with one click. Each automation fires once and logs a timestamped confirmation — your compliance record that the workflow was executed.", "📍 Day 1: Build your complete admission workflow in Automation — it runs itself after that"], ["📝", "Notes + Voice — Windshield Mode", "The most powerful feature in Gold. After a visit, tap the 🎤 Voice Note button and speak your note while driving — it transcribes live.", "📍 Game changer: Use 🎤 Voice Note after every visit — speak your note while driving, it transcribes live"], ["🤝", "Touch Log — Relationship Tracking System", "Log every visit and call to every referral source: select the source, touch type (In-Person Visit, Phone Call, Text, Email, Dropped Materials), date, and a brief note. Admin sees which Green sources haven't been touched in 14+ days and gets a Cold Alert.", "📍 Log every referral source interaction — admin sees Cold Alerts for sources going dark"], ["📊", "Weekly Report — Executive Performance Summary", "Admin-only. Auto-emailed every Monday at 7am with the full team's weekly performance: prospects, admissions, losses, top referral source, and individual marketer rankings.", "📍 Admin: This runs automatically — forward it to your leadership team every Monday morning"], ["💬", "Team Notes — Clinical Coordination", "Internal notes shared across the whole team on any prospect — never visible to patients or families. Tag notes as General, Family Sensitive, Clinical Context, Strategy, or Urgent.", "📍 Marketer → Nurse handoffs go here — clinical flags stay attached to the prospect permanently"], ["📅", "Reminders — Never Miss a Follow-Up", "Auto-populated from every Next Step Due Date on prospects and referral sources. Red = overdue, yellow = due today, blue = due this week.", "📍 Morning habit: Dashboard → Reminders — clear everything red and yellow before noon"], ["🔁", "Re-Engagement Queue — Win Back Lost Prospects", "Lost prospects 30+ days old who are ready to re-contact. Studies show 20-30% of lost hospice prospects convert when re-engaged at the right time — insurance clears, family decides, condition worsens.", "📍 Monday habit: Check Re-Engagement — one click re-assigns a prospect who may be ready now"], ["🎯", "Daily Goals — Team Accountability", "Set weekly targets for facility visits, phone calls, and referral contacts. Progress bars update as the team logs activity.", "📍 Monday: Set targets. Friday: Review as a team — Leaderboard makes performance public"], ["📤", "Import Data — Zero-Friction Migration", "Bring your existing prospect list from any CRM in minutes. Download the sample template first, fill in your data matching the column format, then upload.", "📍 Day 1: Migrate your full list — historical data makes the AI Scorecard more accurate immediately"], ["🏥", "Referral Portal — Hospital Direct Intake", "Your white-label referral intake form. Copy the link from this tab and share it with every discharge planner and social worker you meet.", "📍 This week: Share your portal link with every discharge planner — post QR codes at nursing stations"], ["📘", "Playbook Generator — Custom Agency SOP", "AI generates your complete hospice marketing playbook in 30 seconds. Enter your city, team size, monthly admission goal, and biggest challenge.", "📍 Day 1: Generate your playbook — use it to onboard every future team member"], ["🤖", "AI Command Center — Enterprise Intelligence", "Advanced Claude AI with access to your full CRM context. Ask for prospect pipeline analysis, revenue forecasting, territory strategy recommendations, referral source talking points, team coaching scripts, compliance guidance, and family conversation frameworks.", "📍 Use before board meetings, difficult family calls, and territory strategy reviews"], ["💰", "Revenue Intelligence — Financial Command Center", "Admin-only. Admin enters revenue per admission and monthly marketing cost — the system auto-calculates cost per admission, forecasted admits, and lost opportunity value from every lost prospect.", "📍 Admin: Enter your revenue per admission and marketing cost — the system calculates your ROI automatically"], ["🏆", "Leaderboard — Team Performance Rankings", "Live marketer rankings by admissions, conversion rate, facility visits, and revenue generated. Everyone on the team sees it — it drives healthy competition and public accountability.", "📍 Review in team meetings — celebrate public wins, address gaps privately"], ["🔔", "Notifications — Real-Time Admin Alerts", "Admin-only. Configure text and email alerts for the moments that matter: new admission, lost prospect, overdue follow-up (15 minutes after due), and 14-day cold alert when a Green referral source goes untouched.", "📍 Day 1: Set up all four notification alerts — phone number + email — takes 2 minutes"], ["🎯", "Referral Scorecard — AI-Powered Source Ranking", "Admin-only. Every referral source gets a 1-10 score based on: referrals sent (40%), conversion rate (30%), recency of last touch (20%), and response time (10%).", "📍 Admin: Review monthly — sources below 4.0 need a visit this week"], ["🔐", "HIPAA Audit Log — Full Compliance Trail", "Admin-only. Every action in the CRM is automatically logged: who accessed what record, when, and from which IP address.", "📍 Admin: Export this log quarterly — it is your HIPAA audit trail"], ["🔒", "Admin — Full System Control", "Admin-only. Edit or delete any record system-wide.", "📍 Day 1: Invite your full team — assign roles, set seat limits, turn on Notifications"], ["🎉", "Gold Day 1 Checklist — Get Started Right", "1) Import your existing prospect and referral lists in Import Data. 2) Invite your full team in Admin — assign Marketer, Nurse, Caregiver, and Admin roles.", "📞 Questions? Info@wemarketpluscom.org | (469) 793-0673"]];
-var oi=0;
-function startTour(){document.getElementById('owOv').style.display='flex';owR(0);}
-function owR(i){
-var s=OW[i],n=OW.length;
-document.getElementById('owD').innerHTML=OW.map(function(_,j){return'<div class="ow-dt'+(j===i?' on':'')+'" style="display:inline-block"></div>';}).join('');
-document.getElementById('owI').textContent=s[0];
-document.getElementById('owT').textContent=s[1];
-document.getElementById('owX').textContent=s[2];
-var h=document.getElementById('owH');
-if(s[3]){h.textContent=s[3];h.style.display='block';}else{h.style.display='none';}
-document.getElementById('owNB').textContent=(i===n-1)?"Let's Go! 🚀":"Next →";
-document.getElementById('owP').textContent='Step '+(i+1)+' of '+n;
-}
-function owNx(){if(oi<OW.length-1){oi++;owR(oi);}else owSk();}
-function owSk(){localStorage.setItem(TOUR_KEY,'1');document.getElementById('owOv').style.display='none';}
-(function(){var seen=localStorage.getItem(TOUR_KEY);if(!seen)setTimeout(startTour,1200);})();
-function autoLogCommunication(n,m,prev,ct){
-var nl=document.getElementById("notesList");if(!nl)return;
-var w=nl.querySelector(".grid-2")||nl;
-var now=new Date();
-var b=document.createElement("div");b.className="note-box";
-b.style.borderLeft="4px solid "+(m==="SMS"?"#7c3aed":"#2563eb");
-b.innerHTML="<h4 style='color:"+(m==="SMS"?"#7c3aed":"#2563eb")+"'>"+(m==="SMS"?"📱":"📧")+" "+m+" → "+n+"</h4>"
-+"<p><strong>Date:</strong> "+now.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})
-+" at "+now.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})+"</p>"
-+"<p><strong>Contact:</strong> "+(ct==="prospect"?"Prospect":"Referral Source")+"</p>"
-+"<p>"+prev+"</p>"
-+"<p style='color:#0a6c2f;font-size:11px;font-weight:700;margin-top:6px;'>✅ Auto-logged to Notes</p>";
-w.prepend(b);
-var cnt=gs(K.notes,0)+1;ss(K.notes,cnt);
-if(typeof updateDashboard==="function")updateDashboard();
-}
-function callContact(phone,name){
-if(confirm("📞 Call "+name+" at "+phone+"?\n\nTap OK to open your phone dialer.")){
-window.open("tel:"+phone);
-autoLogCommunication(name,"Call","Outbound call to "+phone,"prospect");
-}
-}
-function sendContactSMS(phone,name,ct){
-var msg=prompt("📱 Text to "+name+" ("+phone+") — Type your message:","Hi "+name+", this is your HospiceLink team. ");
-if(!msg)return;
-window.open("sms:"+phone+"?&body="+encodeURIComponent(msg));
-autoLogCommunication(name,"SMS",msg.slice(0,100)+(msg.length>100?"…":""),ct);
-}
-function sendContactEmail(email,name,ct){
-var sub=prompt("📧 Email subject to "+name+" ("+email+"):","Follow-up from HospiceLink");
-if(!sub)return;
-var body=prompt("Message body:","Dear "+name+", ");
-if(!body)return;
-window.open("mailto:"+email+"?subject="+encodeURIComponent(sub)+"&body="+encodeURIComponent(body));
-autoLogCommunication(name,"Email",sub,ct);
-}
-function sendSMS(){
-var n=document.getElementById("familyNewName")?document.getElementById("familyNewName").value:"Family";
-var t=document.getElementById("familyText")?document.getElementById("familyText").value:"";
-window.open("sms:?&body="+encodeURIComponent("HospiceLink Update for "+n+": "+t));
-}
-function sendEmail(){
-var n=document.getElementById("familyNewName")?document.getElementById("familyNewName").value:"Family";
-var t=document.getElementById("familyText")?document.getElementById("familyText").value:"";
-window.open("mailto:?subject="+encodeURIComponent("HospiceLink Update")+"&body="+encodeURIComponent("Dear "+n+",\n\n"+t+"\n\nBest regards,\nHospiceLink Team"));
-}
-function adminDeleteProspect(i){
-if(!confirm("Delete this prospect? This cannot be undone."))return;
-var prsp=gs(K.prsp,defProsp());
-prsp.splice(i,1);
-ss(K.prsp,prsp);
-renderProspectRecords();
-if(typeof updateDashboard==="function")updateDashboard();
-}
-function crmLogout(){
-try{localStorage.removeItem("hl_token");localStorage.removeItem("hl_user");}catch(e){}
-window.location.href="login.html";
-}
-function initAutoProspectSelect(){
-var sel=document.getElementById('autoProspectSelect');
-if(!sel)return;
-var prsp=gs(K.prsp,defProsp());
-sel.innerHTML='<option value="">— Choose a Prospect or Referral Source —</option>';
-prsp.filter(function(p){return p.status!=='Admitted';}).forEach(function(p,i){
-var o=document.createElement('option');o.value=i;o.textContent=p.name+' ('+p.status+')';sel.appendChild(o);
-});
-sel.onchange=function(){
-var idx=parseInt(this.value);
-var statusEl=document.getElementById('autoProspectStatus');
-if(isNaN(idx)||!statusEl){statusEl&&(statusEl.textContent='Select a prospect above');return;}
-var p=prsp[idx];
-statusEl.innerHTML='<span class="pill '+({'Inquiry':'pill-blue','Pending Admission':'pill-yellow','Lost':'pill-red','Admitted':'pill-green'}[p.status]||'pill-blue')+'">'+p.status+'</span> &nbsp;'+p.marketer;
-};
-}
-function fireAutoForProspect(btn,msg){
-var sel=document.getElementById('autoProspectSelect');
-var prospectName=sel&&sel.value!==''?sel.options[sel.selectedIndex].text.split(' (')[0]:'';
-if(!prospectName){alert('Please select a prospect first (Step 1 above).');return;}
-btn.disabled=true;btn.style.opacity='.5';
-var log=document.getElementById('autoLog');
-if(log){
-var empty=log.querySelector('div[style*="italic"]');if(empty)empty.remove();
-var d=document.createElement('div');
-d.style.cssText='background:rgba(140,255,102,.08);border:1px solid rgba(140,255,102,.2);border-radius:9px;padding:10px 14px;font-size:12px;color:var(--text);';
-d.innerHTML='✅ <strong>'+prospectName+'</strong> — '+msg+'<span style="color:var(--muted);font-size:11px;float:right;">'+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</span>';
-log.prepend(d);
-}
-setTimeout(function(){btn.disabled=false;btn.style.opacity='1';},2000);
-}
-function fireAuto(btn,msg){
-btn.classList.add('fired');btn.disabled=true;
-var log=document.getElementById('autoLog');
-if(log){var d=document.createElement('div');d.style.cssText='background:rgba(140,255,102,.08);border:1px solid rgba(140,255,102,.2);border-radius:9px;padding:9px 13px;font-size:12px;color:var(--text);';d.textContent='✅ '+msg+' — '+new Date().toLocaleTimeString();log.prepend(d);}
-}
-var PROSPECT_STEP_DESC = {
-"Immediate Family Outreach (Call/Text)": "Call or text the patient's family today. Introduce yourself, explain hospice services, and ask if they'd be open to a visit.",
-"Schedule On-Site Visit": "Contact the case manager at the referring facility. Get on their schedule. Confirm patient room number and best visit time.",
-"Conduct Bedside Presentation": "Visit the patient and family in person. Walk them through what hospice care provides. Answer questions. Address hesitation calmly.",
-"Request Clinical Records (H&P)": "Ask the facility CM or physician for the patient's history and physical. Required to confirm hospice eligibility.",
-"RN Assessment Requested": "Notify your clinical director that an RN assessment is needed. Provide patient name, location, and insurance info.",
-"RN Assessment Scheduled": "RN assessment is on the calendar. Confirm date/time with the family. Follow up the day before.",
-"Obtain Physician Order for Eval": "The attending physician needs to sign a hospice evaluation order. Ask the case manager to facilitate — usually 24-48 hours.",
-"Insurance Verification in Progress": "Your billing team is verifying coverage. Follow up with them within 24 hours for a status update.",
-"Admission Paperwork in Progress": "Patient is approved — get the hospice election forms signed by the family. Move quickly.",
-"CM Follow-Up (Status Update)": "Check back with the referring case manager. Ask: Has the family made a decision? Any change in status?",
-"Overcoming Family Hesitation": "Family has concerns. Schedule a family meeting. Bring your clinical liaison if possible to answer medical questions."
-};
-var REFERRAL_STEP_DESC = {
-"Initial Contact Made": "First visit done. Send a follow-up text or email the same day. Log this touch in the Touch Log tab.",
-"Dropped Off Materials": "Left brochures and your card. Follow up in 3-5 days to see if they have questions.",
-"Schedule Follow-Up Visit": "Book your next visit now. Don't leave without a date on the calendar. Aim for within 7-10 days.",
-"Needs Assessment Conversation": "Schedule 15 minutes to ask: What do they need from a hospice partner? Listen more than you talk.",
-"First Referral Received": "They sent their first patient — deliver exceptional service. Close the loop with the CM after admission.",
-"Active Referral Partner — Maintain": "Visit at least every 14 days. Bring lunch quarterly. Text thank-you after every admission.",
-"Re-Engagement Needed (30+ days cold)": "No referral in 30+ days. Call to check in — not to pitch. Ask how things are going.",
-"Key Decision Maker Meeting": "Meeting with the DON, director, or medical director. Bring a one-pager on your agency's outcomes."
-};
-function showProspectStepDesc(val){
-var box=document.getElementById("prospectStepDescBox");
-if(!box)return;
-var desc=PROSPECT_STEP_DESC[val];
-if(desc){box.textContent=desc;box.style.display="block";}
-else{box.style.display="none";}
-}
-function showReferralStepDesc(val){
-var box=document.getElementById("refStepDescBox");
-if(!box)return;
-var desc=REFERRAL_STEP_DESC[val];
-if(desc){box.textContent=desc;box.style.display="block";}
-else{box.style.display="none";}
-}
-function showNoteStepDesc(val){
-var box=document.getElementById("noteStepDescBox");
-if(!box)return;
-var desc=PROSPECT_STEP_DESC[val];
-if(desc){box.textContent=desc;box.style.display="block";}
-else{box.style.display="none";}
-}
-function saveProspect(){
-var name=(document.getElementById("prospectName")||{value:""}).value.trim();
-var status=(document.getElementById("prospectStatus")||{value:""}).value;
-var source=(document.getElementById("prospectReferralSourceSelect")||{value:""}).value;
-var nm=(document.getElementById("newAssignedMarketerInput")||{value:""}).value.trim();
-var marketer=nm||((document.getElementById("prospectAssignedMarketerSelect")||{value:""}).value);
-var nextStep=(document.getElementById("prospectNextStep")||{value:""}).value;
-var nextStepDate=(document.getElementById("prospectNextStepDate")||{value:""}).value||"";
-var assignedTo=(document.getElementById("prospectAssignedTo")||{value:"Marketer"}).value||"Marketer";
-var phone=(document.getElementById("prospectPhone")||{value:""}).value.trim();
-var email=(document.getElementById("prospectEmail")||{value:""}).value.trim();
-var address=(document.getElementById("prospectAddress")||{value:""}).value.trim();
-var secondary=(document.getElementById("prospectSecondary")||{value:""}).value.trim();
-var secondaryRelation=(document.getElementById("prospectSecondaryRelation")||{value:""}).value.trim();
-var secondaryPhone=(document.getElementById("prospectSecondaryPhone")||{value:""}).value.trim();
-var secondaryEmail=(document.getElementById("prospectSecondaryEmail")||{value:""}).value.trim();
-
-if(!name){alert("Prospect name is required.");return;}
-if(!status){alert("Please select a status.");return;}
-if(!marketer){ marketer = "Unassigned"; }
-if(!nextStep){alert("Please select a Next Step from the dropdown — this tells your team what to do and queues the reminder.");return;}
-if(!nextStepDate){alert("Please set a Next Step Due Date — this is what triggers the reminder in the Reminders tab.");return;}
-
-if(nm){var m=gs(K.mkt,["Ericka"]);if(!m.includes(nm)){m.push(nm);ss(K.mkt,m);if(typeof loadMarketers==="function")loadMarketers();}}
-
-var prsp=gs(K.prsp,defProsp());
-prsp.unshift({name:name,status:status,source:source,marketer:marketer,nextStep:nextStep,nextStepDate:nextStepDate,assignedTo:assignedTo,phone:phone,email:email,address:address,secondary:secondary,secondaryRelation:secondaryRelation,secondaryPhone:secondaryPhone,secondaryEmail:secondaryEmail});
-ss(K.prsp,prsp);
-
-if(typeof renderProspectsTable==="function")renderProspectsTable();
-if(typeof renderProspectRecords==="function")renderProspectRecords();
-if(typeof updateDashboard==="function")updateDashboard();
-if(typeof renderReminders==="function")renderReminders();
-if(typeof initAutoProspectSelect==="function")initAutoProspectSelect();
-
-
-var conf=document.getElementById("prospectSaveConfirm");
-if(conf){
-conf.innerHTML="✅ <strong>"+name+"</strong> added! Reminder queued for <strong>"+nextStep+"</strong> on <strong>"+nextStepDate+"</strong> → assigned to <strong>"+assignedTo+"</strong>. Check Reminders tab to see it.";
-conf.style.display="block";
-setTimeout(function(){if(conf)conf.style.display="none";},6000);
-}
-
-
-["prospectName","newAssignedMarketerInput","prospectPhone","prospectEmail","prospectAddress","prospectSecondary","prospectSecondaryRelation","prospectSecondaryPhone","prospectSecondaryEmail"].forEach(function(id){var el=document.getElementById(id);if(el)el.value="";});
-var ns=document.getElementById("prospectNextStep");if(ns)ns.value="";
-var nd=document.getElementById("prospectNextStepDate");if(nd)nd.value="";
-var db=document.getElementById("prospectStepDescBox");if(db)db.style.display="none";
-}
-function saveDemoNote(){
-var sn=(document.getElementById("noteNameSelect")||{value:""}).value.trim();
-var nn=(document.getElementById("noteNewName")||{value:""}).value.trim();
-var fn=nn||sn;
-var pos=(document.getElementById("notePosition")||{value:""}).value;
-var dt=(document.getElementById("noteDate")||{value:""}).value;
-var ti=(document.getElementById("noteTime")||{value:""}).value;
-var ns=(document.getElementById("noteNextStep")||{value:""}).value;
-var nd=(document.getElementById("noteNextStepDate")||{value:""}).value||"";
-var prospect=(document.getElementById("noteProspectSelect")||{value:""}).value;
-var nt=(document.getElementById("noteText")||{value:""}).value.trim();
-
-if(!fn){alert("Please select or enter your name.");return;}
-if(!pos){alert("Please select your position.");return;}
-if(!dt){alert("Please enter the date.");return;}
-if(!ns){alert("Please select the Next Step from the dropdown — this updates the reminder queue.");return;}
-if(!nt){alert("Please enter your note.");return;}
-
-if(typeof saveNameIfNeeded==="function")saveNameIfNeeded(fn);
-
-
-if(prospect&&nd){
-var prsp=gs(K.prsp,defProsp());
-var pidx=prsp.findIndex(function(p){return p.name===prospect;});
-if(pidx>=0){
-prsp[pidx].nextStep=ns;
-prsp[pidx].nextStepDate=nd;
-ss(K.prsp,prsp);
-if(typeof renderProspectRecords==="function")renderProspectRecords();
-if(typeof renderReminders==="function")renderReminders();
-}
-}
-
-
-var loc="";
-if(navigator.geolocation){
-navigator.geolocation.getCurrentPosition(function(pos){loc=pos.coords.latitude.toFixed(4)+", "+pos.coords.longitude.toFixed(4);},function(){loc="Location capture failed";});
-}
-
-
-var list=document.getElementById("notesList");
-var w=list?list.querySelector(".grid-2"):null;
-var now=new Date();
-var nowStr=now.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})+" at "+now.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
-
-if(w){
-var b=document.createElement("div");b.className="note-box";
-b.innerHTML="<h4>"+fn+(prospect?" — "+prospect:"")+"</h4>"
-+"<p><strong>Position:</strong> "+pos+"</p>"
-+"<p><strong>Date/Time:</strong> "+dt+" at "+ti+"</p>"
-+(prospect?"<p><strong>Prospect:</strong> "+prospect+"</p>":"")
-+"<p><strong>Next Step:</strong> "+ns+"</p>"
-+(nd?"<p><strong>Next Step Due Date:</strong> <span style='color:#f9c74f;font-weight:700;'>"+nd+"</span> — Reminder re-queued ✅</p>":"<p style='color:#94a3b8;font-size:12px;'>📅 No due date set for this step — go to Reminders to add one.</p>")
-+"<p>"+nt+"</p>"
-+"<p style='color:#6c8aab;font-size:11px;margin-top:6px;'>✅ Synced — GPS Captured | "+nowStr+"</p>";
-w.prepend(b);
-}
-
-
-var tb=document.getElementById("staffTrackingBody");
-if(tb){
-var tr=document.createElement("tr");
-tr.innerHTML="<td>"+fn+"</td><td>"+pos+"</td><td>"+dt+"</td><td>"+ti+"</td><td>"+(prospect||"—")+"</td><td>"+ns+"</td><td style='color:#0a6c2f;'>✅ Synced</td>";
-tb.prepend(tr);
-}
-
-var cnt=gs(K.notes,0)+1;ss(K.notes,cnt);
-if(typeof updateDashboard==="function")updateDashboard();
-
-var st=document.getElementById("syncStatus");
-if(st){
-st.innerHTML="✅ Note synced"+(prospect&&nd?" — Reminder re-queued for <strong>"+ns+"</strong> on <strong>"+nd+"</strong>":"")+" — GPS captured";
-setTimeout(function(){if(st)st.innerHTML="";},5000);
-}
-
-
-["noteNewName","noteText","noteNextStepDate"].forEach(function(id){var el=document.getElementById(id);if(el)el.value="";});
-var nn2=document.getElementById("noteNextStep");if(nn2)nn2.value="";
-var db2=document.getElementById("noteStepDescBox");if(db2)db2.style.display="none";
-}
-function saveReferralFromModal(){
-var cn=(document.getElementById("refContactName")||{value:""}).value.trim();
-var biz=(document.getElementById("refBusiness")||{value:""}).value.trim();
-if(!cn||!biz){alert("Contact name and business name are required.");return;}
-
-var nextStep=(document.getElementById("refNextStep")||{value:""}).value;
-var nextTouchDate=(document.getElementById("refNextTouchDate")||{value:""}).value||"";
-
-if(!nextStep){alert("Please select a Next Step — this tells your team what to do with this referral source.");return;}
-if(!nextTouchDate){alert("Please set a Next Touch Date — this queues a reminder in the Reminders tab.");return;}
-
-var refs=gs(K.refs,defRefs());
-refs.push({
-contactName:cn,
-business:biz,
-phone:(document.getElementById("refPhone")||{value:""}).value.trim(),
-email:(document.getElementById("refEmail")||{value:""}).value.trim(),
-address:(document.getElementById("refAddress")||{value:""}).value.trim(),
-status:(document.getElementById("refStatus")||{value:"Red"}).value,
-nextStep:nextStep,
-nextTouchDate:nextTouchDate
-});
-ss(K.refs,refs);
-
-if(typeof loadReferralSources==="function")loadReferralSources();
-if(typeof renderReminders==="function")renderReminders();
-if(typeof closeModal==="function")closeModal("addReferralModal");
-
-["refContactName","refBusiness","refPhone","refEmail","refAddress"].forEach(function(id){var el=document.getElementById(id);if(el)el.value="";});
-var rns=document.getElementById("refNextStep");if(rns)rns.value="";
-var rnd=document.getElementById("refNextTouchDate");if(rnd)rnd.value="";
-var rdb=document.getElementById("refStepDescBox");if(rdb)rdb.style.display="none";
-}
-function renderReminders(){
-var prsp=gs(K.prsp,defProsp());
-var refs=gs(K.refs,defRefs());
-var today=new Date();today.setHours(0,0,0,0);
-var todayStr=today.toISOString().split("T")[0];
-var weekEnd=new Date(today);weekEnd.setDate(weekEnd.getDate()+7);
-
-var overdue=[], dueToday=[], thisWeek=[];
-
-
-prsp.forEach(function(p){
-if(!p.nextStepDate||p.status==="Admitted"||p.status==="Lost")return;
-var d=new Date(p.nextStepDate);d.setHours(0,0,0,0);
-var days=Math.round((d-today)/(1000*60*60*24));
-var item={type:"prospect",name:p.name,step:p.nextStep||"Follow up",date:p.nextStepDate,days:days,marketer:p.marketer,assignedTo:p.assignedTo||p.marketer};
-if(d<today)overdue.push(item);
-else if(p.nextStepDate===todayStr)dueToday.push(item);
-else if(d<=weekEnd)thisWeek.push(item);
-});
-
-
-refs.forEach(function(r){
-if(!r.nextTouchDate)return;
-var d=new Date(r.nextTouchDate);d.setHours(0,0,0,0);
-var days=Math.round((d-today)/(1000*60*60*24));
-var item={type:"referral",name:r.business,step:r.nextStep||"Visit/Follow-Up",date:r.nextTouchDate,days:days,marketer:"",contact:r.contactName,assignedTo:"Marketer"};
-if(d<today)overdue.push(item);
-else if(r.nextTouchDate===todayStr)dueToday.push(item);
-else if(d<=weekEnd)thisWeek.push(item);
-});
-
-
-var oc=document.getElementById("remOverdueCount");if(oc)oc.textContent=overdue.length;
-var tc=document.getElementById("remTodayCount");if(tc)tc.textContent=dueToday.length;
-var wc=document.getElementById("remWeekCount");if(wc)wc.textContent=thisWeek.length;
-
-var body=document.getElementById("remindersBody");
-var empty=document.getElementById("remindersEmpty");
-if(!body)return;
-body.innerHTML="";
-
-var allItems=[];
-overdue.forEach(function(i){i.urgency="overdue";allItems.push(i);});
-dueToday.forEach(function(i){i.urgency="today";allItems.push(i);});
-thisWeek.forEach(function(i){i.urgency="week";allItems.push(i);});
-
-if(allItems.length===0){if(empty)empty.style.display="block";return;}
-if(empty)empty.style.display="none";
-
-allItems.forEach(function(item){
-var isRef=item.type==="referral";
-var urgLabel=item.urgency==="overdue"
-?"<span style=\"color:#f87171;font-size:11px;font-weight:700;\">⚠️ Overdue "+Math.abs(item.days)+" day"+(Math.abs(item.days)!==1?"s":"")+"</span>"
-:item.urgency==="today"
-?"<span style=\"color:#fbbf24;font-size:11px;font-weight:700;\">📅 Due today</span>"
-:"<span style=\"color:#60a5fa;font-size:11px;font-weight:700;\">📆 Due "+item.date+"</span>";
-var typeTag=isRef
-?"<span style=\"background:rgba(34,197,94,.15);color:#4ade80;font-size:10px;font-weight:700;border-radius:4px;padding:2px 6px;margin-left:6px;\">🏥 Referral Source</span>"
-:"<span style=\"background:rgba(73,182,255,.15);color:#49b6ff;font-size:10px;font-weight:700;border-radius:4px;padding:2px 6px;margin-left:6px;\">👤 Prospect</span>";
-var subLine=isRef
-?"Contact: "+item.contact+" · "+item.step
-:"Marketer: "+(item.assignedTo||item.marketer)+" · "+item.step;
-
-var row=document.createElement("div");
-row.style.cssText="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.05);";
-row.innerHTML="<div style=\"flex:1\">"
-+"<div style=\"font-weight:700;font-size:13px;\">"+item.name+typeTag+"</div>"
-+"<div style=\"font-size:11px;color:var(--muted);margin-top:2px;\">"+subLine+"</div>"
-+"<div style=\"margin-top:4px;\">"+urgLabel+"</div>"
-+"</div>"
-+"<button class=\"btn btn-green btn-small\" onclick=\"openCompleteStep(this,'"+item.name+"','"+item.type+"')\">✓ Mark Done</button>";
-body.appendChild(row);
-});
-}
-function openCompleteStep(btn,name,type){
-
-var row=btn.closest("div[style]");
-if(row.querySelector(".complete-form"))return; 
-
-var isRef=type==="referral";
-var stepOptions=isRef
-?Object.keys(REFERRAL_STEP_DESC||{}).map(function(s){return"<option>"+s+"</option>";}).join("")
-:Object.keys(PROSPECT_STEP_DESC||{}).map(function(s){return"<option>"+s+"</option>";}).join("");
-
-var form=document.createElement("div");
-form.className="complete-form";
-form.style.cssText="background:rgba(73,182,255,.06);border-top:1px solid rgba(73,182,255,.15);padding:12px;margin-top:8px;border-radius:0 0 10px 10px;width:100%;";
-form.innerHTML="<div style=\"font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;\">✅ Complete: "+name+"</div>"
-+"<div style=\"display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;\">"
-+"<div><label style=\"font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:3px;\">What did you do?</label>"
-+"<input type=\"text\" id=\"completeNote_"+safeId(name)+"\" placeholder=\"Brief note (e.g. Called family, left voicemail)\" style=\"width:100%;border:1px solid #d7e0ec;border-radius:8px;padding:7px;font-size:12px;font:inherit;\"></div>"
-+"<div><label style=\"font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:3px;\">New Next Step</label>"
-+"<select id=\"completeStep_"+safeId(name)+"\" style=\"width:100%;border:1px solid #d7e0ec;border-radius:8px;padding:7px;font-size:12px;font:inherit;\"><option value=\"\">— Select —</option>"+stepOptions+"</select></div>"
-+"<div><label style=\"font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:3px;\">New Due Date</label>"
-+"<input type=\"date\" id=\"completeDate_"+safeId(name)+"\" style=\"width:100%;border:2px solid rgba(249,199,79,.4);border-radius:8px;padding:7px;font-size:12px;font:inherit;background:#fffbeb;\"></div>"
-+"<div style=\"display:flex;align-items:flex-end;\"><button class=\"btn btn-green btn-small\" onclick=\"saveCompleteStep('"+name+"','"+type+"')\" style=\"width:100%\">Save + Re-Queue Reminder</button></div>"
-+"</div>";
-row.appendChild(form);
-btn.style.display="none";
-}
-function saveCompleteStep(name,type){
-var key=name.replace(/\s/g,"_");
-var note=(document.getElementById("completeNote_"+key)||{value:""}).value.trim();
-var newStep=(document.getElementById("completeStep_"+key)||{value:""}).value;
-var newDate=(document.getElementById("completeDate_"+key)||{value:""}).value;
-
-if(!newStep){alert("Please select the new next step.");return;}
-if(!newDate){alert("Please set a new due date.");return;}
-
-if(type==="prospect"){
-var prsp=gs(K.prsp,defProsp());
-var idx=prsp.findIndex(function(p){return p.name===name;});
-if(idx>=0){prsp[idx].nextStep=newStep;prsp[idx].nextStepDate=newDate;ss(K.prsp,prsp);}
-if(typeof renderProspectRecords==="function")renderProspectRecords();
-} else {
-var refs=gs(K.refs,defRefs());
-var ridx=refs.findIndex(function(r){return r.business===name;});
-if(ridx>=0){refs[ridx].nextStep=newStep;refs[ridx].nextTouchDate=newDate;ss(K.refs,refs);}
-if(typeof loadReferralSources==="function")loadReferralSources();
-}
-
-if(typeof renderReminders==="function")renderReminders();
-if(typeof updateDashboard==="function")updateDashboard();
-
-if(note){
-var list=document.getElementById("notesList");
-var w=list?list.querySelector(".grid-2"):null;
-if(w){
-var b=document.createElement("div");b.className="note-box";
-b.innerHTML="<h4>"+name+" — Step Completed</h4><p>"+note+"</p><p><strong>New Next Step:</strong> "+newStep+"</p><p><strong>New Due Date:</strong> "+newDate+" — Reminder re-queued ✅</p><p style=\"color:#6c8aab;font-size:11px;\">Auto-logged from Reminders</p>";
-w.prepend(b);
-}
-}
-}
-function initNoteProspectSelect(){ }
-function filterNoteProspects(v){var dr=document.getElementById("noteProspectDropdown"),hs=document.getElementById("noteProspectSelect");if(!dr)return;dr.innerHTML="";if(!v||v.length<3){dr.style.display="none";return;}var pr=gs(K.prsp,typeof defProsp==="function"?defProsp():[]),rf=gs(K.refs,typeof defRefs==="function"?defRefs():[]),al=[];pr.forEach(function(p){if(p.name)al.push({label:p.name+" (Prospect)",value:p.name});});rf.forEach(function(r){var n=r.contactName||r.contact||r.name||"",b=r.business||"";if(n)al.push({label:n+(b?" @ "+b:"")+" (Referral)",value:n+(b?" @ "+b:"")});});var q=v.toLowerCase(),mt=al.filter(function(x){return x.label.toLowerCase().indexOf(q)>=0;});var g=document.createElement("div");g.style.cssText="padding:8px 12px;font-size:12px;cursor:pointer;border-bottom:1px solid #f0f4f8;color:#555;";g.textContent="\u2014 General note \u2014";g.onmousedown=function(e){e.preventDefault();document.getElementById("noteProspectSearch").value="";if(hs)hs.value="";var ch=document.getElementById("noteProspectChosen");if(ch)ch.textContent="";dr.style.display="none";};dr.appendChild(g);if(!mt.length){var nd=document.createElement("div");nd.style.cssText="padding:8px 12px;font-size:12px;color:#888;";nd.textContent="No matches";dr.appendChild(nd);}else{mt.slice(0,10).forEach(function(m){var d=document.createElement("div");d.style.cssText="padding:8px 12px;font-size:12px;cursor:pointer;border-bottom:1px solid #f0f4f8;";d.textContent=m.label;d.onmouseover=function(){d.style.background="#f0f7ff";};d.onmouseout=function(){d.style.background="";};d.onmousedown=function(e){e.preventDefault();document.getElementById("noteProspectSearch").value=m.label;if(hs)hs.value=m.value;var ch=document.getElementById("noteProspectChosen");if(ch)ch.textContent="\u2713 "+m.value;dr.style.display="none";};dr.appendChild(d);});}dr.style.display="block";}
-document.addEventListener("click",function(e){var dr=document.getElementById("noteProspectDropdown"),inp=document.getElementById("noteProspectSearch");if(dr&&inp&&!inp.contains(e.target)&&!dr.contains(e.target))dr.style.display="none";});
-function openModal(id){var el=document.getElementById(id);if(!el)return;if(el.classList&&el.classList.contains('modal-overlay')){el.classList.add('open');}else{el.style.display='flex';}}
-function closeModal(id){var el=document.getElementById(id);if(!el)return;if(el.classList&&el.classList.contains('modal-overlay')){el.classList.remove('open');}else{el.style.display='none';}}
-function openRemoveUserModal(){document.getElementById('removeUserModal').style.display='flex';}
-async function doSendInvite(){
-var firstName=(document.getElementById('invFirstName')||{value:''}).value.trim();
-var email=(document.getElementById('invEmail2')||{value:''}).value.trim();
-var role=(document.getElementById('invRole2')||{value:'marketer'}).value;
-var msg=document.getElementById('inviteMsg2');
-if(!firstName||!email){msg.style.color='#dc2626';msg.textContent='First name and email are required.';return;}
-msg.style.color='#64748b';msg.textContent='Sending invite...';
-try{
-var res=await fetch('https://wemarketplus-backend-1.onrender.com/api/users/invite',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+(localStorage.getItem('hl_token')||'')},body:JSON.stringify({firstName,email,role})});
-var data=await res.json();
-if(res.ok){msg.style.color='#166534';msg.textContent='\u2705 Invite sent to '+email+'!';document.getElementById('invFirstName').value='';document.getElementById('invEmail2').value='';setTimeout(function(){document.getElementById('inviteUserModal').style.display='none';msg.textContent='';},3000);}
-else{msg.style.color='#dc2626';msg.textContent='\u274C '+(data.message||'Error. Email Info@wemarketpluscom.org');}
-}catch(e){msg.style.color='#dc2626';msg.textContent='\u274C Connection error. Email Info@wemarketpluscom.org to add '+email+'.';}
-}
-async function doRemoveUser(){
-var email=(document.getElementById('removeEmail2')||{value:''}).value.trim();
-var msg=document.getElementById('removeMsg2');
-if(!email){msg.textContent='Email is required.';return;}
-if(!confirm('Remove '+email+'? Access revoked immediately.'))return;
-msg.style.color='#64748b';msg.textContent='Removing...';
-try{
-var res=await fetch('https://wemarketplus-backend-1.onrender.com/api/team/remove',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+(localStorage.getItem('hl_token')||'')},body:JSON.stringify({email})});
-var data=await res.json();
-if(res.ok){msg.style.color='#166534';msg.textContent='\u2705 '+email+' removed.';setTimeout(function(){document.getElementById('removeUserModal').style.display='none';document.getElementById('removeEmail2').value='';msg.textContent='';},2500);}
-else{msg.style.color='#dc2626';msg.textContent='\u274C '+(data.message||'Error. Email Info@wemarketpluscom.org');}
-}catch(e){msg.style.color='#dc2626';msg.textContent='\u274C Connection error. Email Info@wemarketpluscom.org.';}
-}
-saveReferralFromModal=function(){
-var cn=(document.getElementById('refContactName')||{value:''}).value.trim();
-var biz=(document.getElementById('refBusiness')||{value:''}).value.trim();
-if(!cn||!biz){alert('Contact name and business name are required.');return;}
-var nextStep=(document.getElementById('refNextStep')||{value:''}).value;
-var nextTouchDate=(document.getElementById('refNextTouchDate')||{value:''}).value||'';
-if(!nextStep){alert('Please select a Next Step.');return;}
-if(!nextTouchDate){alert('Please set a Next Touch Date.');return;}
-var refs=gs(K.refs,defRefs());
-refs.push({contactName:cn,business:biz,phone:(document.getElementById('refPhone')||{value:''}).value.trim(),email:(document.getElementById('refEmail')||{value:''}).value.trim(),address:(document.getElementById('refAddress')||{value:''}).value.trim(),status:(document.getElementById('refStatus')||{value:'Red'}).value,nextStep:nextStep,nextTouchDate:nextTouchDate});
-ss(K.refs,refs);
-if(typeof loadReferralSources==='function')loadReferralSources();
-if(typeof renderReferralRecords==='function')renderReferralRecords();
-if(typeof renderReminders==='function')renderReminders();
-['refContactName','refBusiness','refPhone','refEmail','refAddress'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
-var rns=document.getElementById('refNextStep');if(rns)rns.value='';
-var rnd=document.getElementById('refNextTouchDate');if(rnd)rnd.value='';
-var rss=document.getElementById('refSaveStatus');if(rss){rss.textContent='\u2705 '+cn+' saved!';setTimeout(function(){rss.textContent='';},4000);}
-if(typeof showTab==='function')showTab('referrals');
-};
-function initAutoProspectSelect(){
-var sel=document.getElementById('autoProspectSelect');if(!sel)return;
-var prsp=gs(K.prsp,defProsp());
-sel.innerHTML='<option value="">\u2014 Select a prospect \u2014</option>';
-prsp.forEach(function(p,i){var o=document.createElement('option');o.value=i;o.textContent=p.name+' ('+p.status+')';sel.appendChild(o);});
-}
-function fireAutoForProspect(btn,msg){
-var sel=document.getElementById('autoProspectSelect');var prosp='';
-if(sel&&sel.value!==''){var prsp=gs(K.prsp,defProsp());var p=prsp[parseInt(sel.value)];if(p)prosp=' for '+p.name;}
-btn.textContent='\u2705 Done';btn.disabled=true;
-var log=document.getElementById('autoLog');
-if(log){var d=document.createElement('div');d.style.cssText='background:#fff;color:#111;border-radius:9px;padding:9px 13px;font-size:12px;margin-bottom:6px;';d.textContent='\u2705 '+msg+prosp+' \u2014 '+new Date().toLocaleTimeString();log.prepend(d);}
-}
-var aiHist=[];
-sendAI=async function(msg){
-var inp=document.getElementById('aiIn');
-if(!msg){msg=inp?inp.value.trim():'';if(!msg)return;if(inp)inp.value='';}
-var c=document.getElementById('aiMsgs');if(!c)return;
-var u=document.createElement('div');u.style.cssText='padding:10px 14px;border-radius:12px;font-size:13px;max-width:80%;background:#1e3a5f;color:#e2e8f0;align-self:flex-end;margin:4px 0;';u.textContent=msg;c.appendChild(u);
-var t=document.createElement('div');t.style.cssText='padding:10px 14px;border-radius:12px;font-size:13px;color:#94a3b8;font-style:italic;align-self:flex-start;margin:4px 0;';t.textContent='Thinking...';c.appendChild(t);c.scrollTop=c.scrollHeight;
-aiHist.push({role:'user',content:msg});
-try{
-var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:'You are an AI assistant for HospiceLink, a hospice marketing CRM. Be concise and practical.',messages:aiHist.slice(-10)})});
-var d=await r.json();var rep=(d.content&&d.content[0])?d.content[0].text:null;if(!rep)throw new Error('empty');
-aiHist.push({role:'assistant',content:rep});
-t.style.cssText='padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%;background:#1a2a1a;color:#c8f7c5;border:1px solid rgba(140,255,102,.2);align-self:flex-start;margin:4px 0;';t.textContent=rep;
-}catch(e){
-t.style.cssText='padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%;background:#1a2a1a;color:#c8f7c5;align-self:flex-start;margin:4px 0;';
-t.textContent='\u26A0\uFE0F AI temporarily unavailable. Try again in a moment.';
-}
-c.scrollTop=c.scrollHeight;
-};
-var _st0=typeof showTab==='function'?showTab:function(){};
-showTab=function(id){_st0(id);if(id==='automation')setTimeout(initAutoProspectSelect,100);};
-setTimeout(initAutoProspectSelect,1500);
