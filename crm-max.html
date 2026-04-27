@@ -239,30 +239,56 @@
   <section class="section">
     <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How to use Referral Sources:</strong> This is your account list — every hospital, rehab, SNF, and physician office you call on. <strong>Green</strong> = they're actively sending you referrals. <strong>Red</strong> = they haven't sent yet — these are your priority targets to visit. Click <strong>📱 Text</strong> or <strong>📧 Email</strong> on any source to contact them — the message auto-logs to your Notes tab.</p></div>
     <div class="mini-actions" style="margin-bottom:12px;">
-      <button class="btn btn-green" onclick="openModal('addReferralModal')">Add Referral</button>
+      <button class="btn btn-green" onclick="showTab('referral-records')">Add Referral Source</button>
       
-    </div>
-    <div class="table-wrap">
-      <table><thead><tr><th>Sel</th><th>Contact</th><th>Business</th><th>Phone</th><th>Address</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead>
-      <tbody id="referralTableBody"></tbody></table>
     </div>
   </section>
 </div>
 
 <!-- REFERRAL RECORDS -->
 <div class="tab-pane" id="tab-referral-records">
-  <div class="topbar"><div><h2>Referral Records</h2></div></div>
+  <div class="topbar"><div><h2>Add Referral Source</h2></div></div>
   <section class="section">
-    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How to use Referral Records:</strong> This is a searchable log of all your referral sources. Use the search bar to find any contact by name, business, phone, or address. Use this when you're heading to a facility and want to pull up their contact quickly.</p></div>
-    <input class="search-bar" id="referralSearch" type="text" placeholder="🔍  Search by name, business, phone, email, or address…" oninput="renderReferralRecords()">
-    <div class="table-wrap">
-      <table><thead><tr><th>Contact</th><th>Business</th><th>Phone</th><th>Address</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead>
-      <tbody id="referralRecordsBody"></tbody></table>
+    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How to add a Referral Source:</strong> Fill in the contact info below, set their referral status, choose a next step, and set a touch date. Click <strong>Save Referral + Queue Reminder</strong> to save. The source will appear in Referral Sources instantly.</p></div>
+    <div class="note-form-wrap">
+      <div class="modal-grid">
+        <div class="field"><label>Contact Name</label><input id="refContactName" type="text" placeholder="e.g. Jane Smith"></div>
+        <div class="field"><label>Business / Facility</label><input id="refBusiness" type="text" placeholder="e.g. North Park Rehab"></div>
+        <div class="field"><label>Phone</label><input id="refPhone" type="tel" placeholder="(469) 555-0100"></div>
+        <div class="field"><label>Email</label><input id="refEmail" type="email" placeholder="jane@facility.com"></div>
+        <div class="field full"><label>Address</label><input id="refAddress" type="text" placeholder="123 Main St, Dallas TX"></div>
+        <div class="field"><label>Ref Status</label><select id="refStatus"><option value="Green">&#x1F7E2; Green — Sending Referrals</option><option value="Red">&#x1F534; Red — No Referrals Yet</option></select></div>
+      </div>
+      <div class="field" style="margin-top:10px;">
+        <label>Next Step <span style="color:#dc2626;">*</span></label>
+        <select id="refNextStep" onchange="showReferralStepDesc(this.value)" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;">
+          <option value="">— Select next step —</option>
+          <option value="Initial Contact Made">Initial Contact Made</option>
+          <option value="Dropped Off Materials">Dropped Off Materials</option>
+          <option value="Schedule Follow-Up Visit">Schedule Follow-Up Visit</option>
+          <option value="Needs Assessment Conversation">Needs Assessment Conversation</option>
+          <option value="First Referral Received">First Referral Received</option>
+          <option value="Active Referral Partner — Maintain">Active Referral Partner — Maintain</option>
+          <option value="Re-Engagement Needed (30+ days cold)">Re-Engagement Needed (30+ days cold)</option>
+          <option value="Key Decision Maker Meeting">Key Decision Maker Meeting</option>
+        </select>
+        <div id="refStepDescBox" style="display:none;background:#fffbeb;border:1px solid rgba(249,199,79,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:#334155;line-height:1.6;margin-top:6px;"></div>
+      </div>
+      <div class="field" style="margin-top:10px;">
+        <label>&#x1F4C5; Next Touch Date <span style="color:#dc2626;">*</span></label>
+        <input id="refNextTouchDate" type="date" style="border:2px solid rgba(249,199,79,.4);border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;background:#fffbeb;">
+        <div style="font-size:11px;color:#f59e0b;margin-top:3px;font-weight:700;">&#x26A1; Queues reminder in Reminders tab</div>
+      </div>
+      <div class="modal-actions" style="margin-top:14px;">
+        <button class="btn btn-green" onclick="saveReferralFromModal()">Save Referral + Queue Reminder</button>
+      </div>
+      <div id="refSaveStatus" style="margin-top:8px;font-size:12px;color:#0a6c2f;font-weight:700;"></div>
     </div>
   </section>
 </div>
 
-<!-- PIPELINE -->
+
+<!-- !-- PIPELINE -->
 <div class="tab-pane" id="tab-pipeline">
   <div class="topbar"><div><h2>Pipeline</h2></div></div>
   <section class="section">
@@ -806,27 +832,6 @@
 </div>
 
 <!-- MODALS -->
-<div class="modal-overlay" id="addReferralModal"><div class="modal-box"><button class="close-modal" onclick="closeModal('addReferralModal')">&times;</button><h4>Add Referral Source</h4><div class="modal-grid"><div class="field"><label>Contact Name</label><input id="refContactName" type="text" placeholder="e.g. Jane Smith"></div><div class="field"><label>Business / Facility</label><input id="refBusiness" type="text" placeholder="e.g. North Park Rehab"></div><div class="field"><label>Phone</label><input id="refPhone" type="tel" placeholder="(469) 555-0100"></div><div class="field"><label>Email</label><input id="refEmail" type="email" placeholder="jane@facility.com"></div><div class="field full"><label>Address</label><input id="refAddress" type="text" placeholder="123 Main St, Dallas TX"></div><div class="field"><label>Ref Status</label><select id="refStatus"><option value="Green">🟢 Green — Sending Referrals</option><option value="Red">🔴 Red — No Referrals Yet</option></select></div></div><div class="field">
-          <label>Next Step <span style="color:#dc2626;">*</span></label>
-          <select id="refNextStep" onchange="showReferralStepDesc(this.value)" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;">
-              <option value="">— Select next step —</option>
-              <option value="Initial Contact Made">Initial Contact Made</option>
-              <option value="Dropped Off Materials">Dropped Off Materials</option>
-              <option value="Schedule Follow-Up Visit">Schedule Follow-Up Visit</option>
-              <option value="Needs Assessment Conversation">Needs Assessment Conversation</option>
-              <option value="First Referral Received">First Referral Received</option>
-              <option value="Active Referral Partner — Maintain">Active Referral Partner — Maintain</option>
-              <option value="Re-Engagement Needed (30+ days cold)">Re-Engagement Needed (30+ days cold)</option>
-              <option value="Key Decision Maker Meeting">Key Decision Maker Meeting</option>
-            </select>
-          <div id="refStepDescBox" style="display:none;background:#fffbeb;border:1px solid rgba(249,199,79,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:#334155;line-height:1.6;margin-top:6px;"></div>
-        </div>
-        <div class="field">
-          <label>📅 Next Touch Date <span style="color:#dc2626;">*</span></label>
-          <input id="refNextTouchDate" type="date" style="border:2px solid rgba(249,199,79,.4);border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;background:#fffbeb;">
-          <div style="font-size:11px;color:#f59e0b;margin-top:3px;font-weight:700;">⚡ Queues reminder in Reminders tab</div>
-        </div>
-    <div class="modal-actions"><button class="btn btn-green" onclick="saveReferralFromModal()">Save Referral + Queue Reminder</button><button class="btn btn-gray" onclick="closeModal('addReferralModal')">Cancel</button></div></div></div>
 <div class="modal-overlay" id="editReferralModal"><div class="modal-box"><button class="close-modal" onclick="closeModal('editReferralModal')">&times;</button><h4>Edit Referral Source</h4><input type="hidden" id="editRefIndex"><div class="modal-grid"><div class="field"><label>Contact Name</label><input id="editRefContactName" type="text"></div><div class="field"><label>Business / Facility</label><input id="editRefBusiness" type="text"></div><div class="field"><label>Phone</label><input id="editRefPhone" type="tel"></div><div class="field"><label>Email</label><input id="editRefEmail" type="email"></div><div class="field full"><label>Address</label><input id="editRefAddress" type="text"></div><div class="field"><label>Ref Status</label><select id="editRefStatus"><option value="Green">🟢 Green — Sending Referrals</option><option value="Red">🔴 Red — No Referrals Yet</option></select></div></div><div class="modal-actions"><button class="btn btn-green" onclick="saveEditReferral()">Save Changes</button><button class="btn btn-gray" onclick="closeModal('editReferralModal')">Cancel</button></div></div></div>
 <div class="modal-overlay" id="editProspectModal"><div class="modal-box"><button class="close-modal" onclick="closeModal('editProspectModal')">&times;</button><h4>Edit Prospect</h4><input type="hidden" id="editProspIndex"><div class="modal-grid"><div class="field"><label>Name</label><input id="editProspName" type="text"></div><div class="field"><label>Status</label><select id="editProspStatus"><option>Inquiry</option><option>Pending Admission</option><option>Lost</option><option>Admitted</option></select></div><div class="field"><label>Phone</label><input id="editProspPhone" type="tel"></div><div class="field"><label>Email</label><input id="editProspEmail" type="email"></div><div class="field full"><label>Address</label><input id="editProspAddress" type="text"></div><div class="field"><label>Secondary Contact</label><input id="editProspSecondary" type="text"></div><div class="field"><label>Assigned Marketer</label><input id="editProspMarketer" type="text"></div><div class="field full"><label>Next Step</label><input id="editProspNextStep" type="text"></div></div><div class="modal-actions"><button class="btn btn-green" onclick="saveEditProspect()">Save Changes</button><button class="btn btn-gray" onclick="closeModal('editProspectModal')">Cancel</button></div></div></div>
 
@@ -1223,8 +1228,8 @@ document.querySelectorAll('.nav a').forEach(function(l){l.addEventListener('clic
   </div>
 </div>
 <script>
-var TOUR_KEY="hl_crm_max_v5";
-var OW=[["👋", "Welcome to HospiceLink Max!", "Your professional multi-role CRM for marketers, nurses, and caregivers. Every tab is built around the real workflow of a hospice team. Let's walk through each one.", ""], ["🏠", "Dashboard — Team Command Center", "Opens every morning with 4 action cards: Overdue follow-ups, Due Today, Goals progress, and Re-Engagement queue. Below that, your full pipeline and CRM overview update in real time as your team logs activity.", "📍 Tab: Dashboard → every team member starts here each morning"], ["➕", "Add Prospect — Intake Form", "Complete intake: name, status, referral source, assigned marketer, phone, email, address, secondary contact, next step, and due date. The due date auto-triggers the Reminders system. Required fields: Name, Status, Marketer, Next Step.", "📍 Always set a Next Step + Due Date — it powers your whole reminder system"], ["📋", "Prospect Records — Full Patient List", "All prospects in one table with status filter and CSV export. The 📱 and 📧 buttons open your phone app pre-filled and auto-log the communication to Notes. No manual logging needed.", "📍 Tab: Prospect Records → 📱 Text and 📧 Email auto-log to Notes"], ["🤝", "Referral Sources — Account Management", "Your full referral partner list. Green = actively sending. Red = not sending yet. Contact any source directly from this tab. All communications auto-log. Admin can see which sources are going cold in the Touch Log.", "📍 Green = nurture relationship. Red = schedule a visit this week."], ["🔀", "Pipeline — Visual Funnel", "Inquiry → Pending Admission → Admitted → Lost at a glance. Prospect cards show who is in each stage. Use this in team meetings to discuss stuck cases.", "📍 Tab: Pipeline → review in weekly team meetings"], ["🗺️", "Territory View — Coverage Map", "Territories with visit count, admissions, and conversion rate. Identifies underperforming areas before they become a problem.", "📍 Tab: Territory View → review monthly"], ["📈", "Productivity — Marketer Scorecard", "Individual and team-level visit and admission tracking. Notes synced count shows field activity. Managers use this for weekly 1-on-1s.", "📍 Tab: Productivity → managers review every Friday"], ["🚗", "EVV / Mileage — GPS Compliance", "Marketers log every field trip: name, start address, end address, purpose. Miles are estimated automatically. Admin sees all staff mileage in the Admin tab. Required for compliance and mileage reimbursement.", "📍 Tab: EVV/Mileage → log every trip before you drive home"], ["👨‍👩‍👧", "Family Communication — Compliance Log", "Every family conversation logged with your name, date, time, and notes. Required for compliance. Send directly via SMS or email from this tab — pre-fills with your message. Critical for clinical staff.", "📍 Tab: Family Communication → log within 24 hours of every family contact"], ["⚙️", "Automation — Workflow Triggers", "Auto follow-up tasks, touch cadences, reminders, paperwork alerts, overdue alerts. Each fires once and logs confirmation. Set these up for every stage of your admission workflow.", "📍 Tab: Automation → set up your follow-up cadence on day one"], ["📝", "Notes — Field Sync with GPS", "Log every interaction with name, position, date, time, next step, and note. Hit Sync & Save — GPS location captures automatically. All SMS and emails auto-appear here too. Admin sees all synced notes.", "📍 Tab: Notes → sync after every visit, every family call"], ["🤝", "Touch Log — Referral Source Activity", "Log every in-person visit, phone call, text, or email to each referral source. Admin sees which sources haven't been touched in 14+ days — those trigger a cold alert. This is how top agencies manage relationships.", "📍 Tab: Touch Log → log every visit and call to your referral sources"], ["📊", "Weekly Report — Admin Performance Summary", "Admin-only. Auto-emailed every Monday at 7am with full team performance: prospects, admissions, losses, top referral source, marketer activity. Download as CSV for board meetings. Agency owners forward this to their boards.", "📍 Tab: Weekly Report → Admin only. Automatically sent every Monday 7am."], ["💬", "Team Notes — Internal Coordination", "Internal notes on prospects that the team shares — never visible to patients or families. Use for clinical context (\"Patient has COPD + CHF — approach gently\"), family sensitivity notes, and marketer-to-nurse handoffs.", "📍 Tab: Team Notes → coordinate handoffs between marketers and nurses"], ["📅", "Reminders — Follow-Up Queue", "Auto-populated from Next Step due dates. Overdue in red, today in yellow, this week in blue. Check every morning. Complete items as you go. Daily 7am email digest in the live CRM.", "📍 Tab: Reminders → check every morning, clear before end of day"], ["🔁", "Re-Engagement — Lost Prospect Queue", "Lost prospects 30+ days old. One-click re-assign to put them back in your pipeline. Studies show 20-30% convert when re-contacted. Review weekly.", "📍 Tab: Re-Engagement → review every Monday"], ["🎯", "Daily Goals — Team Accountability", "Set daily targets for visits, calls, and referral contacts. Progress bars update as you log. Drives accountability without managers having to chase people.", "📍 Tab: Daily Goals → set targets Monday morning, review Friday"], ["📤", "Import Data — Bring Your Existing List", "Upload CSV or Excel from any CRM. Download the template first to see the exact format. Duplicate detection prevents the same facility from being entered twice.", "📍 Tab: Import Data → use on day one to migrate your existing list"], ["🏥", "Referral Portal — Hospital Direct Intake", "White-label link for discharge planners. They submit a referral on their end, it appears in your Prospect Records instantly as an Inquiry. Print the QR code and post it at every nursing station.", "📍 Tab: Referral Portal → share the link with every discharge planner"], ["📘", "Playbook Generator — Custom Marketing SOP", "AI builds your agency's complete marketing playbook in 30 seconds. Enter your city, team size, monthly goal, and biggest challenge. Get your weekly schedule, referral targets, pitch scripts, and 90-day plan.", "📍 Tab: Playbook Generator → generate on day one, share with your team"], ["🤖", "AI Assistant — 24/7 Strategy Partner", "Claude AI knows your CRM data and can answer questions, draft messages, analyze performance, and coach your team. Ask anything: \"What should I focus on today?\" or \"Draft a follow-up for a hospital case manager.\"", "📍 Tab: AI Assistant → use daily for scripts, analysis, and coaching"], ["🔒", "Admin — Full System Control", "Edit and delete any record. View all staff notes, GPS tracking, and mileage. Manage team seats and roles. Invite new team members via email. This tab is only visible to the account admin.", "📍 Tab: Admin → invite your team and review staff activity weekly"], ["🎉", "Day 1 Checklist — Get Started Right", "1) Import your existing prospect list  2) Add your first new prospect with a due date  3) Share your Referral Portal link with 3 discharge planners  4) Log your first Touch on your top referral sources  5) Generate your Marketing Playbook", "📞 Info@wemarketpluscom.org | (469) 793-0673"]];
+var TOUR_KEY="hl_crm_max_v6";
+var OW=[["👋", "Welcome to HospiceLink Max", "Max is built for the full hospice team — marketers, nurses, and caregivers working together in one system. Every role has dedicated tabs. This tour walks you through each one: what it does, who uses it, and exactly how. Takes about 4 minutes.", ""], ["🏠", "Dashboard — Team Command Center", "Every team member starts here each morning. The 4 action cards show: overdue follow-ups (red), due today (yellow), goal progress (green), and re-engagement queue (blue). Click any card to jump to that action. Below the cards, your full pipeline and CRM overview update in real time as the team logs activity throughout the day.", "📍 Morning habit: Check Dashboard first — clear red cards before anything else"], ["➕", "Add Prospect — Full Team Intake", "Every new patient lead starts here. Enter the prospect name, status (start with Inquiry), referral source, assigned marketer, phone, email, address, and secondary contact. Then set the Next Step and — critically — the Next Step Due Date. That date is what powers your entire Reminders system. Required fields: Name, Status, Marketer, and Next Step.", "📍 Rule: Never submit a prospect without a Next Step + Due Date — it drives every follow-up"], ["📋", "Prospect Records — Your Full Patient Database", "Every prospect in one searchable table. Filter by status to focus on one stage at a time. Use the search bar to find anyone instantly. Click 📱 to text or 📧 to email directly from the record — your app opens pre-filled, and the communication auto-logs to Notes immediately. Export to CSV anytime for reports or meetings.", "📍 Daily use: This is your working list — filter by Inquiry and Pending Admission every morning"], ["🤝", "Add Referral — Adding a Referral Source", "Go to Referral Records to add a new source. Enter the contact name, business, phone, email, and address. Set status: Green = actively sending referrals, Red = not sending yet. Select a Next Step and set a Next Touch Date to queue them in Reminders. Click Save Referral + Queue Reminder. They appear in your Referral Sources list immediately.", "📍 Rule: Every facility you call on needs to be in here with a status and a touch date"], ["🤝", "Referral Sources — Account Management", "All your referral partners in one view. Green = nurture the relationship with regular visits and calls. Red = priority visit this week — these are the accounts that haven't sent referrals yet. Click the phone or email on any row to contact them directly. All contacts auto-log to Notes with timestamp.", "📍 Weekly: Schedule visits for all Red sources. Call all Green sources you haven't touched in 7 days"], ["🔀", "Pipeline — Visual Team Funnel", "Prospect cards grouped by stage: Inquiry → Pending Admission → Admitted → Lost. The bar chart shows conversion at each stage. Use this in your weekly team meeting to see who is stuck and where. Marketers and nurses both see this view so handoffs between stages are visible to everyone.", "📍 Team meeting: Pull up Pipeline every week — identify stuck prospects and assign next actions"], ["🗺️", "Territory View — Coverage by Area", "Territories with visit count, admissions, and conversion rate per area. Identifies underperforming territories before they become a problem. Use monthly with your team to decide where to shift visit frequency. If McKinney is at 30% conversion and North Dallas is at 60%, McKinney needs more attention.", "📍 Monthly: Reallocate visit time based on territory conversion rates"], ["📈", "Productivity — Team Scorecard", "Individual and team-level tracking: accounts visited, follow-ups completed, admissions, and notes synced. Managers use this for weekly 1-on-1s without having to ask what anyone did. If notes are low, the team member isn't syncing after visits. If visits are low, they're not in the field. Accountability is automatic.", "📍 Managers: Review every Friday — use this data in your 1-on-1s"], ["🚗", "EVV / Mileage — GPS Compliance Logging", "Log every field trip here: enter your name, start address, end address, and purpose. Miles are estimated automatically. This tab is required for mileage reimbursement and compliance documentation. Marketers should log every trip before driving home for the day. Admin sees all staff mileage in the Admin tab.", "📍 Rule: Log every trip before you drive home — start address, end address, purpose"], ["👨‍👩‍👧", "Family Communication — Clinical Compliance Log", "Every conversation with a patient's family gets logged here. Enter your name, date, time, and the notes from the call or visit. You can also send an SMS or email directly from this tab — it pre-fills with a professional message. This log is required for compliance. Clinical staff must log every family contact within 24 hours.", "📍 Clinical rule: Log every family conversation within 24 hours — this is your compliance record"], ["⚙️", "Automation — Workflow Triggers", "Automation fires follow-up tasks, touch cadences, paperwork alerts, and overdue notifications with one click. Each automation logs a timestamped confirmation when it fires. Set up your admission workflow triggers on day one: initial follow-up at 48 hours, paperwork reminder at 72 hours, and weekly nurture cadence for active sources.", "📍 Day 1: Set up your admission workflow automations before your first field visit"], ["📝", "Notes — Field Sync with GPS", "After every visit or call, open Notes. Select your name, set your position, enter the date and time, search for the prospect or referral source (type 3 letters to find them), pick your Next Step, set a due date, and write your note. Click Sync & Save — GPS captures automatically. Every SMS and email you send also auto-appears here. Admin sees all synced notes.", "📍 Rule: Sync after every visit and every important call — GPS and next step log automatically"], ["🤝", "Touch Log — Referral Source Tracking", "After every visit or call to a referral source, log it here. Select the source, choose the touch type (In-Person Visit, Phone Call, Text, Email, or Dropped Materials), enter the date, and add a brief note. Admin can see which Green sources haven't been touched in 14+ days — those trigger a cold alert. This is how top agencies maintain systematic referral relationships.", "📍 Rule: Log every referral source interaction here — admin sees cold sources automatically"], ["📊", "Weekly Report — Admin Performance Summary", "Admin-only. This report is auto-emailed every Monday at 7am with the full team's weekly performance: total prospects, admissions, losses, top referral source, and individual marketer activity. Download as CSV for board presentations. Most agency owners forward this directly to their leadership team every Monday without editing it.", "📍 Admin: This report runs automatically — share it with leadership every Monday"], ["💬", "Team Notes — Internal Coordination", "Internal notes that the whole team shares on any prospect — never visible to patients or families. Use this for clinical context that helps the team: 'Patient has COPD + CHF — approach gently,' 'Family is hesitant — daughter is the decision maker,' or 'Marketer to nurse: patient ready for assessment.' Select the prospect, enter your name, pick a tag, and save.", "📍 Marketer-to-nurse handoffs go here — clinical context stays with the prospect record"], ["📅", "Reminders — Follow-Up Queue", "Auto-populated from every Next Step Due Date set on prospects and referral sources. Red = overdue, yellow = due today, blue = due this week. Check this tab every morning right after the Dashboard. Complete items as you go. In the live CRM, you also get a 7am daily email digest of everything due that day.", "📍 Morning habit: Dashboard → Reminders → clear red and yellow before noon"], ["🔁", "Re-Engagement — Lost Prospect Recovery", "Shows every prospect marked Lost that is 30 or more days old and ready for re-contact. Studies show 20-30% convert when re-engaged at the right time. Click Re-Engage to move them back to Inquiry status. Review every Monday morning — situations change, families come back, insurance approvals come through.", "📍 Monday habit: Check Re-Engagement — one click to re-assign a prospect who may be ready"], ["🎯", "Daily Goals — Team Accountability", "Set daily targets at the start of each week: facility visits, phone calls, and referral contacts. Progress bars update as the team logs activity. Drives accountability without managers needing to check in constantly. Review on Friday as a team to see who hit their numbers and who needs support next week.", "📍 Monday: Set targets. Friday: Review as a team — celebrate wins, address gaps"], ["📤", "Import Data — Migrate in Minutes", "Bring your existing prospect list from any CRM. Download the sample template to see the exact format, fill in your data, then upload. The system maps columns automatically. Most agencies complete their full migration in under 10 minutes. Use this on day one so your team has real data to work with immediately.", "📍 Day 1: Download template → fill in your list → upload → your team has live data"], ["🏥", "Referral Portal — Hospital Direct Intake", "A white-label referral intake form you share with discharge planners and social workers. Copy your unique link from this tab and send it to every discharge planner you meet. When they submit a referral, it appears instantly in Prospect Records as an Inquiry — no phone tag, no fax. Print the QR code and post it at every nursing station in every facility you visit.", "📍 This week: Share your portal link with every discharge planner — post the QR code at nursing stations"], ["📘", "Playbook Generator — Custom Agency SOP", "AI builds your complete hospice marketing playbook in 30 seconds. Enter your city, team size, monthly admission goal, and biggest challenge. Click Generate. You get a full weekly schedule, your top referral target types by facility, your 30-second pitch script, KPIs, and a 90-day ramp plan — all customized to your market and team.", "📍 Day 1: Generate your playbook — share it with every team member as your operating guide"], ["🤖", "AI Assistant — 24/7 Clinical + Marketing Coach", "Claude AI is available any time for any question. Marketers: ask for follow-up scripts, referral analysis, or territory strategy. Nurses: ask for clinical note templates, family conversation guidance, or compliance questions. Ask anything — the AI gives practical, hospice-specific answers. Use it before difficult calls or family conversations to prepare your approach.", "📍 Use before difficult calls — ask: 'Draft a follow-up for a family who is hesitant about hospice'"], ["🔒", "Admin — Full System Control", "Admin-only. Edit or delete any record in the system. View all staff notes, GPS tracking, and mileage reports. Manage team seats and roles — add or remove users as your team changes. Invite new members by email. Review staff activity to ensure everyone is logging visits and syncing notes. Standard users never see this tab.", "📍 Day 1: Invite your full team here — assign roles (Marketer, Nurse, Caregiver, Admin)"], ["🎉", "Day 1 Checklist — Get Your Team Started", "1) Import your existing prospect list using Import Data. 2) Invite your full team in the Admin tab and assign roles. 3) Add your referral sources in Referral Records with Green or Red status. 4) Share your Referral Portal link with 3 discharge planners today. 5) Set up your Automation workflow triggers. 6) Generate your Marketing Playbook and share it with the team. 7) Log your first Touch on your top referral sources.", "📞 Questions? Info@wemarketpluscom.org  |  (469) 793-0673"]];
 var oi=0;
 function startTour(){document.getElementById('owOv').style.display='flex';owR(0);}
 function owR(i){
@@ -1735,7 +1740,72 @@ function saveCompleteStep(name,type){
 
 
 /* ── INIT NOTE PROSPECT SELECT ── */
-function initNoteProspectSelect(){var sel=document.getElementById("noteProspectSelect");if(!sel)return;var prsp=gs(K.prsp,defProsp());sel.innerHTML='<option value="">— General note (no specific prospect) —</option>';prsp.filter(function(p){return p.status!=="Admitted";}).forEach(function(p){var o=document.createElement("option");o.value=p.name;o.textContent=p.name+" ("+p.status+")";sel.appendChild(o);});}
+function initNoteProspectSelect(){ /* replaced by typeahead */ }
+
+function filterNoteProspects(val) {
+  var drop = document.getElementById("noteProspectDropdown");
+  var hiddenSel = document.getElementById("noteProspectSelect");
+  if (!drop) return;
+  drop.innerHTML = "";
+  if (!val || val.length < 3) { drop.style.display = "none"; return; }
+  var prsp = gs(K.prsp, typeof defProsp === "function" ? defProsp() : []);
+  var refs = gs(K.refs, typeof defRefs === "function" ? defRefs() : []);
+  var all = [];
+  prsp.forEach(function(p) {
+    if (p.name) all.push({ label: p.name + " (Prospect \u2013 " + (p.status || "") + ")", value: p.name });
+  });
+  refs.forEach(function(r) {
+    var nm = r.contactName || r.contact || r.name || "";
+    var biz = r.business || "";
+    if (nm) all.push({ label: nm + (biz ? " @ " + biz : "") + " (Referral)", value: nm + (biz ? " @ " + biz : "") });
+  });
+  var q = val.toLowerCase();
+  var matches = all.filter(function(x) { return x.label.toLowerCase().indexOf(q) >= 0; });
+  var gen = document.createElement("div");
+  gen.style.cssText = "padding:9px 12px;font-size:12px;cursor:pointer;border-bottom:1px solid #f0f4f8;color:#555;";
+  gen.textContent = "\u2014 General note (no specific person) \u2014";
+  gen.onmousedown = function(e) {
+    e.preventDefault();
+    document.getElementById("noteProspectSearch").value = "";
+    if (hiddenSel) hiddenSel.value = "";
+    var ch = document.getElementById("noteProspectChosen"); if (ch) ch.textContent = "";
+    drop.style.display = "none";
+  };
+  drop.appendChild(gen);
+  if (matches.length === 0) {
+    var nd = document.createElement("div");
+    nd.style.cssText = "padding:9px 12px;font-size:12px;color:#888;";
+    nd.textContent = "No matches found";
+    drop.appendChild(nd);
+  } else {
+    matches.slice(0, 12).forEach(function(m) {
+      var d = document.createElement("div");
+      d.style.cssText = "padding:9px 12px;font-size:12px;cursor:pointer;border-bottom:1px solid #f0f4f8;";
+      d.textContent = m.label;
+      d.onmouseover = function() { d.style.background = "#f0f7ff"; };
+      d.onmouseout  = function() { d.style.background = ""; };
+      d.onmousedown = function(e) {
+        e.preventDefault();
+        document.getElementById("noteProspectSearch").value = m.label;
+        if (hiddenSel) hiddenSel.value = m.value;
+        var ch = document.getElementById("noteProspectChosen");
+        if (ch) ch.textContent = "Selected: " + m.value;
+        drop.style.display = "none";
+      };
+      drop.appendChild(d);
+    });
+  }
+  drop.style.display = "block";
+}
+document.addEventListener("click", function(e) {
+  var drop = document.getElementById("noteProspectDropdown");
+  var inp  = document.getElementById("noteProspectSearch");
+  if (drop && inp && !inp.contains(e.target) && !drop.contains(e.target)) {
+    drop.style.display = "none";
+  }
+});
+
 </script>
+
 </body>
 </html>
