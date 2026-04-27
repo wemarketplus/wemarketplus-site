@@ -103,7 +103,7 @@
     <a data-tab="hipaa" class="admin-link" onclick="showTab('hipaa');return false;">🔐 HIPAA Audit Log 🔒</a>
     <a data-tab="admin" class="admin-link" onclick="showTab('admin');return false;">🔒 Admin</a>
   <button onclick="logout()" style="display:block;width:100%;margin-top:8px;background:rgba(224,85,85,.12);border:1px solid rgba(224,85,85,.3);color:#ff8080;border-radius:12px;padding:11px;font-size:13px;font-weight:800;cursor:pointer;">🚪 Logout</button>
-  <button onclick="crmLogout()" style="display:block;width:100%;margin-top:8px;background:rgba(224,85,85,.1);border:1px solid rgba(224,85,85,.25);color:#ff8080;border-radius:10px;padding:10px;font-size:12px;font-weight:800;cursor:pointer;">🚪 Logout</button>
+
   </nav>
   <div class="footer-actions" style="margin-top:20px;"><a href="https://wemarketpluscom.org" class="btn btn-blue btn-small">Back to Website</a></div>
 </aside>
@@ -160,7 +160,10 @@
         <div class="field"><label>Phone</label><input id="prospectPhone" type="tel" placeholder="(469) 555-0100"></div>
         <div class="field"><label>Email</label><input id="prospectEmail" type="email" placeholder="name@email.com"></div>
         <div class="field"><label>Address</label><input id="prospectAddress" type="text" placeholder="123 Main St, Dallas TX"></div>
-        <div class="field"><label>Secondary Contact</label><input id="prospectSecondary" type="text" placeholder="Secondary contact name"></div>
+        <div class="field"><label>Secondary Contact Name</label><input id="prospectSecondary" type="text" placeholder="e.g. Jane Smith (Daughter)"></div>
+        <div class="field"><label>Secondary Contact Relationship</label><input id="prospectSecondaryRelation" type="text" placeholder="e.g. Daughter, Son, POA, Spouse"></div>
+        <div class="field"><label>Secondary Contact Phone</label><input id="prospectSecondaryPhone" type="tel" placeholder="Secondary phone number"></div>
+        <div class="field"><label>Secondary Contact Email</label><input id="prospectSecondaryEmail" type="email" placeholder="Secondary email (optional)"></div>
         <div class="field" style="grid-column:1/3">
           <label>Next Step <span style="color:#dc2626;">*</span> — tells your team what to do + queues the reminder</label>
           <select id="prospectNextStep" onchange="showProspectStepDesc(this.value)" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;">
@@ -368,7 +371,7 @@
         <div class="field"><label>First Time? Add Name</label><input id="familyNewName" type="text" placeholder="Enter your name"></div>
         <div class="field"><label>Date</label><input id="familyDate" type="date"></div>
         <div class="field"><label>Time</label><input id="familyTime" type="time"></div>
-        <div class="field full"><label>Communication</label><textarea id="familyText" placeholder="Enter family communication details"></textarea></div>
+        <div class="field full"><label>Communication</label><textarea id="familyText" placeholder="Enter family communication details" spellcheck="true"></textarea></div>
       </div>
       <div class="note-actions"><button class="btn btn-green" onclick="saveFamilyCommunication()">Add Family Communication</button></div>
     </div>
@@ -494,7 +497,7 @@
           <input id="noteNextStepDate" type="date" style="border:2px solid rgba(249,199,79,.3);border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;background:#fffbeb;">
           <div style="font-size:11px;color:#f59e0b;margin-top:3px;">Set this to re-queue the reminder after completing a step</div>
         </div>
-        <div style="grid-column:1/-1;"><label for="noteText">Note</label><textarea id="noteText" placeholder="Enter note details here…"></textarea></div>
+        <div style="grid-column:1/-1;"><label for="noteText">Note</label><textarea id="noteText" placeholder="Enter note details here…" spellcheck="true"></textarea></div>
       </div>
       <div class="note-actions"><button class="btn btn-green" onclick="saveDemoNote()">Sync &amp; Save Note</button></div>
       <div id="syncStatus" style="margin-top:8px;font-size:12px;color:#0a6c2f;font-weight:700;"></div>
@@ -515,7 +518,7 @@
     <div class="admin-banner"><h3 style="margin:0;color:#c9aeff;">🔒 Admin Only</h3><span class="pill pill-purple">Admin View Only</span></div>
     <p class="admin-note">This section is hidden from standard users. Only the Admin account holder can view seat limits, manage users, review EVV data, mileage, staff tracking entries, and notes totals.</p>
     <div class="admin-grid">
-      <div class="admin-card"><h4>👥 User Management</h4><p>Admin manages user access and subscription seat limits.</p><div class="mini-actions" style="margin-top:10px;"><button class="btn btn-green btn-small">+ Add User</button><button class="btn btn-red btn-small">− Remove User</button></div></div>
+      <div class="admin-card"><h4>👥 User Management</h4><p>Admin manages user access and subscription seat limits.</p><div class="mini-actions" style="margin-top:10px;"><button class="btn btn-green btn-small" onclick="openModal('inviteUserModal')">+ Add User</button><button class="btn btn-red btn-small" onclick="openRemoveUserModal()">− Remove User</button></div></div>
       <div class="admin-card"><h4>🪑 Seat Limits</h4><p>Subscription seat count controls active users.</p><span class="admin-stat">12 / 20</span><p style="font-size:11px;">Seats in use / Total purchased</p></div>
       <div class="admin-card"><h4>📝 Notes Synced</h4><p>Total notes synced across all team members.</p><span class="admin-stat" id="adminNotes">0</span></div>
       <div class="admin-card"><h4>📍 Miles Logged</h4><p>Total mileage captured via GPS.</p><span class="admin-stat" id="adminMiles">0.0 mi</span></div>
@@ -786,7 +789,7 @@
         <div class="field"><label>Prospect</label><select id="tnProspect" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></select></div>
         <div class="field"><label>Your Name</label><input id="tnAuthor" type="text" placeholder="Enter your name" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></div>
         <div class="field"><label>Tag</label><select id="tnTag" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"><option>📋 General</option><option>⚠️ Family Sensitive</option><option>🏥 Clinical Context</option><option>💡 Strategy</option><option>🚨 Urgent</option></select></div>
-        <div class="field full" style="grid-column:1/-1"><label>Note (team only)</label><textarea id="tnText" placeholder="e.g. Family is hesitant — approach gently. Daughter is primary decision maker." style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;min-height:70px;resize:vertical;"></textarea></div>
+        <div class="field full" style="grid-column:1/-1"><label>Note (team only)</label><textarea id="tnText" placeholder="e.g. Family is hesitant — approach gently. Daughter is primary decision maker." style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;min-height:70px;resize:vertical;" spellcheck="true"></textarea></div>
       </div>
       <div class="note-actions"><button class="btn btn-green" onclick="saveTeamNote()">💬 Save Team Note</button></div>
     </div>
@@ -1140,16 +1143,16 @@ function updateDashboard(){
   const as2=document.getElementById("adminStaff");if(as2)as2.textContent=sc;
   renderPipeline(prsp);renderProspectRecords();renderReferralRecords();
 }
-function loadReferralSources(){const refs=gs(K.refs,defRefs());ss(K.refs,refs);const sel=document.getElementById("prospectReferralSourceSelect");const tb=document.getElementById("referralTableBody");sel.innerHTML="";tb.innerHTML="";refs.forEach((r,i)=>{const o=document.createElement("option");o.value=r.business;o.textContent=r.business;sel.appendChild(o);const tr=document.createElement("tr");tr.innerHTML=`<td><input type="radio" name="selRef" value="${i}"></td><td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${r.address||"—"}</td><td>${r.email||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button></td>`;tb.appendChild(tr);});updateDashboard();}
-function renderReferralRecords(){const refs=gs(K.refs,defRefs());const q=(document.getElementById("referralSearch")||{value:""}).value.toLowerCase();const tb=document.getElementById("referralRecordsBody");tb.innerHTML="";refs.filter(r=>{if(!q)return true;return[r.contactName,r.business,r.phone,r.email,r.address].some(v=>(v||"").toLowerCase().includes(q));}).forEach((r,_,arr)=>{const i=arr.indexOf(r);const tr=document.createElement("tr");tr.innerHTML=`<td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${r.address||"—"}</td><td>${r.email||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button></td>`;tb.appendChild(tr);});}
+function loadReferralSources(){const refs=gs(K.refs,defRefs());ss(K.refs,refs);const sel=document.getElementById("prospectReferralSourceSelect");const tb=document.getElementById("referralTableBody");if(sel){sel.innerHTML='<option value="">— Select referral source —</option>';refs.forEach((r,i)=>{const o=document.createElement("option");o.value=r.business;o.textContent=r.business+(r.status==="Red"?" 🔴":"");sel.appendChild(o);});}if(tb){tb.innerHTML="";refs.forEach((r,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td><input type="radio" name="selRef" value="${i}"></td><td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${r.address||"—"}</td><td>${r.email||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button></td>`;tb.appendChild(tr);});}updateDashboard();}
+function renderReferralRecords(){const refs=gs(K.refs,defRefs());const q=(document.getElementById("referralSearch")||{value:""}).value.toLowerCase();const tb=document.getElementById("referralRecordsBody");if(!tb)return;tb.innerHTML="";refs.filter(r=>{if(!q)return true;return[r.contactName,r.business,r.phone,r.email,r.address].some(v=>(v||"").toLowerCase().includes(q));}).forEach((r,_,arr)=>{const i=arr.indexOf(r);const tr=document.createElement("tr");tr.innerHTML=`<td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${r.address||"—"}</td><td>${r.email||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button></td>`;tb.appendChild(tr);});}
 
 function deleteSelectedReferral(){const sel=document.querySelector('input[name="selRef"]:checked');if(!sel){alert("Select a referral to delete.");return;}const refs=gs(K.refs,defRefs());refs.splice(parseInt(sel.value),1);ss(K.refs,refs);loadReferralSources();}
 function openEditReferral(i){const refs=gs(K.refs,defRefs());const r=refs[i];document.getElementById("editRefIndex").value=i;document.getElementById("editRefContactName").value=r.contactName||"";document.getElementById("editRefBusiness").value=r.business||"";document.getElementById("editRefPhone").value=r.phone||"";document.getElementById("editRefEmail").value=r.email||"";document.getElementById("editRefAddress").value=r.address||"";document.getElementById("editRefStatus").value=r.status||"Green";openModal("editReferralModal");}
 function saveEditReferral(){const i=parseInt(document.getElementById("editRefIndex").value);const refs=gs(K.refs,defRefs());refs[i]={contactName:document.getElementById("editRefContactName").value.trim(),business:document.getElementById("editRefBusiness").value.trim(),phone:document.getElementById("editRefPhone").value.trim(),email:document.getElementById("editRefEmail").value.trim(),address:document.getElementById("editRefAddress").value.trim(),status:document.getElementById("editRefStatus").value};ss(K.refs,refs);closeModal("editReferralModal");loadReferralSources();}
-function loadMarketers(){const m=gs(K.mkt,["Ericka"]);ss(K.mkt,m);const sel=document.getElementById("prospectAssignedMarketerSelect");sel.innerHTML="";m.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});}
-function loadNames(){const names=gs(K.names,["Ericka","Angela","Mike"]);ss(K.names,names);["noteNameSelect","familyNameSelect"].forEach(id=>{const sel=document.getElementById(id);if(!sel)return;sel.innerHTML='<option value="">Select saved name</option>';names.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});});}
+function loadMarketers(){const m=gs(K.mkt,["Ericka"]);ss(K.mkt,m);const sel=document.getElementById("prospectAssignedMarketerSelect");if(!sel)return;sel.innerHTML='<option value="">— Select marketer —</option>';m.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});}
+function loadNames(){const names=gs(K.names,["Ericka","Angela","Mike"]);ss(K.names,names);["noteNameSelect","familyNameSelect"].forEach(id=>{const sel=document.getElementById(id);if(!sel)return;if(!sel)return;sel.innerHTML='<option value="">Select saved name</option>';names.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});});}
 function saveNameIfNeeded(name){if(!name)return;const names=gs(K.names,["Ericka","Angela","Mike"]);if(!names.includes(name)){names.push(name);ss(K.names,names);loadNames();}}
-function renderProspectsTable(){const prsp=gs(K.prsp,defProsp());const tb=document.getElementById("prospectsTableBody");tb.innerHTML="";prsp.forEach((p,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td><input type="radio" name="selProsp" value="${i}"></td><td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.source||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">Edit</button></td>`;tb.appendChild(tr);});}
+function renderProspectsTable(){const prsp=gs(K.prsp,defProsp());const tb=document.getElementById("prospectsTableBody");if(!tb)return;tb.innerHTML="";prsp.forEach((p,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td><input type="radio" name="selProsp" value="${i}"></td><td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.source||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">Edit</button></td>`;tb.appendChild(tr);});}
 function renderProspectRecords(){const prsp=gs(K.prsp,defProsp());const q=(document.getElementById("prospectSearch")||{value:""}).value.toLowerCase();const tb=document.getElementById("prospectRecordsBody");tb.innerHTML="";prsp.filter(p=>{if(!q)return true;return[p.name,p.phone,p.email,p.address,p.secondary].some(v=>(v||"").toLowerCase().includes(q));}).forEach((p,_,arr)=>{const i=arr.indexOf(p);const tr=document.createElement("tr");const sB=p.phone?`<button class="btn btn-small" style="background:#7c3aed;color:#fff;padding:3px 8px;font-size:10px;margin-left:3px;border-radius:6px;" onclick="sendContactSMS('${p.phone}','${p.name}','prospect')" title="Text ${p.name}">📱 Text</button>`:'';
     const eB=p.email?`<button class="btn btn-small" style="background:#2563eb;color:#fff;padding:3px 8px;font-size:10px;margin-left:3px;border-radius:6px;" onclick="sendContactEmail('${p.email}','${p.name}','prospect')" title="Email ${p.name}">📧 Email</button>`:'';
     const cB=p.phone?`<button class="btn btn-small" style="background:#059669;color:#fff;padding:3px 8px;font-size:10px;margin-left:3px;border-radius:6px;" onclick="callContact('${p.phone}','${p.name}')" title="Call ${p.name}">📞 Call</button>`:'';
@@ -1169,6 +1172,78 @@ function updateMileageTotals(){checkDayReset();const todayMi=parseFloat(gs(K.tod
 
 // Auth
 try{if(!localStorage.getItem("hl_token"))window.location.href="login.html";}catch(e){}
+
+// ── TEAM MANAGEMENT ──────────────────────────────────────────
+const API_BASE = "https://wemarketplus-backend-1.onrender.com";
+
+function openRemoveUserModal(){ openModal("removeUserModal"); }
+
+async function sendTeamInvite(){
+  var firstName = (document.getElementById("invFirstName")||{value:""}).value.trim();
+  var lastName = (document.getElementById("invLastName")||{value:""}).value.trim();
+  var email = (document.getElementById("invEmail")||{value:""}).value.trim();
+  var role = (document.getElementById("invRole")||{value:"marketer"}).value;
+  var msg = document.getElementById("inviteMsg");
+
+  if(!firstName || !email){ msg.style.color="#dc2626"; msg.textContent="First name and email are required."; return; }
+
+  msg.style.color="#64748b"; msg.textContent="Sending invite...";
+
+  try {
+    var token = localStorage.getItem("hl_token") || "";
+    var res = await fetch(API_BASE + "/api/users/invite", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+      body: JSON.stringify({ firstName, lastName, email, role })
+    });
+    var data = await res.json();
+    if(res.ok){
+      msg.style.color="#166534";
+      msg.textContent="✅ Invite sent to " + email + "! They will receive login credentials by email.";
+      ["invFirstName","invLastName","invEmail"].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=""; });
+      setTimeout(function(){ closeModal("inviteUserModal"); msg.textContent=""; }, 3000);
+    } else {
+      msg.style.color="#dc2626";
+      msg.textContent="❌ " + (data.message || "Error sending invite.");
+    }
+  } catch(e) {
+    msg.style.color="#dc2626";
+    msg.textContent="❌ Connection error. Please try again.";
+  }
+}
+
+async function confirmRemoveUser(){
+  var email = (document.getElementById("removeEmail")||{value:""}).value.trim();
+  var msg = document.getElementById("removeMsg");
+  if(!email){ msg.textContent="Email is required."; return; }
+
+  if(!confirm("Remove " + email + "? Their access will be revoked immediately.")){ return; }
+
+  msg.style.color="#64748b"; msg.textContent="Removing...";
+
+  try {
+    var token = localStorage.getItem("hl_token") || "";
+    var res = await fetch(API_BASE + "/api/team/remove", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+      body: JSON.stringify({ email })
+    });
+    var data = await res.json();
+    if(res.ok){
+      msg.style.color="#166534";
+      msg.textContent="✅ " + email + " removed successfully.";
+      setTimeout(function(){ closeModal("removeUserModal"); document.getElementById("removeEmail").value=""; msg.textContent=""; }, 2500);
+    } else {
+      msg.style.color="#dc2626";
+      msg.textContent="❌ " + (data.message || "Error removing user.");
+    }
+  } catch(e) {
+    msg.style.color="#dc2626";
+    msg.textContent="❌ Connection error. Please try again.";
+  }
+}
+
+function safeId(s){return(s||"").replace(/\s/g,"_").replace(/[^a-zA-Z0-9_]/g,"");}
 function logout(){try{localStorage.removeItem("hl_token");localStorage.removeItem("hl_user");}catch(e){}window.location.href="login.html";}
 document.addEventListener('DOMContentLoaded',function(){showTab('dashboard');checkDayReset();if(typeof loadReferralSources==='function')loadReferralSources();if(typeof loadMarketers==='function')loadMarketers();if(typeof loadNames==='function')loadNames();if(typeof renderProspectsTable==='function')renderProspectsTable();if(typeof updateDashboard==='function')updateDashboard();if(typeof updateMileageTotals==='function')updateMileageTotals();});
 
@@ -1204,7 +1279,7 @@ async function sendAI(msg){
 }
 
 /* ── TOUCH LOG ── */
-var touchLogs=JSON.parse(localStorage.getItem('hl_touches')||'[]');
+var touchLogs=JSON.parse(localStorage.getItem('hl_touches')||'[]');if(!Array.isArray(touchLogs))touchLogs=[];
 function initTouchSourceSelect(){
   var sel=document.getElementById('touchSource');
   if(!sel)return;
@@ -1434,7 +1509,7 @@ function owR(i){
 }
 function owNx(){if(oi<OW.length-1){oi++;owR(oi);}else owSk();}
 function owSk(){localStorage.setItem(TOUR_KEY,'1');document.getElementById('owOv').style.display='none';}
-(function(){if(!localStorage.getItem(TOUR_KEY))setTimeout(startTour,1000);})();
+(function(){var seen=localStorage.getItem(TOUR_KEY);if(!seen)setTimeout(startTour,1200);})();
 
 /* ── SMS / EMAIL AUTO-LOGGING ── */
 function autoLogCommunication(n,m,prev,ct){
@@ -1460,21 +1535,15 @@ function callContact(phone,name){
   }
 }
 function sendContactSMS(phone,name,ct){
-  var msg=prompt("📱 Text to "+name+" ("+phone+"):
-
-Type your message:","Hi "+name+", this is your HospiceLink team. ");
+  var msg=prompt("📱 Text to "+name+" ("+phone+") — Type your message:","Hi "+name+", this is your HospiceLink team. ");
   if(!msg)return;
   window.open("sms:"+phone+"?&body="+encodeURIComponent(msg));
   autoLogCommunication(name,"SMS",msg.slice(0,100)+(msg.length>100?"…":""),ct);
 }
 function sendContactEmail(email,name,ct){
-  var sub=prompt("📧 Email to "+name+" ("+email+"):
-
-Subject line:","Follow-up from HospiceLink");
+  var sub=prompt("📧 Email subject to "+name+" ("+email+"):","Follow-up from HospiceLink");
   if(!sub)return;
-  var body=prompt("Message body:","Dear "+name+",
-
-");
+  var body=prompt("Message body:","Dear "+name+", ");
   if(!body)return;
   window.open("mailto:"+email+"?subject="+encodeURIComponent(sub)+"&body="+encodeURIComponent(body));
   autoLogCommunication(name,"Email",sub,ct);
@@ -1610,17 +1679,20 @@ function saveProspect(){
   var email=(document.getElementById("prospectEmail")||{value:""}).value.trim();
   var address=(document.getElementById("prospectAddress")||{value:""}).value.trim();
   var secondary=(document.getElementById("prospectSecondary")||{value:""}).value.trim();
+  var secondaryRelation=(document.getElementById("prospectSecondaryRelation")||{value:""}).value.trim();
+  var secondaryPhone=(document.getElementById("prospectSecondaryPhone")||{value:""}).value.trim();
+  var secondaryEmail=(document.getElementById("prospectSecondaryEmail")||{value:""}).value.trim();
   
   if(!name){alert("Prospect name is required.");return;}
   if(!status){alert("Please select a status.");return;}
-  if(!marketer){alert("Please assign a marketer.");return;}
+  if(!marketer){ marketer = "Unassigned"; }
   if(!nextStep){alert("Please select a Next Step from the dropdown — this tells your team what to do and queues the reminder.");return;}
   if(!nextStepDate){alert("Please set a Next Step Due Date — this is what triggers the reminder in the Reminders tab.");return;}
   
   if(nm){var m=gs(K.mkt,["Ericka"]);if(!m.includes(nm)){m.push(nm);ss(K.mkt,m);if(typeof loadMarketers==="function")loadMarketers();}}
   
   var prsp=gs(K.prsp,defProsp());
-  prsp.unshift({name:name,status:status,source:source,marketer:marketer,nextStep:nextStep,nextStepDate:nextStepDate,assignedTo:assignedTo,phone:phone,email:email,address:address,secondary:secondary});
+  prsp.unshift({name:name,status:status,source:source,marketer:marketer,nextStep:nextStep,nextStepDate:nextStepDate,assignedTo:assignedTo,phone:phone,email:email,address:address,secondary:secondary,secondaryRelation:secondaryRelation,secondaryPhone:secondaryPhone,secondaryEmail:secondaryEmail});
   ss(K.prsp,prsp);
   
   if(typeof renderProspectsTable==="function")renderProspectsTable();
@@ -1638,7 +1710,7 @@ function saveProspect(){
   }
   
   // Clear form
-  ["prospectName","newAssignedMarketerInput","prospectPhone","prospectEmail","prospectAddress","prospectSecondary"].forEach(function(id){var el=document.getElementById(id);if(el)el.value="";});
+  ["prospectName","newAssignedMarketerInput","prospectPhone","prospectEmail","prospectAddress","prospectSecondary","prospectSecondaryRelation","prospectSecondaryPhone","prospectSecondaryEmail"].forEach(function(id){var el=document.getElementById(id);if(el)el.value="";});
   var ns=document.getElementById("prospectNextStep");if(ns)ns.value="";
   var nd=document.getElementById("prospectNextStepDate");if(nd)nd.value="";
   var db=document.getElementById("prospectStepDescBox");if(db)db.style.display="none";
@@ -1860,11 +1932,11 @@ function openCompleteStep(btn,name,type){
   form.innerHTML="<div style=\"font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;\">✅ Complete: "+name+"</div>"
     +"<div style=\"display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;\">"
     +"<div><label style=\"font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:3px;\">What did you do?</label>"
-    +"<input type=\"text\" id=\"completeNote_"+name.replace(/\s/g,\"_\")+"\" placeholder=\"Brief note (e.g. Called family, left voicemail)\" style=\"width:100%;border:1px solid #d7e0ec;border-radius:8px;padding:7px;font-size:12px;font:inherit;\"></div>"
+    +"<input type=\"text\" id=\"completeNote_"+safeId(name)+"\" placeholder=\"Brief note (e.g. Called family, left voicemail)\" style=\"width:100%;border:1px solid #d7e0ec;border-radius:8px;padding:7px;font-size:12px;font:inherit;\"></div>"
     +"<div><label style=\"font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:3px;\">New Next Step</label>"
-    +"<select id=\"completeStep_"+name.replace(/\s/g,\"_\")+"\" style=\"width:100%;border:1px solid #d7e0ec;border-radius:8px;padding:7px;font-size:12px;font:inherit;\"><option value=\"\">— Select —</option>"+stepOptions+"</select></div>"
+    +"<select id=\"completeStep_"+safeId(name)+"\" style=\"width:100%;border:1px solid #d7e0ec;border-radius:8px;padding:7px;font-size:12px;font:inherit;\"><option value=\"\">— Select —</option>"+stepOptions+"</select></div>"
     +"<div><label style=\"font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:3px;\">New Due Date</label>"
-    +"<input type=\"date\" id=\"completeDate_"+name.replace(/\s/g,\"_\")+"\" style=\"width:100%;border:2px solid rgba(249,199,79,.4);border-radius:8px;padding:7px;font-size:12px;font:inherit;background:#fffbeb;\"></div>"
+    +"<input type=\"date\" id=\"completeDate_"+safeId(name)+"\" style=\"width:100%;border:2px solid rgba(249,199,79,.4);border-radius:8px;padding:7px;font-size:12px;font:inherit;background:#fffbeb;\"></div>"
     +"<div style=\"display:flex;align-items:flex-end;\"><button class=\"btn btn-green btn-small\" onclick=\"saveCompleteStep('"+name+"','"+type+"')\" style=\"width:100%\">Save + Re-Queue Reminder</button></div>"
     +"</div>";
   row.appendChild(form);
