@@ -703,6 +703,7 @@
   <section class="section">
     <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How Re-Engagement works:</strong> This tab automatically shows prospects that have been marked <strong>Lost</strong> for 30 or more days. Studies show 20–30% of lost hospice prospects eventually convert when someone reaches back out. Click <strong>Re-Engage</strong> to move them back into your active pipeline as an Inquiry.</p></div>
     <div style="background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.2);border-radius:12px;padding:12px 14px;margin-bottom:14px;"><p style="color:#fbbf24;font-size:13px;margin:0;">💡 Studies show 20–30% of lost hospice prospects convert when re-contacted at the right time.</p></div>
+    <div id="reengagementList" style="margin-bottom:12px;"></div>
     <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;">
       <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-bottom:1px solid rgba(255,255,255,.06);"><div><div style="font-weight:700;font-size:13px;">Helen P. — Lost 45 days ago</div><div style="font-size:11px;color:var(--muted);">Insurance issue · Physician Office</div></div><button class="btn btn-blue btn-small" onclick="doReEngage(this,'Helen P.')">Re-Engage →</button></div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-bottom:1px solid rgba(255,255,255,.06);"><div><div style="font-weight:700;font-size:13px;">Robert H. — Lost 38 days ago</div><div style="font-size:11px;color:var(--muted);">Family not ready · North Park Rehab</div></div><button class="btn btn-blue btn-small" onclick="doReEngage(this,'Robert H.')">Re-Engage →</button></div>
@@ -917,8 +918,6 @@ function owR(i){
 function owNx(){if(oi<OW.length-1){oi++;owR(oi);}else owSk();}
 function owSk(){localStorage.setItem(TOUR_KEY,'1');document.getElementById('owOv').style.display='none';}
 (function(){var seen=localStorage.getItem(TOUR_KEY);if(!seen){localStorage.setItem(TOUR_KEY,"1");setTimeout(startTour,1400);}})();
-
-/* ── SMS / EMAIL AUTO-LOGGING ── */
 function autoLogCommunication(n,m,prev,ct){
   var nl=document.getElementById("notesList");if(!nl)return;
   var w=nl.querySelector(".grid-2")||nl;
@@ -955,8 +954,6 @@ function sendContactEmail(email,name,ct){
   window.open("mailto:"+email+"?subject="+encodeURIComponent(sub)+"&body="+encodeURIComponent(body));
   autoLogCommunication(name,"Email",sub,ct);
 }
-
-/* ── EVV / FAMILY COMM FUNCTIONS (Max) ── */
 function estimateMiles(s,e){var seed=(s+e).split("").reduce(function(a,c){return a+c.charCodeAt(0);},0);return+(8+(seed%40)+Math.random()*5).toFixed(1);}
 function logMileage(){
   var staff=document.getElementById("gpsStaffName").value.trim();
@@ -1000,14 +997,10 @@ function sendEmail(){
   var t=document.getElementById("familyText")?document.getElementById("familyText").value:"";
   window.open("mailto:?subject="+encodeURIComponent("HospiceLink Update")+"&body="+encodeURIComponent("Dear "+n+",\n\n"+t+"\n\nBest regards,\nHospiceLink Team"));
 }
-
 function crmLogout(){
   try{localStorage.removeItem("hl_token");localStorage.removeItem("hl_user");}catch(e){}
   window.location.href="login.html";
 }
-
-
-/* ── AUTOMATION PROSPECT DROPDOWN ── */
 function initAutoProspectSelect(){
   var sel=document.getElementById('autoProspectSelect');
   if(!sel)return;
@@ -1039,16 +1032,11 @@ function fireAutoForProspect(btn,msg){
   }
   setTimeout(function(){btn.disabled=false;btn.style.opacity='1';},2000);
 }
-
-/* Also keep old fireAuto for backwards compat */
 function fireAuto(btn,msg){
   btn.classList.add('fired');btn.disabled=true;
   var log=document.getElementById('autoLog');
   if(log){var d=document.createElement('div');d.style.cssText='background:rgba(140,255,102,.08);border:1px solid rgba(140,255,102,.2);border-radius:9px;padding:9px 13px;font-size:12px;color:var(--text);';d.textContent='✅ '+msg+' — '+new Date().toLocaleTimeString();log.prepend(d);}
 }
-
-
-
 var PROSPECT_STEP_DESC = {
   "Immediate Family Outreach (Call/Text)": "Call or text the patient's family today. Introduce yourself, explain hospice services, and ask if they'd be open to a visit.",
   "Schedule On-Site Visit": "Contact the case manager at the referring facility. Get on their schedule. Confirm patient room number and best visit time.",
@@ -1093,10 +1081,6 @@ function showNoteStepDesc(val){
   if(desc){box.textContent=desc;box.style.display="block";}
   else{box.style.display="none";}
 }
-
-
-
-/* ── COMPLETE PROSPECT SAVE WITH CONFIRMATION ── */
 function saveProspect(){
   var name=(document.getElementById("prospectName")||{value:""}).value.trim();
   var status=(document.getElementById("prospectStatus")||{value:""}).value;
@@ -1113,43 +1097,31 @@ function saveProspect(){
   var secondaryRelation=(document.getElementById("prospectSecondaryRelation")||{value:""}).value.trim();
   var secondaryPhone=(document.getElementById("prospectSecondaryPhone")||{value:""}).value.trim();
   var secondaryEmail=(document.getElementById("prospectSecondaryEmail")||{value:""}).value.trim();
-  
   if(!name){alert("Prospect name is required.");return;}
   if(!status){alert("Please select a status.");return;}
   if(!marketer){ marketer = "Unassigned"; }
   if(!nextStep){alert("Please select a Next Step from the dropdown — this tells your team what to do and queues the reminder.");return;}
   if(!nextStepDate){alert("Please set a Next Step Due Date — this is what triggers the reminder in the Reminders tab.");return;}
-  
   if(nm){var m=gs(K.mkt,["Ericka"]);if(!m.includes(nm)){m.push(nm);ss(K.mkt,m);if(typeof loadMarketers==="function")loadMarketers();}}
-  
   var prsp=gs(K.prsp,defProsp());
   prsp.unshift({name:name,status:status,source:source,marketer:marketer,nextStep:nextStep,nextStepDate:nextStepDate,assignedTo:assignedTo,phone:phone,email:email,address:address,secondary:secondary,secondaryRelation:secondaryRelation,secondaryPhone:secondaryPhone,secondaryEmail:secondaryEmail});
   ss(K.prsp,prsp);
-  
   if(typeof renderProspectsTable==="function")renderProspectsTable();
   if(typeof renderProspectRecords==="function")renderProspectRecords();
   if(typeof updateDashboard==="function")updateDashboard();
   if(typeof renderReminders==="function")renderReminders();
   if(typeof initAutoProspectSelect==="function")initAutoProspectSelect();
-  
-  // Show confirmation
   var conf=document.getElementById("prospectSaveConfirm");
   if(conf){
     conf.innerHTML="✅ <strong>"+name+"</strong> added! Reminder queued for <strong>"+nextStep+"</strong> on <strong>"+nextStepDate+"</strong> → assigned to <strong>"+assignedTo+"</strong>. Check Reminders tab to see it.";
     conf.style.display="block";
     setTimeout(function(){if(conf)conf.style.display="none";},6000);
   }
-  
-  // Clear form
   ["prospectName","newAssignedMarketerInput","prospectPhone","prospectEmail","prospectAddress","prospectSecondary","prospectSecondaryRelation","prospectSecondaryPhone","prospectSecondaryEmail"].forEach(function(id){var el=document.getElementById(id);if(el)el.value="";});
   var ns=document.getElementById("prospectNextStep");if(ns)ns.value="";
   var nd=document.getElementById("prospectNextStepDate");if(nd)nd.value="";
   var db=document.getElementById("prospectStepDescBox");if(db)db.style.display="none";
 }
-
-
-
-/* ── NOTES SAVE — UPDATES PROSPECT NEXT STEP + RE-QUEUES REMINDER ── */
 function saveDemoNote(){
   var sn=(document.getElementById("noteNameSelect")||{value:""}).value.trim();
   var nn=(document.getElementById("noteNewName")||{value:""}).value.trim();
@@ -1161,16 +1133,12 @@ function saveDemoNote(){
   var nd=(document.getElementById("noteNextStepDate")||{value:""}).value||"";
   var prospect=(document.getElementById("noteProspectSelect")||{value:""}).value;
   var nt=(document.getElementById("noteText")||{value:""}).value.trim();
-  
   if(!fn){alert("Please select or enter your name.");return;}
   if(!pos){alert("Please select your position.");return;}
   if(!dt){alert("Please enter the date.");return;}
   if(!ns){alert("Please select the Next Step from the dropdown — this updates the reminder queue.");return;}
   if(!nt){alert("Please enter your note.");return;}
-  
   if(typeof saveNameIfNeeded==="function")saveNameIfNeeded(fn);
-  
-  // If a prospect is selected and new due date provided, UPDATE their next step + queue new reminder
   if(prospect&&nd){
     var prsp=gs(K.prsp,defProsp());
     var pidx=prsp.findIndex(function(p){return p.name===prospect;});
@@ -1182,19 +1150,14 @@ function saveDemoNote(){
       if(typeof renderReminders==="function")renderReminders();
     }
   }
-  
-  // Get GPS-style location
   var loc="";
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(function(pos){loc=pos.coords.latitude.toFixed(4)+", "+pos.coords.longitude.toFixed(4);},function(){loc="Location capture failed";});
   }
-  
-  // Build note display
   var list=document.getElementById("notesList");
   var w=list?list.querySelector(".grid-2"):null;
   var now=new Date();
   var nowStr=now.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})+" at "+now.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
-  
   if(w){
     var b=document.createElement("div");b.className="note-box";
     b.innerHTML="<h4>"+fn+(prospect?" — "+prospect:"")+"</h4>"
@@ -1207,44 +1170,31 @@ function saveDemoNote(){
       +"<p style='color:#6c8aab;font-size:11px;margin-top:6px;'>✅ Synced — GPS Captured | "+nowStr+"</p>";
     w.prepend(b);
   }
-  
-  // Update tracking table
   var tb=document.getElementById("staffTrackingBody");
   if(tb){
     var tr=document.createElement("tr");
     tr.innerHTML="<td>"+fn+"</td><td>"+pos+"</td><td>"+dt+"</td><td>"+ti+"</td><td>"+(prospect||"—")+"</td><td>"+ns+"</td><td style='color:#0a6c2f;'>✅ Synced</td>";
     tb.prepend(tr);
   }
-  
   var cnt=gs(K.notes,0)+1;ss(K.notes,cnt);
   if(typeof updateDashboard==="function")updateDashboard();
-  
   var st=document.getElementById("syncStatus");
   if(st){
     st.innerHTML="✅ Note synced"+(prospect&&nd?" — Reminder re-queued for <strong>"+ns+"</strong> on <strong>"+nd+"</strong>":"")+" — GPS captured";
     setTimeout(function(){if(st)st.innerHTML="";},5000);
   }
-  
-  // Clear form
   ["noteNewName","noteText","noteNextStepDate"].forEach(function(id){var el=document.getElementById(id);if(el)el.value="";});
   var nn2=document.getElementById("noteNextStep");if(nn2)nn2.value="";
   var db2=document.getElementById("noteStepDescBox");if(db2)db2.style.display="none";
 }
-
-
-
-/* ── REFERRAL SAVE — ADDS NEXT STEP + TOUCH DATE + QUEUES REMINDER ── */
 function saveReferralFromModal(){
   var cn=(document.getElementById("refContactName")||{value:""}).value.trim();
   var biz=(document.getElementById("refBusiness")||{value:""}).value.trim();
   if(!cn||!biz){alert("Contact name and business name are required.");return;}
-  
   var nextStep=(document.getElementById("refNextStep")||{value:""}).value;
   var nextTouchDate=(document.getElementById("refNextTouchDate")||{value:""}).value||"";
-  
   if(!nextStep){alert("Please select a Next Step — this tells your team what to do with this referral source.");return;}
   if(!nextTouchDate){alert("Please set a Next Touch Date — this queues a reminder in the Reminders tab.");return;}
-  
   var refs=gs(K.refs,defRefs());
   refs.push({
     contactName:cn,
@@ -1257,30 +1207,21 @@ function saveReferralFromModal(){
     nextTouchDate:nextTouchDate
   });
   ss(K.refs,refs);
-  
   if(typeof loadReferralSources==="function")loadReferralSources();
   if(typeof renderReminders==="function")renderReminders();
   if(typeof closeModal==="function")closeModal("addReferralModal");
-  
   ["refContactName","refBusiness","refPhone","refEmail","refAddress"].forEach(function(id){var el=document.getElementById(id);if(el)el.value="";});
   var rns=document.getElementById("refNextStep");if(rns)rns.value="";
   var rnd=document.getElementById("refNextTouchDate");if(rnd)rnd.value="";
   var rdb=document.getElementById("refStepDescBox");if(rdb)rdb.style.display="none";
 }
-
-
-
-/* ── RENDER REMINDERS — PROSPECTS + REFERRAL SOURCES ── */
 function renderReminders(){
   var prsp=gs(K.prsp,defProsp());
   var refs=gs(K.refs,defRefs());
   var today=new Date();today.setHours(0,0,0,0);
   var todayStr=today.toISOString().split("T")[0];
   var weekEnd=new Date(today);weekEnd.setDate(weekEnd.getDate()+7);
-  
   var overdue=[], dueToday=[], thisWeek=[];
-  
-  // Prospect reminders
   prsp.forEach(function(p){
     if(!p.nextStepDate||p.status==="Admitted"||p.status==="Lost")return;
     var d=new Date(p.nextStepDate);d.setHours(0,0,0,0);
@@ -1290,8 +1231,6 @@ function renderReminders(){
     else if(p.nextStepDate===todayStr)dueToday.push(item);
     else if(d<=weekEnd)thisWeek.push(item);
   });
-  
-  // Referral source touch reminders
   refs.forEach(function(r){
     if(!r.nextTouchDate)return;
     var d=new Date(r.nextTouchDate);d.setHours(0,0,0,0);
@@ -1301,25 +1240,19 @@ function renderReminders(){
     else if(r.nextTouchDate===todayStr)dueToday.push(item);
     else if(d<=weekEnd)thisWeek.push(item);
   });
-  
-  // Update counts
   var oc=document.getElementById("remOverdueCount");if(oc)oc.textContent=overdue.length;
   var tc=document.getElementById("remTodayCount");if(tc)tc.textContent=dueToday.length;
   var wc=document.getElementById("remWeekCount");if(wc)wc.textContent=thisWeek.length;
-  
   var body=document.getElementById("remindersBody");
   var empty=document.getElementById("remindersEmpty");
   if(!body)return;
   body.innerHTML="";
-  
   var allItems=[];
   overdue.forEach(function(i){i.urgency="overdue";allItems.push(i);});
   dueToday.forEach(function(i){i.urgency="today";allItems.push(i);});
   thisWeek.forEach(function(i){i.urgency="week";allItems.push(i);});
-  
   if(allItems.length===0){if(empty)empty.style.display="block";return;}
   if(empty)empty.style.display="none";
-  
   allItems.forEach(function(item){
     var isRef=item.type==="referral";
     var urgLabel=item.urgency==="overdue"
@@ -1333,7 +1266,6 @@ function renderReminders(){
     var subLine=isRef
       ?"Contact: "+item.contact+" · "+item.step
       :"Marketer: "+(item.assignedTo||item.marketer)+" · "+item.step;
-    
     var row=document.createElement("div");
     row.style.cssText="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.05);";
     row.innerHTML="<div style=\"flex:1\">"
@@ -1345,18 +1277,13 @@ function renderReminders(){
     body.appendChild(row);
   });
 }
-
-/* Quick-complete a step: log what happened + set new step + new date */
 function openCompleteStep(btn,name,type){
-  // Show inline complete form below the row
   var row=btn.closest("div[style]");
-  if(row.querySelector(".complete-form"))return; // already open
-  
+  if(row.querySelector(".complete-form"))return;
   var isRef=type==="referral";
   var stepOptions=isRef
     ?Object.keys(REFERRAL_STEP_DESC||{}).map(function(s){return"<option>"+s+"</option>";}).join("")
     :Object.keys(PROSPECT_STEP_DESC||{}).map(function(s){return"<option>"+s+"</option>";}).join("");
-  
   var form=document.createElement("div");
   form.className="complete-form";
   form.style.cssText="background:rgba(73,182,255,.06);border-top:1px solid rgba(73,182,255,.15);padding:12px;margin-top:8px;border-radius:0 0 10px 10px;width:100%;";
@@ -1373,16 +1300,13 @@ function openCompleteStep(btn,name,type){
   row.appendChild(form);
   btn.style.display="none";
 }
-
 function saveCompleteStep(name,type){
   var key=name.replace(/\s/g,"_");
   var note=(document.getElementById("completeNote_"+key)||{value:""}).value.trim();
   var newStep=(document.getElementById("completeStep_"+key)||{value:""}).value;
   var newDate=(document.getElementById("completeDate_"+key)||{value:""}).value;
-  
   if(!newStep){alert("Please select the new next step.");return;}
   if(!newDate){alert("Please set a new due date.");return;}
-  
   if(type==="prospect"){
     var prsp=gs(K.prsp,defProsp());
     var idx=prsp.findIndex(function(p){return p.name===name;});
@@ -1394,10 +1318,8 @@ function saveCompleteStep(name,type){
     if(ridx>=0){refs[ridx].nextStep=newStep;refs[ridx].nextTouchDate=newDate;ss(K.refs,refs);}
     if(typeof loadReferralSources==="function")loadReferralSources();
   }
-  
   if(typeof renderReminders==="function")renderReminders();
   if(typeof updateDashboard==="function")updateDashboard();
-  
   if(note){
     var list=document.getElementById("notesList");
     var w=list?list.querySelector(".grid-2"):null;
@@ -1408,12 +1330,10 @@ function saveCompleteStep(name,type){
     }
   }
 }
-
-
-/* ── INIT NOTE PROSPECT SELECT ── */
 function initNoteProspectSelect(){var sel=document.getElementById("noteProspectSelect");if(!sel)return;var prsp=gs(K.prsp,defProsp());sel.innerHTML='<option value="">— General note (no specific prospect) —</option>';prsp.filter(function(p){return p.status!=="Admitted";}).forEach(function(p){var o=document.createElement("option");o.value=p.name;o.textContent=p.name+" ("+p.status+")";sel.appendChild(o);});}
 </script>
-<script>const G="max";
+<script>
+const G="max";
 const K={refs:`crmRefs_${G}`,prsp:`crmProsp_${G}`,mkt:`crmMkt_${G}`,names:`crmNames_${G}`,notes:`crmNotes_${G}`,staff:`crmStaff_${G}`,todayDate:`crmTodayDate_${G}`};
 function gs(k,d){try{const r=localStorage.getItem(k);return r?JSON.parse(r):d;}catch(e){return d;}}
 function ss(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
@@ -1481,12 +1401,10 @@ askAI(msg);
 }
 async function askAI(msg){
 const messages = document.getElementById('aiMessages');
-
 const uDiv = document.createElement('div');
 uDiv.className = 'ai-msg user';
 uDiv.textContent = msg;
 messages.appendChild(uDiv);
-
 const tDiv = document.createElement('div');
 tDiv.className = 'ai-msg thinking';
 tDiv.textContent = 'Thinking…';
@@ -1677,11 +1595,6 @@ function downloadWeeklyReport(){
 var report=generateWeeklyReport();
 var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([report],{type:'text/plain'}));a.download='HospiceLink_Weekly_Report.txt';a.click();
 }
-// ════════════════════════════════════════════════════════════
-// FINAL COMPREHENSIVE PATCH
-// ════════════════════════════════════════════════════════════
-
-// ── renderReengagement: show lost prospects, update pipeline on re-engage
 function renderReengagement() {
   var prsp = gs(K.prsp, typeof defProsp==="function" ? defProsp() : []);
   var lost = prsp.filter(function(p) { return p.status === "Lost"; });
@@ -1704,7 +1617,6 @@ function renderReengagement() {
       + "<button onclick='doReEngage(this,\"" + p.name.replace(/"/g,'&quot;') + "\")' style='background:linear-gradient(90deg,#42b7ff,#6ed6ff);color:#07111f;border:none;border-radius:999px;padding:8px 16px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;'>Re-Engage →</button>";
     container.appendChild(div);
   });
-  // Also show hardcoded demo items if no real lost prospects yet
   if (lost.length === 0) {
     var demoItems = [
       {name:"Helen P.", days:45, reason:"Insurance issue", source:"Physician Office"},
@@ -1721,8 +1633,6 @@ function renderReengagement() {
     });
   }
 }
-
-// ── doReEngage: update prospect status, re-render pipeline + dashboard
 function doReEngage(btn, name) {
   var prsp = gs(K.prsp, typeof defProsp==="function" ? defProsp() : []);
   var idx = prsp.findIndex(function(p){ return p.name === name; });
@@ -1747,13 +1657,9 @@ function doReEngage(btn, name) {
   }
   alert("\u2705 " + name + " moved back to Inquiry! They now appear in Prospect Records and Reminders.");
 }
-
-// ── renderTouchLog: alias (touch log uses logTouch, already defined)
 function renderTouchLog() {
   if (typeof loadTouches === "function") loadTouches();
 }
-
-// ── renderTeamNotes: render team coordination notes in the Notes tab
 function renderTeamNotes() {
   var list = document.getElementById("tnList");
   if (!list) return;
@@ -1774,8 +1680,6 @@ function renderTeamNotes() {
     list.appendChild(d);
   });
 }
-
-// ── saveTeamNote: save a team coordination note
 function saveTeamNote() {
   var sel    = document.getElementById("tnProspect");
   var author = (document.getElementById("tnAuthor")||{value:""}).value.trim();
@@ -1794,18 +1698,14 @@ function saveTeamNote() {
   if (st) { st.textContent = "\u2705 Team note saved!"; setTimeout(function(){st.textContent="";},3000); }
   var tnText = document.getElementById("tnText"); if (tnText) tnText.value = "";
 }
-
-// ── Hook showTab to run render functions when tabs open
 (function(){
   var _prev = typeof showTab === "function" ? showTab : null;
   showTab = function(id) {
-    // Safe tab switching
     document.querySelectorAll(".tab-pane").forEach(function(p){ if(p&&p.classList)p.classList.remove("active"); });
     document.querySelectorAll(".nav a").forEach(function(a){ if(a&&a.classList)a.classList.remove("active"); });
     var pane = document.getElementById("tab-" + id); if(pane&&pane.classList)pane.classList.add("active");
     var lnk  = document.querySelector(".nav a[data-tab='" + id + "']"); if(lnk&&lnk.classList)lnk.classList.add("active");
     window.scrollTo(0,0);
-    // Tab-specific initializers
     var t = function(fn, delay){ setTimeout(fn, delay||60); };
     if (id==="reengagement")   t(renderReengagement);
     if (id==="notes")          t(function(){ if(typeof initNoteNameSelect==="function")initNoteNameSelect(); if(typeof initTnProspectSelect==="function")initTnProspectSelect(); renderTeamNotes(); });
@@ -1818,14 +1718,11 @@ function saveTeamNote() {
     if (id==="reminders")      t(function(){ if(typeof renderReminders==="function")renderReminders(); });
     if (id==="dashboard")      t(function(){ if(typeof updateDashboard==="function")updateDashboard(); });
     if (id==="touchlog")       t(function(){ if(typeof loadTouches==="function")loadTouches(); });
-    // Legacy handler for tabs that need original logic
     if (_prev && ["evv","mileage","family","weeklyreport","scorecard","leaderboard","notifications","hipaa","productivity","territory","import","playbook","ai","touchlog","goals","admin"].indexOf(id)>=0) {
       try { _prev(id); } catch(e) {}
     }
   };
 })();
-
-// ── DOMContentLoaded: initialize all data-driven tabs
 document.addEventListener("DOMContentLoaded", function() {
   setTimeout(function() {
     if (typeof loadNames === "function") loadNames();
@@ -1839,7 +1736,6 @@ document.addEventListener("DOMContentLoaded", function() {
     renderTeamNotes();
   }, 1500);
 });
-
 </script>
 <style>
 @media(max-width:768px){
@@ -1862,10 +1758,6 @@ document.addEventListener("DOMContentLoaded", function() {
 function toggleMob(){var s=document.querySelector('.sidebar');var ov=document.getElementById('mobOv');var b=document.getElementById('mobBtn');s.classList.toggle('mob-open');ov.classList.toggle('show');b.innerHTML=s.classList.contains('mob-open')?'✕':'☰';}
 function closeMob(){var s=document.querySelector('.sidebar');document.getElementById('mobOv').classList.remove('show');s.classList.remove('mob-open');document.getElementById('mobBtn').innerHTML='☰';}
 document.querySelectorAll('.nav a').forEach(function(l){l.addEventListener('click',closeMob);});
-
-// ── HOSPICELINK TARGETED FIXES ────────────────────────────────
-
-// FIX 1: filterNoteProspects — correct implementation
 window.filterNoteProspects = function(v) {
   var dr = document.getElementById("noteProspectDropdown");
   var hs = document.getElementById("noteProspectSelect");
@@ -1881,7 +1773,6 @@ window.filterNoteProspects = function(v) {
     if (n) al.push({ label: n + (b ? " @ " + b : "") + " (Referral)", value: n + (b ? " @ " + b : "") });
   });
   var q = v.toLowerCase(), mt = al.filter(function(x) { return x.label.toLowerCase().indexOf(q) >= 0; });
-  // General note option
   var g = document.createElement("div");
   g.style.cssText = "padding:8px 12px;font-size:12px;cursor:pointer;border-bottom:1px solid #f0f4f8;color:#555;";
   g.textContent = "\u2014 General note (no specific person) \u2014";
@@ -1922,8 +1813,6 @@ document.addEventListener("click", function(e) {
   var inp = document.getElementById("noteProspectSearch");
   if (dr && inp && !inp.contains(e.target) && !dr.contains(e.target)) dr.style.display = "none";
 });
-
-// FIX 2: initTnProspectSelect — team notes dropdown with prospects + referrals
 window.initTnProspectSelect = function() {
   var sel = document.getElementById("tnProspect");
   if (!sel) return;
@@ -1948,8 +1837,6 @@ window.initTnProspectSelect = function() {
     sel.appendChild(rg);
   }
 };
-
-// FIX 3: Note NAME select — use K.names (array of authors), not K.notes (integer count)
 window.initNoteNameSelect = function() {
   if (typeof loadNames === "function") { loadNames(); return; }
   var sel = document.getElementById("noteNameSelect");
@@ -1964,13 +1851,10 @@ window.initNoteNameSelect = function() {
   }
   if (cur) sel.value = cur;
 };
-
-// FIX 4: Note persistence — extend saveDemoNote to also save to K.notesArr
 (function() {
   var _orig = typeof saveDemoNote === "function" ? saveDemoNote : null;
   if (!_orig) return;
   saveDemoNote = function() {
-    // Grab values BEFORE calling original (which clears the form)
     var author = (document.getElementById("noteNewName") || {value: ""}).value.trim()
                || (document.getElementById("noteNameSelect") || {value: ""}).value;
     var pos    = (document.getElementById("notePosition") || {value: ""}).value;
@@ -1980,11 +1864,7 @@ window.initNoteNameSelect = function() {
     var nd     = (document.getElementById("noteNextStepDate") || {value: ""}).value || "";
     var subject = (document.getElementById("noteProspectSelect") || {value: ""}).value;
     var txt    = (document.getElementById("noteText") || {value: ""}).value.trim();
-    
-    // Call original function
     _orig();
-    
-    // Persist to localStorage if we have enough data
     if (author && txt && typeof gs === "function" && typeof K !== "undefined") {
       try {
         var arr = gs(K.prsp + "_notesArr", []);
@@ -1999,8 +1879,6 @@ window.initNoteNameSelect = function() {
     }
   };
 })();
-
-// FIX 5: Load persisted notes on init and render them into notesList
 window.loadPersistedNotes = function() {
   if (typeof gs !== "function" || typeof K === "undefined") return;
   var arr = gs(K.prsp + "_notesArr", []);
@@ -2008,7 +1886,6 @@ window.loadPersistedNotes = function() {
   var list = document.getElementById("notesList");
   var w = list ? list.querySelector(".grid-2") : null;
   if (!w) return;
-  // Remove only hardcoded demo notes (keep any DOM-added ones)
   arr.slice(0, 20).forEach(function(n) {
     var b = document.createElement("div"); b.className = "note-box";
     b.innerHTML = "<h4>" + (n.author || "") + (n.subject ? " \u2014 " + n.subject : "") + "</h4>"
@@ -2022,8 +1899,6 @@ window.loadPersistedNotes = function() {
     w.appendChild(b);
   });
 };
-
-// FIX 6: Populate referral source dropdown on Add Prospect tab
 window.initProspectReferralSelect = function() {
   var sel = document.getElementById("prospectReferralSourceSelect");
   if (!sel) return;
@@ -2038,8 +1913,6 @@ window.initProspectReferralSelect = function() {
   });
   if (cur) sel.value = cur;
 };
-
-// FIX 7: Automation dropdown — prospects + referral sources
 window.initAutoProspectSelect = function() {
   var sel = document.getElementById("autoProspectSelect");
   if (!sel) return;
@@ -2068,8 +1941,6 @@ window.initAutoProspectSelect = function() {
     e.textContent = "No data yet \u2014 add prospects or referrals first"; sel.appendChild(e);
   }
 };
-
-// FIX 8: Add/Remove user (API + demo fallback)
 window.doSendInvite = async function() {
   var fn = (document.getElementById("invFirstName") || {value: ""}).value.trim();
   var em = (document.getElementById("invEmail2") || {value: ""}).value.trim();
@@ -2097,7 +1968,6 @@ window.doSendInvite = async function() {
     setTimeout(function() { document.getElementById("inviteUserModal").style.display = "none"; if (msg) msg.textContent = ""; }, 3500);
   }
 };
-
 window.doRemoveUser = async function() {
   var em = (document.getElementById("removeEmail2") || {value: ""}).value.trim();
   var msg = document.getElementById("removeMsg2");
@@ -2122,8 +1992,6 @@ window.doRemoveUser = async function() {
     setTimeout(function() { document.getElementById("removeUserModal").style.display = "none"; if (msg) msg.textContent = ""; }, 3000);
   }
 };
-
-// FIX 9: AI assistant using Anthropic API
 var _aiHist = [];
 window.askAI = async function(msg) {
   var msgsEl = document.getElementById("aiMsgs") || document.getElementById("aiMessages");
@@ -2156,8 +2024,6 @@ window.sendAI = async function() {
   if (!msg) return; if (inp) inp.value = "";
   window.askAI(msg);
 };
-
-// FIX 10: showTab — null-safe with all tab hooks
 (function() {
   var _orig = typeof showTab === "function" ? showTab : null;
   showTab = function(id) {
@@ -2172,14 +2038,11 @@ window.sendAI = async function() {
     if (id === "automation")     t(window.initAutoProspectSelect);
     if (id === "referrals")      t(function() { if (typeof renderReferralSourcesTable === "function") renderReferralSourcesTable(); });
     if (id === "referral-records") t(window.initProspectReferralSelect);
-    // Legacy handlers (touchlog, family, etc.)
     if (_orig && ["touchlog","family","evv","mileage","teamnotes","revenue","reengagement","playbook","scorecard"].indexOf(id) >= 0) {
       try { _orig(id); } catch(e) {}
     }
   };
 })();
-
-// FIX 11: renderReferralSourcesTable — show all referral source data
 window.renderReferralSourcesTable = function() {
   var refs = (typeof gs === "function" && typeof K !== "undefined") ? gs(K.refs, typeof defRefs === "function" ? defRefs() : []) : [];
   var tb = document.getElementById("referralSourcesBody");
@@ -2207,11 +2070,8 @@ window.renderReferralSourcesTable = function() {
       + "<td><button style='background:rgba(73,182,255,.12);color:#49b6ff;border:1px solid rgba(73,182,255,.3);border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;' onclick='openEditReferral(" + i + ")'>\u270F\uFE0F Edit</button></td>";
     tb.appendChild(tr);
   });
-  // Also update prospect referral source select
   window.initProspectReferralSelect();
 };
-
-// FIX 12: saveReferralFromModal — save all fields including new ones
 window.saveReferralFromModal = function() {
   var cn  = (document.getElementById("refContactName")  || {value:""}).value.trim();
   var biz = (document.getElementById("refBusiness")     || {value:""}).value.trim();
@@ -2242,8 +2102,6 @@ window.saveReferralFromModal = function() {
   if (rss) { rss.textContent = "\u2705 " + cn + " at " + biz + " saved! View in Referral Sources."; setTimeout(function(){rss.textContent="";},5000); }
   setTimeout(function(){if(typeof showTab==="function")showTab("referrals");},1500);
 };
-
-// INIT on DOMContentLoaded
 document.addEventListener("DOMContentLoaded", function() {
   setTimeout(function() {
     if (typeof loadNames === "function") loadNames();
@@ -2254,19 +2112,13 @@ document.addEventListener("DOMContentLoaded", function() {
     window.renderReferralSourcesTable();
   }, 1500);
 });
-
-// safeId — used by renderReminders
 function safeId(s){ return (s||"").replace(/\s/g,"_").replace(/[^a-zA-Z0-9_]/g,""); }
-
-// fmt12h — convert HH:MM 24h to 12h AM/PM
 function fmt12h(t) {
   if (!t) return "";
   var p = t.split(":"); if (p.length < 2) return t;
   var h = parseInt(p[0]), m = p[1], ap = h >= 12 ? "PM" : "AM";
   return (h % 12 || 12) + ":" + m + " " + ap;
 }
-
-// calcAndSaveRevIntel — Revenue Intelligence calculations
 window.calcAndSaveRevIntel = function() {
   var rpa = parseFloat((document.getElementById("revPerAdmit")||{value:0}).value) || 0;
   var mmc = parseFloat((document.getElementById("monthlyMktCost")||{value:0}).value) || 0;
@@ -2301,7 +2153,6 @@ window.calcAndSaveRevIntel = function() {
   var st = document.getElementById("revSaveStatus");
   if (st){ st.textContent="\u2705 Saved! KPIs updated."; setTimeout(function(){st.textContent="";},4000); }
 };
-
 window.loadRevSettings = function() {
   try {
     var s = JSON.parse(localStorage.getItem("hl_rev_settings")||"{}");
@@ -2312,8 +2163,6 @@ window.loadRevSettings = function() {
     if (s.rpa||s.mmc) setTimeout(window.calcAndSaveRevIntel,100);
   } catch(e) {}
 };
-
-// sendAI — accept parameter from chip buttons
 (function(){
   var _prev = typeof window.askAI==="function" ? window.askAI : null;
   window.sendAI = async function(msg) {
@@ -2326,8 +2175,6 @@ window.loadRevSettings = function() {
     if (_prev) _prev(msg);
   };
 })();
-
-// Pipeline cards — clickable to open prospect record
 (function(){
   var _prev = typeof renderPipeline==="function" ? renderPipeline : null;
   if (!_prev) return;
@@ -2350,8 +2197,6 @@ window.loadRevSettings = function() {
     });
   };
 })();
-
-// Edit Prospect — populate referral source
 (function(){
   var _prev = typeof openEditProspect==="function" ? openEditProspect : null;
   if (!_prev) return;
@@ -2375,8 +2220,6 @@ window.loadRevSettings = function() {
     };
   }
 })();
-
-// Referral Sources table render
 window.renderReferralSourcesTable = function() {
   var refs=gs(K.refs,typeof defRefs==="function"?defRefs():[]);
   var tb=document.getElementById("referralSourcesBody");
@@ -2396,8 +2239,6 @@ window.renderReferralSourcesTable = function() {
   });
   window.initProspectReferralSelect();
 };
-
-// saveReferralFromModal
 window.saveReferralFromModal = function(){
   var cn=(document.getElementById("refContactName")||{value:""}).value.trim();
   var biz=(document.getElementById("refBusiness")||{value:""}).value.trim();
@@ -2426,8 +2267,6 @@ window.saveReferralFromModal = function(){
   if(rss){rss.textContent="\u2705 "+cn+" at "+biz+" saved!";setTimeout(function(){rss.textContent="";},5000);}
   setTimeout(function(){if(typeof showTab==="function")showTab("referrals");},1500);
 };
-
-// initProspectReferralSelect
 window.initProspectReferralSelect = function(){
   var sel=document.getElementById("prospectReferralSourceSelect");if(!sel)return;
   var refs=gs(K.refs,typeof defRefs==="function"?defRefs():[]);
@@ -2436,5 +2275,4 @@ window.initProspectReferralSelect = function(){
   refs.forEach(function(r){var o=document.createElement("option");o.value=r.business||r.contactName||"";o.textContent=(r.business||"")+(r.contactName?" ("+r.contactName+")":"")+(r.status==="Red"?" \uD83D\uDD34":"");sel.appendChild(o);});
   if(cur)sel.value=cur;
 };
-
 </script>
