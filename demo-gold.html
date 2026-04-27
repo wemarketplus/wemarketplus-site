@@ -77,8 +77,8 @@
     <a data-tab="dashboard" class="active" onclick="showTab('dashboard');return false;">Dashboard</a>
     <a data-tab="prospects" onclick="showTab('prospects');return false;">Add Prospect</a>
     <a data-tab="prospect-records" onclick="showTab('prospect-records');return false;">Prospect Records</a>
-    <a data-tab="referrals" onclick="showTab('referrals');return false;">Add Referral</a>
-    <a data-tab="referral-records" onclick="showTab('referral-records');return false;">Referral Records</a>
+    <a data-tab="referrals" onclick="showTab('referrals');return false;">Referral Sources</a>
+    <a data-tab="referral-records" onclick="showTab('referral-records');return false;">Add Referral</a>
     <a data-tab="pipeline" onclick="showTab('pipeline');return false;">Pipeline</a>
     <a data-tab="territory" onclick="showTab('territory');return false;">Territory View</a>
     <a data-tab="productivity" onclick="showTab('productivity');return false;">Productivity</a>
@@ -94,7 +94,6 @@
     <a data-tab="playbook" onclick="showTab('playbook');return false;">📘 Playbook Generator</a>
     <a data-tab="ai" class="ai-link" onclick="showTab('ai');return false;">🤖 AI Assistant</a>
     <a data-tab="touchlog" onclick="showTab('touchlog');return false;">🤝 Touch Log</a>
-    <a data-tab="teamnotes" onclick="showTab('teamnotes');return false;">💬 Team Notes</a>
     <a data-tab="weeklyreport" class="admin-link" onclick="showTab('weeklyreport');return false;">📊 Weekly Report 🔒</a>
     <a data-tab="revenue" class="admin-link" onclick="showTab('revenue');return false;">💰 Revenue Intelligence 🔒</a>
     <a data-tab="leaderboard" onclick="showTab('leaderboard');return false;">🏆 Leaderboard</a>
@@ -220,34 +219,57 @@
 </div>
 
 <!-- REFERRAL SOURCES -->
+<!-- REFERRAL SOURCES -->
 <div class="tab-pane" id="tab-referrals">
-  <div class="topbar"><div><h2>Add Referral</h2></div></div>
+  <div class="topbar"><div><h2>Referral Sources</h2><p>All your referral accounts — hospitals, SNFs, physician offices, and more</p></div></div>
   <section class="section">
-    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How to use Referral Sources:</strong> This is your account list — every hospital, rehab, SNF, and physician office you call on. <strong>Green</strong> = they're actively sending you referrals. <strong>Red</strong> = they haven't sent yet — these are your priority targets to visit. Click <strong>📱 Text</strong> or <strong>📧 Email</strong> on any source to contact them — the message auto-logs to your Notes tab.</p></div>
-    <div class="mini-actions" style="margin-bottom:12px;">
-      <button class="btn btn-green" onclick="showTab('referral-records')">Add Referral Source</button>
-      
+    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;">
+      <p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How to use Referral Sources:</strong> This is your full account list. <strong>Green</strong> = actively sending referrals — nurture these. <strong>Red</strong> = not sending yet — these are your priority visit targets. Click 📱 or 📧 to contact directly — every message auto-logs to Notes. Click <strong>Edit</strong> to update any record. To add a new account, use the <strong>Add Referral</strong> tab in the sidebar.</p>
     </div>
+    <div class="mini-actions" style="margin-bottom:14px;display:flex;gap:10px;flex-wrap:wrap;">
+      <input type="text" id="refSearch" placeholder="Search referral sources..." onInput="filterReferralSources(this.value)" style="border:1px solid #d7e0ec;border-radius:10px;padding:8px 12px;font:inherit;font-size:12px;flex:1;min-width:160px;">
+    </div>
+    <div class="table-wrap">
+      <table id="refSourcesTable">
+        <thead><tr>
+          <th>Contact</th><th>Company / Facility</th><th>Work Phone</th><th>Cell Phone</th>
+          <th>Email</th><th>Address</th><th>Status</th><th>Next Step</th><th>Actions</th>
+        </tr></thead>
+        <tbody id="referralSourcesBody"></tbody>
+      </table>
+    </div>
+    <div id="refSourcesEmpty" style="display:none;text-align:center;padding:24px;color:var(--muted);font-size:13px;">No referral sources yet. Click <strong>+ Add Referral Source</strong> to add your first account.</div>
   </section>
 </div>
 
+
 <!-- REFERRAL RECORDS -->
 <div class="tab-pane" id="tab-referral-records">
-  <div class="topbar"><div><h2>Add Referral Source</h2></div></div>
+  <div class="topbar"><div><h2>Add Referral</h2></div></div>
   <section class="section">
-    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How to add a Referral Source:</strong> Fill in the contact info below, set their referral status, choose a next step, and set a touch date. Click <strong>Save Referral + Queue Reminder</strong> to save. The source will appear in Referral Sources instantly.</p></div>
+    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;">
+      <p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How to add a Referral Source:</strong> Fill in the full contact info below. Include both work and cell phone numbers. Set their referral status, choose a next step, and set a touch date. Click <strong>Save Referral + Queue Reminder</strong>. The source appears in your Referral Sources tab instantly with all their info.</p>
+    </div>
     <div class="note-form-wrap">
       <div class="modal-grid">
-        <div class="field"><label>Contact Name</label><input id="refContactName" type="text" placeholder="e.g. Jane Smith"></div>
-        <div class="field"><label>Business / Facility</label><input id="refBusiness" type="text" placeholder="e.g. North Park Rehab"></div>
-        <div class="field"><label>Phone</label><input id="refPhone" type="tel" placeholder="(469) 555-0100"></div>
+        <div class="field"><label>Contact Name *</label><input id="refContactName" type="text" placeholder="e.g. Jane Smith"></div>
+        <div class="field"><label>Company / Facility Name *</label><input id="refBusiness" type="text" placeholder="e.g. North Park Rehab"></div>
+        <div class="field"><label>Work Phone</label><input id="refPhone" type="tel" placeholder="(469) 555-0100"></div>
+        <div class="field"><label>Cell Phone</label><input id="refCellPhone" type="tel" placeholder="(469) 555-0101"></div>
         <div class="field"><label>Email</label><input id="refEmail" type="email" placeholder="jane@facility.com"></div>
+        <div class="field"><label>Title / Role</label><input id="refTitle" type="text" placeholder="e.g. Discharge Planner, Social Worker, MD"></div>
         <div class="field full"><label>Address</label><input id="refAddress" type="text" placeholder="123 Main St, Dallas TX"></div>
-        <div class="field"><label>Ref Status</label><select id="refStatus"><option value="Green">&#x1F7E2; Green — Sending Referrals</option><option value="Red">&#x1F534; Red — No Referrals Yet</option></select></div>
+        <div class="field"><label>Ref Status</label>
+          <select id="refStatus" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;">
+            <option value="Green">🟢 Green — Sending Referrals</option>
+            <option value="Red">🔴 Red — No Referrals Yet</option>
+          </select>
+        </div>
+        <div class="field"><label>Notes / Background</label><input id="refNotes" type="text" placeholder="e.g. Prefers morning calls, knows Dr. Patel"></div>
       </div>
-      <div class="field" style="margin-top:10px;">
+      <div class="field" style="margin-top:12px;">
         <label>Next Step <span style="color:#dc2626;">*</span></label>
-        <select id="refNextStep" onchange="showReferralStepDesc(this.value)" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;">
+        <select id="refNextStep" onchange="if(typeof showReferralStepDesc==='function')showReferralStepDesc(this.value)" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;">
           <option value="">— Select next step —</option>
           <option value="Initial Contact Made">Initial Contact Made</option>
           <option value="Dropped Off Materials">Dropped Off Materials</option>
@@ -261,17 +283,19 @@
         <div id="refStepDescBox" style="display:none;background:#fffbeb;border:1px solid rgba(249,199,79,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:#334155;line-height:1.6;margin-top:6px;"></div>
       </div>
       <div class="field" style="margin-top:10px;">
-        <label>&#x1F4C5; Next Touch Date <span style="color:#dc2626;">*</span></label>
+        <label>📅 Next Touch Date <span style="color:#dc2626;">*</span></label>
         <input id="refNextTouchDate" type="date" style="border:2px solid rgba(249,199,79,.4);border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;background:#fffbeb;">
-        <div style="font-size:11px;color:#f59e0b;margin-top:3px;font-weight:700;">&#x26A1; Queues reminder in Reminders tab</div>
+        <div style="font-size:11px;color:#f59e0b;margin-top:3px;font-weight:700;">⚡ Queues reminder in Reminders tab</div>
       </div>
       <div class="modal-actions" style="margin-top:14px;">
         <button class="btn btn-green" onclick="saveReferralFromModal()">Save Referral + Queue Reminder</button>
+        <button class="btn btn-dark" onclick="showTab('referrals')">← Back to Referral Sources</button>
       </div>
       <div id="refSaveStatus" style="margin-top:8px;font-size:12px;color:#0a6c2f;font-weight:700;"></div>
     </div>
   </section>
 </div>
+
 
 
 <!-- !-- PIPELINE -->
@@ -411,13 +435,13 @@
       <p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How this works:</strong> Select a prospect, then trigger an action. In the live CRM, these actions automatically send reminders, schedule follow-ups, and alert you when a prospect goes cold. In this demo, clicking a button shows you a logged confirmation of what would happen.</p>
     </div>
     
-    <!-- Step 1: Select Prospect -->
+    <!-- Step 1: Select Prospect or Referral Source -->
     <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;">
-      <h4 style="color:var(--text);margin:0 0 12px;font-size:14px;">Step 1 — Select a Prospect</h4>
+      <h4 style="color:var(--text);margin:0 0 12px;font-size:14px;">Step 1 — Select a Prospect or Referral Source</h4>
       <div class="grid-2">
-        <div class="field"><label style="color:var(--text);font-size:12px;font-weight:700;display:block;margin-bottom:4px;">Prospect Name</label>
+        <div class="field"><label style="color:var(--text);font-size:12px;font-weight:700;display:block;margin-bottom:4px;">Prospect or Referral Source</label>
           <select id="autoProspectSelect" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(73,182,255,.2);border-radius:8px;padding:9px;color:var(--text);font-size:12px;font:inherit;">
-            <option value="">— Select a prospect —</option>
+            <option value="">— Choose a Prospect or Referral Source —</option>
           </select>
         </div>
         <div class="field"><label style="color:var(--text);font-size:12px;font-weight:700;display:block;margin-bottom:4px;">Current Status</label>
@@ -476,9 +500,11 @@
 
 <!-- NOTES -->
 <div class="tab-pane" id="tab-notes">
-  <div class="topbar"><div><h2>Notes</h2></div></div>
+  <div class="topbar"><div><h2>📝 Notes</h2><p>Internal team log — GPS synced, never visible to patients or families</p></div></div>
   <section class="section">
-    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How to log a note:</strong> After every facility visit or family interaction, come here. Select your name (or type it the first time), pick your position, enter today's date and time, select the next step, write your note, and click <strong>Sync &amp; Save Note</strong>. Your GPS location is captured automatically. All SMS and email communications also auto-appear here.</p></div>
+    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;">
+      <p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How Notes work:</strong> All notes are <strong>internal only</strong> — never visible to patients or families. Log every visit, call, and interaction here. Select the prospect or referral source you interacted with (type 3+ letters), pick the Next Step, set a due date, and click <strong>Sync & Save Note</strong>. GPS captures automatically. Every SMS and email you send also auto-logs here. The Team Notes section below is for internal coordination notes only.</p>
+    </div>
     <div class="note-form-wrap">
       <div class="form-grid-3">
         <div><label for="noteNameSelect">Select Name</label><select id="noteNameSelect"><option value="">Select saved name</option></select><div class="note-help">Previous noters appear here.</div></div>
@@ -486,334 +512,73 @@
         <div><label for="notePosition">Position</label><select id="notePosition"><option value="">-- Select --</option><option>Nurse</option><option>Caregiver</option><option>Marketer</option><option>Other</option></select></div>
         <div><label for="noteDate">Date</label><input id="noteDate" type="date"></div>
         <div><label for="noteTime">Time</label><input id="noteTime" type="time"></div>
-        <div>
-          <label>Select Prospect or Referral (optional)</label>
-          <div style="position:relative;">
-          <input type="text" id="noteProspectSearch" placeholder="Type 3+ letters to search…" 
-            oninput="filterNoteProspects(this.value)"
-            onfocus="filterNoteProspects(this.value)"
-            style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;">
+        <div style="position:relative;">
+          <label>Prospect or Referral Source (optional)</label>
+          <input type="text" id="noteProspectSearch" placeholder="Type 3+ letters to search…" oninput="filterNoteProspects(this.value)" onfocus="filterNoteProspects(this.value)" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;box-sizing:border-box;">
           <input type="hidden" id="noteProspectSelect" value="">
-          <div id="noteProspectDropdown" style="display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border:1px solid #d7e0ec;border-radius:10px;max-height:200px;overflow-y:auto;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,.12);">
-          </div>
+          <div id="noteProspectDropdown" style="display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border:1px solid #d7e0ec;border-radius:10px;max-height:200px;overflow-y:auto;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,.12);"></div>
           <div id="noteProspectChosen" style="font-size:11px;color:#0a6c2f;font-weight:700;margin-top:3px;"></div>
-        </div>
         </div>
         <div>
           <label>Next Step <span style="color:#f9c74f;font-size:10px;font-weight:700;">→ Updates prospect reminder</span></label>
-          <select id="noteNextStep" onchange="showNoteStepDesc(this.value)" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;">
-              <option value="">— Select next step —</option>
-              <option value="Immediate Family Outreach (Call/Text)">Immediate Family Outreach (Call/Text)</option>
-              <option value="Schedule On-Site Visit">Schedule On-Site Visit</option>
-              <option value="Conduct Bedside Presentation">Conduct Bedside Presentation</option>
-              <option value="Request Clinical Records (H&P)">Request Clinical Records (H&P)</option>
-              <option value="RN Assessment Requested">RN Assessment Requested</option>
-              <option value="RN Assessment Scheduled">RN Assessment Scheduled</option>
-              <option value="Obtain Physician Order for Eval">Obtain Physician Order for Eval</option>
-              <option value="Insurance Verification in Progress">Insurance Verification in Progress</option>
-              <option value="Admission Paperwork in Progress">Admission Paperwork in Progress</option>
-              <option value="CM Follow-Up (Status Update)">CM Follow-Up (Status Update)</option>
-              <option value="Overcoming Family Hesitation">Overcoming Family Hesitation</option>
-            </select>
-          <div id="noteStepDescBox" style="display:none;background:#fffbeb;border:1px solid rgba(249,199,79,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:#334155;line-height:1.6;margin-top:6px;"></div>
+          <select id="noteNextStep" onchange="if(typeof showNoteStepDesc==='function')showNoteStepDesc(this.value)" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;">
+            <option value="">— Select next step —</option>
+            <option value="Immediate Family Outreach (Call/Text)">Immediate Family Outreach (Call/Text)</option>
+            <option value="Schedule On-Site Visit">Schedule On-Site Visit</option>
+            <option value="Conduct Bedside Presentation">Conduct Bedside Presentation</option>
+            <option value="Request Clinical Records (H&P)">Request Clinical Records (H&P)</option>
+            <option value="RN Assessment Requested">RN Assessment Requested</option>
+            <option value="RN Assessment Scheduled">RN Assessment Scheduled</option>
+            <option value="Obtain Physician Order for Eval">Obtain Physician Order for Eval</option>
+            <option value="Insurance Verification in Progress">Insurance Verification in Progress</option>
+            <option value="CM Follow-Up (Status Update)">CM Follow-Up (Status Update)</option>
+            <option value="Overcoming Family Hesitation">Overcoming Family Hesitation</option>
+            <option value="Other">Other</option>
+          </select>
+          <div id="noteStepDescBox" style="display:none;background:#fffbeb;border:1px solid rgba(249,199,79,.3);border-radius:8px;padding:8px 10px;font-size:11px;color:#334155;line-height:1.5;margin-top:5px;"></div>
         </div>
         <div>
           <label>📅 New Due Date <span style="color:#f9c74f;font-size:10px;font-weight:700;">→ Re-queues reminder</span></label>
-          <input id="noteNextStepDate" type="date" style="border:2px solid rgba(249,199,79,.3);border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;background:#fffbeb;">
-          <div style="font-size:11px;color:#f59e0b;margin-top:3px;">Set this to re-queue the reminder after completing a step</div>
+          <input id="noteNextStepDate" type="date" style="border:2px solid rgba(249,199,79,.4);border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;background:#fffbeb;">
+          <div style="font-size:10px;color:#f59e0b;margin-top:2px;">Set this to re-queue the reminder after completing a step.</div>
         </div>
-        <div style="grid-column:1/-1;"><label for="noteText">Note</label><textarea id="noteText" placeholder="Enter note details here…" spellcheck="true"></textarea></div>
+        <div style="grid-column:1/-1;"><label for="noteText">Note (internal only — never visible to patients)</label><textarea id="noteText" placeholder="Enter note details here…" spellcheck="true"></textarea></div>
       </div>
-      <div class="note-actions"><button class="btn btn-green" onclick="saveDemoNote()">Sync &amp; Save Note</button></div>
+      <div class="note-actions"><button class="btn btn-green" onclick="saveDemoNote()">🔒 Sync &amp; Save Note (Internal)</button></div>
       <div id="syncStatus" style="margin-top:8px;font-size:12px;color:#0a6c2f;font-weight:700;"></div>
     </div>
     <div id="notesList" style="margin-top:14px;">
       <div class="grid-2">
-        <div class="note-box"><h4>Ericka — 2026-04-12 at 10:00 AM</h4><p><strong>Position:</strong> Marketer</p><p><strong>Next Step:</strong> CM Follow-Up (Status Update)</p><p>Baylor requested faster turnaround updates.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">✅ Synced — Location Captured</p></div>
-        <div class="note-box"><h4>Angela — 2026-04-11 at 01:40 PM</h4><p><strong>Position:</strong> Nurse</p><p><strong>Next Step:</strong> RN Assessment Scheduled</p><p>Patient appropriate for hospice. Family receptive.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">✅ Synced — Location Captured</p></div>
+        <div class="note-box"><h4>Ericka — 2026-04-12 at 10:00 AM</h4><p><strong>Position:</strong> Marketer</p><p><strong>Next Step:</strong> CM Follow-Up (Status Update)</p><p><strong>Next Step Due Date:</strong> <span style="color:#f9c74f;font-weight:700;">2026-04-19</span></p><p>Baylor requested faster turnaround updates.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">🔒 Internal | ✅ Synced — GPS Captured</p></div>
+        <div class="note-box"><h4>Angela — 2026-04-11 at 01:40 PM</h4><p><strong>Position:</strong> Nurse</p><p><strong>Next Step:</strong> RN Assessment Scheduled</p><p><strong>Next Step Due Date:</strong> <span style="color:#f9c74f;font-weight:700;">2026-04-14</span></p><p>Patient appropriate for hospice. Family receptive.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">🔒 Internal | ✅ Synced — GPS Captured</p></div>
       </div>
     </div>
-  </section>
-</div>
 
-<!-- ADMIN — Staff Tracking lives here only -->
-<div class="tab-pane" id="tab-admin">
-  <div class="topbar"><div><h2>🔒 Admin</h2></div></div>
-  <section class="admin-section">
-    <div class="admin-banner"><h3 style="margin:0;color:#c9aeff;">🔒 Admin Only</h3><span class="pill pill-purple">Admin View Only</span></div>
-    <p class="admin-note">This section is hidden from standard users. Only the Admin account holder can view seat limits, manage users, review EVV data, mileage, staff tracking entries, and notes totals.</p>
-    <div class="admin-grid">
-      <div class="admin-card"><h4>👥 User Management</h4><p>Admin manages user access and subscription seat limits.</p><div class="mini-actions" style="margin-top:10px;"><button class="btn btn-green btn-small" onclick="document.getElementById('inviteUserModal').style.display='flex'">+ Add User</button><button class="btn btn-red btn-small" onclick="document.getElementById('removeUserModal').style.display='flex'">− Remove User</button></div></div>
-      <div class="admin-card"><h4>🪑 Seat Limits</h4><p>Subscription seat count controls active users.</p><span class="admin-stat">12 / 20</span><p style="font-size:11px;">Seats in use / Total purchased</p></div>
-      <div class="admin-card"><h4>📝 Notes Synced</h4><p>Total notes synced across all team members.</p><span class="admin-stat" id="adminNotes">0</span></div>
-      <div class="admin-card"><h4>📍 Miles Logged</h4><p>Total mileage captured via GPS.</p><span class="admin-stat" id="adminMiles">0.0 mi</span></div>
-      <div class="admin-card"><h4>📡 Staff Tracking Entries</h4><p>Auto-captured location entries at note sync time.</p><span class="admin-stat" id="adminStaff">0</span></div>
-      <div class="admin-card" style="grid-column:1/-1;">
-        <h4>📍 All Staff Mileage (Admin View)</h4>
-        <p style="margin-bottom:12px;">Admin can see every team member's daily and weekly mileage totals below.</p>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;">
-          <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;"><p style="font-size:10px;color:var(--muted);margin:0 0 4px;font-weight:800;text-transform:uppercase;">All Staff Today</p><p style="font-size:22px;font-weight:900;color:var(--green);margin:0;" id="adminAllTodayMiles">0.0 mi</p></div>
-          <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;"><p style="font-size:10px;color:var(--muted);margin:0 0 4px;font-weight:800;text-transform:uppercase;">All Staff This Week</p><p style="font-size:22px;font-weight:900;color:var(--blue);margin:0;" id="adminAllWeekMiles">0.0 mi</p></div>
-          <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;"><p style="font-size:10px;color:var(--muted);margin:0 0 4px;font-weight:800;text-transform:uppercase;">Total Trips Logged</p><p style="font-size:22px;font-weight:900;color:#ffd36e;margin:0;" id="adminTotalTrips">0</p></div>
-          <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;"><p style="font-size:10px;color:var(--muted);margin:0 0 4px;font-weight:800;text-transform:uppercase;">Staff Active Today</p><p style="font-size:22px;font-weight:900;color:#c9aeff;margin:0;" id="adminStaffLoggedToday">0</p></div>
+    <!-- TEAM COORDINATION NOTES (built into Notes tab) -->
+    <div style="margin-top:28px;border-top:1px solid rgba(255,255,255,.08);padding-top:20px;">
+      <h3 style="color:#c9aeff;margin:0 0 6px;font-size:17px;">💬 Team Coordination Notes</h3>
+      <p style="color:var(--muted);font-size:12px;margin:0 0 14px;">Internal team-only notes — never visible to patients or families. Use for clinical context, family sensitivity, and marketer ↔ nurse handoffs.</p>
+      <div style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:10px 14px;margin-bottom:14px;">
+        <p style="color:#60a5fa;font-size:12px;margin:0;">💬 These notes are <strong>internal only</strong> — use for context like "Family is hesitant — daughter is the decision maker" or clinical flags for the nurse team.</p>
+      </div>
+      <div class="note-form-wrap" style="margin-bottom:14px;">
+        <div class="form-grid-4">
+          <div class="field">
+            <label>Prospect or Referral Source</label>
+            <select id="tnProspect" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></select>
+          </div>
+          <div class="field"><label>Your Name</label><input id="tnAuthor" type="text" placeholder="Enter your name" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></div>
+          <div class="field"><label>Tag</label><select id="tnTag" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"><option>📋 General</option><option>⚠️ Family Sensitive</option><option>🏥 Clinical Context</option><option>💡 Strategy</option><option>🚨 Urgent</option><option>🤝 Marketer→Nurse Handoff</option></select></div>
+          <div class="field" style="grid-column:1/-1;"><label>Team Note (internal only)</label><textarea id="tnText" placeholder="e.g. Family is hesitant — daughter is the decision maker, don't push the timeline." style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;height:80px;resize:vertical;"></textarea></div>
         </div>
-        <div class="table-wrap">
-          <table><thead><tr><th>Staff Name</th><th>Miles Today</th><th>Miles This Week</th><th>Total Trips</th><th>Last Trip</th></tr></thead>
-          <tbody id="adminMileageTable"><tr><td colspan="5" style="text-align:center;color:#888;">No trips logged yet.</td></tr></tbody></table>
-        </div>
+        <div class="note-actions"><button class="btn btn-green" onclick="saveTeamNote()">💬 Save Team Note</button></div>
+        <div id="tnStatus" style="margin-top:6px;font-size:12px;color:#0a6c2f;font-weight:700;"></div>
       </div>
-    
-
-    <!-- OpenPhone Integration Tip -->
-    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.2);border-radius:14px;padding:16px;margin-top:16px;">
-      <h4 style="color:#49b6ff;margin:0 0 8px;font-size:14px;">📱 Business Phone System — Recommended</h4>
-      <p style="color:var(--muted);font-size:13px;margin:0 0 10px;line-height:1.6;">For a dedicated business number (separate from personal cells), we recommend <strong style="color:var(--text);">OpenPhone</strong>. Your team gets a shared business number, call recording, and a mobile app. Works seamlessly with HospiceLink.</p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-        <a href="https://www.openphone.com" target="_blank" class="btn btn-blue btn-small">🔗 openphone.com</a>
-        <span style="color:var(--muted);font-size:12px;">~$13/user/mo · Shared team inbox · Call recording · Mobile app</span>
-      </div>
-      <p style="color:var(--muted);font-size:11px;margin:10px 0 0;">💡 How it works: When you click 📱 Text or 📧 Email on any prospect or referral, your OpenPhone app opens pre-filled with the message. It sends from your business number — not your personal cell. Everything auto-logs back to HospiceLink Notes.</p>
-    </div></div>
-    <!-- STAFF TRACKING — Admin eyes only -->
-    <div style="margin-top:24px;">
-      <h4 style="color:#c9aeff;margin:0 0 10px;">📍 Staff Tracking</h4>
-      <p style="color:var(--muted);font-size:13px;margin:0 0 12px;">Auto-captured each time a team member clicks "Sync &amp; Save Note". Location is recorded at sync time.</p>
-      <div class="table-wrap">
-        <table><thead><tr><th>Staff</th><th>Position</th><th>Date</th><th>Time</th><th>📍 Location at Sync</th><th>Next Step</th></tr></thead>
-        <tbody id="staffTrackingBody">
-          <tr><td>Angela</td><td>Nurse</td><td>2026-04-12</td><td>9:05 AM</td><td><span class="pill pill-green">📍 Dallas, TX — 32.7767°N 96.7970°W</span></td><td>RN Assessment Scheduled</td></tr>
-          <tr><td>Ericka</td><td>Marketer</td><td>2026-04-11</td><td>1:15 PM</td><td><span class="pill pill-green">📍 Plano, TX — 33.0198°N 96.6989°W</span></td><td>CM Follow-Up (Status Update)</td></tr>
-        </tbody></table>
-      </div>
-    </div>
-    <div style="margin-top:16px;">
-      <h4 style="color:#c9aeff;margin:0 0 10px;">Current Users</h4>
-      <div class="table-wrap">
-        <table><thead><tr><th>Name</th><th>Title / Role</th><th>Status</th><th>Action</th></tr></thead>
-        <tbody id="adminUserBody">
-          <tr><td>Ericka</td><td>Marketer</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-red btn-small" onclick="document.getElementById('removeUserModal').style.display='flex'">Remove</button></td></tr>
-          <tr><td>Angela</td><td>Nurse</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-red btn-small" onclick="document.getElementById('removeUserModal').style.display='flex'">Remove</button></td></tr>
-          <tr><td>Admin</td><td>Administrator</td><td><span class="pill pill-purple">Admin</span></td><td>—</td></tr>
-        </tbody></table>
-      </div>
+      <div id="tnList" style="margin-top:10px;"></div>
     </div>
   </section>
 </div>
 
-
-
-    <div style="margin-top:20px;background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.15);border-radius:12px;padding:14px;">
-      <h4 style="color:#ffd700;margin:0 0 8px;font-size:13px;">🗄️ Data Retention Policy</h4>
-      <p style="color:var(--muted);font-size:12px;margin:0;line-height:1.7;">
-        <strong style="color:var(--text);">Marketing leads:</strong> Archived after 36 months, restorable anytime.<br>
-        <strong style="color:var(--text);">Mileage / GPS logs:</strong> Archived after 48 months (IRS compliance).<br>
-        <strong style="color:#ffd700;">Clinical notes, family communications, HIPAA logs:</strong> Retained 6–10 years per federal HIPAA requirements. Never auto-archived. Cannot be deleted by users.
-      </p>
-    </div>
-
-
-<!-- REMINDERS -->
-<div class="tab-pane" id="tab-reminders">
-  <div class="topbar"><div><h2>📅 Follow-Up Reminders</h2><p>Auto-populated from the "Next Step Due Date" you set on each prospect</p></div></div>
-  <section class="section">
-    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;">
-      <p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How this works:</strong> When you add a prospect and set a <strong>Next Step Due Date</strong>, it automatically appears here. Overdue items show in red. Due today in yellow. In the live CRM, you also get a daily 7am email with your reminders for the day.</p>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;">
-      <div style="background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.3);border-radius:12px;padding:14px;text-align:center;"><p style="color:#f87171;font-size:10px;font-weight:800;margin:0 0 4px;text-transform:uppercase;">⚠️ Overdue</p><p style="font-size:28px;font-weight:900;color:#dc2626;margin:0;" id="remOverdueCount">0</p></div>
-      <div style="background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.3);border-radius:12px;padding:14px;text-align:center;"><p style="color:#fbbf24;font-size:10px;font-weight:800;margin:0 0 4px;text-transform:uppercase;">📅 Due Today</p><p style="font-size:28px;font-weight:900;color:#f59e0b;margin:0;" id="remTodayCount">0</p></div>
-      <div style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);border-radius:12px;padding:14px;text-align:center;"><p style="color:#60a5fa;font-size:10px;font-weight:800;margin:0 0 4px;text-transform:uppercase;">📆 This Week</p><p style="font-size:28px;font-weight:900;color:#3b82f6;margin:0;" id="remWeekCount">0</p></div>
-    </div>
-    <div id="remindersList" style="background:var(--panel);border:1px solid var(--line);border-radius:12px;">
-      <div style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.06);font-size:12px;font-weight:800;text-transform:uppercase;color:var(--muted);">Your Follow-Up List (from prospect due dates)</div>
-      <div id="remindersBody"></div>
-      <div id="remindersEmpty" style="padding:20px;text-align:center;color:var(--muted);font-size:13px;">No follow-ups due yet. Add a prospect with a Next Step Due Date to see reminders here.</div>
-    </div>
-    <p style="font-size:12px;color:var(--muted);margin:12px 0 0;">💡 To add a reminder: go to <strong>Add Prospect</strong> → fill in Next Step → set a <strong>Next Step Due Date</strong>. That date drives this entire tab.</p>
-  </section>
-</div>
-
-<!-- RE-ENGAGEMENT -->
-<div class="tab-pane" id="tab-reengagement">
-  <div class="topbar"><div><h2>🔁 Re-Engagement Queue</h2><p>Lost prospects worth re-contacting</p></div></div>
-  <section class="section">
-    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How Re-Engagement works:</strong> This tab automatically shows prospects that have been marked <strong>Lost</strong> for 30 or more days. Studies show 20–30% of lost hospice prospects eventually convert when someone reaches back out. Click <strong>Re-Engage</strong> to move them back into your active pipeline as an Inquiry.</p></div>
-    <div style="background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.2);border-radius:12px;padding:12px 14px;margin-bottom:14px;"><p style="color:#fbbf24;font-size:13px;margin:0;">💡 Studies show 20–30% of lost hospice prospects convert when re-contacted at the right time.</p></div>
-    <div id="reengagementList" style="margin-bottom:12px;"></div>
-      <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-bottom:1px solid rgba(255,255,255,.06);"><div><div style="font-weight:700;font-size:13px;">Helen P. — Lost 45 days ago</div><div style="font-size:11px;color:var(--muted);">Insurance issue · Physician Office</div></div><button class="btn btn-blue btn-small" onclick="this.textContent='✅ Re-assigned';this.disabled=true;">Re-Engage →</button></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-bottom:1px solid rgba(255,255,255,.06);"><div><div style="font-weight:700;font-size:13px;">Robert H. — Lost 38 days ago</div><div style="font-size:11px;color:var(--muted);">Family not ready · North Park Rehab</div></div><button class="btn btn-blue btn-small" onclick="this.textContent='✅ Re-assigned';this.disabled=true;">Re-Engage →</button></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;"><div><div style="font-weight:700;font-size:13px;">Sandra M. — Lost 62 days ago</div><div style="font-size:11px;color:var(--muted);">Chose competitor · Hospital CM</div></div><button class="btn btn-blue btn-small" onclick="this.textContent='✅ Re-assigned';this.disabled=true;">Re-Engage →</button></div>
-    </div>
-  </section>
-</div>
-<!-- DAILY GOALS -->
-<div class="tab-pane" id="tab-goals">
-  <div class="topbar"><div><h2>🎯 Daily Goals</h2><p>Set targets, track daily progress</p></div></div>
-  <section class="section">
-    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How Daily Goals works:</strong> Set your targets on Monday morning using the form on the right. The progress bars on the left update as you log visits, calls, and contacts in the system. This keeps everyone accountable without managers having to check in constantly.</p></div>
-    <div class="grid-2">
-      <div class="note-form-wrap">
-        <h4 style="margin-bottom:14px;">Today's Progress</h4>
-        <div style="margin-bottom:12px;"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#111;margin-bottom:5px;"><span>Facility Visits</span><span>3 / 5</span></div><div style="height:8px;background:#e7edf5;border-radius:4px;"><div style="height:100%;width:60%;background:#2563eb;border-radius:4px;"></div></div></div>
-        <div style="margin-bottom:12px;"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#111;margin-bottom:5px;"><span>Phone Calls</span><span>7 / 10</span></div><div style="height:8px;background:#e7edf5;border-radius:4px;"><div style="height:100%;width:70%;background:#16a34a;border-radius:4px;"></div></div></div>
-        <div><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#111;margin-bottom:5px;"><span>Referral Contacts</span><span>2 / 3</span></div><div style="height:8px;background:#e7edf5;border-radius:4px;"><div style="height:100%;width:67%;background:#b45309;border-radius:4px;"></div></div></div>
-      </div>
-      <div class="note-form-wrap">
-        <h4 style="margin-bottom:14px;">Set Daily Goals</h4>
-        <div class="field"><label>Facility Visits Target</label><input type="number" value="5" min="1" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></div>
-        <div class="field"><label>Phone Calls Target</label><input type="number" value="10" min="1" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></div>
-        <div class="field"><label>Referral Contacts Target</label><input type="number" value="3" min="1" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></div>
-        <button class="btn btn-green btn-small" onclick="alert('Goals saved!')">Save Goals</button>
-      </div>
-    </div>
-  </section>
-</div>
-<!-- IMPORT DATA -->
-<div class="tab-pane" id="tab-import">
-  <div class="topbar"><div><h2>📤 Import Data</h2><p>Switch from any CRM in minutes</p></div></div>
-  <section class="section">
-
-    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:16px;">
-      <p style="color:var(--text);font-size:13px;margin:0 0 8px;"><strong>📌 What this tab does:</strong> <strong>Import</strong> means you are bringing data IN to HospiceLink from somewhere else — like an Excel spreadsheet or another CRM. This is a one-time or occasional action.</p>
-      <p style="color:var(--muted);font-size:12px;margin:0;"><strong>Export</strong> (the CSV button on Prospect Records) means sending data OUT of HospiceLink — like downloading your prospect list for a meeting or report. They are opposite directions. Import = bring in. Export = send out.</p>
-    </div>
-    <div id="importDrop" onclick="document.getElementById('csvFileIn').click()" style="border:2px dashed rgba(73,182,255,.3);border-radius:16px;padding:40px;text-align:center;cursor:pointer;">
-      <div style="font-size:48px;margin-bottom:12px;">📁</div>
-      <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;">Drop your CSV or Excel file here</div>
-      <div style="font-size:13px;color:var(--muted);margin-bottom:14px;">or click to browse</div>
-      <button class="btn btn-blue" onclick="event.stopPropagation()">Browse Files</button>
-      <input type="file" id="csvFileIn" accept=".csv,.xlsx" style="display:none" onchange="runImport(this)">
-    </div>
-    <div id="importOK" style="display:none;margin-top:14px;background:rgba(140,255,102,.08);border:1px solid rgba(140,255,102,.25);border-radius:14px;padding:28px;text-align:center;">
-      <div style="font-size:48px;margin-bottom:10px;">✅</div>
-      <div style="font-size:18px;font-weight:900;color:#8cff66;margin-bottom:8px;" id="importMsg">Import Complete!</div>
-      <button class="btn btn-blue btn-small" onclick="showTab('prospect-records');document.getElementById('importOK').style.display='none';document.getElementById('importDrop').style.display='block';">View Records →</button>
-    </div>
-    <div style="margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;">
-      <p style="color:var(--text);font-size:13px;font-weight:700;margin:0 0 6px;">📥 Download Sample Template</p>
-      <p style="color:var(--muted);font-size:12px;margin:0 0 10px;">Not sure of the format? Download our sample and fill in your data.</p>
-      <button class="btn btn-gray btn-small" onclick="dlSampleCSV()">📥 Download Sample CSV</button>
-    </div>
-  </section>
-</div>
-<!-- REFERRAL PORTAL -->
-<div class="tab-pane" id="tab-referralportal">
-  <div class="topbar"><div><h2>🏥 Facility Referral Portal</h2><p>White-label link for hospital discharge planners</p></div></div>
-  <section class="section">
-    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How the Referral Portal works:</strong> Copy your unique link and share it with every hospital discharge planner and social worker you visit. They fill out a short referral form on their end — name, diagnosis, contact info. It drops directly into your Prospect Records as a new Inquiry. No phone calls. No faxes. No follow-up needed. Print the QR code and leave it at every nursing station.</p></div>
-    <div style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:14px;margin-bottom:16px;"><p style="color:#ffd700;font-size:13px;margin:0;"><strong>⭐ Game-Changer:</strong> Give this link to hospital discharge planners. They fill in a referral — it appears in your Prospect Records instantly as an Inquiry.</p></div>
-    <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px;">
-      <h4 style="color:var(--text);margin:0 0 12px;">Your Referral Portal Link</h4>
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;"><div style="flex:1;background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.2);border-radius:10px;padding:10px 14px;font-size:13px;color:#49b6ff;font-family:monospace;">https://wemarketpluscom.org/refer/your-agency</div><button class="btn btn-blue btn-small" onclick="navigator.clipboard.writeText('https://wemarketpluscom.org/refer/your-agency').then(function(){alert('Copied!')})">📋 Copy</button></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;"><button class="btn btn-green btn-small" onclick="alert('In live CRM: Opens your branded referral portal.')">👁 Preview</button><button class="btn btn-gray btn-small" onclick="alert('In live CRM: Downloads QR code for printing.')">📥 QR Code</button></div>
-    </div>
-    <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;">
-      <h4 style="color:var(--text);margin:0 0 12px;">Recent Portal Submissions</h4>
-      <div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:13px;font-weight:700;">Mary J.</div><div style="font-size:11px;color:var(--muted);">Baylor — Sarah M.</div></div><span class="pill pill-green">New</span></div>
-      <div style="padding:8px 0;display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:13px;font-weight:700;">Robert T.</div><div style="font-size:11px;color:var(--muted);">North Park — Kim L.</div></div><span class="pill pill-blue">2h ago</span></div>
-      <p style="font-size:11px;color:var(--muted);margin:10px 0 0;">All submissions auto-appear as Inquiry in Prospect Records.</p>
-    </div>
-  </section>
-</div>
-<!-- PLAYBOOK GENERATOR -->
-<div class="tab-pane" id="tab-playbook">
-  <div class="topbar"><div><h2>📘 Playbook Generator</h2><p>AI builds your custom marketing SOP in seconds</p></div></div>
-  <section class="section">
-    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How the Playbook Generator works:</strong> Answer 4 questions: your city, team size, monthly admission goal, and your biggest challenge. Click Generate. The AI builds your complete marketing SOP in seconds — your weekly schedule, your top referral targets, your 30-second pitch, and your 90-day ramp plan. Customized to your exact market. Use it to onboard new marketers.</p></div>
-    <div id="pbForm" style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;">
-      <div class="form-grid-4">
-        <div><label style="display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;">City / Market</label><input id="pbCity" type="text" placeholder="e.g. Dallas, TX" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(73,182,255,.2);border-radius:8px;padding:9px;color:var(--text);font-size:12px;font:inherit;"></div>
-        <div><label style="display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;">Team Size</label><select id="pbTeam" style="width:100%;background:rgba(30,50,80,.9);border:1px solid rgba(73,182,255,.2);border-radius:8px;padding:9px;color:var(--text);font-size:12px;"><option>1 marketer</option><option>2-5 marketers</option><option>6-10 marketers</option><option>10+ marketers</option></select></div>
-        <div><label style="display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;">Monthly Goal</label><input id="pbGoal" type="number" placeholder="e.g. 8" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(73,182,255,.2);border-radius:8px;padding:9px;color:var(--text);font-size:12px;font:inherit;"></div>
-        <div><label style="display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;">Biggest Challenge</label><select id="pbChallenge" style="width:100%;background:rgba(30,50,80,.9);border:1px solid rgba(73,182,255,.2);border-radius:8px;padding:9px;color:var(--text);font-size:12px;"><option>Not enough referral sources</option><option>Low conversion rate</option><option>Team accountability</option><option>Competitor pressure</option></select></div>
-      </div>
-      <div class="note-actions" style="margin-top:14px;"><button class="btn btn-green" id="pbBtn" onclick="genPlaybook()">🤖 Generate My Playbook</button></div>
-    </div>
-    <div id="pbResult" style="display:none;margin-top:14px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><h4 style="margin:0;color:var(--text);">Your Custom Playbook</h4><button class="btn btn-gray btn-small" onclick="document.getElementById('pbForm').style.display='block';document.getElementById('pbResult').style.display='none';">↺ Redo</button></div>
-      <div id="pbText" style="background:rgba(73,182,255,.04);border:1px solid rgba(73,182,255,.1);border-radius:14px;padding:20px;font-size:13px;color:var(--muted);line-height:1.8;white-space:pre-wrap;max-height:500px;overflow-y:auto;"></div>
-    </div>
-  </section>
-</div>
-
-<div class="tab-pane" id="tab-ai">
-  <div class="topbar"><div><h2>🤖 AI Assistant</h2><p>Powered by Claude — clinical workflows, family communications, and referral strategy</p></div></div>
-  <section class="section" style="padding:0;overflow:hidden;">
-    <div style="background:#0a1628;border:1px solid rgba(249,199,79,.25);border-radius:16px;overflow:hidden;">
-      <div style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;"><div style="width:10px;height:10px;background:#8cff66;border-radius:50%;"></div><span style="color:#c9d6ea;font-size:13px;font-weight:700;">HospiceLink AI — Full Suite Assistant</span></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;padding:8px 12px 0;">
-        <span onclick="sendAI('Which referral source is converting best this week?')" style="background:rgba(249,199,79,.12);border:1px solid rgba(249,199,79,.3);color:#f9c74f;padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;cursor:pointer;">Best referral source?</span>
-        <span onclick="sendAI('Draft a family update message for a patient in hospice care')" style="background:rgba(249,199,79,.12);border:1px solid rgba(249,199,79,.3);color:#f9c74f;padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;cursor:pointer;">Draft family update</span>
-        <span onclick="sendAI('What are signs a patient is ready for hospice admission?')" style="background:rgba(249,199,79,.12);border:1px solid rgba(249,199,79,.3);color:#f9c74f;padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;cursor:pointer;">Admission readiness</span>
-        <span onclick="sendAI('Suggest a follow-up cadence for a hospital case manager')" style="background:rgba(249,199,79,.12);border:1px solid rgba(249,199,79,.3);color:#f9c74f;padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;cursor:pointer;">Follow-up cadence</span>
-      </div>
-      <div id="aiMsgs" style="min-height:280px;max-height:420px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;"><div style="padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%;background:#1a2a1a;color:#c8f7c5;border:1px solid rgba(140,255,102,.2);align-self:flex-start;">👋 Hi! I am your HospiceLink AI. I can help with clinical workflows, family communications, referral strategies, and more. What do you need?</div></div>
-      <div style="display:flex;gap:8px;padding:12px;border-top:1px solid rgba(255,255,255,.08);">
-        <input type="text" id="aiIn" placeholder="Ask anything about your CRM, prospects, or strategy…" onkeydown="if(event.key===&quot;Enter&quot;)sendAI()" style="flex:1;background:#0f1929;border:1px solid #334155;border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:13px;">
-        <button onclick="sendAI()" style="background:#f9c74f;color:#000;border:none;border-radius:8px;padding:10px 16px;font-weight:800;cursor:pointer;">Send ➤</button>
-      </div>
-    </div>
-  </section>
-</div>
-
-<!-- TOUCH LOG -->
-<div class="tab-pane" id="tab-touchlog">
-  <div class="topbar"><div><h2>🤝 Referral Source Touch Log</h2><p>Every visit and call logged — admin sees overdue sources at a glance</p></div></div>
-  <section class="section">
-    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How the Touch Log works:</strong> After every visit or call to a referral source, log it here. Select the source, choose the type of touch (In-Person Visit, Phone Call, etc.), enter today's date, and add a quick note. The Admin sees a cold alert when any <strong>Green</strong> referral source hasn't been touched in 14+ days.</p></div>
-    <div class="note-form-wrap" style="margin-bottom:16px;">
-      <h4 style="margin:0 0 12px;">Log a Touch</h4>
-      <div class="form-grid-4">
-        <div class="field"><label>Referral Source</label><select id="touchSource" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></select></div>
-        <div class="field"><label>Touch Type</label><select id="touchType" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"><option>In-Person Visit</option><option>Phone Call</option><option>Text Message</option><option>Email</option><option>Dropped Off Materials</option></select></div>
-        <div class="field"><label>Date</label><input id="touchDate" type="date" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></div>
-        <div class="field"><label>Notes</label><input id="touchNotes" type="text" placeholder="Brief note…" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></div>
-      </div>
-      <div class="note-actions"><button class="btn btn-green" onclick="logTouch()">✅ Log Touch</button></div>
-    </div>
-    <div id="touchAlerts" style="margin-bottom:14px;"></div>
-    <h4 style="color:var(--text);margin:0 0 10px;">Touch History</h4>
-    <div class="table-wrap">
-      <table><thead><tr><th>Referral Source</th><th>Touch Type</th><th>Date</th><th>Days Since</th><th>Notes</th></tr></thead>
-      <tbody id="touchLogBody">
-        <tr><td>Baylor Hospital</td><td>In-Person Visit</td><td>2026-04-14</td><td><span class="pill pill-green">7 days</span></td><td>Left brochures with case manager</td></tr>
-        <tr><td>North Park Rehab</td><td>Phone Call</td><td>2026-04-10</td><td><span class="pill pill-yellow">11 days</span></td><td>Confirmed referral in progress</td></tr>
-        <tr><td>Physician Office</td><td>In-Person Visit</td><td>2026-03-28</td><td><span class="pill pill-red">24 days ⚠️</span></td><td>Met with office manager</td></tr>
-      </tbody></table>
-    </div>
-  </section>
-</div>
-
-<!-- TEAM NOTES -->
-<div class="tab-pane" id="tab-teamnotes">
-  <div class="topbar"><div><h2>💬 Team Notes on Prospects</h2><p>Internal team coordination — never visible to patients or families</p></div></div>
-  <section class="section">
-    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How Team Notes works:</strong> These are <strong>internal team notes only</strong> — never visible to patients or families. Use them for context that helps your whole team: "Family is hesitant — daughter is the decision maker, don't push the timeline." Select the prospect, enter your name, pick a tag, write the note, and save. The whole team sees it instantly.</p></div>
-    <div style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:12px;padding:12px 14px;margin-bottom:14px;"><p style="color:#60a5fa;font-size:13px;margin:0;">💬 These notes are <strong>internal team only</strong> — never shared with patients or families. Use for clinical context, family sensitivity notes, and coordination between marketers and nurses.</p></div>
-    <div class="note-form-wrap" style="margin-bottom:16px;">
-      <div class="form-grid-4">
-        <div class="field"><label>Prospect</label><select id="tnProspect" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></select></div>
-        <div class="field"><label>Your Name</label><input id="tnAuthor" type="text" placeholder="Enter your name" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></div>
-        <div class="field"><label>Tag</label><select id="tnTag" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"><option>📋 General</option><option>⚠️ Family Sensitive</option><option>🏥 Clinical Context</option><option>💡 Strategy</option><option>🚨 Urgent</option></select></div>
-        <div class="field full" style="grid-column:1/-1"><label>Note (team only)</label><textarea id="tnText" placeholder="e.g. Family is hesitant — approach gently. Daughter is primary decision maker." style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;min-height:70px;resize:vertical;" spellcheck="true"></textarea></div>
-      </div>
-      <div class="note-actions"><button class="btn btn-green" onclick="saveTeamNote()">💬 Save Team Note</button></div>
-    </div>
-    <div id="teamNotesList" style="display:grid;gap:10px;">
-      <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span style="font-weight:700;font-size:13px;">Robert H.</span><span class="pill pill-yellow">⚠️ Family Sensitive</span></div>
-        <p style="color:var(--text);font-size:13px;margin:0 0 4px;">Family is hesitant — daughter is the decision maker. Approach gently, do not push admission timeline.</p>
-        <p style="color:var(--muted);font-size:11px;margin:0;">Ericka · 2026-04-14</p>
-      </div>
-      <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span style="font-weight:700;font-size:13px;">Dorothy F.</span><span class="pill pill-blue">🏥 Clinical Context</span></div>
-        <p style="color:var(--text);font-size:13px;margin:0 0 4px;">Patient has COPD + CHF. RN assessment scheduled for next week. Insurance pre-auth in progress.</p>
-        <p style="color:var(--muted);font-size:11px;margin:0;">Angela · 2026-04-12</p>
-      </div>
-    </div>
-  </section>
-</div>
 
 <!-- WEEKLY REPORT -->
 <div class="tab-pane" id="tab-weeklyreport">
@@ -998,6 +763,248 @@
     <div style="margin-top:14px;display:flex;gap:10px;">
       <button class="btn btn-blue btn-small" onclick="alert('Audit log exported to CSV — in live CRM this downloads automatically.')">📥 Export Log (CSV)</button>
       <button class="btn btn-gray btn-small" onclick="alert('Compliance report sent — in live CRM this emails your compliance officer.')">📧 Email Compliance Report</button>
+    </div>
+  </section>
+</div>
+
+<!-- TAB-ADMIN -->
+<div class="tab-pane" id="tab-admin">
+  <div class="topbar"><div><h2>🔒 Admin</h2></div></div>
+  <section class="admin-section">
+    <div class="admin-banner"><h3 style="margin:0;color:#c9aeff;">🔒 Admin Only</h3><span class="pill pill-purple">Admin View Only</span></div>
+    <p class="admin-note">This section is hidden from standard users. Only the Admin account holder can view seat limits, manage users, review EVV data, mileage, staff tracking entries, and notes totals.</p>
+    <div class="admin-grid">
+      <div class="admin-card"><button onclick="captureAdminGPS()" style="background:rgba(73,182,255,.15);color:#49b6ff;border:1px solid rgba(73,182,255,.3);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;margin-bottom:12px;">📍 Capture My Location</button><div id="adminGPSStatus" style="font-size:12px;color:#8a9dc0;margin-bottom:12px;"></div><h4>👥 User Management</h4><p>Admin manages user access and subscription seat limits.</p><div class="mini-actions" style="margin-top:10px;"><button class="btn btn-green btn-small" onclick="document.getElementById('inviteUserModal').style.display='flex'">+ Add User</button><button class="btn btn-red btn-small" onclick="document.getElementById('removeUserModal').style.display='flex'">− Remove User</button></div></div>
+      <div class="admin-card"><h4>🪑 Seat Limits</h4><p>Subscription seat count controls active users.</p><span class="admin-stat">12 / 20</span><p style="font-size:11px;">Seats in use / Total purchased</p></div>
+      <div class="admin-card"><h4>📝 Notes Synced</h4><p>Total notes synced across all team members.</p><span class="admin-stat" id="adminNotes">0</span></div>
+      <div class="admin-card"><h4>📍 Miles Logged</h4><p>Total mileage captured via GPS.</p><span class="admin-stat" id="adminMiles">0.0 mi</span></div>
+      <div class="admin-card"><h4>📡 Staff Tracking Entries</h4><p>Auto-captured location entries at note sync time.</p><span class="admin-stat" id="adminStaff">0</span></div>
+      <div class="admin-card" style="grid-column:1/-1;">
+        <h4>📍 All Staff Mileage (Admin View)</h4>
+        <p style="margin-bottom:12px;">Admin can see every team member's daily and weekly mileage totals below.</p>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;">
+          <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;"><p style="font-size:10px;color:var(--muted);margin:0 0 4px;font-weight:800;text-transform:uppercase;">All Staff Today</p><p style="font-size:22px;font-weight:900;color:var(--green);margin:0;" id="adminAllTodayMiles">0.0 mi</p></div>
+          <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;"><p style="font-size:10px;color:var(--muted);margin:0 0 4px;font-weight:800;text-transform:uppercase;">All Staff This Week</p><p style="font-size:22px;font-weight:900;color:var(--blue);margin:0;" id="adminAllWeekMiles">0.0 mi</p></div>
+          <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;"><p style="font-size:10px;color:var(--muted);margin:0 0 4px;font-weight:800;text-transform:uppercase;">Total Trips Logged</p><p style="font-size:22px;font-weight:900;color:#ffd36e;margin:0;" id="adminTotalTrips">0</p></div>
+          <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center;"><p style="font-size:10px;color:var(--muted);margin:0 0 4px;font-weight:800;text-transform:uppercase;">Staff Active Today</p><p style="font-size:22px;font-weight:900;color:#c9aeff;margin:0;" id="adminStaffLoggedToday">0</p></div>
+        </div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Staff Name</th><th>Miles Today</th><th>Miles This Week</th><th>Total Trips</th><th>Last Trip</th></tr></thead>
+          <tbody id="adminMileageTable"><tr><td colspan="5" style="text-align:center;color:#888;">No trips logged yet.</td></tr></tbody></table>
+        </div>
+      </div>
+    
+
+    <!-- OpenPhone Integration Tip -->
+    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.2);border-radius:14px;padding:16px;margin-top:16px;">
+      <h4 style="color:#49b6ff;margin:0 0 8px;font-size:14px;">📱 Business Phone System — Recommended</h4>
+      <p style="color:var(--muted);font-size:13px;margin:0 0 10px;line-height:1.6;">For a dedicated business number (separate from personal cells), we recommend <strong style="color:var(--text);">OpenPhone</strong>. Your team gets a shared business number, call recording, and a mobile app. Works seamlessly with HospiceLink.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <a href="https://www.openphone.com" target="_blank" class="btn btn-blue btn-small">🔗 openphone.com</a>
+        <span style="color:var(--muted);font-size:12px;">~$13/user/mo · Shared team inbox · Call recording · Mobile app</span>
+      </div>
+      <p style="color:var(--muted);font-size:11px;margin:10px 0 0;">💡 How it works: When you click 📱 Text or 📧 Email on any prospect or referral, your OpenPhone app opens pre-filled with the message. It sends from your business number — not your personal cell. Everything auto-logs back to HospiceLink Notes.</p>
+    </div></div>
+    <!-- STAFF TRACKING — Admin eyes only -->
+    <div style="margin-top:24px;">
+      <h4 style="color:#c9aeff;margin:0 0 10px;">📍 Staff Tracking</h4>
+      <p style="color:var(--muted);font-size:13px;margin:0 0 12px;">Auto-captured each time a team member clicks "Sync &amp; Save Note". Location is recorded at sync time.</p>
+      <div class="table-wrap">
+        <table><thead><tr><th>Staff</th><th>Position</th><th>Date</th><th>Time</th><th>📍 Location at Sync</th><th>Next Step</th></tr></thead>
+        <tbody id="staffTrackingBody">
+          <tr><td>Angela</td><td>Nurse</td><td>2026-04-12</td><td>9:05 AM</td><td><span class="pill pill-green">📍 Dallas, TX — 32.7767°N 96.7970°W</span></td><td>RN Assessment Scheduled</td></tr>
+          <tr><td>Ericka</td><td>Marketer</td><td>2026-04-11</td><td>1:15 PM</td><td><span class="pill pill-green">📍 Plano, TX — 33.0198°N 96.6989°W</span></td><td>CM Follow-Up (Status Update)</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+    <div style="margin-top:16px;">
+      <h4 style="color:#c9aeff;margin:0 0 10px;">Current Users</h4>
+      <div class="table-wrap">
+        <table><thead><tr><th>Name</th><th>Title / Role</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="adminUserBody">
+          <tr><td>Ericka</td><td>Marketer</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-red btn-small" onclick="document.getElementById('removeUserModal').style.display='flex'">Remove</button></td></tr>
+          <tr><td>Angela</td><td>Nurse</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-red btn-small" onclick="document.getElementById('removeUserModal').style.display='flex'">Remove</button></td></tr>
+          <tr><td>Admin</td><td>Administrator</td><td><span class="pill pill-purple">Admin</span></td><td>—</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- TAB-REMINDERS -->
+<div class="tab-pane" id="tab-reminders">
+  <div class="topbar"><div><h2>📅 Follow-Up Reminders</h2><p>Auto-populated from the "Next Step Due Date" you set on each prospect</p></div></div>
+  <section class="section">
+    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;">
+      <p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How this works:</strong> When you add a prospect and set a <strong>Next Step Due Date</strong>, it automatically appears here. Overdue items show in red. Due today in yellow. In the live CRM, you also get a daily 7am email with your reminders for the day.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;">
+      <div style="background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.3);border-radius:12px;padding:14px;text-align:center;"><p style="color:#f87171;font-size:10px;font-weight:800;margin:0 0 4px;text-transform:uppercase;">⚠️ Overdue</p><p style="font-size:28px;font-weight:900;color:#dc2626;margin:0;" id="remOverdueCount">0</p></div>
+      <div style="background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.3);border-radius:12px;padding:14px;text-align:center;"><p style="color:#fbbf24;font-size:10px;font-weight:800;margin:0 0 4px;text-transform:uppercase;">📅 Due Today</p><p style="font-size:28px;font-weight:900;color:#f59e0b;margin:0;" id="remTodayCount">0</p></div>
+      <div style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);border-radius:12px;padding:14px;text-align:center;"><p style="color:#60a5fa;font-size:10px;font-weight:800;margin:0 0 4px;text-transform:uppercase;">📆 This Week</p><p style="font-size:28px;font-weight:900;color:#3b82f6;margin:0;" id="remWeekCount">0</p></div>
+    </div>
+    <div id="remindersList" style="background:var(--panel);border:1px solid var(--line);border-radius:12px;">
+      <div style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.06);font-size:12px;font-weight:800;text-transform:uppercase;color:var(--muted);">Your Follow-Up List (from prospect due dates)</div>
+      <div id="remindersBody"></div>
+      <div id="remindersEmpty" style="padding:20px;text-align:center;color:var(--muted);font-size:13px;">No follow-ups due yet. Add a prospect with a Next Step Due Date to see reminders here.</div>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin:12px 0 0;">💡 To add a reminder: go to <strong>Add Prospect</strong> → fill in Next Step → set a <strong>Next Step Due Date</strong>. That date drives this entire tab.</p>
+  </section>
+</div>
+
+<!-- TAB-REENGAGEMENT -->
+<div class="tab-pane" id="tab-reengagement">
+  <div class="topbar"><div><h2>🔁 Re-Engagement Queue</h2><p>Lost prospects worth re-contacting</p></div></div>
+  <section class="section">
+    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How Re-Engagement works:</strong> This tab automatically shows prospects that have been marked <strong>Lost</strong> for 30 or more days. Studies show 20–30% of lost hospice prospects eventually convert when someone reaches back out. Click <strong>Re-Engage</strong> to move them back into your active pipeline as an Inquiry.</p></div>
+    <div style="background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.2);border-radius:12px;padding:12px 14px;margin-bottom:14px;"><p style="color:#fbbf24;font-size:13px;margin:0;">💡 Studies show 20–30% of lost hospice prospects convert when re-contacted at the right time.</p></div>
+    <div id="reengagementList" style="margin-bottom:12px;"></div>
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-bottom:1px solid rgba(255,255,255,.06);"><div><div style="font-weight:700;font-size:13px;">Helen P. — Lost 45 days ago</div><div style="font-size:11px;color:var(--muted);">Insurance issue · Physician Office</div></div><button class="btn btn-blue btn-small" onclick="this.textContent='✅ Re-assigned';this.disabled=true;">Re-Engage →</button></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-bottom:1px solid rgba(255,255,255,.06);"><div><div style="font-weight:700;font-size:13px;">Robert H. — Lost 38 days ago</div><div style="font-size:11px;color:var(--muted);">Family not ready · North Park Rehab</div></div><button class="btn btn-blue btn-small" onclick="this.textContent='✅ Re-assigned';this.disabled=true;">Re-Engage →</button></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;"><div><div style="font-weight:700;font-size:13px;">Sandra M. — Lost 62 days ago</div><div style="font-size:11px;color:var(--muted);">Chose competitor · Hospital CM</div></div><button class="btn btn-blue btn-small" onclick="this.textContent='✅ Re-assigned';this.disabled=true;">Re-Engage →</button></div>
+    </div>
+  </section>
+</div>
+
+<!-- TAB-GOALS -->
+<div class="tab-pane" id="tab-goals">
+  <div class="topbar"><div><h2>🎯 Daily Goals</h2><p>Set targets, track daily progress</p></div></div>
+  <section class="section">
+    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How Daily Goals works:</strong> Set your targets on Monday morning using the form on the right. The progress bars on the left update as you log visits, calls, and contacts in the system. This keeps everyone accountable without managers having to check in constantly.</p></div>
+    <div class="grid-2">
+      <div class="note-form-wrap">
+        <h4 style="margin-bottom:14px;">Today's Progress</h4>
+        <div style="margin-bottom:12px;"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#111;margin-bottom:5px;"><span>Facility Visits</span><span>3 / 5</span></div><div style="height:8px;background:#e7edf5;border-radius:4px;"><div style="height:100%;width:60%;background:#2563eb;border-radius:4px;"></div></div></div>
+        <div style="margin-bottom:12px;"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#111;margin-bottom:5px;"><span>Phone Calls</span><span>7 / 10</span></div><div style="height:8px;background:#e7edf5;border-radius:4px;"><div style="height:100%;width:70%;background:#16a34a;border-radius:4px;"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#111;margin-bottom:5px;"><span>Referral Contacts</span><span>2 / 3</span></div><div style="height:8px;background:#e7edf5;border-radius:4px;"><div style="height:100%;width:67%;background:#b45309;border-radius:4px;"></div></div></div>
+      </div>
+      <div class="note-form-wrap">
+        <h4 style="margin-bottom:14px;">Set Daily Goals</h4>
+        <div class="field"><label>Facility Visits Target</label><input type="number" value="5" min="1" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></div>
+        <div class="field"><label>Phone Calls Target</label><input type="number" value="10" min="1" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></div>
+        <div class="field"><label>Referral Contacts Target</label><input type="number" value="3" min="1" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></div>
+        <button class="btn btn-green btn-small" onclick="alert('Goals saved!')">Save Goals</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- TAB-IMPORT -->
+<div class="tab-pane" id="tab-import">
+  <div class="topbar"><div><h2>📤 Import Data</h2><p>Switch from any CRM in minutes</p></div></div>
+  <section class="section">
+
+    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:16px;">
+      <p style="color:var(--text);font-size:13px;margin:0 0 8px;"><strong>📌 What this tab does:</strong> <strong>Import</strong> means you are bringing data IN to HospiceLink from somewhere else — like an Excel spreadsheet or another CRM. This is a one-time or occasional action.</p>
+      <p style="color:var(--muted);font-size:12px;margin:0;"><strong>Export</strong> (the CSV button on Prospect Records) means sending data OUT of HospiceLink — like downloading your prospect list for a meeting or report. They are opposite directions. Import = bring in. Export = send out.</p>
+    </div>
+    <div id="importDrop" onclick="document.getElementById('csvFileIn').click()" style="border:2px dashed rgba(73,182,255,.3);border-radius:16px;padding:40px;text-align:center;cursor:pointer;">
+      <div style="font-size:48px;margin-bottom:12px;">📁</div>
+      <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;">Drop your CSV or Excel file here</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:14px;">or click to browse</div>
+      <button class="btn btn-blue" onclick="event.stopPropagation()">Browse Files</button>
+      <input type="file" id="csvFileIn" accept=".csv,.xlsx" style="display:none" onchange="runImport(this)">
+    </div>
+    <div id="importOK" style="display:none;margin-top:14px;background:rgba(140,255,102,.08);border:1px solid rgba(140,255,102,.25);border-radius:14px;padding:28px;text-align:center;">
+      <div style="font-size:48px;margin-bottom:10px;">✅</div>
+      <div style="font-size:18px;font-weight:900;color:#8cff66;margin-bottom:8px;" id="importMsg">Import Complete!</div>
+      <button class="btn btn-blue btn-small" onclick="showTab('prospect-records');document.getElementById('importOK').style.display='none';document.getElementById('importDrop').style.display='block';">View Records →</button>
+    </div>
+    <div style="margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;">
+      <p style="color:var(--text);font-size:13px;font-weight:700;margin:0 0 6px;">📥 Download Sample Template</p>
+      <p style="color:var(--muted);font-size:12px;margin:0 0 10px;">Not sure of the format? Download our sample and fill in your data.</p>
+      <button class="btn btn-gray btn-small" onclick="dlSampleCSV()">📥 Download Sample CSV</button>
+    </div>
+  </section>
+</div>
+
+<!-- TAB-REFERRALPORTAL -->
+<div class="tab-pane" id="tab-referralportal">
+  <div class="topbar"><div><h2>🏥 Facility Referral Portal</h2><p>White-label link for hospital discharge planners</p></div></div>
+  <section class="section">
+    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How the Referral Portal works:</strong> Copy your unique link and share it with every hospital discharge planner and social worker you visit. They fill out a short referral form on their end — name, diagnosis, contact info. It drops directly into your Prospect Records as a new Inquiry. No phone calls. No faxes. No follow-up needed. Print the QR code and leave it at every nursing station.</p></div>
+    <div style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:14px;margin-bottom:16px;"><p style="color:#ffd700;font-size:13px;margin:0;"><strong>⭐ Game-Changer:</strong> Give this link to hospital discharge planners. They fill in a referral — it appears in your Prospect Records instantly as an Inquiry.</p></div>
+    <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px;">
+      <h4 style="color:var(--text);margin:0 0 12px;">Your Referral Portal Link</h4>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;"><div style="flex:1;background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.2);border-radius:10px;padding:10px 14px;font-size:13px;color:#49b6ff;font-family:monospace;">https://wemarketpluscom.org/refer/your-agency</div><button class="btn btn-blue btn-small" onclick="navigator.clipboard.writeText('https://wemarketpluscom.org/refer/your-agency').then(function(){alert('Copied!')})">📋 Copy</button></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;"><button class="btn btn-green btn-small" onclick="window.open('https://wemarketpluscom.org/refer/your-agency','_blank')">👁 Preview</button><button class="btn btn-gray btn-small" onclick="alert('QR code download available in your live CRM. Contact Info@wemarketpluscom.org to activate.')">📥 QR Code</button></div>
+    </div>
+    <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;">
+      <h4 style="color:var(--text);margin:0 0 12px;">Recent Portal Submissions</h4>
+      <div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:13px;font-weight:700;">Mary J.</div><div style="font-size:11px;color:var(--muted);">Baylor — Sarah M.</div></div><span class="pill pill-green">New</span></div>
+      <div style="padding:8px 0;display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:13px;font-weight:700;">Robert T.</div><div style="font-size:11px;color:var(--muted);">North Park — Kim L.</div></div><span class="pill pill-blue">2h ago</span></div>
+      <p style="font-size:11px;color:var(--muted);margin:10px 0 0;">All submissions auto-appear as Inquiry in Prospect Records.</p>
+    </div>
+  </section>
+</div>
+
+<!-- TAB-PLAYBOOK -->
+<div class="tab-pane" id="tab-playbook">
+  <div class="topbar"><div><h2>📘 Playbook Generator</h2><p>AI builds your custom marketing SOP in seconds</p></div></div>
+  <section class="section">
+    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How the Playbook Generator works:</strong> Answer 4 questions: your city, team size, monthly admission goal, and your biggest challenge. Click Generate. The AI builds your complete marketing SOP in seconds — your weekly schedule, your top referral targets, your 30-second pitch, and your 90-day ramp plan. Customized to your exact market. Use it to onboard new marketers.</p></div>
+    <div id="pbForm" style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;">
+      <div class="form-grid-4">
+        <div><label style="display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;">City / Market</label><input id="pbCity" type="text" placeholder="e.g. Dallas, TX" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(73,182,255,.2);border-radius:8px;padding:9px;color:var(--text);font-size:12px;font:inherit;"></div>
+        <div><label style="display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;">Team Size</label><select id="pbTeam" style="width:100%;background:rgba(30,50,80,.9);border:1px solid rgba(73,182,255,.2);border-radius:8px;padding:9px;color:var(--text);font-size:12px;"><option>1 marketer</option><option>2-5 marketers</option><option>6-10 marketers</option><option>10+ marketers</option></select></div>
+        <div><label style="display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;">Monthly Goal</label><input id="pbGoal" type="number" placeholder="e.g. 8" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(73,182,255,.2);border-radius:8px;padding:9px;color:var(--text);font-size:12px;font:inherit;"></div>
+        <div><label style="display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;">Biggest Challenge</label><select id="pbChallenge" style="width:100%;background:rgba(30,50,80,.9);border:1px solid rgba(73,182,255,.2);border-radius:8px;padding:9px;color:var(--text);font-size:12px;"><option>Not enough referral sources</option><option>Low conversion rate</option><option>Team accountability</option><option>Competitor pressure</option></select></div>
+      </div>
+      <div class="note-actions" style="margin-top:14px;"><button class="btn btn-green" id="pbBtn" onclick="genPlaybook()">🤖 Generate My Playbook</button></div>
+    </div>
+    <div id="pbResult" style="display:none;margin-top:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><h4 style="margin:0;color:var(--text);">Your Custom Playbook</h4><button class="btn btn-gray btn-small" onclick="document.getElementById('pbForm').style.display='block';document.getElementById('pbResult').style.display='none';">↺ Redo</button></div>
+      <div id="pbText" style="background:rgba(73,182,255,.04);border:1px solid rgba(73,182,255,.1);border-radius:14px;padding:20px;font-size:13px;color:var(--muted);line-height:1.8;white-space:pre-wrap;max-height:500px;overflow-y:auto;"></div>
+    </div>
+  </section>
+</div>
+
+<!-- TAB-AI -->
+<div class="tab-pane" id="tab-ai">
+  <div class="topbar"><div><h2>🤖 AI Assistant</h2><p>Powered by Claude — clinical workflows, family communications, and referral strategy</p></div></div>
+  <section class="section" style="padding:0;overflow:hidden;">
+    <div style="background:#0a1628;border:1px solid rgba(249,199,79,.25);border-radius:16px;overflow:hidden;">
+      <div style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;"><div style="width:10px;height:10px;background:#8cff66;border-radius:50%;"></div><span style="color:#c9d6ea;font-size:13px;font-weight:700;">HospiceLink AI — Full Suite Assistant</span></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;padding:8px 12px 0;">
+        <span onclick="sendAI('Which referral source is converting best this week?')" style="background:rgba(249,199,79,.12);border:1px solid rgba(249,199,79,.3);color:#f9c74f;padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;cursor:pointer;">Best referral source?</span>
+        <span onclick="sendAI('Draft a family update message for a patient in hospice care')" style="background:rgba(249,199,79,.12);border:1px solid rgba(249,199,79,.3);color:#f9c74f;padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;cursor:pointer;">Draft family update</span>
+        <span onclick="sendAI('What are signs a patient is ready for hospice admission?')" style="background:rgba(249,199,79,.12);border:1px solid rgba(249,199,79,.3);color:#f9c74f;padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;cursor:pointer;">Admission readiness</span>
+        <span onclick="sendAI('Suggest a follow-up cadence for a hospital case manager')" style="background:rgba(249,199,79,.12);border:1px solid rgba(249,199,79,.3);color:#f9c74f;padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;cursor:pointer;">Follow-up cadence</span>
+      </div>
+      <div id="aiMsgs" style="min-height:280px;max-height:420px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;"><div style="padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%;background:#1a2a1a;color:#c8f7c5;border:1px solid rgba(140,255,102,.2);align-self:flex-start;">👋 Hi! I am your HospiceLink AI. I can help with clinical workflows, family communications, referral strategies, and more. What do you need?</div></div>
+      <div style="display:flex;gap:8px;padding:12px;border-top:1px solid rgba(255,255,255,.08);">
+        <input type="text" id="aiIn" placeholder="Ask anything about your CRM, prospects, or strategy…" onkeydown="if(event.key===&quot;Enter&quot;)sendAI()" style="flex:1;background:#0f1929;border:1px solid #334155;border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:13px;">
+        <button onclick="sendAI()" style="background:#f9c74f;color:#000;border:none;border-radius:8px;padding:10px 16px;font-weight:800;cursor:pointer;">Send ➤</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- TAB-TOUCHLOG -->
+<div class="tab-pane" id="tab-touchlog">
+  <div class="topbar"><div><h2>🤝 Referral Source Touch Log</h2><p>Every visit and call logged — admin sees overdue sources at a glance</p></div></div>
+  <section class="section">
+    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How the Touch Log works:</strong> After every visit or call to a referral source, log it here. Select the source, choose the type of touch (In-Person Visit, Phone Call, etc.), enter today's date, and add a quick note. The Admin sees a cold alert when any <strong>Green</strong> referral source hasn't been touched in 14+ days.</p></div>
+    <div class="note-form-wrap" style="margin-bottom:16px;">
+      <h4 style="margin:0 0 12px;">Log a Touch</h4>
+      <div class="form-grid-4">
+        <div class="field"><label>Referral Source</label><select id="touchSource" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></select></div>
+        <div class="field"><label>Touch Type</label><select id="touchType" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"><option>In-Person Visit</option><option>Phone Call</option><option>Text Message</option><option>Email</option><option>Dropped Off Materials</option></select></div>
+        <div class="field"><label>Date</label><input id="touchDate" type="date" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></div>
+        <div class="field"><label>Notes</label><input id="touchNotes" type="text" placeholder="Brief note…" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></div>
+      </div>
+      <div class="note-actions"><button class="btn btn-green" onclick="logTouch()">✅ Log Touch</button></div>
+    </div>
+    <div id="touchAlerts" style="margin-bottom:14px;"></div>
+    <h4 style="color:var(--text);margin:0 0 10px;">Touch History</h4>
+    <div class="table-wrap">
+      <table><thead><tr><th>Referral Source</th><th>Touch Type</th><th>Date</th><th>Days Since</th><th>Notes</th></tr></thead>
+      <tbody id="touchLogBody">
+        <tr><td>Baylor Hospital</td><td>In-Person Visit</td><td>2026-04-14</td><td><span class="pill pill-green">7 days</span></td><td>Left brochures with case manager</td></tr>
+        <tr><td>North Park Rehab</td><td>Phone Call</td><td>2026-04-10</td><td><span class="pill pill-yellow">11 days</span></td><td>Confirmed referral in progress</td></tr>
+        <tr><td>Physician Office</td><td>In-Person Visit</td><td>2026-03-28</td><td><span class="pill pill-red">24 days ⚠️</span></td><td>Met with office manager</td></tr>
+      </tbody></table>
     </div>
   </section>
 </div>
@@ -1391,7 +1398,7 @@ function initAutoProspectSelect(){
   var sel=document.getElementById('autoProspectSelect');
   if(!sel)return;
   var prsp=gs(K.prsp,defProsp());
-  sel.innerHTML='<option value="">— Select a prospect —</option>';
+  sel.innerHTML='<option value="">— Choose a Prospect or Referral Source —</option>';
   prsp.filter(function(p){return p.status!=='Admitted';}).forEach(function(p,i){
     var o=document.createElement('option');o.value=i;o.textContent=p.name+' ('+p.status+')';sel.appendChild(o);
   });
@@ -1788,6 +1795,99 @@ function saveCompleteStep(name,type){
 
 /* ── INIT NOTE PROSPECT SELECT ── */
 function initNoteProspectSelect(){ /* replaced by typeahead */ }
+
+// ── FINAL FIXES ──────────────────────────────────────────────
+
+// A. Override initAutoProspectSelect - runs LAST so it definitively wins
+// Uses assignment so it overrides any prior declaration
+window.initAutoProspectSelect = function() {
+  var sel = document.getElementById('autoProspectSelect');
+  if (!sel) return;
+  var prsp = gs(K.prsp, typeof defProsp==='function' ? defProsp() : []);
+  var refs = gs(K.refs, typeof defRefs==='function' ? defRefs() : []);
+  sel.innerHTML = '<option value="">— Choose a Prospect or Referral Source —</option>';
+  if (prsp.length) {
+    var pg = document.createElement('optgroup'); pg.label = '\ud83d\udc64 Prospects';
+    prsp.filter(function(p){return p.status!=='Admitted';}).forEach(function(p,i){
+      var o=document.createElement('option'); o.value='p:'+i;
+      o.textContent=p.name+' ('+p.status+')'; pg.appendChild(o);
+    });
+    sel.appendChild(pg);
+  }
+  if (refs.length) {
+    var rg = document.createElement('optgroup'); rg.label = '\ud83e\udd1d Referral Sources';
+    refs.forEach(function(r,i){
+      var nm=(r.contactName||r.name||'');
+      var biz=(r.business||'');
+      var o=document.createElement('option'); o.value='r:'+i;
+      o.textContent = nm+(biz?' @ '+biz:'')+(r.status==='Green'?' \ud83d\udfe2':' \ud83d\udd34');
+      rg.appendChild(o);
+    });
+    sel.appendChild(rg);
+  }
+  if (!prsp.length && !refs.length) {
+    var empty = document.createElement('option');
+    empty.textContent = 'No prospects or referrals yet — add them first';
+    empty.disabled = true;
+    sel.appendChild(empty);
+  }
+  sel.onchange = function() {
+    var statusEl = document.getElementById('autoProspectStatus');
+    if (!statusEl) return;
+    var val = this.value;
+    if (!val) { statusEl.textContent = 'Select above to see details'; return; }
+    var parts = val.split(':'); var type=parts[0]; var idx=parseInt(parts[1]);
+    if (type==='p') {
+      var p = gs(K.prsp, typeof defProsp==='function'?defProsp():[])[idx];
+      statusEl.innerHTML = p ? '<strong>'+p.name+'</strong> — '+p.status+(p.nextStep?' | Next: '+p.nextStep:'') : 'Not found';
+    } else {
+      var r = gs(K.refs, typeof defRefs==='function'?defRefs():[])[idx];
+      statusEl.innerHTML = r ? '<strong>'+(r.contactName||r.business)+'</strong> @ '+(r.business||'')+' — '+(r.status||'')+' | Next: '+(r.nextStep||'—') : 'Not found';
+    }
+  };
+};
+
+// B. Override fireAutoForProspect to work with new value format
+window.fireAutoForProspect = function(btn, msg) {
+  var sel = document.getElementById('autoProspectSelect');
+  if (!sel || !sel.value) {
+    alert('Please select a Prospect or Referral Source first (Step 1 above).');
+    return;
+  }
+  var label = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].text : 'selected';
+  btn.textContent = '\u2705 Done'; btn.disabled = true;
+  var log = document.getElementById('autoLog');
+  if (log) {
+    var empties = log.querySelectorAll('div[style*="italic"]');
+    empties.forEach(function(e){e.remove();});
+    var d = document.createElement('div');
+    d.style.cssText = 'background:#fff;color:#111;border-radius:9px;padding:9px 13px;font-size:12px;margin-bottom:6px;';
+    d.textContent = '\u2705 ' + msg + ' \u2014 ' + label + ' \u2014 ' + new Date().toLocaleTimeString();
+    log.prepend(d);
+  }
+};
+
+// C. Hook showTab — ensure automation refreshes with latest data
+var __finalShowTab = typeof showTab==='function' ? showTab : function(){};
+showTab = function(id) {
+  __finalShowTab(id);
+  if (id==='automation') setTimeout(window.initAutoProspectSelect, 80);
+  if (id==='notes') {
+    setTimeout(function(){
+      if(typeof initTnProspectSelect==='function') initTnProspectSelect();
+      if(typeof renderTeamNotes==='function') renderTeamNotes();
+    }, 80);
+  }
+  if (id==='referrals') setTimeout(function(){
+    if(typeof renderReferralSourcesTable==='function') renderReferralSourcesTable();
+  }, 80);
+};
+
+// D. Auto-init on DOMContentLoaded / load
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(window.initAutoProspectSelect, 1800);
+});
+
 </script>
 <script>
 // ── HOSPICELINK DEMO PATCH v2 ─────────────────────────────────
@@ -2281,31 +2381,3 @@ document.addEventListener("click", function(e) {
     drop.style.display = "none";
   }
 });
-
-</script>
-<!-- INVITE USER MODAL -->
-<div id="inviteUserModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:#0d1b2e;border:1px solid rgba(73,182,255,.3);border-radius:20px;padding:28px;width:min(460px,90vw);max-height:90vh;overflow:auto;">
-    <h3 style="color:#fff;margin:0 0 6px;font-size:18px;">➕ Invite Team Member</h3>
-    <p style="color:#64748b;font-size:12px;margin:0 0 16px;">Demo: shows the flow. Live CRM sends real email with login credentials instantly.</p>
-    <div style="margin-bottom:12px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:5px;text-transform:uppercase;">FIRST NAME *</label><input id="invFirstName" type="text" placeholder="First name" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;color:#f0f5ff;font-size:14px;outline:none;box-sizing:border-box;"></div>
-    <div style="margin-bottom:12px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:5px;text-transform:uppercase;">EMAIL ADDRESS *</label><input id="invEmail" type="email" placeholder="team@agency.com" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;color:#f0f5ff;font-size:14px;outline:none;box-sizing:border-box;"></div>
-    <div style="margin-bottom:16px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:5px;text-transform:uppercase;">ROLE</label><select id="invRole" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;color:#f0f5ff;font-size:14px;outline:none;box-sizing:border-box;"><option value="marketer">Marketer</option><option value="nurse">Nurse</option><option value="caregiver">Caregiver</option><option value="admin">Admin</option></select></div>
-    <div id="inviteMsg" style="min-height:18px;font-size:13px;font-weight:700;margin-bottom:12px;"></div>
-    <div style="display:flex;gap:10px;"><button onclick="demoSendInvite()" style="flex:1;background:linear-gradient(90deg,#82f86b,#b8ff79);color:#08101b;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:800;cursor:pointer;">📧 Send Invite</button><button onclick="document.getElementById('inviteUserModal').style.display='none'" style="flex:1;background:rgba(255,255,255,.06);color:#8a9dc0;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button></div>
-  </div>
-</div>
-
-<!-- REMOVE USER MODAL -->
-<div id="removeUserModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:#0d1b2e;border:1px solid rgba(255,107,107,.3);border-radius:20px;padding:28px;width:min(440px,90vw);">
-    <h3 style="color:#fff;margin:0 0 6px;font-size:18px;">➖ Remove Team Member</h3>
-    <p style="color:#64748b;font-size:12px;margin:0 0 16px;">In live CRM, this immediately revokes access and frees the seat.</p>
-    <div style="margin-bottom:12px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:5px;text-transform:uppercase;">EMAIL ADDRESS *</label><input id="removeEmail" type="email" placeholder="team@agency.com" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;color:#f0f5ff;font-size:14px;outline:none;box-sizing:border-box;"></div>
-    <div id="removeMsg" style="min-height:18px;font-size:13px;font-weight:700;margin-bottom:12px;"></div>
-    <div style="display:flex;gap:10px;"><button onclick="demoRemoveUser()" style="flex:1;background:#dc2626;color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:800;cursor:pointer;">Remove Access</button><button onclick="document.getElementById('removeUserModal').style.display='none'" style="flex:1;background:rgba(255,255,255,.06);color:#8a9dc0;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button></div>
-  </div>
-</div>
-
-</body>
-</html>
