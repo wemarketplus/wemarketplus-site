@@ -674,17 +674,17 @@
 
 <!-- REVENUE INTELLIGENCE -->
 <div class="tab-pane" id="tab-revenue">
-  <div class="topbar"><div><h2>💰 Revenue Intelligence</h2><p><span class="pill pill-purple" style="font-size:11px;">🔒 Admin Only</span> Executive-level financial insights and forecasting</p></div></div>
+ <div class="topbar"><div><h2>💰 Revenue Intelligence</h2><p><span class="pill pill-purple" style="font-size:11px;">🔒 Admin Only</span> Executive-level financial insights and forecasting</p></div></div>
   <section class="section" style="padding-top:12px;">
     <div style="background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.25);border-radius:12px;padding:14px 18px;margin-bottom:20px;">
       <p style="color:#ffd700;font-size:13px;font-weight:800;margin:0 0 4px;">🔒 Admin Settings — Enter Your Agency Numbers</p>
-      <p style="color:var(--muted);font-size:12px;margin:0;">Enter your figures below and click <strong style="color:#ffd700;">Save &amp; Calculate</strong>. Numbers auto-update all KPIs.</p>
+      <p style="color:var(--muted);font-size:12px;margin:0;">Enter your figures and click <strong style="color:#ffd700;">Save &amp; Calculate</strong>. All KPIs update automatically and persist across sessions.</p>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;">
       <div style="background:var(--panel);border:1px solid rgba(255,215,0,.3);border-radius:14px;padding:16px;">
         <label style="color:var(--muted);font-size:11px;font-weight:800;text-transform:uppercase;display:block;margin-bottom:8px;">Revenue Per Admission ($)</label>
         <input id="revPerAdmit" type="number" placeholder="e.g. 4200" min="0" style="width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,215,0,.4);border-radius:8px;padding:10px;color:#ffd700;font-size:22px;font-weight:900;box-sizing:border-box;outline:none;">
-        <p style="color:var(--muted);font-size:11px;margin:6px 0 0;">Avg revenue your agency earns per admitted patient</p>
+        <p style="color:var(--muted);font-size:11px;margin:6px 0 0;">Avg revenue per admitted patient</p>
       </div>
       <div style="background:var(--panel);border:1px solid rgba(73,182,255,.3);border-radius:14px;padding:16px;">
         <label style="color:var(--muted);font-size:11px;font-weight:800;text-transform:uppercase;display:block;margin-bottom:8px;">Monthly Marketing Cost ($)</label>
@@ -697,33 +697,18 @@
       <div id="revSaveStatus" style="margin-top:8px;font-size:12px;color:#166534;font-weight:700;min-height:18px;"></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
-      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;">
-        <p style="color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;margin:0 0 6px;">Revenue Per Source</p>
-        <p id="kpiRevPerSource" style="font-size:26px;font-weight:900;color:#8cff66;margin:0;">—</p>
-        <p style="color:var(--muted);font-size:10px;margin:4px 0 0;">avg / referral source</p>
-      </div>
-      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;">
-        <p style="color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;margin:0 0 6px;">Cost Per Admission</p>
-        <p id="kpiCostPerAdmit" style="font-size:26px;font-weight:900;color:#49b6ff;margin:0;">—</p>
-        <p style="color:var(--muted);font-size:10px;margin:4px 0 0;">avg marketing cost</p>
-      </div>
-      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;">
-        <p style="color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;margin:0 0 6px;">Forecasted Admits</p>
-        <p id="kpiForecasted" style="font-size:26px;font-weight:900;color:#f9c74f;margin:0;">—</p>
-        <p style="color:var(--muted);font-size:10px;margin:4px 0 0;">this month (projected)</p>
-      </div>
-      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;">
-        <p style="color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;margin:0 0 6px;">Lost Opportunity</p>
-        <p id="kpiLostOpp" style="font-size:26px;font-weight:900;color:#dc2626;margin:0;">—</p>
-        <p style="color:var(--muted);font-size:10px;margin:4px 0 0;">from unconverted leads</p>
-      </div>
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;"><p style="color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;margin:0 0 6px;">Revenue Per Source</p><p id="kpiRevPerSource" style="font-size:26px;font-weight:900;color:#8cff66;margin:0;">—</p><p style="color:var(--muted);font-size:10px;margin:4px 0 0;">avg / referral source</p></div>
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;"><p style="color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;margin:0 0 6px;">Cost Per Admission</p><p id="kpiCostPerAdmit" style="font-size:26px;font-weight:900;color:#49b6ff;margin:0;">—</p><p style="color:var(--muted);font-size:10px;margin:4px 0 0;">avg marketing cost</p></div>
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;"><p style="color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;margin:0 0 6px;">Forecasted Admits</p><p id="kpiForecasted" style="font-size:26px;font-weight:900;color:#f9c74f;margin:0;">—</p><p style="color:var(--muted);font-size:10px;margin:4px 0 0;">this month (projected)</p></div>
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;"><p style="color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;margin:0 0 6px;">Lost Opportunity</p><p id="kpiLostOpp" style="font-size:26px;font-weight:900;color:#dc2626;margin:0;">—</p><p style="color:var(--muted);font-size:10px;margin:4px 0 0;">from unconverted leads</p></div>
     </div>
     <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;">
       <h4 style="color:var(--text);margin:0 0 14px;font-size:14px;">💵 Revenue by Referral Source</h4>
-      <div id="revSourceBars"><p style="color:var(--muted);font-size:12px;">Enter values above and click Save &amp; Calculate to see revenue by source.</p></div>
+      <div id="revSourceBars"><p style="color:var(--muted);font-size:12px;">Enter values above and click Save &amp; Calculate to see breakdown.</p></div>
     </div>
   </section>
 </div>
+
 
   <section class="section">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
