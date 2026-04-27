@@ -107,7 +107,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
   <button onclick="logout()" style="display:block;width:100%;margin-top:8px;background:rgba(224,85,85,.12);border:1px solid rgba(224,85,85,.3);color:#ff8080;border-radius:12px;padding:11px;font-size:13px;font-weight:800;cursor:pointer;">🚪 Logout</button>
 
   </nav>
-  <div class="footer-actions" style="margin-top:20px;"><a href="https://wemarketpluscom.org" class="btn btn-blue btn-small">Back to Website</a></div>
+  
 </aside>
 
 <main class="main">
@@ -488,7 +488,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
     <div class="admin-banner"><h3 style="margin:0;color:#c9aeff;">🔒 Admin Only</h3><span class="pill pill-purple">Admin View Only</span></div>
     <p class="admin-note">This section is hidden from standard users. Only the Admin account holder can view seat limits, manage users, review staff tracking entries, and notes totals.</p>
     <div class="admin-grid">
-      <div class="admin-card"><h4>👥 User Management</h4><p>Admin manages user access and subscription seat limits.</p><div class="mini-actions" style="margin-top:10px;"><button class="btn btn-green btn-small" onclick="openModal('inviteUserModal')">+ Add User</button><button class="btn btn-red btn-small" onclick="openRemoveUserModal()">− Remove User</button></div></div>
+      <div class="admin-card"><h4>👥 User Management</h4><p>Admin manages user access and subscription seat limits.</p><div class="mini-actions" style="margin-top:10px;"><button class="btn btn-green btn-small" onclick="document.getElementById('inviteUserModal').style.display='flex'">+ Add User</button><button class="btn btn-red btn-small" onclick="document.getElementById('removeUserModal').style.display='flex'">− Remove User</button></div></div>
       <div class="admin-card"><h4>🪑 Seat Limits</h4><p>Subscription seat count controls active users.</p><span class="admin-stat">8 / 10</span><p style="font-size:11px;">Seats in use / Total purchased</p></div>
       <div class="admin-card"><h4>📝 Notes Synced</h4><p>Total notes synced across all team members.</p><span class="admin-stat" id="adminNotes">0</span></div>
     </div>
@@ -883,7 +883,7 @@ function renderProspectRecords(){
   prsp.filter(p=>{if(!q)return true;return[p.name,p.phone,p.email,p.address,p.secondary].some(v=>(v||"").toLowerCase().includes(q));}).forEach((p,_,arr)=>{
     const i=arr.indexOf(p);const tr=document.createElement("tr");
     const sB=p.phone?`<button class="btn btn-small" style="background:#7c3aed;color:#fff;padding:3px 7px;font-size:10px;" onclick="sendContactSMS('${p.phone}','${p.name}','prospect')">📱</button>`:'';
-    const eB=p.email?`<button class="btn btn-small" style="background:#2563eb;color:#fff;padding:3px 7px;font-size:10px;" onclick="sendContactEmail('${p.email}','${p.name}','prospect')">📧</button>`:'';
+    const eB=p.email?`<button class="btn btn-small" style="background:#2563eb;color:#fff;padding:3px 7px;font-size:10px;" onclick="sendContactEmail('${p.email}','${p.name}','prospect')">📧</button>`:'';const cB=p.phone?`<a href="tel:${p.phone}" class="btn btn-small" style="background:#059669;color:#fff;padding:3px 7px;font-size:10px;text-decoration:none;">📞</a>`:'';
     const due=p.nextStepDate?`<span style="font-size:11px;font-weight:700;color:${new Date(p.nextStepDate)<new Date()?'#dc2626':'#3b82f6'}">${p.nextStepDate}</span>`:'—';
     tr.innerHTML=`<td><input type="radio" name="selProsp" value="${i}"></td><td style="font-weight:700">${p.name}</td><td>${pSt(p.status)}</td><td>${p.phone||'—'} ${sB} ${cB}</td><td>${p.email||'—'} ${eB}</td><td>${p.address||'—'}</td><td>${p.secondary||'—'}</td><td>${p.source||'—'}</td><td>${p.marketer||'—'}</td><td>${p.nextStep||'—'}</td><td>${due}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">✏️ Edit</button></td>`;
     tb.appendChild(tr);
@@ -1692,7 +1692,258 @@ document.addEventListener("click", function(e) {
   }
 });
 
+
+// ── CRM FIX PATCH ────────────────────────────────────────────
+
+// 1. Fix openModal for invite/remove - use style.display instead of classList
+function openModal(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  if (el.classList && el.classList.contains('modal-overlay')) {
+    el.classList.add('open');
+  } else {
+    el.style.display = 'flex';
+  }
+}
+function closeModal(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  if (el.classList && el.classList.contains('modal-overlay')) {
+    el.classList.remove('open');
+  } else {
+    el.style.display = 'none';
+  }
+}
+function openRemoveUserModal() {
+  document.getElementById('removeUserModal').style.display = 'flex';
+}
+
+// 2. Invite + Remove user handlers (real API with fallback)
+async function doSendInvite() {
+  var firstName = (document.getElementById('invFirstName')||{value:''}).value.trim();
+  var email = (document.getElementById('invEmail2')||{value:''}).value.trim();
+  var role = (document.getElementById('invRole2')||{value:'marketer'}).value;
+  var msg = document.getElementById('inviteMsg2');
+  if (!firstName || !email) { msg.style.color='#dc2626'; msg.textContent='First name and email are required.'; return; }
+  msg.style.color='#64748b'; msg.textContent='Sending invite...';
+  try {
+    var token = localStorage.getItem('hl_token') || '';
+    var res = await fetch('https://wemarketplus-backend-1.onrender.com/api/users/invite', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ firstName: firstName, email: email, role: role })
+    });
+    var data = await res.json();
+    if (res.ok) {
+      msg.style.color='#166534';
+      msg.textContent = '✅ Invite sent to ' + email + '! They will receive login credentials by email.';
+      document.getElementById('invFirstName').value='';
+      document.getElementById('invEmail2').value='';
+      setTimeout(function(){ document.getElementById('inviteUserModal').style.display='none'; msg.textContent=''; }, 3000);
+    } else {
+      msg.style.color='#dc2626';
+      msg.textContent = '❌ ' + (data.message || 'Error sending invite. Contact Info@wemarketpluscom.org');
+    }
+  } catch(e) {
+    msg.style.color='#dc2626';
+    msg.textContent = '❌ Unable to reach server. Email Info@wemarketpluscom.org to add ' + email + ' as ' + role + '.';
+  }
+}
+
+async function doRemoveUser() {
+  var email = (document.getElementById('removeEmail2')||{value:''}).value.trim();
+  var msg = document.getElementById('removeMsg2');
+  if (!email) { msg.textContent='Email is required.'; return; }
+  if (!confirm('Remove ' + email + '? Their access will be revoked immediately.')) return;
+  msg.style.color='#64748b'; msg.textContent='Removing...';
+  try {
+    var token = localStorage.getItem('hl_token') || '';
+    var res = await fetch('https://wemarketplus-backend-1.onrender.com/api/team/remove', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ email: email })
+    });
+    var data = await res.json();
+    if (res.ok) {
+      msg.style.color='#166534';
+      msg.textContent = '✅ ' + email + ' removed successfully.';
+      setTimeout(function(){ document.getElementById('removeUserModal').style.display='none'; document.getElementById('removeEmail2').value=''; msg.textContent=''; }, 2500);
+    } else {
+      msg.style.color='#dc2626';
+      msg.textContent = '❌ ' + (data.message || 'Error. Contact Info@wemarketpluscom.org to remove user.');
+    }
+  } catch(e) {
+    msg.style.color='#dc2626';
+    msg.textContent = '❌ Unable to reach server. Email Info@wemarketpluscom.org to remove ' + email + '.';
+  }
+}
+
+// 3. Fix saveReferralFromModal - don't call closeModal("addReferralModal") since it's inline now
+var _origSaveReferral = typeof saveReferralFromModal === 'function' ? saveReferralFromModal : null;
+saveReferralFromModal = function() {
+  var cn=(document.getElementById('refContactName')||{value:''}).value.trim();
+  var biz=(document.getElementById('refBusiness')||{value:''}).value.trim();
+  if(!cn||!biz){alert('Contact name and business name are required.');return;}
+  var nextStep=(document.getElementById('refNextStep')||{value:''}).value;
+  var nextTouchDate=(document.getElementById('refNextTouchDate')||{value:''}).value||'';
+  if(!nextStep){alert('Please select a Next Step.');return;}
+  if(!nextTouchDate){alert('Please set a Next Touch Date — this queues a reminder in the Reminders tab.');return;}
+  var refs=gs(K.refs,defRefs());
+  refs.push({
+    contactName:cn,business:biz,
+    phone:(document.getElementById('refPhone')||{value:''}).value.trim(),
+    email:(document.getElementById('refEmail')||{value:''}).value.trim(),
+    address:(document.getElementById('refAddress')||{value:''}).value.trim(),
+    status:(document.getElementById('refStatus')||{value:'Red'}).value,
+    nextStep:nextStep,nextTouchDate:nextTouchDate
+  });
+  ss(K.refs,refs);
+  if(typeof loadReferralSources==='function')loadReferralSources();
+  if(typeof renderReferralRecords==='function')renderReferralRecords();
+  if(typeof renderReminders==='function')renderReminders();
+  // Clear form
+  ['refContactName','refBusiness','refPhone','refEmail','refAddress'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  var rns=document.getElementById('refNextStep');if(rns)rns.value='';
+  var rnd=document.getElementById('refNextTouchDate');if(rnd)rnd.value='';
+  var rdb=document.getElementById('refStepDescBox');if(rdb)rdb.style.display='none';
+  var rss=document.getElementById('refSaveStatus');
+  if(rss){rss.textContent='✅ '+cn+' at '+biz+' saved!';setTimeout(function(){rss.textContent='';},4000);}
+  // Show success and navigate to Referral Sources
+  alert('✅ Referral source saved! They now appear in Referral Sources.');
+  if(typeof showTab==='function') showTab('referrals');
+};
+
+// 4. Fix Automation - populate autoProspectSelect and make triggers work
+function initAutoProspectSelect(){
+  var sel=document.getElementById('autoProspectSelect');
+  if(!sel)return;
+  var prsp=gs(K.prsp,defProsp());
+  sel.innerHTML='<option value="">— Select a prospect —</option>';
+  prsp.forEach(function(p,i){
+    var o=document.createElement('option');
+    o.value=i;
+    o.textContent=p.name+' ('+p.status+')';
+    sel.appendChild(o);
+  });
+}
+
+function fireAutoForProspect(btn, msg) {
+  var sel=document.getElementById('autoProspectSelect');
+  var prosp='';
+  if(sel && sel.value!==''){
+    var prsp=gs(K.prsp,defProsp());
+    var p=prsp[parseInt(sel.value)];
+    if(p) prosp=' for '+p.name;
+  }
+  btn.textContent='✅ Done'; btn.disabled=true;
+  var log=document.getElementById('autoLog');
+  if(log){
+    var d=document.createElement('div');
+    d.style.cssText='background:#fff;color:#111;border-radius:9px;padding:9px 13px;font-size:12px;margin-bottom:6px;';
+    d.textContent='✅ '+msg+prosp+' — '+new Date().toLocaleTimeString();
+    log.prepend(d);
+  }
+  // Update prospect status display
+  var statusEl=document.getElementById('autoProspectStatus');
+  if(statusEl && prosp) statusEl.textContent='Last action'+prosp+': '+msg.split('—')[0].trim();
+}
+
+// 5. Fix AI - use Anthropic API directly (same as demo)
+var aiHist = [];
+sendAI = async function(msg) {
+  var inp = document.getElementById('aiIn');
+  if (!msg) { msg = inp ? inp.value.trim() : ''; if (!msg) return; if(inp) inp.value=''; }
+  var c = document.getElementById('aiMsgs');
+  if (!c) return;
+  var u = document.createElement('div');
+  u.style.cssText = 'padding:10px 14px;border-radius:12px;font-size:13px;max-width:80%;background:#1e3a5f;color:#e2e8f0;align-self:flex-end;margin:4px 0;';
+  u.textContent = msg; c.appendChild(u);
+  var t = document.createElement('div');
+  t.style.cssText = 'padding:10px 14px;border-radius:12px;font-size:13px;color:#94a3b8;font-style:italic;align-self:flex-start;margin:4px 0;';
+  t.textContent = 'Thinking...'; c.appendChild(t); c.scrollTop = c.scrollHeight;
+  aiHist.push({role:'user',content:msg});
+  try {
+    var r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 600,
+        system: 'You are an AI assistant for HospiceLink, a hospice marketing CRM. Help with prospect follow-up scripts, referral source strategies, team coordination, and daily priorities. Be concise and practical.',
+        messages: aiHist.slice(-10)
+      })
+    });
+    var d = await r.json();
+    var rep = (d.content && d.content[0]) ? d.content[0].text : null;
+    if (!rep) throw new Error('No content');
+    aiHist.push({role:'assistant',content:rep});
+    t.style.cssText = 'padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%;background:#1a2a1a;color:#c8f7c5;border:1px solid rgba(140,255,102,.2);align-self:flex-start;margin:4px 0;';
+    t.textContent = rep;
+  } catch(e) {
+    // Fallback to backend
+    try {
+      var r2 = await fetch('https://wemarketplus-backend-1.onrender.com/api/ai', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,
+          system:'You are an AI assistant for HospiceLink, a hospice marketing CRM. Be concise.',
+          messages:aiHist.slice(-10)})
+      });
+      var d2 = await r2.json();
+      var rep2 = (d2.content && d2.content[0]) ? d2.content[0].text : null;
+      if (!rep2) throw new Error('No content');
+      aiHist.push({role:'assistant',content:rep2});
+      t.style.cssText = 'padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%;background:#1a2a1a;color:#c8f7c5;border:1px solid rgba(140,255,102,.2);align-self:flex-start;margin:4px 0;';
+      t.textContent = rep2;
+    } catch(e2) {
+      t.style.cssText = 'padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%;background:#1a2a1a;color:#c8f7c5;align-self:flex-start;margin:4px 0;';
+      t.textContent = '⚠️ AI temporarily unavailable. Try again in a moment.';
+    }
+  }
+  c.scrollTop = c.scrollHeight;
+};
+
+// 6. Call initAutoProspectSelect on tab open
+var _origST2 = typeof showTab === 'function' ? showTab : function(){};
+showTab = function(id) {
+  _origST2(id);
+  if (id === 'automation') setTimeout(initAutoProspectSelect, 100);
+};
+
+// Initialize automation select on load
+setTimeout(initAutoProspectSelect, 1500);
+
 </script>
+
+
+<!-- INVITE USER MODAL -->
+<div id="inviteUserModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#0d1b2e;border:1px solid rgba(73,182,255,.3);border-radius:20px;padding:28px;width:min(460px,90vw);max-height:90vh;overflow:auto;">
+    <h3 style="color:#fff;margin:0 0 6px;font-size:18px;">Invite Team Member</h3>
+    <p style="color:#64748b;font-size:12px;margin:0 0 16px;">Send an email invitation with login credentials.</p>
+    <div style="margin-bottom:12px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:5px;text-transform:uppercase;">FIRST NAME *</label><input id="invFirstName" type="text" placeholder="First name" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;color:#f0f5ff;font-size:14px;outline:none;box-sizing:border-box;"></div>
+    <div style="margin-bottom:12px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:5px;text-transform:uppercase;">EMAIL ADDRESS *</label><input id="invEmail2" type="email" placeholder="team@agency.com" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;color:#f0f5ff;font-size:14px;outline:none;box-sizing:border-box;"></div>
+    <div style="margin-bottom:16px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:5px;text-transform:uppercase;">ROLE</label><select id="invRole2" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;color:#f0f5ff;font-size:14px;outline:none;box-sizing:border-box;"><option value="marketer">Marketer</option><option value="nurse">Nurse</option><option value="caregiver">Caregiver</option><option value="admin">Admin</option></select></div>
+    <div id="inviteMsg2" style="min-height:18px;font-size:13px;font-weight:700;margin-bottom:12px;color:#166534;"></div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="doSendInvite()" style="flex:1;background:linear-gradient(90deg,#82f86b,#b8ff79);color:#08101b;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:800;cursor:pointer;">Send Invite</button>
+      <button onclick="document.getElementById('inviteUserModal').style.display='none'" style="flex:1;background:rgba(255,255,255,.06);color:#8a9dc0;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- REMOVE USER MODAL -->
+<div id="removeUserModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#0d1b2e;border:1px solid rgba(255,107,107,.3);border-radius:20px;padding:28px;width:min(440px,90vw);">
+    <h3 style="color:#fff;margin:0 0 6px;font-size:18px;">Remove Team Member</h3>
+    <p style="color:#64748b;font-size:12px;margin:0 0 16px;">This immediately revokes their access and frees the seat.</p>
+    <div style="margin-bottom:12px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:5px;text-transform:uppercase;">EMAIL ADDRESS *</label><input id="removeEmail2" type="email" placeholder="team@agency.com" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;color:#f0f5ff;font-size:14px;outline:none;box-sizing:border-box;"></div>
+    <div id="removeMsg2" style="min-height:18px;font-size:13px;font-weight:700;margin-bottom:12px;color:#166534;"></div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="doRemoveUser()" style="flex:1;background:#dc2626;color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:800;cursor:pointer;">Remove Access</button>
+      <button onclick="document.getElementById('removeUserModal').style.display='none'" style="flex:1;background:rgba(255,255,255,.06);color:#8a9dc0;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
