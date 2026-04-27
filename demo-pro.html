@@ -87,7 +87,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
     <a data-tab="dashboard" class="active" onclick="showTab('dashboard');return false;">Dashboard</a>
     <a data-tab="prospects" onclick="showTab('prospects');return false;">Add Prospect</a>
     <a data-tab="prospect-records" onclick="showTab('prospect-records');return false;">Prospect Records</a>
-    <a data-tab="referrals" onclick="showTab('referrals');return false;">Referral Sources</a>
+    <a data-tab="referrals" onclick="showTab('referrals');return false;">➕ Add Referral</a>
     <a data-tab="referral-records" onclick="showTab('referral-records');return false;">Referral Records</a>
     <a data-tab="pipeline" onclick="showTab('pipeline');return false;">Pipeline</a>
     <a data-tab="territory" onclick="showTab('territory');return false;">Territory View</a>
@@ -160,7 +160,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
         <div class="field"><label>Phone</label><input id="prospectPhone" type="tel" placeholder="(469) 555-0100"></div>
         <div class="field"><label>Email</label><input id="prospectEmail" type="email" placeholder="name@email.com"></div>
         <div class="field"><label>Address</label><input id="prospectAddress" type="text" placeholder="123 Main St, Dallas TX"></div>
-        <div class="field"><label>Secondary Contact</label><input id="prospectSecondary" type="text" placeholder="Secondary contact name"></div>
+        <div class="field"><label>Secondary Contact Name</label><input id="prospectSecondary" type="text" placeholder="e.g. Jane Smith"></div><div class="field"><label>Relationship</label><input id="prospectSecondaryRelation" type="text" placeholder="e.g. Daughter, POA, Spouse"></div><div class="field"><label>Secondary Phone</label><input id="prospectSecondaryPhone" type="tel" placeholder="Secondary phone"></div><div class="field"><label>Secondary Email</label><input id="prospectSecondaryEmail" type="email" placeholder="Secondary email (optional)"></div>
         <div class="field" style="grid-column:1/3">
           <label>Next Step <span style="color:#dc2626;">*</span> — tells your team what to do + queues the reminder</label>
           <select id="prospectNextStep" onchange="showProspectStepDesc(this.value)" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;">
@@ -176,8 +176,6 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
               <option value="Admission Paperwork in Progress">Admission Paperwork in Progress</option>
               <option value="CM Follow-Up (Status Update)">CM Follow-Up (Status Update)</option>
               <option value="Overcoming Family Hesitation">Overcoming Family Hesitation</option>
-              <option value="Other">Other</option>
-              
             </select>
           <div id="prospectStepDescBox" style="display:none;background:#fffbeb;border:1px solid rgba(249,199,79,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:#334155;line-height:1.6;margin-top:6px;"></div>
         </div>
@@ -224,7 +222,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
 
 <!-- REFERRAL SOURCES -->
 <div class="tab-pane" id="tab-referrals">
-  <div class="topbar"><div><h2>Referral Sources</h2></div></div>
+  <div class="topbar"><div><h2>➕ Add Referral</h2></div></div>
   <section class="section">
     <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How to use Referral Sources:</strong> This is your account list — every hospital, rehab, SNF, and physician office you call on. <strong>Green</strong> = they're actively sending you referrals. <strong>Red</strong> = they haven't sent yet — these are your priority targets to visit. Click <strong>📱 Text</strong> or <strong>📧 Email</strong> on any source to contact them — the message auto-logs to your Notes tab.</p></div>
     <div class="mini-actions" style="margin-bottom:12px;">
@@ -400,9 +398,9 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
         <div><label for="noteDate">Date</label><input id="noteDate" type="date"></div>
         <div><label for="noteTime">Time</label><input id="noteTime" type="time"></div>
         <div>
-          <label>Select Prospect (optional)</label>
+          <label>Select Prospect or Referral (optional)</label>
           <select id="noteProspectSelect" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;">
-            <option value="">— General note (no specific prospect) —</option>
+            <option value="">— General note (no specific person) —</option>
           </select>
         </div>
         <div>
@@ -420,8 +418,6 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
               <option value="Admission Paperwork in Progress">Admission Paperwork in Progress</option>
               <option value="CM Follow-Up (Status Update)">CM Follow-Up (Status Update)</option>
               <option value="Overcoming Family Hesitation">Overcoming Family Hesitation</option>
-              <option value="Other">Other</option>
-              
             </select>
           <div id="noteStepDescBox" style="display:none;background:#fffbeb;border:1px solid rgba(249,199,79,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:#334155;line-height:1.6;margin-top:6px;"></div>
         </div>
@@ -430,15 +426,15 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
           <input id="noteNextStepDate" type="date" style="border:2px solid rgba(249,199,79,.3);border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;background:#fffbeb;">
           <div style="font-size:11px;color:#f59e0b;margin-top:3px;">Set this to re-queue the reminder after completing a step</div>
         </div>
-        <div style="grid-column:1/-1;"><label for="noteText">Note</label><textarea id="noteText" placeholder="Enter note details here…"></textarea></div>
+        <div style="grid-column:1/-1;"><label for="noteText">Note</label><textarea id="noteText" placeholder="Enter note details here…" spellcheck="true"></textarea></div>
       </div>
       <div class="note-actions"><button class="btn btn-green" onclick="saveDemoNote()">Sync &amp; Save Note</button></div>
       <div id="syncStatus" style="margin-top:8px;font-size:12px;color:#0a6c2f;font-weight:700;"></div>
     </div>
     <div id="notesList" style="margin-top:14px;">
       <div class="grid-2">
-        <div class="note-box"><h4>Ericka — 2026-04-12 at 10:00 AM</h4><p><strong>Position:</strong> Marketer</p><p><strong>Next Step:</strong> CM Follow-Up (Status Update)</p><p><strong>Next Step Due Date:</strong> <span style="color:#f9c74f;font-weight:700;">2026-04-19</span></p><p>Baylor requested faster turnaround updates.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">✅ Synced — GPS Captured</p></div>
-        <div class="note-box"><h4>Angela — 2026-04-11 at 01:40 PM</h4><p><strong>Position:</strong> Nurse</p><p><strong>Next Step:</strong> RN Assessment Scheduled</p><p><strong>Next Step Due Date:</strong> <span style="color:#f9c74f;font-weight:700;">2026-04-14</span></p><p>Patient appropriate for hospice. Family receptive.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">✅ Synced — GPS Captured</p></div>
+        <div class="note-box"><h4>Ericka — 2026-04-12 at 10:00 AM</h4><p><strong>Position:</strong> Marketer</p><p><strong>Next Step:</strong> CM Follow-Up (Status Update)</p><p>Baylor requested faster turnaround updates.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">✅ Synced — Location Captured</p></div>
+        <div class="note-box"><h4>Angela — 2026-04-11 at 01:40 PM</h4><p><strong>Position:</strong> Nurse</p><p><strong>Next Step:</strong> RN Assessment Scheduled</p><p>Patient appropriate for hospice. Family receptive.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">✅ Synced — Location Captured</p></div>
       </div>
     </div>
   </section>
@@ -451,7 +447,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
     <div class="admin-banner"><h3 style="margin:0;color:#c9aeff;">🔒 Admin Only</h3><span class="pill pill-purple">Admin View Only</span></div>
     <p class="admin-note">This section is hidden from standard users. Only the Admin account holder can view seat limits, manage users, review staff tracking entries, and notes totals.</p>
     <div class="admin-grid">
-      <div class="admin-card"><h4>👥 User Management</h4><p>Admin manages user access and subscription seat limits.</p><div class="mini-actions" style="margin-top:10px;"><button class="btn btn-green btn-small">+ Add User</button><button class="btn btn-red btn-small">− Remove User</button></div></div>
+      <div class="admin-card"><button onclick="captureAdminGPS()" style="background:rgba(73,182,255,.15);color:#49b6ff;border:1px solid rgba(73,182,255,.3);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;margin-bottom:12px;">📍 Capture My Location</button><div id="adminGPSStatus" style="font-size:12px;color:#8a9dc0;margin-bottom:12px;"></div><h4>👥 User Management</h4><p>Admin manages user access and subscription seat limits.</p><div class="mini-actions" style="margin-top:10px;"><button class="btn btn-green btn-small" onclick="document.getElementById('inviteUserModal').style.display='flex'">+ Add User</button><button class="btn btn-red btn-small" onclick="document.getElementById('removeUserModal').style.display='flex'">− Remove User</button></div></div>
       <div class="admin-card"><h4>🪑 Seat Limits</h4><p>Subscription seat count controls active users.</p><span class="admin-stat">8 / 10</span><p style="font-size:11px;">Seats in use / Total purchased</p></div>
       <div class="admin-card"><h4>📝 Notes Synced</h4><p>Total notes synced across all team members.</p><span class="admin-stat" id="adminNotes">0</span></div>
     </div>
@@ -460,7 +456,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
       <div class="table-wrap">
         <table><thead><tr><th>Name</th><th>Title / Role</th><th>Status</th><th>Action</th></tr></thead>
         <tbody id="adminUserBody">
-          <tr><td>Ericka</td><td>Marketer</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-red btn-small">Remove</button></td></tr>
+          <tr><td>Ericka</td><td>Marketer</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-red btn-small" onclick="document.getElementById('removeUserModal').style.display='flex'">Remove</button></td></tr>
           <tr><td>Admin</td><td>Administrator</td><td><span class="pill pill-purple">Admin</span></td><td>—</td></tr>
         </tbody></table>
       </div>
@@ -541,7 +537,8 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
   <section class="section">
     <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How Re-Engagement works:</strong> This tab automatically shows prospects that have been marked <strong>Lost</strong> for 30 or more days. Studies show 20–30% of lost hospice prospects eventually convert when someone reaches back out. Click <strong>Re-Engage</strong> to move them back into your active pipeline as an Inquiry.</p></div>
     <div style="background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.2);border-radius:12px;padding:12px 14px;margin-bottom:14px;"><p style="color:#fbbf24;font-size:13px;margin:0;">💡 Studies show 20–30% of lost hospice prospects convert when re-contacted at the right time.</p></div>
-    <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;">
+    <div id="reengagementList" style="margin-bottom:12px;"></div>
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;">
       <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-bottom:1px solid rgba(255,255,255,.06);"><div><div style="font-weight:700;font-size:13px;">Helen P. — Lost 45 days ago</div><div style="font-size:11px;color:var(--muted);">Insurance issue · Physician Office</div></div><button class="btn btn-blue btn-small" onclick="this.textContent='✅ Re-assigned';this.disabled=true;">Re-Engage →</button></div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;border-bottom:1px solid rgba(255,255,255,.06);"><div><div style="font-weight:700;font-size:13px;">Robert H. — Lost 38 days ago</div><div style="font-size:11px;color:var(--muted);">Family not ready · North Park Rehab</div></div><button class="btn btn-blue btn-small" onclick="this.textContent='✅ Re-assigned';this.disabled=true;">Re-Engage →</button></div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;"><div><div style="font-weight:700;font-size:13px;">Sandra M. — Lost 62 days ago</div><div style="font-size:11px;color:var(--muted);">Chose competitor · Hospital CM</div></div><button class="btn btn-blue btn-small" onclick="this.textContent='✅ Re-assigned';this.disabled=true;">Re-Engage →</button></div>
@@ -677,7 +674,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
         <div class="field"><label>Prospect</label><select id="tnProspect" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></select></div>
         <div class="field"><label>Your Name</label><input id="tnAuthor" type="text" placeholder="Enter your name" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></div>
         <div class="field"><label>Tag</label><select id="tnTag" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"><option>📋 General</option><option>⚠️ Family Sensitive</option><option>🏥 Clinical Context</option><option>💡 Strategy</option><option>🚨 Urgent</option></select></div>
-        <div class="field full" style="grid-column:1/-1"><label>Note (team only)</label><textarea id="tnText" placeholder="e.g. Family is hesitant — approach gently. Daughter is primary decision maker." style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;min-height:70px;resize:vertical;"></textarea></div>
+        <div class="field full" style="grid-column:1/-1"><label>Note (team only)</label><textarea id="tnText" placeholder="e.g. Family is hesitant — approach gently. Daughter is primary decision maker." style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;min-height:70px;resize:vertical;" spellcheck="true"></textarea></div>
       </div>
       <div class="note-actions"><button class="btn btn-green" onclick="saveTeamNote()">💬 Save Team Note</button></div>
     </div>
@@ -818,16 +815,13 @@ function updateDashboard(){
 function loadReferralSources(){
   const refs=gs(K.refs,defRefs());ss(K.refs,refs);
   const sel=document.getElementById("prospectReferralSourceSelect");const tb=document.getElementById("referralTableBody");
-  sel.innerHTML="";tb.innerHTML="";
-  refs.forEach((r,i)=>{
-    const o=document.createElement("option");o.value=r.business;o.textContent=r.business;sel.appendChild(o);
-    const tr=document.createElement("tr");tr.innerHTML=`<td><input type="radio" name="selRef" value="${i}"></td><td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${r.address||"—"}</td><td>${r.email||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button></td>`;
-    tb.appendChild(tr);
-  });updateDashboard();
+  if(sel){sel.innerHTML='<option value="">— Select referral source —</option>';refs.forEach((r,i)=>{const o=document.createElement("option");o.value=r.business;o.textContent=r.business+(r.status==="Red"?" 🔴":"");sel.appendChild(o);});}
+  if(tb){tb.innerHTML="";refs.forEach((r,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td><input type="radio" name="selRef" value="${i}"></td><td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${r.address||"—"}</td><td>${r.email||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button></td>`;tb.appendChild(tr);});}
+  updateDashboard();
 }
 function renderReferralRecords(){
   const refs=gs(K.refs,defRefs());const q=(document.getElementById("referralSearch")||{value:""}).value.toLowerCase();
-  const tb=document.getElementById("referralRecordsBody");tb.innerHTML="";
+  const tb=document.getElementById("referralRecordsBody");if(!tb)return;tb.innerHTML="";
   refs.filter(r=>{if(!q)return true;return[r.contactName,r.business,r.phone,r.email,r.address].some(v=>(v||"").toLowerCase().includes(q));}).forEach((r,_,arr)=>{
     const i=arr.indexOf(r);const tr=document.createElement("tr");
     tr.innerHTML=`<td>${r.contactName}</td><td>${r.business}</td><td>${r.phone||"—"}</td><td>${r.address||"—"}</td><td>${r.email||"—"}</td><td>${pRef(r.status)}</td><td><button class="btn btn-gray btn-small" onclick="openEditReferral(${i})">Edit</button></td>`;
@@ -839,16 +833,16 @@ function deleteSelectedReferral(){const sel=document.querySelector('input[name="
 function openEditReferral(i){const refs=gs(K.refs,defRefs());const r=refs[i];document.getElementById("editRefIndex").value=i;document.getElementById("editRefContactName").value=r.contactName||"";document.getElementById("editRefBusiness").value=r.business||"";document.getElementById("editRefPhone").value=r.phone||"";document.getElementById("editRefEmail").value=r.email||"";document.getElementById("editRefAddress").value=r.address||"";document.getElementById("editRefStatus").value=r.status||"Green";openModal("editReferralModal");}
 function saveEditReferral(){const i=parseInt(document.getElementById("editRefIndex").value);const refs=gs(K.refs,defRefs());refs[i]={contactName:document.getElementById("editRefContactName").value.trim(),business:document.getElementById("editRefBusiness").value.trim(),phone:document.getElementById("editRefPhone").value.trim(),email:document.getElementById("editRefEmail").value.trim(),address:document.getElementById("editRefAddress").value.trim(),status:document.getElementById("editRefStatus").value};ss(K.refs,refs);closeModal("editReferralModal");loadReferralSources();}
 
-function loadMarketers(){const m=gs(K.mkt,["Ericka"]);ss(K.mkt,m);const sel=document.getElementById("prospectAssignedMarketerSelect");sel.innerHTML="";m.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});}
+function loadMarketers(){const m=gs(K.mkt,["Ericka"]);ss(K.mkt,m);const sel=document.getElementById("prospectAssignedMarketerSelect");if(!sel)return;sel.innerHTML='<option value="">— Select marketer —</option>';m.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});}
 function loadNames(){
   const names=gs(K.names,["Ericka","Angela"]);ss(K.names,names);
   const sel=document.getElementById("noteNameSelect");if(!sel)return;
-  sel.innerHTML='<option value="">Select saved name</option>';names.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});
+  if(!sel)return;sel.innerHTML='<option value="">Select saved name</option>';names.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});
 }
 function saveNameIfNeeded(name){if(!name)return;const names=gs(K.names,["Ericka","Angela"]);if(!names.includes(name)){names.push(name);ss(K.names,names);loadNames();}}
 
 function renderProspectsTable(){
-  const prsp=gs(K.prsp,defProsp());const tb=document.getElementById("prospectsTableBody");tb.innerHTML="";
+  const prsp=gs(K.prsp,defProsp());const tb=document.getElementById("prospectsTableBody");if(!tb)return;tb.innerHTML="";
   prsp.forEach((p,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td><input type="radio" name="selProsp" value="${i}"></td><td>${p.name}</td><td>${pSt(p.status)}</td><td>${p.source||"—"}</td><td>${p.marketer||"—"}</td><td>${p.nextStep||"—"}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">Edit</button></td>`;tb.appendChild(tr);});
 }
 function renderProspectRecords(){
@@ -859,7 +853,7 @@ function renderProspectRecords(){
     const sB=p.phone?`<button class="btn btn-small" style="background:#7c3aed;color:#fff;padding:3px 7px;font-size:10px;" onclick="sendContactSMS('${p.phone}','${p.name}','prospect')">📱</button>`:'';
     const eB=p.email?`<button class="btn btn-small" style="background:#2563eb;color:#fff;padding:3px 7px;font-size:10px;" onclick="sendContactEmail('${p.email}','${p.name}','prospect')">📧</button>`:'';
     const due=p.nextStepDate?`<span style="font-size:11px;font-weight:700;color:${new Date(p.nextStepDate)<new Date()?'#dc2626':'#3b82f6'}">${p.nextStepDate}</span>`:'—';
-    tr.innerHTML=`<td><input type="radio" name="selProsp" value="${i}"></td><td style="font-weight:700">${p.name}</td><td>${pSt(p.status)}</td><td>${p.phone||'—'} ${sB} ${cB}</td><td>${p.email||'—'} ${eB}</td><td>${p.address||'—'}</td><td>${p.secondary||'—'}</td><td>${p.source||'—'}</td><td>${p.marketer||'—'}</td><td>${p.nextStep||'—'}</td><td>${due}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">✏️ Edit</button></td>`;
+    tr.innerHTML=`<td><input type="radio" name="selProsp" value="${i}"></td><td style="font-weight:700">${p.name}</td><td>${pSt(p.status)}</td><td>${p.phone||'—'} ${sB}</td><td>${p.email||'—'} ${eB}</td><td>${p.address||'—'}</td><td>${p.secondary||'—'}</td><td>${p.source||'—'}</td><td>${p.marketer||'—'}</td><td>${p.nextStep||'—'}</td><td>${due}</td><td><button class="btn btn-gray btn-small" onclick="openEditProspect(${i})">✏️ Edit</button></td>`;
     tb.appendChild(tr);
   });
 }
@@ -887,10 +881,10 @@ function runImport(input){var file=input.files[0];if(!file)return;document.getEl
 function dlSampleCSV(){var csv='Name,Status,Phone,Email,Referral Source,Marketer,Next Step,Next Step Date\nMary Johnson,Inquiry,(214)555-1234,mary@email.com,Baylor Hospital,Ericka,Schedule assessment,2026-04-28\n';var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='HospiceLink_Template.csv';a.click();}
 async function genPlaybook(){var city=document.getElementById('pbCity').value||'your market';var team=document.getElementById('pbTeam').value;var goal=document.getElementById('pbGoal').value||'8';var challenge=document.getElementById('pbChallenge').value;var btn=document.getElementById('pbBtn');btn.textContent='Generating...';btn.disabled=true;var fallback='HOSPICE MARKETING PLAYBOOK\n\nWEEKLY SCHEDULE\nMon: Pipeline review + overdue follow-ups\nTue: Hospital rounds (3-4 case managers)\nWed: Physician office visits\nThu: Rehab/SNF facility rounds\nFri: Follow-ups + CRM updates\n\nTOP REFERRAL TARGETS\n1. Hospital discharge planners\n2. SNF/Rehab social workers\n3. Primary care physicians\n\n30-SECOND PITCH\n"Hi [Name], I am with [Agency] Hospice in '+city+'. We offer same-day admission and 24/7 nurse support. Do you have any patients who might benefit from a hospice conversation?"\n\nWEEKLY KPIs\n'+goal+' admissions/month | 15+ facility visits | 90%+ on-time follow-ups';try{var r=await fetch('https://wemarketplus-backend-1.onrender.com/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:'Create a hospice marketing playbook for '+city+'. Team: '+team+'. Goal: '+goal+' admissions/month. Challenge: '+challenge+'. Include: WEEKLY SCHEDULE, TOP REFERRAL TARGETS, 30-SECOND PITCH, WEEKLY KPIs. Plain text only, no markdown.'}]})});var d=await r.json();document.getElementById('pbText').textContent=(d.content&&d.content[0])?d.content[0].text:fallback;}catch(e){document.getElementById('pbText').textContent=fallback;}document.getElementById('pbForm').style.display='none';document.getElementById('pbResult').style.display='block';btn.textContent='Generate My Playbook';btn.disabled=false;}
 var aiHist=[];
-async function sendAI(msg){var inp=document.getElementById('aiIn');if(!msg){msg=inp.value.trim();if(!msg)return;inp.value='';}var c=document.getElementById('aiMsgs');var u=document.createElement('div');u.style.cssText='padding:10px 14px;border-radius:12px;font-size:13px;max-width:80%;background:#1e3a5f;color:#e2e8f0;align-self:flex-end;';u.textContent=msg;c.appendChild(u);var t=document.createElement('div');t.style.cssText='padding:10px 14px;border-radius:12px;font-size:13px;color:#94a3b8;font-style:italic;align-self:flex-start;';t.textContent='Thinking...';c.appendChild(t);c.scrollTop=c.scrollHeight;aiHist.push({role:'user',content:msg});try{var r=await fetch('https://wemarketplus-backend-1.onrender.com/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:'You are an AI assistant for HospiceLink, a hospice marketing CRM. Help with prospect analysis, follow-up scripts, and referral strategies. Be concise.',messages:aiHist.slice(-10)})});var d=await r.json();var rep=(d.content&&d.content[0])?d.content[0].text:'Sorry, could not get a response.';aiHist.push({role:'assistant',content:rep});t.style.cssText='padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%;background:#1a2a1a;color:#c8f7c5;border:1px solid rgba(140,255,102,.2);align-self:flex-start;';t.textContent=rep;}catch(e){t.style.cssText='padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%;background:#1a2a1a;color:#c8f7c5;align-self:flex-start;';t.textContent='⚠️ AI temporarily unavailable. Please try again in a moment.';}c.scrollTop=c.scrollHeight;}
+async function sendAI(msg){var inp=document.getElementById('aiIn');if(!msg){msg=inp.value.trim();if(!msg)return;inp.value='';}var c=document.getElementById('aiMsgs');var u=document.createElement('div');u.style.cssText='padding:10px 14px;border-radius:12px;font-size:13px;max-width:80%;background:#1e3a5f;color:#e2e8f0;align-self:flex-end;';u.textContent=msg;c.appendChild(u);var t=document.createElement('div');t.style.cssText='padding:10px 14px;border-radius:12px;font-size:13px;color:#94a3b8;font-style:italic;align-self:flex-start;';t.textContent='Thinking...';c.appendChild(t);c.scrollTop=c.scrollHeight;aiHist.push({role:'user',content:msg});try{var r=await fetch('https://wemarketplus-backend-1.onrender.com/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:'You are an AI assistant for HospiceLink, a hospice marketing CRM. Help with prospect analysis, follow-up scripts, and referral strategies. Be concise.',messages:aiHist.slice(-10)})});var d=await r.json();var rep=(d.content&&d.content[0])?d.content[0].text:'Sorry, could not get a response.';aiHist.push({role:'assistant',content:rep});t.style.cssText='padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%;background:#1a2a1a;color:#c8f7c5;border:1px solid rgba(140,255,102,.2);align-self:flex-start;';t.textContent=rep;}catch(e){t.style.cssText='padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%;background:#1a2a1a;color:#c8f7c5;align-self:flex-start;';t.textContent='⚠️ AI temporarily unavailable. In the live CRM, this connects to Claude AI for real hospice marketing advice.';}c.scrollTop=c.scrollHeight;}
 
 /* ── TOUCH LOG ── */
-var touchLogs=JSON.parse(localStorage.getItem('hl_touches')||'[]');
+var touchLogs=JSON.parse(localStorage.getItem('hl_touches')||'[]');if(!Array.isArray(touchLogs))touchLogs=[];
 function initTouchSourceSelect(){
   var sel=document.getElementById('touchSource');
   if(!sel)return;
@@ -1011,7 +1005,7 @@ document.querySelectorAll('.nav a').forEach(function(l){l.addEventListener('clic
   <button class="hp-close" onclick="document.getElementById('helpPanel').classList.remove('open')">✕</button>
   <div class="hp-title">HospiceLink Pro Help</div>
   <div class="hp-sub">Tap any item to learn what it does</div>
-  <div class="hp-item"><div class="hp-name">Dashboard</div><div class="hp-desc">Morning Command Center — click any card to jump to that feature.</div></div><div class="hp-item"><div class="hp-name">Add Prospect</div><div class="hp-desc">Set a Next Step Due Date — auto-triggers Reminders.</div></div><div class="hp-item"><div class="hp-name">Prospect Records</div><div class="hp-desc">📱 📧 buttons auto-log to Notes. Status filter + Export CSV.</div></div><div class="hp-item"><div class="hp-name">Referral Sources</div><div class="hp-desc">Green = active. Red = not sending. Visit Red sources weekly.</div></div><div class="hp-item"><div class="hp-name">📅 Reminders</div><div class="hp-desc">Overdue in red, due today in yellow. Daily 7am email digest.</div></div><div class="hp-item"><div class="hp-name">🔁 Re-Engagement</div><div class="hp-desc">Lost 30+ days — 20-30% convert when re-contacted.</div></div><div class="hp-item"><div class="hp-name">🎯 Daily Goals</div><div class="hp-desc">Set targets. Track daily visit/call/contact progress.</div></div><div class="hp-item"><div class="hp-name">📤 Import Data</div><div class="hp-desc">Upload CSV/Excel from any CRM. Auto-detects columns.</div></div><div class="hp-item"><div class="hp-name">🏥 Referral Portal</div><div class="hp-desc">White-label link for discharge planners — referrals drop into CRM.</div></div><div class="hp-item"><div class="hp-name">📘 Playbook Generator</div><div class="hp-desc">AI builds your custom marketing SOP.</div></div><div class="hp-item"><div class="hp-name">🤖 AI Assistant</div><div class="hp-desc">Ask Claude AI for scripts, analysis, strategies.</div></div><div class="hp-item"><div class="hp-name">🔒 Admin</div><div class="hp-desc">Manage users, seats, staff tracking. Admin only.</div></div>
+  <div class="hp-item"><div class="hp-name">Dashboard</div><div class="hp-desc">Morning Command Center — click any card to jump to that feature.</div></div><div class="hp-item"><div class="hp-name">Add Prospect</div><div class="hp-desc">Set a Next Step Due Date — auto-triggers Reminders.</div></div><div class="hp-item"><div class="hp-name">Prospect Records</div><div class="hp-desc">📱 📧 buttons auto-log to Notes. Status filter + Export CSV.</div></div><div class="hp-item"><div class="hp-name">➕ Add Referral</div><div class="hp-desc">Green = active. Red = not sending. Visit Red sources weekly.</div></div><div class="hp-item"><div class="hp-name">📅 Reminders</div><div class="hp-desc">Overdue in red, due today in yellow. Daily 7am email digest.</div></div><div class="hp-item"><div class="hp-name">🔁 Re-Engagement</div><div class="hp-desc">Lost 30+ days — 20-30% convert when re-contacted.</div></div><div class="hp-item"><div class="hp-name">🎯 Daily Goals</div><div class="hp-desc">Set targets. Track daily visit/call/contact progress.</div></div><div class="hp-item"><div class="hp-name">📤 Import Data</div><div class="hp-desc">Upload CSV/Excel from any CRM. Auto-detects columns.</div></div><div class="hp-item"><div class="hp-name">🏥 Referral Portal</div><div class="hp-desc">White-label link for discharge planners — referrals drop into CRM.</div></div><div class="hp-item"><div class="hp-name">📘 Playbook Generator</div><div class="hp-desc">AI builds your custom marketing SOP.</div></div><div class="hp-item"><div class="hp-name">🤖 AI Assistant</div><div class="hp-desc">Ask Claude AI for scripts, analysis, strategies.</div></div><div class="hp-item"><div class="hp-name">🔒 Admin</div><div class="hp-desc">Manage users, seats, staff tracking. Admin only.</div></div>
   <div style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:11px;margin-top:10px;">
     <div style="font-size:11px;font-weight:700;color:#a78bfa;margin-bottom:8px;">📱 SMS &amp; Email Auto-Logging</div>
     <div style="font-size:11px;color:rgba(180,200,255,.6);line-height:1.6;">
@@ -1065,7 +1059,7 @@ function owR(i){
 }
 function owNx(){if(oi<OW.length-1){oi++;owR(oi);}else owSk();}
 function owSk(){localStorage.setItem(TOUR_KEY,'1');document.getElementById('owOv').style.display='none';}
-(function(){if(!localStorage.getItem(TOUR_KEY))setTimeout(startTour,1000);})();
+/* tour handled by patch */;
 
 /* ── SMS / EMAIL AUTO-LOGGING ── */
 function autoLogCommunication(n,m,prev,ct){
@@ -1084,28 +1078,16 @@ function autoLogCommunication(n,m,prev,ct){
   var cnt=gs(K.notes,0)+1;ss(K.notes,cnt);
   if(typeof updateDashboard==="function")updateDashboard();
 }
-function callContact(phone,name){
-  if(confirm("📞 Call "+name+" at "+phone+"?\n\nTap OK to open your phone dialer.")){
-    window.open("tel:"+phone);
-    autoLogCommunication(name,"Call","Outbound call to "+phone,"prospect");
-  }
-}
 function sendContactSMS(phone,name,ct){
-  var msg=prompt("📱 Text to "+name+" ("+phone+"):
-
-Type your message:","Hi "+name+", this is your HospiceLink team. ");
+  var msg=prompt("📱 Text to "+name+" ("+phone+") — Type your message:","Hi "+name+", this is your HospiceLink team. ");
   if(!msg)return;
   window.open("sms:"+phone+"?&body="+encodeURIComponent(msg));
   autoLogCommunication(name,"SMS",msg.slice(0,100)+(msg.length>100?"…":""),ct);
 }
 function sendContactEmail(email,name,ct){
-  var sub=prompt("📧 Email to "+name+" ("+email+"):
-
-Subject line:","Follow-up from HospiceLink");
+  var sub=prompt("📧 Email subject to "+name+" ("+email+"):","Follow-up from HospiceLink");
   if(!sub)return;
-  var body=prompt("Message body:","Dear "+name+",
-
-");
+  var body=prompt("📧 Message body:","Dear "+name+", ");
   if(!body)return;
   window.open("mailto:"+email+"?subject="+encodeURIComponent(sub)+"&body="+encodeURIComponent(body));
   autoLogCommunication(name,"Email",sub,ct);
@@ -1313,7 +1295,7 @@ function saveDemoNote(){
       +"<p><strong>Date/Time:</strong> "+dt+" at "+ti+"</p>"
       +(prospect?"<p><strong>Prospect:</strong> "+prospect+"</p>":"")
       +"<p><strong>Next Step:</strong> "+ns+"</p>"
-      +(nd?"<p><strong>Next Step Due Date:</strong> <span style='color:#f9c74f;font-weight:700;'>"+nd+"</span> — Reminder re-queued ✅</p>":"<p style='color:#94a3b8;font-size:12px;'>📅 No due date set for this step — go to Reminders to add one.</p>")
+      +(nd?"<p><strong>New Due Date:</strong> <span style='color:#f9c74f;font-weight:700;'>"+nd+"</span> — Reminder re-queued ✅</p>":"")
       +"<p>"+nt+"</p>"
       +"<p style='color:#6c8aab;font-size:11px;margin-top:6px;'>✅ Synced — GPS Captured | "+nowStr+"</p>";
     w.prepend(b);
@@ -1474,11 +1456,11 @@ function openCompleteStep(btn,name,type){
   form.innerHTML="<div style=\"font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;\">✅ Complete: "+name+"</div>"
     +"<div style=\"display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;\">"
     +"<div><label style=\"font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:3px;\">What did you do?</label>"
-    +"<input type=\"text\" id=\"completeNote_"+name.replace(/\s/g,\"_\")+"\" placeholder=\"Brief note (e.g. Called family, left voicemail)\" style=\"width:100%;border:1px solid #d7e0ec;border-radius:8px;padding:7px;font-size:12px;font:inherit;\"></div>"
+    +"<input type=\"text\" id=\"completeNote_"+safeId(name)+"\" placeholder=\"Brief note (e.g. Called family, left voicemail)\" style=\"width:100%;border:1px solid #d7e0ec;border-radius:8px;padding:7px;font-size:12px;font:inherit;\"></div>"
     +"<div><label style=\"font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:3px;\">New Next Step</label>"
-    +"<select id=\"completeStep_"+name.replace(/\s/g,\"_\")+"\" style=\"width:100%;border:1px solid #d7e0ec;border-radius:8px;padding:7px;font-size:12px;font:inherit;\"><option value=\"\">— Select —</option>"+stepOptions+"</select></div>"
+    +"<select id=\"completeStep_"+safeId(name)+"\" style=\"width:100%;border:1px solid #d7e0ec;border-radius:8px;padding:7px;font-size:12px;font:inherit;\"><option value=\"\">— Select —</option>"+stepOptions+"</select></div>"
     +"<div><label style=\"font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:3px;\">New Due Date</label>"
-    +"<input type=\"date\" id=\"completeDate_"+name.replace(/\s/g,\"_\")+"\" style=\"width:100%;border:2px solid rgba(249,199,79,.4);border-radius:8px;padding:7px;font-size:12px;font:inherit;background:#fffbeb;\"></div>"
+    +"<input type=\"date\" id=\"completeDate_"+safeId(name)+"\" style=\"width:100%;border:2px solid rgba(249,199,79,.4);border-radius:8px;padding:7px;font-size:12px;font:inherit;background:#fffbeb;\"></div>"
     +"<div style=\"display:flex;align-items:flex-end;\"><button class=\"btn btn-green btn-small\" onclick=\"saveCompleteStep('"+name+"','"+type+"')\" style=\"width:100%\">Save + Re-Queue Reminder</button></div>"
     +"</div>";
   row.appendChild(form);
@@ -1522,7 +1504,461 @@ function saveCompleteStep(name,type){
 
 
 /* ── INIT NOTE PROSPECT SELECT ── */
-function initNoteProspectSelect(){var sel=document.getElementById("noteProspectSelect");if(!sel)return;var prsp=gs(K.prsp,defProsp());sel.innerHTML='<option value="">— General note (no specific prospect) —</option>';prsp.filter(function(p){return p.status!=="Admitted";}).forEach(function(p){var o=document.createElement("option");o.value=p.name;o.textContent=p.name+" ("+p.status+")";sel.appendChild(o);});}
+function initNoteProspectSelect(){var sel=document.getElementById("noteProspectSelect");if(!sel)return;var prsp=gs(K.prsp,defProsp());sel.innerHTML='<option value="">— General note (no specific person) —</option>';prsp.filter(function(p){return p.status!=="Admitted";}).forEach(function(p){var o=document.createElement("option");o.value=p.name;o.textContent=p.name+" ("+p.status+")";sel.appendChild(o);});}
 </script>
+<script>
+// ── HOSPICELINK DEMO PATCH v2 ─────────────────────────────────
+// Overrides broken functions and adds missing ones
+
+// 1. Override showTab to populate dropdowns when tabs open
+var _origST = typeof showTab === "function" ? showTab : null;
+showTab = function(id) {
+  document.querySelectorAll(".tab-pane").forEach(function(p){ p.classList.remove("active"); });
+  document.querySelectorAll(".nav a").forEach(function(a){ a.classList.remove("active"); });
+  var pane = document.getElementById("tab-" + id);
+  if (pane) pane.classList.add("active");
+  var link = document.querySelector(".nav a[data-tab='" + id + "']");
+  if (link) link.classList.add("active");
+  window.scrollTo(0, 0);
+
+  if (id === "touchlog" || id === "family") {
+    var refs = gs(K.refs, defRefs());
+    ["touchSource", "familySource"].forEach(function(sid) {
+      var sel = document.getElementById(sid);
+      if (!sel || sel.options.length > 1) return;
+      sel.innerHTML = "";
+      var blank = document.createElement("option"); blank.value = ""; blank.textContent = "-- Select source --"; sel.appendChild(blank);
+      refs.forEach(function(r) { var o = document.createElement("option"); o.value = r.business; o.textContent = r.business; sel.appendChild(o); });
+    });
+  }
+  if (id === "teamnotes") {
+    var prsp = gs(K.prsp, defProsp());
+    var tnSel = document.getElementById("tnProspect");
+    if (tnSel && tnSel.options.length <= 1) {
+      tnSel.innerHTML = "";
+      var b2 = document.createElement("option"); b2.value = ""; b2.textContent = "-- Select prospect --"; tnSel.appendChild(b2);
+      prsp.forEach(function(p) { var o = document.createElement("option"); o.value = p.name; o.textContent = p.name + " (" + p.status + ")"; tnSel.appendChild(o); });
+    }
+  }
+  if (id === "notes") {
+    var prsp2 = gs(K.prsp, defProsp());
+    var refs2 = gs(K.refs, defRefs());
+    var nSel = document.getElementById("noteProspectSelect") || document.getElementById("noteProspect") || document.getElementById("noteAutoProspect");
+    if (nSel) {
+      nSel.innerHTML = "";
+      var gen = document.createElement("option"); gen.value = ""; gen.textContent = "-- Select prospect or referral --"; nSel.appendChild(gen);
+      var pg = document.createElement("optgroup"); pg.label = "Prospects";
+      prsp2.forEach(function(p) { var o = document.createElement("option"); o.value = p.name; o.textContent = p.name + " (" + p.status + ")"; pg.appendChild(o); });
+      nSel.appendChild(pg);
+      var rg = document.createElement("optgroup"); rg.label = "Referral Sources";
+      refs2.forEach(function(r) { var o = document.createElement("option"); o.value = r.business; o.textContent = r.contactName + " - " + r.business; rg.appendChild(o); });
+      nSel.appendChild(rg);
+    }
+  }
+  if (id === "revenue" && typeof calcRevIntel === "function") calcRevIntel();
+  if (id === "reengagement" && typeof renderReengagement === "function") renderReengagement();
+};
+
+// 2. Missing step desc functions
+function showProspectStepDesc(val) {
+  var box = document.getElementById("prospectStepDescBox");
+  if (!box) return;
+  if (!val) { box.style.display = "none"; return; }
+  var desc = (typeof PROSPECT_STEP_DESC !== "undefined") ? PROSPECT_STEP_DESC[val] : null;
+  if (desc) { box.style.display = "block"; var t = document.getElementById("prospectStepDescText"); if (t) t.textContent = desc; }
+  else { box.style.display = "none"; }
+}
+function showNoteStepDesc(val) {
+  var box = document.getElementById("noteStepDescBox");
+  if (!box) return;
+  if (!val) { box.style.display = "none"; return; }
+  var desc = (typeof PROSPECT_STEP_DESC !== "undefined") ? PROSPECT_STEP_DESC[val] : null;
+  if (desc) { box.style.display = "block"; var t = document.getElementById("noteStepDescText"); if (t) t.textContent = desc; }
+  else { box.style.display = "none"; }
+}
+function showReferralStepDesc(val) {
+  var box = document.getElementById("refStepDescBox");
+  if (!box) return;
+  if (!val) { box.style.display = "none"; return; }
+  var desc = (typeof REFERRAL_STEP_DESC !== "undefined") ? REFERRAL_STEP_DESC[val] : null;
+  if (desc) { box.style.display = "block"; var t = document.getElementById("refStepDescText"); if (t) t.textContent = desc; }
+  else { box.style.display = "none"; }
+}
+
+// 3. Override saveProspect - works without marketer, captures all secondary fields
+saveProspect = function() {
+  var name = (document.getElementById("prospectName") || {value: ""}).value.trim();
+  var status = (document.getElementById("prospectStatus") || {value: ""}).value;
+  var source = (document.getElementById("prospectReferralSourceSelect") || {value: ""}).value;
+  var nm = (document.getElementById("newAssignedMarketerInput") || {value: ""}).value.trim();
+  var marketer = nm || ((document.getElementById("prospectAssignedMarketerSelect") || {value: ""}).value) || "Unassigned";
+  var nextStep = (document.getElementById("prospectNextStep") || {value: ""}).value;
+  var nextStepDate = (document.getElementById("prospectNextStepDate") || {value: ""}).value || "";
+  var assignedTo = (document.getElementById("prospectAssignedTo") || {value: "Marketer"}).value || "Marketer";
+  var phone = (document.getElementById("prospectPhone") || {value: ""}).value.trim();
+  var email = (document.getElementById("prospectEmail") || {value: ""}).value.trim();
+  var address = (document.getElementById("prospectAddress") || {value: ""}).value.trim();
+  var secondary = (document.getElementById("prospectSecondary") || {value: ""}).value.trim();
+  var secRel = (document.getElementById("prospectSecondaryRelation") || {value: ""}).value.trim();
+  var secPhone = (document.getElementById("prospectSecondaryPhone") || {value: ""}).value.trim();
+  var secEmail = (document.getElementById("prospectSecondaryEmail") || {value: ""}).value.trim();
+
+  if (!name) { alert("Prospect name is required."); return; }
+  if (!status) { alert("Please select a status."); return; }
+  if (!nextStep) { alert("Please select a Next Step."); return; }
+  if (!nextStepDate) { alert("Please set a Next Step Due Date."); return; }
+
+  if (nm) {
+    var m = gs(K.mkt, ["Ericka"]);
+    if (!m.includes(nm)) { m.push(nm); ss(K.mkt, m); if (typeof loadMarketers === "function") loadMarketers(); }
+  }
+
+  var prsp = gs(K.prsp, defProsp());
+  prsp.unshift({name: name, status: status, source: source, marketer: marketer, nextStep: nextStep, nextStepDate: nextStepDate, assignedTo: assignedTo, phone: phone, email: email, address: address, secondary: secondary, secondaryRelation: secRel, secondaryPhone: secPhone, secondaryEmail: secEmail});
+  ss(K.prsp, prsp);
+
+  if (typeof renderProspectsTable === "function") renderProspectsTable();
+  if (typeof renderProspectRecords === "function") renderProspectRecords();
+  if (typeof updateDashboard === "function") updateDashboard();
+  if (typeof renderReminders === "function") renderReminders();
+  if (typeof initAutoProspectSelect === "function") initAutoProspectSelect();
+
+  var conf = document.getElementById("prospectSaveConfirm");
+  if (conf) {
+    conf.innerHTML = "✅ <strong>" + name + "</strong> added! Reminder queued for <strong>" + nextStep + "</strong> on <strong>" + nextStepDate + "</strong>.";
+    conf.style.display = "block";
+    setTimeout(function() { if (conf) conf.style.display = "none"; }, 6000);
+  }
+  ["prospectName","newAssignedMarketerInput","prospectPhone","prospectEmail","prospectAddress","prospectSecondary","prospectSecondaryRelation","prospectSecondaryPhone","prospectSecondaryEmail","prospectNextStep","prospectNextStepDate"].forEach(function(id) { var el = document.getElementById(id); if (el) el.value = ""; });
+};
+
+// 4. Override saveReferralFromModal
+saveReferralFromModal = function() {
+  var cn = (document.getElementById("refContactName") || {value: ""}).value.trim();
+  var biz = (document.getElementById("refBusiness") || {value: ""}).value.trim();
+  if (!cn || !biz) { alert("Contact name and business name are required."); return; }
+  var nextStep = (document.getElementById("refNextStep") || {value: ""}).value;
+  var nextTouchDate = (document.getElementById("refNextTouchDate") || {value: ""}).value || "";
+  if (!nextStep) { alert("Please select a Next Step."); return; }
+  if (!nextTouchDate) { alert("Please set a Next Touch Date."); return; }
+  var refs = gs(K.refs, defRefs());
+  refs.push({
+    contactName: cn, business: biz,
+    phone: (document.getElementById("refPhone") || {value: ""}).value.trim(),
+    email: (document.getElementById("refEmail") || {value: ""}).value.trim(),
+    address: (document.getElementById("refAddress") || {value: ""}).value.trim(),
+    status: (document.getElementById("refStatus") || {value: "Green"}).value,
+    nextStep: nextStep, nextTouchDate: nextTouchDate
+  });
+  ss(K.refs, refs);
+  if (typeof loadReferralSources === "function") loadReferralSources();
+  if (typeof renderReminders === "function") renderReminders();
+  if (typeof closeModal === "function") closeModal("addReferralModal");
+  ["refContactName","refBusiness","refPhone","refEmail","refAddress"].forEach(function(id) { var el = document.getElementById(id); if (el) el.value = ""; });
+  var rns = document.getElementById("refNextStep"); if (rns) rns.value = "";
+  var rnd = document.getElementById("refNextTouchDate"); if (rnd) rnd.value = "";
+  alert("✅ Referral source saved and added to Referral Sources tab and Reminders!");
+};
+
+// 5. Override loadReferralSources - null safe with blank option
+loadReferralSources = function() {
+  var refs = gs(K.refs, defRefs()); ss(K.refs, refs);
+  var sel = document.getElementById("prospectReferralSourceSelect");
+  var tb = document.getElementById("referralTableBody");
+  if (sel) {
+    sel.innerHTML = "";
+    var blank = document.createElement("option"); blank.value = ""; blank.textContent = "-- Select referral source --"; sel.appendChild(blank);
+    refs.forEach(function(r) {
+      var o = document.createElement("option"); o.value = r.business; o.textContent = r.business + (r.status === "Red" ? " 🔴" : ""); sel.appendChild(o);
+    });
+  }
+  if (tb) {
+    tb.innerHTML = "";
+    refs.forEach(function(r, i) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td><input type='radio' name='selRef' value='" + i + "'></td><td>" + r.contactName + "</td><td>" + r.business + "</td><td>" + (r.phone || "—") + "</td><td>" + (r.address || "—") + "</td><td>" + (r.email || "—") + "</td><td>" + pRef(r.status) + "</td><td><button class='btn btn-gray btn-small' onclick='openEditReferral(" + i + ")'>Edit</button></td>";
+      tb.appendChild(tr);
+    });
+  }
+  if (typeof renderReferralRecords === "function") renderReferralRecords();
+  if (typeof updateDashboard === "function") updateDashboard();
+};
+
+// 6. Override loadMarketers - null safe with blank option
+loadMarketers = function() {
+  var m = gs(K.mkt, ["Ericka"]); ss(K.mkt, m);
+  var sel = document.getElementById("prospectAssignedMarketerSelect");
+  if (!sel) return;
+  sel.innerHTML = "";
+  var blank = document.createElement("option"); blank.value = ""; blank.textContent = "-- Select marketer --"; sel.appendChild(blank);
+  m.forEach(function(n) { var o = document.createElement("option"); o.value = n; o.textContent = n; sel.appendChild(o); });
+};
+
+// 7. Override saveDemoNote with GPS + staff tracking
+saveDemoNote = function() {
+  var fn = (document.getElementById("noteNewName") || {value: ""}).value.trim() || (document.getElementById("noteNameSelect") || {value: ""}).value;
+  var pos = (document.getElementById("notePosition") || {value: ""}).value;
+  var dt = (document.getElementById("noteDate") || {value: ""}).value;
+  var ti = (document.getElementById("noteTime") || {value: ""}).value;
+  var ns = (document.getElementById("noteNextStep") || {value: ""}).value;
+  var nt = (document.getElementById("noteText") || {value: ""}).value.trim();
+  var prospect = ((document.getElementById("noteProspect") || document.getElementById("noteAutoProspect")) || {value: ""}).value;
+  var nd = (document.getElementById("noteNextStepDate") || {value: ""}).value;
+
+  if (!fn) { alert("Please select or enter your name."); return; }
+  if (!pos) { alert("Please select your position."); return; }
+  if (!dt) { alert("Please enter the date."); return; }
+  if (!ns) { alert("Please select the Next Step."); return; }
+  if (!nt) { alert("Please enter your note."); return; }
+
+  if (typeof saveNameIfNeeded === "function") saveNameIfNeeded(fn);
+  if (prospect && nd) {
+    var prsp = gs(K.prsp, defProsp());
+    var pidx = prsp.findIndex(function(p) { return p.name === prospect; });
+    if (pidx >= 0) { prsp[pidx].nextStep = ns; prsp[pidx].nextStepDate = nd; ss(K.prsp, prsp); if (typeof renderReminders === "function") renderReminders(); }
+  }
+
+  var nowStr = new Date().toLocaleDateString("en-US", {month: "short", day: "numeric", year: "numeric"}) + " at " + new Date().toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
+
+  function buildNote(loc) {
+    var list = document.getElementById("notesList");
+    var w = list ? (list.querySelector(".grid-2") || list) : null;
+    if (w) {
+      var b = document.createElement("div"); b.className = "note-box";
+      b.innerHTML = "<h4>" + fn + (prospect ? " — " + prospect : "") + "</h4>"
+        + "<p><strong>Position:</strong> " + pos + "</p>"
+        + "<p><strong>Date/Time:</strong> " + dt + " at " + (ti || "--") + "</p>"
+        + (prospect ? "<p><strong>For:</strong> " + prospect + "</p>" : "")
+        + "<p><strong>Next Step:</strong> " + ns + "</p>"
+        + "<p><strong>Next Step Due Date:</strong> <span style='color:#f9c74f;font-weight:700;'>" + (nd || "Not set") + "</span>" + (nd ? " — Reminder re-queued ✅" : "") + "</p>"
+        + "<p>" + nt + "</p>"
+        + "<p style='color:#6c8aab;font-size:11px;margin-top:6px;'>✅ Synced — " + (loc ? "GPS: " + loc : "Location pending") + " | " + nowStr + "</p>";
+      w.prepend(b);
+    }
+    var atb = document.getElementById("staffTrackingBody");
+    if (atb) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + fn + "</td><td>" + pos + "</td><td>" + dt + "</td><td>" + (ti || "--") + "</td><td><span class='pill pill-green'>📍 " + (loc || "Captured") + "</span></td><td>" + ns + "</td>";
+      atb.prepend(tr);
+    }
+    var cnt = gs(K.notes, 0) + 1; ss(K.notes, cnt);
+    if (typeof updateDashboard === "function") updateDashboard();
+    var st = document.getElementById("syncStatus");
+    if (st) { st.innerHTML = "✅ Note synced" + (prospect && nd ? " — Reminder queued for <strong>" + ns + "</strong> on <strong>" + nd + "</strong>" : "") + " — GPS captured"; setTimeout(function() { if (st) st.innerHTML = ""; }, 5000); }
+    ["noteNewName","noteText","noteNextStepDate"].forEach(function(id) { var el = document.getElementById(id); if (el) el.value = ""; });
+    var nn2 = document.getElementById("noteNextStep"); if (nn2) nn2.value = "";
+    var ns2 = document.getElementById("noteProspect") || document.getElementById("noteAutoProspect"); if (ns2) ns2.value = "";
+  }
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      function(gpos) { buildNote(gpos.coords.latitude.toFixed(4) + ", " + gpos.coords.longitude.toFixed(4)); },
+      function() { buildNote("Location denied"); }
+    );
+  } else { buildNote("GPS unavailable"); }
+};
+
+// 8. Admin GPS capture
+function captureAdminGPS() {
+  var el = document.getElementById("adminGPSStatus");
+  if (!el) return;
+  if (!navigator.geolocation) { el.textContent = "GPS not available on this device."; return; }
+  el.textContent = "📍 Capturing location...";
+  navigator.geolocation.getCurrentPosition(
+    function(pos) {
+      var lat = pos.coords.latitude.toFixed(4); var lng = pos.coords.longitude.toFixed(4);
+      el.innerHTML = "📍 Admin Location: <strong>" + lat + "°N " + lng + "°W</strong> — <small>" + new Date().toLocaleTimeString() + "</small>";
+      var atb = document.getElementById("staffTrackingBody");
+      if (atb) {
+        var tr = document.createElement("tr");
+        tr.innerHTML = "<td><strong>Admin</strong></td><td>Administrator</td><td>" + new Date().toLocaleDateString() + "</td><td>" + new Date().toLocaleTimeString() + "</td><td><span class='pill pill-green'>📍 " + lat + "°N, " + lng + "°W</span></td><td>Admin Check-in</td>";
+        atb.prepend(tr);
+      }
+    },
+    function() { el.textContent = "⚠️ Location permission denied. Please allow location access in your browser settings."; }
+  );
+}
+
+// 9. Demo team management
+function demoSendInvite() {
+  var firstName = (document.getElementById("invFirstName") || {value: ""}).value.trim();
+  var email = (document.getElementById("invEmail") || {value: ""}).value.trim();
+  var msg = document.getElementById("inviteMsg");
+  if (!firstName || !email) { if (msg) { msg.style.color = "#dc2626"; msg.textContent = "First name and email are required."; } return; }
+  if (msg) { msg.style.color = "#166534"; msg.textContent = "✅ Demo: In live CRM, " + email + " would receive login credentials by email instantly."; }
+  setTimeout(function() { document.getElementById("inviteUserModal").style.display = "none"; if (msg) msg.textContent = ""; }, 3000);
+}
+function demoRemoveUser() {
+  var email = (document.getElementById("removeEmail") || {value: ""}).value.trim();
+  var msg = document.getElementById("removeMsg");
+  if (!email) { if (msg) { msg.style.color = "#dc2626"; msg.textContent = "Email is required."; } return; }
+  if (msg) { msg.style.color = "#166534"; msg.textContent = "✅ Demo: In live CRM, " + email + " access would be revoked immediately and seat freed."; }
+  setTimeout(function() { document.getElementById("removeUserModal").style.display = "none"; var el = document.getElementById("removeEmail"); if (el) el.value = ""; if (msg) msg.textContent = ""; }, 2500);
+}
+
+// 10. Re-init on load
+document.addEventListener("DOMContentLoaded", function() {
+  if (typeof loadReferralSources === "function") loadReferralSources();
+  if (typeof loadMarketers === "function") loadMarketers();
+  if (typeof loadNames === "function") loadNames();
+  if (typeof renderProspectsTable === "function") renderProspectsTable();
+  if (typeof renderProspectRecords === "function") renderProspectRecords();
+  if (typeof updateDashboard === "function") updateDashboard();
+  if (typeof renderReminders === "function") renderReminders();
+  if (typeof initAutoProspectSelect === "function") initAutoProspectSelect();
+  if (typeof initTouchSourceSelect === "function") initTouchSourceSelect();
+  if (typeof updateMileageTotals === "function") updateMileageTotals();
+  if (typeof renderReengagement === "function") renderReengagement();
+  setTimeout(function() {
+    if (typeof checkTouchAlerts === "function") checkTouchAlerts();
+    var tk = (typeof TOUR_KEY !== "undefined") ? TOUR_KEY : "hl_tour";
+    if (!localStorage.getItem(tk) && typeof startTour === "function") startTour();
+  }, 1400);
+});
+
+// Null-safe renderProspectsTable
+renderProspectsTable = function() {
+  var prsp = gs(K.prsp, defProsp());
+  var tb = document.getElementById("prospectsTableBody");
+  if (!tb) return; // element doesn't exist on this page variant
+  tb.innerHTML = "";
+  prsp.forEach(function(p, i) {
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td><input type='radio' name='selProsp' value='" + i + "'></td><td>" + p.name + "</td><td>" + pSt(p.status) + "</td><td>" + (p.source || "—") + "</td><td>" + (p.marketer || "—") + "</td><td>" + (p.nextStep || "—") + "</td><td><button class='btn btn-gray btn-small' onclick='openEditProspect(" + i + ")'>✏️ Edit</button></td>";
+    tb.appendChild(tr);
+  });
+};
+
+
+// Wrap updateDashboard to be null-safe
+var _origUD = typeof updateDashboard === "function" ? updateDashboard : null;
+updateDashboard = function() {
+  try { if(_origUD) _origUD(); } catch(e) { /* ignore null element errors on init */ }
+};
+
+updateDashboard_safe = true;
+function safeId(s){return(s||"").replace(/\s/g,"_").replace(/[^a-zA-Z0-9_]/g,"");}
+
+// Re-Engagement functions
+function renderReengagement() {
+  var prsp = gs(K.prsp, defProsp());
+  var lost = prsp.filter(function(p) { return p.status === "Lost"; });
+  var container = document.getElementById("reengagementList");
+  if (!container) return;
+  container.innerHTML = "";
+  if (lost.length === 0) {
+    container.innerHTML = "<p style='color:var(--muted);text-align:center;padding:20px;'>No lost prospects to re-engage right now. 🎉</p>";
+    return;
+  }
+  lost.forEach(function(p, idx) {
+    var realIdx = prsp.indexOf(p);
+    var d = document.createElement("div");
+    d.style.cssText = "background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;";
+    d.innerHTML = "<div><div style='font-weight:700;font-size:13px;'>" + p.name + " — Lost</div>"
+      + "<div style='font-size:11px;color:var(--muted);'>" + (p.nextStep || "No next step") + " · " + (p.source || "No source") + "</div></div>"
+      + "<button class='btn btn-blue btn-small' onclick='reEngageByIndex(" + realIdx + ", this)'>🔁 Re-Engage</button>";
+    container.appendChild(d);
+  });
+}
+function reEngageByIndex(idx, btn) {
+  var prsp = gs(K.prsp, defProsp());
+  if (!prsp[idx]) return;
+  prsp[idx].status = "Inquiry";
+  prsp[idx].nextStep = prsp[idx].nextStep || "Immediate Family Outreach (Call/Text)";
+  ss(K.prsp, prsp);
+  if (btn) { btn.textContent = "✅ Re-engaged!"; btn.disabled = true; btn.style.background = "#166534"; }
+  if (typeof renderProspectsTable === "function") renderProspectsTable();
+  if (typeof renderProspectRecords === "function") renderProspectRecords();
+  if (typeof renderPipeline === "function") renderPipeline(prsp);
+  if (typeof updateDashboard === "function") updateDashboard();
+  if (typeof renderReminders === "function") renderReminders();
+  setTimeout(renderReengagement, 800);
+  alert("✅ " + prsp[idx].name + " moved back to Inquiry! They now appear in your Pipeline and Prospect Records.");
+}
+function reEngageProspect(btn) {
+  var row = btn.closest ? btn.closest("[style*='display:flex']") : btn.parentElement;
+  var nameEl = row ? row.querySelector("div > div") : null;
+  var name = nameEl ? nameEl.textContent.replace(" — Lost", "").trim() : "";
+  var prsp = gs(K.prsp, defProsp());
+  var idx = prsp.findIndex(function(p) { return p.name === name; });
+  reEngageByIndex(idx, btn);
+}
+
+
+// AI Assistant override with better error handling
+var _origSendAI = typeof sendAI === "function" ? sendAI : null;
+sendAI = async function(msg) {
+  var inp = document.getElementById("aiIn");
+  if (!msg) { msg = inp ? inp.value.trim() : ""; if (!msg) return; if(inp) inp.value = ""; }
+  var c = document.getElementById("aiMsgs");
+  if (!c) return;
+  var u = document.createElement("div");
+  u.style.cssText = "padding:10px 14px;border-radius:12px;font-size:13px;max-width:80%;background:#1e3a5f;color:#e2e8f0;align-self:flex-end;margin:4px 0;";
+  u.textContent = msg;
+  c.appendChild(u);
+  var t = document.createElement("div");
+  t.style.cssText = "padding:10px 14px;border-radius:12px;font-size:13px;color:#94a3b8;font-style:italic;align-self:flex-start;margin:4px 0;";
+  t.textContent = "Thinking...";
+  c.appendChild(t);
+  c.scrollTop = c.scrollHeight;
+  try {
+    var r = await fetch("https://wemarketplus-backend-1.onrender.com/api/ai", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 600,
+        system: "You are an AI assistant for HospiceLink, a hospice marketing CRM. Help with prospect follow-up scripts, referral source strategies, and team coordination. Be concise and practical.",
+        messages: [{ role: "user", content: msg }]
+      })
+    });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    var d = await r.json();
+    var rep = (d.content && d.content[0]) ? d.content[0].text : null;
+    if (!rep) throw new Error("No content");
+    t.style.cssText = "padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%;background:#1a2a1a;color:#c8f7c5;border:1px solid rgba(140,255,102,.2);align-self:flex-start;margin:4px 0;";
+    t.textContent = rep;
+  } catch(e) {
+    // Demo fallback responses
+    var demos = {
+      "top referral": "Your top referral source based on current data is North Park Rehab with 3 active prospects. Schedule a visit this week to maintain the relationship.",
+      "priorities": "Today's priorities: 1) Follow up with Mary J. (overdue), 2) Schedule RN assessment for John T., 3) Call Baylor CM about pending admission.",
+      "follow-up": "Draft: 'Hi [Name], this is [Your Name] from HospiceLink. I wanted to follow up on our last conversation and see if there have been any changes with your patient. Are you available for a brief call this week?'",
+      "script": "30-second pitch: 'Hi, I'm [Name] with [Agency] Hospice. We specialize in same-day admissions and 24/7 nurse support. Do you have any patients who might benefit from a comfort-focused care conversation?'"
+    };
+    var key = Object.keys(demos).find(function(k) { return msg.toLowerCase().includes(k); });
+    t.style.cssText = "padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%;background:#1a2a1a;color:#c8f7c5;border:1px solid rgba(140,255,102,.2);align-self:flex-start;margin:4px 0;";
+    t.textContent = key ? demos[key] : "In the live CRM, Claude AI responds here with real hospice marketing advice, follow-up scripts, and referral strategies tailored to your actual prospect data.";
+  }
+  c.scrollTop = c.scrollHeight;
+};
+
+// ── END PATCH ────────────────────────────────────────────────
+
+</script>
+<!-- INVITE USER MODAL -->
+<div id="inviteUserModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#0d1b2e;border:1px solid rgba(73,182,255,.3);border-radius:20px;padding:28px;width:min(460px,90vw);max-height:90vh;overflow:auto;">
+    <h3 style="color:#fff;margin:0 0 6px;font-size:18px;">➕ Invite Team Member</h3>
+    <p style="color:#64748b;font-size:12px;margin:0 0 16px;">Demo: shows the flow. Live CRM sends real email with login credentials instantly.</p>
+    <div style="margin-bottom:12px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:5px;text-transform:uppercase;">FIRST NAME *</label><input id="invFirstName" type="text" placeholder="First name" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;color:#f0f5ff;font-size:14px;outline:none;box-sizing:border-box;"></div>
+    <div style="margin-bottom:12px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:5px;text-transform:uppercase;">EMAIL ADDRESS *</label><input id="invEmail" type="email" placeholder="team@agency.com" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;color:#f0f5ff;font-size:14px;outline:none;box-sizing:border-box;"></div>
+    <div style="margin-bottom:16px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:5px;text-transform:uppercase;">ROLE</label><select id="invRole" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;color:#f0f5ff;font-size:14px;outline:none;box-sizing:border-box;"><option value="marketer">Marketer</option><option value="nurse">Nurse</option><option value="caregiver">Caregiver</option><option value="admin">Admin</option></select></div>
+    <div id="inviteMsg" style="min-height:18px;font-size:13px;font-weight:700;margin-bottom:12px;"></div>
+    <div style="display:flex;gap:10px;"><button onclick="demoSendInvite()" style="flex:1;background:linear-gradient(90deg,#82f86b,#b8ff79);color:#08101b;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:800;cursor:pointer;">📧 Send Invite</button><button onclick="document.getElementById('inviteUserModal').style.display='none'" style="flex:1;background:rgba(255,255,255,.06);color:#8a9dc0;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button></div>
+  </div>
+</div>
+
+<!-- REMOVE USER MODAL -->
+<div id="removeUserModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#0d1b2e;border:1px solid rgba(255,107,107,.3);border-radius:20px;padding:28px;width:min(440px,90vw);">
+    <h3 style="color:#fff;margin:0 0 6px;font-size:18px;">➖ Remove Team Member</h3>
+    <p style="color:#64748b;font-size:12px;margin:0 0 16px;">In live CRM, this immediately revokes access and frees the seat.</p>
+    <div style="margin-bottom:12px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:5px;text-transform:uppercase;">EMAIL ADDRESS *</label><input id="removeEmail" type="email" placeholder="team@agency.com" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;color:#f0f5ff;font-size:14px;outline:none;box-sizing:border-box;"></div>
+    <div id="removeMsg" style="min-height:18px;font-size:13px;font-weight:700;margin-bottom:12px;"></div>
+    <div style="display:flex;gap:10px;"><button onclick="demoRemoveUser()" style="flex:1;background:#dc2626;color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:800;cursor:pointer;">Remove Access</button><button onclick="document.getElementById('removeUserModal').style.display='none'" style="flex:1;background:rgba(255,255,255,.06);color:#8a9dc0;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button></div>
+  </div>
+</div>
+
 </body>
 </html>
