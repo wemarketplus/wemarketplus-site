@@ -82,27 +82,26 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
 <body>
 <div class="layout">
 <aside class="sidebar">
-  <div class="brand"><h1>HospiceLink Pro</h1><p>Marketing CRM Demo</p></div>
+  <div class="brand"><h1>HospiceLink Pro</h1><p>Starter Plan — Upgrade for more ⬆</p></div>
   <nav class="nav">
     <a data-tab="dashboard" class="active" onclick="showTab('dashboard');return false;">Dashboard</a>
     <a data-tab="prospects" onclick="showTab('prospects');return false;">Add Prospect</a>
     <a data-tab="prospect-records" onclick="showTab('prospect-records');return false;">Prospect Records</a>
     <a data-tab="referrals" onclick="showTab('referrals');return false;">Referral Sources</a>
-    <a data-tab="referral-records" onclick="showTab('referral-records');return false;">Referral Records</a>
+    <a data-tab="referral-records" onclick="showTab('referral-records');return false;">Add Referral</a>
     <a data-tab="pipeline" onclick="showTab('pipeline');return false;">Pipeline</a>
-    <a data-tab="territory" onclick="showTab('territory');return false;">Territory View</a>
+    <a data-tab="territory" onclick="showTab('territory');return false;" style="display:none;">Territory View</a>
     <a data-tab="productivity" onclick="showTab('productivity');return false;">Productivity</a>
-    <a data-tab="automation" onclick="showTab('automation');return false;">Automation</a>
+    <a data-tab="automation" onclick="showTab('automation');return false;" style="display:none;">Automation</a>
     <a data-tab="notes" onclick="showTab('notes');return false;">Notes</a>
     <a data-tab="reminders" onclick="showTab('reminders');return false;">📅 Reminders</a>
     <a data-tab="reengagement" onclick="showTab('reengagement');return false;">🔁 Re-Engagement</a>
     <a data-tab="goals" onclick="showTab('goals');return false;">🎯 Daily Goals</a>
     <a data-tab="import" onclick="showTab('import');return false;">📤 Import Data</a>
-    <a data-tab="referralportal" onclick="showTab('referralportal');return false;">🏥 Referral Portal</a>
-    <a data-tab="playbook" onclick="showTab('playbook');return false;">📘 Playbook Generator</a>
+    <a data-tab="referralportal" onclick="showTab('referralportal');return false;" style="display:none;">🏥 Referral Portal</a>
+    <a data-tab="playbook" onclick="showTab('playbook');return false;" style="display:none;">📘 Playbook Generator</a>
     <a data-tab="ai" class="ai-link" onclick="showTab('ai');return false;">🤖 AI Assistant</a>
-    <a data-tab="touchlog" onclick="showTab('touchlog');return false;">🤝 Touch Log</a>
-    <a data-tab="teamnotes" onclick="showTab('teamnotes');return false;">💬 Team Notes</a>
+    <a data-tab="touchlog" onclick="showTab('touchlog');return false;" style="display:none;">🤝 Touch Log</a>
     <a data-tab="admin" class="admin-link" onclick="showTab('admin');return false;">🔒 Admin</a>
   <button onclick="logout()" style="display:block;width:100%;margin-top:8px;background:rgba(224,85,85,.12);border:1px solid rgba(224,85,85,.3);color:#ff8080;border-radius:12px;padding:11px;font-size:13px;font-weight:800;cursor:pointer;">🚪 Logout</button>
 
@@ -114,7 +113,12 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
 
 <!-- DASHBOARD -->
 <div class="tab-pane active" id="tab-dashboard">
-  <div class="topbar"><div><h2>HospiceLink Pro</h2><p>Marketing CRM Demo</p></div></div>
+  <div class="topbar"><div><h2>HospiceLink Pro</h2><p>Starter Plan — Upgrade for more ⬆</p></div></div>
+    <div style="background:linear-gradient(135deg,rgba(73,182,255,.08),rgba(140,255,102,.05));border:1px solid rgba(73,182,255,.2);border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+      <div><p style="color:#49b6ff;font-size:13px;font-weight:800;margin:0 0 3px;">⬆ Want more power?</p><p style="color:var(--muted);font-size:12px;margin:0;">Upgrade to <strong style="color:#8cff66;">Max</strong> for AI, Automation, EVV, Team Reports &amp; more. Or <strong style="color:#ffd700;">Gold</strong> for Revenue Intelligence, Leaderboard &amp; Voice Notes.</p></div>
+      <a href="https://wemarketpluscom.org/#pricing" target="_blank" class="btn btn-green btn-small" style="white-space:nowrap;">View Upgrade Options →</a>
+    </div>
+
   <section class="hero">
     <h3>Marketing CRM Command Center</h3>
     <p>Prospect intake, referral management, pipeline tracking, territory view, productivity tracking, and automation — all in one place.</p>
@@ -227,34 +231,57 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
 </div>
 
 <!-- REFERRAL SOURCES -->
+<!-- REFERRAL SOURCES -->
 <div class="tab-pane" id="tab-referrals">
-  <div class="topbar"><div><h2>Referral Sources</h2></div></div>
+  <div class="topbar"><div><h2>Referral Sources</h2><p>All your referral accounts — hospitals, SNFs, physician offices, and more</p></div></div>
   <section class="section">
-    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How to use Referral Sources:</strong> This is your account list — every hospital, rehab, SNF, and physician office you call on. <strong>Green</strong> = they're actively sending you referrals. <strong>Red</strong> = they haven't sent yet — these are your priority targets to visit. Click <strong>📱 Text</strong> or <strong>📧 Email</strong> on any source to contact them — the message auto-logs to your Notes tab.</p></div>
-    <div class="mini-actions" style="margin-bottom:12px;">
-      <button class="btn btn-green" onclick="showTab('referral-records')">Add Referral Source</button>
-      
+    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;">
+      <p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How to use Referral Sources:</strong> This is your full account list. <strong>Green</strong> = actively sending referrals — nurture these. <strong>Red</strong> = not sending yet — these are your priority visit targets. Click 📱 or 📧 to contact directly — every message auto-logs to Notes. Click <strong>Edit</strong> to update any record. To add a new account, use the <strong>Add Referral</strong> tab in the sidebar.</p>
     </div>
+    <div class="mini-actions" style="margin-bottom:14px;display:flex;gap:10px;flex-wrap:wrap;">
+      <input type="text" id="refSearch" placeholder="Search referral sources..." onInput="filterReferralSources(this.value)" style="border:1px solid #d7e0ec;border-radius:10px;padding:8px 12px;font:inherit;font-size:12px;flex:1;min-width:160px;">
+    </div>
+    <div class="table-wrap">
+      <table id="refSourcesTable">
+        <thead><tr>
+          <th>Contact</th><th>Company / Facility</th><th>Work Phone</th><th>Cell Phone</th>
+          <th>Email</th><th>Address</th><th>Status</th><th>Next Step</th><th>Actions</th>
+        </tr></thead>
+        <tbody id="referralSourcesBody"></tbody>
+      </table>
+    </div>
+    <div id="refSourcesEmpty" style="display:none;text-align:center;padding:24px;color:var(--muted);font-size:13px;">No referral sources yet. Click <strong>+ Add Referral Source</strong> to add your first account.</div>
   </section>
 </div>
 
+
 <!-- REFERRAL RECORDS -->
 <div class="tab-pane" id="tab-referral-records">
-  <div class="topbar"><div><h2>Add Referral Source</h2></div></div>
+  <div class="topbar"><div><h2>Add Referral</h2></div></div>
   <section class="section">
-    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How to add a Referral Source:</strong> Fill in the contact info below, set their referral status, choose a next step, and set a touch date. Click <strong>Save Referral + Queue Reminder</strong> to save. The source will appear in Referral Sources instantly.</p></div>
+    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;">
+      <p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How to add a Referral Source:</strong> Fill in the full contact info below. Include both work and cell phone numbers. Set their referral status, choose a next step, and set a touch date. Click <strong>Save Referral + Queue Reminder</strong>. The source appears in your Referral Sources tab instantly with all their info.</p>
+    </div>
     <div class="note-form-wrap">
       <div class="modal-grid">
-        <div class="field"><label>Contact Name</label><input id="refContactName" type="text" placeholder="e.g. Jane Smith"></div>
-        <div class="field"><label>Business / Facility</label><input id="refBusiness" type="text" placeholder="e.g. North Park Rehab"></div>
-        <div class="field"><label>Phone</label><input id="refPhone" type="tel" placeholder="(469) 555-0100"></div>
+        <div class="field"><label>Contact Name *</label><input id="refContactName" type="text" placeholder="e.g. Jane Smith"></div>
+        <div class="field"><label>Company / Facility Name *</label><input id="refBusiness" type="text" placeholder="e.g. North Park Rehab"></div>
+        <div class="field"><label>Work Phone</label><input id="refPhone" type="tel" placeholder="(469) 555-0100"></div>
+        <div class="field"><label>Cell Phone</label><input id="refCellPhone" type="tel" placeholder="(469) 555-0101"></div>
         <div class="field"><label>Email</label><input id="refEmail" type="email" placeholder="jane@facility.com"></div>
+        <div class="field"><label>Title / Role</label><input id="refTitle" type="text" placeholder="e.g. Discharge Planner, Social Worker, MD"></div>
         <div class="field full"><label>Address</label><input id="refAddress" type="text" placeholder="123 Main St, Dallas TX"></div>
-        <div class="field"><label>Ref Status</label><select id="refStatus"><option value="Green">&#x1F7E2; Green — Sending Referrals</option><option value="Red">&#x1F534; Red — No Referrals Yet</option></select></div>
+        <div class="field"><label>Ref Status</label>
+          <select id="refStatus" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;">
+            <option value="Green">🟢 Green — Sending Referrals</option>
+            <option value="Red">🔴 Red — No Referrals Yet</option>
+          </select>
+        </div>
+        <div class="field"><label>Notes / Background</label><input id="refNotes" type="text" placeholder="e.g. Prefers morning calls, knows Dr. Patel"></div>
       </div>
-      <div class="field" style="margin-top:10px;">
+      <div class="field" style="margin-top:12px;">
         <label>Next Step <span style="color:#dc2626;">*</span></label>
-        <select id="refNextStep" onchange="showReferralStepDesc(this.value)" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;">
+        <select id="refNextStep" onchange="if(typeof showReferralStepDesc==='function')showReferralStepDesc(this.value)" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;">
           <option value="">— Select next step —</option>
           <option value="Initial Contact Made">Initial Contact Made</option>
           <option value="Dropped Off Materials">Dropped Off Materials</option>
@@ -268,17 +295,19 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
         <div id="refStepDescBox" style="display:none;background:#fffbeb;border:1px solid rgba(249,199,79,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:#334155;line-height:1.6;margin-top:6px;"></div>
       </div>
       <div class="field" style="margin-top:10px;">
-        <label>&#x1F4C5; Next Touch Date <span style="color:#dc2626;">*</span></label>
+        <label>📅 Next Touch Date <span style="color:#dc2626;">*</span></label>
         <input id="refNextTouchDate" type="date" style="border:2px solid rgba(249,199,79,.4);border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;background:#fffbeb;">
-        <div style="font-size:11px;color:#f59e0b;margin-top:3px;font-weight:700;">&#x26A1; Queues reminder in Reminders tab</div>
+        <div style="font-size:11px;color:#f59e0b;margin-top:3px;font-weight:700;">⚡ Queues reminder in Reminders tab</div>
       </div>
       <div class="modal-actions" style="margin-top:14px;">
         <button class="btn btn-green" onclick="saveReferralFromModal()">Save Referral + Queue Reminder</button>
+        <button class="btn btn-dark" onclick="showTab('referrals')">← Back to Referral Sources</button>
       </div>
       <div id="refSaveStatus" style="margin-top:8px;font-size:12px;color:#0a6c2f;font-weight:700;"></div>
     </div>
   </section>
 </div>
+
 
 
 <!-- !-- PIPELINE -->
@@ -354,13 +383,13 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
       <p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How this works:</strong> Select a prospect, then trigger an action. In the live CRM, these actions automatically send reminders, schedule follow-ups, and alert you when a prospect goes cold. In this demo, clicking a button shows you a logged confirmation of what would happen.</p>
     </div>
     
-    <!-- Step 1: Select Prospect -->
+    <!-- Step 1: Select Prospect or Referral Source -->
     <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;">
-      <h4 style="color:var(--text);margin:0 0 12px;font-size:14px;">Step 1 — Select a Prospect</h4>
+      <h4 style="color:var(--text);margin:0 0 12px;font-size:14px;">Step 1 — Select a Prospect or Referral Source</h4>
       <div class="grid-2">
-        <div class="field"><label style="color:var(--text);font-size:12px;font-weight:700;display:block;margin-bottom:4px;">Prospect Name</label>
+        <div class="field"><label style="color:var(--text);font-size:12px;font-weight:700;display:block;margin-bottom:4px;">Prospect or Referral Source</label>
           <select id="autoProspectSelect" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(73,182,255,.2);border-radius:8px;padding:9px;color:var(--text);font-size:12px;font:inherit;">
-            <option value="">— Select a prospect —</option>
+            <option value="">— Choose a Prospect or Referral Source —</option>
           </select>
         </div>
         <div class="field"><label style="color:var(--text);font-size:12px;font-weight:700;display:block;margin-bottom:4px;">Current Status</label>
@@ -419,9 +448,11 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
 
 <!-- NOTES -->
 <div class="tab-pane" id="tab-notes">
-  <div class="topbar"><div><h2>Notes</h2></div></div>
+  <div class="topbar"><div><h2>📝 Notes</h2><p>Internal team log — GPS synced, never visible to patients or families</p></div></div>
   <section class="section">
-    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How to log a note:</strong> After every facility visit or family interaction, come here. Select your name (or type it the first time), pick your position, enter today's date and time, select the next step, write your note, and click <strong>Sync &amp; Save Note</strong>. Your GPS location is captured automatically. All SMS and email communications also auto-appear here.</p></div>
+    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;">
+      <p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How Notes work:</strong> All notes are <strong>internal only</strong> — never visible to patients or families. Log every visit, call, and interaction here. Select the prospect or referral source you interacted with (type 3+ letters), pick the Next Step, set a due date, and click <strong>Sync & Save Note</strong>. GPS captures automatically. Every SMS and email you send also auto-logs here. The Team Notes section below is for internal coordination notes only.</p>
+    </div>
     <div class="note-form-wrap">
       <div class="form-grid-3">
         <div><label for="noteNameSelect">Select Name</label><select id="noteNameSelect"><option value="">Select saved name</option></select><div class="note-help">Previous noters appear here.</div></div>
@@ -429,66 +460,82 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
         <div><label for="notePosition">Position</label><select id="notePosition"><option value="">-- Select --</option><option>Nurse</option><option>Caregiver</option><option>Marketer</option><option>Other</option></select></div>
         <div><label for="noteDate">Date</label><input id="noteDate" type="date"></div>
         <div><label for="noteTime">Time</label><input id="noteTime" type="time"></div>
-        <div>
-          <label>Select Prospect or Referral (optional)</label>
-          <div style="position:relative;">
-          <input type="text" id="noteProspectSearch" placeholder="Type 3+ letters to search…" 
-            oninput="filterNoteProspects(this.value)"
-            onfocus="filterNoteProspects(this.value)"
-            style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;">
+        <div style="position:relative;">
+          <label>Prospect or Referral Source (optional)</label>
+          <input type="text" id="noteProspectSearch" placeholder="Type 3+ letters to search…" oninput="filterNoteProspects(this.value)" onfocus="filterNoteProspects(this.value)" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;box-sizing:border-box;">
           <input type="hidden" id="noteProspectSelect" value="">
-          <div id="noteProspectDropdown" style="display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border:1px solid #d7e0ec;border-radius:10px;max-height:200px;overflow-y:auto;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,.12);">
-          </div>
+          <div id="noteProspectDropdown" style="display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border:1px solid #d7e0ec;border-radius:10px;max-height:200px;overflow-y:auto;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,.12);"></div>
           <div id="noteProspectChosen" style="font-size:11px;color:#0a6c2f;font-weight:700;margin-top:3px;"></div>
-        </div>
         </div>
         <div>
           <label>Next Step <span style="color:#f9c74f;font-size:10px;font-weight:700;">→ Updates prospect reminder</span></label>
-          <select id="noteNextStep" onchange="showNoteStepDesc(this.value)" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;">
-              <option value="">— Select next step —</option>
-              <option value="Immediate Family Outreach (Call/Text)">Immediate Family Outreach (Call/Text)</option>
-              <option value="Schedule On-Site Visit">Schedule On-Site Visit</option>
-              <option value="Conduct Bedside Presentation">Conduct Bedside Presentation</option>
-              <option value="Request Clinical Records (H&P)">Request Clinical Records (H&P)</option>
-              <option value="RN Assessment Requested">RN Assessment Requested</option>
-              <option value="RN Assessment Scheduled">RN Assessment Scheduled</option>
-              <option value="Obtain Physician Order for Eval">Obtain Physician Order for Eval</option>
-              <option value="Insurance Verification in Progress">Insurance Verification in Progress</option>
-              <option value="Admission Paperwork in Progress">Admission Paperwork in Progress</option>
-              <option value="CM Follow-Up (Status Update)">CM Follow-Up (Status Update)</option>
-              <option value="Overcoming Family Hesitation">Overcoming Family Hesitation</option>
-              <option value="Other">Other</option>
-              
-            </select>
-          <div id="noteStepDescBox" style="display:none;background:#fffbeb;border:1px solid rgba(249,199,79,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:#334155;line-height:1.6;margin-top:6px;"></div>
+          <select id="noteNextStep" onchange="if(typeof showNoteStepDesc==='function')showNoteStepDesc(this.value)" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;">
+            <option value="">— Select next step —</option>
+            <option value="Immediate Family Outreach (Call/Text)">Immediate Family Outreach (Call/Text)</option>
+            <option value="Schedule On-Site Visit">Schedule On-Site Visit</option>
+            <option value="Conduct Bedside Presentation">Conduct Bedside Presentation</option>
+            <option value="Request Clinical Records (H&P)">Request Clinical Records (H&P)</option>
+            <option value="RN Assessment Requested">RN Assessment Requested</option>
+            <option value="RN Assessment Scheduled">RN Assessment Scheduled</option>
+            <option value="Obtain Physician Order for Eval">Obtain Physician Order for Eval</option>
+            <option value="Insurance Verification in Progress">Insurance Verification in Progress</option>
+            <option value="CM Follow-Up (Status Update)">CM Follow-Up (Status Update)</option>
+            <option value="Overcoming Family Hesitation">Overcoming Family Hesitation</option>
+            <option value="Other">Other</option>
+          </select>
+          <div id="noteStepDescBox" style="display:none;background:#fffbeb;border:1px solid rgba(249,199,79,.3);border-radius:8px;padding:8px 10px;font-size:11px;color:#334155;line-height:1.5;margin-top:5px;"></div>
         </div>
         <div>
           <label>📅 New Due Date <span style="color:#f9c74f;font-size:10px;font-weight:700;">→ Re-queues reminder</span></label>
-          <input id="noteNextStepDate" type="date" style="border:2px solid rgba(249,199,79,.3);border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;background:#fffbeb;">
-          <div style="font-size:11px;color:#f59e0b;margin-top:3px;">Set this to re-queue the reminder after completing a step</div>
+          <input id="noteNextStepDate" type="date" style="border:2px solid rgba(249,199,79,.4);border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;background:#fffbeb;">
+          <div style="font-size:10px;color:#f59e0b;margin-top:2px;">Set this to re-queue the reminder after completing a step.</div>
         </div>
-        <div style="grid-column:1/-1;"><label for="noteText">Note</label><textarea id="noteText" placeholder="Enter note details here…" spellcheck="true"></textarea></div>
+        <div style="grid-column:1/-1;"><label for="noteText">Note (internal only — never visible to patients)</label><textarea id="noteText" placeholder="Enter note details here…" spellcheck="true"></textarea></div>
       </div>
-      <div class="note-actions"><button class="btn btn-green" onclick="saveDemoNote()">Sync &amp; Save Note</button></div>
+      <div class="note-actions"><button class="btn btn-green" onclick="saveDemoNote()">🔒 Sync &amp; Save Note (Internal)</button></div>
       <div id="syncStatus" style="margin-top:8px;font-size:12px;color:#0a6c2f;font-weight:700;"></div>
     </div>
     <div id="notesList" style="margin-top:14px;">
       <div class="grid-2">
-        <div class="note-box"><h4>Ericka — 2026-04-12 at 10:00 AM</h4><p><strong>Position:</strong> Marketer</p><p><strong>Next Step:</strong> CM Follow-Up (Status Update)</p><p><strong>Next Step Due Date:</strong> <span style="color:#f9c74f;font-weight:700;">2026-04-19</span></p><p>Baylor requested faster turnaround updates.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">✅ Synced — GPS Captured</p></div>
-        <div class="note-box"><h4>Angela — 2026-04-11 at 01:40 PM</h4><p><strong>Position:</strong> Nurse</p><p><strong>Next Step:</strong> RN Assessment Scheduled</p><p><strong>Next Step Due Date:</strong> <span style="color:#f9c74f;font-weight:700;">2026-04-14</span></p><p>Patient appropriate for hospice. Family receptive.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">✅ Synced — GPS Captured</p></div>
+        <div class="note-box"><h4>Ericka — 2026-04-12 at 10:00 AM</h4><p><strong>Position:</strong> Marketer</p><p><strong>Next Step:</strong> CM Follow-Up (Status Update)</p><p><strong>Next Step Due Date:</strong> <span style="color:#f9c74f;font-weight:700;">2026-04-19</span></p><p>Baylor requested faster turnaround updates.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">🔒 Internal | ✅ Synced — GPS Captured</p></div>
+        <div class="note-box"><h4>Angela — 2026-04-11 at 01:40 PM</h4><p><strong>Position:</strong> Nurse</p><p><strong>Next Step:</strong> RN Assessment Scheduled</p><p><strong>Next Step Due Date:</strong> <span style="color:#f9c74f;font-weight:700;">2026-04-14</span></p><p>Patient appropriate for hospice. Family receptive.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px;">🔒 Internal | ✅ Synced — GPS Captured</p></div>
       </div>
+    </div>
+
+    <!-- TEAM COORDINATION NOTES (built into Notes tab) -->
+    <div style="margin-top:28px;border-top:1px solid rgba(255,255,255,.08);padding-top:20px;">
+      <h3 style="color:#c9aeff;margin:0 0 6px;font-size:17px;">💬 Team Coordination Notes</h3>
+      <p style="color:var(--muted);font-size:12px;margin:0 0 14px;">Internal team-only notes — never visible to patients or families. Use for clinical context, family sensitivity, and marketer ↔ nurse handoffs.</p>
+      <div style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:10px 14px;margin-bottom:14px;">
+        <p style="color:#60a5fa;font-size:12px;margin:0;">💬 These notes are <strong>internal only</strong> — use for context like "Family is hesitant — daughter is the decision maker" or clinical flags for the nurse team.</p>
+      </div>
+      <div class="note-form-wrap" style="margin-bottom:14px;">
+        <div class="form-grid-4">
+          <div class="field">
+            <label>Prospect or Referral Source</label>
+            <select id="tnProspect" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></select>
+          </div>
+          <div class="field"><label>Your Name</label><input id="tnAuthor" type="text" placeholder="Enter your name" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></div>
+          <div class="field"><label>Tag</label><select id="tnTag" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"><option>📋 General</option><option>⚠️ Family Sensitive</option><option>🏥 Clinical Context</option><option>💡 Strategy</option><option>🚨 Urgent</option><option>🤝 Marketer→Nurse Handoff</option></select></div>
+          <div class="field" style="grid-column:1/-1;"><label>Team Note (internal only)</label><textarea id="tnText" placeholder="e.g. Family is hesitant — daughter is the decision maker, don't push the timeline." style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;height:80px;resize:vertical;"></textarea></div>
+        </div>
+        <div class="note-actions"><button class="btn btn-green" onclick="saveTeamNote()">💬 Save Team Note</button></div>
+        <div id="tnStatus" style="margin-top:6px;font-size:12px;color:#0a6c2f;font-weight:700;"></div>
+      </div>
+      <div id="tnList" style="margin-top:10px;"></div>
     </div>
   </section>
 </div>
 
-<!-- ADMIN — includes Staff Tracking (admin-only) -->
+
+<!-- TAB-ADMIN -->
 <div class="tab-pane" id="tab-admin">
   <div class="topbar"><div><h2>🔒 Admin</h2></div></div>
   <section class="admin-section">
     <div class="admin-banner"><h3 style="margin:0;color:#c9aeff;">🔒 Admin Only</h3><span class="pill pill-purple">Admin View Only</span></div>
     <p class="admin-note">This section is hidden from standard users. Only the Admin account holder can view seat limits, manage users, review staff tracking entries, and notes totals.</p>
     <div class="admin-grid">
-      <div class="admin-card"><h4>👥 User Management</h4><p>Admin manages user access and subscription seat limits.</p><div class="mini-actions" style="margin-top:10px;"><button class="btn btn-green btn-small" onclick="document.getElementById('inviteUserModal').style.display='flex'">+ Add User</button><button class="btn btn-red btn-small" onclick="document.getElementById('removeUserModal').style.display='flex'">− Remove User</button></div></div>
+      <div class="admin-card"><h4>👥 User Management</h4><p>Admin manages user access and subscription seat limits.</p><div class="mini-actions" style="margin-top:10px;"><button class="btn btn-green btn-small" onclick="openModal('inviteUserModal')">+ Add User</button><button class="btn btn-red btn-small" onclick="openRemoveUserModal()">− Remove User</button></div></div>
       <div class="admin-card"><h4>🪑 Seat Limits</h4><p>Subscription seat count controls active users.</p><span class="admin-stat">8 / 10</span><p style="font-size:11px;">Seats in use / Total purchased</p></div>
       <div class="admin-card"><h4>📝 Notes Synced</h4><p>Total notes synced across all team members.</p><span class="admin-stat" id="adminNotes">0</span></div>
     </div>
@@ -521,7 +568,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
   </section>
 </div>
 
-
+<!-- TAB-AI -->
 <div class="tab-pane" id="tab-ai">
   <div class="topbar"><div><h2>🤖 AI Assistant</h2><p>Powered by Claude — strategy, scripts, and CRM analysis</p></div></div>
   <section class="section" style="padding:0;overflow:hidden;">
@@ -574,8 +621,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
   </section>
 </div>
 
-
-<!-- REMINDERS -->
+<!-- TAB-REMINDERS -->
 <div class="tab-pane" id="tab-reminders">
   <div class="topbar"><div><h2>📅 Follow-Up Reminders</h2><p>Auto-populated from the "Next Step Due Date" you set on each prospect</p></div></div>
   <section class="section">
@@ -596,7 +642,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
   </section>
 </div>
 
-<!-- RE-ENGAGEMENT -->
+<!-- TAB-REENGAGEMENT -->
 <div class="tab-pane" id="tab-reengagement">
   <div class="topbar"><div><h2>🔁 Re-Engagement Queue</h2><p>Lost prospects worth re-contacting</p></div></div>
   <section class="section">
@@ -609,7 +655,8 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
     </div>
   </section>
 </div>
-<!-- DAILY GOALS -->
+
+<!-- TAB-GOALS -->
 <div class="tab-pane" id="tab-goals">
   <div class="topbar"><div><h2>🎯 Daily Goals</h2><p>Set targets, track daily progress</p></div></div>
   <section class="section">
@@ -631,7 +678,8 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
     </div>
   </section>
 </div>
-<!-- IMPORT DATA -->
+
+<!-- TAB-IMPORT -->
 <div class="tab-pane" id="tab-import">
   <div class="topbar"><div><h2>📤 Import Data</h2><p>Switch from any CRM in minutes</p></div></div>
   <section class="section">
@@ -659,7 +707,8 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
     </div>
   </section>
 </div>
-<!-- REFERRAL PORTAL -->
+
+<!-- TAB-REFERRALPORTAL -->
 <div class="tab-pane" id="tab-referralportal">
   <div class="topbar"><div><h2>🏥 Facility Referral Portal</h2><p>White-label link for hospital discharge planners</p></div></div>
   <section class="section">
@@ -668,7 +717,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
     <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px;">
       <h4 style="color:var(--text);margin:0 0 12px;">Your Referral Portal Link</h4>
       <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;"><div style="flex:1;background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.2);border-radius:10px;padding:10px 14px;font-size:13px;color:#49b6ff;font-family:monospace;">https://wemarketpluscom.org/refer/your-agency</div><button class="btn btn-blue btn-small" onclick="navigator.clipboard.writeText('https://wemarketpluscom.org/refer/your-agency').then(function(){alert('Copied!')})">📋 Copy</button></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;"><button class="btn btn-green btn-small" onclick="alert('In live CRM: Opens your branded referral portal.')">👁 Preview</button><button class="btn btn-gray btn-small" onclick="alert('In live CRM: Downloads QR code for printing.')">📥 QR Code</button></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;"><button class="btn btn-green btn-small" onclick="window.open('https://wemarketpluscom.org/refer/your-agency','_blank')">👁 Preview</button><button class="btn btn-gray btn-small" onclick="alert('QR code download available in your live CRM. Contact Info@wemarketpluscom.org to activate.')">📥 QR Code</button></div>
     </div>
     <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;">
       <h4 style="color:var(--text);margin:0 0 12px;">Recent Portal Submissions</h4>
@@ -678,7 +727,8 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
     </div>
   </section>
 </div>
-<!-- PLAYBOOK GENERATOR -->
+
+<!-- TAB-PLAYBOOK -->
 <div class="tab-pane" id="tab-playbook">
   <div class="topbar"><div><h2>📘 Playbook Generator</h2><p>AI builds your custom marketing SOP in seconds</p></div></div>
   <section class="section">
@@ -699,7 +749,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
   </section>
 </div>
 
-<!-- TOUCH LOG -->
+<!-- TAB-TOUCHLOG -->
 <div class="tab-pane" id="tab-touchlog">
   <div class="topbar"><div><h2>🤝 Referral Source Touch Log</h2><p>Every visit and call logged — admin sees overdue sources at a glance</p></div></div>
   <section class="section">
@@ -723,36 +773,6 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
         <tr><td>North Park Rehab</td><td>Phone Call</td><td>2026-04-10</td><td><span class="pill pill-yellow">11 days</span></td><td>Confirmed referral in progress</td></tr>
         <tr><td>Physician Office</td><td>In-Person Visit</td><td>2026-03-28</td><td><span class="pill pill-red">24 days ⚠️</span></td><td>Met with office manager</td></tr>
       </tbody></table>
-    </div>
-  </section>
-</div>
-
-<!-- TEAM NOTES -->
-<div class="tab-pane" id="tab-teamnotes">
-  <div class="topbar"><div><h2>💬 Team Notes on Prospects</h2><p>Internal team coordination — never visible to patients or families</p></div></div>
-  <section class="section">
-    <div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 16px;margin-bottom:14px;"><p style="color:var(--text);font-size:13px;margin:0;"><strong>📌 How Team Notes works:</strong> These are <strong>internal team notes only</strong> — never visible to patients or families. Use them for context that helps your whole team: "Family is hesitant — daughter is the decision maker, don't push the timeline." Select the prospect, enter your name, pick a tag, write the note, and save. The whole team sees it instantly.</p></div>
-    <div style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:12px;padding:12px 14px;margin-bottom:14px;"><p style="color:#60a5fa;font-size:13px;margin:0;">💬 These notes are <strong>internal team only</strong> — never shared with patients or families. Use for clinical context, family sensitivity notes, and coordination between marketers and nurses.</p></div>
-    <div class="note-form-wrap" style="margin-bottom:16px;">
-      <div class="form-grid-4">
-        <div class="field"><label>Prospect</label><select id="tnProspect" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></select></div>
-        <div class="field"><label>Your Name</label><input id="tnAuthor" type="text" placeholder="Enter your name" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"></div>
-        <div class="field"><label>Tag</label><select id="tnTag" style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;"><option>📋 General</option><option>⚠️ Family Sensitive</option><option>🏥 Clinical Context</option><option>💡 Strategy</option><option>🚨 Urgent</option></select></div>
-        <div class="field full" style="grid-column:1/-1"><label>Note (team only)</label><textarea id="tnText" placeholder="e.g. Family is hesitant — approach gently. Daughter is primary decision maker." style="border:1px solid #d7e0ec;border-radius:10px;padding:9px;font:inherit;font-size:12px;width:100%;min-height:70px;resize:vertical;" spellcheck="true"></textarea></div>
-      </div>
-      <div class="note-actions"><button class="btn btn-green" onclick="saveTeamNote()">💬 Save Team Note</button></div>
-    </div>
-    <div id="teamNotesList" style="display:grid;gap:10px;">
-      <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span style="font-weight:700;font-size:13px;">Robert H.</span><span class="pill pill-yellow">⚠️ Family Sensitive</span></div>
-        <p style="color:var(--text);font-size:13px;margin:0 0 4px;">Family is hesitant — daughter is the decision maker. Approach gently, do not push admission timeline.</p>
-        <p style="color:var(--muted);font-size:11px;margin:0;">Ericka · 2026-04-14</p>
-      </div>
-      <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span style="font-weight:700;font-size:13px;">Dorothy F.</span><span class="pill pill-blue">🏥 Clinical Context</span></div>
-        <p style="color:var(--text);font-size:13px;margin:0 0 4px;">Patient has COPD + CHF. RN assessment scheduled for next week. Insurance pre-auth in progress.</p>
-        <p style="color:var(--muted);font-size:11px;margin:0;">Angela · 2026-04-12</p>
-      </div>
     </div>
   </section>
 </div>
@@ -1080,6 +1100,99 @@ function saveTeamNote(){
 function toggleMob(){var s=document.querySelector('.sidebar');var ov=document.getElementById('mobOv');var b=document.getElementById('mobBtn');s.classList.toggle('mob-open');ov.classList.toggle('show');b.innerHTML=s.classList.contains('mob-open')?'✕':'☰';}
 function closeMob(){var s=document.querySelector('.sidebar');document.getElementById('mobOv').classList.remove('show');s.classList.remove('mob-open');document.getElementById('mobBtn').innerHTML='☰';}
 document.querySelectorAll('.nav a').forEach(function(l){l.addEventListener('click',closeMob);});
+
+// ── FINAL FIXES ──────────────────────────────────────────────
+
+// A. Override initAutoProspectSelect - runs LAST so it definitively wins
+// Uses assignment so it overrides any prior declaration
+window.initAutoProspectSelect = function() {
+  var sel = document.getElementById('autoProspectSelect');
+  if (!sel) return;
+  var prsp = gs(K.prsp, typeof defProsp==='function' ? defProsp() : []);
+  var refs = gs(K.refs, typeof defRefs==='function' ? defRefs() : []);
+  sel.innerHTML = '<option value="">— Choose a Prospect or Referral Source —</option>';
+  if (prsp.length) {
+    var pg = document.createElement('optgroup'); pg.label = '\ud83d\udc64 Prospects';
+    prsp.filter(function(p){return p.status!=='Admitted';}).forEach(function(p,i){
+      var o=document.createElement('option'); o.value='p:'+i;
+      o.textContent=p.name+' ('+p.status+')'; pg.appendChild(o);
+    });
+    sel.appendChild(pg);
+  }
+  if (refs.length) {
+    var rg = document.createElement('optgroup'); rg.label = '\ud83e\udd1d Referral Sources';
+    refs.forEach(function(r,i){
+      var nm=(r.contactName||r.name||'');
+      var biz=(r.business||'');
+      var o=document.createElement('option'); o.value='r:'+i;
+      o.textContent = nm+(biz?' @ '+biz:'')+(r.status==='Green'?' \ud83d\udfe2':' \ud83d\udd34');
+      rg.appendChild(o);
+    });
+    sel.appendChild(rg);
+  }
+  if (!prsp.length && !refs.length) {
+    var empty = document.createElement('option');
+    empty.textContent = 'No prospects or referrals yet — add them first';
+    empty.disabled = true;
+    sel.appendChild(empty);
+  }
+  sel.onchange = function() {
+    var statusEl = document.getElementById('autoProspectStatus');
+    if (!statusEl) return;
+    var val = this.value;
+    if (!val) { statusEl.textContent = 'Select above to see details'; return; }
+    var parts = val.split(':'); var type=parts[0]; var idx=parseInt(parts[1]);
+    if (type==='p') {
+      var p = gs(K.prsp, typeof defProsp==='function'?defProsp():[])[idx];
+      statusEl.innerHTML = p ? '<strong>'+p.name+'</strong> — '+p.status+(p.nextStep?' | Next: '+p.nextStep:'') : 'Not found';
+    } else {
+      var r = gs(K.refs, typeof defRefs==='function'?defRefs():[])[idx];
+      statusEl.innerHTML = r ? '<strong>'+(r.contactName||r.business)+'</strong> @ '+(r.business||'')+' — '+(r.status||'')+' | Next: '+(r.nextStep||'—') : 'Not found';
+    }
+  };
+};
+
+// B. Override fireAutoForProspect to work with new value format
+window.fireAutoForProspect = function(btn, msg) {
+  var sel = document.getElementById('autoProspectSelect');
+  if (!sel || !sel.value) {
+    alert('Please select a Prospect or Referral Source first (Step 1 above).');
+    return;
+  }
+  var label = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].text : 'selected';
+  btn.textContent = '\u2705 Done'; btn.disabled = true;
+  var log = document.getElementById('autoLog');
+  if (log) {
+    var empties = log.querySelectorAll('div[style*="italic"]');
+    empties.forEach(function(e){e.remove();});
+    var d = document.createElement('div');
+    d.style.cssText = 'background:#fff;color:#111;border-radius:9px;padding:9px 13px;font-size:12px;margin-bottom:6px;';
+    d.textContent = '\u2705 ' + msg + ' \u2014 ' + label + ' \u2014 ' + new Date().toLocaleTimeString();
+    log.prepend(d);
+  }
+};
+
+// C. Hook showTab — ensure automation refreshes with latest data
+var __finalShowTab = typeof showTab==='function' ? showTab : function(){};
+showTab = function(id) {
+  __finalShowTab(id);
+  if (id==='automation') setTimeout(window.initAutoProspectSelect, 80);
+  if (id==='notes') {
+    setTimeout(function(){
+      if(typeof initTnProspectSelect==='function') initTnProspectSelect();
+      if(typeof renderTeamNotes==='function') renderTeamNotes();
+    }, 80);
+  }
+  if (id==='referrals') setTimeout(function(){
+    if(typeof renderReferralSourcesTable==='function') renderReferralSourcesTable();
+  }, 80);
+};
+
+// D. Auto-init on DOMContentLoaded / load
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(window.initAutoProspectSelect, 1800);
+});
+
 </script>
 <script>
 /* © 2026 We Market Plus LLC — All Rights Reserved */
@@ -1097,853 +1210,3 @@ document.querySelectorAll('.nav a').forEach(function(l){l.addEventListener('clic
     w.textContent='© 2026 We Market Plus LLC';document.body.appendChild(w);
   });
 })();
-</script>
-<style>
-.help-fab{position:fixed;bottom:20px;right:20px;z-index:9997;width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#0d2040,#1a3a60);border:2px solid rgba(73,182,255,.5);color:#49b6ff;font-size:22px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(0,0,0,.5);}
-.help-panel{position:fixed;top:0;right:-320px;width:300px;height:100vh;background:linear-gradient(180deg,#0d1b2e,#08111f);border-left:1px solid rgba(73,182,255,.2);padding:18px;z-index:9998;overflow-y:auto;transition:right .3s ease;}
-.help-panel.open{right:0;}
-.hp-close{position:absolute;top:14px;right:14px;background:none;border:none;color:rgba(180,200,255,.5);font-size:20px;cursor:pointer;}
-.hp-title{font-size:15px;font-weight:900;color:#fff;margin-bottom:3px;padding-right:24px;}
-.hp-sub{font-size:11px;color:rgba(180,200,255,.4);margin-bottom:14px;}
-.hp-item{padding:9px 11px;border-radius:9px;margin-bottom:5px;background:rgba(255,255,255,.03);border:1px solid rgba(73,182,255,.06);}
-.hp-name{font-size:11px;font-weight:700;color:#49b6ff;margin-bottom:3px;}
-.hp-desc{font-size:11px;color:rgba(180,200,255,.6);line-height:1.45;}
-</style>
-<button class="help-fab" onclick="document.getElementById('helpPanel').classList.toggle('open')">?</button>
-<div class="help-panel" id="helpPanel">
-  <button class="hp-close" onclick="document.getElementById('helpPanel').classList.remove('open')">✕</button>
-  <div class="hp-title">HospiceLink Pro Help</div>
-  <div class="hp-sub">Tap any item to learn what it does</div>
-  <div class="hp-item"><div class="hp-name">Dashboard</div><div class="hp-desc">Morning Command Center — click any card to jump to that feature.</div></div><div class="hp-item"><div class="hp-name">Add Prospect</div><div class="hp-desc">Set a Next Step Due Date — auto-triggers Reminders.</div></div><div class="hp-item"><div class="hp-name">Prospect Records</div><div class="hp-desc">📱 📧 buttons auto-log to Notes. Status filter + Export CSV.</div></div><div class="hp-item"><div class="hp-name">Referral Sources</div><div class="hp-desc">Green = active. Red = not sending. Visit Red sources weekly.</div></div><div class="hp-item"><div class="hp-name">📅 Reminders</div><div class="hp-desc">Overdue in red, due today in yellow. Daily 7am email digest.</div></div><div class="hp-item"><div class="hp-name">🔁 Re-Engagement</div><div class="hp-desc">Lost 30+ days — 20-30% convert when re-contacted.</div></div><div class="hp-item"><div class="hp-name">🎯 Daily Goals</div><div class="hp-desc">Set targets. Track daily visit/call/contact progress.</div></div><div class="hp-item"><div class="hp-name">📤 Import Data</div><div class="hp-desc">Upload CSV/Excel from any CRM. Auto-detects columns.</div></div><div class="hp-item"><div class="hp-name">🏥 Referral Portal</div><div class="hp-desc">White-label link for discharge planners — referrals drop into CRM.</div></div><div class="hp-item"><div class="hp-name">📘 Playbook Generator</div><div class="hp-desc">AI builds your custom marketing SOP.</div></div><div class="hp-item"><div class="hp-name">🤖 AI Assistant</div><div class="hp-desc">Ask Claude AI for scripts, analysis, strategies.</div></div><div class="hp-item"><div class="hp-name">🔒 Admin</div><div class="hp-desc">Manage users, seats, staff tracking. Admin only.</div></div>
-  <div style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:11px;margin-top:10px;">
-    <div style="font-size:11px;font-weight:700;color:#a78bfa;margin-bottom:8px;">📱 SMS &amp; Email Auto-Logging</div>
-    <div style="font-size:11px;color:rgba(180,200,255,.6);line-height:1.6;">
-      <strong style="color:#a78bfa">1</strong> Go to Prospect Records or Referral Sources<br>
-      <strong style="color:#a78bfa">2</strong> Click 📱 Text or 📧 Email on any record<br>
-      <strong style="color:#a78bfa">3</strong> Type message — your phone app opens pre-filled<br>
-      <strong style="color:#a78bfa">4</strong> <strong style="color:#8cff66">Auto-logged to Notes</strong> — no manual entry needed
-    </div>
-  </div>
-  <div style="border-top:1px solid rgba(73,182,255,.1);margin-top:14px;padding-top:14px;">
-    <button onclick="localStorage.removeItem(TOUR_KEY);document.getElementById('helpPanel').classList.remove('open');setTimeout(startTour,300);" style="width:100%;background:rgba(73,182,255,.08);border:1px solid rgba(73,182,255,.15);color:#49b6ff;border-radius:8px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;margin-bottom:8px;">🎓 Replay Onboarding Tour</button>
-    <div style="font-size:11px;color:rgba(180,200,255,.35);line-height:1.6;">Info@wemarketpluscom.org<br>(469) 793-0673</div>
-  </div>
-</div>
-<style>
-.ow-ov{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;}
-.ow-bx{background:linear-gradient(180deg,#0d1b2e,#07101c);border:1px solid rgba(73,182,255,.25);border-radius:22px;padding:28px;width:min(500px,100%);max-height:90vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.8);}
-.ow-dt{width:7px;height:7px;border-radius:50%;background:rgba(73,182,255,.15);display:inline-block;margin:0 2px;transition:all .25s;}
-.ow-dt.on{background:#49b6ff;width:20px;border-radius:4px;}
-.ow-hl{background:rgba(73,182,255,.07);border:1px solid rgba(73,182,255,.15);border-radius:9px;padding:10px 13px;font-size:12px;color:#49b6ff;margin-bottom:16px;line-height:1.5;}
-</style>
-<div id="owOv" style="display:none" class="ow-ov">
-  <div class="ow-bx">
-    <div style="text-align:center;margin-bottom:14px" id="owD"></div>
-    <div style="font-size:38px;text-align:center;margin-bottom:10px" id="owI"></div>
-    <div style="font-size:18px;font-weight:900;color:#fff;text-align:center;margin-bottom:8px;line-height:1.2" id="owT"></div>
-    <div style="font-size:13px;color:rgba(190,215,255,.8);text-align:center;line-height:1.75;margin-bottom:14px" id="owX"></div>
-    <div id="owH" style="display:none" class="ow-hl"></div>
-    <div style="display:flex;gap:10px;justify-content:center;margin-bottom:10px;">
-      <button onclick="owSk()" style="background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);border-radius:999px;padding:10px 18px;font-size:12px;cursor:pointer;">Skip Tour</button>
-      <button id="owNB" onclick="owNx()" style="background:linear-gradient(90deg,#3ab4ff,#6ed6ff);color:#07111f;border:none;border-radius:999px;padding:10px 22px;font-size:13px;font-weight:900;cursor:pointer;min-width:90px;">Next →</button>
-    </div>
-    <div style="font-size:11px;color:rgba(180,200,255,.25);text-align:center" id="owP"></div>
-  </div>
-</div>
-<script>
-var TOUR_KEY="hl_crm_pro_v6";
-var OW=[["👋", "Welcome to HospiceLink Pro", "This is your hospice marketing command center. Every tab has a specific job. This tour walks you through each one — what it does, when to use it, and exactly how. Takes about 3 minutes. Let's go.", ""], ["🏠", "Dashboard — Start Every Morning Here", "The Dashboard is your daily briefing. The 4 colored cards at the top tell you what needs attention right now: red = overdue follow-ups, yellow = due today, green = your goal progress, blue = lost prospects to re-engage. Click any card and it jumps you straight to that action. The pipeline charts below update automatically as you add and update prospects.", "📍 Action: Click each colored card to see what needs your attention today"], ["➕", "Add Prospect — How to Enter a New Lead", "Every new patient lead starts here. Fill in the prospect's name, set their status (start with Inquiry), select the referral source who sent them, assign the marketer responsible, and enter their phone and email. Most importantly: set a Next Step and a Next Step Due Date. That due date is what drives your Reminders tab. Without it, nothing gets followed up automatically.", "📍 Rule: Never add a prospect without a Next Step + Due Date. That date runs your whole follow-up system."], ["📋", "Prospect Records — Your Full Patient List", "This is where all your prospects live. Use the search bar to find anyone by name, phone, email, or address. Filter by status (Inquiry, Pending, Admitted, Lost) to focus on one stage. Click 📱 on any row to text that prospect — your phone opens pre-filled. Click 📧 to email them. Both auto-log to your Notes tab immediately — no manual entry ever needed.", "📍 Action: Use 📱 and 📧 buttons daily — every contact auto-logs to Notes"], ["🤝", "Add Referral — How to Add a Referral Source", "Go to Referral Records in the sidebar to add a new referral source. Fill in the contact name, business/facility, phone, email, and address. Set their status: Green means they are actively sending referrals, Red means they haven't sent yet and are a priority target. Choose a Next Step and set a Next Touch Date — this queues them in your Reminders. Click Save Referral + Queue Reminder.", "📍 Rule: Every facility you call on should be in here with a status and a touch date"], ["📋", "Referral Sources — Managing Your Accounts", "The Add Referral tab shows all your referral sources at a glance. Green sources are actively sending — nurture these relationships with regular visits. Red sources are not sending yet — these are your weekly priority targets. Click the phone or email icon on any source to contact them directly. Every message auto-logs to Notes.", "📍 Weekly habit: Visit every Red source. Call every Green source you haven't touched in 7+ days"], ["🔀", "Pipeline — See Your Whole Funnel", "The Pipeline shows every prospect grouped by stage: Inquiry → Pending Admission → Admitted → Lost. The bar chart shows how many are in each stage and your conversion rate between stages. Use this every week in team meetings to identify where prospects are getting stuck. No data entry here — it updates automatically from your Prospect Records.", "📍 Action: Review Pipeline in your weekly team meeting — find where people are getting stuck"], ["🗺️", "Territory View — Know Your Coverage", "Territory View shows performance by geographic area: accounts visited, admissions, and conversion rate per territory. Use this monthly to identify which territories are underperforming. If North Dallas is at 60% conversion and McKinney is at 30%, you know where to focus next month.", "📍 Action: Review monthly — reallocate your time to underperforming territories"], ["📈", "Productivity — Track Your Activity", "Productivity shows your weekly scorecard: facility visits, phone calls, notes synced, and admissions. This is how managers review team performance without having to ask what everyone did. If your notes count is low, you're not syncing after visits. If visits are low, you're not in the field enough. This tab makes accountability automatic.", "📍 Action: Review every Friday — managers use this for weekly 1-on-1s"], ["⚙️", "Automation — Set Up Your Follow-Up Engine", "Automation lets you trigger follow-up workflows with one click: schedule visit reminders, set touch cadences for referral sources, send overdue alerts, and queue paperwork follow-ups. Each automation fires once and logs a timestamped confirmation. Set these up on day one and they run in the background while you're in the field.", "📍 Day 1 action: Set up your follow-up cadence automation before your first field visit"], ["📝", "Notes — Log Every Visit and Call", "After every facility visit or phone call, come to Notes. Select your name (or type it the first time), choose your position, set the date and time, select the prospect or referral source you interacted with (type 3 letters to search), pick the Next Step, set a due date, and write your note. Click Sync & Save — your GPS location captures automatically. Every SMS and email you send also auto-appears here.", "📍 Rule: Sync a note after every visit and every important call — your GPS and next step log automatically"], ["📅", "Reminders — Never Miss a Follow-Up", "Reminders auto-populates from every Next Step Due Date you set on prospects and referral sources. Red = overdue. Yellow = due today. Blue = due this week. Check this tab every morning right after the Dashboard. When you complete a follow-up, mark it done — it clears from the list. In the live CRM, you also get a 7am email digest every morning.", "📍 Morning habit: Dashboard → Reminders → clear everything red and yellow before noon"], ["🔁", "Re-Engagement — Win Back Lost Prospects", "Re-Engagement shows every prospect marked Lost that is 30 or more days old. Studies show 20-30% of lost hospice prospects eventually convert when someone reaches back out at the right time. Click Re-Engage on any prospect to move them back into your active pipeline as an Inquiry. Review this tab every Monday morning.", "📍 Monday habit: Check Re-Engagement — re-assign the ones whose situation may have changed"], ["🎯", "Daily Goals — Stay Accountable", "Set your daily targets at the start of each week: how many facility visits, phone calls, and referral contacts you plan to hit. The progress bars update as you log activity throughout the day. Use this to keep yourself on pace without needing your manager to check in. Review Friday to see if you hit your weekly numbers.", "📍 Monday: Set your targets. Friday: Review your numbers."], ["📤", "Import Data — Bring Your Existing List", "If you have an existing prospect list in Excel or CSV from another CRM, go to Import Data. Download the sample template first to see the exact column format needed. Fill in your data matching that format, then upload. The system detects columns automatically. Most agencies are fully migrated in under 10 minutes.", "📍 Day 1 action: Download the template, fill in your existing list, upload it"], ["🏥", "Referral Portal — Give Hospitals a Direct Link", "Your Referral Portal is a white-label intake form you share with hospital discharge planners. Copy your unique link and send it to every discharge planner and social worker you visit. When they submit a referral on their end, it appears instantly in your Prospect Records as a new Inquiry. Print the QR code and post it at every nursing station you visit.", "📍 This week: Share your portal link with every discharge planner you visit"], ["📘", "Playbook Generator — Your Custom Marketing SOP", "The Playbook Generator uses AI to build your complete hospice marketing playbook in about 30 seconds. Enter your city, team size, monthly admission goal, and biggest challenge. Click Generate. You get your weekly schedule, top referral targets by facility type, your 30-second pitch, and a 90-day ramp plan — all customized to your market.", "📍 Day 1 action: Generate your playbook and share it with your team"], ["🤖", "AI Assistant — Your 24/7 Strategy Partner", "The AI Assistant is powered by Claude and available any time. Ask it anything: Which referral sources need attention? Draft a follow-up message for a hospital case manager. What should I prioritize today? How do I handle a family that keeps delaying? It gives practical, hospice-specific answers in seconds. Use it before difficult calls to prepare your approach.", "📍 Use before every difficult call or visit — ask it to draft your opening message"], ["🔒", "Admin — For Account Owners Only", "The Admin tab is only visible to the account admin. From here you can edit or delete any record in the system, manage team seats and user roles, invite new team members by email, and review staff tracking entries. If a team member leaves or is added, this is where you manage their access. Standard users never see this tab.", "📍 Admin action: Invite your team members here on day one — set their roles"], ["🎉", "You're Ready — Day 1 Checklist", "Here is your Day 1 checklist: 1) Import your existing prospect list using Import Data. 2) Add your first new prospect with a Next Step and Due Date. 3) Add your top referral sources in Referral Records with Green or Red status. 4) Share your Referral Portal link with at least 3 discharge planners. 5) Generate your Marketing Playbook. 6) Set up your Automation cadences. Click the ? button anytime to replay this tour.", "📞 Questions? Info@wemarketpluscom.org  |  (469) 793-0673"]];
-var oi=0;
-function startTour(){document.getElementById('owOv').style.display='flex';owR(0);}
-function owR(i){
-  var s=OW[i],n=OW.length;
-  document.getElementById('owD').innerHTML=OW.map(function(_,j){return'<div class="ow-dt'+(j===i?' on':'')+'" style="display:inline-block"></div>';}).join('');
-  document.getElementById('owI').textContent=s[0];
-  document.getElementById('owT').textContent=s[1];
-  document.getElementById('owX').textContent=s[2];
-  var h=document.getElementById('owH');
-  if(s[3]){h.textContent=s[3];h.style.display='block';}else{h.style.display='none';}
-  document.getElementById('owNB').textContent=(i===n-1)?"Let's Go! 🚀":"Next →";
-  document.getElementById('owP').textContent='Step '+(i+1)+' of '+n;
-}
-function owNx(){if(oi<OW.length-1){oi++;owR(oi);}else owSk();}
-function owSk(){localStorage.setItem(TOUR_KEY,'1');document.getElementById('owOv').style.display='none';}
-(function(){var seen=localStorage.getItem(TOUR_KEY);if(!seen)setTimeout(startTour,1200);})();
-
-/* ── SMS / EMAIL AUTO-LOGGING ── */
-function autoLogCommunication(n,m,prev,ct){
-  var nl=document.getElementById("notesList");if(!nl)return;
-  var w=nl.querySelector(".grid-2")||nl;
-  var now=new Date();
-  var b=document.createElement("div");b.className="note-box";
-  b.style.borderLeft="4px solid "+(m==="SMS"?"#7c3aed":"#2563eb");
-  b.innerHTML="<h4 style='color:"+(m==="SMS"?"#7c3aed":"#2563eb")+"'>"+(m==="SMS"?"📱":"📧")+" "+m+" → "+n+"</h4>"
-    +"<p><strong>Date:</strong> "+now.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})
-    +" at "+now.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})+"</p>"
-    +"<p><strong>Contact:</strong> "+(ct==="prospect"?"Prospect":"Referral Source")+"</p>"
-    +"<p>"+prev+"</p>"
-    +"<p style='color:#0a6c2f;font-size:11px;font-weight:700;margin-top:6px;'>✅ Auto-logged to Notes</p>";
-  w.prepend(b);
-  var cnt=gs(K.notes,0)+1;ss(K.notes,cnt);
-  if(typeof updateDashboard==="function")updateDashboard();
-}
-function callContact(phone,name){
-  if(confirm("📞 Call "+name+" at "+phone+"?\n\nTap OK to open your phone dialer.")){
-    window.open("tel:"+phone);
-    autoLogCommunication(name,"Call","Outbound call to "+phone,"prospect");
-  }
-}
-function sendContactSMS(phone,name,ct){
-  var msg=prompt("📱 Text to "+name+" ("+phone+") — Type your message:","Hi "+name+", this is your HospiceLink team. ");
-  if(!msg)return;
-  window.open("sms:"+phone+"?&body="+encodeURIComponent(msg));
-  autoLogCommunication(name,"SMS",msg.slice(0,100)+(msg.length>100?"…":""),ct);
-}
-function sendContactEmail(email,name,ct){
-  var sub=prompt("📧 Email subject to "+name+" ("+email+"):","Follow-up from HospiceLink");
-  if(!sub)return;
-  var body=prompt("Message body:","Dear "+name+", ");
-  if(!body)return;
-  window.open("mailto:"+email+"?subject="+encodeURIComponent(sub)+"&body="+encodeURIComponent(body));
-  autoLogCommunication(name,"Email",sub,ct);
-}
-
-function adminDeleteProspect(i){
-  if(!confirm("Delete this prospect? This cannot be undone."))return;
-  var prsp=gs(K.prsp,defProsp());
-  prsp.splice(i,1);
-  ss(K.prsp,prsp);
-  renderProspectRecords();
-  if(typeof updateDashboard==="function")updateDashboard();
-}
-
-function crmLogout(){
-  try{localStorage.removeItem("hl_token");localStorage.removeItem("hl_user");}catch(e){}
-  window.location.href="login.html";
-}
-
-
-/* ── AUTOMATION PROSPECT DROPDOWN ── */
-function initAutoProspectSelect(){
-  var sel=document.getElementById('autoProspectSelect');
-  if(!sel)return;
-  var prsp=gs(K.prsp,defProsp());
-  sel.innerHTML='<option value="">— Select a prospect —</option>';
-  prsp.filter(function(p){return p.status!=='Admitted';}).forEach(function(p,i){
-    var o=document.createElement('option');o.value=i;o.textContent=p.name+' ('+p.status+')';sel.appendChild(o);
-  });
-  sel.onchange=function(){
-    var idx=parseInt(this.value);
-    var statusEl=document.getElementById('autoProspectStatus');
-    if(isNaN(idx)||!statusEl){statusEl&&(statusEl.textContent='Select a prospect above');return;}
-    var p=prsp[idx];
-    statusEl.innerHTML='<span class="pill '+({'Inquiry':'pill-blue','Pending Admission':'pill-yellow','Lost':'pill-red','Admitted':'pill-green'}[p.status]||'pill-blue')+'">'+p.status+'</span> &nbsp;'+p.marketer;
-  };
-}
-function fireAutoForProspect(btn,msg){
-  var sel=document.getElementById('autoProspectSelect');
-  var prospectName=sel&&sel.value!==''?sel.options[sel.selectedIndex].text.split(' (')[0]:'';
-  if(!prospectName){alert('Please select a prospect first (Step 1 above).');return;}
-  btn.disabled=true;btn.style.opacity='.5';
-  var log=document.getElementById('autoLog');
-  if(log){
-    var empty=log.querySelector('div[style*="italic"]');if(empty)empty.remove();
-    var d=document.createElement('div');
-    d.style.cssText='background:rgba(140,255,102,.08);border:1px solid rgba(140,255,102,.2);border-radius:9px;padding:10px 14px;font-size:12px;color:var(--text);';
-    d.innerHTML='✅ <strong>'+prospectName+'</strong> — '+msg+'<span style="color:var(--muted);font-size:11px;float:right;">'+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</span>';
-    log.prepend(d);
-  }
-  setTimeout(function(){btn.disabled=false;btn.style.opacity='1';},2000);
-}
-
-/* Also keep old fireAuto for backwards compat */
-function fireAuto(btn,msg){
-  btn.classList.add('fired');btn.disabled=true;
-  var log=document.getElementById('autoLog');
-  if(log){var d=document.createElement('div');d.style.cssText='background:rgba(140,255,102,.08);border:1px solid rgba(140,255,102,.2);border-radius:9px;padding:9px 13px;font-size:12px;color:var(--text);';d.textContent='✅ '+msg+' — '+new Date().toLocaleTimeString();log.prepend(d);}
-}
-
-
-
-var PROSPECT_STEP_DESC = {
-  "Immediate Family Outreach (Call/Text)": "Call or text the patient's family today. Introduce yourself, explain hospice services, and ask if they'd be open to a visit.",
-  "Schedule On-Site Visit": "Contact the case manager at the referring facility. Get on their schedule. Confirm patient room number and best visit time.",
-  "Conduct Bedside Presentation": "Visit the patient and family in person. Walk them through what hospice care provides. Answer questions. Address hesitation calmly.",
-  "Request Clinical Records (H&P)": "Ask the facility CM or physician for the patient's history and physical. Required to confirm hospice eligibility.",
-  "RN Assessment Requested": "Notify your clinical director that an RN assessment is needed. Provide patient name, location, and insurance info.",
-  "RN Assessment Scheduled": "RN assessment is on the calendar. Confirm date/time with the family. Follow up the day before.",
-  "Obtain Physician Order for Eval": "The attending physician needs to sign a hospice evaluation order. Ask the case manager to facilitate — usually 24-48 hours.",
-  "Insurance Verification in Progress": "Your billing team is verifying coverage. Follow up with them within 24 hours for a status update.",
-  "Admission Paperwork in Progress": "Patient is approved — get the hospice election forms signed by the family. Move quickly.",
-  "CM Follow-Up (Status Update)": "Check back with the referring case manager. Ask: Has the family made a decision? Any change in status?",
-  "Overcoming Family Hesitation": "Family has concerns. Schedule a family meeting. Bring your clinical liaison if possible to answer medical questions."
-};
-var REFERRAL_STEP_DESC = {
-  "Initial Contact Made": "First visit done. Send a follow-up text or email the same day. Log this touch in the Touch Log tab.",
-  "Dropped Off Materials": "Left brochures and your card. Follow up in 3-5 days to see if they have questions.",
-  "Schedule Follow-Up Visit": "Book your next visit now. Don't leave without a date on the calendar. Aim for within 7-10 days.",
-  "Needs Assessment Conversation": "Schedule 15 minutes to ask: What do they need from a hospice partner? Listen more than you talk.",
-  "First Referral Received": "They sent their first patient — deliver exceptional service. Close the loop with the CM after admission.",
-  "Active Referral Partner — Maintain": "Visit at least every 14 days. Bring lunch quarterly. Text thank-you after every admission.",
-  "Re-Engagement Needed (30+ days cold)": "No referral in 30+ days. Call to check in — not to pitch. Ask how things are going.",
-  "Key Decision Maker Meeting": "Meeting with the DON, director, or medical director. Bring a one-pager on your agency's outcomes."
-};
-function showProspectStepDesc(val){
-  var box=document.getElementById("prospectStepDescBox");
-  if(!box)return;
-  var desc=PROSPECT_STEP_DESC[val];
-  if(desc){box.textContent=desc;box.style.display="block";}
-  else{box.style.display="none";}
-}
-function showReferralStepDesc(val){
-  var box=document.getElementById("refStepDescBox");
-  if(!box)return;
-  var desc=REFERRAL_STEP_DESC[val];
-  if(desc){box.textContent=desc;box.style.display="block";}
-  else{box.style.display="none";}
-}
-function showNoteStepDesc(val){
-  var box=document.getElementById("noteStepDescBox");
-  if(!box)return;
-  var desc=PROSPECT_STEP_DESC[val];
-  if(desc){box.textContent=desc;box.style.display="block";}
-  else{box.style.display="none";}
-}
-
-
-
-/* ── COMPLETE PROSPECT SAVE WITH CONFIRMATION ── */
-function saveProspect(){
-  var name=(document.getElementById("prospectName")||{value:""}).value.trim();
-  var status=(document.getElementById("prospectStatus")||{value:""}).value;
-  var source=(document.getElementById("prospectReferralSourceSelect")||{value:""}).value;
-  var nm=(document.getElementById("newAssignedMarketerInput")||{value:""}).value.trim();
-  var marketer=nm||((document.getElementById("prospectAssignedMarketerSelect")||{value:""}).value);
-  var nextStep=(document.getElementById("prospectNextStep")||{value:""}).value;
-  var nextStepDate=(document.getElementById("prospectNextStepDate")||{value:""}).value||"";
-  var assignedTo=(document.getElementById("prospectAssignedTo")||{value:"Marketer"}).value||"Marketer";
-  var phone=(document.getElementById("prospectPhone")||{value:""}).value.trim();
-  var email=(document.getElementById("prospectEmail")||{value:""}).value.trim();
-  var address=(document.getElementById("prospectAddress")||{value:""}).value.trim();
-  var secondary=(document.getElementById("prospectSecondary")||{value:""}).value.trim();
-  var secondaryRelation=(document.getElementById("prospectSecondaryRelation")||{value:""}).value.trim();
-  var secondaryPhone=(document.getElementById("prospectSecondaryPhone")||{value:""}).value.trim();
-  var secondaryEmail=(document.getElementById("prospectSecondaryEmail")||{value:""}).value.trim();
-  
-  if(!name){alert("Prospect name is required.");return;}
-  if(!status){alert("Please select a status.");return;}
-  if(!marketer){ marketer = "Unassigned"; }
-  if(!nextStep){alert("Please select a Next Step from the dropdown — this tells your team what to do and queues the reminder.");return;}
-  if(!nextStepDate){alert("Please set a Next Step Due Date — this is what triggers the reminder in the Reminders tab.");return;}
-  
-  if(nm){var m=gs(K.mkt,["Ericka"]);if(!m.includes(nm)){m.push(nm);ss(K.mkt,m);if(typeof loadMarketers==="function")loadMarketers();}}
-  
-  var prsp=gs(K.prsp,defProsp());
-  prsp.unshift({name:name,status:status,source:source,marketer:marketer,nextStep:nextStep,nextStepDate:nextStepDate,assignedTo:assignedTo,phone:phone,email:email,address:address,secondary:secondary,secondaryRelation:secondaryRelation,secondaryPhone:secondaryPhone,secondaryEmail:secondaryEmail});
-  ss(K.prsp,prsp);
-  
-  if(typeof renderProspectsTable==="function")renderProspectsTable();
-  if(typeof renderProspectRecords==="function")renderProspectRecords();
-  if(typeof updateDashboard==="function")updateDashboard();
-  if(typeof renderReminders==="function")renderReminders();
-  if(typeof initAutoProspectSelect==="function")initAutoProspectSelect();
-  
-  // Show confirmation
-  var conf=document.getElementById("prospectSaveConfirm");
-  if(conf){
-    conf.innerHTML="✅ <strong>"+name+"</strong> added! Reminder queued for <strong>"+nextStep+"</strong> on <strong>"+nextStepDate+"</strong> → assigned to <strong>"+assignedTo+"</strong>. Check Reminders tab to see it.";
-    conf.style.display="block";
-    setTimeout(function(){if(conf)conf.style.display="none";},6000);
-  }
-  
-  // Clear form
-  ["prospectName","newAssignedMarketerInput","prospectPhone","prospectEmail","prospectAddress","prospectSecondary","prospectSecondaryRelation","prospectSecondaryPhone","prospectSecondaryEmail"].forEach(function(id){var el=document.getElementById(id);if(el)el.value="";});
-  var ns=document.getElementById("prospectNextStep");if(ns)ns.value="";
-  var nd=document.getElementById("prospectNextStepDate");if(nd)nd.value="";
-  var db=document.getElementById("prospectStepDescBox");if(db)db.style.display="none";
-}
-
-
-
-/* ── NOTES SAVE — UPDATES PROSPECT NEXT STEP + RE-QUEUES REMINDER ── */
-function saveDemoNote(){
-  var sn=(document.getElementById("noteNameSelect")||{value:""}).value.trim();
-  var nn=(document.getElementById("noteNewName")||{value:""}).value.trim();
-  var fn=nn||sn;
-  var pos=(document.getElementById("notePosition")||{value:""}).value;
-  var dt=(document.getElementById("noteDate")||{value:""}).value;
-  var ti=(document.getElementById("noteTime")||{value:""}).value;
-  var ns=(document.getElementById("noteNextStep")||{value:""}).value;
-  var nd=(document.getElementById("noteNextStepDate")||{value:""}).value||"";
-  var prospect=(document.getElementById("noteProspectSelect")||{value:""}).value;
-  var nt=(document.getElementById("noteText")||{value:""}).value.trim();
-  
-  if(!fn){alert("Please select or enter your name.");return;}
-  if(!pos){alert("Please select your position.");return;}
-  if(!dt){alert("Please enter the date.");return;}
-  if(!ns){alert("Please select the Next Step from the dropdown — this updates the reminder queue.");return;}
-  if(!nt){alert("Please enter your note.");return;}
-  
-  if(typeof saveNameIfNeeded==="function")saveNameIfNeeded(fn);
-  
-  // If a prospect is selected and new due date provided, UPDATE their next step + queue new reminder
-  if(prospect&&nd){
-    var prsp=gs(K.prsp,defProsp());
-    var pidx=prsp.findIndex(function(p){return p.name===prospect;});
-    if(pidx>=0){
-      prsp[pidx].nextStep=ns;
-      prsp[pidx].nextStepDate=nd;
-      ss(K.prsp,prsp);
-      if(typeof renderProspectRecords==="function")renderProspectRecords();
-      if(typeof renderReminders==="function")renderReminders();
-    }
-  }
-  
-  // Get GPS-style location
-  var loc="";
-  if(navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(function(pos){loc=pos.coords.latitude.toFixed(4)+", "+pos.coords.longitude.toFixed(4);},function(){loc="Location capture failed";});
-  }
-  
-  // Build note display
-  var list=document.getElementById("notesList");
-  var w=list?list.querySelector(".grid-2"):null;
-  var now=new Date();
-  var nowStr=now.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})+" at "+now.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
-  
-  if(w){
-    var b=document.createElement("div");b.className="note-box";
-    b.innerHTML="<h4>"+fn+(prospect?" — "+prospect:"")+"</h4>"
-      +"<p><strong>Position:</strong> "+pos+"</p>"
-      +"<p><strong>Date/Time:</strong> "+dt+" at "+ti+"</p>"
-      +(prospect?"<p><strong>Prospect:</strong> "+prospect+"</p>":"")
-      +"<p><strong>Next Step:</strong> "+ns+"</p>"
-      +(nd?"<p><strong>Next Step Due Date:</strong> <span style='color:#f9c74f;font-weight:700;'>"+nd+"</span> — Reminder re-queued ✅</p>":"<p style='color:#94a3b8;font-size:12px;'>📅 No due date set for this step — go to Reminders to add one.</p>")
-      +"<p>"+nt+"</p>"
-      +"<p style='color:#6c8aab;font-size:11px;margin-top:6px;'>✅ Synced — GPS Captured | "+nowStr+"</p>";
-    w.prepend(b);
-  }
-  
-  // Update tracking table
-  var tb=document.getElementById("staffTrackingBody");
-  if(tb){
-    var tr=document.createElement("tr");
-    tr.innerHTML="<td>"+fn+"</td><td>"+pos+"</td><td>"+dt+"</td><td>"+ti+"</td><td>"+(prospect||"—")+"</td><td>"+ns+"</td><td style='color:#0a6c2f;'>✅ Synced</td>";
-    tb.prepend(tr);
-  }
-  
-  var cnt=gs(K.notes,0)+1;ss(K.notes,cnt);
-  if(typeof updateDashboard==="function")updateDashboard();
-  
-  var st=document.getElementById("syncStatus");
-  if(st){
-    st.innerHTML="✅ Note synced"+(prospect&&nd?" — Reminder re-queued for <strong>"+ns+"</strong> on <strong>"+nd+"</strong>":"")+" — GPS captured";
-    setTimeout(function(){if(st)st.innerHTML="";},5000);
-  }
-  
-  // Clear form
-  ["noteNewName","noteText","noteNextStepDate"].forEach(function(id){var el=document.getElementById(id);if(el)el.value="";});
-  var nn2=document.getElementById("noteNextStep");if(nn2)nn2.value="";
-  var db2=document.getElementById("noteStepDescBox");if(db2)db2.style.display="none";
-}
-
-
-
-/* ── REFERRAL SAVE — ADDS NEXT STEP + TOUCH DATE + QUEUES REMINDER ── */
-function saveReferralFromModal(){
-  var cn=(document.getElementById("refContactName")||{value:""}).value.trim();
-  var biz=(document.getElementById("refBusiness")||{value:""}).value.trim();
-  if(!cn||!biz){alert("Contact name and business name are required.");return;}
-  
-  var nextStep=(document.getElementById("refNextStep")||{value:""}).value;
-  var nextTouchDate=(document.getElementById("refNextTouchDate")||{value:""}).value||"";
-  
-  if(!nextStep){alert("Please select a Next Step — this tells your team what to do with this referral source.");return;}
-  if(!nextTouchDate){alert("Please set a Next Touch Date — this queues a reminder in the Reminders tab.");return;}
-  
-  var refs=gs(K.refs,defRefs());
-  refs.push({
-    contactName:cn,
-    business:biz,
-    phone:(document.getElementById("refPhone")||{value:""}).value.trim(),
-    email:(document.getElementById("refEmail")||{value:""}).value.trim(),
-    address:(document.getElementById("refAddress")||{value:""}).value.trim(),
-    status:(document.getElementById("refStatus")||{value:"Red"}).value,
-    nextStep:nextStep,
-    nextTouchDate:nextTouchDate
-  });
-  ss(K.refs,refs);
-  
-  if(typeof loadReferralSources==="function")loadReferralSources();
-  if(typeof renderReminders==="function")renderReminders();
-  if(typeof closeModal==="function")closeModal("addReferralModal");
-  
-  ["refContactName","refBusiness","refPhone","refEmail","refAddress"].forEach(function(id){var el=document.getElementById(id);if(el)el.value="";});
-  var rns=document.getElementById("refNextStep");if(rns)rns.value="";
-  var rnd=document.getElementById("refNextTouchDate");if(rnd)rnd.value="";
-  var rdb=document.getElementById("refStepDescBox");if(rdb)rdb.style.display="none";
-}
-
-
-
-/* ── RENDER REMINDERS — PROSPECTS + REFERRAL SOURCES ── */
-function renderReminders(){
-  var prsp=gs(K.prsp,defProsp());
-  var refs=gs(K.refs,defRefs());
-  var today=new Date();today.setHours(0,0,0,0);
-  var todayStr=today.toISOString().split("T")[0];
-  var weekEnd=new Date(today);weekEnd.setDate(weekEnd.getDate()+7);
-  
-  var overdue=[], dueToday=[], thisWeek=[];
-  
-  // Prospect reminders
-  prsp.forEach(function(p){
-    if(!p.nextStepDate||p.status==="Admitted"||p.status==="Lost")return;
-    var d=new Date(p.nextStepDate);d.setHours(0,0,0,0);
-    var days=Math.round((d-today)/(1000*60*60*24));
-    var item={type:"prospect",name:p.name,step:p.nextStep||"Follow up",date:p.nextStepDate,days:days,marketer:p.marketer,assignedTo:p.assignedTo||p.marketer};
-    if(d<today)overdue.push(item);
-    else if(p.nextStepDate===todayStr)dueToday.push(item);
-    else if(d<=weekEnd)thisWeek.push(item);
-  });
-  
-  // Referral source touch reminders
-  refs.forEach(function(r){
-    if(!r.nextTouchDate)return;
-    var d=new Date(r.nextTouchDate);d.setHours(0,0,0,0);
-    var days=Math.round((d-today)/(1000*60*60*24));
-    var item={type:"referral",name:r.business,step:r.nextStep||"Visit/Follow-Up",date:r.nextTouchDate,days:days,marketer:"",contact:r.contactName,assignedTo:"Marketer"};
-    if(d<today)overdue.push(item);
-    else if(r.nextTouchDate===todayStr)dueToday.push(item);
-    else if(d<=weekEnd)thisWeek.push(item);
-  });
-  
-  // Update counts
-  var oc=document.getElementById("remOverdueCount");if(oc)oc.textContent=overdue.length;
-  var tc=document.getElementById("remTodayCount");if(tc)tc.textContent=dueToday.length;
-  var wc=document.getElementById("remWeekCount");if(wc)wc.textContent=thisWeek.length;
-  
-  var body=document.getElementById("remindersBody");
-  var empty=document.getElementById("remindersEmpty");
-  if(!body)return;
-  body.innerHTML="";
-  
-  var allItems=[];
-  overdue.forEach(function(i){i.urgency="overdue";allItems.push(i);});
-  dueToday.forEach(function(i){i.urgency="today";allItems.push(i);});
-  thisWeek.forEach(function(i){i.urgency="week";allItems.push(i);});
-  
-  if(allItems.length===0){if(empty)empty.style.display="block";return;}
-  if(empty)empty.style.display="none";
-  
-  allItems.forEach(function(item){
-    var isRef=item.type==="referral";
-    var urgLabel=item.urgency==="overdue"
-      ?"<span style=\"color:#f87171;font-size:11px;font-weight:700;\">⚠️ Overdue "+Math.abs(item.days)+" day"+(Math.abs(item.days)!==1?"s":"")+"</span>"
-      :item.urgency==="today"
-      ?"<span style=\"color:#fbbf24;font-size:11px;font-weight:700;\">📅 Due today</span>"
-      :"<span style=\"color:#60a5fa;font-size:11px;font-weight:700;\">📆 Due "+item.date+"</span>";
-    var typeTag=isRef
-      ?"<span style=\"background:rgba(34,197,94,.15);color:#4ade80;font-size:10px;font-weight:700;border-radius:4px;padding:2px 6px;margin-left:6px;\">🏥 Referral Source</span>"
-      :"<span style=\"background:rgba(73,182,255,.15);color:#49b6ff;font-size:10px;font-weight:700;border-radius:4px;padding:2px 6px;margin-left:6px;\">👤 Prospect</span>";
-    var subLine=isRef
-      ?"Contact: "+item.contact+" · "+item.step
-      :"Marketer: "+(item.assignedTo||item.marketer)+" · "+item.step;
-    
-    var row=document.createElement("div");
-    row.style.cssText="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.05);";
-    row.innerHTML="<div style=\"flex:1\">"
-      +"<div style=\"font-weight:700;font-size:13px;\">"+item.name+typeTag+"</div>"
-      +"<div style=\"font-size:11px;color:var(--muted);margin-top:2px;\">"+subLine+"</div>"
-      +"<div style=\"margin-top:4px;\">"+urgLabel+"</div>"
-      +"</div>"
-      +"<button class=\"btn btn-green btn-small\" onclick=\"openCompleteStep(this,'"+item.name+"','"+item.type+"')\">✓ Mark Done</button>";
-    body.appendChild(row);
-  });
-}
-
-/* Quick-complete a step: log what happened + set new step + new date */
-function openCompleteStep(btn,name,type){
-  // Show inline complete form below the row
-  var row=btn.closest("div[style]");
-  if(row.querySelector(".complete-form"))return; // already open
-  
-  var isRef=type==="referral";
-  var stepOptions=isRef
-    ?Object.keys(REFERRAL_STEP_DESC||{}).map(function(s){return"<option>"+s+"</option>";}).join("")
-    :Object.keys(PROSPECT_STEP_DESC||{}).map(function(s){return"<option>"+s+"</option>";}).join("");
-  
-  var form=document.createElement("div");
-  form.className="complete-form";
-  form.style.cssText="background:rgba(73,182,255,.06);border-top:1px solid rgba(73,182,255,.15);padding:12px;margin-top:8px;border-radius:0 0 10px 10px;width:100%;";
-  form.innerHTML="<div style=\"font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;\">✅ Complete: "+name+"</div>"
-    +"<div style=\"display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;\">"
-    +"<div><label style=\"font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:3px;\">What did you do?</label>"
-    +"<input type=\"text\" id=\"completeNote_"+safeId(name)+"\" placeholder=\"Brief note (e.g. Called family, left voicemail)\" style=\"width:100%;border:1px solid #d7e0ec;border-radius:8px;padding:7px;font-size:12px;font:inherit;\"></div>"
-    +"<div><label style=\"font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:3px;\">New Next Step</label>"
-    +"<select id=\"completeStep_"+safeId(name)+"\" style=\"width:100%;border:1px solid #d7e0ec;border-radius:8px;padding:7px;font-size:12px;font:inherit;\"><option value=\"\">— Select —</option>"+stepOptions+"</select></div>"
-    +"<div><label style=\"font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:3px;\">New Due Date</label>"
-    +"<input type=\"date\" id=\"completeDate_"+safeId(name)+"\" style=\"width:100%;border:2px solid rgba(249,199,79,.4);border-radius:8px;padding:7px;font-size:12px;font:inherit;background:#fffbeb;\"></div>"
-    +"<div style=\"display:flex;align-items:flex-end;\"><button class=\"btn btn-green btn-small\" onclick=\"saveCompleteStep('"+name+"','"+type+"')\" style=\"width:100%\">Save + Re-Queue Reminder</button></div>"
-    +"</div>";
-  row.appendChild(form);
-  btn.style.display="none";
-}
-
-function saveCompleteStep(name,type){
-  var key=name.replace(/\s/g,"_");
-  var note=(document.getElementById("completeNote_"+key)||{value:""}).value.trim();
-  var newStep=(document.getElementById("completeStep_"+key)||{value:""}).value;
-  var newDate=(document.getElementById("completeDate_"+key)||{value:""}).value;
-  
-  if(!newStep){alert("Please select the new next step.");return;}
-  if(!newDate){alert("Please set a new due date.");return;}
-  
-  if(type==="prospect"){
-    var prsp=gs(K.prsp,defProsp());
-    var idx=prsp.findIndex(function(p){return p.name===name;});
-    if(idx>=0){prsp[idx].nextStep=newStep;prsp[idx].nextStepDate=newDate;ss(K.prsp,prsp);}
-    if(typeof renderProspectRecords==="function")renderProspectRecords();
-  } else {
-    var refs=gs(K.refs,defRefs());
-    var ridx=refs.findIndex(function(r){return r.business===name;});
-    if(ridx>=0){refs[ridx].nextStep=newStep;refs[ridx].nextTouchDate=newDate;ss(K.refs,refs);}
-    if(typeof loadReferralSources==="function")loadReferralSources();
-  }
-  
-  if(typeof renderReminders==="function")renderReminders();
-  if(typeof updateDashboard==="function")updateDashboard();
-  
-  if(note){
-    var list=document.getElementById("notesList");
-    var w=list?list.querySelector(".grid-2"):null;
-    if(w){
-      var b=document.createElement("div");b.className="note-box";
-      b.innerHTML="<h4>"+name+" — Step Completed</h4><p>"+note+"</p><p><strong>New Next Step:</strong> "+newStep+"</p><p><strong>New Due Date:</strong> "+newDate+" — Reminder re-queued ✅</p><p style=\"color:#6c8aab;font-size:11px;\">Auto-logged from Reminders</p>";
-      w.prepend(b);
-    }
-  }
-}
-
-
-/* ── INIT NOTE PROSPECT SELECT ── */
-function initNoteProspectSelect(){ /* replaced by typeahead */ }
-
-function filterNoteProspects(val) {
-  var drop = document.getElementById("noteProspectDropdown");
-  var hiddenSel = document.getElementById("noteProspectSelect");
-  if (!drop) return;
-  drop.innerHTML = "";
-  if (!val || val.length < 3) { drop.style.display = "none"; return; }
-  var prsp = gs(K.prsp, typeof defProsp === "function" ? defProsp() : []);
-  var refs = gs(K.refs, typeof defRefs === "function" ? defRefs() : []);
-  var all = [];
-  prsp.forEach(function(p) {
-    if (p.name) all.push({ label: p.name + " (Prospect \u2013 " + (p.status || "") + ")", value: p.name });
-  });
-  refs.forEach(function(r) {
-    var nm = r.contactName || r.contact || r.name || "";
-    var biz = r.business || "";
-    if (nm) all.push({ label: nm + (biz ? " @ " + biz : "") + " (Referral)", value: nm + (biz ? " @ " + biz : "") });
-  });
-  var q = val.toLowerCase();
-  var matches = all.filter(function(x) { return x.label.toLowerCase().indexOf(q) >= 0; });
-  var gen = document.createElement("div");
-  gen.style.cssText = "padding:9px 12px;font-size:12px;cursor:pointer;border-bottom:1px solid #f0f4f8;color:#555;";
-  gen.textContent = "\u2014 General note (no specific person) \u2014";
-  gen.onmousedown = function(e) {
-    e.preventDefault();
-    document.getElementById("noteProspectSearch").value = "";
-    if (hiddenSel) hiddenSel.value = "";
-    var ch = document.getElementById("noteProspectChosen"); if (ch) ch.textContent = "";
-    drop.style.display = "none";
-  };
-  drop.appendChild(gen);
-  if (matches.length === 0) {
-    var nd = document.createElement("div");
-    nd.style.cssText = "padding:9px 12px;font-size:12px;color:#888;";
-    nd.textContent = "No matches found";
-    drop.appendChild(nd);
-  } else {
-    matches.slice(0, 12).forEach(function(m) {
-      var d = document.createElement("div");
-      d.style.cssText = "padding:9px 12px;font-size:12px;cursor:pointer;border-bottom:1px solid #f0f4f8;";
-      d.textContent = m.label;
-      d.onmouseover = function() { d.style.background = "#f0f7ff"; };
-      d.onmouseout  = function() { d.style.background = ""; };
-      d.onmousedown = function(e) {
-        e.preventDefault();
-        document.getElementById("noteProspectSearch").value = m.label;
-        if (hiddenSel) hiddenSel.value = m.value;
-        var ch = document.getElementById("noteProspectChosen");
-        if (ch) ch.textContent = "Selected: " + m.value;
-        drop.style.display = "none";
-      };
-      drop.appendChild(d);
-    });
-  }
-  drop.style.display = "block";
-}
-document.addEventListener("click", function(e) {
-  var drop = document.getElementById("noteProspectDropdown");
-  var inp  = document.getElementById("noteProspectSearch");
-  if (drop && inp && !inp.contains(e.target) && !drop.contains(e.target)) {
-    drop.style.display = "none";
-  }
-});
-
-
-// ── CRM FIX PATCH ────────────────────────────────────────────
-
-// 1. Fix openModal for invite/remove - use style.display instead of classList
-function openModal(id) {
-  var el = document.getElementById(id);
-  if (!el) return;
-  if (el.classList && el.classList.contains('modal-overlay')) {
-    el.classList.add('open');
-  } else {
-    el.style.display = 'flex';
-  }
-}
-function closeModal(id) {
-  var el = document.getElementById(id);
-  if (!el) return;
-  if (el.classList && el.classList.contains('modal-overlay')) {
-    el.classList.remove('open');
-  } else {
-    el.style.display = 'none';
-  }
-}
-function openRemoveUserModal() {
-  document.getElementById('removeUserModal').style.display = 'flex';
-}
-
-// 2. Invite + Remove user handlers (real API with fallback)
-async function doSendInvite() {
-  var firstName = (document.getElementById('invFirstName')||{value:''}).value.trim();
-  var email = (document.getElementById('invEmail2')||{value:''}).value.trim();
-  var role = (document.getElementById('invRole2')||{value:'marketer'}).value;
-  var msg = document.getElementById('inviteMsg2');
-  if (!firstName || !email) { msg.style.color='#dc2626'; msg.textContent='First name and email are required.'; return; }
-  msg.style.color='#64748b'; msg.textContent='Sending invite...';
-  try {
-    var token = localStorage.getItem('hl_token') || '';
-    var res = await fetch('https://wemarketplus-backend-1.onrender.com/api/users/invite', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify({ firstName: firstName, email: email, role: role })
-    });
-    var data = await res.json();
-    if (res.ok) {
-      msg.style.color='#166534';
-      msg.textContent = '✅ Invite sent to ' + email + '! They will receive login credentials by email.';
-      document.getElementById('invFirstName').value='';
-      document.getElementById('invEmail2').value='';
-      setTimeout(function(){ document.getElementById('inviteUserModal').style.display='none'; msg.textContent=''; }, 3000);
-    } else {
-      msg.style.color='#dc2626';
-      msg.textContent = '❌ ' + (data.message || 'Error sending invite. Contact Info@wemarketpluscom.org');
-    }
-  } catch(e) {
-    msg.style.color='#dc2626';
-    msg.textContent = '❌ Unable to reach server. Email Info@wemarketpluscom.org to add ' + email + ' as ' + role + '.';
-  }
-}
-
-async function doRemoveUser() {
-  var email = (document.getElementById('removeEmail2')||{value:''}).value.trim();
-  var msg = document.getElementById('removeMsg2');
-  if (!email) { msg.textContent='Email is required.'; return; }
-  if (!confirm('Remove ' + email + '? Their access will be revoked immediately.')) return;
-  msg.style.color='#64748b'; msg.textContent='Removing...';
-  try {
-    var token = localStorage.getItem('hl_token') || '';
-    var res = await fetch('https://wemarketplus-backend-1.onrender.com/api/team/remove', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify({ email: email })
-    });
-    var data = await res.json();
-    if (res.ok) {
-      msg.style.color='#166534';
-      msg.textContent = '✅ ' + email + ' removed successfully.';
-      setTimeout(function(){ document.getElementById('removeUserModal').style.display='none'; document.getElementById('removeEmail2').value=''; msg.textContent=''; }, 2500);
-    } else {
-      msg.style.color='#dc2626';
-      msg.textContent = '❌ ' + (data.message || 'Error. Contact Info@wemarketpluscom.org to remove user.');
-    }
-  } catch(e) {
-    msg.style.color='#dc2626';
-    msg.textContent = '❌ Unable to reach server. Email Info@wemarketpluscom.org to remove ' + email + '.';
-  }
-}
-
-// 3. Fix saveReferralFromModal - don't call closeModal("addReferralModal") since it's inline now
-var _origSaveReferral = typeof saveReferralFromModal === 'function' ? saveReferralFromModal : null;
-saveReferralFromModal = function() {
-  var cn=(document.getElementById('refContactName')||{value:''}).value.trim();
-  var biz=(document.getElementById('refBusiness')||{value:''}).value.trim();
-  if(!cn||!biz){alert('Contact name and business name are required.');return;}
-  var nextStep=(document.getElementById('refNextStep')||{value:''}).value;
-  var nextTouchDate=(document.getElementById('refNextTouchDate')||{value:''}).value||'';
-  if(!nextStep){alert('Please select a Next Step.');return;}
-  if(!nextTouchDate){alert('Please set a Next Touch Date — this queues a reminder in the Reminders tab.');return;}
-  var refs=gs(K.refs,defRefs());
-  refs.push({
-    contactName:cn,business:biz,
-    phone:(document.getElementById('refPhone')||{value:''}).value.trim(),
-    email:(document.getElementById('refEmail')||{value:''}).value.trim(),
-    address:(document.getElementById('refAddress')||{value:''}).value.trim(),
-    status:(document.getElementById('refStatus')||{value:'Red'}).value,
-    nextStep:nextStep,nextTouchDate:nextTouchDate
-  });
-  ss(K.refs,refs);
-  if(typeof loadReferralSources==='function')loadReferralSources();
-  if(typeof renderReferralRecords==='function')renderReferralRecords();
-  if(typeof renderReminders==='function')renderReminders();
-  // Clear form
-  ['refContactName','refBusiness','refPhone','refEmail','refAddress'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
-  var rns=document.getElementById('refNextStep');if(rns)rns.value='';
-  var rnd=document.getElementById('refNextTouchDate');if(rnd)rnd.value='';
-  var rdb=document.getElementById('refStepDescBox');if(rdb)rdb.style.display='none';
-  var rss=document.getElementById('refSaveStatus');
-  if(rss){rss.textContent='✅ '+cn+' at '+biz+' saved!';setTimeout(function(){rss.textContent='';},4000);}
-  // Show success and navigate to Referral Sources
-  alert('✅ Referral source saved! They now appear in Referral Sources.');
-  if(typeof showTab==='function') showTab('referrals');
-};
-
-// 4. Fix Automation - populate autoProspectSelect and make triggers work
-function initAutoProspectSelect(){
-  var sel=document.getElementById('autoProspectSelect');
-  if(!sel)return;
-  var prsp=gs(K.prsp,defProsp());
-  sel.innerHTML='<option value="">— Select a prospect —</option>';
-  prsp.forEach(function(p,i){
-    var o=document.createElement('option');
-    o.value=i;
-    o.textContent=p.name+' ('+p.status+')';
-    sel.appendChild(o);
-  });
-}
-
-function fireAutoForProspect(btn, msg) {
-  var sel=document.getElementById('autoProspectSelect');
-  var prosp='';
-  if(sel && sel.value!==''){
-    var prsp=gs(K.prsp,defProsp());
-    var p=prsp[parseInt(sel.value)];
-    if(p) prosp=' for '+p.name;
-  }
-  btn.textContent='✅ Done'; btn.disabled=true;
-  var log=document.getElementById('autoLog');
-  if(log){
-    var d=document.createElement('div');
-    d.style.cssText='background:#fff;color:#111;border-radius:9px;padding:9px 13px;font-size:12px;margin-bottom:6px;';
-    d.textContent='✅ '+msg+prosp+' — '+new Date().toLocaleTimeString();
-    log.prepend(d);
-  }
-  // Update prospect status display
-  var statusEl=document.getElementById('autoProspectStatus');
-  if(statusEl && prosp) statusEl.textContent='Last action'+prosp+': '+msg.split('—')[0].trim();
-}
-
-// 5. Fix AI - use Anthropic API directly (same as demo)
-var aiHist = [];
-sendAI = async function(msg) {
-  var inp = document.getElementById('aiIn');
-  if (!msg) { msg = inp ? inp.value.trim() : ''; if (!msg) return; if(inp) inp.value=''; }
-  var c = document.getElementById('aiMsgs');
-  if (!c) return;
-  var u = document.createElement('div');
-  u.style.cssText = 'padding:10px 14px;border-radius:12px;font-size:13px;max-width:80%;background:#1e3a5f;color:#e2e8f0;align-self:flex-end;margin:4px 0;';
-  u.textContent = msg; c.appendChild(u);
-  var t = document.createElement('div');
-  t.style.cssText = 'padding:10px 14px;border-radius:12px;font-size:13px;color:#94a3b8;font-style:italic;align-self:flex-start;margin:4px 0;';
-  t.textContent = 'Thinking...'; c.appendChild(t); c.scrollTop = c.scrollHeight;
-  aiHist.push({role:'user',content:msg});
-  try {
-    var r = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 600,
-        system: 'You are an AI assistant for HospiceLink, a hospice marketing CRM. Help with prospect follow-up scripts, referral source strategies, team coordination, and daily priorities. Be concise and practical.',
-        messages: aiHist.slice(-10)
-      })
-    });
-    var d = await r.json();
-    var rep = (d.content && d.content[0]) ? d.content[0].text : null;
-    if (!rep) throw new Error('No content');
-    aiHist.push({role:'assistant',content:rep});
-    t.style.cssText = 'padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%;background:#1a2a1a;color:#c8f7c5;border:1px solid rgba(140,255,102,.2);align-self:flex-start;margin:4px 0;';
-    t.textContent = rep;
-  } catch(e) {
-    // Fallback to backend
-    try {
-      var r2 = await fetch('https://wemarketplus-backend-1.onrender.com/api/ai', {
-        method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,
-          system:'You are an AI assistant for HospiceLink, a hospice marketing CRM. Be concise.',
-          messages:aiHist.slice(-10)})
-      });
-      var d2 = await r2.json();
-      var rep2 = (d2.content && d2.content[0]) ? d2.content[0].text : null;
-      if (!rep2) throw new Error('No content');
-      aiHist.push({role:'assistant',content:rep2});
-      t.style.cssText = 'padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%;background:#1a2a1a;color:#c8f7c5;border:1px solid rgba(140,255,102,.2);align-self:flex-start;margin:4px 0;';
-      t.textContent = rep2;
-    } catch(e2) {
-      t.style.cssText = 'padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;max-width:85%;background:#1a2a1a;color:#c8f7c5;align-self:flex-start;margin:4px 0;';
-      t.textContent = '⚠️ AI temporarily unavailable. Try again in a moment.';
-    }
-  }
-  c.scrollTop = c.scrollHeight;
-};
-
-// 6. Call initAutoProspectSelect on tab open
-var _origST2 = typeof showTab === 'function' ? showTab : function(){};
-showTab = function(id) {
-  _origST2(id);
-  if (id === 'automation') setTimeout(initAutoProspectSelect, 100);
-};
-
-// Initialize automation select on load
-setTimeout(initAutoProspectSelect, 1500);
-
-</script>
-
-
-<!-- INVITE USER MODAL -->
-<div id="inviteUserModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:#0d1b2e;border:1px solid rgba(73,182,255,.3);border-radius:20px;padding:28px;width:min(460px,90vw);max-height:90vh;overflow:auto;">
-    <h3 style="color:#fff;margin:0 0 6px;font-size:18px;">Invite Team Member</h3>
-    <p style="color:#64748b;font-size:12px;margin:0 0 16px;">Send an email invitation with login credentials.</p>
-    <div style="margin-bottom:12px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:5px;text-transform:uppercase;">FIRST NAME *</label><input id="invFirstName" type="text" placeholder="First name" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;color:#f0f5ff;font-size:14px;outline:none;box-sizing:border-box;"></div>
-    <div style="margin-bottom:12px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:5px;text-transform:uppercase;">EMAIL ADDRESS *</label><input id="invEmail2" type="email" placeholder="team@agency.com" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;color:#f0f5ff;font-size:14px;outline:none;box-sizing:border-box;"></div>
-    <div style="margin-bottom:16px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:5px;text-transform:uppercase;">ROLE</label><select id="invRole2" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;color:#f0f5ff;font-size:14px;outline:none;box-sizing:border-box;"><option value="marketer">Marketer</option><option value="nurse">Nurse</option><option value="caregiver">Caregiver</option><option value="admin">Admin</option></select></div>
-    <div id="inviteMsg2" style="min-height:18px;font-size:13px;font-weight:700;margin-bottom:12px;color:#166534;"></div>
-    <div style="display:flex;gap:10px;">
-      <button onclick="doSendInvite()" style="flex:1;background:linear-gradient(90deg,#82f86b,#b8ff79);color:#08101b;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:800;cursor:pointer;">Send Invite</button>
-      <button onclick="document.getElementById('inviteUserModal').style.display='none'" style="flex:1;background:rgba(255,255,255,.06);color:#8a9dc0;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- REMOVE USER MODAL -->
-<div id="removeUserModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:#0d1b2e;border:1px solid rgba(255,107,107,.3);border-radius:20px;padding:28px;width:min(440px,90vw);">
-    <h3 style="color:#fff;margin:0 0 6px;font-size:18px;">Remove Team Member</h3>
-    <p style="color:#64748b;font-size:12px;margin:0 0 16px;">This immediately revokes their access and frees the seat.</p>
-    <div style="margin-bottom:12px;"><label style="color:#8a9dc0;font-size:11px;font-weight:800;display:block;margin-bottom:5px;text-transform:uppercase;">EMAIL ADDRESS *</label><input id="removeEmail2" type="email" placeholder="team@agency.com" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;color:#f0f5ff;font-size:14px;outline:none;box-sizing:border-box;"></div>
-    <div id="removeMsg2" style="min-height:18px;font-size:13px;font-weight:700;margin-bottom:12px;color:#166534;"></div>
-    <div style="display:flex;gap:10px;">
-      <button onclick="doRemoveUser()" style="flex:1;background:#dc2626;color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:800;cursor:pointer;">Remove Access</button>
-      <button onclick="document.getElementById('removeUserModal').style.display='none'" style="flex:1;background:rgba(255,255,255,.06);color:#8a9dc0;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button>
-    </div>
-  </div>
-</div>
-
-</body>
-</html>
