@@ -498,20 +498,34 @@ var ROLE_TABS = {
     'import','referralportal','playbook'
   ]
 };
-  admin:['dashboard','prospects','records','referrals','addref','pipeline','territory','productivity','touchlog','notes','reminders','reengagement','goals','ai','import','referralportal','playbook','weeklyreport','admin'],
-  marketer:['dashboard','prospects','records','referrals','addref','pipeline','territory','productivity','touchlog','notes','reminders','reengagement','goals','ai','import','referralportal','playbook']
+
+var ROLE_DESC = {
+  admin: 'You see every tab including Team Management and Weekly Report.',
+  marketer: 'You only see marketing tools and cannot access admin sections.'
 };
 
-  // update badge
-  document.getElementById('roleBadge').innerText =
-    role === 'admin' ? 'Admin View' : 'Marketer View';
+function setRole(role){
+  const tabs = document.querySelectorAll('[data-tab]');
+  const navLinks = document.querySelectorAll('.nav a');
 
-  // update banner
-  document.getElementById('bannerRole').innerText =
-    role === 'admin' ? 'Admin View' : 'Marketer View';
+  // hide everything
+  tabs.forEach(t => t.style.display = 'none');
+  navLinks.forEach(n => n.style.display = 'none');
 
-  document.getElementById('bannerDesc').innerText = ROLE_DESC[role];
-}
+  // show allowed tabs
+  ROLE_TABS[role].forEach(tab => {
+    document.querySelectorAll(`[data-tab="${tab}"]`)
+      .forEach(el => el.style.display = 'block');
+
+    document.querySelectorAll(`.nav a[data-tab="${tab}"]`)
+      .forEach(el => el.style.display = 'block');
+  });
+
+  // hide admin section label
+  const adminSection = document.getElementById('sec-admin');
+  if(adminSection){
+    adminSection.style.display = role === 'admin' ? 'block' : 'none';
+  }
 
   // update badge
   const badge = document.getElementById('roleBadge');
@@ -522,18 +536,14 @@ var ROLE_TABS = {
     role === 'admin' ? 'Admin View' : 'Marketer View';
 
   document.getElementById('bannerDesc').innerText = ROLE_DESC[role];
-}
-  var sa = document.getElementById('sec-admin');
-  if (sa) sa.style.display = (role === 'admin') ? '' : 'none';
-  var b = document.getElementById('roleBadge');
-  b.textContent = ROLE_LABEL[role];
-  b.className = 'role-badge ' + ROLE_BADGE[role];
-  document.getElementById('bannerRole').textContent = ROLE_LABEL[role];
-  document.getElementById('bannerDesc').textContent = ROLE_DESC[role];
-  var al = document.querySelector('.nav a.active');
-  if (al) {
-    var atab = al.getAttribute('data-tab');
-    if (allowed.indexOf(atab) < 0) showTab('dashboard');
+
+  // force dashboard if hidden tab was active
+  const active = document.querySelector('.nav a.active');
+  if(active){
+    const current = active.getAttribute('data-tab');
+    if(!ROLE_TABS[role].includes(current)){
+      showTab('dashboard');
+    }
   }
 }
 
