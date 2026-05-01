@@ -13,7 +13,7 @@
 .role-box label{display:block;font-size:10px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:#49b6ff;margin-bottom:6px}
 .role-box select{width:100%;background:#0a1628;border:1px soliFd rgba(73,182,255,.35);border-radius:8px;padding:7px 10px;color:#f0f5ff;font-size:12px;font-weight:700;outline:none;cursor:pointer}
 .role-badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:10px;font-weight:800;margin-top:6px}
-.badge-admin{background:rgba(188,140,255,.18);color:#c9aeff}.badge-marketer{background:rgba(73,182,255,.18);color:#49b6ff}.badge-nurse{background:rgba(140,255,102,.15);color:#8cff66}.badge-{background:rgba(255,215,0,.12);color:#ffd700}
+.badge-admin{background:rgba(188,140,255,.18);color:#c9aeff}.badge-marketer{background:rgba(73,182,255,.18);color:#49b6ff}.badge-{background:rgba(140,255,102,.15);color:#8cff66}.badge-{background:rgba(255,215,0,.12);color:#ffd700}
 .nav{display:grid;gap:4px;margin-top:4px}
 .nav a{text-decoration:none;color:var(--text);padding:8px 11px;border-radius:9px;border:1px solid transparent;font-weight:700;font-size:12px;cursor:pointer;user-select:none;display:block;transition:.12s}
 .nav a:hover{background:#10203a;border-color:var(--line)}
@@ -316,7 +316,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
   </div>
   <div class="g2" style="margin-top:12px">
     <div class="whtbx"><h4>Ericka — Apr 23</h4><p><strong>Position:</strong> Marketer | <strong>Next Step:</strong> CM Follow-Up</p><p>Baylor requested faster turnaround updates.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px">Internal — GPS Captured</p></div>
-    <div class="whtbx"><h4>Angela — Apr 22</h4><p><strong>Position:</strong> Nurse | <strong>Next Step:</strong> RN Assessment</p><p>Patient appropriate for hospice. Family receptive.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px">Internal — GPS Captured</p></div>
+    <div class="whtbx"><h4>Angela — Apr 22</h4><p><strong>Position:</strong>  | <strong>Next Step:</strong> RN Assessment</p><p>Patient appropriate for hospice. Family receptive.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px">Internal — GPS Captured</p></div>
   </div></section>
 </div>
 
@@ -485,7 +485,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
       <table><thead><tr><th>Name</th><th>Role</th><th>What They See</th><th>Status</th><th>Actions</th></tr></thead><tbody>
         <tr><td><strong>Ericka (You)</strong></td><td>Admin</td><td>All tabs</td><td><span class="pill pill-purple">Admin</span></td><td>—</td></tr>
         <tr><td><strong>Mike R.</strong></td><td>Marketer</td><td>Marketing + Notes + AI</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-gray btn-small" onclick="alert('Change role for Mike')">Change Role</button> <button class="btn btn-red btn-small" onclick="alert('Mike removed. Access revoked immediately.')">Remove</button></td></tr>
-        <tr><td><strong>Angela N.</strong></td><td>Nurse</td><td>Records + Notes + AI</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-gray btn-small" onclick="alert('Change role for Angela')">Change Role</button> <button class="btn btn-red btn-small" onclick="alert('Angela removed. Access revoked immediately.')">Remove</button></td></tr>
+        <tr><td><strong>Angela N.</strong></td><td></td><td>Records + Notes + AI</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-gray btn-small" onclick="alert('Change role for Angela')">Change Role</button> <button class="btn btn-red btn-small" onclick="alert('Angela removed. Access revoked immediately.')">Remove</button></td></tr>
       </tbody></table>
     </div>
     <div style="margin-top:12px;background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px">
@@ -511,7 +511,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
         <h4 style="color:var(--text);margin:0 0 10px">Recent Messages</h4>
         <div style="display:flex;flex-direction:column;gap:8px">
           <div style="background:rgba(255,255,255,.05);border-radius:10px;padding:10px;font-size:12px;color:var(--muted)"><div style="color:var(--text);font-weight:700;margin-bottom:3px">Dorothy F. — Visit Summary</div><div>Comfortable and resting well. Medication adjusted.</div><div style="font-size:10px;color:#334d6e;margin-top:4px">Angela N. — Apr 23</div></div>
-          <div style="background:rgba(255,255,255,.05);border-radius:10px;padding:10px;font-size:12px;color:var(--muted)"><div style="color:var(--text);font-weight:700;margin-bottom:3px">John T.'s son replied</div><div>Can we schedule a call with the nurse this week?</div><div style="font-size:10px;color:#334d6e;margin-top:4px">Apr 23</div></div>
+          <div style="background:rgba(255,255,255,.05);border-radius:10px;padding:10px;font-size:12px;color:var(--muted)"><div style="color:var(--text);font-weight:700;margin-bottom:3px">John T.'s son replied</div><div>Can we schedule a call with the  this week?</div><div style="font-size:10px;color:#334d6e;margin-top:4px">Apr 23</div></div>
         </div>
       </div>
     </div>
@@ -527,7 +527,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
       <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px">
         <h4 style="color:var(--text);margin:0 0 10px">Log a Visit</h4>
         <div class="field"><label style="color:var(--text)">Patient</label><select style="width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:8px;color:var(--text);font-size:12px"><option>Dorothy F.</option><option>John T.</option></select></div>
-        <div class="field"><label style="color:var(--text)">Visit Type</label><select style="width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:8px;color:var(--text);font-size:12px"><option>Skilled Nurse Visit</option><option>Aide Visit</option><option>Social Work</option></select></div>
+        <div class="field"><label style="color:var(--text)">Visit Type</label><select style="width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:8px;color:var(--text);font-size:12px"><option>Skilled Visit</option><option>Aide Visit</option><option>Social Work</option></select></div>
         <div class="g2">
           <div class="field"><label style="color:var(--text)">Check-In</label><input type="time" style="width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:8px;color:var(--text);font-size:12px"></div>
           <div class="field"><label style="color:var(--text)">Check-Out</label><input type="time" style="width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:8px;color:var(--text);font-size:12px"></div>
@@ -536,12 +536,12 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
       </div>
       <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px">
         <h4 style="color:var(--text);margin:0 0 10px">Today's Visits</h4>
-        <div style="background:rgba(255,255,255,.05);border-radius:10px;padding:10px;font-size:12px;margin-bottom:8px"><div style="color:var(--text);font-weight:700;margin-bottom:3px;display:flex;justify-content:space-between"><span>Dorothy F.</span><span class="pill pill-green" style="font-size:10px">Completed</span></div><div style="color:var(--muted)">9:00 AM to 11:00 AM — Skilled Nurse</div><div style="color:#8cff66;font-size:11px;margin-top:3px">GPS captured — 12.4 miles</div></div>
+        <div style="background:rgba(255,255,255,.05);border-radius:10px;padding:10px;font-size:12px;margin-bottom:8px"><div style="color:var(--text);font-weight:700;margin-bottom:3px;display:flex;justify-content:space-between"><span>Dorothy F.</span><span class="pill pill-green" style="font-size:10px">Completed</span></div><div style="color:var(--muted)">9:00 AM to 11:00 AM — Skilled </div><div style="color:#8cff66;font-size:11px;margin-top:3px">GPS captured — 12.4 miles</div></div>
         <div style="background:rgba(255,255,255,.05);border-radius:10px;padding:10px;font-size:12px"><div style="color:var(--text);font-weight:700;margin-bottom:3px;display:flex;justify-content:space-between"><span>John T.</span><span class="pill pill-yellow" style="font-size:10px">In Progress</span></div><div style="color:var(--muted)">1:30 PM — Aide Visit</div><div style="color:#fbbf24;font-size:11px;margin-top:3px">GPS capturing...</div></div>
       </div>
     </div>
     <div class="table-wrap"><table><thead><tr><th>Staff</th><th>Total Visits</th><th>Total Miles</th><th>Reimbursable</th></tr></thead><tbody>
-      <tr><td>Angela N. (Nurse)</td><td>8</td><td>94.2 mi</td><td><span class="pill pill-green">$55.17</span></td></tr>
+      <tr><td>Angela N. ()</td><td>8</td><td>94.2 mi</td><td><span class="pill pill-green">$55.17</span></td></tr>
       <tr><td>James K. (Aide)</td><td>12</td><td>138.6 mi</td><td><span class="pill pill-green">$81.11</span></td></tr>
     </tbody></table></div>
   </section>
@@ -666,8 +666,8 @@ function toggleMob() { document.getElementById('sidebar').classList.toggle('mob-
 function closeMob() { document.getElementById('sidebar').classList.remove('mob-open'); }
 
 var TOUR = [
-  {i:'⭐',t:'Welcome to HospiceLink Max',d:'Everything in Pro, plus <strong>Family Communication</strong> and <strong>EVV / Mileage Tracking</strong>. Use the role dropdown in the sidebar to switch between Admin, Marketer, , and Caregiver views.'},
-  {i:'👥',t:'Two Views: Admin vs User',d:'<strong>Admin</strong> sees everything. <strong>Marketer</strong> gets the full marketing suite. <strong></strong> gets records, notes, reminders, AI, <strong>Family Communication, and EVV</strong>. <strong>Caregiver</strong> gets records, notes, Family Comm, and EVV. Switch the dropdown now to see each view.'},
+  {i:'⭐',t:'Welcome to HospiceLink Max',d:'Everything in Pro, plus <strong>Family Communication</strong> and <strong>EVV / Mileage Tracking</strong>. Use the role dropdown in the sidebar to switch between Admin, Marketer, , and  views.'},
+  {i:'👥',t:'Two Views: Admin vs User',d:'<strong>Admin</strong> sees everything. <strong>Marketer</strong> gets the full marketing suite. <strong></strong> gets records, notes, reminders, AI, <strong>Family Communication, and EVV</strong>. <strong>/strong> gets records, notes, Family Comm, and EVV. Switch the dropdown now to see each view.'},
   {i:'➕',t:'Prospects + Auto Reminders',d:'Add a prospect with a <strong>Next Step and Due Date</strong> and it instantly appears in Reminders. Overdue items show red on the Dashboard. Both  and Marketers see their relevant reminders.'},
   {i:'💬',t:'Family Communication — Max Exclusive',d:'Send secure updates to patient families. Families click a link (no login needed) and can reply directly both have access. All messages are logged for compliance.'},
   {i:'📍',t:'EVV / Mileage — Max Exclusive',d:'Staff check in and out with GPS captured automatically. Mileage is calculated for reimbursement. Satisfies EVV compliance. both have access.'},
