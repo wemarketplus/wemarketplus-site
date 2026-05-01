@@ -13,7 +13,7 @@
 .role-box label{display:block;font-size:10px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:#49b6ff;margin-bottom:6px}
 .role-box select{width:100%;background:#0a1628;border:1px solid rgba(73,182,255,.35);border-radius:8px;padding:7px 10px;color:#f0f5ff;font-size:12px;font-weight:700;outline:none;cursor:pointer}
 .role-badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:10px;font-weight:800;margin-top:6px}
-.badge-admin{background:rgba(188,140,255,.18);color:#c9aeff}.badge-marketer{background:rgba(73,182,255,.18);color:#49b6ff}.badge-nurse{background:rgba(140,255,102,.15);color:#8cff66}.badge-caregiver{background:rgba(255,215,0,.12);color:#ffd700}
+.badge-admin{background:rgba(188,140,255,.18);color:#c9aeff}.badge-marketer{background:rgba(73,182,255,.18);color:#49b6ff}.badge-e{background:rgba(140,255,102,.15);color:#8cff66}.badge-caregiver{background:rgba(255,215,0,.12);color:#ffd700}
 .nav{display:grid;gap:4px;margin-top:4px}
 .nav a{text-decoration:none;color:var(--text);padding:8px 11px;border-radius:9px;border:1px solid transparent;font-weight:700;font-size:12px;cursor:pointer;user-select:none;display:block;transition:.12s}
 .nav a:hover{background:#10203a;border-color:var(--line)}
@@ -294,7 +294,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
   <section class="section"><div class="whtbx">
     <div class="fg3" style="margin-bottom:12px">
       <div><label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px">Your Name</label><input type="text" placeholder="Enter your name" style="width:100%;border:1px solid #d7e0ec;border-radius:9px;padding:8px;font:inherit;font-size:12px"></div>
-      <div><label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px">Position</label><select style="width:100%;border:1px solid #d7e0ec;border-radius:9px;padding:8px;font:inherit;font-size:12px"><option>Nurse</option><option>Caregiver</option><option>Marketer</option></select></div>
+      <div><label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px">Position</label><select style="width:100%;border:1px solid #d7e0ec;border-radius:9px;padding:8px;font:inherit;font-size:12px"><option></option><option>Caregiver</option><option>Marketer</option></select></div>
       <div><label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px">Date</label><input type="date" style="width:100%;border:1px solid #d7e0ec;border-radius:9px;padding:8px;font:inherit;font-size:12px"></div>
       <div><label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px">Next Step</label><select style="width:100%;border:1px solid #d7e0ec;border-radius:9px;padding:8px;font:inherit;font-size:12px"><option>CM Follow-Up</option><option>Schedule Visit</option><option>RN Assessment</option></select></div>
       <div><label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px">Due Date</label><input type="date" style="width:100%;border:2px solid rgba(249,199,79,.4);border-radius:9px;padding:8px;font:inherit;font-size:12px;background:#fffbeb"></div>
@@ -304,7 +304,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
   </div>
   <div class="g2" style="margin-top:12px">
     <div class="whtbx"><h4>Ericka — Apr 23</h4><p><strong>Position:</strong> Marketer | <strong>Next Step:</strong> CM Follow-Up</p><p>Baylor requested faster turnaround updates.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px">Internal — GPS Captured</p></div>
-    <div class="whtbx"><h4>Angela — Apr 22</h4><p><strong>Position:</strong> Nurse | <strong>Next Step:</strong> RN Assessment</p><p>Patient appropriate for hospice. Family receptive.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px">Internal — GPS Captured</p></div>
+    <div class="whtbx"><h4>Angela — Apr 22</h4><p><strong>Position:</strong> e | <strong>Next Step:</strong> RN Assessment</p><p>Patient appropriate for hospice. Family receptive.</p><p style="color:#6c8aab;font-size:11px;margin-top:6px">Internal — GPS Captured</p></div>
   </div></section>
 </div>
 
@@ -453,14 +453,14 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
           <select style="width:100%;background:rgba(10,20,40,.95);border:1px solid rgba(73,182,255,.35);border-radius:9px;padding:10px;color:#f0f5ff;font-size:13px">
             <option value="">Select a role</option>
             <option>Marketer — Prospects, referrals, pipeline, notes, AI, playbook, goals</option>
-            <option>Nurse — Prospect records, notes, reminders, AI assistant</option>
+            <option>e — Prospect records, notes, reminders, AI assistant</option>
             <option>Caregiver — Prospect records, notes only</option>
           </select>
         </div>
         <div class="field full" style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px">
           <p style="font-size:12px;color:var(--muted);margin:0;line-height:1.7">
             <strong style="color:#49b6ff">Marketer</strong> — Prospects, referrals, pipeline, territory, productivity, notes, reminders, re-engagement, goals, AI, referral portal, playbook, touch log<br>
-            <strong style="color:#8cff66">Nurse</strong> — Prospect records, notes (GPS sync), reminders, AI assistant<br>
+            <strong style="color:#8cff66">e</strong> — Prospect records, notes (GPS sync), reminders, AI assistant<br>
             <strong style="color:#ffd700">Caregiver</strong> — Prospect records and notes only<br>
             <strong style="color:#c9aeff">Admin</strong> — All tabs + weekly report + team management
           </p>
@@ -473,7 +473,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
       <table><thead><tr><th>Name</th><th>Role</th><th>What They See</th><th>Status</th><th>Actions</th></tr></thead><tbody>
         <tr><td><strong>Ericka (You)</strong></td><td>Admin</td><td>All tabs</td><td><span class="pill pill-purple">Admin</span></td><td>—</td></tr>
         <tr><td><strong>Mike R.</strong></td><td>Marketer</td><td>Marketing + Notes + AI</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-gray btn-small" onclick="alert('Change role for Mike')">Change Role</button> <button class="btn btn-red btn-small" onclick="alert('Mike removed. Access revoked immediately.')">Remove</button></td></tr>
-        <tr><td><strong>Angela N.</strong></td><td>Nurse</td><td>Records + Notes + AI</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-gray btn-small" onclick="alert('Change role for Angela')">Change Role</button> <button class="btn btn-red btn-small" onclick="alert('Angela removed. Access revoked immediately.')">Remove</button></td></tr>
+        <tr><td><strong>Angela N.</strong></td><td>e</td><td>Records + Notes + AI</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-gray btn-small" onclick="alert('Change role for Angela')">Change Role</button> <button class="btn btn-red btn-small" onclick="alert('Angela removed. Access revoked immediately.')">Remove</button></td></tr>
       </tbody></table>
     </div>
     <div style="margin-top:12px;background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px">
@@ -491,15 +491,15 @@ var ROLE_TABS = {
 };
   admin:['dashboard','prospects','records','referrals','addref','pipeline','territory','productivity','touchlog','notes','reminders','reengagement','goals','ai','import','referralportal','playbook','weeklyreport','admin'],
   marketer:['dashboard','prospects','records','referrals','addref','pipeline','territory','productivity','touchlog','notes','reminders','reengagement','goals','ai','import','referralportal','playbook'],
-  nurse:['dashboard','records','notes','reminders','ai'],
+  e:['dashboard','records','notes','reminders','ai'],
   caregiver:['dashboard','records','notes']
 };
-var ROLE_BADGE = {admin:'badge-admin',marketer:'badge-marketer',nurse:'badge-nurse',caregiver:'badge-caregiver'};
-var ROLE_LABEL = {admin:'Admin View',marketer:'Marketer View',nurse:'Nurse View',caregiver:'Caregiver View'};
+var ROLE_BADGE = {admin:'badge-admin',marketer:'badge-marketer',e:'badge-e',caregiver:'badge-caregiver'};
+var ROLE_LABEL = {admin:'Admin View',marketer:'Marketer View',e:'e View',caregiver:'Caregiver View'};
 var ROLE_DESC = {
   admin:'You see every tab including Team Management and Weekly Report. Use the dropdown to switch perspectives.',
   marketer:'Full marketing suite: prospects, referrals, pipeline, AI, playbook, goals, and more. Team Management is Admin-only.',
-  nurse:'Prospect records, notes (with GPS sync), reminders, and AI assistant.',
+  e:'Prospect records, notes (with GPS sync), reminders, and AI assistant.',
   caregiver:'Prospect records and notes only.'
 };
 
@@ -622,7 +622,7 @@ function toggleMob() { document.getElementById('sidebar').classList.toggle('mob-
 function closeMob() { document.getElementById('sidebar').classList.remove('mob-open'); }
 
 var TOUR = [
-  {i:'🏥',t:'Welcome to HospiceLink Pro',d:'Your complete hospice marketing CRM. <strong>Use the role dropdown in the sidebar</strong> to switch between Admin, Marketer, Nurse, and Caregiver views and see exactly what each person sees when they log in.'},
+  {i:'🏥',t:'Welcome to HospiceLink Pro',d:'Your complete hospice marketing CRM. <strong>Use the role dropdown in the sidebar</strong> to switch between Admin, Marketer, e, and Caregiver views and see exactly what each person sees when they log in.'},
   {i:'👥',t:'Two Views: Admin vs User',d:'<strong>Admin (you)</strong> sees everything including Team Management and Weekly Report. <strong>Users</strong> see only their tabs — no locks, just clean access. Switch the dropdown right now to see the difference.'},
   {i:'➕',t:'Prospects + Auto Reminders',d:'Every prospect gets a <strong>Next Step and Due Date</strong>. Save a prospect and it automatically appears in Reminders. Overdue follow-ups turn red on the Dashboard — nothing falls through the cracks.'},
   {i:'🏥',t:'Referral Source Management',d:'Track every hospital, SNF, and physician. Sources are marked <strong>Green</strong> (sending referrals) or <strong>Red</strong> (not yet). The Touch Log shows exactly how long since your last contact.'},
