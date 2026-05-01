@@ -504,12 +504,12 @@ var ROLE_DESC = {
 };
 
 function setRole(role){
-  const allTabs = document.querySelectorAll('[data-tab]');
-  const allNav = document.querySelectorAll('.nav a');
+  const tabs = document.querySelectorAll('[data-tab]');
+  const navLinks = document.querySelectorAll('.nav a');
 
   // hide everything first
-  allTabs.forEach(t => t.style.display = 'none');
-  allNav.forEach(n => n.style.display = 'none');
+  tabs.forEach(t => t.style.display = 'none');
+  navLinks.forEach(n => n.style.display = 'none');
 
   // show allowed tabs
   ROLE_TABS[role].forEach(tab => {
