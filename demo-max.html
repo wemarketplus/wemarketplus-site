@@ -551,24 +551,31 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
 
 <script>
 var ROLE_TABS = {
-  admin:['dashboard','prospects','records','referrals','addref','pipeline','territory','productivity','touchlog','notes','reminders','reengagement','goals','ai','import','referralportal','playbook','weeklyreport','admin'],
-  marketer:['dashboard','prospects','records','referrals','addref','pipeline','territory','productivity','touchlog','notes','reminders','reengagement','goals','ai','import','referralportal','playbook']
+  admin: [
+    'dashboard','prospects','records','referrals','addref','pipeline','territory',
+    'productivity','touchlog','notes','reminders','reengagement','goals','ai',
+    'familycomm','evv','import','referralportal','playbook','weeklyreport','admin'
+  ],
+  marketer: [
+    'dashboard','prospects','records','referrals','addref','pipeline','territory',
+    'productivity','touchlog','notes','reminders','reengagement','goals','ai',
+    'import','referralportal','playbook'
+  ]
 };
-  admin:['dashboard','prospects','records','referrals','addref','pipeline','territory','productivity','touchlog','notes','reminders','reengagement','goals','ai','familycomm','evv','import','referralportal','playbook','weeklyreport','admin'],
-  marketer:['dashboard','prospects','records','referrals','addref','pipeline','territory','productivity','touchlog','notes','reminders','reengagement','goals','ai','import','referralportal','playbook'],
-  nurse:['dashboard','records','notes','reminders','ai','familycomm','evv'],
-  caregiver:['dashboard','records','notes','familycomm','evv']
+
+var ROLE_BADGE = {
+  admin:'badge-admin',
+  marketer:'badge-marketer'
 };
-var ROLE_BADGE = {admin:'badge-admin',marketer:'badge-marketer',nurse:'badge-nurse',caregiver:'badge-caregiver'};
-var ROLE_LABEL = {admin:'Admin View',marketer:'Marketer View',nurse:'Nurse View',caregiver:'Caregiver View'};
+
+var ROLE_LABEL = {
+  admin:'Admin View',
+  marketer:'Marketer View'
+};
+
 var ROLE_DESC = {
-  admin:'You see every tab including Team Management and Weekly Report. Switch to Marketer to see the user view.', 
-  marketer:'Full marketing suite: prospects, referrals, pipeline, AI, playbook, goals, and more. Switch to Admin to see Team Management and Weekly Report.'
-};
-  admin:'You see every tab including Team Management and Weekly Report. Use the dropdown to switch perspectives.',
-  marketer:'Full marketing suite: prospects, referrals, pipeline, AI, playbook, goals, and more. Team Management is Admin-only.',
-  nurse:'Prospect records, notes (GPS sync), reminders, AI assistant, Family Communication, and EVV/Mileage.',
-  caregiver:'Prospect records, notes, Family Communication, and EVV/Mileage.'
+  admin:'You see every tab including Team Management and Weekly Report.',
+  marketer:'Full marketing suite. Admin tabs are hidden.'
 };
 
 function setRole(role) {
