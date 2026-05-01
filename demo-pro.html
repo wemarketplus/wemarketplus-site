@@ -508,13 +508,30 @@ var ROLE_DESC = {
   caregiver:'Prospect records and notes only.'
 };
 
-function setRole(role) {
-  var allowed = ROLE_TABS[role] || ROLE_TABS.admin;
-  var links = document.querySelectorAll('.nav a[data-tab]');
-  for (var i = 0; i < links.length; i++) {
-    var tab = links[i].getAttribute('data-tab');
-    links[i].style.display = (allowed.indexOf(tab) >= 0) ? '' : 'none';
-  }
+function setRole(role){
+  const tabs = document.querySelectorAll('[data-tab]');
+  const navItems = document.querySelectorAll('.nav a');
+
+  // hide everything first
+  tabs.forEach(tab => tab.style.display = 'none');
+  navItems.forEach(item => item.style.display = 'none');
+
+  // show allowed tabs
+  ROLE_TABS[role].forEach(tabName => {
+    document.querySelectorAll(`[data-tab="${tabName}"]`)
+      .forEach(el => el.style.display = 'block');
+  });
+
+  // update badge
+  const badge = document.getElementById('roleBadge');
+  badge.innerText = role === 'admin' ? 'Admin View' : 'Marketer View';
+
+  // update banner
+  document.getElementById('bannerRole').innerText =
+    role === 'admin' ? 'Admin View' : 'Marketer View';
+
+  document.getElementById('bannerDesc').innerText = ROLE_DESC[role];
+}
   var sa = document.getElementById('sec-admin');
   if (sa) sa.style.display = (role === 'admin') ? '' : 'none';
   var b = document.getElementById('roleBadge');
