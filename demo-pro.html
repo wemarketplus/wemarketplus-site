@@ -489,36 +489,6 @@ var ROLE_TABS = {
   admin:['dashboard','prospects','records','referrals','addref','pipeline','territory','productivity','touchlog','notes','reminders','reengagement','goals','ai','import','referralportal','playbook','weeklyreport','admin'],
   marketer:['dashboard','prospects','records','referrals','addref','pipeline','territory','productivity','touchlog','notes','reminders','reengagement','goals','ai','import','referralportal','playbook']
 };
-  admin:['dashboard','prospects','records','referrals','addref','pipeline','territory','productivity','touchlog','notes','reminders','reengagement','goals','ai','import','referralportal','playbook','weeklyreport','admin'],
-  marketer:['dashboard','prospects','records','referrals','addref','pipeline','territory','productivity','touchlog','notes','reminders','reengagement','goals','ai','import','referralportal','playbook'],
-  e:['dashboard','records','notes','reminders','ai'],
-  :['dashboard','records','notes']
-};
-var ROLE_BADGE = {admin:'badge-admin',marketer:'badge-marketer',e:'badge-e',:'badge-'};
-var ROLE_LABEL = {admin:'Admin View',marketer:'Marketer View',e:'e View',:' View'};
-var ROLE_DESC = {
-  admin:'You see every tab including Team Management and Weekly Report. Use the dropdown to switch perspectives.',
-  marketer:'Full marketing suite: prospects, referrals, pipeline, AI, playbook, goals, and more. Team Management is Admin-only.',
-  e:'Prospect records, notes (with GPS sync), reminders, and AI assistant.',
-  :'Prospect records and notes only.'
-};
-
-function setRole(role){
-  const tabs = document.querySelectorAll('[data-tab]');
-  const navLinks = document.querySelectorAll('.nav a');
-
-  // hide everything first
-  tabs.forEach(t => t.style.display = 'none');
-  navLinks.forEach(n => n.style.display = 'none');
-
-  // show allowed tabs
-  ROLE_TABS[role].forEach(tab => {
-    document.querySelectorAll(`[data-tab="${tab}"]`)
-      .forEach(el => el.style.display = 'block');
-
-    document.querySelectorAll(`.nav a[data-tab="${tab}"]`)
-      .forEach(el => el.style.display = 'flex');
-  });
 
   // update badge
   document.getElementById('roleBadge').innerText =
