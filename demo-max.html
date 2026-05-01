@@ -306,7 +306,7 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
   <section class="section"><div class="whtbx">
     <div class="fg3" style="margin-bottom:12px">
       <div><label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px">Your Name</label><input type="text" placeholder="Enter your name" style="width:100%;border:1px solid #d7e0ec;border-radius:9px;padding:8px;font:inherit;font-size:12px"></div>
-      <div><label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px">Position</label><select style="width:100%;border:1px solid #d7e0ec;border-radius:9px;padding:8px;font:inherit;font-size:12px"><option>Nurse</option><option>Caregiver</option><option>Marketer</option></select></div>
+      <div><label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px">Position</label><select style="width:100%;border:1px solid #d7e0ec;border-radius:9px;padding:8px;font:inherit;font-size:12px"><option></option><option>Caregiver</option><option>Marketer</option></select></div>
       <div><label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px">Date</label><input type="date" style="width:100%;border:1px solid #d7e0ec;border-radius:9px;padding:8px;font:inherit;font-size:12px"></div>
       <div><label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px">Next Step</label><select style="width:100%;border:1px solid #d7e0ec;border-radius:9px;padding:8px;font:inherit;font-size:12px"><option>CM Follow-Up</option><option>Schedule Visit</option><option>RN Assessment</option></select></div>
       <div><label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px">Due Date</label><input type="date" style="width:100%;border:2px solid rgba(249,199,79,.4);border-radius:9px;padding:8px;font:inherit;font-size:12px;background:#fffbeb"></div>
@@ -666,12 +666,12 @@ function toggleMob() { document.getElementById('sidebar').classList.toggle('mob-
 function closeMob() { document.getElementById('sidebar').classList.remove('mob-open'); }
 
 var TOUR = [
-  {i:'⭐',t:'Welcome to HospiceLink Max',d:'Everything in Pro, plus <strong>Family Communication</strong> and <strong>EVV / Mileage Tracking</strong>. Use the role dropdown in the sidebar to switch between Admin, Marketer, Nurse, and Caregiver views.'},
-  {i:'👥',t:'Two Views: Admin vs User',d:'<strong>Admin</strong> sees everything. <strong>Marketer</strong> gets the full marketing suite. <strong>Nurse</strong> gets records, notes, reminders, AI, <strong>Family Communication, and EVV</strong>. <strong>Caregiver</strong> gets records, notes, Family Comm, and EVV. Switch the dropdown now to see each view.'},
-  {i:'➕',t:'Prospects + Auto Reminders',d:'Add a prospect with a <strong>Next Step and Due Date</strong> and it instantly appears in Reminders. Overdue items show red on the Dashboard. Both Nurses and Marketers see their relevant reminders.'},
-  {i:'💬',t:'Family Communication — Max Exclusive',d:'Send secure updates to patient families. Families click a link (no login needed) and can reply directly. Nurses and Caregivers both have access. All messages are logged for compliance.'},
-  {i:'📍',t:'EVV / Mileage — Max Exclusive',d:'Staff check in and out with GPS captured automatically. Mileage is calculated for reimbursement. Satisfies EVV compliance. Nurses and Caregivers both have access.'},
-  {i:'🛡',t:'Team Management — Admin Only',d:'<strong>Admins must choose a role every time they add a user.</strong> Nurses and Caregivers automatically get Family Communication and EVV. Change or remove a member at any time with immediate effect.'},
+  {i:'⭐',t:'Welcome to HospiceLink Max',d:'Everything in Pro, plus <strong>Family Communication</strong> and <strong>EVV / Mileage Tracking</strong>. Use the role dropdown in the sidebar to switch between Admin, Marketer, , and Caregiver views.'},
+  {i:'👥',t:'Two Views: Admin vs User',d:'<strong>Admin</strong> sees everything. <strong>Marketer</strong> gets the full marketing suite. <strong></strong> gets records, notes, reminders, AI, <strong>Family Communication, and EVV</strong>. <strong>Caregiver</strong> gets records, notes, Family Comm, and EVV. Switch the dropdown now to see each view.'},
+  {i:'➕',t:'Prospects + Auto Reminders',d:'Add a prospect with a <strong>Next Step and Due Date</strong> and it instantly appears in Reminders. Overdue items show red on the Dashboard. Both  and Marketers see their relevant reminders.'},
+  {i:'💬',t:'Family Communication — Max Exclusive',d:'Send secure updates to patient families. Families click a link (no login needed) and can reply directly both have access. All messages are logged for compliance.'},
+  {i:'📍',t:'EVV / Mileage — Max Exclusive',d:'Staff check in and out with GPS captured automatically. Mileage is calculated for reimbursement. Satisfies EVV compliance. both have access.'},
+  {i:'🛡',t:'Team Management — Admin Only',d:'<strong>Admins must choose a role every time they add a user.</strong>  automatically get Family Communication and EVV. Change or remove a member at any time with immediate effect.'},
   {i:'🚀',t:'Fully Interactive Demo',d:'Every tab and feature works right now. Try Family Communication, log an EVV visit, or switch roles with the dropdown. When ready, click <strong>Get Started</strong> to choose your plan.'}
 ];
 var tIdx = 0;
