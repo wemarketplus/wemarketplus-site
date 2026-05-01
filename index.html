@@ -1,369 +1,88 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>We Market Plus LLC</title>
-  <meta name="description" content="Hospice CRM software by We Market Plus LLC" />
-  <style>
-    :root{--bg1:#06101d;--bg2:#0b2140;--line:rgba(255,255,255,.12);--text:#f5f8ff;--muted:#c7d3e8;--blue:#49b6ff;--green:#8cff66;--green2:#b8ff7f;}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}
-    body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:radial-gradient(circle at top,#14345f 0%,#09162b 34%,#050b15 100%);}
-    nav{position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;gap:18px;padding:16px 24px;background:rgba(5,11,22,.88);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08);}
-    .brand{display:flex;align-items:center;gap:12px}.brand img{width:56px;height:56px;object-fit:contain;background:#fff;border-radius:12px;padding:6px}
-    .brand h1{margin:0;font-size:20px;line-height:1.1}.brand p{margin:4px 0 0;color:var(--muted);font-size:12px}
-    .nav-links{display:flex;flex-wrap:wrap;gap:18px;align-items:center}.nav-links a{color:#fff;text-decoration:none;font-weight:800;font-size:15px}.nav-links a:hover{color:var(--blue)}
-    .hero{max-width:1240px;margin:0 auto;padding:78px 24px 38px;text-align:center}
-    .pill{display:inline-block;padding:10px 18px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);color:#dbe7f8;font-weight:800;margin-bottom:18px;}
-    .hero h2{margin:0 0 12px;font-size:72px;line-height:1;font-weight:900;background:linear-gradient(90deg,var(--blue),#7bd3ff,var(--green),var(--green2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-    .hero p{max-width:980px;margin:0 auto 24px;color:#dce6f6;font-size:22px;line-height:1.6}
-    .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-    .section{max-width:1240px;margin:0 auto;padding:40px 24px}
-    .section h3{font-size:46px;margin:0 0 14px}
-    .lead{margin:0 0 24px;color:var(--muted);line-height:1.7;font-size:19px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:999px;padding:14px 20px;font-weight:900;cursor:pointer;text-decoration:none;font-size:16px;}
-    .btn-blue{background:linear-gradient(90deg,#42b7ff,#6ed6ff);color:#07111f}
-    .btn-green{background:linear-gradient(90deg,#82f86b,#b8ff79);color:#08101b}
-    .btn-dark{background:#0e1930;color:#fff;border:1px solid rgba(255,255,255,.12)}
-    .btn-small{padding:10px 14px;font-size:14px}
-    .feature-grid,.legal-grid,.contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-    .feature-box,.legal-box,.contact-box{background:linear-gradient(180deg,rgba(18,31,61,.95),rgba(11,18,36,.96));border:1px solid rgba(73,182,255,.22);border-radius:22px;padding:22px;}
-    .feature-box h4,.legal-box h4,.contact-box h4{margin:0 0 8px;font-size:28px}
-    .feature-box p,.legal-box p,.contact-box p{margin:0 0 14px;color:var(--muted);line-height:1.7}
-    .crm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
-    .crm-card{position:relative;background:linear-gradient(180deg,rgba(18,30,60,.96),rgba(9,16,30,.98));border:1px solid rgba(73,182,255,.26);border-radius:30px;padding:24px;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,.30);transition:all .35s ease;}
-    .crm-card::before{content:"";position:absolute;inset:-2px;border-radius:32px;padding:1px;background:linear-gradient(135deg,rgba(73,182,255,.75),rgba(140,255,102,.45),rgba(73,182,255,.28));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.55;pointer-events:none;}
-    .crm-card::after{content:"";position:absolute;left:50%;transform:translateX(-50%);bottom:-85px;width:78%;height:145px;background:radial-gradient(circle,rgba(73,182,255,.36) 0%,rgba(73,182,255,.10) 40%,rgba(73,182,255,0) 72%);filter:blur(18px);pointer-events:none;}
-    .crm-card:hover{transform:translateY(-8px) scale(1.01);border-color:rgba(73,182,255,.58)}
-    .crm-card.gold-card{border-color:rgba(255,215,0,.45);box-shadow:0 25px 60px rgba(255,200,0,.18),0 0 40px rgba(255,200,0,.10);}
-    .crm-card.gold-card::before{background:linear-gradient(135deg,rgba(255,215,0,.8),rgba(140,255,102,.5),rgba(255,215,0,.3));}
-    .crm-card.gold-card:hover{border-color:rgba(255,215,0,.75)}
-    .badge{position:absolute;top:16px;right:16px;color:#06111d;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:900;}
-    .badge-popular{background:linear-gradient(90deg,var(--blue),var(--green))}.badge-gold{background:linear-gradient(90deg,#ffd700,#ffec6e);color:#3a2800}
-    .logo-wrap{height:220px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.09);border-radius:24px;background:rgba(255,255,255,.04);padding:18px;margin-bottom:18px;}
-    .logo-wrap img{max-width:100%;max-height:100%;object-fit:contain}
-    .crm-card h4{margin:0 0 8px;font-size:34px}.crm-sub{margin:0 0 6px;color:#eaf1fb;font-size:17px;line-height:1.6;font-weight:700}
-    .crm-tier-label{display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:900;margin-bottom:12px;}
-    .tier-starter{background:rgba(73,182,255,.15);color:#49b6ff;border:1px solid rgba(73,182,255,.3)}
-    .tier-professional{background:rgba(140,255,102,.12);color:#8cff66;border:1px solid rgba(140,255,102,.3)}
-    .tier-enterprise{background:rgba(255,215,0,.15);color:#ffd700;border:1px solid rgba(255,215,0,.35)}
-    .crm-desc{margin:0 0 18px;color:var(--muted);font-size:15px;line-height:1.7;min-height:220px}
-    .feature-check-list{margin:0 0 18px;padding:0;list-style:none;display:grid;gap:6px}
-    .feature-check-list li{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:flex-start}
-    .feature-check-list li span.ck{color:#8cff66;font-size:14px;flex-shrink:0;margin-top:1px}
-    .card-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
-    .price-list{border-top:1px solid rgba(255,255,255,.08);margin-top:12px}
-    .price-row{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.08);}
-    .price-row:last-child{border-bottom:none}.price-name{font-size:16px;font-weight:800}
-    .price-amt{font-size:18px;font-weight:900;white-space:nowrap}.price-amt.gold-price{color:#ffd700}
-    footer{max-width:1240px;margin:0 auto;padding:34px 24px 54px;color:var(--muted);text-align:center}
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:9999;background:rgba(0,0,0,.74);padding:18px;}
-    .modal.show{display:flex}.modal-box{width:min(680px,100%);max-height:92vh;overflow:auto;background:linear-gradient(180deg,#0d1730,#09101f);border:1px solid rgba(255,255,255,.10);border-radius:24px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.45);}
-    .modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.modal-head h4{margin:0;font-size:34px}
-    .close-btn{border:none;background:none;color:#fff;font-size:30px;cursor:pointer;line-height:1}
-    .agreement-list{display:grid;gap:12px;margin:16px 0}
-    .agree-item{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px;}
-    .agree-item input{margin-top:3px}.agree-item strong{display:block;margin-bottom:6px}
-    .msg{margin-top:12px;min-height:20px;font-size:14px;font-weight:800;color:#ff9696}
-    @media(max-width:1100px){.crm-grid,.feature-grid,.legal-grid,.contact-grid{grid-template-columns:1fr}}
-    @media(max-width:760px){nav{flex-direction:column;align-items:flex-start}.hero h2{font-size:50px}.hero p{font-size:18px}.section h3{font-size:38px}.price-row{grid-template-columns:1fr}.modal-head h4{font-size:28px}}
-  </style>
-</head>
-<body>
-  <nav>
-    <div class="brand">
-      <img src="assets/site-logo.png" alt="We Market Plus LLC logo">
-      <div><h1>We Market Plus LLC</h1><p>Connect. Grow. Succeed.</p></div>
-    </div>
-    <div class="nav-links">
-      <a href="#homepage">Homepage</a>
-      <a href="#features">Features</a>
-      <a href="#pricing">🧠 Hospice-Intelligent Pricing</a>
-      <a href="#contact">Contact</a>
-      <a href="#terms">Terms</a>
-      <a href="#privacy">Privacy</a>
-      <a href="#baa">BAA</a>
-    </div>
-  </nav>
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  <section class="hero" id="homepage">
-    <div class="pill">Hospice CRM Platform by We Market Plus LLC</div>
-    <h2>Connect. Grow. Succeed.</h2>
-    <div style="background:linear-gradient(135deg,rgba(73,182,255,.08),rgba(140,255,102,.05));border:1px solid rgba(73,182,255,.2);border-radius:16px;padding:20px;margin-bottom:28px;text-align:center;">
-      <p style="font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#49b6ff;margin:0 0 8px;">Why HospiceLink beats every generic CRM</p>
-      <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-top:12px;">
-        <span style="font-size:13px;color:rgba(200,220,255,.8);">✅ Built for hospice workflows</span>
-        <span style="font-size:13px;color:rgba(200,220,255,.8);">✅ 📞 Call, 📱 Text &amp; 📧 Email from prospect record</span>
-        <span style="font-size:13px;color:rgba(200,220,255,.8);">✅ All communications auto-log to Notes</span>
-        <span style="font-size:13px;color:rgba(200,220,255,.8);">✅ Next Step + Due Date recorded on every note</span>
-        <span style="font-size:13px;color:rgba(200,220,255,.8);">✅ AI-powered referral scorecard</span>
-        <span style="font-size:13px;color:rgba(200,220,255,.8);">✅ 14-day retention alerts</span>
-        <span style="font-size:13px;color:rgba(200,220,255,.8);">✅ Marketing Playbook Generator</span>
-        <span style="font-size:13px;color:rgba(200,220,255,.8);">✅ One-click CSV import from any CRM</span>
-        <span style="font-size:13px;color:rgba(200,220,255,.8);">✅ HIPAA-compliant encryption</span>
-        <span style="font-size:13px;color:rgba(200,220,255,.8);">✅ 📞 Business phone tip: Use <a href="https://openphone.com" target="_blank" style="color:#49b6ff;">OpenPhone</a> (~$13/user/mo) for shared team inbox &amp; call recording</span>
-      </div>
-    </div>
-    <p>The only CRM built specifically for hospice teams. Choose your tier, watch the live demo, review the agreements, and subscribe. Three tiers — one platform.</p>
-    <div class="hero-actions">
-      <a href="#pricing" class="btn btn-blue">View Pricing &amp; Subscribe</a>
-      <a href="#pricing" class="btn btn-green">View Demos</a>
-    </div>
-  </section>
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
 
-  <section class="section" id="features">
-    <h3>Platform Highlights</h3>
-    <p class="lead">Built by hospice industry professionals. Every feature maps directly to real workflows — from first referral call to admission, clinical note, and family communication.</p>
-    <div class="feature-grid">
-      <div class="feature-box">
-        <h4>📞 One-Tap Communications</h4>
-        <p>Call, text, or email any prospect directly from their record. Every communication auto-logs to Notes — visible to the whole team. Next Step and due date are captured on every note automatically. No manual logging ever. Use <a href="https://openphone.com" target="_blank" style="color:#49b6ff;">OpenPhone</a> (~$13/user/mo) for a dedicated business number with shared team inbox and call recording.</p>
-      </div>
-      <div class="feature-box">
-        <h4>🧠 Marketing Workflow Intelligence</h4>
-        <p>Inquiry → Visit → Admit → Lost tracking, referral source management with full contact details (work phone, cell, email, title), AI-powered scorecard, 14-day cold alerts, reminders auto-set from due dates, re-engagement queue, territory management, and productivity dashboards.</p>
-      </div>
-      <div class="feature-box">
-        <h4>🔐 Compliance &amp; Admin Controls</h4>
-        <p>Terms, Privacy, and BAA acknowledgment before checkout. Role-based access control, seat-cap enforcement, HIPAA audit logs, Revenue Intelligence with editable admin settings, and suspension logic for nonpayment.</p>
-      </div>
-      <div class="feature-box">
-        <h4>🚗 GPS, EVV &amp; Clinical Tools</h4>
-        <p>GPS check-in on every synced note, EVV mileage tracking, voice-to-note (Windshield Mode), clinical notes, family communication logs, real-time staff location maps, and admin reporting on higher-tier plans.</p>
-      </div>
-      <div class="feature-box">
-        <h4>💰 Revenue Intelligence</h4>
-        <p>Admin enters revenue per admit and monthly marketing cost — the system auto-calculates cost per admission, forecasted admits, and lost opportunity value. Save settings persist across sessions. Gold tier only.</p>
-      </div>
-      <div class="feature-box">
-        <h4>🤖 AI-Powered Tools</h4>
-        <p>Claude AI assistant available 24/7 for follow-up scripts, referral analysis, playbook generation, team coaching, revenue insights, and compliance guidance. AI referral scorecard ranks every source 1–10 nightly.</p>
-      </div>
-    </div>
-  </section>
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
 
-  <section class="section" id="pricing">
-    <h3>Choose Your CRM</h3>
-    <p class="lead">Three tiers built for different roles. Click Demo to see exactly what each system includes before you subscribe.</p>
-    <div style="background:linear-gradient(135deg,rgba(140,255,102,.07),rgba(73,182,255,.05));border:1px solid rgba(140,255,102,.2);border-radius:20px;padding:28px 32px;margin-bottom:36px;">
-      <p style="font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#8cff66;margin:0 0 16px;">💡 What This System Does For Your Agency</p>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
-        <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;"><p style="font-size:22px;font-weight:900;color:#8cff66;margin:0 0 4px;">20–40%</p><p style="font-size:13px;color:#c7d3e8;margin:0;">Increase in hospice referrals</p></div>
-        <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;"><p style="font-size:22px;font-weight:900;color:#49b6ff;margin:0 0 4px;">80%</p><p style="font-size:13px;color:#c7d3e8;margin:0;">Reduction in missed follow-ups</p></div>
-        <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;"><p style="font-size:22px;font-weight:900;color:#ffd700;margin:0 0 4px;">30+ min</p><p style="font-size:13px;color:#c7d3e8;margin:0;">Saved daily per marketer (Gold)</p></div>
-        <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;"><p style="font-size:22px;font-weight:900;color:#8cff66;margin:0 0 4px;">0</p><p style="font-size:13px;color:#c7d3e8;margin:0;">Spreadsheets needed — ever again</p></div>
-        <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;"><p style="font-size:22px;font-weight:900;color:#49b6ff;margin:0 0 4px;">Real-time</p><p style="font-size:13px;color:#c7d3e8;margin:0;">Marketer performance tracking</p></div>
-        <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;"><p style="font-size:22px;font-weight:900;color:#ffd700;margin:0 0 4px;">$0</p><p style="font-size:13px;color:#c7d3e8;margin:0;">Lost to cold referral sources you didn't know about</p></div>
-      </div>
-      <p style="color:#94a3b8;font-size:12px;margin:16px 0 0;text-align:center;">You are not buying software. You are buying outcomes. Every dollar spent here drives admits.</p>
-    </div>
 
-    <div class="crm-grid">
-      <!-- PRO -->
-      <article class="crm-card">
-        <span class="badge badge-popular">Starter</span>
-        <h4>HospiceLink Pro</h4>
-        <p class="crm-sub">Hospice Marketing CRM — For Field Marketers</p>
-        <span class="crm-tier-label tier-starter">Starter Plan</span>
-        <p class="crm-desc">Built for individual hospice marketers starting out. Track prospects from Inquiry to Admission, manage referral sources with basic contact info, set follow-up reminders, and log notes after every visit. Call or text any prospect directly from their record — every communication auto-logs. Simple, fast, and focused on the fundamentals. <em style="color:#49b6ff;">Upgrade to Max for team features, EVV, family logs, weekly reports, and AI tools.</em></p>
-        <ul class="feature-check-list">
-          <li><span class="ck">✓</span>Prospect pipeline — Inquiry, Pending, Admitted, Lost</li>
-          <li><span class="ck">✓</span>Referral source management — Green/Red status tracking</li>
-          <li><span class="ck">✓</span>📞 Call, 📱 Text &amp; 📧 Email directly from prospect record</li>
-          <li><span class="ck">✓</span>All communications auto-log to Notes</li>
-          <li><span class="ck">✓</span>📅 Follow-up reminders auto-set from due dates</li>
-          <li><span class="ck">✓</span>🔁 Re-engagement queue — win back lost prospects</li>
-          <li><span class="ck">✓</span>🎯 Daily goals tracker</li>
-          <li><span class="ck">✓</span>📤 CSV / Excel prospect importer</li>
-          <li><span class="ck">✓</span>Internal notes with GPS location sync</li>
-          <li><span class="ck">✓</span>🔒 Admin: edit/delete records + user management <span style="font-size:10px;background:rgba(91,58,160,.15);color:#c9aeff;border-radius:4px;padding:1px 5px;font-weight:700;margin-left:4px;">Admin</span></li>
-          <li><span class="ck" style="color:#94a3b8;">—</span><span style="color:#64748b;">Territory view &amp; productivity tracking <span style="color:#49b6ff;font-size:11px;">(Max+)</span></span></li>
-          <li><span class="ck" style="color:#94a3b8;">—</span><span style="color:#64748b;">Automation workflows <span style="color:#49b6ff;font-size:11px;">(Max+)</span></span></li>
-          <li><span class="ck" style="color:#94a3b8;">—</span><span style="color:#64748b;">AI assistant &amp; playbook generator <span style="color:#49b6ff;font-size:11px;">(Max+)</span></span></li>
-          <li><span class="ck" style="color:#94a3b8;">—</span><span style="color:#64748b;">EVV / GPS mileage tracking <span style="color:#49b6ff;font-size:11px;">(Max+)</span></span></li>
-          <li><span class="ck" style="color:#94a3b8;">—</span><span style="color:#64748b;">Team notes &amp; weekly performance reports <span style="color:#49b6ff;font-size:11px;">(Max+)</span></span></li>
-          <li><span class="ck" style="color:#94a3b8;">—</span><span style="color:#64748b;">Referral portal, touch log, family comms <span style="color:#49b6ff;font-size:11px;">(Max+)</span></span></li>
-        </ul>
-        <div class="card-actions"><a href="demo-pro.html" class="btn btn-blue btn-small">Demo</a></div>
-        <div class="price-list">
-          <div class="price-row"><div class="price-name">0–5 Users</div><div class="price-amt">$149/mo</div><button onclick="startSubscribe('HospiceLink Pro','0–5 Users','$149/mo','STRIPE_PRO_0_5')" class="btn btn-green btn-small">Subscribe</button></div>
-          <div class="price-row"><div class="price-name">5–10 Users</div><div class="price-amt">$249/mo</div><button onclick="startSubscribe('HospiceLink Pro','5–10 Users','$249/mo','STRIPE_PRO_5_10')" class="btn btn-green btn-small">Subscribe</button></div>
-          <div class="price-row"><div class="price-name">10–20 Users</div><div class="price-amt">$349/mo</div><button onclick="startSubscribe('HospiceLink Pro','10–20 Users','$349/mo','STRIPE_PRO_10_20')" class="btn btn-green btn-small">Subscribe</button></div>
-          <div class="price-row"><div class="price-name">Unlimited Users</div><div class="price-amt">$499/mo</div><button onclick="startSubscribe('HospiceLink Pro','Unlimited Users','$499/mo','STRIPE_PRO_UNLIMITED')" class="btn btn-green btn-small">Subscribe</button></div>
-        </div>
-      </article>
 
-      <!-- MAX -->
-      <article class="crm-card">
-        <span class="badge badge-popular">⭐ Best Value</span>
-        <h4>HospiceLink Max</h4>
-        <p class="crm-sub">Clinical + Marketing CRM — For Full Hospice Teams</p>
-        <span class="crm-tier-label tier-professional">Professional Plan</span>
-        <p class="crm-desc">Everything in Pro, built for the full hospice team — Marketers, Nurses, and Caregivers. Call, text, or email any prospect directly from their record — every communication is logged to Notes and visible to all team members. Adds EVV and GPS mileage tracking, timestamped family communication logs, a referral source touch log with 14-day cold alerts, weekly performance reports auto-emailed to admin every Monday, and internal team notes on every prospect and referral. Next Step and due date recorded on every note. Multi-role access for marketers, nurses, and caregivers.</p>
-        <ul class="feature-check-list">
-          <li><span class="ck">✓</span>Everything in Pro</li>
-          <li><span class="ck">✓</span>🚗 EVV / GPS mileage tracking + compliance log</li>
-          <li><span class="ck">✓</span>👨‍👩‍👧 Family communication log (timestamped)</li>
-          <li><span class="ck">✓</span>🤝 Referral source touch log + 14-day cold alerts</li>
-          <li><span class="ck">✓</span>📊 Weekly performance report (auto-emailed Mon 7am) <span style="font-size:10px;background:rgba(91,58,160,.15);color:#c9aeff;border-radius:4px;padding:1px 5px;font-weight:700;margin-left:4px;">Admin</span></li>
-          <li><span class="ck">✓</span>💬 Team notes — internal, never visible to patients</li>
-          <li><span class="ck">✓</span>Clinical notes for nurses and caregivers</li>
-          <li><span class="ck">✓</span>Multi-role access: marketer, nurse, caregiver</li>
-          <li><span class="ck">✓</span>📤 CSV importer + territory view</li>
-          <li><span class="ck">✓</span>🏥 Referral portal + AI playbook generator</li>
-          <li><span class="ck">✓</span>🤖 AI assistant (clinical + marketing workflows)</li>
-          <li><span class="ck">✓</span>📞 Business phone tip: <a href="https://openphone.com" target="_blank" style="color:#8cff66;">OpenPhone</a> (~$13/user/mo)</li>
-          <li><span class="ck">✓</span>🔒 Admin: full staff tracking + mileage reports <span style="font-size:10px;background:rgba(91,58,160,.15);color:#c9aeff;border-radius:4px;padding:1px 5px;font-weight:700;margin-left:4px;">Admin</span></li>
-        </ul>
-        <div class="card-actions"><a href="demo-max.html" class="btn btn-blue btn-small">Demo</a></div>
-        <div class="price-list">
-          <div class="price-row"><div class="price-name">0–10 Users</div><div class="price-amt">$449/mo</div><button onclick="startSubscribe('HospiceLink Max','0–10 Users','$449/mo','STRIPE_MAX_0_10')" class="btn btn-green btn-small">Subscribe</button></div>
-          <div class="price-row"><div class="price-name">10–20 Users</div><div class="price-amt">$749/mo</div><button onclick="startSubscribe('HospiceLink Max','10–20 Users','$749/mo','STRIPE_MAX_10_20')" class="btn btn-green btn-small">Subscribe</button></div>
-          <div class="price-row"><div class="price-name">Unlimited Users</div><div class="price-amt">$999/mo</div><button onclick="startSubscribe('HospiceLink Max','Unlimited Users','$999/mo','STRIPE_MAX_UNLIMITED')" class="btn btn-green btn-small">Subscribe</button></div>
-        </div>
-      </article>
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
 
-      <!-- GOLD -->
-      <article class="crm-card gold-card">
-        <span class="badge badge-gold">🏆 Enterprise</span>
-        <h4>HospiceLink Gold</h4>
-        <p class="crm-sub">Enterprise CRM — Gold Standard Suite</p>
-        <span class="crm-tier-label tier-enterprise">Enterprise Plan</span>
-        <p class="crm-desc">The most complete Hospice-Intelligent CRM available. Everything in Max plus Windshield Voice Mode (speak your note while driving — it transcribes live), AI-ranked referral source scorecard, real-time team notifications visible to everyone, Revenue Intelligence with editable admin fields (revenue per admit, cost per admission, forecasted admits — all auto-calculated and saveable), marketer leaderboard, 14-day retention alerts, and HIPAA audit logs. Every note captures Next Step + due date. Built for enterprise agencies — Marketers, Nurses, and Caregivers — that compete to win.</p>
-        <ul class="feature-check-list">
-          <li><span class="ck">✓</span>Everything in Max</li>
-          <li><span class="ck">✓</span>🎤 Voice-to-note "Windshield Mode" — speak, it transcribes</li>
-          <li><span class="ck">✓</span>💰 Revenue intelligence — cost per admission, forecasting <span style="font-size:10px;background:rgba(91,58,160,.15);color:#c9aeff;border-radius:4px;padding:1px 5px;font-weight:700;margin-left:4px;">Admin</span></li>
-          <li><span class="ck">✓</span>🎯 AI referral source scorecard — 1–10 ranking <span style="font-size:10px;background:rgba(91,58,160,.15);color:#c9aeff;border-radius:4px;padding:1px 5px;font-weight:700;margin-left:4px;">Admin</span></li>
-          <li><span class="ck">✓</span>🔔 Real-time notifications — admits, losses, cold sources — team-wide</li>
-          <li><span class="ck">✓</span>💾 Revenue Intelligence with Save Settings</li>
-          <li><span class="ck">✓</span>🏆 Marketer leaderboard — admissions, conversion, revenue</li>
-          <li><span class="ck">✓</span>🔐 HIPAA audit log — full compliance trail <span style="font-size:10px;background:rgba(91,58,160,.15);color:#c9aeff;border-radius:4px;padding:1px 5px;font-weight:700;margin-left:4px;">Admin</span></li>
-          <li><span class="ck">✓</span>14-day referral retention alert system</li>
-          <li><span class="ck">✓</span>Territory heat maps + performance analytics</li>
-          <li><span class="ck">✓</span>🤖 AI command center — revenue, territory, team coaching</li>
-          <li><span class="ck">✓</span>📞 Business phone tip: <a href="https://openphone.com" target="_blank" style="color:#ffd700;">OpenPhone</a> (~$13/user/mo)</li>
-          <li><span class="ck">✓</span>🔒 Enterprise admin: seat management + user roles <span style="font-size:10px;background:rgba(91,58,160,.15);color:#c9aeff;border-radius:4px;padding:1px 5px;font-weight:700;margin-left:4px;">Admin</span></li>
-        </ul>
-        <div style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:12px;margin-bottom:14px;">
-          <p style="color:#ffd700;font-size:12px;font-weight:700;margin:0 0 4px;">🚀 White-Glove Onboarding</p>
-          <p style="color:#c9a800;font-size:11px;margin:0;">One-time $500 setup fee — includes full data migration, team training, and custom playbook. <strong style="color:#ffd700;">Waived during launch promo.</strong></p>
-        </div>
-        <div class="card-actions"><a href="demo-gold.html" class="btn btn-blue btn-small">Demo</a></div>
-        <div class="price-list">
-          <div class="price-row"><div class="price-name">0–10 Users</div><div class="price-amt gold-price">$899/mo</div><button onclick="startSubscribe('HospiceLink Gold','0–10 Users','$899/mo','STRIPE_GOLD_0_10')" class="btn btn-green btn-small">Subscribe</button></div>
-          <div class="price-row"><div class="price-name">10–20 Users</div><div class="price-amt gold-price">$1,299/mo</div><button onclick="startSubscribe('HospiceLink Gold','10–20 Users','$1,299/mo','STRIPE_GOLD_10_20')" class="btn btn-green btn-small">Subscribe</button></div>
-          <div class="price-row"><div class="price-name">Unlimited Users</div><div class="price-amt gold-price">$1,999/mo</div><button onclick="startSubscribe('HospiceLink Gold','Unlimited Users','$1,999/mo','STRIPE_GOLD_UNLIMITED')" class="btn btn-green btn-small">Subscribe</button></div>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <section class="section" id="why-us">
-    <h3>Why We Market Plus?</h3>
-    <div class="feature-grid">
-      <div class="feature-box"><h4>Hospice-Centric Design</h4><p>Unlike generic CRMs, our platform is built by industry professionals who understand referral tracking, facility visits, clinical documentation, and the unique hospice sales cycle.</p></div>
-      <div class="feature-box"><h4>Scalable Solutions</h4><p>Start with Pro and scale to Gold as your agency grows. Transition seamlessly from a marketing-only focus to a full enterprise clinical workflow platform.</p></div>
-      <div class="feature-box"><h4>Revenue &amp; Accountability</h4><p>Real-time performance dashboards show admissions per marketer, conversion by referral source, revenue intelligence, and territory heat maps — so you always know where the money is.</p></div>
-    </div>
-  </section>
-
-  <section class="section" id="contact">
-    <h3>Contact</h3>
-    <div class="contact-grid">
-      <div class="contact-box" style="grid-column:1 / -1;"><h4>We Market Plus LLC</h4><p>Email: info@wemarketplus.com<br>Phone: +1 (469) 793-0673</p></div>
-    </div>
-  </section>
-
-  <section class="section" id="terms">
-    <h3>Subscription Terms of Service</h3>
-    <div class="legal-grid"><div class="legal-box" style="grid-column:1 / -1;">
-      <h4>1. Subscription and Billing</h4><p>By subscribing to a We Market Plus LLC CRM plan, you agree to a recurring monthly billing cycle based on your selected tier. All fees are billed in advance and are <strong>non-refundable</strong>. We Market Plus LLC reserves the right to modify subscription fees with 30 days written notice.</p>
-      <h4>2. Intellectual Property &amp; Ownership</h4><p>HospiceLink CRM, all associated software, code, designs, interfaces, workflows, and content are the exclusive proprietary property of We Market Plus LLC, protected under U.S. Copyright Law. <strong>This software is licensed, not sold.</strong></p>
-      <h4>3. Prohibited Use</h4><p>Subscribers are strictly prohibited from: copying, reproducing, or distributing any portion of the software; reverse-engineering; white-labeling without written agreement; reselling or sublicensing access; exceeding user seat limits; using the platform to build a competing product; or scraping data.</p>
-      <h4>4. Account Standing and Suspension</h4><p>Access to the CRM is contingent upon the account remaining in good standing. We Market Plus LLC reserves the right to suspend or terminate access immediately upon non-payment, violation of these terms, or fraudulent activity.</p>
-      <h4>5. Data Ownership</h4><p>You retain ownership of all data you enter into the CRM. Upon cancellation, you may request a data export within 30 days. After 30 days, data may be permanently deleted.</p>
-      <h4>6. Governing Law</h4><p>These terms are governed by the laws of the State of Texas. Any disputes shall be resolved through binding arbitration in Dallas County, Texas.</p>
-    </div></div>
-  </section>
-
-  <section class="section" id="privacy">
-    <h3>Privacy Policy</h3>
-    <div class="legal-grid"><div class="legal-box" style="grid-column:1 / -1;">
-      <h4>1. Commitment to Data Integrity</h4><p>We Market Plus LLC prioritizes the confidentiality and security of your business data. We collect only the information necessary to provide and improve our services.</p>
-      <h4>2. User Responsibilities</h4><p>Subscribers are solely responsible for ensuring their specific use of the platform complies with federal and state regulations.</p>
-      <h4>3. Security Disclaimer</h4><p>This platform is designed as a workflow and business optimization tool. Users are advised that production-grade security, end-to-end encryption, and comprehensive audit logging must be verified before processing Protected Health Information (PHI).</p>
-    </div></div>
-  </section>
-
-  <section class="section" id="baa">
-    <h3>Business Associate Agreement (BAA)</h3>
-    <div class="legal-grid"><div class="legal-box" style="grid-column:1 / -1;">
-      <h4>BAA Acknowledgment &amp; Compliance</h4>
-      <p>In compliance with HIPAA, We Market Plus LLC provides a standard Business Associate Agreement (BAA) for clients utilizing our Max or Gold tiers for regulated data.</p>
-      <p><strong>Requirement:</strong> Execution of the BAA is mandatory prior to the storage or transmission of any Protected Health Information (PHI) within the platform.</p>
-    </div></div>
-  </section>
-
-  <footer style="text-align:center;padding:30px 20px;color:#c7d3e8;">
-    <p>© 2026 We Market Plus LLC &nbsp;·&nbsp; All Rights Reserved.</p>
-    <p style="margin-top:10px;">
-      <a href="#terms" style="color:#c7d3e8;margin:0 10px;">Terms of Service</a>
-      <a href="#privacy" style="color:#c7d3e8;margin:0 10px;">Privacy Policy</a>
-      <a href="#baa" style="color:#c7d3e8;margin:0 10px;">HIPAA Compliance / BAA</a>
-      <a href="#contact" style="color:#c7d3e8;margin:0 10px;">Support / Contact Us</a>
-    </p>
-  </footer>
-
-  <!-- SUBSCRIBE MODAL -->
-  <div class="modal" id="subscribeModal">
-    <div class="modal-box">
-      <div class="modal-head"><h4>Before You Continue</h4><button class="close-btn" onclick="closeModal('subscribeModal')">&times;</button></div>
-      <p id="subscribeSummary" class="lead" style="font-size:18px;margin-bottom:8px;"></p>
-      <div class="agreement-list">
-        <label class="agree-item"><input type="checkbox" class="consent-check"><div><strong>Terms of Service</strong>I agree to the monthly subscription terms, including billing, user limits, and cancellation policy.</div></label>
-        <label class="agree-item"><input type="checkbox" class="consent-check"><div><strong>Privacy Policy</strong>I acknowledge the privacy policy and data handling terms.</div></label>
-        <label class="agree-item"><input type="checkbox" class="consent-check"><div><strong>Business Associate Agreement</strong>I acknowledge the BAA requirements and responsibilities related to protected health information.</div></label>
-        <label class="agree-item"><input type="checkbox" class="consent-check"><div><strong>Automatic Suspension for Nonpayment</strong>I understand that if the subscription is not paid, CRM access will be suspended until the account is brought current.</div></label>
-      </div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;">
-        <button class="btn btn-green" onclick="continueToStripe()">Continue to Stripe ➤</button>
-        <button class="btn btn-dark" onclick="closeModal('subscribeModal')">Cancel</button>
-      </div>
-      <div class="msg" id="subscribeMsg"></div>
-    </div>
-  </div>
-
-  <script>
-    let pendingStripeLink = "";
-    const STRIPE_LINKS = {
-      STRIPE_PRO_0_5:       "https://buy.stripe.com/dRm28sdss2jt5H99trfEk0i",
-      STRIPE_PRO_5_10:      "https://buy.stripe.com/28E14o2NO3nx1qTaxvfEk0j",
-      STRIPE_PRO_10_20:     "https://buy.stripe.com/3cI28sgEE1fp3z10WVfEk0k",
-      STRIPE_PRO_UNLIMITED: "https://buy.stripe.com/7sY7sM4VWcY72uXgVTfEk0l",
-      STRIPE_MAX_0_10:      "https://buy.stripe.com/7sY7sM9cc6zJ1qT7ljfEk0d",
-      STRIPE_MAX_10_20:     "https://buy.stripe.com/dRmcN67446zJ4D55dbfEk0m",
-      STRIPE_MAX_UNLIMITED: "https://buy.stripe.com/5kQfZiaggcY79Xp0WVfEk0n",
-      STRIPE_GOLD_0_10:     "https://buy.stripe.com/dRm00k9ccbU3edF8pnfEk0o",
-      STRIPE_GOLD_10_20:    "https://buy.stripe.com/dRm5kE2NO4rB1qT20ZfEk0q",
-      STRIPE_GOLD_UNLIMITED:"https://buy.stripe.com/00wcN61JKf6f6Ld497fEk0p",
-    };
-    function openModal(id){document.getElementById(id).classList.add("show");document.body.style.overflow="hidden";}
-    function closeModal(id){document.getElementById(id).classList.remove("show");document.body.style.overflow="";document.getElementById("subscribeMsg").textContent="";}
-    window.addEventListener("click",function(e){if(e.target.classList.contains("modal"))closeModal(e.target.id);});
-    function startSubscribe(crm,users,price,linkKey){
-      pendingStripeLink=STRIPE_LINKS[linkKey]||"";
-      document.getElementById("subscribeSummary").textContent=crm+" | "+users+" | "+price;
-      document.querySelectorAll(".consent-check").forEach(c=>c.checked=false);
-      document.getElementById("subscribeMsg").textContent="";
-      openModal("subscribeModal");
-    }
-    function continueToStripe(){
-      const checks=[...document.querySelectorAll(".consent-check")];
-      if(!checks.every(c=>c.checked)){document.getElementById("subscribeMsg").textContent="Please accept all required agreements before continuing.";return;}
-      if(!pendingStripeLink){document.getElementById("subscribeMsg").textContent="Payment link coming soon — contact us at info@wemarketplus.com to subscribe.";return;}
-      window.open(pendingStripeLink,"_blank");
-    }
-  </script>
-</body>
-</html>
+  body {
+    @apply bg-background text-foreground;
+  }
+}
