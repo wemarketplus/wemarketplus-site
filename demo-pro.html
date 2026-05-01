@@ -454,14 +454,14 @@ th{background:#f4f8fc;font-size:10px;text-transform:uppercase;letter-spacing:.04
             <option value="">Select a role</option>
             <option>Marketer — Prospects, referrals, pipeline, notes, AI, playbook, goals</option>
             <option>e — Prospect records, notes, reminders, AI assistant</option>
-            <option>Caregiver — Prospect records, notes only</option>
+            <option> — Prospect records, notes only</option>
           </select>
         </div>
         <div class="field full" style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px">
           <p style="font-size:12px;color:var(--muted);margin:0;line-height:1.7">
             <strong style="color:#49b6ff">Marketer</strong> — Prospects, referrals, pipeline, territory, productivity, notes, reminders, re-engagement, goals, AI, referral portal, playbook, touch log<br>
             <strong style="color:#8cff66">e</strong> — Prospect records, notes (GPS sync), reminders, AI assistant<br>
-            <strong style="color:#ffd700">Caregiver</strong> — Prospect records and notes only<br>
+            <strong style="color:#ffd700"></strong> — Prospect records and notes only<br>
             <strong style="color:#c9aeff">Admin</strong> — All tabs + weekly report + team management
           </p>
         </div>
@@ -492,10 +492,10 @@ var ROLE_TABS = {
   admin:['dashboard','prospects','records','referrals','addref','pipeline','territory','productivity','touchlog','notes','reminders','reengagement','goals','ai','import','referralportal','playbook','weeklyreport','admin'],
   marketer:['dashboard','prospects','records','referrals','addref','pipeline','territory','productivity','touchlog','notes','reminders','reengagement','goals','ai','import','referralportal','playbook'],
   e:['dashboard','records','notes','reminders','ai'],
-  caregiver:['dashboard','records','notes']
+  :['dashboard','records','notes']
 };
-var ROLE_BADGE = {admin:'badge-admin',marketer:'badge-marketer',e:'badge-e',caregiver:'badge-caregiver'};
-var ROLE_LABEL = {admin:'Admin View',marketer:'Marketer View',e:'e View',caregiver:'Caregiver View'};
+var ROLE_BADGE = {admin:'badge-admin',marketer:'badge-marketer',e:'badge-e',:'badge-'};
+var ROLE_LABEL = {admin:'Admin View',marketer:'Marketer View',e:'e View',:' View'};
 var ROLE_DESC = {
   admin:'You see every tab including Team Management and Weekly Report. Use the dropdown to switch perspectives.',
   marketer:'Full marketing suite: prospects, referrals, pipeline, AI, playbook, goals, and more. Team Management is Admin-only.',
