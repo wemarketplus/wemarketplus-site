@@ -509,18 +509,32 @@ var ROLE_DESC = {
 };
 
 function setRole(role){
-  const tabs = document.querySelectorAll('[data-tab]');
-  const navItems = document.querySelectorAll('.nav a');
+  const allTabs = document.querySelectorAll('[data-tab]');
+  const allNav = document.querySelectorAll('.nav a');
 
   // hide everything first
-  tabs.forEach(tab => tab.style.display = 'none');
-  navItems.forEach(item => item.style.display = 'none');
+  allTabs.forEach(t => t.style.display = 'none');
+  allNav.forEach(n => n.style.display = 'none');
 
   // show allowed tabs
-  ROLE_TABS[role].forEach(tabName => {
-    document.querySelectorAll(`[data-tab="${tabName}"]`)
+  ROLE_TABS[role].forEach(tab => {
+    document.querySelectorAll(`[data-tab="${tab}"]`)
       .forEach(el => el.style.display = 'block');
+
+    document.querySelectorAll(`.nav a[data-tab="${tab}"]`)
+      .forEach(el => el.style.display = 'flex');
   });
+
+  // update badge
+  document.getElementById('roleBadge').innerText =
+    role === 'admin' ? 'Admin View' : 'Marketer View';
+
+  // update banner
+  document.getElementById('bannerRole').innerText =
+    role === 'admin' ? 'Admin View' : 'Marketer View';
+
+  document.getElementById('bannerDesc').innerText = ROLE_DESC[role];
+}
 
   // update badge
   const badge = document.getElementById('roleBadge');
