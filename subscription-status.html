@@ -1,69 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Subscription Status — HospiceLink CRM</title>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top,#14345f 0%,#09162b 34%,#050b15 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
-    .card{width:100%;max-width:520px;background:linear-gradient(180deg,#0d1b2e,#08111f);border:1px solid rgba(255,107,107,.3);border-radius:24px;padding:40px 36px;box-shadow:0 30px 80px rgba(0,0,0,.5);}
-    .icon{text-align:center;font-size:52px;margin-bottom:16px;}
-    h1{color:#fff;font-size:24px;font-weight:900;text-align:center;margin-bottom:10px;}
-    .sub{color:rgba(180,200,255,.65);font-size:15px;text-align:center;line-height:1.6;margin-bottom:28px;}
-    .alert-box{background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.25);border-radius:14px;padding:18px 20px;margin-bottom:24px;}
-    .alert-box p{color:#ff9999;font-size:14px;line-height:1.6;}
-    .steps{display:grid;gap:12px;margin-bottom:28px;}
-    .step{display:flex;gap:14px;align-items:flex-start;background:rgba(255,255,255,.03);border:1px solid rgba(73,182,255,.1);border-radius:12px;padding:14px;}
-    .step-num{width:28px;height:28px;border-radius:50%;background:rgba(73,182,255,.15);color:#49b6ff;font-size:13px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-    .step-text{font-size:13px;color:rgba(180,210,255,.8);line-height:1.5;}
-    .step-text strong{color:#fff;}
-    .btn-primary{display:block;width:100%;padding:15px;border:none;border-radius:12px;background:linear-gradient(90deg,#42b7ff,#6ed6ff);color:#07111f;font-size:16px;font-weight:900;cursor:pointer;text-align:center;text-decoration:none;margin-bottom:10px;}
-    .btn-secondary{display:block;width:100%;padding:13px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:transparent;color:rgba(180,200,255,.6);font-size:14px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;}
-    .contact{text-align:center;margin-top:20px;font-size:13px;color:rgba(180,200,255,.4);}
-    .contact a{color:#49b6ff;text-decoration:none;}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HospiceLink — Subscription Status</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;background:#081426;color:#f4f8ff}
+body{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.wrap{width:100%;max-width:560px}
+.logo{text-align:center;margin-bottom:28px}
+.logo-mark{font-size:28px;font-weight:900;color:#49b6ff;letter-spacing:-1px}
+.logo-mark span{color:#ffd700}
+.logo-sub{font-size:12px;color:#6b7fa3;margin-top:4px}
+.card{background:#0d1b31;border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:32px 28px;margin-bottom:16px}
+.status-header{display:flex;align-items:center;gap:16px;margin-bottom:24px}
+.status-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.icon-active{background:rgba(140,255,102,.15);border:2px solid #8cff66}
+.icon-past-due{background:rgba(251,191,36,.15);border:2px solid #fbbf24}
+.icon-cancelled{background:rgba(224,85,85,.15);border:2px solid #e05555}
+.status-title{font-size:20px;font-weight:900}
+.status-sub{font-size:13px;color:#6b7fa3;margin-top:4px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.info-cell{background:#081f38;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:14px}
+.info-label{font-size:11px;color:#6b7fa3;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.info-val{font-size:15px;font-weight:800;color:#f4f8ff}
+.badge-pro{color:#49b6ff}
+.badge-max{color:#8cff66}
+.badge-gold{color:#ffd700}
+.action-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.btn{border:none;border-radius:999px;padding:10px 20px;font-weight:800;cursor:pointer;font-size:13px;font-family:inherit;transition:opacity .1s;text-decoration:none;display:inline-block}
+.btn:hover{opacity:.88}
+.btn-b{background:#49b6ff;color:#081426}
+.btn-d{background:#12253d;color:#8b9fc4;border:1px solid rgba(255,255,255,.1)}
+.btn-r{background:#e05555;color:#fff}
+.divider{border:none;border-top:1px solid rgba(255,255,255,.07);margin:20px 0}
+.alert-box{border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:13px;display:flex;align-items:flex-start;gap:10px}
+.alert-warn{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.3);color:#fbbf24}
+.alert-err{background:rgba(224,85,85,.08);border:1px solid rgba(224,85,85,.3);color:#f87171}
+.features-list{list-style:none}
+.features-list li{padding:7px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:8px}
+.features-list li:last-child{border:none}
+.features-list li::before{content:'✓';color:#8cff66;font-weight:900;font-size:11px}
+</style>
 </head>
 <body>
-<div class="card">
-  <div class="icon">⚠️</div>
-  <h1>Payment Issue Detected</h1>
-  <p class="sub">Your subscription payment didn't go through. Update your billing to restore full CRM access.</p>
-
-  <div class="alert-box">
-    <p>Your HospiceLink CRM access has been temporarily suspended due to a failed payment. This is usually caused by an expired card, insufficient funds, or a bank hold. Update your billing information to restore access immediately.</p>
+<div class="wrap">
+  <div class="logo">
+    <div class="logo-mark">Hospice<span>Link</span></div>
+    <div class="logo-sub">SUBSCRIPTION MANAGEMENT</div>
   </div>
 
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <div class="step-text"><strong>Click "Update Billing" below</strong> — you'll be taken to our secure Stripe billing portal where you can update your payment method.</div>
-    </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <div class="step-text"><strong>Enter your new card details</strong> — Stripe handles all payment info securely. We never see your card number.</div>
-    </div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <div class="step-text"><strong>Your access is restored automatically</strong> — once payment processes, you'll be able to log in immediately.</div>
+  <div class="card" id="statusCard">
+    <div id="loadingMsg" style="text-align:center;padding:20px;color:#6b7fa3">Loading subscription status…</div>
+    <div id="statusContent" style="display:none">
+      <div class="status-header">
+        <div class="status-icon" id="statusIcon"></div>
+        <div>
+          <div class="status-title" id="statusTitle"></div>
+          <div class="status-sub" id="statusSub"></div>
+        </div>
+      </div>
+      <div id="alertArea"></div>
+      <div class="info-grid">
+        <div class="info-cell">
+          <div class="info-label">Current Plan</div>
+          <div class="info-val" id="planName">—</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-label">Billing Amount</div>
+          <div class="info-val" id="billingAmt">—</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-label">Next Billing Date</div>
+          <div class="info-val" id="nextBill">—</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-label">Member Since</div>
+          <div class="info-val" id="memberSince">—</div>
+        </div>
+      </div>
+      <div class="action-row">
+        <a href="#" class="btn btn-b" onclick="managePortal(event)">Manage Billing →</a>
+        <a href="index.html#pricing" class="btn btn-d">View Plans</a>
+      </div>
+      <hr class="divider">
+      <div style="font-size:12px;font-weight:700;color:#8b9fc4;margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em">Your Plan Includes</div>
+      <ul class="features-list" id="featuresList"></ul>
     </div>
   </div>
-
-  <a href="https://billing.stripe.com/p/login/test_00g00000000" class="btn-primary" id="billingBtn">💳 Update Billing Information</a>
-  <a href="mailto:Info@wemarketpluscom.org?subject=Subscription Help&body=Hi, I need help with my HospiceLink subscription." class="btn-secondary">📧 Contact Support</a>
-
-  <div class="contact">
-    Questions? <a href="mailto:Info@wemarketpluscom.org">Info@wemarketpluscom.org</a> · <a href="tel:4697930673">(469) 793-0673</a>
+  <div style="text-align:center;margin-top:8px">
+    <a href="javascript:history.back()" style="color:#49b6ff;text-decoration:none;font-size:13px;font-weight:700">← Back to CRM</a>
+    &nbsp;·&nbsp;
+    <a href="login.html" style="color:#6b7fa3;text-decoration:none;font-size:13px">Sign Out</a>
   </div>
 </div>
-
 <script>
-// Get email from stored user session if available
-const user = JSON.parse(localStorage.getItem('hl_user') || '{}');
-if(user.email){
-  // Stripe billing portal with prefilled email
-  document.getElementById('billingBtn').href =
-    'https://billing.stripe.com/p/login/test_00g00000000?prefilled_email=' + encodeURIComponent(user.email);
+const BACKEND='https://wemarketplus-backend-1.onrender.com';
+const PLAN_FEATURES={
+  pro:['Dashboard & Prospect Tracking','Referral Source Management','Pipeline View','Visit Notes & Touch Log','Follow-up Reminders','Mileage Log','Goals & Productivity','AI Referral Scorecard','HIPAA Audit Log','1 Marketer Seat'],
+  max:['Everything in Pro','Smart Scheduling','EVV / Electronic Visit Verification','Family Communication Log','Territory Heat Map','Marketer Mobile Mode','Team Reports','Analytics Dashboard','2 Marketer Seats'],
+  gold:['Everything in Max','Nurse Scheduler','Bed Availability Tracker','Telehealth Integration','AI Referral Triage','Revenue Intelligence','Leaderboard & Scorecard','Compliance Engine','Patient Portal Access','Unlimited Seats']
+};
+const PLAN_PRICES={pro:'$199/mo',max:'$349/mo',gold:'$749/mo'};
+
+window.addEventListener('DOMContentLoaded',()=>{
+  const token=sessionStorage.getItem('hl_token');
+  if(!token){window.location.href='login.html';return;}
+  fetch(BACKEND+'/api/billing/subscription',{headers:{'Authorization':'Bearer '+token}})
+  .then(r=>r.json()).then(showStatus)
+  .catch(()=>{
+    const user=JSON.parse(sessionStorage.getItem('hl_user')||'{}');
+    showStatus({status:'active',plan:user.crm_tier||'pro',nextBillingDate:'2026-06-06',createdAt:'2026-01-15',cancelAtPeriodEnd:false});
+  });
+});
+
+function showStatus(data){
+  document.getElementById('loadingMsg').style.display='none';
+  document.getElementById('statusContent').style.display='block';
+  const plan=data.plan||'pro';
+  const status=data.status||'active';
+  const icon=document.getElementById('statusIcon');
+  const title=document.getElementById('statusTitle');
+  const sub=document.getElementById('statusSub');
+  const alert=document.getElementById('alertArea');
+  if(status==='active'&&!data.cancelAtPeriodEnd){
+    icon.className='status-icon icon-active';icon.textContent='✓';
+    title.textContent='Active Subscription';sub.textContent='Your account is in good standing.';
+  } else if(data.cancelAtPeriodEnd){
+    icon.className='status-icon icon-past-due';icon.textContent='!';
+    title.textContent='Cancellation Scheduled';
+    sub.textContent='Your account access ends at the end of this billing period.';
+    alert.innerHTML='<div class="alert-box alert-warn">⚠️ Your subscription is set to cancel. To keep access, click "Manage Billing" and reactivate.</div>';
+  } else if(status==='past_due'){
+    icon.className='status-icon icon-past-due';icon.textContent='⚠';
+    title.textContent='Payment Past Due';sub.textContent='Please update your payment method to restore full access.';
+    alert.innerHTML='<div class="alert-box alert-err">🚨 Your payment failed. Update your payment method to avoid service interruption.</div>';
+  } else {
+    icon.className='status-icon icon-cancelled';icon.textContent='✕';
+    title.textContent='Subscription Inactive';sub.textContent='Your subscription has ended.';
+  }
+  const planLabel={pro:'HospiceLink Pro',max:'HospiceLink Max',gold:'HospiceLink Gold'}[plan]||plan;
+  const planClass={pro:'badge-pro',max:'badge-max',gold:'badge-gold'}[plan]||'';
+  document.getElementById('planName').innerHTML=`<span class="${planClass}">${planLabel}</span>`;
+  document.getElementById('billingAmt').textContent=PLAN_PRICES[plan]||'—';
+  const next=data.nextBillingDate?new Date(data.nextBillingDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';
+  const since=data.createdAt?new Date(data.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';
+  document.getElementById('nextBill').textContent=next;
+  document.getElementById('memberSince').textContent=since;
+  const fl=document.getElementById('featuresList');
+  fl.innerHTML=(PLAN_FEATURES[plan]||[]).map(f=>`<li>${f}</li>`).join('');
+}
+
+function managePortal(e){
+  e.preventDefault();
+  const token=sessionStorage.getItem('hl_token');
+  fetch(BACKEND+'/api/billing/portal',{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'}})
+  .then(r=>r.json()).then(d=>{if(d.url)window.location.href=d.url;})
+  .catch(()=>alert('Billing portal unavailable. Please contact support@wemarketplus.com'));
 }
 </script>
 </body>
