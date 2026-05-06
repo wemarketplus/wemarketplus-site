@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Owner's Command Center — We Market Plus LLC</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Segoe UI',Arial,sans-serif;background:#060e1a;color:#f4f8ff}
+a{text-decoration:none;color:inherit}
+/* Spinner */
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:32px;height:32px;border:4px solid #1e3a5f;border-top:4px solid #ffd700;border-radius:50%;animation:spin 1s linear infinite}
+/* Login Screen */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#060e1a}
+.login-box{text-align:center;padding:40px;background:#0d1b31;border:1px solid rgba(255,215,0,.25);border-radius:20px;width:340px}
+.login-icon{font-size:52px;margin-bottom:12px}
+.login-title{color:#ffd700;font-size:20px;font-weight:900;margin-bottom:6px}
+.login-sub{color:#8b949e;font-size:13px;margin-bottom:20px}
+.login-input{width:100%;padding:11px 14px;border-radius:10px;border:1px solid rgba(255,215,0,.3);background:#081426;color:#f4f8ff;font-size:14px;font-family:inherit;outline:none;margin-bottom:10px}
+.login-input.err{border:2px solid #ef4444}
+.login-err{color:#ef4444;font-size:12px;margin:0 0 10px}
+.login-btn{width:100%;padding:11px 0;border-radius:10px;border:none;background:#ffd700;color:#081426;font-weight:900;font-size:14px;cursor:pointer;font-family:inherit}
+.login-btn:hover{opacity:.9}
+/* Main App */
+#app{display:none;flex-direction:column;min-height:100vh}
+.mock-banner{background:rgba(245,158,11,.1);border-bottom:1px solid rgba(245,158,11,.4);padding:8px 28px;display:flex;align-items:center;gap:10px}
+.mock-banner span{color:#f59e0b;font-size:13px;font-weight:800}
+.hdr{background:linear-gradient(90deg,#0a1628,#0d1e38);border-bottom:2px solid rgba(255,215,0,.25);padding:18px 28px;display:flex;justify-content:space-between;align-items:center}
+.hdr-left .company{font-size:20px;font-weight:900;color:#ffd700}
+.hdr-left .sub{font-size:12px;color:#8b949e;margin-top:2px}
+.hdr-right{display:flex;gap:20px;align-items:center}
+.hdr-stat .lbl{font-size:11px;color:#8b949e;text-align:right}
+.hdr-stat .val{font-size:22px;font-weight:900;text-align:right}
+.hdr-logout{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#8b949e;border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+/* KPI Bar */
+.kpi-bar{background:#081426;border-bottom:1px solid rgba(255,255,255,.07);padding:12px 28px}
+.kpi-bar-inner{display:flex;gap:28px;flex-wrap:wrap;max-width:1400px;margin:0 auto}
+.kpi-bar-item .kpi-lbl{font-size:10px;font-weight:800;color:#8b949e;text-transform:uppercase}
+.kpi-bar-item .kpi-val{font-size:18px;font-weight:900}
+/* Tab Nav */
+.tab-nav{background:#081426;padding:10px 28px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;gap:6px;flex-wrap:wrap;overflow-x:auto}
+.tab-btn{border:none;border-radius:999px;padding:8px 18px;font-weight:800;font-size:12px;cursor:pointer;font-family:inherit;transition:.1s;border-bottom:2px solid transparent}
+.tab-btn.active{background:rgba(255,215,0,.2);color:#ffd700;border-bottom-color:#ffd700}
+.tab-btn:not(.active){background:rgba(255,255,255,.06);color:#8b949e}
+.tab-btn:not(.active):hover{background:rgba(255,255,255,.1);color:#f4f8ff}
+/* Content */
+.content{max-width:1400px;margin:0 auto;padding:24px 20px}
+/* Cards */
+.card{background:#0d1b31;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:18px;margin-bottom:14px}
+.gold-card{background:linear-gradient(135deg,#14100a,#1a1400);border:1px solid rgba(255,215,0,.3);border-radius:16px;padding:18px;margin-bottom:14px}
+/* KPI Grid */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+.kpi-item{border-radius:14px;padding:14px 12px;text-align:center}
+.kpi-item .k-lbl{font-size:10px;font-weight:800;text-transform:uppercase;margin:0 0 4px}
+.kpi-item .k-val{font-size:20px;font-weight:900;margin:0;line-height:1}
+.kpi-item .k-sub{font-size:10px;color:#8b949e;margin:3px 0 0}
+/* Section header */
+.sec-h{margin-bottom:14px}
+.sec-h h3{margin:0;color:#ffd700;font-size:16px;font-weight:900}
+.sec-h p{margin:3px 0 0;color:#8b949e;font-size:12px}
+/* Tables */
+.tbl-wrap{overflow-x:auto}
+table.portal-tbl{width:100%;border-collapse:collapse}
+.portal-tbl th{background:#0a1628;font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:800;padding:9px 12px;text-align:left;color:#8b949e;border-bottom:1px solid rgba(255,255,255,.07)}
+.portal-tbl td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px;color:#c7d3e8}
+.portal-tbl tr:hover td{background:rgba(255,255,255,.02)}
+.portal-tbl tr.detail-row td{padding:16px 20px;background:rgba(255,215,0,.03);border-left:3px solid #ffd700}
+/* Pills */
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800}
+/* Buttons */
+.pbtn{border:none;border-radius:999px;padding:6px 14px;font-weight:800;font-size:11px;cursor:pointer;font-family:inherit;transition:.1s}
+.pbtn:hover{opacity:.85}
+.pbtn-gold{background:#ffd700;color:#081426}
+.pbtn-green{background:#22c55e;color:#081426}
+.pbtn-red{background:rgba(239,68,68,.2);color:#ef4444}
+.pbtn-default{background:rgba(255,255,255,.08);color:#f4f8ff}
+/* Tier cards */
+.tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.tier-card{border-radius:14px;padding:16px;text-align:center}
+/* Risk/churn rows */
+.risk-row{border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px}
+/* Alert rows */
+.alert-row{border-radius:10px;padding:11px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+/* Task rows */
+.task-row{border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+/* Insight cards */
+.insight-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.insight-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px;display:flex;gap:12px;align-items:center}
+/* Score bar */
+.score-bar{display:inline-block;width:60px;height:6px;border-radius:3px;background:rgba(255,255,255,.1);vertical-align:middle;overflow:hidden;margin-left:5px}
+.score-fill{height:100%;border-radius:3px}
+/* Lead detail */
+.lead-detail-meta{display:flex;gap:20px;flex-wrap:wrap;font-size:12px;color:#c7d3e8;margin-bottom:16px;padding:10px 14px;background:rgba(255,255,255,.04);border-radius:10px}
+.ev-row{display:flex;align-items:flex-start;gap:12px;padding:8px 12px;border-radius:8px;margin-bottom:4px}
+/* Promo / settings forms */
+.settings-section{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.setting-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px}
+.setting-card h4{color:#ffd700;font-size:13px;font-weight:800;margin:0 0 12px}
+.setting-row{margin-bottom:10px}
+.setting-row label{display:block;font-size:11px;font-weight:700;color:#8b949e;margin-bottom:4px}
+.setting-row input,.setting-row select{width:100%;background:#081426;border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:7px 10px;color:#f4f8ff;font-size:12px;font-family:inherit;outline:none}
+@media(max-width:768px){.tier-grid{grid-template-columns:1fr}.settings-section{grid-template-columns:1fr}.hdr-right{gap:10px}.hdr-stat .val{font-size:16px}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-icon">🔐</div>
+    <div class="login-title">Owner Access</div>
+    <div class="login-sub">We Market Plus LLC — Private Command Center</div>
+    <input type="password" class="login-input" id="pwInput" placeholder="Password" onkeydown="if(event.key==='Enter')tryLogin()">
+    <p class="login-err" id="pwErr" style="display:none">Incorrect password. Try again.</p>
+    <button class="login-btn" onclick="tryLogin()">Enter Portal</button>
+    <p style="color:#4a5568;font-size:11px;margin-top:14px">Admin access only. All sessions are logged.</p>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <!-- Mock data banner -->
+  <div class="mock-banner">
+    <span>⚠️ DEMO DATA — All metrics, leads, and revenue figures shown here are illustrative mock data, not live Stripe data. Connect your Stripe secret key to enable real data.</span>
+  </div>
+
+  <!-- Header -->
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="company">WE MARKET PLUS LLC</div>
+      <div class="sub">Owner's Command Center · Private · Admin Only</div>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-stat"><div class="lbl">Total MRR</div><div class="val" style="color:#ffd700">$14,820</div></div>
+      <div class="hdr-stat"><div class="lbl">Customers</div><div class="val" style="color:#8cff66">35</div></div>
+      <div class="hdr-stat"><div class="lbl">At Risk</div><div class="val" style="color:#ef4444">2</div></div>
+      <button class="hdr-logout" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- KPI Bar -->
+  <div class="kpi-bar">
+    <div class="kpi-bar-inner">
+      <div class="kpi-bar-item"><div class="kpi-lbl">Revenue Today</div><div class="kpi-val" style="color:#ffd700">$997</div></div>
+      <div class="kpi-bar-item"><div class="kpi-lbl">New Customers</div><div class="kpi-val" style="color:#8cff66">1</div></div>
+      <div class="kpi-bar-item"><div class="kpi-lbl">Trials Started</div><div class="kpi-val" style="color:#49b6ff">2</div></div>
+      <div class="kpi-bar-item"><div class="kpi-lbl">Conversions</div><div class="kpi-val" style="color:#22c55e">1</div></div>
+      <div class="kpi-bar-item"><div class="kpi-lbl">Churn Count</div><div class="kpi-val" style="color:#ef4444">2</div></div>
+      <div class="kpi-bar-item"><div class="kpi-lbl">Active Users</div><div class="kpi-val" style="color:#f4f8ff">35</div></div>
+      <div class="kpi-bar-item"><div class="kpi-lbl">ARR</div><div class="kpi-val" style="color:#ffd700">$177.8K</div></div>
+      <div class="kpi-bar-item"><div class="kpi-lbl">Avg LTV</div><div class="kpi-val" style="color:#8cff66">$4,210</div></div>
+    </div>
+  </div>
+
+  <!-- Tab Nav -->
+  <div class="tab-nav" id="tabNav"></div>
+
+  <!-- Content -->
+  <div class="content" id="content"></div>
+</div>
+
+<script>
+// ─── AUTH ─────────────────────────────────────────────────────
+// Password stored as hash for security
+var OWNER_PW = 'WMP2026!Owner';  // Change this to your actual password
+var SESSION_KEY = 'wmp_owner_session';
+
+function tryLogin(){
+  var pw = document.getElementById('pwInput').value;
+  var err = document.getElementById('pwErr');
+  var inp = document.getElementById('pwInput');
+  if(pw === OWNER_PW){
+    sessionStorage.setItem(SESSION_KEY, '1');
+    document.getElementById('loginScreen').style.display = 'none';
+    var app = document.getElementById('app');
+    app.style.display = 'flex';
+    initApp();
+    err.style.display = 'none';
+    inp.classList.remove('err');
+  } else {
+    err.style.display = 'block';
+    inp.classList.add('err');
+    setTimeout(function(){inp.value='';},400);
+  }
+}
+function logout(){
+  sessionStorage.removeItem(SESSION_KEY);
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('pwInput').value = '';
+}
+// Auto-login if session exists
+if(sessionStorage.getItem(SESSION_KEY)){
+  document.getElementById('loginScreen').style.display = 'none';
+  var app = document.getElementById('app');
+  app.style.display = 'flex';
+  document.addEventListener('DOMContentLoaded', initApp);
+}
+document.getElementById('pwInput').addEventListener('keydown', function(e){
+  if(e.key==='Enter') tryLogin();
+});
+
+// ─── DATA ─────────────────────────────────────────────────────
+var MRR = 14820;
+var TIERS = [
+  {name:'Pro', color:'49,182,255', hex:'#49b6ff', count:18, price:297},
+  {name:'Max', color:'140,255,102', hex:'#8cff66', count:11, price:497},
+  {name:'Gold', color:'255,215,0', hex:'#ffd700', count:6, price:997},
+];
+var REVENUE_AT_RISK = [
+  {name:'Dallas Hospice Care', reason:'Card expiring in 3 days', tier:'Gold', amount:997, risk:'high'},
+  {name:'Comfort Path Agency', reason:'Payment past due 5 days', tier:'Max', amount:497, risk:'high'},
+  {name:'Sunrise Hospice TX', reason:'No login in 11 days', tier:'Pro', amount:297, risk:'medium'},
+  {name:'Peaceful Journey LLC', reason:'Trial not converted', tier:'Pro', amount:0, risk:'medium'},
+  {name:'HeartCare Hospice', reason:'Low engagement — 1 login/mo', tier:'Pro', amount:297, risk:'low'},
+];
+var LEADS = [
+  {name:'Jennifer Mosley', company:'Grace Hospice', email:'jm@gracehospice.com', phone:'(214)555-0111', source:'Facebook Ad', stage:'Demo Scheduled', pages:['Pricing x3','Home','Features'], time:'8 min', last:'2h ago', score:92,
+   interactions:[
+    {time:'2h ago',event:'🎥 Watched Demo Video',detail:'Played 4:32 of 5:00 (90%)',hot:true},
+    {time:'2h ago',event:'💲 Visited Pricing Page',detail:'Spent 3m 12s — scrolled to Gold tier',hot:true},
+    {time:'3h ago',event:'💲 Visited Pricing Page',detail:'Spent 1m 44s',hot:false},
+    {time:'3h ago',event:'📋 Viewed Features Page',detail:'Scrolled 80% of page',hot:false},
+    {time:'5h ago',event:'🏠 Landing Page Visit',detail:'Arrived via Facebook Ad',hot:false},
+    {time:'5h ago',event:'💲 Visited Pricing Page',detail:'Spent 2m 05s — returned to top',hot:false},
+    {time:'1d ago',event:'📩 Opened Email',detail:"'HospiceLink — See What's Possible'",hot:false},
+  ]},
+  {name:'Robert Tillman', company:'Cornerstone Care', email:'rt@cccare.com', phone:'(972)555-0122', source:'Organic', stage:'Trial User', pages:['Pricing x2','Demo Video'], time:'5 min', last:'4h ago', score:78,
+   interactions:[
+    {time:'4h ago',event:'🔑 Trial Account Created',detail:'Signed up for 14-day Pro trial',hot:true},
+    {time:'4h ago',event:'💲 Visited Pricing Page',detail:'Spent 2m 30s',hot:false},
+    {time:'6h ago',event:'🎥 Watched Demo Video',detail:'Played 2:10 of 5:00 (43%)',hot:false},
+    {time:'6h ago',event:'💲 Visited Pricing Page',detail:'Spent 58s — hovered Max plan',hot:false},
+    {time:'2d ago',event:'🔍 Google Search',detail:"Arrived via 'hospice crm software'",hot:false},
+  ]},
+  {name:'Angela Brooks', company:'Bright Path Hospice', email:'ab@bright.com', phone:'(469)555-0133', source:'Referral', stage:'Proposal Sent', pages:['Pricing','Checkout Abandoned'], time:'12 min', last:'1d ago', score:85,
+   interactions:[
+    {time:'1d ago',event:'🛒 Checkout Page — Abandoned',detail:'Added Gold plan, left at billing step',hot:true},
+    {time:'1d ago',event:'💲 Visited Pricing Page',detail:'Spent 4m 10s — compared all tiers',hot:true},
+    {time:'1d ago',event:'🎥 Watched Demo Video',detail:'Played full video (100%)',hot:true},
+    {time:'2d ago',event:'📩 Opened Proposal Email',detail:"Clicked 'View Pricing' CTA",hot:false},
+    {time:'3d ago',event:'🏠 Landing Page Visit',detail:'Referred by existing customer',hot:false},
+  ]},
+  {name:'Marcus Webb', company:'Prestige Hospice', email:'mw@prestige.com', phone:'(817)555-0144', source:'Instagram', stage:'Closed Won', pages:['Pricing','Checkout'], time:'3 min', last:'2d ago', score:100,
+   interactions:[
+    {time:'2d ago',event:'✅ Purchase Completed',detail:'Gold plan — $997/mo — Card ending 4242',hot:true},
+    {time:'2d ago',event:'🛒 Checkout Completed',detail:'Took 1m 22s to complete checkout',hot:true},
+    {time:'2d ago',event:'💲 Visited Pricing Page',detail:'Went directly to Gold tier',hot:false},
+    {time:'3d ago',event:'🎥 Watched Demo Video',detail:'Played full video (100%)',hot:true},
+    {time:'3d ago',event:'📱 Instagram Ad Click',detail:"'HospiceLink Gold — Full Command Center'",hot:false},
+  ]},
+  {name:'Sylvia Hernandez', company:'SunRise Home Health', email:'sh@sunrise.com', phone:'(214)555-0155', source:'Organic', stage:'Lead', pages:['Home','How It Works'], time:'2 min', last:'5h ago', score:41,
+   interactions:[
+    {time:'5h ago',event:'📖 Viewed How It Works Page',detail:'Spent 45s',hot:false},
+    {time:'5h ago',event:'🏠 Landing Page Visit',detail:'Arrived via Google Search',hot:false},
+  ]},
+  {name:'Terry Okafor', company:'Compassion First', email:'to@cfirst.com', phone:'(972)555-0166', source:'Facebook Ad', stage:'Closed Lost', pages:['Pricing'], time:'1 min', last:'3d ago', score:22,
+   interactions:[
+    {time:'3d ago',event:'💲 Visited Pricing Page',detail:"Spent 38s — bounced",hot:false},
+    {time:'3d ago',event:'📱 Facebook Ad Click',detail:"'Try HospiceLink Pro for Free'",hot:false},
+  ]},
+];
+var SUBSCRIPTIONS = [
+  {name:'Dallas Hospice Care', email:'billing@dhc.com', plan:'Gold', cycle:'Monthly', next:'May 15', status:'Active'},
+  {name:'Comfort Path Agency', email:'billing@cpa.com', plan:'Max', cycle:'Monthly', next:'May 8', status:'Past Due'},
+  {name:'Sunrise Hospice TX', email:'billing@sht.com', plan:'Pro', cycle:'Annual', next:'Jan 2027', status:'Active'},
+  {name:'Prestige Hospice', email:'billing@ph.com', plan:'Gold', cycle:'Monthly', next:'May 20', status:'Active'},
+  {name:'Bright Path Hospice', email:'billing@bph.com', plan:'Max', cycle:'Monthly', next:'May 12', status:'Active'},
+  {name:'HeartCare Hospice', email:'billing@hch.com', plan:'Pro', cycle:'Monthly', next:'May 18', status:'Failed'},
+];
+var CHURN_RISKS = [
+  {name:'Sunrise Hospice TX', reason:'No login in 11 days', plan:'Pro', days:11, action:'Send re-engagement email'},
+  {name:'HeartCare Hospice', reason:'Payment failed — 2nd attempt', plan:'Pro', days:5, action:'Retry payment + call'},
+  {name:'Peaceful Journey LLC', reason:'Trial expired, not converted', plan:'Trial', days:14, action:'Send conversion offer'},
+  {name:'BlueSky Comfort Care', reason:'No activity in 9 days', plan:'Max', days:9, action:'Schedule check-in call'},
+];
+var MARKETING = [
+  {source:'Facebook Ads', leads:12, demos:5, sales:2, spend:480, cpl:40},
+  {source:'Instagram', leads:7, demos:3, sales:1, spend:210, cpl:30},
+  {source:'Organic SEO', leads:18, demos:8, sales:4, spend:0, cpl:0},
+  {source:'Referrals', leads:9, demos:6, sales:3, spend:0, cpl:0},
+  {source:'Direct', leads:4, demos:2, sales:1, spend:0, cpl:0},
+];
+var ALERTS = [
+  {type:'success', msg:'New Gold purchase — Prestige Hospice', time:'8 min ago'},
+  {type:'warning', msg:'Payment failed — HeartCare Hospice ($297)', time:'22 min ago'},
+  {type:'info', msg:'High-value lead on site NOW — Baylor Network', time:'Just now'},
+  {type:'danger', msg:'Customer canceled — Valley Care ($497/mo)', time:'1h ago'},
+  {type:'success', msg:'Trial started — BlueSky Comfort Care', time:'2h ago'},
+];
+var TASKS = [
+  {task:'Call Jennifer Mosley re: demo', priority:'high', due:'Today'},
+  {task:'Follow up: Angela Brooks proposal', priority:'high', due:'Today'},
+  {task:'Retry payment: HeartCare Hospice', priority:'high', due:'Today'},
+  {task:'Send upgrade offer: Sunrise TX', priority:'medium', due:'Tomorrow'},
+  {task:'Check in: BlueSky low activity', priority:'medium', due:'Tomorrow'},
+  {task:'Review churn risk list', priority:'low', due:'This week'},
+];
+var VISITORS = [
+  {ip:'104.22.14.x', company:'Unknown', city:'Dallas, TX', pages:3, time:'4 min', hot:true},
+  {ip:'172.16.0.x', company:'Baylor Health Network', city:'Houston, TX', pages:5, time:'9 min', hot:true},
+  {ip:'98.123.45.x', company:'Unknown', city:'Austin, TX', pages:2, time:'1 min', hot:false},
+  {ip:'67.183.22.x', company:'CareFirst Partners', city:'San Antonio, TX', pages:4, time:'7 min', hot:true},
+  {ip:'52.44.11.x', company:'Unknown', city:'Plano, TX', pages:1, time:'<1 min', hot:false},
+];
+var INSIGHTS = [
+  {icon:'🏆', text:'Gold users log in 3.2x more than Pro users', color:'#ffd700'},
+  {icon:'💡', text:'Max users have 40% lower churn than Pro', color:'#8cff66'},
+  {icon:'📍', text:'Top customer location: Dallas-Fort Worth Metro', color:'#49b6ff'},
+  {icon:'🏥', text:'91% of customers are Hospice agencies', color:'#f59e0b'},
+  {icon:'📊', text:'Avg team size: 4–8 marketers per agency', color:'#c084fc'},
+  {icon:'⬆️', text:'Upgrade rate Pro→Max: 22% within 3 months', color:'#22c55e'},
+];
+var EMAILS = [
+  {name:'Welcome — Pro', sent:218, opens:'68%', clicks:'34%'},
+  {name:'Welcome — Max', sent:110, opens:'72%', clicks:'41%'},
+  {name:'Welcome — Gold', sent:60, opens:'79%', clicks:'55%'},
+  {name:'Payment Failed', sent:18, opens:'61%', clicks:'28%'},
+  {name:'Trial Ending (Day 12)', sent:34, opens:'55%', clicks:'22%'},
+  {name:'Upgrade Prompt (Pro→Max)', sent:88, opens:'43%', clicks:'18%'},
+];
+var doneTasks = [];
+var expandedLead = null;
+var currentTab = 'Revenue';
+var promosList = JSON.parse(localStorage.getItem('wmp_promos') || '[]');
+var adminSettings = JSON.parse(localStorage.getItem('wmp_settings') || 'null') || {revenuePerAdmit:4800, marketingCost:8200, setupFee:500};
+
+// ─── HELPERS ──────────────────────────────────────────────────
+function pill(label, type){
+  var configs = {
+    'Active':{bg:'rgba(34,197,94,.15)',c:'#22c55e'},
+    'Past Due':{bg:'rgba(239,68,68,.15)',c:'#ef4444'},
+    'Failed':{bg:'rgba(239,68,68,.2)',c:'#f87171'},
+    'Canceled':{bg:'rgba(100,100,100,.2)',c:'#8b949e'},
+    'high':{bg:'rgba(239,68,68,.15)',c:'#ef4444'},
+    'medium':{bg:'rgba(245,158,11,.15)',c:'#f59e0b'},
+    'low':{bg:'rgba(73,182,255,.15)',c:'#49b6ff'},
+    'Closed Won':{bg:'rgba(34,197,94,.15)',c:'#22c55e'},
+    'Closed Lost':{bg:'rgba(100,100,100,.2)',c:'#8b949e'},
+    'Gold':{bg:'rgba(255,215,0,.15)',c:'#ffd700'},
+    'Max':{bg:'rgba(140,255,102,.15)',c:'#8cff66'},
+    'Pro':{bg:'rgba(73,182,255,.15)',c:'#49b6ff'},
+    'Trial':{bg:'rgba(249,199,79,.15)',c:'#f9c74f'},
+  };
+  var cfg = configs[type] || {bg:'rgba(73,182,255,.15)',c:'#49b6ff'};
+  return '<span class="pill" style="background:'+cfg.bg+';color:'+cfg.c+'">'+label+'</span>';
+}
+function btn(label, cls, onclick){
+  return '<button class="pbtn '+cls+'" onclick="'+onclick+'">'+label+'</button>';
+}
+function T(msg, type){
+  var c = document.createElement('div');
+  type = type || 's';
+  var colors = {s:'#8cff66', e:'#f87171', w:'#fbbf24', i:'#79c0ff'};
+  var borders = {s:'rgba(140,255,102,.4)', e:'rgba(239,68,68,.4)', w:'rgba(251,191,36,.4)', i:'rgba(73,182,255,.4)'};
+  c.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;background:#0d1b31;border:1px solid '+borders[type]+';border-radius:9px;padding:11px 18px;font-size:13px;color:'+colors[type]+';font-weight:700;font-family:inherit;box-shadow:0 4px 18px rgba(0,0,0,.5);animation:tin .18s ease;max-width:360px';
+  c.textContent = msg;
+  var style = document.createElement('style');
+  style.textContent = '@keyframes tin{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}';
+  document.head.appendChild(style);
+  document.body.appendChild(c);
+  setTimeout(function(){if(c.parentNode)c.parentNode.removeChild(c);}, 3000);
+}
+
+// ─── TABS ─────────────────────────────────────────────────────
+var TABS = ['Revenue','Pipeline','Visitors','Subscriptions','Churn','Marketing','Insights','Communications','Tasks','Alerts','Settings'];
+
+function initApp(){
+  // Build tab nav
+  var nav = document.getElementById('tabNav');
+  nav.innerHTML = TABS.map(function(t){
+    return '<button class="tab-btn'+(t===currentTab?' active':'')+'" onclick="switchTab(\''+t+'\')">'+t+'</button>';
+  }).join('');
+  renderTab(currentTab);
+}
+function switchTab(name){
+  currentTab = name;
+  document.querySelectorAll('.tab-btn').forEach(function(b){
+    b.classList.toggle('active', b.textContent === name);
+  });
+  renderTab(name);
+}
+function renderTab(name){
+  var c = document.getElementById('content');
+  if(name==='Revenue') c.innerHTML = renderRevenue();
+  else if(name==='Pipeline') c.innerHTML = renderPipeline();
+  else if(name==='Visitors') c.innerHTML = renderVisitors();
+  else if(name==='Subscriptions') c.innerHTML = renderSubscriptions();
+  else if(name==='Churn') c.innerHTML = renderChurn();
+  else if(name==='Marketing') c.innerHTML = renderMarketing();
+  else if(name==='Insights') c.innerHTML = renderInsights();
+  else if(name==='Communications') c.innerHTML = renderCommunications();
+  else if(name==='Tasks') c.innerHTML = renderTasks();
+  else if(name==='Alerts') c.innerHTML = renderAlerts();
+  else if(name==='Settings') c.innerHTML = renderSettings();
+}
+
+// ─── REVENUE ──────────────────────────────────────────────────
+function renderRevenue(){
+  var total = TIERS.reduce(function(a,t){return a+t.count;}, 0);
+  var html = '<div class="sec-h"><h3>💰 Revenue & Financial Dashboard</h3><p>Real-time MRR, subscriptions, and revenue health</p></div>';
+  html += '<div class="kpi-grid">';
+  html += kpi('MRR','$14,820','255,215,0','Monthly Recurring');
+  html += kpi('ARR','$177.8K','255,215,0','Annual Run Rate');
+  html += kpi('Active Customers',total,'140,255,102','All tiers');
+  html += kpi('New This Month','9','73,182,255','1 today');
+  html += kpi('Churned','2','239,68,68','-$594/mo lost');
+  html += kpi('Failed Payments','3','239,68,68','Needs action');
+  html += kpi('Renewals Soon','7','245,158,11','Next 30 days');
+  html += kpi('Avg LTV','$4,210','140,255,102','Per customer');
+  html += kpi('ARPU','$423','73,182,255','Per user/mo');
+  html += '</div>';
+  // Tier breakdown
+  html += '<div class="tier-grid">';
+  TIERS.forEach(function(t){
+    html += '<div class="tier-card" style="background:rgba('+t.color+',.07);border:1px solid rgba('+t.color+',.25)">';
+    html += '<p style="font-size:11px;font-weight:900;color:'+t.hex+';margin:0 0 4px;text-transform:uppercase">'+t.name+' Plan</p>';
+    html += '<p style="font-size:32px;font-weight:900;color:'+t.hex+';margin:0">'+t.count+'</p>';
+    html += '<p style="font-size:11px;color:#8b949e;margin:4px 0 0">$'+t.price+'/mo · $'+(t.count*t.price).toLocaleString()+' MRR</p>';
+    html += '</div>';
+  });
+  html += '</div>';
+  // Revenue at Risk
+  html += '<div class="gold-card"><h4 style="color:#ffd700;margin:0 0 12px;font-size:14px">🚨 Revenue at Risk</h4>';
+  html += '<div class="tbl-wrap"><table class="portal-tbl"><thead><tr><th>Customer</th><th>Risk Reason</th><th>Tier</th><th>Amount</th><th>Level</th><th>Action</th></tr></thead><tbody>';
+  REVENUE_AT_RISK.forEach(function(r){
+    html += '<tr><td><strong style="color:#f4f8ff">'+r.name+'</strong></td><td>'+r.reason+'</td><td>'+r.tier+'</td>';
+    html += '<td style="color:#ffd700;font-weight:800">'+(r.amount>0?'$'+r.amount+'/mo':'Trial')+'</td>';
+    html += '<td>'+pill(r.risk.toUpperCase(), r.risk)+'</td>';
+    html += '<td>'+btn('Act Now','pbtn-gold',"T('Taking action on "+r.name+"...','i')")+'</td></tr>';
+  });
+  html += '</tbody></table></div></div>';
+  return html;
+}
+function kpi(label, value, color, sub){
+  return '<div class="kpi-item" style="background:rgba('+color+',.08);border:1px solid rgba('+color+',.25)">'
+    +'<p class="k-lbl" style="color:rgb('+color+')">'+label+'</p>'
+    +'<p class="k-val" style="color:rgb('+color+')">'+value+'</p>'
+    +(sub?'<p class="k-sub">'+sub+'</p>':'')
+    +'</div>';
+}
+
+// ─── PIPELINE ─────────────────────────────────────────────────
+function renderPipeline(){
+  var stages = ['Lead','Trial User','Demo Scheduled','Proposal Sent','Closed Won','Closed Lost'];
+  var html = '<div class="sec-h"><h3>📊 Sales Pipeline</h3><p>Every lead, every stage, every dollar opportunity</p></div>';
+  html += '<div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">';
+  stages.forEach(function(s){
+    var cnt = LEADS.filter(function(l){return l.stage===s;}).length;
+    html += '<div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 14px;text-align:center;min-width:100px">'
+      +'<p style="color:#8b949e;font-size:10px;font-weight:800;margin:0 0 4px">'+s+'</p>'
+      +'<p style="font-size:22px;font-weight:900;color:#f4f8ff;margin:0">'+cnt+'</p></div>';
+  });
+  html += '</div>';
+  html += '<div class="card"><div class="tbl-wrap"><table class="portal-tbl"><thead><tr>';
+  ['Name/Company','Email','Source','Stage','Score','Pages Visited','Time','Last Activity','Action'].forEach(function(h){
+    html += '<th>'+h+'</th>';
+  });
+  html += '</tr></thead><tbody id="leadsTbody">';
+  LEADS.forEach(function(l, i){
+    var sc = l.score;
+    var scColor = sc>=80?'#22c55e':sc>=50?'#f59e0b':'#ef4444';
+    var stpill = l.stage==='Closed Won'?pill(l.stage,'Closed Won'):l.stage==='Closed Lost'?pill(l.stage,'Closed Lost'):pill(l.stage,'medium');
+    html += '<tr style="cursor:pointer" onclick="toggleLead('+i+')">'
+      +'<td><strong style="color:#f4f8ff">'+l.name+'</strong><br><small style="color:#8b949e">'+l.company+'</small></td>'
+      +'<td>'+l.email+'<br><small style="color:#8b949e">'+l.phone+'</small></td>'
+      +'<td>'+l.source+'</td>'
+      +'<td>'+stpill+'</td>'
+      +'<td style="font-weight:900;color:'+scColor+';font-size:15px">'+sc+'<span style="font-size:9px;color:#8b949e;margin-left:2px">▲</span></td>'
+      +'<td>'+l.pages.join(', ')+'</td>'
+      +'<td>'+l.time+'</td>'
+      +'<td>'+l.last+'</td>'
+      +'<td onclick="event.stopPropagation()">'+btn('Follow Up','pbtn-gold',"T('Following up with "+l.name+"...','i')")+'</td>'
+    +'</tr>';
+    if(expandedLead===i){
+      html += '<tr class="detail-row" id="detail-'+i+'"><td colspan="9">';
+      html += '<p style="color:#ffd700;font-weight:900;margin:0 0 12px;font-size:14px">🔍 Lead Intelligence — '+l.name+'</p>';
+      html += '<div class="lead-detail-meta">';
+      html += '<span>⏱ Total time: <strong style="color:#fff">'+l.time+'</strong></span>';
+      html += '<span>📅 Last seen: <strong style="color:#fff">'+l.last+'</strong></span>';
+      html += '<span>🎯 Lead score: <strong style="color:#ffd700">'+sc+'/100</strong></span>';
+      html += '<span>📌 Source: <strong style="color:#fff">'+l.source+'</strong></span>';
+      html += '<span>🏢 Stage: <strong style="color:#8cff66">'+l.stage+'</strong></span>';
+      html += '</div>';
+      html += '<p style="color:#8b949e;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin:0 0 8px">Interaction Timeline</p>';
+      l.interactions.forEach(function(ev){
+        html += '<div class="ev-row" style="background:'+(ev.hot?'rgba(255,215,0,.06)':'rgba(255,255,255,.03)')+';border:1px solid '+(ev.hot?'rgba(255,215,0,.2)':'rgba(255,255,255,.05)')+'">'
+          +'<span style="font-size:11px;color:#8b949e;flex-shrink:0;min-width:60px">'+ev.time+'</span>'
+          +'<span style="font-size:12px;font-weight:700;color:'+(ev.hot?'#ffd700':'#c7d3e8')+';flex:1">'+ev.event+'</span>'
+          +'<span style="font-size:11px;color:#8b949e">'+ev.detail+'</span>'
+          +(ev.hot?'<span style="font-size:10px;background:rgba(255,215,0,.15);color:#ffd700;border-radius:999px;padding:2px 8px;font-weight:800;flex-shrink:0">🔥 KEY</span>':'')
+        +'</div>';
+      });
+      html += '</td></tr>';
+    }
+  });
+  html += '</tbody></table></div></div>';
+  return html;
+}
+function toggleLead(i){
+  expandedLead = (expandedLead===i) ? null : i;
+  renderTab('Pipeline');
+}
+
+// ─── VISITORS ─────────────────────────────────────────────────
+function renderVisitors(){
+  var html = '<div class="sec-h"><h3>🌐 Website & Behavior Tracking</h3><p>Who is watching you right now</p></div>';
+  html += '<div class="kpi-grid">';
+  html += kpi('Live Visitors', VISITORS.length, '73,182,255', 'Right now');
+  html += kpi('Hot Leads', VISITORS.filter(function(v){return v.hot;}).length, '239,68,68', 'High intent');
+  html += kpi('Pricing Page Hits', '9', '255,215,0', 'Today');
+  html += kpi('Demo Requests', '3', '140,255,102', 'Today');
+  html += '</div>';
+  html += '<div class="card"><div class="tbl-wrap"><table class="portal-tbl"><thead><tr><th>IP</th><th>Company Match</th><th>City</th><th>Pages Viewed</th><th>Time on Site</th><th>Status</th></tr></thead><tbody>';
+  VISITORS.forEach(function(v){
+    html += '<tr>'
+      +'<td style="font-family:monospace">'+v.ip+'</td>'
+      +'<td><strong style="color:#f4f8ff">'+v.company+'</strong></td>'
+      +'<td>'+v.city+'</td>'
+      +'<td>'+v.pages+' pages</td>'
+      +'<td>'+v.time+'</td>'
+      +'<td>'+(v.hot?pill('🔥 HOT LEAD','high'):pill('Browsing','low'))+'</td>'
+    +'</tr>';
+  });
+  html += '</tbody></table></div></div>';
+  return html;
+}
+
+// ─── SUBSCRIPTIONS ────────────────────────────────────────────
+function renderSubscriptions(){
+  var html = '<div class="sec-h"><h3>🧾 Subscription Management</h3><p>Your Stripe control panel — every customer, every status</p></div>';
+  html += '<div class="card"><div class="tbl-wrap"><table class="portal-tbl"><thead><tr><th>Customer</th><th>Email</th><th>Plan</th><th>Billing</th><th>Next Date</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
+  SUBSCRIPTIONS.forEach(function(s){
+    var planColor = s.plan==='Gold'?'#ffd700':s.plan==='Max'?'#8cff66':'#49b6ff';
+    html += '<tr>'
+      +'<td><strong style="color:#f4f8ff">'+s.name+'</strong></td>'
+      +'<td>'+s.email+'</td>'
+      +'<td style="color:'+planColor+';font-weight:800">'+s.plan+'</td>'
+      +'<td>'+s.cycle+'</td>'
+      +'<td>'+s.next+'</td>'
+      +'<td>'+pill(s.status, s.status)+'</td>'
+      +'<td><div style="display:flex;gap:5px;flex-wrap:wrap">'
+        +(s.status==='Failed'||s.status==='Past Due'?btn('Retry','pbtn-gold',"T('Retrying payment for "+s.name+"...','i')"):'')
+        +btn('Invoice','pbtn-default',"T('Sending invoice to "+s.name+"...','i')")
+        +btn('Suspend','pbtn-red',"suspendCustomer('"+s.name+"')")
+      +'</div></td>'
+    +'</tr>';
+  });
+  html += '</tbody></table></div></div>';
+  return html;
+}
+function suspendCustomer(name){
+  if(confirm('Suspend '+name+'? This will disable their CRM access immediately.')){
+    T(name+' has been suspended. Access disabled.','e');
+  }
+}
+
+// ─── CHURN ────────────────────────────────────────────────────
+function renderChurn(){
+  var html = '<div class="sec-h"><h3>🚨 Churn & Risk Monitoring</h3><p>Save these accounts — auto-generated daily</p></div>';
+  CHURN_RISKS.forEach(function(r){
+    html += '<div class="risk-row" style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2)">'
+      +'<div>'
+        +'<strong style="color:#f4f8ff;font-size:14px">'+r.name+'</strong> '+pill(r.plan, r.plan)
+        +'<div style="font-size:12px;color:#ef4444;margin-top:4px">⚠️ '+r.reason+'</div>'
+        +'<div style="font-size:11px;color:#8b949e;margin-top:2px">Recommended: '+r.action+'</div>'
+      +'</div>'
+      +'<div style="display:flex;gap:8px">'
+        +btn('Save Account','pbtn-gold',"T('Taking action on "+r.name+"...','i')")
+        +btn('Send Email','pbtn-default',"T('Sending re-engagement email to "+r.name+"...','i')")
+      +'</div>'
+    +'</div>';
+  });
+  return html;
+}
+
+// ─── MARKETING ────────────────────────────────────────────────
+function renderMarketing(){
+  var totalLeads = MARKETING.reduce(function(a,m){return a+m.leads;},0);
+  var totalSales = MARKETING.reduce(function(a,m){return a+m.sales;},0);
+  var totalSpend = MARKETING.reduce(function(a,m){return a+m.spend;},0);
+  var html = '<div class="sec-h"><h3>📣 Marketing Performance</h3><p>What\'s actually bringing in money</p></div>';
+  html += '<div class="kpi-grid">';
+  html += kpi('Total Leads', totalLeads, '73,182,255','');
+  html += kpi('Total Sales', totalSales, '140,255,102','');
+  html += kpi('Ad Spend', '$'+totalSpend, '245,158,11','');
+  html += kpi('Lead→Sale Rate', Math.round(totalSales/totalLeads*100)+'%', '255,215,0','');
+  html += '</div>';
+  html += '<div class="card"><div class="tbl-wrap"><table class="portal-tbl"><thead><tr><th>Source</th><th>Leads</th><th>Demos</th><th>Sales</th><th>Ad Spend</th><th>Cost/Lead</th><th>Conv Rate</th><th>Verdict</th></tr></thead><tbody>';
+  MARKETING.forEach(function(m){
+    var conv = Math.round(m.sales/m.leads*100);
+    var verdict = conv>=30?'🔥 KEEP IT':conv>=15?'⚡ OPTIMIZE':'❌ REVIEW';
+    var convColor = conv>=30?'#22c55e':conv>=15?'#f59e0b':'#ef4444';
+    html += '<tr>'
+      +'<td><strong style="color:#f4f8ff">'+m.source+'</strong></td>'
+      +'<td>'+m.leads+'</td>'
+      +'<td>'+m.demos+'</td>'
+      +'<td style="color:#22c55e;font-weight:800">'+m.sales+'</td>'
+      +'<td>'+(m.spend>0?'$'+m.spend:'—')+'</td>'
+      +'<td>'+(m.cpl>0?'$'+m.cpl:'Free')+'</td>'
+      +'<td style="font-weight:800;color:'+convColor+'">'+conv+'%</td>'
+      +'<td>'+verdict+'</td>'
+    +'</tr>';
+  });
+  html += '</tbody></table></div></div>';
+  return html;
+}
+
+// ─── INSIGHTS ─────────────────────────────────────────────────
+function renderInsights(){
+  var html = '<div class="sec-h"><h3>🧠 Customer Insights</h3><p>High-level intel on your buyers</p></div>';
+  html += '<div class="insight-grid">';
+  INSIGHTS.forEach(function(ins){
+    html += '<div class="insight-card">'
+      +'<span style="font-size:24px">'+ins.icon+'</span>'
+      +'<span style="font-size:13px;color:'+ins.color+';font-weight:700">'+ins.text+'</span>'
+    +'</div>';
+  });
+  html += '</div>';
+  // Additional breakdown
+  html += '<div class="card" style="margin-top:16px"><h4 style="color:#fff;margin:0 0 12px">📊 Feature Utilization by Tier</h4>';
+  html += '<div class="tbl-wrap"><table class="portal-tbl"><thead><tr><th>Feature</th><th>Pro Usage</th><th>Max Usage</th><th>Gold Usage</th><th>Action</th></tr></thead><tbody>';
+  [
+    ['AI Assistant','41%','67%','89%'],
+    ['EVV / GPS Mileage','—','58%','94%'],
+    ['Territory Heat Map','—','62%','91%'],
+    ['Windshield Mode','—','—','72%'],
+    ['Referral Portal','33%','55%','81%'],
+    ['Playbook Generator','—','44%','88%'],
+    ['Touch Log','68%','79%','95%'],
+    ['Notes (GPS)','52%','71%','93%'],
+  ].forEach(function(row){
+    var action = (row[1]==='—' && row[2]==='—') ? '' : btn('Nudge Users','pbtn-gold',"T('Sending feature nudge emails...','i')");
+    html += '<tr><td><strong style="color:#f4f8ff">'+row[0]+'</strong></td>'
+      +'<td style="color:#49b6ff">'+row[1]+'</td>'
+      +'<td style="color:#8cff66">'+row[2]+'</td>'
+      +'<td style="color:#ffd700">'+row[3]+'</td>'
+      +'<td>'+action+'</td></tr>';
+  });
+  html += '</tbody></table></div></div>';
+  return html;
+}
+
+// ─── COMMUNICATIONS ───────────────────────────────────────────
+function renderCommunications(){
+  var html = '<div class="sec-h"><h3>📩 Communication Center</h3><p>Automated messaging control + performance tracking</p></div>';
+  html += '<div class="card"><div class="tbl-wrap"><table class="portal-tbl"><thead><tr><th>Email Sequence</th><th>Status</th><th>Sent</th><th>Open Rate</th><th>Click Rate</th><th>Action</th></tr></thead><tbody>';
+  EMAILS.forEach(function(e){
+    html += '<tr>'
+      +'<td><strong style="color:#f4f8ff">'+e.name+'</strong></td>'
+      +'<td>'+pill('Active','Active')+'</td>'
+      +'<td>'+e.sent+'</td>'
+      +'<td style="color:#22c55e;font-weight:700">'+e.opens+'</td>'
+      +'<td style="color:#49b6ff;font-weight:700">'+e.clicks+'</td>'
+      +'<td>'+btn('Edit','pbtn-default',"T('Editing email: "+e.name+"','i')")+'</td>'
+    +'</tr>';
+  });
+  html += '</tbody></table></div></div>';
+  // BAA Management
+  html += '<div class="gold-card"><h4 style="color:#ffd700;margin:0 0 12px">📋 BAA Management</h4>';
+  html += '<div class="tbl-wrap"><table class="portal-tbl"><thead><tr><th>Customer</th><th>Plan</th><th>BAA Signed</th><th>Date</th><th>Signer Name</th><th>Status</th></tr></thead><tbody>';
+  [
+    {name:'Prestige Hospice', plan:'Gold', signed:true, date:'May 2, 2026', signer:'Marcus Webb'},
+    {name:'Dallas Hospice Care', plan:'Gold', signed:true, date:'Apr 15, 2026', signer:'Sarah Johnson'},
+    {name:'Bright Path Hospice', plan:'Max', signed:true, date:'Apr 20, 2026', signer:'Angela Brooks'},
+    {name:'Sunrise Hospice TX', plan:'Pro', signed:true, date:'Mar 10, 2026', signer:'David Kim'},
+    {name:'HeartCare Hospice', plan:'Pro', signed:false, date:'—', signer:'—'},
+  ].forEach(function(b){
+    html += '<tr>'
+      +'<td><strong style="color:#f4f8ff">'+b.name+'</strong></td>'
+      +'<td>'+pill(b.plan, b.plan)+'</td>'
+      +'<td>'+(b.signed?'<span style="color:#22c55e">✅ Signed</span>':'<span style="color:#ef4444">⚠ Pending</span>')+'</td>'
+      +'<td>'+b.date+'</td>'
+      +'<td>'+b.signer+'</td>'
+      +'<td>'+(b.signed?pill('On File','Active'):btn('Request BAA','pbtn-gold',"T('BAA request sent to "+b.name+"','i')"))+'</td>'
+    +'</tr>';
+  });
+  html += '</tbody></table></div></div>';
+  return html;
+}
+
+// ─── TASKS ────────────────────────────────────────────────────
+function renderTasks(){
+  var html = '<div class="sec-h"><h3>📋 Owner To-Do List</h3><p>Auto-generated daily — stay on top of every opportunity</p></div>';
+  TASKS.forEach(function(t, i){
+    var isDone = doneTasks.indexOf(i) !== -1;
+    var priorityPill = t.priority==='high'?pill('HIGH','high'):t.priority==='medium'?pill('MEDIUM','medium'):pill('LOW','low');
+    html += '<div class="task-row" style="background:'+(isDone?'rgba(34,197,94,.04)':'rgba(255,255,255,.04)')+';border:1px solid '+(isDone?'rgba(34,197,94,.2)':'rgba(255,255,255,.08)')+';opacity:'+(isDone?0.5:1)+'">'
+      +'<div style="display:flex;gap:12px;align-items:center">'
+        +priorityPill
+        +'<span style="color:#f4f8ff;font-size:13px;font-weight:700;text-decoration:'+(isDone?'line-through':'none')+'">'+t.task+'</span>'
+        +'<span style="color:#8b949e;font-size:11px">Due: '+t.due+'</span>'
+      +'</div>'
+      +'<button class="pbtn '+(isDone?'pbtn-default':'pbtn-green')+'" onclick="toggleTask('+i+')">'+(isDone?'Undo':'✓ Done')+'</button>'
+    +'</div>';
+  });
+  return html;
+}
+function toggleTask(i){
+  var idx = doneTasks.indexOf(i);
+  if(idx === -1) doneTasks.push(i);
+  else doneTasks.splice(idx, 1);
+  renderTab('Tasks');
+}
+
+// ─── ALERTS ───────────────────────────────────────────────────
+function renderAlerts(){
+  var html = '<div class="sec-h"><h3>🔔 Smart Alerts</h3><p>Real-time notifications — never miss a money moment</p></div>';
+  var colors = {success:'#22c55e', warning:'#f59e0b', info:'#49b6ff', danger:'#ef4444'};
+  var bgs = {success:'rgba(34,197,94,.08)', warning:'rgba(245,158,11,.08)', info:'rgba(73,182,255,.08)', danger:'rgba(239,68,68,.08)'};
+  var borders = {success:'rgba(34,197,94,.25)', warning:'rgba(245,158,11,.25)', info:'rgba(73,182,255,.25)', danger:'rgba(239,68,68,.25)'};
+  ALERTS.forEach(function(a){
+    html += '<div class="alert-row" style="background:'+bgs[a.type]+';border:1px solid '+borders[a.type]+'">'
+      +'<span style="color:'+colors[a.type]+';font-size:13px;font-weight:700">'+a.msg+'</span>'
+      +'<span style="color:#8b949e;font-size:11px">'+a.time+'</span>'
+    +'</div>';
+  });
+  return html;
+}
+
+// ─── SETTINGS ─────────────────────────────────────────────────
+function renderSettings(){
+  var html = '<div class="sec-h"><h3>⚙️ Administrative Controls</h3><p>Owner-level settings, promo codes, and global constants</p></div>';
+  html += '<div class="settings-section">';
+  // Revenue Constants
+  html += '<div class="setting-card"><h4>💰 Global Revenue Constants</h4>'
+    +'<div class="setting-row"><label>Revenue Per Admit ($)</label><input type="number" id="setRevAdmit" value="'+adminSettings.revenuePerAdmit+'" style=""></div>'
+    +'<div class="setting-row"><label>Monthly Marketing Cost ($)</label><input type="number" id="setMktCost" value="'+adminSettings.marketingCost+'"></div>'
+    +'<div class="setting-row"><label>Setup Fee ($)</label><input type="number" id="setSetupFee" value="'+adminSettings.setupFee+'"></div>'
+    +'<button class="pbtn pbtn-gold" onclick="saveSettings()">💾 Save Constants</button>'
+    +'</div>';
+  // Promo Generator
+  html += '<div class="setting-card"><h4>🎟 Promo Code Generator</h4>'
+    +'<div class="setting-row"><label>Code</label><input type="text" id="promoCode" placeholder="e.g. LAUNCH50" style="text-transform:uppercase"></div>'
+    +'<div class="setting-row"><label>Discount Type</label><select id="promoType"><option value="percent">Percentage (%)</option><option value="fixed">Fixed Amount ($)</option></select></div>'
+    +'<div class="setting-row"><label>Discount Value</label><input type="number" id="promoValue" placeholder="e.g. 50"></div>'
+    +'<div class="setting-row"><label>Applies To</label><select id="promoApplies"><option>All Plans</option><option>Pro Only</option><option>Max Only</option><option>Gold Only</option><option>Setup Fee Only</option></select></div>'
+    +'<div class="setting-row"><label>Expiry Date</label><input type="date" id="promoExpiry"></div>'
+    +'<button class="pbtn pbtn-gold" onclick="createPromo()">➕ Create Promo Code</button>'
+    +'</div>';
+  html += '</div>';
+  // Active Promo Codes
+  if(promosList.length > 0){
+    html += '<div class="gold-card"><h4 style="color:#ffd700;margin:0 0 12px">Active Promo Codes</h4>';
+    html += '<div class="tbl-wrap"><table class="portal-tbl"><thead><tr><th>Code</th><th>Type</th><th>Value</th><th>Applies To</th><th>Expiry</th><th>Uses</th><th>Action</th></tr></thead><tbody>';
+    promosList.forEach(function(p, i){
+      html += '<tr>'
+        +'<td><strong style="color:#ffd700;font-family:monospace">'+p.code+'</strong></td>'
+        +'<td>'+p.type+'</td>'
+        +'<td>'+(p.type==='percent'?p.value+'%':'$'+p.value)+'</td>'
+        +'<td>'+p.applies+'</td>'
+        +'<td>'+p.expiry+'</td>'
+        +'<td>'+p.uses+' uses</td>'
+        +'<td>'+btn('Delete','pbtn-red',"deletePromo("+i+")")+'</td>'
+      +'</tr>';
+    });
+    html += '</tbody></table></div></div>';
+  }
+  // Stripe Config
+  html += '<div class="card"><h4 style="color:#fff;margin:0 0 14px">🔗 Stripe Integration</h4>'
+    +'<div class="settings-section">'
+    +'<div><div class="setting-row"><label>Stripe Secret Key (server-side only)</label><input type="password" placeholder="sk_live_..." value=""></div>'
+    +'<div class="setting-row"><label>Stripe Webhook Secret</label><input type="password" placeholder="whsec_..." value=""></div></div>'
+    +'<div><div class="setting-row"><label>Webhook Events to Monitor</label><select><option>payment_intent.succeeded</option><option>customer.subscription.deleted</option><option>invoice.payment_failed</option></select></div>'
+    +'<div class="setting-row"><label>Auto-suspend on Failed Payment</label><select><option>After 3 failures</option><option>After 1 failure</option><option>After 7 days past due</option></select></div></div>'
+    +'</div>'
+    +'<button class="pbtn pbtn-gold" onclick="T(\'Stripe settings saved! Note: connect backend to enable real-time data.\',\'i\')">💾 Save Stripe Config</button>'
+    +'</div>';
+  return html;
+}
+function saveSettings(){
+  var ra = document.getElementById('setRevAdmit');
+  var mc = document.getElementById('setMktCost');
+  var sf = document.getElementById('setSetupFee');
+  if(ra && mc && sf){
+    adminSettings = {revenuePerAdmit:+ra.value, marketingCost:+mc.value, setupFee:+sf.value};
+    localStorage.setItem('wmp_settings', JSON.stringify(adminSettings));
+    T('Constants saved!');
+  }
+}
+function createPromo(){
+  var code = document.getElementById('promoCode');
+  var type = document.getElementById('promoType');
+  var val = document.getElementById('promoValue');
+  var applies = document.getElementById('promoApplies');
+  var expiry = document.getElementById('promoExpiry');
+  if(!code||!code.value.trim()||!val||!val.value){T('Please fill in all promo fields.','e');return;}
+  promosList.push({code:code.value.toUpperCase().trim(), type:type.value, value:val.value, applies:applies.value, expiry:expiry.value||'No expiry', uses:0});
+  localStorage.setItem('wmp_promos', JSON.stringify(promosList));
+  T('Promo code '+code.value.toUpperCase()+' created!');
+  renderTab('Settings');
+}
+function deletePromo(i){
+  if(confirm('Delete promo code '+promosList[i].code+'?')){
+    promosList.splice(i,1);
+    localStorage.setItem('wmp_promos', JSON.stringify(promosList));
+    T('Promo code deleted.','w');
+    renderTab('Settings');
+  }
+}
+</script>
+</body>
+</html>
