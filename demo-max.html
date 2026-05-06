@@ -132,6 +132,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 <button class="nav-btn" data-t="refs" onclick="showTab('refs')">Referral Sources</button>
 <button class="nav-btn" data-t="addpx" onclick="showTab('addpx')">Add Prospect</button>
 <button class="nav-btn" data-t="records" onclick="showTab('records')">Prospect Records</button>
+<button class="nav-btn" data-t="timeline" onclick="showTab('timeline')">Prospect Timeline</button>
 <button class="nav-btn" data-t="pipeline" onclick="showTab('pipeline')">Pipeline</button>
 <button class="nav-btn" data-t="territory" onclick="showTab('territory')">Territory View</button>
 <button class="nav-btn" data-t="prod" onclick="showTab('prod')">Productivity</button>
@@ -152,9 +153,12 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 <button class="nav-btn" data-t="portal" onclick="showTab('portal')">Referral Portal</button>
 <button class="nav-btn" data-t="playbook" onclick="showTab('playbook')">Playbook Generator</button>
 <button class="nav-btn" data-t="mobile" onclick="showTab('mobile')">Marketer Mobile</button>
+<button class="nav-btn" data-t="settings" onclick="showTab('settings')">Settings</button>
 <span class="nav-sec">ANALYTICS</span>
 <button class="nav-btn" data-t="heatmap" onclick="showTab('heatmap')">Territory Heat Map</button>
 <span class="nav-sec adm">ADMIN ONLY</span>
+<button class="nav-btn adm" data-t="analytics" onclick="showTab('analytics')">Analytics Dashboard</button>
+<button class="nav-btn adm" data-t="agency" onclick="showTab('agency')">Agency Performance</button>
 <button class="nav-btn adm" data-t="report" onclick="showTab('report')">Weekly Report</button>
 <button class="nav-btn adm" data-t="team" onclick="showTab('team')">Team Management</button>
 
@@ -681,6 +685,277 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 </div>
 </div>
 
+<div class="tab" id="tab-timeline">
+<div class="sec-hdr"><div><h2>Prospect Timeline</h2><p>Complete interaction history with GPS stamps — click any note to expand</p></div></div>
+<div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+  <select id="tlProspect" onchange="renderTimeline()" style="background:#0f1e35;border:1px solid rgba(73,182,255,.2);color:#e8f0fc;border-radius:8px;padding:7px 10px;font-size:12px;font-family:inherit;outline:none">
+    <option value="all">All Prospects</option>
+    <option value="Mary J.">Mary J.</option>
+    <option value="John T.">John T.</option>
+    <option value="Dorothy F.">Dorothy F.</option>
+  </select>
+  <select id="tlType" onchange="renderTimeline()" style="background:#0f1e35;border:1px solid rgba(73,182,255,.2);color:#e8f0fc;border-radius:8px;padding:7px 10px;font-size:12px;font-family:inherit;outline:none">
+    <option value="all">All Types</option>
+    <option value="visit">Visits</option>
+    <option value="call">Calls</option>
+    <option value="note">Notes</option>
+    <option value="hot">Hot Leads Only</option>
+  </select>
+  <button class="btn btn-g btn-sm" onclick="renderTimeline()">🔄 Refresh</button>
+</div>
+<div id="tlFeed" style="display:flex;flex-direction:column;gap:10px"></div>
+<script>
+(function(){
+  function renderTimeline(){
+    var filter = document.getElementById('tlProspect')&&document.getElementById('tlProspect').value;
+    var typeFilter = document.getElementById('tlType')&&document.getElementById('tlType').value;
+    var feed = document.getElementById('tlFeed');if(!feed)return;
+    var events = [
+      {prospect:'Mary J.',author:'Ericka',role:'marketer',date:'May 5 · 2:14 PM',type:'visit',icon:'🏥',color:'#8cff66',bg:'rgba(140,255,102,.06)',border:'rgba(140,255,102,.15)',title:'Facility Visit — Baylor Hospital',summary:'Met with CM Sarah. 2 patients ready for hospice eval. Family not on board yet.',gps:'Baylor University Medical Center, Dallas TX',nextStep:'📞 Immediate Family Outreach',assignedTo:'Ericka',due:'May 7 @ 9:00 AM',hot:true},
+      {prospect:'Dorothy F.',author:'Angela RN',role:'nurse',date:'May 4 · 11:30 AM',type:'visit',icon:'🛏',color:'#49b6ff',bg:'rgba(73,182,255,.06)',border:'rgba(73,182,255,.15)',title:'Bedside Visit — Patient Home',summary:'Dorothy F. pain well-controlled at 2/10. Family satisfied. Patient alert and engaged.',gps:'Patient Home, Plano TX',nextStep:'📉 Document Decline Trend',assignedTo:'Angela RN',due:'May 9 @ 10:00 AM',hot:false},
+      {prospect:'John T.',author:'Mike',role:'marketer',date:'May 3 · 10:00 AM',type:'call',icon:'📞',color:'#ffd700',bg:'rgba(255,215,0,.05)',border:'rgba(255,215,0,.15)',title:'Phone Call — Son Robert',summary:'Son Robert confirmed ready for admission paperwork. Schedule coordinator visit.',gps:null,nextStep:'📋 Paperwork / Move-In Coordination',assignedTo:'Mike',due:'May 6 @ 9:00 AM',hot:false},
+      {prospect:'Mary J.',author:'Ericka',role:'marketer',date:'May 2 · 3:44 PM',type:'note',icon:'📝',color:'#c9aeff',bg:'rgba(201,174,255,.05)',border:'rgba(201,174,255,.15)',title:'Note — Status Update',summary:'Updated status from Inquiry to Pending Admission. Insurance verification in progress.',gps:null,nextStep:'💳 Insurance Verification',assignedTo:'Ericka',due:'May 5 @ 9:00 AM',hot:false},
+      {prospect:'Dorothy F.',author:'Angela RN',role:'nurse',date:'May 1 · 9:00 AM',type:'visit',icon:'🛏',color:'#49b6ff',bg:'rgba(73,182,255,.06)',border:'rgba(73,182,255,.15)',title:'Initial Assessment — Facility',summary:'First bedside assessment complete. Acuity 3/5. Pain managed. Family present.',gps:'Sunrise Care Facility, McKinney TX',nextStep:'🩺 RN Assessment Scheduled',assignedTo:'Angela RN',due:'May 4 @ 9:00 AM',hot:false},
+    ];
+    var filtered = events.filter(function(e){
+      var prospectOk = !filter || filter==='all' || e.prospect===filter;
+      var typeOk = !typeFilter || typeFilter==='all' || e.type===typeFilter || (typeFilter==='hot'&&e.hot);
+      return prospectOk && typeOk;
+    });
+    if(filtered.length===0){feed.innerHTML='<div class="card" style="text-align:center;color:#8b949e;padding:32px">No timeline events match the selected filters.</div>';return;}
+    feed.innerHTML = filtered.map(function(ev){
+      return '<div style="background:'+ev.bg+';border:1px solid '+ev.border+';border-left:4px solid '+ev.color+';border-radius:12px;padding:14px">'
+        +'<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:8px">'
+          +'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
+            +'<span style="font-size:18px">'+ev.icon+'</span>'
+            +'<strong style="color:#f4f8ff;font-size:13px">'+ev.title+'</strong>'
+            +'<span style="background:rgba(255,255,255,.07);color:#8b949e;padding:2px 8px;border-radius:999px;font-size:10px">'+ev.prospect+'</span>'
+            +(ev.hot?'<span style="background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#ef4444;padding:2px 9px;border-radius:999px;font-size:10px;font-weight:800">🔥 HOT LEAD</span>':'')
+          +'</div>'
+          +'<span style="font-size:11px;color:#8b949e">'+ev.date+'</span>'
+        +'</div>'
+        +'<p style="font-size:13px;color:#c0cce0;margin:0 0 8px;line-height:1.6">'+ev.summary+'</p>'
+        +(ev.gps?'<p style="font-size:11px;color:#6c8aab;margin:0 0 6px">📍 GPS — '+ev.gps+'</p>':'')
+        +'<div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:7px;padding:7px 11px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
+          +'<span style="font-size:11px;font-weight:800;color:#22c55e">✅ Next Step:</span>'
+          +'<span style="font-size:11px;color:#c0cce0">'+ev.nextStep+'</span>'
+          +'<span style="color:#6c8aab">→</span>'
+          +'<span style="font-size:11px;color:#c0cce0">'+ev.assignedTo+'</span>'
+          +'<span style="background:#1e3050;color:#f59e0b;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:700">📅 '+ev.due+'</span>'
+        +'</div>'
+      +'</div>';
+    }).join('');
+  }
+  // Wait for DOM
+  document.addEventListener('DOMContentLoaded', function(){
+    var btn = document.querySelector('[data-t="timeline"]');
+    if(btn) btn.addEventListener('click', function(){setTimeout(renderTimeline,50);});
+  });
+  window.renderTimeline = renderTimeline;
+})();
+</script>
+</div>
+
+<div class="tab" id="tab-analytics">
+<div class="sec-hdr"><div><h2>Analytics Dashboard</h2><p>Admin only — aggregate performance metrics across your team</p></div></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:14px">
+  <div class="card" style="text-align:center;background:rgba(73,182,255,.08);border:1px solid rgba(73,182,255,.25)"><p style="color:#49b6ff;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Total Prospects</p><p style="font-size:26px;font-weight:900;color:#49b6ff;margin:0">10</p></div>
+  <div class="card" style="text-align:center;background:rgba(140,255,102,.08);border:1px solid rgba(140,255,102,.25)"><p style="color:#8cff66;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Admitted This Month</p><p style="font-size:26px;font-weight:900;color:#8cff66;margin:0">3</p></div>
+  <div class="card" style="text-align:center;background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.25)"><p style="color:#f59e0b;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Conversion Rate</p><p style="font-size:26px;font-weight:900;color:#f59e0b;margin:0">30%</p></div>
+  <div class="card" style="text-align:center;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25)"><p style="color:#ef4444;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Lost This Month</p><p style="font-size:26px;font-weight:900;color:#ef4444;margin:0">1</p></div>
+  <div class="card" style="text-align:center;background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.25)"><p style="color:#ffd700;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Avg Days to Admit</p><p style="font-size:26px;font-weight:900;color:#ffd700;margin:0">8.4</p></div>
+  <div class="card" style="text-align:center;background:rgba(201,174,255,.08);border:1px solid rgba(201,174,255,.25)"><p style="color:#c9aeff;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Active Referral Sources</p><p style="font-size:26px;font-weight:900;color:#c9aeff;margin:0">3</p></div>
+</div>
+<div class="g2">
+  <div class="card">
+    <h4 style="color:#fff;margin:0 0 12px">Pipeline Distribution</h4>
+    <div id="pipeChart" style="display:flex;flex-direction:column;gap:10px">
+      <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:#c0cce0">Inquiry</span><span style="color:#49b6ff;font-weight:800">4 (40%)</span></div><div style="height:10px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden"><div style="height:100%;width:40%;background:linear-gradient(90deg,#2e7fb5,#49b6ff);border-radius:5px"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:#c0cce0">Pending Admission</span><span style="color:#f59e0b;font-weight:800">2 (20%)</span></div><div style="height:10px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden"><div style="height:100%;width:20%;background:linear-gradient(90deg,#b58800,#ffd36e);border-radius:5px"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:#c0cce0">Admitted</span><span style="color:#8cff66;font-weight:800">3 (30%)</span></div><div style="height:10px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden"><div style="height:100%;width:30%;background:linear-gradient(90deg,#2a8800,#8cff66);border-radius:5px"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:#c0cce0">Lost</span><span style="color:#ef4444;font-weight:800">1 (10%)</span></div><div style="height:10px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden"><div style="height:100%;width:10%;background:linear-gradient(90deg,#8f1f1f,#e05555);border-radius:5px"></div></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h4 style="color:#fff;margin:0 0 12px">Monthly Trends (6 Months)</h4>
+    <div style="overflow-x:auto">
+    <table class="tbl"><thead><tr><th>Month</th><th>New</th><th>Admitted</th><th>Lost</th><th>Conv%</th></tr></thead><tbody>
+      <tr><td>Dec 25</td><td>4</td><td>1</td><td>1</td><td><span class="pill pill-y">25%</span></td></tr>
+      <tr><td>Jan 26</td><td>6</td><td>2</td><td>1</td><td><span class="pill pill-y">33%</span></td></tr>
+      <tr><td>Feb 26</td><td>5</td><td>1</td><td>2</td><td><span class="pill pill-r">20%</span></td></tr>
+      <tr><td>Mar 26</td><td>8</td><td>3</td><td>1</td><td><span class="pill pill-g">37%</span></td></tr>
+      <tr><td>Apr 26</td><td>9</td><td>3</td><td>2</td><td><span class="pill pill-g">33%</span></td></tr>
+      <tr><td>May 26</td><td>10</td><td>3</td><td>1</td><td><span class="pill pill-g">30%</span></td></tr>
+    </tbody></table>
+    </div>
+  </div>
+</div>
+<div class="card">
+  <h4 style="color:#fff;margin:0 0 12px">Referral Source Performance</h4>
+  <div style="overflow-x:auto">
+  <table class="tbl"><thead><tr><th>Source</th><th>Referrals Sent</th><th>Admissions</th><th>Conversion</th><th>Avg Days</th><th>Status</th></tr></thead><tbody>
+    <tr><td><strong>Baylor Hospital</strong></td><td>12</td><td>7</td><td><span class="pill pill-g">58%</span></td><td>7.2</td><td><span class="pill pill-g">Hot</span></td></tr>
+    <tr><td><strong>North Park Rehab</strong></td><td>8</td><td>4</td><td><span class="pill pill-b">50%</span></td><td>9.1</td><td><span class="pill pill-b">Active</span></td></tr>
+    <tr><td><strong>Physician Office</strong></td><td>3</td><td>1</td><td><span class="pill pill-r">33%</span></td><td>14.0</td><td><span class="pill pill-r">Cold ⚠</span></td></tr>
+  </tbody></table>
+  </div>
+</div>
+</div>
+
+<div class="tab" id="tab-agency">
+<div class="sec-hdr"><div><h2>Agency Performance</h2><p>Admin only — leaderboard and team metrics for the current month</p></div></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px">
+  <div class="card" style="text-align:center;background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.25)"><p style="color:#ffd700;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">🥇 Top Marketer</p><p style="font-size:16px;font-weight:900;color:#ffd700;margin:0">Ericka</p><p style="font-size:11px;color:#8b949e;margin-top:2px">7 admits this month</p></div>
+  <div class="card" style="text-align:center;background:rgba(140,255,102,.08);border:1px solid rgba(140,255,102,.25)"><p style="color:#8cff66;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Team Admissions</p><p style="font-size:26px;font-weight:900;color:#8cff66;margin:0">11</p><p style="font-size:11px;color:#8b949e;margin-top:2px">This month</p></div>
+  <div class="card" style="text-align:center;background:rgba(73,182,255,.08);border:1px solid rgba(73,182,255,.25)"><p style="color:#49b6ff;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Facility Visits</p><p style="font-size:26px;font-weight:900;color:#49b6ff;margin:0">34</p><p style="font-size:11px;color:#8b949e;margin-top:2px">This week</p></div>
+  <div class="card" style="text-align:center;background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.25)"><p style="color:#f59e0b;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">On-Time Follow-Up</p><p style="font-size:26px;font-weight:900;color:#f59e0b;margin:0">87%</p><p style="font-size:11px;color:#8b949e;margin-top:2px">Team average</p></div>
+</div>
+<div class="card">
+  <h4 style="color:#fff;margin:0 0 14px">Marketer Leaderboard — May 2026</h4>
+  <div style="overflow-x:auto">
+  <table class="tbl"><thead><tr><th>Rank</th><th>Marketer</th><th>Admits</th><th>Prospects</th><th>Visits</th><th>Follow-Up %</th><th>Conversion</th><th>Score</th></tr></thead><tbody>
+    <tr style="background:rgba(255,215,0,.03)"><td style="font-size:18px">🥇</td><td><strong>Ericka</strong><br><small style="color:#8b949e">North Dallas</small></td><td style="color:#8cff66;font-weight:900">7</td><td>13</td><td>13</td><td><span class="pill pill-g">92%</span></td><td><span class="pill pill-g">54%</span></td><td style="font-size:16px;font-weight:900;color:#ffd700">94</td></tr>
+    <tr><td style="font-size:18px">🥈</td><td><strong>Mike</strong><br><small style="color:#8b949e">McKinney</small></td><td style="color:#49b6ff;font-weight:900">4</td><td>8</td><td>8</td><td><span class="pill pill-b">78%</span></td><td><span class="pill pill-b">50%</span></td><td style="font-size:16px;font-weight:900;color:#8b949e">71</td></tr>
+    <tr><td style="font-size:18px">🥉</td><td><strong>Angela</strong><br><small style="color:#8b949e">Plano / Allen</small></td><td style="color:#8b949e;font-weight:900">2</td><td>5</td><td>5</td><td><span class="pill pill-y">65%</span></td><td><span class="pill pill-y">40%</span></td><td style="font-size:16px;font-weight:900;color:#8b949e">52</td></tr>
+  </tbody></table>
+  </div>
+</div>
+<div class="g2" style="margin-top:14px">
+  <div class="card">
+    <h4 style="color:#fff;margin:0 0 12px">Individual Scorecards</h4>
+    <div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="color:#ffd700;font-weight:800">Ericka</span><span style="font-size:24px;font-weight:900;color:#ffd700">9.4</span></div>
+      <div style="height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden"><div style="height:100%;width:94%;background:linear-gradient(90deg,#b8860b,#ffd700);border-radius:4px"></div></div>
+    </div>
+    <div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="color:#8cff66;font-weight:800">Mike</span><span style="font-size:24px;font-weight:900;color:#8cff66">7.1</span></div>
+      <div style="height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden"><div style="height:100%;width:71%;background:linear-gradient(90deg,#2a8800,#8cff66);border-radius:4px"></div></div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="color:#49b6ff;font-weight:800">Angela</span><span style="font-size:24px;font-weight:900;color:#49b6ff">5.2</span></div>
+      <div style="height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden"><div style="height:100%;width:52%;background:linear-gradient(90deg,#2e7fb5,#49b6ff);border-radius:4px"></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h4 style="color:#fff;margin:0 0 12px">Team Activity — This Week</h4>
+    <div style="overflow-x:auto">
+    <table class="tbl"><thead><tr><th>Metric</th><th>Ericka</th><th>Mike</th><th>Angela</th></tr></thead><tbody>
+      <tr><td>Facility Visits</td><td style="color:#8cff66;font-weight:700">13</td><td>8</td><td>5</td></tr>
+      <tr><td>Notes Logged</td><td style="color:#8cff66;font-weight:700">11</td><td>7</td><td>4</td></tr>
+      <tr><td>Miles Driven</td><td style="color:#8cff66;font-weight:700">186</td><td>126</td><td>82</td></tr>
+      <tr><td>Overdue Items</td><td>0</td><td style="color:#f59e0b;font-weight:700">1</td><td style="color:#ef4444;font-weight:700">2</td></tr>
+      <tr><td>Cold Alerts</td><td>0</td><td>1</td><td style="color:#ef4444;font-weight:700">2</td></tr>
+    </tbody></table>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="tab" id="tab-settings">
+<div class="sec-hdr"><div><h2>⚙️ Settings</h2><p>Manage your profile, notifications, and subscription</p></div></div>
+<div id="settingsContent"></div>
+<script>
+(function(){
+  var stTab = 'profile';
+  var notifPrefs = JSON.parse(localStorage.getItem('hl_notif_prefs') || '{"weekly_reports":true,"new_prospects":true,"overdue_followups":true,"cold_sources":true}');
+  var checks = JSON.parse(localStorage.getItem('hl_onboarding_checks') || '[]');
+
+  function renderSettings(){
+    var c = document.getElementById('settingsContent');if(!c)return;
+    var tabBtns = ['profile','notifications','subscription'].map(function(t){
+      return '<button class="st-tab-btn" data-st="'+t+'" onclick="switchSettingsTab(this)" style="border:none;border-radius:999px;padding:7px 16px;font-weight:800;font-size:12px;cursor:pointer;font-family:inherit;background:'+(stTab===t?'#49b6ff':'rgba(255,255,255,.07)')+';color:'+(stTab===t?'#081426':'#8b949e')+';margin-right:6px">'+t.charAt(0).toUpperCase()+t.slice(1)+'</button>';
+    }).join('');
+
+    var html = '<div style="display:flex;gap:0;margin-bottom:16px">'+tabBtns+'</div><div id="settingsPanel"></div>';
+    c.innerHTML = html;
+    renderSettingsPanel();
+  }
+
+  function renderSettingsPanel(){
+    var p = document.getElementById('settingsPanel');if(!p)return;
+    if(stTab==='profile'){
+      p.innerHTML = '<div class="card form-white">'
+        +'<h4 style="margin:0 0 14px">Profile Information</h4>'
+        +'<div class="ga" style="margin-bottom:12px">'
+          +'<div class="field"><label>Full Name</label><input type="text" id="sfName" value="Ericka Johnson" placeholder="Your full name"></div>'
+          +'<div class="field"><label>Email Address</label><input type="email" id="sfEmail" value="ericka@agency.com" placeholder="your@email.com"></div>'
+          +'<div class="field"><label>Phone</label><input type="tel" id="sfPhone" placeholder="(214) 555-0100"></div>'
+          +'<div class="field"><label>Title</label><input type="text" id="sfTitle" value="Marketing Director" placeholder="Your title"></div>'
+        +'</div>'
+        +'<button class="btn btn-g" data-sv="profile" onclick="settingsSaved(this.dataset.sv)">💾 Save Profile</button>'
+        +'</div>'
+        +'<div class="card form-white">'
+        +'<h4 style="margin:0 0 14px">Change Password</h4>'
+        +'<div class="ga" style="margin-bottom:12px">'
+          +'<div class="field"><label>Current Password</label><input type="password" placeholder="Current password"></div>'
+          +'<div class="field"><label>New Password</label><input type="password" id="sfNewPw" placeholder="Min 8 chars, 1 number, 1 special"></div>'
+          +'<div class="field"><label>Confirm New Password</label><input type="password" id="sfConfPw" placeholder="Repeat new password"></div>'
+        +'</div>'
+        +'<button class="btn btn-b" onclick="updatePassword()">🔑 Update Password</button>'
+        +'</div>'
+        +'<div class="card">'
+        +'<h4 style="color:#fff;margin:0 0 14px">Onboarding Checklist</h4>'
+        +[{id:1,text:'Set your account password on first login'},{id:2,text:'Open your Setup Guide and follow the walkthrough'},{id:3,text:'Add your first prospect using Add Prospect'},{id:4,text:'Add your first referral source using Referral Sources'}].map(function(step){
+          var done = checks.indexOf(step.id) !== -1;
+          return '<div class="chk-item" data-chk="'+step.id+'" onclick="toggleChecklist(this)" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;margin-bottom:6px;cursor:pointer">'
+            +'<span style="font-size:16px">'+(done?'✅':'⬜')+'</span>'
+            +'<span style="font-size:13px;color:'+(done?'#8b949e':'#f4f8ff')+';text-decoration:'+(done?'line-through':'none')+'">'+step.text+'</span>'
+          +'</div>';
+        }).join('')
+        +'</div>';
+    } else if(stTab==='notifications'){
+      p.innerHTML = '<div class="card form-white"><h4 style="margin:0 0 14px">Notification Preferences</h4>'
+        +[['weekly_reports','Weekly Report emails (every Monday 7am)'],['new_prospects','New prospect added by team member'],['overdue_followups','Overdue follow-up alerts'],['cold_sources','14-day cold source alerts']].map(function(pref){
+          var key = pref[0], label = pref[1];
+          var on = notifPrefs[key] !== false;
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #e4ecf5">'
+            +'<span style="font-size:13px;font-weight:600">'+label+'</span>'
+            +'<button data-nk="'+key+'" onclick="toggleNotif(this)" style="width:48px;height:26px;border-radius:999px;border:none;cursor:pointer;font-family:inherit;background:'+(on?'#8cff66':'#e4ecf5')+';color:'+(on?'#081426':'#6c7a8a')+';font-weight:800;font-size:11px">'+(on?'ON':'OFF')+'</button>'
+          +'</div>';
+        }).join('')
+        +'<button class="btn btn-g" style="margin-top:12px" data-sv="notif" onclick="settingsSaved(this.dataset.sv)">💾 Save Preferences</button>'
+        +'</div>';
+    } else {
+      p.innerHTML = '<div class="card">'
+        +'<h4 style="color:#fff;margin:0 0 8px">Current Subscription</h4>'
+        +'<div style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.2);border-radius:12px;padding:16px;margin-bottom:14px">'
+          +'<p style="color:#49b6ff;font-size:11px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Active Plan</p>'
+          +'<p style="font-size:18px;font-weight:900;color:#f4f8ff;margin:0">HospiceLink <span id="planTierDisplay" style="color:#49b6ff">Pro</span></p>'
+          +'<p style="font-size:12px;color:#8b949e;margin:4px 0 0">Next billing: June 1, 2026 · Cancel anytime</p>'
+        +'</div>'
+        +'<div style="display:flex;gap:8px;flex-wrap:wrap">'
+          +'<a href="https://billing.stripe.com/p/login/" target="_blank" class="btn btn-b" style="text-decoration:none;display:inline-block">💳 Manage Billing</a>'
+          +'<a href="https://wemarketplus.com/#pricing" target="_blank" class="btn btn-g" style="text-decoration:none;display:inline-block">⬆️ Upgrade Plan</a>'
+          +'<button class="btn btn-d" data-sv="cancel" onclick="settingsSaved(this.dataset.sv)">Cancel Subscription</button>'
+        +'</div>'
+        +'</div>';
+      // Set plan display from tier
+      setTimeout(function(){
+        var el = document.getElementById('planTierDisplay');
+        if(el) el.textContent = (window.CRM_TIER||'Pro');
+        var color = {'Pro':'#49b6ff','Max':'#8cff66','Gold':'#ffd700'};
+        if(el) el.style.color = color[window.CRM_TIER||'Pro']||'#49b6ff';
+      }, 50);
+    }
+  }
+
+  window.switchSettingsTab = function(btn){
+    stTab = btn.getAttribute('data-st') || stTab;
+    renderSettings();
+  };
+
+  window.renderSettingsInner = function(){
+    renderSettings();
+  };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    var btn = document.querySelector('[data-t="settings"]');
+    if(btn) btn.addEventListener('click', function(){setTimeout(renderSettings,50);});
+  });
+})();
+</script>
+</div>
+
 
 </div>
 </div>
@@ -690,7 +965,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 // Config injected per tier
 var TIER = 'Max';
 var ACTIVE_CLS = 'active-b';
-var ROLE_TABS = {"admin": ["dash", "addref", "refs", "addpx", "records", "pipeline", "territory", "prod", "touch", "schedule", "cal", "notes", "remind", "reengage", "goals", "aiasst", "family", "evv", "import", "portal", "playbook", "mobile", "heatmap", "report", "team"], "marketer": ["dash", "addref", "refs", "addpx", "records", "pipeline", "territory", "prod", "touch", "schedule", "cal", "notes", "remind", "reengage", "goals", "aiasst", "family", "evv", "import", "portal", "playbook", "mobile", "heatmap"]};
+var ROLE_TABS = {"admin": ["dash", "addref", "refs", "addpx", "records", "timeline", "pipeline", "territory", "prod", "touch", "schedule", "cal", "notes", "remind", "reengage", "goals", "aiasst", "family", "evv", "import", "portal", "playbook", "mobile", "heatmap", "analytics", "agency", "report", "team", "settings"], "marketer": ["dash", "addref", "refs", "addpx", "records", "timeline", "pipeline", "territory", "prod", "touch", "schedule", "cal", "notes", "remind", "reengage", "goals", "aiasst", "family", "evv", "import", "portal", "playbook", "mobile", "heatmap"]};
 var ROLE_DESC = {"admin": "You see every tab including Team Management and Weekly Report. Marketers do not see admin-only tabs.", "marketer": "Full marketing suite: prospects, referrals, EVV/mileage, touch log, AI assistant, referral portal, playbook, and more. 14-Day Cold Alerts appear on your Dashboard and in Reminders."};
 var BADGE_STYLE = {"admin": "background:rgba(188,140,255,.2);color:#c9aeff", "marketer": "background:rgba(73,182,255,.2);color:#49b6ff", "nurse": "background:rgba(140,255,102,.2);color:#8cff66", "caregiver": "background:rgba(249,199,79,.2);color:#f9c74f"};
 var IS_DEMO = true;
@@ -724,6 +999,33 @@ function addrSearch(inp,dropId){
 function callProspect(btn){T('Calling: '+btn.getAttribute('data-ph'));}
 function emailProspect(btn){T('Email: '+btn.getAttribute('data-em'));}
 function editProspect(btn){T(btn.getAttribute('data-nm')+' — edit in live CRM','i');}
+function toggleChecklist(el){
+  var id=+el.getAttribute('data-chk');
+  var ch=JSON.parse(localStorage.getItem('hl_onboarding_checks')||'[]');
+  var idx=ch.indexOf(id);if(idx===-1)ch.push(id);else ch.splice(idx,1);
+  localStorage.setItem('hl_onboarding_checks',JSON.stringify(ch));
+  if(window.renderSettingsInner)window.renderSettingsInner();
+}
+function toggleNotif(el){
+  var key=el.getAttribute('data-nk');
+  var np=JSON.parse(localStorage.getItem('hl_notif_prefs')||'{}');
+  np[key]=!np[key];
+  localStorage.setItem('hl_notif_prefs',JSON.stringify(np));
+  if(window.renderSettingsInner)window.renderSettingsInner();
+}
+function settingsSaved(el){
+  var type = el && el.getAttribute ? el.getAttribute('data-ss') : (typeof el==='string'?el:'profile');
+  if(type==='cancel'){T('Cancellation request sent. You will receive a confirmation email.','w');return;}
+  if(type==='notif')T('Notification preferences saved!');
+  else T('Settings saved!');
+}
+function updatePassword(){
+  var np=document.getElementById('sfNewPw')&&document.getElementById('sfNewPw').value;
+  var cp=document.getElementById('sfConfPw')&&document.getElementById('sfConfPw').value;
+  if(!np||np.length<8){T('Password must be at least 8 characters.','e');}
+  else if(np!==cp){T('Passwords do not match.','e');}
+  else{T('Password updated!');}
+}
 
 // ── NAVIGATION ─────────────────────────────────────────────────
 var currentRole = 'marketer';
