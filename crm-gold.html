@@ -382,21 +382,70 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 </div>
 
 <div class="tab" id="tab-notes">
-<div class="sec-hdr"><div><h2>Notes</h2><p>Timestamped visit notes — attached to prospect records</p></div></div>
-<div class="card form-white" style="margin-bottom:12px">
-  <div class="ga" style="margin-bottom:10px">
-    <div class="field"><label>Patient / Prospect</label><select><option>Mary J.</option><option>John T.</option><option>Dorothy F.</option></select></div>
-    <div class="field"><label>Visit Type</label><select><option>Facility Visit</option><option>Phone Call</option><option>Family Meeting</option><option>Bedside Visit</option><option>Other</option></select></div>
-    <div class="field"><label>Contact Name</label><input type="text" placeholder="Family contact or CM name"></div>
-    <div class="field"><label>Next Step</label><input type="text" placeholder="What is the next action?"></div>
+<h2 style="margin:0 0 4px;font-size:24px;color:#fff">Notes</h2>
+<p style="color:#8b949e;font-size:13px;margin-bottom:16px">Structured note logging — Next Step is <strong style="color:#f9c74f">required</strong> · GPS-stamped · Role-specific workflows</p>
+
+<div id="noteFormWrap" style="background:#fff;color:#111;border-radius:14px;padding:16px;margin-bottom:16px">
+  <!-- Hot lead banner -->
+  <div id="hotBanner" style="display:none;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#dc2626">
+    🔥 <strong>Hot Lead Detected</strong> — Keywords suggest urgency. Consider marking Urgency as Hot.
   </div>
-  <div class="field"><label>Clinical / Visit Note</label><textarea placeholder="Detailed note from this visit or contact…"></textarea></div>
-  <button class="btn btn-g" onclick="addNote()" style="margin-top:8px">💾 Save Note</button>
+  <!-- Row 1 -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:10px">
+    <div class="field form-white"><label>Your Name</label><input type="text" id="noteAuthor" value="Ericka" style="background:#f9fafb"></div>
+    <div class="field form-white"><label>Position</label><input type="text" id="notePosition" value="Marketer" style="background:#f9fafb" readonly></div>
+    <div class="field form-white"><label>Interaction Type</label><select id="noteIntType">
+      <option value="visit">Visit</option><option value="call">Call</option><option value="email">Email</option><option value="text">Text</option><option value="update">Update</option><option value="note">Note</option>
+    </select></div>
+    <div class="field form-white"><label>Contact Type</label><select id="noteContactType">
+      <option value="">Select...</option><option>Call</option><option>Facility Visit</option><option>Bedside Visit</option><option>Family Meeting</option><option>Drop-In</option><option>Email</option><option>Text</option><option>Other</option>
+    </select></div>
+  </div>
+  <!-- Row 2 -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:10px">
+    <div class="field form-white"><label>Urgency</label><select id="noteUrgency" onchange="updateUrgencyBorder(this)" style="border:2px solid #f59e0b">
+      <option value="hot">🔥 Hot</option><option value="warm" selected>⚡ Warm</option><option value="cold">❄️ Cold</option>
+    </select></div>
+    <div class="field form-white"><label>Date</label><input type="date" id="noteDate"></div>
+    <div class="field form-white"><label>Decision Maker(s)</label><input type="text" id="noteDecision" placeholder="e.g. Daughter Lisa (POA)"></div>
+  </div>
+  <!-- Summary -->
+  <div class="field form-white" style="margin-bottom:10px">
+    <label>Summary of Interaction <span style="color:#dc2626">*</span></label>
+    <textarea id="noteSummary" oninput="checkHotKeywords(this.value)" placeholder="What happened? Who said what? Emotional tone? Concerns raised..." style="min-height:80px;resize:vertical;width:100%;border:1px solid #d0dce8;border-radius:8px;padding:8px 10px;font-family:inherit;font-size:12px"></textarea>
+  </div>
+  <!-- Patient Status + Barriers -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+    <div class="field form-white"><label>Patient Status Update</label><input type="text" id="notePatStatus" placeholder="e.g. Not eating, rapid decline..."></div>
+    <div class="field form-white"><label>Barriers / Objections</label><select id="noteBarriers">
+      <option>None</option><option>Not Ready</option><option>Family Disagreement</option><option>Wants to Wait</option><option>Competitor</option><option>Financial Concerns</option><option>Other</option>
+    </select></div>
+  </div>
+  <!-- Next Step Required Box -->
+  <div id="nextStepBox" style="background:rgba(73,182,255,.04);border:2px solid rgba(73,182,255,.25);border-radius:10px;padding:12px;margin-bottom:12px">
+    <label style="font-size:13px;font-weight:800;color:#2563eb;display:block;margin-bottom:8px">✅ Next Step (Required)</label>
+    <select id="noteNextStep" style="width:100%;border:1px solid #d0dce8;border-radius:8px;padding:8px 10px;font-family:inherit;font-size:12px">
+      <option value="">Select a next step...</option>
+    </select>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">
+      <div class="field form-white"><label style="font-size:11px;color:#555">👤 Assigned To</label><input type="text" id="noteAssigned" placeholder="Name..."></div>
+      <div class="field form-white"><label style="font-size:11px;color:#555">📅 Follow-Up Date</label><input type="date" id="noteFollowDate" style="border:2px solid rgba(249,199,79,.4);background:#fffbeb"></div>
+      <div class="field form-white"><label style="font-size:11px;color:#555">🕐 Follow-Up Time</label><input type="text" id="noteFollowTime" placeholder="e.g. 9:00 AM"></div>
+    </div>
+  </div>
+  <!-- GPS note display -->
+  <div id="gpsNote" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:7px;padding:6px 10px;margin-bottom:10px;font-size:11px;color:#15803d"></div>
+  <!-- Buttons -->
+  <div style="display:flex;gap:10px;align-items:center">
+    <button onclick="notesCaptureGPS()" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;border-radius:999px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:12px;font-family:inherit" id="gpsBtn">📍 Capture GPS</button>
+    <button onclick="saveNote()" style="background:#8cff66;color:#081426;border:none;border-radius:999px;padding:10px 0;font-weight:900;cursor:pointer;font-size:14px;font-family:inherit;flex:1">📍 Sync and Save Note (GPS)</button>
+  </div>
+  <p style="color:#6c8aab;font-size:11px;margin:6px 0 0">Your GPS location will be captured and attached to this note when saved.</p>
+  <p id="noteErr" style="color:#dc2626;font-size:12px;font-weight:700;margin:6px 0 0;display:none">⚠ Summary and Next Step are required to save.</p>
 </div>
-<div id="notesList">
-  <div class="card"><strong style="color:#fff">Dorothy F.</strong> — Facility Visit <span style="color:#8b949e;font-size:11px">Angela · Today, 2:14 PM</span><p style="font-size:12px;color:#c0cce0;margin-top:6px">Family satisfied with care. Pain well controlled. Next: weekly check-in call.</p></div>
-  <div class="card" style="margin-top:10px"><strong style="color:#fff">John T.</strong> — Phone Call <span style="color:#8b949e;font-size:11px">Mike · Yesterday, 10:30 AM</span><p style="font-size:12px;color:#c0cce0;margin-top:6px">Son Robert confirmed ready for admission paperwork. Schedule coordinator visit.</p></div>
-</div>
+
+<!-- Saved Notes Feed -->
+<div id="notesFeed"></div>
 </div>
 
 <div class="tab" id="tab-remind">
@@ -997,6 +1046,7 @@ function setRole(role){
     sec.style.display=anyVisible?'':'none';
   });
   showTab('dash');
+  updateNextStepOptions();
 }
 
 // ── PROSPECTS ──────────────────────────────────────────────────
@@ -1048,14 +1098,146 @@ function saveProspect(){
   renderProspects();showTab('records');
 }
 
-// ── NOTES ──────────────────────────────────────────────────────
-function addNote(){
-  var list=document.getElementById('notesList');if(!list)return;
-  var now=new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-  var d=document.createElement('div');d.className='card';d.style.marginBottom='10px';
-  d.innerHTML='<strong style="color:#f4f8ff">New Note</strong> <span style="color:#8b949e;font-size:11px">— Today, '+now+'</span><p style="font-size:12px;color:#c0cce0;margin-top:6px">Note saved successfully.</p>';
-  list.insertBefore(d,list.firstChild);T('Note saved!');
+// ── NOTES SYSTEM ──────────────────────────────────────────────
+var HOT_KEYWORDS=['not eating','declining','hospital','rapid decline','not walking','pain uncontrolled','unresponsive','emergency','falls','weight loss','icu','dnr','hospice eval','actively dying'];
+var NEXT_STEPS_BY_ROLE={
+  marketer:[{v:'immediate_family_outreach',l:'📞 Immediate Family Outreach'},{v:'schedule_visit',l:'📅 Schedule On-Site Visit'},{v:'bedside_presentation',l:'🛏 Conduct Bedside Presentation'},{v:'drop_off_materials',l:'📦 Drop Off Materials'},{v:'follow_up_referral_source',l:'🔁 Follow Up w/ Referral Source'},{v:'re_engagement_campaign',l:'💬 Re-Engagement Campaign'},{v:'request_clinical_records',l:'📄 Request Clinical Records (H&P)'},{v:'coordinate_nurse_eval',l:'🩺 Coordinate Nurse Evaluation'},{v:'lost',l:'❌ Mark as Lost'},{v:'other',l:'📝 Other'}],
+  nurse:[{v:'rn_assessment_requested',l:'🩺 RN Assessment Requested'},{v:'rn_assessment_scheduled',l:'📅 RN Assessment Scheduled'},{v:'obtain_physician_order',l:'👨‍⚕️ Obtain Physician Order'},{v:'insurance_verification',l:'💳 Insurance Verification'},{v:'admit_patient',l:'✅ Admit Patient'},{v:'document_decline_trend',l:'📉 Document Decline Trend'},{v:'other',l:'📝 Other'}],
+  caregiver:[{v:'report_change_to_nurse',l:'📢 Report Change to Nurse'},{v:'recommend_hospice_eval',l:'🏥 Recommend Hospice Eval'},{v:'escalate_urgent',l:'🚨 Escalate Urgent'},{v:'document_decline_trend',l:'📉 Document Decline Trend'},{v:'notify_family_concerns',l:'👨‍👩‍👧 Notify Family of Concerns'},{v:'other',l:'📝 Other'}],
+  admin:[{v:'immediate_family_outreach',l:'📞 Immediate Family Outreach'},{v:'schedule_visit',l:'📅 Schedule On-Site Visit'},{v:'rn_assessment_requested',l:'🩺 RN Assessment Requested'},{v:'admit_patient',l:'✅ Admit Patient'},{v:'escalate_urgent',l:'🚨 Escalate Urgent'},{v:'other',l:'📝 Other'}]
+};
+var URGENCY_CONFIG={
+  hot:{color:'#ef4444',bg:'rgba(239,68,68,.12)',border:'rgba(239,68,68,.3)',label:'🔥 Hot'},
+  warm:{color:'#f59e0b',bg:'rgba(245,158,11,.12)',border:'rgba(245,158,11,.3)',label:'⚡ Warm'},
+  cold:{color:'#60a5fa',bg:'rgba(96,165,250,.12)',border:'rgba(96,165,250,.3)',label:'❄️ Cold'}
+};
+var ROLE_COLORS={marketer:'#49b6ff',nurse:'#8cff66',caregiver:'#f9c74f',admin:'#c9aeff'};
+var savedNotes=[
+  {author:'Ericka',role:'marketer',date:'May 5 · 2:14 PM',contactType:'Facility Visit',urgency:'hot',summary:'Met with CM Sarah at Baylor. She has 2 patients ready for hospice eval. Declined to commit today — family not on board yet.',decisionMakers:'Daughter Lisa (POA)',patientStatus:'Not eating for 3 days. Rapid decline noted by nursing staff.',barriers:'Family Disagreement',nextStepLabel:'📞 Immediate Family Outreach',assignedTo:'Ericka',followUpDate:'May 7',followUpTime:'9:00 AM',gps:'Baylor University Medical Center, Dallas TX',hot:true},
+  {author:'Angela RN',role:'nurse',date:'May 4 · 11:30 AM',contactType:'Bedside Visit',urgency:'warm',summary:'Dorothy F. pain well-controlled at 2/10. Family satisfied with care team. Patient alert and engaged.',decisionMakers:'Linda F. (Daughter)',patientStatus:'Stable. Pain managed. Appetite slightly reduced.',barriers:'None',nextStepLabel:'📉 Document Decline Trend',assignedTo:'Angela RN',followUpDate:'May 9',followUpTime:'10:00 AM',gps:'Patient Home, Plano TX',hot:false}
+];
+var noteGPS=null;
+
+function buildNotesFeed(){
+  var feed=document.getElementById('notesFeed');if(!feed)return;
+  feed.innerHTML=savedNotes.map(function(n){
+    var uc=URGENCY_CONFIG[n.urgency]||URGENCY_CONFIG.warm;
+    var rc=ROLE_COLORS[n.role]||'#49b6ff';
+    return '<div style="background:#0d1b31;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:16px;margin-bottom:12px">'
+      +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap;gap:6px">'
+        +'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
+          +'<strong style="color:#f4f8ff;font-size:14px">'+n.author+'</strong>'
+          +'<span style="background:rgba('+hexToRgb(rc)+','+'0.18);color:'+rc+';padding:2px 8px;border-radius:999px;font-size:10px;font-weight:800">'+n.role+'</span>'
+          +(n.contactType?'<span style="background:#1e3050;color:#8b949e;padding:2px 8px;border-radius:999px;font-size:10px">'+n.contactType+'</span>':'')
+          +'<span style="background:'+uc.bg+';border:1px solid '+uc.border+';color:'+uc.color+';padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700">'+uc.label+'</span>'
+          +(n.hot?'<span style="background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#ef4444;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:800">🔥 HOT LEAD</span>':'')
+        +'</div>'
+        +'<span style="font-size:11px;color:#8b949e">'+n.date+'</span>'
+      +'</div>'
+      +'<p style="font-size:13px;color:#c0cce0;margin:0 0 10px;line-height:1.6">'+n.summary+'</p>'
+      +(n.decisionMakers?'<p style="font-size:12px;color:#8b949e;margin:0 0 4px">👤 <strong style="color:#c0cce0">Decision Maker(s):</strong> '+n.decisionMakers+'</p>':'')
+      +(n.patientStatus?'<p style="font-size:12px;color:#8b949e;margin:0 0 4px">📊 <strong style="color:#c0cce0">Patient Status:</strong> '+n.patientStatus+'</p>':'')
+      +(n.barriers&&n.barriers!=='None'?'<p style="font-size:12px;color:#8b949e;margin:0 0 8px">⚠ <strong style="color:#c0cce0">Barrier:</strong> '+n.barriers+'</p>':'')
+      +(n.nextStepLabel?'<div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:8px;padding:8px 12px;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:12px;font-weight:700;color:#22c55e">✅ Next Step:</span><span style="font-size:12px;color:#c0cce0">'+n.nextStepLabel+'</span><span style="color:#6c8aab">→</span><span style="font-size:12px;color:#c0cce0">'+n.assignedTo+'</span>'+(n.followUpDate?'<span style="background:#1e3050;color:#f59e0b;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700">📅 '+n.followUpDate+(n.followUpTime?' @ '+n.followUpTime:'')+'</span>':'')+'</div>':'')
+      +(n.gps?'<p style="font-size:11px;color:#6c8aab;margin:0">📍 GPS — '+n.gps+'</p>':'')
+    +'</div>';
+  }).join('');
 }
+
+function hexToRgb(hex){var r=hex.match(/\d+/g)||[];return r.slice(0,3).join(',');}
+
+function checkHotKeywords(text){
+  var lower=(text||'').toLowerCase();
+  var isHot=HOT_KEYWORDS.some(function(kw){return lower.indexOf(kw)!==-1;});
+  var banner=document.getElementById('hotBanner');if(banner)banner.style.display=isHot?'block':'none';
+}
+function updateUrgencyBorder(sel){
+  var colors={hot:'#ef4444',warm:'#f59e0b',cold:'#60a5fa'};
+  sel.style.border='2px solid '+(colors[sel.value]||'#f59e0b');
+}
+function updateNextStepOptions(){
+  var sel=document.getElementById('noteNextStep');if(!sel)return;
+  var steps=NEXT_STEPS_BY_ROLE[currentRole]||NEXT_STEPS_BY_ROLE.marketer;
+  sel.innerHTML='<option value="">Select a next step...</option>'+steps.map(function(s){return '<option value="'+s.v+'">'+s.l+'</option>';}).join('');
+  var pos=document.getElementById('notePosition');
+  if(pos)pos.value=currentRole.charAt(0).toUpperCase()+currentRole.slice(1);
+  var auth=document.getElementById('noteAuthor');
+  if(auth&&!auth.dataset.edited){
+    var names={marketer:'Ericka',nurse:'Angela RN',caregiver:'Caregiver',admin:'Admin'};
+    auth.value=names[currentRole]||'Ericka';
+  }
+}
+function notesCaptureGPS(){
+  var btn=document.getElementById('gpsBtn');
+  if(!navigator.geolocation){T('GPS not available on this device','w');return;}
+  btn.textContent='⏳ Getting GPS...';btn.disabled=true;
+  navigator.geolocation.getCurrentPosition(
+    function(pos){
+      var lat=pos.coords.latitude,lng=pos.coords.longitude;
+      var label=lat.toFixed(4)+', '+lng.toFixed(4);
+      fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat='+lat+'&lon='+lng)
+      .then(function(r){return r.json();})
+      .then(function(data){
+        var a=data.address||{};
+        label=[a.road,a.city||a.town||a.village,a.state].filter(Boolean).join(', ')||label;
+        noteGPS=label;
+        var gd=document.getElementById('gpsNote');if(gd){gd.textContent='📍 '+label;gd.style.display='block';}
+        btn.textContent='📍 GPS Captured ✓';btn.disabled=false;
+      }).catch(function(){
+        noteGPS=label;
+        var gd=document.getElementById('gpsNote');if(gd){gd.textContent='📍 '+label;gd.style.display='block';}
+        btn.textContent='📍 GPS Captured ✓';btn.disabled=false;
+      });
+    },
+    function(){T('GPS permission denied. Please allow location access.','w');btn.textContent='📍 Capture GPS';btn.disabled=false;},
+    {enableHighAccuracy:true,timeout:8000}
+  );
+}
+function saveNote(){
+  var summary=document.getElementById('noteSummary')&&document.getElementById('noteSummary').value.trim();
+  var nextStep=document.getElementById('noteNextStep')&&document.getElementById('noteNextStep').value;
+  var err=document.getElementById('noteErr');
+  var nsBox=document.getElementById('nextStepBox');
+  if(!summary||!nextStep){
+    if(err)err.style.display='block';
+    if(nsBox&&!nextStep)nsBox.style.borderColor='rgba(239,68,68,.4)';
+    return;
+  }
+  if(err)err.style.display='none';
+  if(nsBox)nsBox.style.borderColor='rgba(73,182,255,.25)';
+  var now=new Date();
+  var dateStr=now.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' · '+now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  var steps=NEXT_STEPS_BY_ROLE[currentRole]||NEXT_STEPS_BY_ROLE.marketer;
+  var step=steps.find(function(s){return s.v===nextStep;});
+  var urgency=document.getElementById('noteUrgency')&&document.getElementById('noteUrgency').value||'warm';
+  var hotFlag=HOT_KEYWORDS.some(function(kw){return (summary+' '+(document.getElementById('notePatStatus')&&document.getElementById('notePatStatus').value||'')).toLowerCase().indexOf(kw)!==-1;})||urgency==='hot';
+  var names={marketer:'Ericka',nurse:'Angela RN',caregiver:'Caregiver',admin:'Admin'};
+  savedNotes.unshift({
+    author:document.getElementById('noteAuthor')&&document.getElementById('noteAuthor').value||names[currentRole]||'Ericka',
+    role:currentRole,date:dateStr,
+    contactType:document.getElementById('noteContactType')&&document.getElementById('noteContactType').value,
+    urgency:urgency,
+    summary:summary,
+    decisionMakers:document.getElementById('noteDecision')&&document.getElementById('noteDecision').value,
+    patientStatus:document.getElementById('notePatStatus')&&document.getElementById('notePatStatus').value,
+    barriers:document.getElementById('noteBarriers')&&document.getElementById('noteBarriers').value||'None',
+    nextStepLabel:step?step.l:'',
+    assignedTo:document.getElementById('noteAssigned')&&document.getElementById('noteAssigned').value,
+    followUpDate:document.getElementById('noteFollowDate')&&document.getElementById('noteFollowDate').value,
+    followUpTime:document.getElementById('noteFollowTime')&&document.getElementById('noteFollowTime').value,
+    gps:noteGPS,hot:hotFlag
+  });
+  // Reset form
+  ['noteSummary','noteDecision','notePatStatus','noteAssigned','noteFollowDate','noteFollowTime'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  var ns=document.getElementById('noteNextStep');if(ns)ns.value='';
+  var nb=document.getElementById('hotBanner');if(nb)nb.style.display='none';
+  var gd=document.getElementById('gpsNote');if(gd){gd.style.display='none';}
+  noteGPS=null;
+  var gb=document.getElementById('gpsBtn');if(gb){gb.textContent='📍 Capture GPS';gb.disabled=false;}
+  buildNotesFeed();
+  T('Note saved!'+(noteGPS?' 📍 GPS: '+noteGPS:''));
+}
+
 
 // ── AI ─────────────────────────────────────────────────────────
 function aiSend(){
@@ -1166,6 +1348,10 @@ document.addEventListener('DOMContentLoaded',function(){
   prospects[0].due=relDate(0);prospects[1].due=relDate(2);
   renderProspects();buildCal();
   if(document.getElementById('bedTable'))renderBeds();
+  // Notes
+  var nd=document.getElementById('noteDate');if(nd)nd.value=new Date().toISOString().split('T')[0];
+  updateNextStepOptions();
+  buildNotesFeed();
   // Apply initial role
   var sel=document.getElementById('roleSelect');
   setRole(sel?sel.value:'marketer');
