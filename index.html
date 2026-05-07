@@ -482,10 +482,10 @@ footer{background:#040b14;border-top:1px solid rgba(255,255,255,.07);padding:44p
       <div class="pc-desc">Complete 7-section prospect profiles, referral source management, follow-up reminders, AI assistant, and weekly reports. Most users see improvement in 48 hours.</div>
       <div class="pc-sel">
         <select id="proSel" onchange="updatePrice('pro')">
-          <option value="149|0–5 Users|STRIPE_PRO_0_5">0–5 Users — $149/mo</option>
-          <option value="249|5–10 Users|STRIPE_PRO_5_10">5–10 Users — $249/mo</option>
-          <option value="349|10–20 Users|STRIPE_PRO_10_20">10–20 Users — $349/mo</option>
-          <option value="449|Unlimited Users|STRIPE_PRO_UNLIMITED">Unlimited Users — $449/mo</option>
+          <option value="149|0–5 Users|STRIPE_PRO_0_5|pro_0_5">0–5 Users — $149/mo</option>
+          <option value="249|5–10 Users|STRIPE_PRO_5_10|pro_5_10">5–10 Users — $249/mo</option>
+          <option value="349|10–20 Users|STRIPE_PRO_10_20|pro_10_20">10–20 Users — $349/mo</option>
+          <option value="449|Unlimited Users|STRIPE_PRO_UNLIMITED|pro_unlimited">Unlimited Users — $449/mo</option>
         </select>
       </div>
       <div class="pc-price">
@@ -517,9 +517,9 @@ footer{background:#040b14;border-top:1px solid rgba(255,255,255,.07);padding:44p
       <div class="pc-desc">Everything in Pro — plus EVV mileage, 14-day cold alerts, territory heat map, smart scheduling, marketer mobile, and the AI playbook generator. Admin and Marketer roles included.</div>
       <div class="pc-sel">
         <select id="maxSel" onchange="updatePrice('max')">
-          <option value="449|0–10 Users|STRIPE_MAX_0_10">0–10 Users — $449/mo</option>
-          <option value="649|10–20 Users|STRIPE_MAX_10_20">10–20 Users — $649/mo</option>
-          <option value="849|Unlimited Users|STRIPE_MAX_UNLIMITED">Unlimited Users — $849/mo</option>
+          <option value="449|0–10 Users|STRIPE_MAX_0_10|max_0_10">0–10 Users — $449/mo</option>
+          <option value="749|10–20 Users|STRIPE_MAX_10_20|max_10_20">10–20 Users — $749/mo</option>
+          <option value="999|Unlimited Users|STRIPE_MAX_UNLIMITED|max_unlimited">Unlimited Users — $999/mo</option>
         </select>
       </div>
       <div class="pc-price">
@@ -550,9 +550,9 @@ footer{background:#040b14;border-top:1px solid rgba(255,255,255,.07);padding:44p
       <div class="pc-desc">Everything in Max plus Revenue Intelligence, AI Referral Triage, Windshield Mode, Telehealth, Nurse Scheduling, Patient Portal, HIPAA Audit Log, Territory Management, and full 4-role access (Admin, Marketer, Nurse, Caregiver).</div>
       <div class="pc-sel">
         <select id="goldSel" onchange="updatePrice('gold')" style="border-color:rgba(255,215,0,.35);color:#ffd700">
-          <option value="749|0–10 Users|STRIPE_GOLD_0_10">0–10 Users — $749/mo</option>
-          <option value="999|10–20 Users|STRIPE_GOLD_10_20">10–20 Users — $999/mo</option>
-          <option value="1299|Unlimited Users|STRIPE_GOLD_UNLIMITED">Unlimited Users — $1,299/mo</option>
+          <option value="899|0–10 Users|STRIPE_GOLD_0_10|gold_0_10">0–10 Users — $899/mo</option>
+          <option value="1299|10–20 Users|STRIPE_GOLD_10_20|gold_10_20">10–20 Users — $1,299/mo</option>
+          <option value="1999|Unlimited Users|STRIPE_GOLD_UNLIMITED|gold_unlimited">Unlimited Users — $1,999/mo</option>
         </select>
       </div>
       <div class="pc-price" style="border-color:rgba(255,215,0,.15)">
@@ -779,4 +779,144 @@ function buildProofTicker(){
   var PROOFS = [
     {quote:'HospiceLink cut our response time from 3 days to under 18 hours.', name:'Maria T.', title:'Marketing Director, Dallas TX'},
     {quote:'Referrals tripled in two months. The cold-source alerts alone changed everything.', name:'James R.', title:'Hospice Administrator, Phoenix AZ'},
-    {quote:'We recovered 9 lost prospects in our first month and admitted 3 of them.', name:'Sandra M.', title:'Regional Director, Houston TX
+
+    {quote:'We recovered 9 lost prospects in our first month and admitted 3 of them.', name:'Sandra M.', title:'Regional Director, Houston TX'},
+    {quote:'Our nurses are now fully coordinated with marketing. Gold changed how we operate.', name:'Kevin L.', title:'Executive Director, Austin TX'},
+  ];
+  var track = document.getElementById('proofTrack');
+  if (!track) return;
+  var items = [...PROOFS,...PROOFS];
+  track.innerHTML = items.map(function(p){
+    return '<div class="proof-card"><p class="proof-q">&#8220;'+p.quote+'&#8221;</p><div class="proof-name">'+p.name+'</div><div class="proof-title">'+p.title+'</div></div>';
+  }).join('');
+}
+
+// ── SUBSCRIPTION MODAL ────────────────────────────────────────
+var currentPlan = 'pro';
+
+// Package key mapping — maps plan+stripe key to PLAN_MAP key
+var PKG_MAP = {
+  'STRIPE_PRO_0_5':        'pro_0_5',
+  'STRIPE_PRO_5_10':       'pro_5_10',
+  'STRIPE_PRO_10_20':      'pro_10_20',
+  'STRIPE_PRO_UNLIMITED':  'pro_unlimited',
+  'STRIPE_MAX_0_10':       'max_0_10',
+  'STRIPE_MAX_10_20':      'max_10_20',
+  'STRIPE_MAX_UNLIMITED':  'max_unlimited',
+  'STRIPE_GOLD_0_10':      'gold_0_10',
+  'STRIPE_GOLD_10_20':     'gold_10_20',
+  'STRIPE_GOLD_UNLIMITED': 'gold_unlimited',
+};
+
+function getSelectedOption(plan) {
+  var sel = document.getElementById(plan + 'Sel');
+  if (!sel) return null;
+  var val = sel.value.split('|');
+  return { price: val[0], label: val[1], stripeKey: val[2], pkg: val[3] || PKG_MAP[val[2]] || plan+'_0_5' };
+}
+
+function updatePrice(plan) {
+  var opt = getSelectedOption(plan);
+  if (!opt) return;
+  var amtEl   = document.getElementById(plan + 'Amt');
+  var usersEl = document.getElementById(plan + 'Users');
+  if (amtEl)   amtEl.textContent   = '$' + parseInt(opt.price).toLocaleString();
+  if (usersEl) usersEl.textContent = opt.label;
+}
+
+function openModal(plan) {
+  currentPlan = plan;
+  var opt  = getSelectedOption(plan);
+  var labels = { pro:'HospiceLink Pro', max:'HospiceLink Max', gold:'HospiceLink Gold' };
+  var colors = { pro:'#49b6ff', max:'#8cff66', gold:'#ffd700' };
+  var prices = { pro:'$149', max:'$449', gold:'$899' };
+
+  var modal = document.getElementById('subModal');
+  if (!modal) return;
+
+  document.getElementById('modalTitle').textContent  = labels[plan] || 'HospiceLink ' + plan;
+  document.getElementById('modalPrice').textContent  = opt ? '$' + parseInt(opt.price).toLocaleString() + '/mo' : (prices[plan] + '/mo');
+  document.getElementById('modalTier').textContent   = opt ? opt.label : '';
+  document.getElementById('modalTitle').style.color  = colors[plan] || '#f4f8ff';
+
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  var modal = document.getElementById('subModal');
+  if (modal) modal.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function confirmSubscribe() {
+  var opt = getSelectedOption(currentPlan);
+  if (!opt || !opt.stripeKey) { alert('Please select a plan.'); return; }
+
+  var url = STRIPE[opt.stripeKey];
+  if (!url) { alert('Stripe link not configured. Contact support.'); return; }
+
+  // Track conversion event
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'begin_checkout', { currency: 'USD', value: parseInt(opt.price), item_id: opt.stripeKey });
+  }
+
+  window.location.href = url;
+}
+
+// Close modal on backdrop click
+document.addEventListener('click', function(e) {
+  if (e.target && e.target.id === 'subModal') closeModal();
+});
+
+// Close modal on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ── INIT ─────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  buildTicker();
+  buildLiveFeed();
+  buildProofTicker();
+  // Start ticker animation
+  var track = document.getElementById('tickerTrack');
+  if (track) {
+    var w = track.scrollWidth / 3;
+    track.style.animation = 'ticker ' + Math.max(30, w/80) + 's linear infinite';
+  }
+  // Animate fade-in elements on scroll
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(function(el) { obs.observe(el); });
+});
+</script>
+
+<!-- SUBSCRIPTION MODAL -->
+<div id="subModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)">
+  <div style="background:#0d1f35;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:36px;max-width:440px;width:100%;position:relative">
+    <button onclick="closeModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:#8b949e;font-size:22px;cursor:pointer;line-height:1">✕</button>
+    <h2 id="modalTitle" style="margin:0 0 6px;font-size:22px;font-weight:900">HospiceLink Pro</h2>
+    <p style="margin:0 0 20px;color:#8b949e;font-size:14px">You selected: <span id="modalTier" style="color:#f4f8ff;font-weight:700"></span></p>
+    <div style="background:rgba(255,255,255,.04);border-radius:12px;padding:16px;margin-bottom:20px;text-align:center">
+      <div style="font-size:32px;font-weight:900;color:#f4f8ff" id="modalPrice">$149/mo</div>
+      <div style="font-size:12px;color:#8b949e;margin-top:4px">Billed monthly · Cancel anytime</div>
+    </div>
+    <ul style="list-style:none;padding:0;margin:0 0 24px;color:#c0cce0;font-size:14px;line-height:1.8">
+      <li>✅ HIPAA-ready from day one</li>
+      <li>✅ BAA included</li>
+      <li>✅ Live in 30 minutes</li>
+      <li>✅ 30-day money-back guarantee</li>
+    </ul>
+    <button onclick="confirmSubscribe()" style="width:100%;background:linear-gradient(90deg,#49b6ff,#8cff66);color:#06111d;border:none;border-radius:999px;padding:14px;font-size:16px;font-weight:900;cursor:pointer;transition:opacity .2s" onmouseover="this.style.opacity='.9'" onmouseout="this.style.opacity='1'">
+      Proceed to Secure Checkout →
+    </button>
+    <p style="text-align:center;color:#8b949e;font-size:12px;margin:12px 0 0">🔐 Powered by Stripe · TLS 1.3 encrypted</p>
+  </div>
+</div>
+
+</body>
+</html>
