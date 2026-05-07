@@ -1660,13 +1660,24 @@ document.addEventListener('DOMContentLoaded',function(){
 // RBAC: Determine role from JWT at page load — immutable, no switching
 document.addEventListener('DOMContentLoaded', function() {
   var tok = sessionStorage.getItem('hl_token') || localStorage.getItem('hl_token');
-  var role = 'marketer'; // default
-  if (tok) {
-    try {
-      var payload = JSON.parse(atob(tok.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
-      role = payload.role || 'marketer';
-    } catch(e) {}
+  // ─── TIER ENFORCEMENT ───────────────────────────────────────────────────────
+  // Redirect users who don't belong on this page. Checks JWT crm_tier.
+  if (!tok) { window.location.href = 'login.html?reason=auth_required'; return; }
+  var payload;
+  try {
+    payload = JSON.parse(atob(tok.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+  } catch(e) { window.location.href = 'login.html?reason=invalid_token'; return; }
+  // Check token expiry
+  if (payload.exp && Date.now() / 1000 > payload.exp + 60) {
+    // Give 60s grace for refresh — if truly expired the interceptor will handle it
+    // Only hard-redirect if there's no cookie either
   }
+  var tier = payload.crm_tier || 'pro';
+  if (tier === 'pro')  { window.location.href = 'crm-pro.html';  return; }
+  if (tier === 'max')  { window.location.href = 'crm-max.html';  return; }
+  // tier === 'gold' — correct page, continue
+  // ────────────────────────────────────────────────────────────────────────────
+  var role = payload.role || 'marketer';
   // Set the role badge
   var badge = document.getElementById('roleBadge');
   if (badge) {
