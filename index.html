@@ -3,925 +3,721 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>HospiceLink CRM — More Admits. Less Chaos. Built for Hospice.</title>
-<meta name="description" content="The only CRM built exclusively for hospice marketers. Track every referral, close more admits, eliminate spreadsheets. HIPAA-ready. Up in 30 minutes.">
-<meta name="keywords" content="hospice CRM, hospice marketing software, referral tracking, hospice admissions CRM, HIPAA CRM, hospice marketer tools, hospice census software">
+<title>HospiceLink CRM — Built Exclusively for Hospice</title>
+<meta name="description" content="The only CRM built exclusively for hospice marketers. Track every referral, close more admits, eliminate spreadsheets. HIPAA-ready. Live in 30 minutes.">
 <meta property="og:title" content="HospiceLink CRM — More Admits. Less Chaos.">
 <meta property="og:description" content="The only CRM purpose-built for hospice marketers. HIPAA-ready, live in 30 min, 30-day guarantee.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://wemarketplus.com/">
-<link rel="canonical" href="https://wemarketplus.com/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+/* ---- RESET ---- */
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:'Segoe UI',system-ui,Arial,sans-serif;background:#060f1e;color:#f4f8ff;line-height:1.6;overflow-x:hidden}
+body{font-family:"Outfit",system-ui,sans-serif;background:#06080e;color:#dde4ef;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer}
 
-/* ── NAV ─────────────────────────────────── */
-nav{position:sticky;top:0;z-index:200;background:rgba(6,15,30,.95);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.07)}
-.nav-inner{max-width:1180px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:60px}
-.nav-logo{font-size:17px;font-weight:900;color:#fff;display:flex;align-items:center;gap:8px}
-.nav-logo-dot{width:8px;height:8px;background:#8cff66;border-radius:50%;animation:pulse-green 2s ease infinite}
-@keyframes pulse-green{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.3)}}
-.nav-links{display:flex;gap:18px;align-items:center}
-.nav-links a{font-size:13px;font-weight:600;color:#c0cce0;transition:color .15s}
-.nav-links a:hover{color:#fff}
-.nav-cta{background:linear-gradient(90deg,#7ef05a,#b8ff79);color:#06111d;border-radius:999px;padding:8px 18px;font-weight:900;font-size:13px;display:inline-block;transition:opacity .15s}
-.nav-cta:hover{opacity:.88}
-@media(max-width:720px){.nav-links{display:none}}
+/* ---- TOKENS ---- */
+:root{
+  --ink:#06080e;
+  --page:#06080e;
+  --surface-1:rgba(255,255,255,.03);
+  --surface-2:rgba(255,255,255,.055);
+  --border:rgba(255,255,255,.08);
+  --border-strong:rgba(255,255,255,.14);
+  --text-1:#f4f8ff;
+  --text-2:#8fa3b8;
+  --text-3:#4d6070;
+  --sage:#4fc87a;
+  --sage-dim:rgba(79,200,122,.1);
+  --sage-border:rgba(79,200,122,.22);
+  --azure:#3d9ee8;
+  --azure-dim:rgba(61,158,232,.1);
+  --azure-border:rgba(61,158,232,.22);
+  --amber:#c9903a;
+  --amber-dim:rgba(201,144,58,.1);
+  --amber-border:rgba(201,144,58,.22);
+  --r2:4px;--r4:8px;--r6:12px;--r8:16px;--r12:22px;--r-full:999px;
+}
 
-/* ── FOUNDERS BANNER ─────────────────────── */
-.founders-bar{background:linear-gradient(90deg,rgba(255,215,0,.1),rgba(255,215,0,.06));border-bottom:1px solid rgba(255,215,0,.2);padding:9px 20px;text-align:center}
-.founders-bar span{color:#ffd700;font-weight:900;font-size:13px}
-.founders-bar a{color:#8cff66;font-weight:900;margin-left:8px;font-size:13px}
+/* ---- ANIMATIONS ---- */
+@keyframes breathe{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes scroll-left{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes slide-up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
+.reveal.in{opacity:1;transform:translateY(0)}
 
-/* ── LIVE ACTIVITY TICKER ────────────────── */
-.ticker-wrap{overflow:hidden;background:rgba(73,182,255,.04);border-top:1px solid rgba(73,182,255,.1);border-bottom:1px solid rgba(73,182,255,.1);padding:10px 0;position:relative}
-.ticker-wrap::before,.ticker-wrap::after{content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none}
-.ticker-wrap::before{left:0;background:linear-gradient(90deg,#060f1e,transparent)}
-.ticker-wrap::after{right:0;background:linear-gradient(270deg,#060f1e,transparent)}
-.ticker-track{display:flex;gap:48px;animation:tickerL 40s linear infinite;width:max-content}
-@keyframes tickerL{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.ticker-item{display:flex;align-items:center;gap:8px;flex-shrink:0;font-size:12px;font-weight:700}
-.t-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+/* ---- NAV ---- */
+nav{position:sticky;top:0;z-index:300;background:rgba(6,8,14,.94);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+.nav-wrap{max-width:1200px;margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-brand{display:flex;align-items:center;gap:11px}
+.nav-logo-icon{width:30px;height:30px;border-radius:7px;background:linear-gradient(140deg,#4fc87a,#2da856);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-logo-icon svg{width:16px;height:16px;stroke:#06080e;fill:none;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
+.nav-brand-name{font-size:15px;font-weight:700;color:var(--text-1);letter-spacing:-.02em}
+.nav-brand-name sup{font-size:10px;font-weight:600;color:var(--azure);letter-spacing:.02em;margin-left:2px;vertical-align:super}
+.nav-menu{display:flex;align-items:center;gap:2px}
+.nav-menu a{font-size:13px;font-weight:500;color:var(--text-2);padding:6px 12px;border-radius:var(--r4);transition:color .12s,background .12s;white-space:nowrap}
+.nav-menu a:hover{color:var(--text-1);background:var(--surface-1)}
+.nav-login{background:var(--sage)!important;color:#06080e!important;font-weight:700!important;border-radius:var(--r-full)!important;padding:7px 18px!important;transition:opacity .12s!important}
+.nav-login:hover{opacity:.85!important}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:6px;cursor:pointer}
+.nav-hamburger span{display:block;width:22px;height:2px;background:var(--text-2);border-radius:2px}
+@media(max-width:860px){.nav-menu{display:none}.nav-hamburger{display:flex}}
 
-/* ── HERO ────────────────────────────────── */
-.hero{padding:72px 20px 52px;max-width:1180px;margin:0 auto;text-align:center}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(140,255,102,.07);border:1px solid rgba(140,255,102,.25);border-radius:999px;padding:6px 16px;color:#8cff66;font-weight:800;font-size:13px;margin-bottom:22px}
-.hero-h1{font-size:clamp(34px,5.5vw,64px);font-weight:900;line-height:1.06;margin-bottom:16px;color:#fff}
-.hero-h1 em{font-style:normal;background:linear-gradient(90deg,#8cff66,#5af04f);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero-sub{font-size:clamp(15px,2vw,18px);color:#8b949e;max-width:580px;margin:0 auto 30px;line-height:1.7}
-.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
-.hero-trust{display:flex;gap:22px;justify-content:center;flex-wrap:wrap}
-.ht-item{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#5a7090}
-.ht-item span{color:#8cff66}
+/* ---- ALERT BANNER ---- */
+.alert-bar{background:linear-gradient(90deg,rgba(201,144,58,.08),rgba(201,144,58,.04));border-bottom:1px solid var(--amber-border);padding:10px 28px;text-align:center;font-size:13px;font-weight:500;color:var(--text-2)}
+.alert-bar strong{color:var(--amber);font-weight:700}
+.alert-bar a{color:var(--azure);font-weight:600;border-bottom:1px solid var(--azure-border);padding-bottom:1px;transition:color .12s}
+.alert-bar a:hover{color:var(--text-1)}
 
-/* ── ANIMATED COUNTER BAR ────────────────── */
-.counter-bar{background:rgba(255,255,255,.025);border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
-.counter-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0;max-width:1100px;margin:0 auto}
-.counter-item{text-align:center;padding:28px 16px;border-right:1px solid rgba(255,255,255,.05)}
-.counter-item:last-child{border-right:none}
-.counter-val{font-size:clamp(26px,3.5vw,42px);font-weight:900;margin-bottom:5px;line-height:1}
-.counter-lbl{font-size:13px;color:#8b949e;font-weight:600}
-.counter-sub{font-size:11px;color:#4a5568;margin-top:2px}
+/* ---- LIVE TICKER ---- */
+.ticker{overflow:hidden;border-bottom:1px solid var(--border);padding:9px 0;position:relative}
+.ticker::before,.ticker::after{content:"";position:absolute;top:0;bottom:0;width:100px;z-index:2;pointer-events:none}
+.ticker::before{left:0;background:linear-gradient(90deg,#06080e,transparent)}
+.ticker::after{right:0;background:linear-gradient(270deg,#06080e,transparent)}
+.ticker-inner{display:flex;gap:52px;width:max-content;animation:scroll-left 60s linear infinite}
+.ticker-event{display:flex;align-items:center;gap:8px;flex-shrink:0;font-size:11.5px;font-weight:600;color:var(--text-3)}
+.ticker-pip{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.ticker-event span{font-weight:500;color:var(--text-2)}
 
-/* ── SOCIAL PROOF TICKER ─────────────────── */
-.proof-wrap{overflow:hidden;background:rgba(255,255,255,.02);border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);padding:14px 0;position:relative}
-.proof-wrap::before,.proof-wrap::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
-.proof-wrap::before{left:0;background:linear-gradient(90deg,#060f1e,transparent)}
-.proof-wrap::after{right:0;background:linear-gradient(270deg,#060f1e,transparent)}
-.proof-track{display:flex;gap:40px;animation:tickerL 60s linear infinite;width:max-content}
-.proof-item{display:flex;align-items:center;gap:10px;flex-shrink:0;max-width:360px}
-.proof-stars{color:#ffd700;font-size:13px;letter-spacing:2px}
-.proof-quote{color:#c7d3e8;font-size:13px;font-style:italic}
-.proof-author{color:#49b6ff;font-size:12px;font-weight:700;margin-left:6px;white-space:nowrap}
-.proof-divider{color:rgba(255,255,255,.1);font-size:20px;margin-left:10px}
+/* ---- HERO ---- */
+.hero{padding:96px 28px 72px;max-width:1200px;margin:0 auto;text-align:center;position:relative}
+.hero::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse at center,rgba(79,200,122,.06) 0%,transparent 70%);pointer-events:none;z-index:0}
+.hero > *{position:relative;z-index:1}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--sage-dim);border:1px solid var(--sage-border);border-radius:var(--r-full);padding:5px 14px;color:var(--sage);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:30px}
+.hero-eyebrow-pulse{width:6px;height:6px;background:var(--sage);border-radius:50%;animation:breathe 2.2s ease infinite}
+.hero-h1{font-family:"Instrument Serif",Georgia,serif;font-size:clamp(44px,6.5vw,80px);font-weight:400;line-height:1.02;color:var(--text-1);margin-bottom:22px;letter-spacing:-.02em}
+.hero-h1 em{color:var(--sage);font-style:italic}
+.hero-h1 strong{font-style:normal;font-weight:400}
+.hero-sub{font-size:clamp(15px,1.8vw,18px);color:var(--text-2);max-width:540px;margin:0 auto 38px;line-height:1.78;font-weight:400}
+.hero-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:36px}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--sage);color:#06080e;border:none;border-radius:var(--r-full);padding:14px 28px;font-size:14px;font-weight:700;transition:opacity .12s,transform .15s}
+.btn-primary:hover{opacity:.88;transform:translateY(-1px)}
+.btn-outline{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--text-1);border:1px solid var(--border-strong);border-radius:var(--r-full);padding:14px 28px;font-size:14px;font-weight:600;transition:border-color .12s,background .12s}
+.btn-outline:hover{border-color:rgba(255,255,255,.28);background:var(--surface-1)}
+.hero-proof{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap}
+.proof-item{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--text-3)}
+.proof-icon{width:18px;height:18px;border-radius:50%;background:var(--sage-dim);border:1px solid var(--sage-border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.proof-icon svg{width:9px;height:9px;stroke:var(--sage);fill:none;stroke-width:2.5}
 
-/* ── SECTIONS ────────────────────────────── */
-.section{padding:64px 20px;max-width:1180px;margin:0 auto}
-.section-center{text-align:center;margin-bottom:42px}
-.section-tag{display:inline-block;border-radius:999px;padding:6px 16px;font-weight:800;font-size:12px;margin-bottom:14px;letter-spacing:.04em;text-transform:uppercase}
-.section-h2{font-size:clamp(26px,4vw,44px);font-weight:900;color:#fff;line-height:1.1;margin-bottom:12px}
-.section-sub{font-size:15px;color:#8b949e;max-width:580px;margin:0 auto;line-height:1.7}
+/* ---- METRICS STRIP ---- */
+.metrics{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface-1)}
+.metrics-inner{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+.metric{text-align:center;padding:28px 12px;border-right:1px solid var(--border)}
+.metric:last-child{border-right:none}
+.metric-val{font-size:clamp(22px,2.8vw,36px);font-weight:800;line-height:1;margin-bottom:5px;letter-spacing:-.03em}
+.metric-label{font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em}
 
-/* ── CRM PREVIEW ─────────────────────────── */
-.crm-preview{background:linear-gradient(135deg,#0a1628,#070f20);border:1px solid rgba(255,255,255,.1);border-radius:18px;overflow:hidden}
-.crm-topbar{background:#071120;border-bottom:1px solid rgba(255,255,255,.08);padding:10px 14px;display:flex;align-items:center;gap:10px}
-.crm-dot{width:11px;height:11px;border-radius:50%}
-.crm-dots{display:flex;gap:5px}
-.crm-body{display:flex;height:340px}
-.crm-sidebar{width:160px;background:#071120;border-right:1px solid rgba(255,255,255,.06);padding:10px 8px;flex-shrink:0}
-.crm-nav-sec{font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#334d6e;padding:6px 4px 2px}
-.crm-nav-item{padding:6px 8px;border-radius:6px;font-size:11px;font-weight:700;color:#8b949e;margin-bottom:1px;cursor:pointer;transition:all .15s}
-.crm-nav-item.active{background:#49b6ff;color:#060f1e}
-.crm-nav-item:hover:not(.active){background:rgba(255,255,255,.06);color:#f4f8ff}
-.crm-main{flex:1;padding:16px;overflow:hidden}
-.crm-stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
-.crm-stat{border-radius:8px;padding:10px 12px}
-.crm-stat-lbl{font-size:8px;font-weight:800;text-transform:uppercase;margin:0 0 3px}
-.crm-stat-val{font-size:20px;font-weight:900;line-height:1}
-.crm-table-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px}
-.crm-badge{border-radius:999px;padding:2px 7px;font-size:9px;font-weight:800}
-.crm-hot{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.25)}
-.crm-warm{background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.25)}
-.crm-cold{background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.25)}
+/* ---- SECTION BASE ---- */
+.section{padding:80px 28px;max-width:1200px;margin:0 auto}
+.section-header{text-align:center;margin-bottom:52px}
+.section-kicker{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;border-radius:var(--r-full);padding:4px 13px;margin-bottom:14px}
+.section-title{font-family:"Instrument Serif",Georgia,serif;font-size:clamp(28px,4vw,48px);font-weight:400;color:var(--text-1);line-height:1.08;margin-bottom:12px;letter-spacing:-.02em}
+.section-body{font-size:15px;color:var(--text-2);max-width:500px;margin:0 auto;line-height:1.75}
 
-/* ── FEATURE CARDS ───────────────────────── */
-.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
-.feat-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:22px;transition:border-color .2s,transform .2s}
-.feat-card:hover{border-color:rgba(73,182,255,.3);transform:translateY(-2px)}
-.feat-icon{font-size:28px;margin-bottom:12px}
-.feat-title{font-size:15px;font-weight:800;color:#fff;margin-bottom:7px}
-.feat-body{font-size:13px;color:#8b949e;line-height:1.6}
-.feat-tag{display:inline-block;margin-top:10px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;border-radius:999px;padding:3px 9px}
+/* ---- PLATFORM PREVIEW ---- */
+.preview-grid{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}
+.crm-window{background:#070b14;border:1px solid rgba(255,255,255,.1);border-radius:var(--r8);overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.6)}
+.window-chrome{background:#050910;border-bottom:1px solid var(--border);padding:10px 14px;display:flex;align-items:center;gap:10px}
+.window-dots{display:flex;gap:5px}
+.window-dot{width:10px;height:10px;border-radius:50%}
+.window-url{flex:1;background:rgba(255,255,255,.04);border-radius:5px;padding:3px 10px;font-size:10px;font-family:monospace;color:var(--text-3);margin:0 8px}
+.window-status{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--sage)}
+.window-status-dot{width:5px;height:5px;background:var(--sage);border-radius:50%;animation:breathe 2s ease infinite}
+.crm-layout{display:flex;height:340px}
+.crm-nav{width:150px;background:#050910;border-right:1px solid var(--border);padding:10px 8px;flex-shrink:0}
+.crm-nav-group{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);padding:8px 6px 4px}
+.crm-nav-item{padding:6px 10px;border-radius:5px;font-size:11px;font-weight:600;color:var(--text-2);margin-bottom:1px;cursor:pointer;transition:all .1s}
+.crm-nav-item.active{background:rgba(61,158,232,.14);color:var(--azure)}
+.crm-nav-item:hover:not(.active){background:var(--surface-2);color:var(--text-1)}
+.crm-content{flex:1;padding:16px;overflow:hidden}
+.crm-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.crm-kpi{border-radius:6px;padding:9px 10px}
+.crm-kpi-label{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
+.crm-kpi-val{font-size:19px;font-weight:800;line-height:1}
+.crm-table-head{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-3);margin-bottom:8px}
+.crm-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px}
+.crm-pill{border-radius:var(--r-full);padding:2px 8px;font-size:9px;font-weight:700}
+.pill-hot{background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.2)}
+.pill-warm{background:rgba(245,158,11,.12);color:#f59e0b;border:1px solid rgba(245,158,11,.2)}
+.pill-admitted{background:var(--sage-dim);color:var(--sage);border:1px solid var(--sage-border)}
+.pill-cold{background:var(--azure-dim);color:var(--azure);border:1px solid var(--azure-border)}
+.crm-alert-row{margin-top:12px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.15);border-radius:6px;padding:8px 11px;display:flex;justify-content:space-between;align-items:center;font-size:11px}
+.crm-alert-text{color:#fbbf24;font-weight:600}
+.crm-alert-btn{background:var(--amber);color:#06080e;border-radius:var(--r-full);padding:3px 10px;font-size:10px;font-weight:700;border:none;cursor:pointer;font-family:inherit}
 
-/* ── WORKFLOW ────────────────────────────── */
-.workflow-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.wf-step{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:20px;position:relative}
-.wf-num{font-size:36px;font-weight:900;color:rgba(73,182,255,.15);line-height:1;margin-bottom:8px}
-.wf-title{font-size:14px;font-weight:800;color:#fff;margin-bottom:6px}
-.wf-body{font-size:12px;color:#8b949e;line-height:1.6}
+/* ---- ACTIVITY FEED ---- */
+.activity-feed{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r8);overflow:hidden}
+.feed-header{border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.feed-header-title{font-size:13px;font-weight:700;color:var(--text-1)}
+.feed-live{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--sage)}
+.feed-live-dot{width:6px;height:6px;background:var(--sage);border-radius:50%;animation:breathe 2s ease infinite}
+.feed-item{padding:11px 16px;border-bottom:1px solid rgba(255,255,255,.035);display:flex;align-items:flex-start;gap:10px}
+.feed-item:last-child{border-bottom:none}
+.feed-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.feed-text{flex:1;font-size:12px;color:var(--text-1);font-weight:600;line-height:1.35}
+.feed-sub{font-size:11px;color:var(--text-3);margin-top:2px;font-weight:400}
+.feed-time{font-size:10px;color:var(--text-3);flex-shrink:0;padding-top:2px}
 
-/* ── LIVE FEED ───────────────────────────── */
-.live-feed{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden}
-.lf-header{background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.07);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
-.lf-live{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:#8cff66}
-.lf-dot{width:7px;height:7px;background:#8cff66;border-radius:50%;animation:pulse-green 1.8s ease infinite}
-.lf-item{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:center;gap:10px;font-size:12px}
-.lf-item:last-child{border-bottom:none}
-.lf-time{font-size:10px;color:#4a5568;margin-left:auto;flex-shrink:0}
+/* ---- FEATURE CARDS ---- */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.feat-card{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r8);padding:24px;transition:border-color .2s,transform .2s}
+.feat-card:hover{border-color:var(--border-strong);transform:translateY(-2px)}
+.feat-icon{width:38px;height:38px;border-radius:9px;margin-bottom:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.feat-icon svg{width:19px;height:19px;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.feat-title{font-size:15px;font-weight:700;color:var(--text-1);margin-bottom:8px;letter-spacing:-.01em}
+.feat-desc{font-size:13px;color:var(--text-2);line-height:1.66}
+.feat-badge{display:inline-block;margin-top:12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-radius:var(--r-full);padding:3px 10px}
 
-/* ── COMPARE ─────────────────────────────── */
-.compare-wrap{overflow-x:auto}
-table.ctbl{width:100%;border-collapse:collapse;font-size:13px}
-.ctbl th{padding:11px 14px;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid rgba(255,255,255,.08)}
-.ctbl td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.05);color:#c0cce0}
-.ctbl tr:last-child td{border:none}
-.ctbl td:first-child{font-weight:600;color:#f4f8ff}
-.ctbl td:not(:first-child){text-align:center}
+/* ---- ORIGIN CALLOUT ---- */
+.origin-card{background:linear-gradient(135deg,rgba(61,158,232,.06),rgba(18,31,61,.4));border:1px solid var(--azure-border);border-radius:var(--r12);padding:40px;display:grid;grid-template-columns:auto 1fr;gap:30px;align-items:center}
+.origin-avatar{width:64px;height:64px;border-radius:var(--r8);background:linear-gradient(135deg,var(--azure),var(--sage));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.origin-avatar svg{width:30px;height:30px;stroke:#06080e;fill:none;stroke-width:1.8}
+.origin-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--azure);margin-bottom:8px}
+.origin-title{font-family:"Instrument Serif",Georgia,serif;font-size:20px;color:var(--text-1);margin-bottom:10px;line-height:1.2}
+.origin-body{font-size:14px;color:var(--text-2);line-height:1.74}
 
-/* ── PRICING ─────────────────────────────── */
-.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;max-width:1180px;margin:0 auto}
-.pc{border-radius:20px;padding:28px;position:relative;border:1px solid rgba(255,255,255,.09);background:linear-gradient(135deg,#0c1a30,#081525)}
-.pc.pop{border-color:rgba(140,255,102,.3)}
-.pc.gld{border:2px solid rgba(255,215,0,.4);background:linear-gradient(135deg,#190f00,#0a152e)}
-.pop-tag{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,#8cff66,#b8ff79);color:#06111d;border-radius:999px;padding:4px 16px;font-weight:900;font-size:12px;white-space:nowrap}
-.pc-tier{display:inline-block;border-radius:6px;padding:3px 10px;font-weight:800;font-size:11px;margin-bottom:10px}
-.pc-title{font-size:22px;font-weight:900;color:#fff;margin-bottom:4px}
-.pc-sub{font-size:12px;color:#8b949e;margin-bottom:12px;line-height:1.5}
-.pc-desc{font-size:12px;color:#c0cce0;line-height:1.7;margin-bottom:14px;padding:11px;background:rgba(255,255,255,.04);border-radius:9px}
-.pc-sel select{width:100%;background:#08111f;border:1px solid rgba(255,255,255,.14);border-radius:9px;padding:9px 12px;color:#f4f8ff;font-size:14px;font-weight:700;outline:none;cursor:pointer;font-family:inherit;margin-bottom:12px}
-.pc-price{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:9px;padding:11px 13px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
-.pc-price-amt{font-size:26px;font-weight:900;color:#fff}
-.pc-price-amt.gld{color:#ffd700}
-.pc-features{list-style:none;margin-bottom:18px;display:flex;flex-direction:column;gap:6px}
-.pc-features li{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:#c0cce0;line-height:1.5}
-.pc-features li::before{content:"✅";flex-shrink:0;font-size:11px;margin-top:2px}
-.pc-btns{display:flex;flex-direction:column;gap:8px}
-.btn-sub{border:none;border-radius:999px;padding:12px 0;font-weight:900;cursor:pointer;font-size:14px;font-family:inherit;width:100%;transition:opacity .1s}
-.btn-sub:hover{opacity:.88}
-.btn-demo{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);border-radius:999px;padding:9px 0;color:#c0cce0;font-weight:800;cursor:pointer;font-size:13px;font-family:inherit;width:100%;transition:.1s}
-.btn-demo:hover{background:rgba(255,255,255,.09);color:#fff}
+/* ---- WORKFLOW STEPS ---- */
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.step-card{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r8);padding:24px;position:relative}
+.step-num{font-family:"Instrument Serif",Georgia,serif;font-size:48px;font-weight:400;color:rgba(255,255,255,.05);line-height:1;margin-bottom:12px;letter-spacing:-.04em}
+.step-title{font-size:14px;font-weight:700;color:var(--text-1);margin-bottom:7px}
+.step-body{font-size:13px;color:var(--text-2);line-height:1.64}
 
-/* ── TESTIMONIALS ────────────────────────── */
+/* ---- COMPARE TABLE ---- */
+.compare-wrap{border:1px solid var(--border);border-radius:var(--r8);overflow-x:auto;background:var(--surface-1)}
+table.compare{width:100%;border-collapse:collapse;font-size:13px}
+.compare th{padding:13px 18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;border-bottom:1px solid var(--border);text-align:center;color:var(--text-3)}
+.compare th:first-child{text-align:left}
+.compare td{padding:10px 18px;border-bottom:1px solid rgba(255,255,255,.04);text-align:center;color:var(--text-2)}
+.compare td:first-child{text-align:left;font-weight:600;color:var(--text-1)}
+.compare tr:last-child td{border:none}
+.c-yes{color:var(--sage)!important;font-weight:700}
+.c-no{color:rgba(255,255,255,.15)!important}
+
+/* ---- TESTIMONIALS ---- */
 .testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
-.testi-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:22px}
-.testi-stars{color:#ffd700;font-size:16px;letter-spacing:2px;margin-bottom:10px}
-.testi-quote{font-size:14px;color:#c7d3e8;line-height:1.7;margin-bottom:14px;font-style:italic}
-.testi-name{font-size:13px;font-weight:800;color:#fff}
-.testi-title{font-size:11px;color:#4a5568;margin-top:2px}
+.testi-card{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r8);padding:26px}
+.testi-stars{display:flex;gap:3px;margin-bottom:14px}
+.star{width:13px;height:13px;fill:var(--amber)}
+.testi-quote{font-family:"Instrument Serif",Georgia,serif;font-size:15px;color:#c9d6e4;line-height:1.7;margin-bottom:18px;font-style:italic}
+.testi-name{font-size:13px;font-weight:700;color:var(--text-1)}
+.testi-role{font-size:11px;color:var(--text-3);margin-top:2px}
 
-/* ── TRUST BADGES ────────────────────────── */
-.trust-badges{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.tb-card{background:rgba(63,185,80,.04);border:1px solid rgba(63,185,80,.15);border-radius:12px;padding:16px;text-align:left}
-.tb-icon{font-size:22px;margin-bottom:7px}
-.tb-title{font-size:13px;font-weight:800;color:#fff;margin-bottom:4px}
-.tb-body{font-size:12px;color:#8b949e;line-height:1.5}
+/* ---- SECURITY CARDS ---- */
+.security-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:12px}
+.security-card{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r8);padding:20px}
+.sc-icon{width:36px;height:36px;border-radius:9px;background:var(--sage-dim);border:1px solid var(--sage-border);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.sc-icon svg{width:18px;height:18px;stroke:var(--sage);fill:none;stroke-width:1.8}
+.sc-title{font-size:13px;font-weight:700;color:var(--text-1);margin-bottom:5px}
+.sc-body{font-size:12px;color:var(--text-2);line-height:1.56}
 
-/* ── FAQ ─────────────────────────────────── */
-.faq-item{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;margin-bottom:9px;overflow:hidden}
-.faq-q{width:100%;background:none;border:none;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;text-align:left;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
-.faq-arrow{font-size:16px;flex-shrink:0;transition:transform .2s}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;font-size:13px;color:#8b949e;line-height:1.7;padding:0 18px}
-.faq-item.open .faq-a{max-height:300px;padding:0 18px 14px}
-.faq-item.open .faq-arrow{transform:rotate(45deg)}
+/* ---- PRICING ---- */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;max-width:1100px;margin:0 auto}
+.plan-card{border:1px solid var(--border);border-radius:var(--r12);padding:30px;background:linear-gradient(160deg,rgba(255,255,255,.035),rgba(255,255,255,.01));position:relative}
+.plan-card.featured{border-color:var(--sage-border);background:linear-gradient(160deg,rgba(79,200,122,.055),rgba(79,200,122,.01))}
+.plan-card.premium{border-color:var(--amber-border);background:linear-gradient(160deg,rgba(201,144,58,.07),rgba(201,144,58,.015))}
+.featured-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--sage);color:#06080e;border-radius:var(--r-full);padding:4px 16px;font-size:11px;font-weight:800;white-space:nowrap;letter-spacing:.04em}
+.plan-tier-badge{display:inline-block;border-radius:var(--r-full);padding:3px 11px;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:12px}
+.plan-name{font-family:"Instrument Serif",Georgia,serif;font-size:24px;color:var(--text-1);margin-bottom:4px;letter-spacing:-.01em}
+.plan-tagline{font-size:12px;color:var(--text-3);margin-bottom:16px}
+.plan-blurb{font-size:13px;color:var(--text-2);line-height:1.66;margin-bottom:18px;padding:14px;background:rgba(255,255,255,.025);border-radius:var(--r6)}
+.plan-select select{width:100%;background:rgba(6,8,14,.8);border:1px solid rgba(255,255,255,.12);border-radius:var(--r6);padding:9px 12px;color:var(--text-1);font-size:13px;font-weight:600;outline:none;cursor:pointer;font-family:inherit;margin-bottom:12px;appearance:none;-webkit-appearance:none}
+.plan-price-row{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--r6);padding:13px 15px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center}
+.plan-amount{font-size:30px;font-weight:800;color:var(--text-1);letter-spacing:-.03em}
+.plan-amount.premium-color{color:var(--amber)}
+.plan-period{font-size:11px;color:var(--text-3);text-align:right;line-height:1.5}
+.plan-features{list-style:none;margin-bottom:22px;display:flex;flex-direction:column;gap:8px}
+.plan-features li{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#bfcede;line-height:1.5}
+.feat-check{width:17px;height:17px;border-radius:50%;background:var(--sage-dim);border:1px solid var(--sage-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.feat-check svg{width:8px;height:8px;stroke:var(--sage);fill:none;stroke-width:2.5}
+.plan-actions{display:flex;flex-direction:column;gap:9px}
+.btn-subscribe{border:none;border-radius:var(--r-full);padding:13px;font-size:14px;font-weight:700;width:100%;transition:opacity .12s}
+.btn-subscribe:hover{opacity:.85}
+.btn-demo-link{background:transparent;border:1px solid var(--border);border-radius:var(--r-full);padding:11px;font-size:13px;font-weight:600;color:var(--text-2);width:100%;transition:border-color .12s,color .12s;border-color:var(--border-strong)}
+.btn-demo-link:hover{color:var(--text-1);border-color:rgba(255,255,255,.28)}
 
-/* ── MODAL ───────────────────────────────── */
-.modal-ov{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.8);align-items:center;justify-content:center;padding:16px}
-.modal-ov.open{display:flex}
-.modal-box{width:min(660px,100%);max-height:92vh;overflow-y:auto;background:linear-gradient(180deg,#0d1730,#090f1e);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:28px}
-.chk-row{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:13px;margin-bottom:9px;cursor:pointer}
-.chk-row input{width:16px;height:16px;flex-shrink:0;margin-top:2px;cursor:pointer;accent-color:#8cff66}
-.chk-row strong{display:block;color:#fff;margin-bottom:2px;font-size:13px}
-.chk-row span{font-size:12px;color:#94a3b8}
-.baa-box{background:rgba(63,185,80,.06);border:1px solid rgba(63,185,80,.22);border-radius:10px;padding:12px 14px;margin-bottom:13px}
-.guarantee-bar{background:rgba(63,185,80,.06);border:1px solid rgba(63,185,80,.18);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:9px;font-size:12px;font-weight:700;color:#3fb950}
+/* ---- FAQ ---- */
+.faq-list{display:flex;flex-direction:column;gap:7px}
+.faq-item{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r6);overflow:hidden}
+.faq-trigger{width:100%;background:none;border:none;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;text-align:left;color:var(--text-1);font-size:14px;font-weight:600;cursor:pointer;gap:16px;transition:background .12s}
+.faq-trigger:hover{background:var(--surface-2)}
+.faq-icon{width:20px;height:20px;border-radius:50%;background:var(--surface-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .2s,background .15s}
+.faq-icon svg{width:10px;height:10px;stroke:var(--text-1);fill:none;stroke-width:2.5}
+.faq-item.open .faq-icon{transform:rotate(45deg);background:var(--sage-dim)}
+.faq-item.open .faq-icon svg{stroke:var(--sage)}
+.faq-answer{max-height:0;overflow:hidden;transition:max-height .3s ease;font-size:13px;color:var(--text-2);line-height:1.72;padding:0 20px}
+.faq-item.open .faq-answer{max-height:250px;padding:0 20px 18px}
 
-/* ── CTA SECTION ─────────────────────────── */
-.cta-section{background:linear-gradient(135deg,rgba(140,255,102,.05),rgba(73,182,255,.05));border:1px solid rgba(140,255,102,.12);border-radius:22px;padding:52px 36px;text-align:center;margin:0 20px}
+/* ---- BAA BLOCK ---- */
+.baa-block{background:rgba(79,200,122,.04);border:1px solid var(--sage-border);border-radius:var(--r8);padding:30px}
+.baa-title{font-size:16px;font-weight:700;color:var(--sage);margin-bottom:10px}
+.baa-text{font-size:13px;color:#bfcede;line-height:1.74}
 
-/* ── FOOTER ──────────────────────────────── */
-footer{background:#040b14;border-top:1px solid rgba(255,255,255,.07);padding:44px 20px 28px;margin-top:64px}
-.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;max-width:1100px;margin:0 auto}
-.footer-col h5{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#8b949e;margin-bottom:12px}
-.footer-col a{display:block;font-size:13px;color:#8b949e;margin-bottom:7px;transition:color .1s}
-.footer-col a:hover{color:#fff}
-.footer-bottom{max-width:1100px;margin:28px auto 0;border-top:1px solid rgba(255,255,255,.07);padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-size:12px;color:#4a5568}
-@media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr}.cta-section{padding:36px 20px}}
-@media(max-width:500px){.footer-grid{grid-template-columns:1fr}}
-@media(max-width:960px){.crm-body{flex-direction:column}.crm-sidebar{width:100%!important;height:auto}}
+/* ---- FINAL CTA ---- */
+.cta-panel{background:linear-gradient(135deg,rgba(79,200,122,.05),rgba(61,158,232,.04));border:1px solid rgba(79,200,122,.12);border-radius:var(--r12);padding:60px 44px;text-align:center}
+.cta-eyebrow{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--amber);background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:var(--r-full);padding:4px 14px;margin-bottom:22px}
+.cta-heading{font-family:"Instrument Serif",Georgia,serif;font-size:clamp(30px,5vw,56px);color:var(--text-1);line-height:1.06;margin-bottom:16px;letter-spacing:-.02em}
+.cta-heading em{color:var(--sage);font-style:italic}
+.cta-sub{font-size:15px;color:var(--text-2);max-width:460px;margin:0 auto 34px;line-height:1.72}
+.cta-fine{font-size:12px;color:var(--text-3);margin-top:16px}
 
-/* ── ANIMATIONS ──────────────────────────── */
-@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
-.fade-in{opacity:1;transform:none;transition:opacity .6s ease,transform .6s ease}
-.fade-in.visible{opacity:1;transform:none}
-@keyframes countUp{from{opacity:0}to{opacity:1}}
+/* ---- MODAL ---- */
+.modal-bg{display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px}
+.modal-bg.open{display:flex}
+.modal-panel{width:min(480px,100%);background:linear-gradient(160deg,#0c1828,#070f1d);border:1px solid rgba(255,255,255,.1);border-radius:var(--r12);padding:34px;position:relative;animation:slide-up .22s ease}
+.modal-close-btn{position:absolute;top:16px;right:16px;background:var(--surface-2);border:none;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-2);transition:color .12s,background .12s}
+.modal-close-btn:hover{color:var(--text-1);background:var(--border-strong)}
+.modal-close-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5}
+
+/* ---- CONTACT ---- */
+.contact-section{padding:48px 28px;max-width:700px;margin:0 auto;text-align:center}
+.contact-title{font-family:"Instrument Serif",Georgia,serif;font-size:26px;color:var(--text-1);margin-bottom:8px}
+.contact-sub{font-size:14px;color:var(--text-2);margin-bottom:24px}
+.contact-links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+/* ---- FOOTER ---- */
+footer{background:#030508;border-top:1px solid var(--border);padding:52px 28px 30px;margin-top:80px}
+.footer-inner{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;max-width:1100px;margin:0 auto}
+.footer-brand p{font-size:13px;color:var(--text-3);line-height:1.68;margin:10px 0 14px}
+.footer-brand small{font-size:12px;color:rgba(255,255,255,.15)}
+.footer-col h6{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);margin-bottom:14px}
+.footer-col a{display:block;font-size:13px;color:var(--text-3);margin-bottom:9px;transition:color .12s}
+.footer-col a:hover{color:var(--text-1)}
+.footer-bottom{max-width:1100px;margin:28px auto 0;border-top:1px solid var(--border);padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--text-3)}
+
+/* ---- RESPONSIVE ---- */
+@media(max-width:960px){.preview-grid{grid-template-columns:1fr}.crm-layout{flex-direction:column}.crm-nav{width:100%;height:auto}}
+@media(max-width:768px){.footer-inner{grid-template-columns:1fr 1fr}.cta-panel{padding:40px 24px}.metrics-inner{grid-template-columns:repeat(3,1fr)}.origin-card{grid-template-columns:1fr}}
+@media(max-width:480px){.footer-inner{grid-template-columns:1fr}.metrics-inner{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 
-<!-- MODAL -->
-<div id="modal" class="modal-ov" onclick="if(event.target===this)closeModal()">
-  <div class="modal-box">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-      <h4 style="font-size:20px;font-weight:900;color:#fff" id="modalTitle">Before You Continue</h4>
-      <button onclick="closeModal()" style="background:none;border:none;color:#fff;font-size:28px;cursor:pointer;line-height:1">&times;</button>
+<!-- CHECKOUT MODAL -->
+<div id="checkoutModal" class="modal-bg" onclick="if(event.target===this)closeModal()">
+  <div class="modal-panel">
+    <button class="modal-close-btn" onclick="closeModal()">
+      <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--azure);margin-bottom:8px">Subscribing To</p>
+    <h2 id="modalPlanName" style="font-family:'Instrument Serif',Georgia,serif;font-size:24px;color:var(--text-1);margin-bottom:4px">HospiceLink Pro</h2>
+    <p style="font-size:13px;color:var(--text-3);margin-bottom:20px">Selected: <span id="modalTierLabel" style="color:var(--text-1);font-weight:600"></span></p>
+    <div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--r6);padding:18px;text-align:center;margin-bottom:20px">
+      <div id="modalPriceDisplay" style="font-size:34px;font-weight:800;color:var(--text-1);letter-spacing:-.03em">$149/mo</div>
+      <div style="font-size:12px;color:var(--text-3);margin-top:5px">Billed monthly &mdash; Cancel anytime</div>
     </div>
-    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);border-radius:9px;padding:6px 13px;margin-bottom:13px">
-      <span style="color:#3fb950;font-size:15px">🔐</span>
-      <span style="color:#3fb950;font-weight:800;font-size:12px">HIPAA-Ready · End-to-End Encryption · BAA Included</span>
-    </div>
-    <p style="color:#fff;font-weight:900;font-size:18px;margin:0 0 3px">Subscribing to: <span id="modalPlan" style="color:#49b6ff"></span></p>
-    <p style="color:#79c0ff;font-size:13px;font-weight:600;margin:0 0 14px" id="modalMeta"></p>
-    <div class="baa-box">
-      <p style="color:#3fb950;font-size:12px;margin:0 0 9px">📋 <strong>Business Associate Agreement (BAA):</strong> <a href="#baa" style="color:#49b6ff;font-weight:700">View BAA Terms →</a> — Copy emailed at signup.</p>
-      <label style="font-size:11px;font-weight:700;color:#fff;display:block;margin-bottom:4px">Your Full Name (BAA Acknowledgment) *</label>
-      <input type="text" id="signerName" placeholder="Enter your full legal name" style="width:100%;background:#0c1829;border:1px solid rgba(63,185,80,.4);border-radius:7px;padding:8px 11px;color:#fff;font-size:13px;outline:none;font-family:inherit">
-      <p style="color:#8b949e;font-size:11px;margin:4px 0 0">By entering your name you acknowledge the BAA on behalf of your organization.</p>
-    </div>
-    <label class="chk-row"><input type="checkbox" id="chk1"><div><strong>Terms of Service, Privacy Policy &amp; BAA</strong><span>I have read and agree to the subscription terms, privacy policy, and BAA.</span></div></label>
-    <label class="chk-row"><input type="checkbox" id="chk2"><div><strong>Billing &amp; Cancellation</strong><span>Recurring monthly subscription. Cancel anytime. 30-day money-back guarantee on first payment.</span></div></label>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
-      <button onclick="confirmSubscribe()" style="background:linear-gradient(90deg,#7ef05a,#b8ff79);color:#06111d;border:none;border-radius:999px;padding:13px 22px;font-weight:900;font-size:15px;cursor:pointer;font-family:inherit">Confirm Subscription →</button>
-      <button onclick="closeModal()" style="background:#0e1a30;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:13px 22px;font-weight:900;font-size:15px;cursor:pointer;font-family:inherit">Cancel</button>
-    </div>
-    <div class="guarantee-bar" style="margin-top:14px"><span style="font-size:15px">🛡</span><span>30-Day Money-Back Guarantee — Not happy? Email us for a full refund.</span></div>
-    <p id="modalErr" style="color:#f87171;font-weight:700;font-size:13px;margin-top:9px;display:none"></p>
+    <ul style="list-style:none;margin-bottom:24px;display:flex;flex-direction:column;gap:9px">
+      <li style="display:flex;align-items:center;gap:10px;font-size:13px;color:#bfcede"><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>HIPAA-ready from day one</li>
+      <li style="display:flex;align-items:center;gap:10px;font-size:13px;color:#bfcede"><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Business Associate Agreement included at signup</li>
+      <li style="display:flex;align-items:center;gap:10px;font-size:13px;color:#bfcede"><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Live in 30 minutes &mdash; No setup fee</li>
+      <li style="display:flex;align-items:center;gap:10px;font-size:13px;color:#bfcede"><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>30-day money-back guarantee</li>
+    </ul>
+    <button onclick="confirmCheckout()" class="btn-subscribe" style="background:var(--sage);color:#06080e;font-size:15px;padding:14px">Proceed to Secure Checkout</button>
+    <p style="text-align:center;font-size:11px;color:var(--text-3);margin-top:10px">Secured by Stripe &mdash; TLS 1.3 encrypted</p>
+    <p id="modalError" style="color:#f87171;font-size:13px;font-weight:600;margin-top:8px;display:none"></p>
   </div>
 </div>
 
 <!-- NAV -->
 <nav>
-  <div class="nav-inner">
-    <a href="/" class="nav-logo"><div class="nav-logo-dot"></div>HospiceLink <span style="color:#49b6ff">CRM</span></a>
-    <div class="nav-links">
-      <a href="#results">Results</a>
+  <div class="nav-wrap">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <span class="nav-brand-name">HospiceLink<sup>CRM</sup></span>
+    </a>
+    <nav class="nav-menu">
+      <a href="#preview">Platform</a>
       <a href="#features">Features</a>
-      <a href="#how">How It Works</a>
+      <a href="#workflow">How It Works</a>
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
       <a href="#security">Security</a>
       <a href="#contact">Contact</a>
-      <a href="javascript:handleLogin()" class="nav-cta">Login to CRM</a>
-    </div>
+      <a href="javascript:handleLogin()" class="nav-login">Log In</a>
+    </nav>
+    <button class="nav-hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
-<!-- FOUNDERS BANNER -->
-<div class="founders-bar">
-  <span>⏰ Founders Pricing Ends May 31, 2026 — Rates increase June 1.</span>
-  <a href="#pricing">Lock your rate →</a>
+<!-- ALERT -->
+<div class="alert-bar">
+  <strong>Founders Pricing</strong> &mdash; Rates increase June 1, 2026.
+  <a href="#pricing">Lock in your rate &rarr;</a>
 </div>
 
-<!-- LIVE ACTIVITY TICKER -->
-<div class="ticker-wrap">
-  <div class="ticker-track" id="tickerTrack"></div>
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner" id="tickerInner"></div>
 </div>
 
 <!-- HERO -->
-<section class="hero fade-in" id="results">
-  <div class="hero-eyebrow">⏰ Founders Pricing — Ends May 31</div>
+<section class="hero reveal">
+  <div class="hero-eyebrow"><span class="hero-eyebrow-pulse"></span>Purpose-Built for Hospice</div>
   <h1 class="hero-h1">
     More Admits.<br>
     Less Chaos.<br>
     <em>Built for Hospice.</em>
   </h1>
-  <p class="hero-sub">Stop losing referrals to spreadsheets and missed follow-ups. HospiceLink is the only CRM purpose-built for hospice marketers — live in 30 minutes, HIPAA-ready from day one.</p>
-  <div class="hero-btns">
-    <a href="#pricing" style="display:inline-flex;align-items:center;background:linear-gradient(90deg,#7ef05a,#b8ff79);color:#06111d;border:none;border-radius:999px;padding:16px 28px;font-weight:900;font-size:17px;cursor:pointer;font-family:inherit">🚀 See Plans &amp; Pricing →</a>
-    <button onclick="openDemoSelector()" style="display:inline-flex;align-items:center;background:rgba(73,182,255,.1);border:1px solid rgba(73,182,255,.35);color:#49b6ff;border-radius:999px;padding:16px 28px;font-weight:900;cursor:pointer;font-size:17px;font-family:inherit">▶ Try Interactive Demo</button>
-    <button onclick="handleLogin()" style="display:inline-flex;align-items:center;background:rgba(73,182,255,.1);border:1px solid rgba(73,182,255,.35);color:#49b6ff;border-radius:999px;padding:16px 28px;font-weight:900;cursor:pointer;font-size:17px;font-family:inherit">🔑 Login to CRM</button>
+  <p class="hero-sub">Stop losing referrals to spreadsheets and missed follow-ups. The only CRM built exclusively for hospice marketers &mdash; live in 30 minutes, HIPAA-ready from day one.</p>
+  <div class="hero-ctas">
+    <a href="#pricing" class="btn-primary">View Plans &amp; Pricing</a>
+    <button onclick="window.location.href='demo-pro.html'" class="btn-outline">Try Interactive Demo</button>
+    <button onclick="handleLogin()" class="btn-outline">Log In to CRM</button>
   </div>
-  <div class="hero-trust">
-    <div class="ht-item"><span>🔐</span> HIPAA-Ready · BAA Included</div>
-    <div class="ht-item"><span>✅</span> No Setup Fee · Live in 30 Min</div>
-    <div class="ht-item"><span>🛡</span> 30-Day Money-Back</div>
-    <div class="ht-item"><span>🎯</span> Built for Hospice Only</div>
+  <div class="hero-proof">
+    <div class="proof-item"><div class="proof-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>HIPAA-Ready &amp; BAA Included</div>
+    <div class="proof-item"><div class="proof-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>No Setup Fee &mdash; Live in 30 Min</div>
+    <div class="proof-item"><div class="proof-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>30-Day Money-Back Guarantee</div>
+    <div class="proof-item"><div class="proof-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Built for Hospice Only</div>
   </div>
 </section>
 
-<!-- ANIMATED COUNTER BAR -->
-<div class="counter-bar" id="counterBar">
-  <div class="counter-grid">
-    <div class="counter-item fade-in"><div class="counter-val" style="color:#8cff66"><span class="count-num" data-target="47" data-suffix="+">0</span></div><div class="counter-lbl">Hospice Teams</div><div class="counter-sub">Actively using HospiceLink</div></div>
-    <div class="counter-item fade-in"><div class="counter-val" style="color:#49b6ff"><span class="count-num" data-target="40" data-prefix="" data-suffix="%" data-start="20">20%</span></div><div class="counter-lbl">Admit Increase</div><div class="counter-sub">Avg in first 30 days</div></div>
-    <div class="counter-item fade-in"><div class="counter-val" style="color:#ffd700">$0</div><div class="counter-lbl">Setup Fee</div><div class="counter-sub">Live the same day</div></div>
-    <div class="counter-item fade-in"><div class="counter-val" style="color:#c084fc">24/7</div><div class="counter-lbl">AI Assistant</div><div class="counter-sub">Always available</div></div>
-    <div class="counter-item fade-in"><div class="counter-val" style="color:#3fb950">30-Day</div><div class="counter-lbl">Money-Back</div><div class="counter-sub">No questions asked</div></div>
+<!-- METRICS -->
+<div class="metrics">
+  <div class="metrics-inner">
+    <div class="metric"><div class="metric-val" style="color:var(--sage)">47+</div><div class="metric-label">Hospice Teams</div></div>
+    <div class="metric"><div class="metric-val" style="color:var(--azure)">40%</div><div class="metric-label">Avg Admit Lift</div></div>
+    <div class="metric"><div class="metric-val" style="color:var(--amber)">$0</div><div class="metric-label">Setup Fee</div></div>
+    <div class="metric"><div class="metric-val" style="color:#a78bfa">24/7</div><div class="metric-label">AI Assistant</div></div>
+    <div class="metric"><div class="metric-val" style="color:var(--sage)">30-Day</div><div class="metric-label">Guarantee</div></div>
   </div>
 </div>
 
-<!-- SOCIAL PROOF TICKER -->
-<div class="proof-wrap">
-  <div class="proof-track" id="proofTrack"></div>
-</div>
-
-<!-- CRM PREVIEW + LIVE FEED -->
-<section class="section fade-in" id="features">
-  <div class="section-center">
-    <div class="section-tag" style="background:rgba(73,182,255,.1);border:1px solid rgba(73,182,255,.2);color:#49b6ff">Live CRM Preview</div>
-    <h2 class="section-h2">See It Before You Buy</h2>
-    <p class="section-sub">Real hospice workflows — not generic CRM templates. Every tab built for how your team actually works.</p>
+<!-- PLATFORM PREVIEW -->
+<section class="section reveal" id="preview">
+  <div class="section-header">
+    <div class="section-kicker" style="background:var(--azure-dim);border:1px solid var(--azure-border);color:var(--azure)">Live Platform Preview</div>
+    <h2 class="section-title">See It Before You Buy</h2>
+    <p class="section-body">Real hospice workflows &mdash; not generic CRM templates. Every screen built for how your team actually works.</p>
   </div>
-  <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start">
-    <div class="crm-preview">
-      <div class="crm-topbar">
-        <div class="crm-dots">
-          <div class="crm-dot" style="background:#ff5f57"></div>
-          <div class="crm-dot" style="background:#febc2e"></div>
-          <div class="crm-dot" style="background:#28c840"></div>
+  <div class="preview-grid">
+    <div class="crm-window">
+      <div class="window-chrome">
+        <div class="window-dots">
+          <div class="window-dot" style="background:#ff5f57"></div>
+          <div class="window-dot" style="background:#febc2e"></div>
+          <div class="window-dot" style="background:#28c840"></div>
         </div>
-        <div style="font-size:11px;color:#8b949e;margin-left:8px">HospiceLink CRM — Dashboard</div>
-        <div style="margin-left:auto;display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:#8cff66"><div style="width:6px;height:6px;background:#8cff66;border-radius:50%"></div>Live</div>
+        <div class="window-url">app.wemarketplus.com/dashboard</div>
+        <div class="window-status"><span class="window-status-dot"></span>Live</div>
       </div>
-      <div class="crm-body">
-        <div class="crm-sidebar">
-          <div class="crm-nav-sec">MAIN</div>
+      <div class="crm-layout">
+        <div class="crm-nav">
+          <div class="crm-nav-group">Main</div>
           <div class="crm-nav-item active">Dashboard</div>
-          <div class="crm-nav-sec">MARKETING</div>
+          <div class="crm-nav-group">Marketing</div>
           <div class="crm-nav-item">Add Referral</div>
           <div class="crm-nav-item">Prospect Records</div>
           <div class="crm-nav-item">Pipeline</div>
           <div class="crm-nav-item">Territory View</div>
-          <div class="crm-nav-sec">ACTIVITY</div>
+          <div class="crm-nav-group">Activity</div>
           <div class="crm-nav-item">Notes</div>
-          <div class="crm-nav-item">Reminders</div>
           <div class="crm-nav-item">AI Assistant</div>
-          <div class="crm-nav-sec">TOOLS</div>
-          <div class="crm-nav-item">Import Data</div>
+          <div class="crm-nav-group">Tools</div>
+          <div class="crm-nav-item">CSV Import</div>
           <div class="crm-nav-item">Referral Portal</div>
         </div>
-        <div class="crm-main">
-          <div class="crm-stat-row">
-            <div class="crm-stat" style="background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.2)"><div class="crm-stat-lbl" style="color:#dc2626">OVERDUE</div><div class="crm-stat-val" style="color:#dc2626">2</div></div>
-            <div class="crm-stat" style="background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.2)"><div class="crm-stat-lbl" style="color:#f59e0b">DUE TODAY</div><div class="crm-stat-val" style="color:#f59e0b">3</div></div>
-            <div class="crm-stat" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2)"><div class="crm-stat-lbl" style="color:#3b82f6">RE-ENGAGE</div><div class="crm-stat-val" style="color:#3b82f6">3</div></div>
-            <div class="crm-stat" style="background:rgba(140,255,102,.1);border:1px solid rgba(140,255,102,.2)"><div class="crm-stat-lbl" style="color:#8cff66">ADMITTED</div><div class="crm-stat-val" style="color:#8cff66">3</div></div>
+        <div class="crm-content">
+          <div class="crm-kpis">
+            <div class="crm-kpi" style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.15)"><div class="crm-kpi-label" style="color:#ef4444">Overdue</div><div class="crm-kpi-val" style="color:#ef4444">2</div></div>
+            <div class="crm-kpi" style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.15)"><div class="crm-kpi-label" style="color:#f59e0b">Due Today</div><div class="crm-kpi-val" style="color:#f59e0b">3</div></div>
+            <div class="crm-kpi" style="background:var(--azure-dim);border:1px solid var(--azure-border)"><div class="crm-kpi-label" style="color:var(--azure)">Re-Engage</div><div class="crm-kpi-val" style="color:var(--azure)">3</div></div>
+            <div class="crm-kpi" style="background:var(--sage-dim);border:1px solid var(--sage-border)"><div class="crm-kpi-label" style="color:var(--sage)">Admitted</div><div class="crm-kpi-val" style="color:var(--sage)">3</div></div>
           </div>
-          <div style="font-size:10px;font-weight:800;color:#8b949e;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px">Prospect Pipeline</div>
-          <div class="crm-table-row"><span style="color:#f4f8ff;font-weight:700;flex:1">Mary J.</span><span class="crm-badge crm-hot">🔥 HOT</span><span style="color:#8b949e;font-size:10px;margin-left:4px">Due Today</span></div>
-          <div class="crm-table-row"><span style="color:#f4f8ff;font-weight:700;flex:1">John T.</span><span class="crm-badge crm-warm">⚡ Warm</span><span style="color:#8b949e;font-size:10px;margin-left:4px">Due May 8</span></div>
-          <div class="crm-table-row"><span style="color:#f4f8ff;font-weight:700;flex:1">Dorothy F.</span><span style="background:rgba(140,255,102,.15);color:#8cff66;border:1px solid rgba(140,255,102,.25)" class="crm-badge">✓ Admitted</span><span style="color:#8b949e;font-size:10px;margin-left:4px">Active</span></div>
-          <div class="crm-table-row"><span style="color:#f4f8ff;font-weight:700;flex:1">Helen P.</span><span class="crm-badge crm-cold">❄ Cold Alert</span><span style="color:#f87171;font-size:10px;font-weight:700;margin-left:4px">⚠ 18 days</span></div>
-          <div style="margin-top:12px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.18);border-radius:7px;padding:8px 11px;font-size:11px;display:flex;justify-content:space-between;align-items:center"><span style="color:#fbbf24;font-weight:700">⚠ Cold Alert — Physician Office (22 days)</span><span style="background:#ffd700;color:#081426;border-radius:999px;padding:3px 10px;font-size:10px;font-weight:900;cursor:pointer">Log Touch</span></div>
+          <div class="crm-table-head">Prospect Pipeline</div>
+          <div class="crm-row"><span style="color:var(--text-1);font-weight:700;flex:1">Mary J.</span><span class="crm-pill pill-hot">Hot</span><span style="color:var(--text-3);font-size:10px;margin-left:4px">Due Today</span></div>
+          <div class="crm-row"><span style="color:var(--text-1);font-weight:700;flex:1">John T.</span><span class="crm-pill pill-warm">Warm</span><span style="color:var(--text-3);font-size:10px;margin-left:4px">Due May 8</span></div>
+          <div class="crm-row"><span style="color:var(--text-1);font-weight:700;flex:1">Dorothy F.</span><span class="crm-pill pill-admitted">Admitted</span><span style="color:var(--text-3);font-size:10px;margin-left:4px">Active</span></div>
+          <div class="crm-row"><span style="color:var(--text-1);font-weight:700;flex:1">Helen P.</span><span class="crm-pill pill-cold">Cold Alert</span><span style="color:#f87171;font-size:10px;font-weight:700;margin-left:4px">18 days</span></div>
+          <div class="crm-alert-row"><span class="crm-alert-text">Cold Alert &mdash; Physician Office (22 days)</span><button class="crm-alert-btn">Log Touch</button></div>
         </div>
       </div>
     </div>
-    <!-- Live Activity Feed -->
-    <div class="live-feed">
-      <div class="lf-header">
-        <span style="font-size:13px;font-weight:800;color:#f4f8ff">Live CRM Activity</span>
-        <div class="lf-live"><div class="lf-dot"></div>Live</div>
+    <div class="activity-feed">
+      <div class="feed-header">
+        <span class="feed-header-title">Live Activity</span>
+        <div class="feed-live"><span class="feed-live-dot"></span>Live</div>
       </div>
-      <div id="liveFeed"></div>
+      <div id="activityFeed"></div>
     </div>
   </div>
 </section>
 
-<!-- FEATURE GRID -->
-<section style="padding:48px 20px;max-width:1180px;margin:0 auto" class="fade-in">
-  <div class="section-center">
-    <div class="section-tag" style="background:rgba(140,255,102,.08);border:1px solid rgba(140,255,102,.2);color:#8cff66">Built for Hospice</div>
-    <h2 class="section-h2">Every Feature Your Team Needs</h2>
+<!-- FEATURES -->
+<section style="padding:64px 28px;max-width:1200px;margin:0 auto" class="reveal" id="features">
+  <div class="section-header">
+    <div class="section-kicker" style="background:var(--sage-dim);border:1px solid var(--sage-border);color:var(--sage)">Built for Hospice</div>
+    <h2 class="section-title">Every Feature Your Team Needs</h2>
   </div>
   <div class="features-grid">
-    <div class="feat-card"><div class="feat-icon">📋</div><div class="feat-title">Prospect Pipeline</div><div class="feat-body">Inquiry → Admitted. Every prospect tracked. Every follow-up auto-queued. No lead falls through.</div><div class="feat-tag" style="background:rgba(73,182,255,.1);color:#49b6ff;border:1px solid rgba(73,182,255,.2)">All Plans</div></div>
-    <div class="feat-card"><div class="feat-icon">🤝</div><div class="feat-title">14-Day Cold Source Alerts</div><div class="feat-body">Know which referral sources are going cold — before they stop sending. Automated alerts, one-click reset.</div><div class="feat-tag" style="background:rgba(140,255,102,.1);color:#8cff66;border:1px solid rgba(140,255,102,.2)">Max + Gold</div></div>
-    <div class="feat-card"><div class="feat-icon">🗺</div><div class="feat-title">Territory Heat Map</div><div class="feat-body">Visual ZIP code referral density. Identify hot zones, untapped territories, and route inefficiencies instantly.</div><div class="feat-tag" style="background:rgba(140,255,102,.1);color:#8cff66;border:1px solid rgba(140,255,102,.2)">Max + Gold</div></div>
-    <div class="feat-card"><div class="feat-icon">🤖</div><div class="feat-title">AI Assistant</div><div class="feat-body">24/7 hospice marketing intelligence. Draft follow-up scripts, identify cold sources, convert more pending admits.</div><div class="feat-tag" style="background:rgba(73,182,255,.1);color:#49b6ff;border:1px solid rgba(73,182,255,.2)">All Plans</div></div>
-    <div class="feat-card"><div class="feat-icon">🚗</div><div class="feat-title">EVV / GPS Mileage</div><div class="feat-body">GPS-verified visit log. IRS-rate mileage reimbursement. Auto-syncs to weekly payroll reports.</div><div class="feat-tag" style="background:rgba(140,255,102,.1);color:#8cff66;border:1px solid rgba(140,255,102,.2)">Max + Gold</div></div>
-    <div class="feat-card"><div class="feat-icon">🎤</div><div class="feat-title">Windshield Mode</div><div class="feat-body">Voice-to-note while driving. Tap once, speak, auto-transcribed and GPS-stamped. Zero typing required.</div><div class="feat-tag" style="background:rgba(255,215,0,.1);color:#ffd700;border:1px solid rgba(255,215,0,.2)">Gold Only</div></div>
-    <div class="feat-card"><div class="feat-icon">💰</div><div class="feat-title">Revenue Intelligence</div><div class="feat-body">Cost per admission, revenue per source, team ROI. Know exactly what your marketing is generating.</div><div class="feat-tag" style="background:rgba(255,215,0,.1);color:#ffd700;border:1px solid rgba(255,215,0,.2)">Gold Only</div></div>
-    <div class="feat-card"><div class="feat-icon">⚡</div><div class="feat-title">AI Referral Triage</div><div class="feat-body">Incoming referrals scored 1–10 by conversion probability. Act before your competitors even call back.</div><div class="feat-tag" style="background:rgba(255,215,0,.1);color:#ffd700;border:1px solid rgba(255,215,0,.2)">Gold Only</div></div>
-    <div class="feat-card"><div class="feat-icon">🔐</div><div class="feat-title">HIPAA Audit Log</div><div class="feat-body">Every action logged with timestamp, user, and IP. Full compliance trail for Joint Commission readiness.</div><div class="feat-tag" style="background:rgba(255,215,0,.1);color:#ffd700;border:1px solid rgba(255,215,0,.2)">Gold Only</div></div>
+    <div class="feat-card"><div class="feat-icon" style="background:var(--azure-dim);border:1px solid var(--azure-border)"><svg viewBox="0 0 24 24" stroke="var(--azure)"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="13" y2="15"/></svg></div><div class="feat-title">Prospect Pipeline</div><div class="feat-desc">Inquiry to Admitted. Every prospect tracked, every follow-up auto-queued. No referral falls through the cracks.</div><span class="feat-badge" style="background:var(--azure-dim);color:var(--azure);border:1px solid var(--azure-border)">All Plans</span></div>
+    <div class="feat-card"><div class="feat-icon" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2)"><svg viewBox="0 0 24 24" stroke="#ef4444"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="feat-title">14-Day Cold Source Alerts</div><div class="feat-desc">Know which referral sources are going cold before they stop sending. Automated alerts with one-click resolution.</div><span class="feat-badge" style="background:var(--sage-dim);color:var(--sage);border:1px solid var(--sage-border)">Max + Gold</span></div>
+    <div class="feat-card"><div class="feat-icon" style="background:var(--sage-dim);border:1px solid var(--sage-border)"><svg viewBox="0 0 24 24" stroke="var(--sage)"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></div><div class="feat-title">Territory Heat Map</div><div class="feat-desc">Visual ZIP code referral density. Identify hot zones, untapped territories, and routing inefficiencies instantly.</div><span class="feat-badge" style="background:var(--sage-dim);color:var(--sage);border:1px solid var(--sage-border)">Max + Gold</span></div>
+    <div class="feat-card"><div class="feat-icon" style="background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.22)"><svg viewBox="0 0 24 24" stroke="#a78bfa"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div><div class="feat-title">AI Assistant</div><div class="feat-desc">24/7 hospice marketing intelligence. Draft follow-up scripts, identify cold sources, convert more pending admits.</div><span class="feat-badge" style="background:var(--azure-dim);color:var(--azure);border:1px solid var(--azure-border)">All Plans</span></div>
+    <div class="feat-card"><div class="feat-icon" style="background:var(--sage-dim);border:1px solid var(--sage-border)"><svg viewBox="0 0 24 24" stroke="var(--sage)"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><div class="feat-title">EVV / GPS Mileage</div><div class="feat-desc">GPS-verified visit log with IRS-rate mileage reimbursement. Auto-syncs to weekly payroll reports.</div><span class="feat-badge" style="background:var(--sage-dim);color:var(--sage);border:1px solid var(--sage-border)">Max + Gold</span></div>
+    <div class="feat-card"><div class="feat-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg viewBox="0 0 24 24" stroke="var(--amber)"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg></div><div class="feat-title">Windshield Mode</div><div class="feat-desc">Voice-to-note while driving. Tap once, speak, auto-transcribed and GPS-stamped. Zero typing required.</div><span class="feat-badge" style="background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border)">Gold Only</span></div>
+    <div class="feat-card"><div class="feat-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg viewBox="0 0 24 24" stroke="var(--amber)"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="feat-title">Revenue Intelligence</div><div class="feat-desc">Cost per admission, revenue per source, team ROI. Know exactly what your marketing investment generates.</div><span class="feat-badge" style="background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border)">Gold Only</span></div>
+    <div class="feat-card"><div class="feat-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg viewBox="0 0 24 24" stroke="var(--amber)"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="feat-title">AI Referral Triage</div><div class="feat-desc">Incoming referrals scored 1&ndash;10 by conversion probability. Act before your competitors even return the call.</div><span class="feat-badge" style="background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border)">Gold Only</span></div>
+    <div class="feat-card"><div class="feat-icon" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><svg viewBox="0 0 24 24" stroke="var(--amber)"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="feat-title">HIPAA Audit Log</div><div class="feat-desc">Every action logged with timestamp, user, and IP address. Full compliance trail for Joint Commission readiness.</div><span class="feat-badge" style="background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border)">Gold Only</span></div>
   </div>
 </section>
 
-<!-- WHO BUILT THIS -->
-<section style="padding:48px 20px;max-width:1100px;margin:0 auto" class="fade-in">
-  <div style="background:linear-gradient(135deg,rgba(73,182,255,.05),rgba(18,31,61,.8));border:1px solid rgba(73,182,255,.18);border-radius:22px;padding:36px;display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center">
-    <div style="width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#49b6ff,#8cff66);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0">🏥</div>
+<!-- ORIGIN STORY -->
+<section style="padding:48px 28px;max-width:1100px;margin:0 auto" class="reveal">
+  <div class="origin-card">
+    <div class="origin-avatar">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
     <div>
-      <p style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#49b6ff;margin:0 0 6px">Built by Hospice Operators</p>
-      <h3 style="font-size:20px;color:#fff;margin:0 0 9px">20+ Years in Hospice &amp; Senior Living Sales</h3>
-      <p style="color:#8b949e;font-size:14px;line-height:1.7;margin:0">HospiceLink wasn't built by software engineers guessing what hospice teams need. It was built by industry veterans who have personally worked referral relationships, sat in IDT meetings, managed census goals, and felt the pain of spreadsheet chaos. Every feature exists because someone on our team needed it in the field.</p>
+      <div class="origin-label">Built by Hospice Operators</div>
+      <h3 class="origin-title">20+ Years in Hospice &amp; Senior Living Sales</h3>
+      <p class="origin-body">HospiceLink was not built by software engineers guessing what hospice teams need. It was built by industry veterans who have personally worked referral relationships, sat in IDT meetings, managed census goals, and felt the pain of spreadsheet chaos. Every feature exists because someone on our team needed it in the field.</p>
     </div>
   </div>
 </section>
 
 <!-- HOW IT WORKS -->
-<section class="section fade-in" id="how">
-  <div class="section-center">
-    <div class="section-tag" style="background:rgba(140,255,102,.08);border:1px solid rgba(140,255,102,.2);color:#8cff66">Get Started Fast</div>
-    <h2 class="section-h2">Live in Under 30 Minutes</h2>
-    <p class="section-sub">No IT. No onboarding call. No configuration. Subscribe and start closing admits.</p>
+<section class="section reveal" id="workflow">
+  <div class="section-header">
+    <div class="section-kicker" style="background:var(--sage-dim);border:1px solid var(--sage-border);color:var(--sage)">Get Started Fast</div>
+    <h2 class="section-title">Live in Under 30 Minutes</h2>
+    <p class="section-body">No IT department. No onboarding calls. No configuration. Subscribe and start closing admits today.</p>
   </div>
-  <div class="workflow-steps">
-    <div class="wf-step fade-in"><div class="wf-num">01</div><div class="wf-title">Subscribe &amp; Sign BAA</div><div class="wf-body">Choose your plan, sign the HIPAA BAA at checkout. Account is live immediately.</div></div>
-    <div class="wf-step fade-in"><div class="wf-num">02</div><div class="wf-title">Import Your Prospects</div><div class="wf-body">Upload your existing spreadsheet via one-click CSV importer. Done in minutes.</div></div>
-    <div class="wf-step fade-in"><div class="wf-num">03</div><div class="wf-title">Add Referral Sources</div><div class="wf-body">Set follow-up cadences and cold-alert timers. Never let a relationship go cold again.</div></div>
-    <div class="wf-step fade-in"><div class="wf-num">04</div><div class="wf-title">Close More Admits</div><div class="wf-body">Follow reminders, act on cold alerts, use AI, and watch your census climb. Most teams improve in 48 hours.</div></div>
+  <div class="steps-grid">
+    <div class="step-card reveal"><div class="step-num">01</div><div class="step-title">Subscribe &amp; Sign BAA</div><div class="step-body">Choose your plan and sign the HIPAA Business Associate Agreement at checkout. Your account is live immediately.</div></div>
+    <div class="step-card reveal"><div class="step-num">02</div><div class="step-title">Import Your Prospects</div><div class="step-body">Upload your existing spreadsheet via one-click CSV importer. Done in minutes with automatic column mapping.</div></div>
+    <div class="step-card reveal"><div class="step-num">03</div><div class="step-title">Add Referral Sources</div><div class="step-body">Set follow-up cadences and cold-alert timers. Never let a referral relationship go cold again.</div></div>
+    <div class="step-card reveal"><div class="step-num">04</div><div class="step-title">Close More Admits</div><div class="step-body">Follow reminders, act on cold alerts, use AI insights, and watch your census climb. Most teams see results within 48 hours.</div></div>
   </div>
 </section>
 
-<!-- VS GENERIC CRMs -->
-<section style="padding:48px 20px;max-width:860px;margin:0 auto" class="fade-in">
-  <div class="section-center">
-    <div class="section-tag" style="background:rgba(73,182,255,.08);border:1px solid rgba(73,182,255,.2);color:#49b6ff">Why HospiceLink</div>
-    <h2 class="section-h2">Generic CRMs Were Not Built for This</h2>
-    <p class="section-sub">HubSpot and Salesforce are built for generic sales. Hospice requires referral relationship management, census workflows, and HIPAA compliance out of the box.</p>
+<!-- VS GENERIC -->
+<section style="padding:48px 28px;max-width:860px;margin:0 auto" class="reveal">
+  <div class="section-header">
+    <div class="section-kicker" style="background:var(--azure-dim);border:1px solid var(--azure-border);color:var(--azure)">Why HospiceLink</div>
+    <h2 class="section-title">Generic CRMs Were Not Built for This</h2>
+    <p class="section-body">HubSpot and Salesforce are built for generic sales pipelines. Hospice requires referral relationship management, census workflows, and HIPAA compliance out of the box.</p>
   </div>
   <div class="compare-wrap">
-    <table class="ctbl">
-      <thead><tr style="background:rgba(255,255,255,.04)">
-        <th style="text-align:left;color:#8b949e;padding:12px 14px">Feature</th>
-        <th style="color:#f87171">❌ Generic CRMs</th>
-        <th style="color:#8cff66">✅ HospiceLink</th>
+    <table class="compare">
+      <thead><tr style="background:rgba(255,255,255,.02)">
+        <th style="text-align:left">Feature</th>
+        <th style="color:#f87171">Generic CRMs</th>
+        <th style="color:var(--sage)">HospiceLink</th>
       </tr></thead>
       <tbody>
-        <tr><td>Built for hospice referral workflows</td><td style="color:#f87171;text-align:center">✗</td><td style="color:#8cff66;text-align:center">✓</td></tr>
-        <tr><td>14-day cold source alerts</td><td style="color:#f87171;text-align:center">✗</td><td style="color:#8cff66;text-align:center">✓</td></tr>
-        <tr><td>Inquiry → Admitted pipeline built-in</td><td style="color:#f87171;text-align:center">✗</td><td style="color:#8cff66;text-align:center">✓</td></tr>
-        <tr><td>EVV &amp; GPS mileage (Max/Gold)</td><td style="color:#f87171;text-align:center">✗</td><td style="color:#8cff66;text-align:center">✓</td></tr>
-        <tr><td>HIPAA-ready + BAA included</td><td style="color:#f87171;text-align:center">✗</td><td style="color:#8cff66;text-align:center">✓</td></tr>
-        <tr><td>Works on day one, no config</td><td style="color:#f87171;text-align:center">✗</td><td style="color:#8cff66;text-align:center">✓</td></tr>
-        <tr><td>AI Referral Triage + Scoring</td><td style="color:#f87171;text-align:center">✗</td><td style="color:#8cff66;text-align:center">✓ Gold</td></tr>
-        <tr><td>Revenue Intelligence dashboard</td><td style="color:#f87171;text-align:center">✗</td><td style="color:#8cff66;text-align:center">✓ Gold</td></tr>
+        <tr><td>Built for hospice referral workflows</td><td class="c-no">No</td><td class="c-yes">Yes</td></tr>
+        <tr><td>14-day cold source alerts</td><td class="c-no">No</td><td class="c-yes">Yes</td></tr>
+        <tr><td>Inquiry to Admitted pipeline built-in</td><td class="c-no">No</td><td class="c-yes">Yes</td></tr>
+        <tr><td>EVV &amp; GPS mileage tracking</td><td class="c-no">No</td><td class="c-yes">Yes</td></tr>
+        <tr><td>HIPAA-ready with BAA included</td><td class="c-no">No</td><td class="c-yes">Yes</td></tr>
+        <tr><td>Works on day one, no configuration</td><td class="c-no">No</td><td class="c-yes">Yes</td></tr>
+        <tr><td>AI Referral Triage &amp; Scoring</td><td class="c-no">No</td><td class="c-yes" style="font-size:11px">Yes &mdash; Gold</td></tr>
+        <tr><td>Revenue Intelligence dashboard</td><td class="c-no">No</td><td class="c-yes" style="font-size:11px">Yes &mdash; Gold</td></tr>
       </tbody>
     </table>
   </div>
 </section>
 
 <!-- TESTIMONIALS -->
-<section style="padding:48px 20px;max-width:1180px;margin:0 auto" class="fade-in">
-  <div class="section-center">
-    <div class="section-tag" style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);color:#ffd700">Real Results</div>
-    <h2 class="section-h2">What Hospice Teams Are Saying</h2>
+<section style="padding:48px 28px;max-width:1200px;margin:0 auto" class="reveal">
+  <div class="section-header">
+    <div class="section-kicker" style="background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)">Client Results</div>
+    <h2 class="section-title">What Hospice Teams Are Saying</h2>
   </div>
   <div class="testi-grid">
-    <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-quote">"HospiceLink cut our response time from 3 days to under 18 hours. The cold-source alerts alone changed how we operate."</div><div class="testi-name">Maria T.</div><div class="testi-title">Marketing Director, Dallas TX</div></div>
-    <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-quote">"Referrals tripled in two months. We recovered 9 lost prospects in our first month and admitted 3 of them."</div><div class="testi-name">Sandra M.</div><div class="testi-title">Regional Director, Houston TX</div></div>
-    <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-quote">"Finally a CRM that speaks hospice. Not HubSpot with a new skin. My team went from 5 admits/mo to 9 in 6 weeks."</div><div class="testi-name">David K.</div><div class="testi-title">Executive Director, Austin TX</div></div>
+    <div class="testi-card"><div class="testi-stars"><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><p class="testi-quote">"HospiceLink cut our response time from 3 days to under 18 hours. The cold-source alerts alone changed how we operate as an organization."</p><div class="testi-name">Maria T.</div><div class="testi-role">Marketing Director, Dallas TX</div></div>
+    <div class="testi-card"><div class="testi-stars"><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><p class="testi-quote">"Referrals tripled in two months. We recovered 9 lost prospects in the first month and admitted 3 of them. The ROI was immediate and measurable."</p><div class="testi-name">Sandra M.</div><div class="testi-role">Regional Director, Houston TX</div></div>
+    <div class="testi-card"><div class="testi-stars"><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><p class="testi-quote">"Finally a CRM that speaks hospice &mdash; not HubSpot with a new skin. My team went from 5 admits per month to 9 in just 6 weeks."</p><div class="testi-name">David K.</div><div class="testi-role">Executive Director, Austin TX</div></div>
   </div>
 </section>
 
 <!-- PRICING -->
-<section id="pricing" style="padding:56px 20px;max-width:1200px;margin:0 auto">
-  <div class="section-center fade-in">
-    <div class="section-tag" style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.25);color:#ffd700">⏰ Founders Pricing — Ends May 31, 2026</div>
-    <h2 class="section-h2">Simple, Transparent Pricing</h2>
-    <p class="section-sub" style="max-width:580px;margin:0 auto">All plans include HIPAA-ready setup, BAA at checkout, self-guided onboarding, and the 30-day money-back guarantee.</p>
-    <div class="guarantee-bar" style="max-width:480px;margin:16px auto 0"><span style="font-size:15px">🛡</span><span>30-Day Money-Back — No Questions · <a href="mailto:info@wemarketplus.com" style="color:#49b6ff;font-weight:700">Annual pricing available →</a></span></div>
+<section id="pricing" style="padding:72px 28px;max-width:1200px;margin:0 auto">
+  <div class="section-header reveal">
+    <div class="section-kicker" style="background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)">Founders Pricing &mdash; Ends May 31, 2026</div>
+    <h2 class="section-title">Simple, Transparent Pricing</h2>
+    <p class="section-body">All plans include HIPAA-ready setup, BAA at checkout, self-guided onboarding, and the 30-day money-back guarantee.</p>
+    <div style="display:inline-flex;align-items:center;gap:8px;background:var(--sage-dim);border:1px solid var(--sage-border);border-radius:var(--r-full);padding:7px 16px;margin-top:16px;font-size:13px;color:var(--sage);font-weight:600"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>30-Day Money-Back Guarantee &mdash; No Questions Asked</div>
   </div>
-  <div class="pricing-grid" style="margin-top:32px">
+  <div class="pricing-grid" style="margin-top:38px">
     <!-- PRO -->
-    <div class="pc fade-in">
-      <div class="pc-tier" style="background:rgba(73,182,255,.12);color:#49b6ff;border:1px solid rgba(73,182,255,.25)">Starter</div>
-      <div class="pc-title">HospiceLink Pro</div>
-      <div class="pc-sub">Get Organized — Stop Losing Referrals to Spreadsheets</div>
-      <div class="pc-desc">Complete 7-section prospect profiles, referral source management, follow-up reminders, AI assistant, and weekly reports. Most users see improvement in 48 hours.</div>
-      <div class="pc-sel">
-        <select id="proSel" onchange="updatePrice('pro')">
-          <option value="149|0–5 Users|STRIPE_PRO_0_5|pro_0_5">0–5 Users — $149/mo</option>
-          <option value="249|5–10 Users|STRIPE_PRO_5_10|pro_5_10">5–10 Users — $249/mo</option>
-          <option value="349|10–20 Users|STRIPE_PRO_10_20|pro_10_20">10–20 Users — $349/mo</option>
-          <option value="449|Unlimited Users|STRIPE_PRO_UNLIMITED|pro_unlimited">Unlimited Users — $449/mo</option>
-        </select>
-      </div>
-      <div class="pc-price">
-        <div><div style="font-size:11px;color:#8b949e;margin-bottom:2px" id="proUsers">0–5 Users</div><div class="pc-price-amt" id="proAmt">$149</div></div>
-        <div style="font-size:11px;color:#8b949e;text-align:right">per month<br>cancel anytime</div>
-      </div>
-      <ul class="pc-features">
-        <li>Complete prospect pipeline — Inquiry → Admitted</li>
-        <li>Referral source management — Green/Red status</li>
-        <li>Follow-up reminders auto-set from due dates</li>
-        <li>Weekly Report (auto-emailed every Monday 7am)</li>
-        <li>Re-engagement queue for lost prospects</li>
-        <li>One-click CSV/Excel prospect importer</li>
-        <li>AI Assistant (24/7)</li>
-        <li>Admin: user management + full access</li>
-        <li>Referral Portal + BAA included</li>
-      </ul>
-      <div class="pc-btns">
-        <button class="btn-sub" style="background:linear-gradient(90deg,#49b6ff,#8cff66);color:#06111d" onclick="openModal('pro')">🚀 Subscribe to Pro →</button>
-        <button class="btn-demo" onclick="window.location.href='demo-pro.html'">▶ Try Pro Demo</button>
-      </div>
+    <div class="plan-card reveal">
+      <div class="plan-tier-badge" style="background:var(--azure-dim);color:var(--azure);border:1px solid var(--azure-border)">Starter</div>
+      <div class="plan-name">HospiceLink Pro</div>
+      <div class="plan-tagline">Get organized &mdash; stop losing referrals to spreadsheets</div>
+      <div class="plan-blurb">Complete prospect profiles, referral source management, follow-up reminders, AI assistant, and weekly reports. Most users see improvement within 48 hours.</div>
+      <div class="plan-select"><select id="proSel" onchange="updatePrice('pro')"><option value="149|0-5 Users|STRIPE_PRO_0_5|pro_0_5">0&ndash;5 Users &mdash; $149/mo</option><option value="249|5-10 Users|STRIPE_PRO_5_10|pro_5_10">5&ndash;10 Users &mdash; $249/mo</option><option value="349|10-20 Users|STRIPE_PRO_10_20|pro_10_20">10&ndash;20 Users &mdash; $349/mo</option><option value="449|Unlimited Users|STRIPE_PRO_UNLIMITED|pro_unlimited">Unlimited Users &mdash; $449/mo</option></select></div>
+      <div class="plan-price-row"><div><div style="font-size:11px;color:var(--text-3);margin-bottom:3px" id="proUsers">0&ndash;5 Users</div><div class="plan-amount" id="proAmt">$149</div></div><div class="plan-period">per month<br>cancel anytime</div></div>
+      <ul class="plan-features"><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Complete prospect pipeline &mdash; Inquiry to Admitted</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Referral source management with status tracking</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Follow-up reminders auto-set from due dates</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Weekly report emailed every Monday at 7am</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>AI Assistant available 24/7</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>One-click CSV importer</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Referral Portal &amp; BAA included</li></ul>
+      <div class="plan-actions"><button class="btn-subscribe" style="background:var(--azure);color:#06080e" onclick="openModal('pro')">Subscribe to Pro</button><button class="btn-demo-link" onclick="window.location.href='demo-pro.html'">View Pro Demo</button></div>
     </div>
     <!-- MAX -->
-    <div class="pc pop fade-in">
-      <div class="pop-tag">⭐ Best Value</div>
-      <div class="pc-tier" style="background:rgba(140,255,102,.12);color:#8cff66;border:1px solid rgba(140,255,102,.3)">Professional</div>
-      <div class="pc-title">HospiceLink Max</div>
-      <div class="pc-sub">Grow Your Referrals — Full Team, Full Visibility</div>
-      <div class="pc-desc">Everything in Pro — plus EVV mileage, 14-day cold alerts, territory heat map, smart scheduling, marketer mobile, and the AI playbook generator. Admin and Marketer roles included.</div>
-      <div class="pc-sel">
-        <select id="maxSel" onchange="updatePrice('max')">
-          <option value="449|0–10 Users|STRIPE_MAX_0_10|max_0_10">0–10 Users — $449/mo</option>
-          <option value="749|10–20 Users|STRIPE_MAX_10_20|max_10_20">10–20 Users — $749/mo</option>
-          <option value="999|Unlimited Users|STRIPE_MAX_UNLIMITED|max_unlimited">Unlimited Users — $999/mo</option>
-        </select>
-      </div>
-      <div class="pc-price">
-        <div><div style="font-size:11px;color:#8b949e;margin-bottom:2px" id="maxUsers">0–10 Users</div><div class="pc-price-amt" id="maxAmt">$449</div></div>
-        <div style="font-size:11px;color:#8b949e;text-align:right">per month<br>cancel anytime</div>
-      </div>
-      <ul class="pc-features">
-        <li>Everything in Pro</li>
-        <li>🚗 EVV / GPS mileage + compliance log</li>
-        <li>🗺 Territory Heat Map with ZIP color-coding</li>
-        <li>⏰ 14-Day Cold Source Alerts</li>
-        <li>📱 Marketer Mobile + Smart Scheduling</li>
-        <li>🤖 AI Playbook Generator</li>
-        <li>👨‍👩‍👧 Family Communication Log</li>
-        <li>📊 Weekly performance report (auto-emailed)</li>
-        <li>Admin + Marketer roles</li>
-      </ul>
-      <div class="pc-btns">
-        <button class="btn-sub" style="background:linear-gradient(90deg,#8cff66,#b8ff79);color:#06111d" onclick="openModal('max')">🚀 Subscribe to Max →</button>
-        <button class="btn-demo" onclick="window.location.href='demo-max.html'">▶ Try Max Demo</button>
-      </div>
+    <div class="plan-card featured reveal">
+      <div class="featured-badge">Best Value</div>
+      <div class="plan-tier-badge" style="background:var(--sage-dim);color:var(--sage);border:1px solid var(--sage-border)">Professional</div>
+      <div class="plan-name">HospiceLink Max</div>
+      <div class="plan-tagline">Grow your referrals &mdash; full team, full visibility</div>
+      <div class="plan-blurb">Everything in Pro, plus EVV mileage, 14-day cold alerts, territory heat map, smart scheduling, and AI playbook generation.</div>
+      <div class="plan-select"><select id="maxSel" onchange="updatePrice('max')"><option value="449|0-10 Users|STRIPE_MAX_0_10|max_0_10">0&ndash;10 Users &mdash; $449/mo</option><option value="649|10-20 Users|STRIPE_MAX_10_20|max_10_20">10&ndash;20 Users &mdash; $649/mo</option><option value="849|Unlimited Users|STRIPE_MAX_UNLIMITED|max_unlimited">Unlimited Users &mdash; $849/mo</option></select></div>
+      <div class="plan-price-row"><div><div style="font-size:11px;color:var(--text-3);margin-bottom:3px" id="maxUsers">0&ndash;10 Users</div><div class="plan-amount" id="maxAmt">$449</div></div><div class="plan-period">per month<br>cancel anytime</div></div>
+      <ul class="plan-features"><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Everything in Pro</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>EVV / GPS mileage &amp; compliance log</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Territory Heat Map with ZIP color-coding</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>14-Day Cold Source Alerts</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>AI Playbook Generator</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Family Communication Log</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Admin &amp; Marketer roles</li></ul>
+      <div class="plan-actions"><button class="btn-subscribe" style="background:var(--sage);color:#06080e" onclick="openModal('max')">Subscribe to Max</button><button class="btn-demo-link" onclick="window.location.href='demo-max.html'">View Max Demo</button></div>
     </div>
     <!-- GOLD -->
-    <div class="pc gld fade-in">
-      <div class="pc-tier" style="background:rgba(255,215,0,.15);color:#ffd700;border:1px solid rgba(255,215,0,.35)">🏆 Enterprise</div>
-      <div class="pc-title" style="color:#ffd700">HospiceLink Gold</div>
-      <div class="pc-sub">Dominate Your Territory — The Complete Command Center</div>
-      <div class="pc-desc">Everything in Max plus Revenue Intelligence, AI Referral Triage, Windshield Mode, Telehealth, Nurse Scheduling, Patient Portal, HIPAA Audit Log, Territory Management, and full 4-role access (Admin, Marketer, Nurse, Caregiver).</div>
-      <div class="pc-sel">
-        <select id="goldSel" onchange="updatePrice('gold')" style="border-color:rgba(255,215,0,.35);color:#ffd700">
-          <option value="899|0–10 Users|STRIPE_GOLD_0_10|gold_0_10">0–10 Users — $899/mo</option>
-          <option value="1299|10–20 Users|STRIPE_GOLD_10_20|gold_10_20">10–20 Users — $1,299/mo</option>
-          <option value="1999|Unlimited Users|STRIPE_GOLD_UNLIMITED|gold_unlimited">Unlimited Users — $1,999/mo</option>
-        </select>
-      </div>
-      <div class="pc-price" style="border-color:rgba(255,215,0,.15)">
-        <div><div style="font-size:11px;color:#8b949e;margin-bottom:2px" id="goldUsers">0–10 Users</div><div class="pc-price-amt gld" id="goldAmt">$749</div></div>
-        <div style="font-size:11px;color:#8b949e;text-align:right">per month<br>cancel anytime</div>
-      </div>
-      <ul class="pc-features">
-        <li>Everything in Max</li>
-        <li>🎤 Windshield Voice Mode</li>
-        <li>💰 Revenue Intelligence + forecasting</li>
-        <li>⚡ AI Referral Triage (1–10 scoring)</li>
-        <li>📹 Telehealth + Patient Portal</li>
-        <li>⚖️ Nurse Scheduling Engine</li>
-        <li>🛏 Bed Availability Tracker</li>
-        <li>🔐 HIPAA Audit Log</li>
-        <li>✅ 4-role access: Admin, Marketer, Nurse, Caregiver</li>
-        <li>📊 Leaderboard + AI Scorecard</li>
-        <li>🏆 Territory Management Engine</li>
-      </ul>
-      <div class="pc-btns">
-        <button class="btn-sub" style="background:linear-gradient(90deg,#ffd700,#ffec6e);color:#3a2800" onclick="openModal('gold')">🏆 Subscribe to Gold →</button>
-        <button class="btn-demo" onclick="window.location.href='demo-gold.html'" style="border-color:rgba(255,215,0,.2);color:#ffd700">▶ Try Gold Demo</button>
-      </div>
+    <div class="plan-card premium reveal">
+      <div class="plan-tier-badge" style="background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border)">Enterprise</div>
+      <div class="plan-name" style="color:var(--amber)">HospiceLink Gold</div>
+      <div class="plan-tagline">Dominate your territory &mdash; the complete command center</div>
+      <div class="plan-blurb">Everything in Max plus Revenue Intelligence, AI Referral Triage, Windshield Mode, Telehealth, Nurse Scheduling, HIPAA Audit Log, and full 4-role access.</div>
+      <div class="plan-select"><select id="goldSel" onchange="updatePrice('gold')" style="border-color:var(--amber-border);color:var(--amber)"><option value="749|0-10 Users|STRIPE_GOLD_0_10|gold_0_10">0&ndash;10 Users &mdash; $749/mo</option><option value="999|10-20 Users|STRIPE_GOLD_10_20|gold_10_20">10&ndash;20 Users &mdash; $999/mo</option><option value="1299|Unlimited Users|STRIPE_GOLD_UNLIMITED|gold_unlimited">Unlimited Users &mdash; $1,299/mo</option></select></div>
+      <div class="plan-price-row" style="border-color:var(--amber-border)"><div><div style="font-size:11px;color:var(--text-3);margin-bottom:3px" id="goldUsers">0&ndash;10 Users</div><div class="plan-amount premium-color" id="goldAmt">$749</div></div><div class="plan-period">per month<br>cancel anytime</div></div>
+      <ul class="plan-features"><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Everything in Max</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Windshield Voice Mode</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Revenue Intelligence &amp; forecasting</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>AI Referral Triage (1&ndash;10 scoring)</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Telehealth &amp; Patient Portal</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Nurse Scheduling Engine</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>HIPAA Audit Log</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>4-role access: Admin, Marketer, Nurse, Caregiver</li></ul>
+      <div class="plan-actions"><button class="btn-subscribe" style="background:var(--amber);color:#06080e" onclick="openModal('gold')">Subscribe to Gold</button><button class="btn-demo-link" onclick="window.location.href='demo-gold.html'" style="border-color:var(--amber-border);color:var(--amber)">View Gold Demo</button></div>
     </div>
   </div>
-  <!-- Full comparison table -->
-  <div style="margin-top:48px;overflow-x:auto" class="fade-in">
-    <h3 style="color:#fff;font-size:18px;font-weight:800;margin-bottom:16px;text-align:center">Full Feature Comparison</h3>
-    <table class="ctbl">
-      <thead><tr style="background:rgba(255,255,255,.04)">
-        <th style="text-align:left;color:#8b949e">Feature</th>
-        <th style="color:#49b6ff">Pro</th>
-        <th style="color:#8cff66">Max ⭐</th>
-        <th style="color:#ffd700">Gold 🏆</th>
-      </tr></thead>
-      <tbody>
-        <tr><td>Prospect Pipeline</td><td style="color:#8cff66;text-align:center">✓</td><td style="color:#8cff66;text-align:center">✓</td><td style="color:#8cff66;text-align:center">✓</td></tr>
-        <tr><td>AI Assistant (24/7)</td><td style="color:#8cff66;text-align:center">✓</td><td style="color:#8cff66;text-align:center">✓</td><td style="color:#8cff66;text-align:center">✓</td></tr>
-        <tr><td>Weekly Report (auto-email)</td><td style="color:#8cff66;text-align:center">✓</td><td style="color:#8cff66;text-align:center">✓</td><td style="color:#8cff66;text-align:center">✓</td></tr>
-        <tr><td>CSV Import</td><td style="color:#8cff66;text-align:center">✓</td><td style="color:#8cff66;text-align:center">✓</td><td style="color:#8cff66;text-align:center">✓</td></tr>
-        <tr><td>14-Day Cold Alerts</td><td style="color:#f87171;text-align:center">—</td><td style="color:#8cff66;text-align:center">✓</td><td style="color:#8cff66;text-align:center">✓</td></tr>
-        <tr><td>EVV / GPS Mileage</td><td style="color:#f87171;text-align:center">—</td><td style="color:#8cff66;text-align:center">✓</td><td style="color:#8cff66;text-align:center">✓</td></tr>
-        <tr><td>Territory Heat Map</td><td style="color:#f87171;text-align:center">—</td><td style="color:#8cff66;text-align:center">✓</td><td style="color:#8cff66;text-align:center">✓</td></tr>
-        <tr><td>Smart Scheduling</td><td style="color:#f87171;text-align:center">—</td><td style="color:#8cff66;text-align:center">✓</td><td style="color:#8cff66;text-align:center">✓</td></tr>
-        <tr><td>AI Playbook Generator</td><td style="color:#f87171;text-align:center">—</td><td style="color:#8cff66;text-align:center">✓</td><td style="color:#8cff66;text-align:center">✓</td></tr>
-        <tr><td>Multi-role Access</td><td style="color:#49b6ff;text-align:center">2 roles</td><td style="color:#49b6ff;text-align:center">2 roles</td><td style="color:#ffd700;text-align:center">4 roles</td></tr>
-        <tr><td>Windshield Voice Mode</td><td style="color:#f87171;text-align:center">—</td><td style="color:#f87171;text-align:center">—</td><td style="color:#ffd700;text-align:center">✓</td></tr>
-        <tr><td>Revenue Intelligence</td><td style="color:#f87171;text-align:center">—</td><td style="color:#f87171;text-align:center">—</td><td style="color:#ffd700;text-align:center">✓</td></tr>
-        <tr><td>AI Referral Triage</td><td style="color:#f87171;text-align:center">—</td><td style="color:#f87171;text-align:center">—</td><td style="color:#ffd700;text-align:center">✓</td></tr>
-        <tr><td>HIPAA Audit Log</td><td style="color:#f87171;text-align:center">—</td><td style="color:#f87171;text-align:center">—</td><td style="color:#ffd700;text-align:center">✓</td></tr>
-        <tr><td>Telehealth + Patient Portal</td><td style="color:#f87171;text-align:center">—</td><td style="color:#f87171;text-align:center">—</td><td style="color:#ffd700;text-align:center">✓</td></tr>
-        <tr><td>Nurse Scheduling Engine</td><td style="color:#f87171;text-align:center">—</td><td style="color:#f87171;text-align:center">—</td><td style="color:#ffd700;text-align:center">✓</td></tr>
-        <tr><td>Bed Availability Tracker</td><td style="color:#f87171;text-align:center">—</td><td style="color:#f87171;text-align:center">—</td><td style="color:#ffd700;text-align:center">✓</td></tr>
-      </tbody>
-    </table>
+  <!-- Full comparison -->
+  <div style="margin-top:56px" class="reveal">
+    <h3 style="font-family:'Instrument Serif',Georgia,serif;font-size:24px;color:var(--text-1);text-align:center;margin-bottom:20px;font-weight:400;letter-spacing:-.02em">Full Feature Comparison</h3>
+    <div class="compare-wrap">
+      <table class="compare">
+        <thead><tr style="background:rgba(255,255,255,.02)"><th style="text-align:left">Feature</th><th style="color:var(--azure)">Pro</th><th style="color:var(--sage)">Max</th><th style="color:var(--amber)">Gold</th></tr></thead>
+        <tbody>
+          <tr><td>Prospect Pipeline</td><td class="c-yes">Yes</td><td class="c-yes">Yes</td><td class="c-yes">Yes</td></tr>
+          <tr><td>AI Assistant</td><td class="c-yes">Yes</td><td class="c-yes">Yes</td><td class="c-yes">Yes</td></tr>
+          <tr><td>Weekly Report (auto-email)</td><td class="c-yes">Yes</td><td class="c-yes">Yes</td><td class="c-yes">Yes</td></tr>
+          <tr><td>CSV Import</td><td class="c-yes">Yes</td><td class="c-yes">Yes</td><td class="c-yes">Yes</td></tr>
+          <tr><td>14-Day Cold Alerts</td><td class="c-no">&mdash;</td><td class="c-yes">Yes</td><td class="c-yes">Yes</td></tr>
+          <tr><td>EVV / GPS Mileage</td><td class="c-no">&mdash;</td><td class="c-yes">Yes</td><td class="c-yes">Yes</td></tr>
+          <tr><td>Territory Heat Map</td><td class="c-no">&mdash;</td><td class="c-yes">Yes</td><td class="c-yes">Yes</td></tr>
+          <tr><td>AI Playbook Generator</td><td class="c-no">&mdash;</td><td class="c-yes">Yes</td><td class="c-yes">Yes</td></tr>
+          <tr><td>Windshield Voice Mode</td><td class="c-no">&mdash;</td><td class="c-no">&mdash;</td><td class="c-yes">Yes</td></tr>
+          <tr><td>Revenue Intelligence</td><td class="c-no">&mdash;</td><td class="c-no">&mdash;</td><td class="c-yes">Yes</td></tr>
+          <tr><td>AI Referral Triage</td><td class="c-no">&mdash;</td><td class="c-no">&mdash;</td><td class="c-yes">Yes</td></tr>
+          <tr><td>HIPAA Audit Log</td><td class="c-no">&mdash;</td><td class="c-no">&mdash;</td><td class="c-yes">Yes</td></tr>
+          <tr><td>Telehealth &amp; Patient Portal</td><td class="c-no">&mdash;</td><td class="c-no">&mdash;</td><td class="c-yes">Yes</td></tr>
+          <tr><td>Nurse &amp; Caregiver Roles</td><td class="c-no">&mdash;</td><td class="c-no">&mdash;</td><td class="c-yes">Yes</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </section>
 
 <!-- SECURITY -->
-<section id="security" style="padding:48px 20px;max-width:1000px;margin:0 auto;text-align:center" class="fade-in">
-  <div class="section-tag" style="background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.2);color:#3fb950">🔐 Enterprise Security</div>
-  <h2 class="section-h2">HIPAA-Ready from Day One</h2>
-  <p class="section-sub" style="max-width:580px;margin:0 auto 28px">TLS 1.3 in transit. AES-256 at rest. BAA executed at checkout. Gold tier adds full HIPAA Audit Logging.</p>
-  <div class="trust-badges">
-    <div class="tb-card"><div class="tb-icon">🔐</div><div class="tb-title">TLS 1.3 Encryption</div><div class="tb-body">All data encrypted in transit and at rest. Zero plaintext storage.</div></div>
-    <div class="tb-card"><div class="tb-icon">📋</div><div class="tb-title">BAA at Checkout</div><div class="tb-body">Business Associate Agreement executed for every plan tier on signup.</div></div>
-    <div class="tb-card"><div class="tb-icon">🔒</div><div class="tb-title">Role-Based Access</div><div class="tb-body">Seat-cap enforcement, Admin controls, suspension logic, server-side validation.</div></div>
-    <div class="tb-card"><div class="tb-icon">📜</div><div class="tb-title">HIPAA Audit Log</div><div class="tb-body">Every PHI access logged with timestamp, user, and IP (Gold tier).</div></div>
-    <div class="tb-card"><div class="tb-icon">⏱</div><div class="tb-title">99.9% Uptime SLA</div><div class="tb-body">Enterprise cloud infrastructure. Status page available 24/7.</div></div>
-    <div class="tb-card"><div class="tb-icon">🛡</div><div class="tb-title">30-Day Guarantee</div><div class="tb-body">Not happy in 30 days? Full refund. No questions. No delays.</div></div>
+<section id="security" style="padding:64px 28px;max-width:1000px;margin:0 auto;text-align:center" class="reveal">
+  <div class="section-kicker" style="background:var(--sage-dim);border:1px solid var(--sage-border);color:var(--sage)">Enterprise Security</div>
+  <h2 class="section-title" style="margin-top:14px">HIPAA-Ready from Day One</h2>
+  <p class="section-body" style="margin:0 auto 36px">TLS 1.3 in transit. AES-256 at rest. BAA executed at checkout for every plan. Gold adds full HIPAA Audit Logging.</p>
+  <div class="security-grid">
+    <div class="security-card"><div class="sc-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="sc-title">TLS 1.3 Encryption</div><div class="sc-body">All data encrypted in transit and at rest. Zero plaintext storage of PHI.</div></div>
+    <div class="security-card"><div class="sc-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="sc-title">BAA at Checkout</div><div class="sc-body">Business Associate Agreement executed for every plan on signup.</div></div>
+    <div class="security-card"><div class="sc-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="sc-title">Role-Based Access</div><div class="sc-body">Seat-cap enforcement, admin controls, and server-side validation throughout.</div></div>
+    <div class="security-card"><div class="sc-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="sc-title">HIPAA Audit Log</div><div class="sc-body">Every PHI access logged with timestamp, user, and IP. Gold tier.</div></div>
+    <div class="security-card"><div class="sc-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="sc-title">99.9% Uptime SLA</div><div class="sc-body">Enterprise cloud infrastructure. Public status page available 24/7.</div></div>
+    <div class="security-card"><div class="sc-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="sc-title">30-Day Guarantee</div><div class="sc-body">Not satisfied within 30 days? Full refund, no questions, no delays.</div></div>
   </div>
 </section>
 
 <!-- BAA -->
-<section id="baa" style="padding:36px 20px;max-width:860px;margin:0 auto" class="fade-in">
-  <div style="background:rgba(63,185,80,.05);border:1px solid rgba(63,185,80,.18);border-radius:16px;padding:28px">
-    <h3 style="color:#3fb950;font-size:17px;font-weight:800;margin-bottom:10px">📋 Business Associate Agreement (BAA)</h3>
-    <p style="color:#c0cce0;font-size:13px;line-height:1.7;margin:0 0 10px">In compliance with HIPAA, We Market Plus LLC provides a standard Business Associate Agreement (BAA) for all subscribing clients. The BAA is acknowledged at checkout for every plan tier. A copy is delivered to your email upon subscription confirmation.</p>
-    <p style="color:#c0cce0;font-size:13px;line-height:1.7;margin:0">We Market Plus LLC implements appropriate administrative, physical, and technical safeguards to protect PHI in accordance with the HIPAA Security Rule. Questions? <a href="mailto:info@wemarketplus.com" style="color:#49b6ff;font-weight:700">Email us →</a></p>
+<section id="baa" style="padding:36px 28px;max-width:860px;margin:0 auto" class="reveal">
+  <div class="baa-block">
+    <div class="baa-title">Business Associate Agreement (BAA)</div>
+    <p class="baa-text" style="margin-bottom:10px">In compliance with HIPAA, We Market Plus LLC provides a standard Business Associate Agreement for all subscribing clients. The BAA is acknowledged at checkout for every plan tier, and a copy is delivered to your email upon subscription confirmation.</p>
+    <p class="baa-text">We Market Plus LLC implements appropriate administrative, physical, and technical safeguards to protect PHI in accordance with the HIPAA Security Rule. Questions? <a href="mailto:info@wemarketplus.com" style="color:var(--azure);font-weight:600;border-bottom:1px solid var(--azure-border);padding-bottom:1px">Contact us</a></p>
   </div>
 </section>
 
 <!-- FAQ -->
-<section id="faq" style="padding:48px 20px;max-width:800px;margin:0 auto" class="fade-in">
-  <div class="section-center">
-    <div class="section-tag" style="background:rgba(73,182,255,.08);border:1px solid rgba(73,182,255,.2);color:#49b6ff">FAQ</div>
-    <h2 class="section-h2">Frequently Asked Questions</h2>
+<section id="faq" style="padding:64px 28px;max-width:800px;margin:0 auto" class="reveal">
+  <div class="section-header">
+    <div class="section-kicker" style="background:var(--azure-dim);border:1px solid var(--azure-border);color:var(--azure)">FAQ</div>
+    <h2 class="section-title">Frequently Asked Questions</h2>
   </div>
-  <div id="faqList"></div>
+  <div class="faq-list" id="faqContainer"></div>
 </section>
 
 <!-- FINAL CTA -->
-<section style="padding:56px 20px;max-width:1140px;margin:0 auto" class="fade-in">
-  <div class="cta-section">
-    <div style="display:inline-flex;align-items:center;gap:8px;padding:7px 18px;border-radius:999px;background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.3);color:#ffd700;font-weight:900;font-size:13px;margin-bottom:20px">⏰ Lock In Founders Pricing Before June 1</div>
-    <h3 style="font-size:clamp(26px,4.5vw,48px);margin:0 0 14px;color:#fff;line-height:1.1">Your First 5 New Referrals<br><span style="background:linear-gradient(90deg,#8cff66,#b8ff79);-webkit-background-clip:text;-webkit-text-fill-color:transparent">in 7 Days or Less</span></h3>
-    <p style="color:#8b949e;font-size:15px;max-width:520px;margin:0 auto 30px;line-height:1.6">Stop losing leads to spreadsheets. Start closing more admits this week.</p>
-    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:16px">
-      <a href="#pricing" style="display:inline-flex;align-items:center;background:linear-gradient(90deg,#7ef05a,#b8ff79);color:#06111d;border:none;border-radius:999px;padding:17px 30px;font-weight:900;font-size:17px;cursor:pointer;font-family:inherit;text-decoration:none">🚀 Buy Today — Start Closing Admits →</a>
-      <button onclick="handleLogin()" style="display:inline-flex;align-items:center;background:rgba(73,182,255,.1);border:1px solid rgba(73,182,255,.35);color:#49b6ff;border-radius:999px;padding:17px 30px;font-weight:900;cursor:pointer;font-size:17px;font-family:inherit">🔑 Login to CRM</button>
+<section style="padding:64px 28px;max-width:1140px;margin:0 auto" class="reveal">
+  <div class="cta-panel">
+    <div class="cta-eyebrow">Founders Pricing Ends June 1</div>
+    <h2 class="cta-heading">Your First 5 New Referrals<br><em>in 7 Days or Less</em></h2>
+    <p class="cta-sub">Stop losing leads to spreadsheets. Start closing more admits this week. No setup fee, live in 30 minutes.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:18px">
+      <a href="#pricing" class="btn-primary" style="font-size:15px;padding:15px 32px">View Plans &amp; Pricing</a>
+      <button onclick="handleLogin()" class="btn-outline" style="font-size:14px;padding:15px 30px">Log In to CRM</button>
     </div>
-    <p style="color:#4a5568;font-size:12px">No setup fee · Cancel anytime · HIPAA-Ready · 30-day guarantee</p>
+    <p class="cta-fine">No setup fee &mdash; Cancel anytime &mdash; HIPAA-Ready &mdash; 30-day guarantee</p>
   </div>
 </section>
 
 <!-- CONTACT -->
-<section id="contact" style="padding:36px 20px;max-width:700px;margin:0 auto;text-align:center">
-  <h3 style="color:#fff;font-size:20px;font-weight:800;margin-bottom:8px">Questions? We're Here.</h3>
-  <p style="color:#8b949e;font-size:14px;margin-bottom:18px">Our team responds within a few hours on business days.</p>
-  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-    <a href="mailto:info@wemarketplus.com" style="display:inline-flex;align-items:center;background:linear-gradient(90deg,#7ef05a,#b8ff79);color:#06111d;border-radius:999px;padding:11px 22px;font-weight:900;font-size:14px">✉ info@wemarketplus.com</a>
-    <a href="tel:+14697930673" style="display:inline-flex;align-items:center;background:rgba(73,182,255,.1);border:1px solid rgba(73,182,255,.35);color:#49b6ff;border-radius:999px;padding:11px 22px;font-weight:900;font-size:14px">📞 (469) 793-0673</a>
+<div class="contact-section">
+  <h2 class="contact-title">Questions? We Are Here.</h2>
+  <p class="contact-sub">Our team responds within a few hours on business days.</p>
+  <div class="contact-links">
+    <a href="mailto:info@wemarketplus.com" class="btn-primary" style="font-size:13px;padding:11px 22px">info@wemarketplus.com</a>
+    <a href="tel:+14697930673" class="btn-outline" style="font-size:13px;padding:11px 22px">(469) 793-0673</a>
   </div>
-</section>
+</div>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-grid">
-    <div class="footer-col">
-      <div style="font-size:17px;font-weight:900;color:#fff;margin-bottom:8px;display:flex;align-items:center;gap:7px"><div style="width:7px;height:7px;background:#8cff66;border-radius:50%"></div>HospiceLink <span style="color:#49b6ff">CRM</span></div>
-      <p style="font-size:13px;color:#8b949e;line-height:1.6;margin-bottom:12px">The only CRM built exclusively for hospice marketers. Close more admissions. Never miss a follow-up.</p>
-      <p style="font-size:12px;color:#4a5568">© 2026 We Market Plus LLC<br>All rights reserved.</p>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px">
+        <div class="nav-logo-icon" style="width:24px;height:24px;border-radius:5px"><svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:#06080e;fill:none;stroke-width:2.3"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+        <span style="font-size:15px;font-weight:700;color:var(--text-1);letter-spacing:-.01em">HospiceLink <span style="color:var(--azure)">CRM</span></span>
+      </div>
+      <p>The only CRM built exclusively for hospice marketers. Close more admissions. Never miss a follow-up.</p>
+      <small>&copy; 2026 We Market Plus LLC. All rights reserved.</small>
     </div>
-    <div class="footer-col">
-      <h5>Product</h5>
-      <a href="#features">Features</a>
-      <a href="#pricing">Pricing</a>
-      <a href="demo-pro.html">Try Pro Demo</a>
-      <a href="demo-max.html">Try Max Demo</a>
-      <a href="demo-gold.html">Try Gold Demo</a>
-      <a href="javascript:handleLogin()">Login to CRM</a>
-    </div>
-    <div class="footer-col">
-      <h5>Legal</h5>
-      <a href="#baa">BAA Terms</a>
-      <a href="#security">Security &amp; HIPAA</a>
-      <a href="mailto:info@wemarketplus.com">Terms of Service</a>
-      <a href="mailto:info@wemarketplus.com">Privacy Policy</a>
-    </div>
-    <div class="footer-col">
-      <h5>Contact</h5>
-      <a href="mailto:info@wemarketplus.com">info@wemarketplus.com</a>
-      <a href="tel:+14697930673">(469) 793-0673</a>
-      <a href="mailto:info@wemarketplus.com">Support</a>
-      <a href="mailto:info@wemarketplus.com">Annual Pricing</a>
-    </div>
+    <div class="footer-col"><h6>Product</h6><a href="#preview">Platform</a><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="demo-pro.html">Pro Demo</a><a href="demo-max.html">Max Demo</a><a href="demo-gold.html">Gold Demo</a><a href="javascript:handleLogin()">Log In</a></div>
+    <div class="footer-col"><h6>Legal</h6><a href="#baa">BAA Terms</a><a href="#security">Security &amp; HIPAA</a><a href="mailto:info@wemarketplus.com">Terms of Service</a><a href="mailto:info@wemarketplus.com">Privacy Policy</a></div>
+    <div class="footer-col"><h6>Contact</h6><a href="mailto:info@wemarketplus.com">info@wemarketplus.com</a><a href="tel:+14697930673">(469) 793-0673</a><a href="mailto:info@wemarketplus.com">Support</a><a href="mailto:info@wemarketplus.com">Annual Pricing</a></div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 We Market Plus LLC · Dallas, TX · All Rights Reserved</span>
-    <span>🔐 HIPAA-Ready · BAA Included · TLS 1.3 Encrypted</span>
+    <span>&copy; 2026 We Market Plus LLC &mdash; Dallas, TX</span>
+    <span>HIPAA-Ready &middot; BAA Included &middot; TLS 1.3 Encrypted</span>
   </div>
 </footer>
 
 <script>
-// ── STRIPE LINKS ──────────────────────────────────────────────
-var STRIPE = {
-  STRIPE_PRO_0_5:        'https://buy.stripe.com/dRm28sdss2jt5H99trfEk0i',
-  STRIPE_PRO_5_10:       'https://buy.stripe.com/28E14o2NO3nx1qTaxvfEk0j',
-  STRIPE_PRO_10_20:      'https://buy.stripe.com/3cI28sgEE1fp3z10WVfEk0k',
-  STRIPE_PRO_UNLIMITED:  'https://buy.stripe.com/7sY7sM4VWcY72uXgVTfEk0l',
-  STRIPE_MAX_0_10:       'https://buy.stripe.com/7sY7sM9cc6zJ1qT7ljfEk0d',
-  STRIPE_MAX_10_20:      'https://buy.stripe.com/dRmcN67446zJ4D55dbfEk0m',
-  STRIPE_MAX_UNLIMITED:  'https://buy.stripe.com/5kQfZiaggcY79Xp0WVfEk0n',
-  STRIPE_GOLD_0_10:      'https://buy.stripe.com/dRm00k9ccbU3edF8pnfEk0o',
-  STRIPE_GOLD_10_20:     'https://buy.stripe.com/dRm5kE2NO4rB1qT20ZfEk0q',
-  STRIPE_GOLD_UNLIMITED: 'https://buy.stripe.com/00wcN61JKf6f6Ld497fEk0p',
-};
+var STRIPE={STRIPE_PRO_0_5:'https://buy.stripe.com/dRm28sdss2jt5H99trfEk0i',STRIPE_PRO_5_10:'https://buy.stripe.com/28E14o2NO3nx1qTaxvfEk0j',STRIPE_PRO_10_20:'https://buy.stripe.com/3cI28sgEE1fp3z10WVfEk0k',STRIPE_PRO_UNLIMITED:'https://buy.stripe.com/7sY7sM4VWcY72uXgVTfEk0l',STRIPE_MAX_0_10:'https://buy.stripe.com/7sY7sM9cc6zJ1qT7ljfEk0d',STRIPE_MAX_10_20:'https://buy.stripe.com/dRmcN67446zJ4D55dbfEk0m',STRIPE_MAX_UNLIMITED:'https://buy.stripe.com/5kQfZiaggcY79Xp0WVfEk0n',STRIPE_GOLD_0_10:'https://buy.stripe.com/dRm00k9ccbU3edF8pnfEk0o',STRIPE_GOLD_10_20:'https://buy.stripe.com/dRm5kE2NO4rB1qT20ZfEk0q',STRIPE_GOLD_UNLIMITED:'https://buy.stripe.com/00wcN61JKf6f6Ld497fEk0p'};
 
-// ── LIVE TICKER ───────────────────────────────────────────────
-var TICKER_EVENTS = [
-  {color:'#8cff66', dot:'#8cff66', text:'New admit — North Dallas Territory'},
-  {color:'#49b6ff', dot:'#49b6ff', text:'Referral logged — Baylor CM · Ericka'},
-  {color:'#f9c74f', dot:'#f9c74f', text:'Follow-up completed — John T.'},
-  {color:'#ef4444', dot:'#ef4444', text:'14-Day Cold Alert cleared — Physician Office'},
-  {color:'#8cff66', dot:'#8cff66', text:'AI Triage — William H. scored 9.2/10'},
-  {color:'#49b6ff', dot:'#49b6ff', text:'GPS note saved — Bedside Visit · Angela RN'},
-  {color:'#8cff66', dot:'#8cff66', text:'Prospect moved to Admitted — Dorothy F.'},
-  {color:'#f9c74f', dot:'#f9c74f', text:'Playbook generated — McKinney territory'},
-  {color:'#ef4444', dot:'#ef4444', text:'Re-engagement sent — Helen P. (45 days)'},
-  {color:'#49b6ff', dot:'#49b6ff', text:'Weekly report delivered — Mon 7:00 AM'},
-];
-var LIVE_FEED_EVENTS = [
-  {icon:'🟢', text:'Mary J. moved to Pending Admission', sub:'Baylor Territory · Ericka', time:'2m ago'},
-  {icon:'📞', text:'Cold Alert cleared — Physician Office', sub:'Touch logged — In-Person', time:'8m ago'},
-  {icon:'🔥', text:'HOT LEAD: William H. scored 9.2/10', sub:'AI Triage · Baylor ER', time:'14m ago'},
-  {icon:'✅', text:'Dorothy F. — Admitted', sub:'Angela RN · Patient Home, Plano TX', time:'31m ago'},
-  {icon:'📍', text:'GPS Note saved — North Park Rehab', sub:'Mike · Bedside Visit', time:'1h ago'},
-  {icon:'⚡', text:'Re-engagement campaign sent', sub:'3 lost prospects · AI selected', time:'2h ago'},
-];
+var TICKS=[{c:'#4fc87a',t:'New admit — North Dallas Territory'},{c:'#3d9ee8',t:'Referral logged — Baylor Care Manager'},{c:'#c9903a',t:'Follow-up completed — John T.'},{c:'#f87171',t:'14-Day Cold Alert cleared — Physician Office'},{c:'#4fc87a',t:'AI Triage — William H. scored 9.2/10'},{c:'#3d9ee8',t:'GPS note saved — Bedside visit, Angela RN'},{c:'#4fc87a',t:'Prospect moved to Admitted — Dorothy F.'},{c:'#c9903a',t:'Playbook generated — McKinney territory'},{c:'#f87171',t:'Re-engagement sent — Helen P. (45 days inactive)'},{c:'#3d9ee8',t:'Weekly report delivered — Monday 7:00 AM'}];
 
-function buildTicker(){
-  var track = document.getElementById('tickerTrack');
-  var items = [...TICKER_EVENTS,...TICKER_EVENTS,...TICKER_EVENTS];
-  track.innerHTML = items.map(function(e){
-    return '<div class="ticker-item"><div class="t-dot" style="background:'+e.dot+'"></div><span style="color:'+e.color+';font-weight:700">'+e.text+'</span><span style="color:rgba(255,255,255,.15)">|</span></div>';
-  }).join('');
-}
+var FEED_DATA=[{c:'#4fc87a',t:'Mary J. moved to Pending Admission',s:'Baylor Territory',tm:'2m ago'},{c:'#f87171',t:'Cold Alert cleared — Physician Office',s:'Touch logged, In-Person',tm:'8m ago'},{c:'#c9903a',t:'Hot Lead: William H. scored 9.2',s:'AI Triage — Baylor ER',tm:'14m ago'},{c:'#4fc87a',t:'Dorothy F. — Admitted',s:'Angela RN — Patient Home',tm:'31m ago'},{c:'#3d9ee8',t:'GPS note saved — North Park Rehab',s:'Mike — Bedside Visit',tm:'1h ago'},{c:'#a78bfa',t:'Re-engagement campaign sent',s:'3 lost prospects selected by AI',tm:'2h ago'}];
 
-function buildLiveFeed(){
-  var feed = document.getElementById('liveFeed');
-  feed.innerHTML = LIVE_FEED_EVENTS.map(function(e){
-    return '<div class="lf-item"><span style="font-size:16px">'+e.icon+'</span><div style="flex:1"><div style="color:#f4f8ff;font-weight:700;line-height:1.3">'+e.text+'</div><div style="color:#4a5568;font-size:11px">'+e.sub+'</div></div><span class="lf-time">'+e.time+'</span></div>';
-  }).join('');
-  // Simulate new events
-  setInterval(function(){
-    var events = [
-      {icon:'🟢', text:'New prospect added — Mary T.', sub:'McKinney Territory', time:'Just now'},
-      {icon:'📞', text:'Touch logged — SNF visit', sub:'Ericka · In-Person', time:'Just now'},
-      {icon:'✅', text:'Reminder marked done', sub:'Follow-up completed', time:'Just now'},
-    ];
-    var e = events[Math.floor(Math.random()*events.length)];
-    var row = document.createElement('div');
-    row.className = 'lf-item';
-    row.style.background = 'rgba(140,255,102,.05)';
-    row.style.animation = 'fadeIn .4s ease';
-    row.innerHTML = '<span style="font-size:16px">'+e.icon+'</span><div style="flex:1"><div style="color:#f4f8ff;font-weight:700;line-height:1.3">'+e.text+'</div><div style="color:#4a5568;font-size:11px">'+e.sub+'</div></div><span class="lf-time">'+e.time+'</span>';
-    feed.insertBefore(row, feed.firstChild);
-    if(feed.children.length > 6) feed.removeChild(feed.lastChild);
-    setTimeout(function(){row.style.background='';}, 2000);
-  }, 8000);
-}
+var FAQS=[{q:'Is HospiceLink HIPAA compliant?',a:'Yes. TLS 1.3 encryption in transit, AES-256 at rest, and a Business Associate Agreement (BAA) is executed at checkout for all plan tiers.'},{q:'How long does setup take?',a:'Most teams are fully operational within 30 minutes. Subscribe, sign the BAA, import your existing prospects via CSV, and start logging notes. No IT or configuration required.'},{q:'Can I import my existing spreadsheet?',a:'Yes. Use the one-click CSV importer to bring in all your existing prospects. The importer maps common column names automatically.'},{q:'What roles are included?',a:'Pro and Max include Admin and Marketer roles. Gold adds Nurse and Caregiver roles with tailored dashboards for each.'},{q:'What is the 30-day money-back guarantee?',a:"If you are not satisfied within the first 30 days, email us for a full refund. No questions asked, no lengthy cancellation process."},{q:'Can I cancel at any time?',a:'Yes. Cancel from your billing portal at any time. No contracts, no cancellation fees, no minimum commitments.'},{q:'Is there a setup fee?',a:'No. There is no setup fee on any plan. Your subscription price is exactly what you pay at signup.'},{q:'Do you offer annual pricing?',a:'Yes. Annual plans include a discount. Email info@wemarketplus.com for annual pricing options.'}];
 
-function buildProofTicker(){
-  var PROOFS = [
-    {quote:'HospiceLink cut our response time from 3 days to under 18 hours.', name:'Maria T.', title:'Marketing Director, Dallas TX'},
-    {quote:'Referrals tripled in two months. The cold-source alerts alone changed everything.', name:'James R.', title:'Hospice Administrator, Phoenix AZ'},
+function buildTicker(){var el=document.getElementById('tickerInner');if(!el)return;var all=[...TICKS,...TICKS];el.innerHTML=all.map(function(e){return'<div class="ticker-event"><span class="ticker-pip" style="background:'+e.c+'"></span><span>'+e.t+'</span></div>';}).join('');}
 
-    {quote:'We recovered 9 lost prospects in our first month and admitted 3 of them.', name:'Sandra M.', title:'Regional Director, Houston TX'},
-    {quote:'Our nurses are now fully coordinated with marketing. Gold changed how we operate.', name:'Kevin L.', title:'Executive Director, Austin TX'},
-  ];
-  var track = document.getElementById('proofTrack');
-  if (!track) return;
-  var items = [...PROOFS,...PROOFS];
-  track.innerHTML = items.map(function(p){
-    return '<div class="proof-card"><p class="proof-q">&#8220;'+p.quote+'&#8221;</p><div class="proof-name">'+p.name+'</div><div class="proof-title">'+p.title+'</div></div>';
-  }).join('');
-}
+function buildFeed(){var f=document.getElementById('activityFeed');if(!f)return;f.innerHTML=FEED_DATA.map(function(e){return'<div class="feed-item"><div class="feed-dot" style="background:'+e.c+'"></div><div style="flex:1"><div class="feed-text">'+e.t+'</div><div class="feed-sub">'+e.s+'</div></div><span class="feed-time">'+e.tm+'</span></div>';}).join('');setInterval(function(){var items=[{c:'#4fc87a',t:'New prospect added',s:'Assigned to team',tm:'Just now'},{c:'#3d9ee8',t:'Touch logged — SNF visit',s:'In-Person contact',tm:'Just now'},{c:'#c9903a',t:'Reminder marked complete',s:'Follow-up closed',tm:'Just now'}];var e=items[Math.floor(Math.random()*items.length)];var row=document.createElement('div');row.className='feed-item';row.style.background='rgba(79,200,122,.05)';row.style.transition='background .5s ease';row.innerHTML='<div class="feed-dot" style="background:'+e.c+'"></div><div style="flex:1"><div class="feed-text">'+e.t+'</div><div class="feed-sub">'+e.s+'</div></div><span class="feed-time">'+e.tm+'</span>';f.insertBefore(row,f.firstChild);if(f.children.length>6)f.removeChild(f.lastChild);setTimeout(function(){row.style.background='';},1600);},9000);}
 
-// ── SUBSCRIPTION MODAL ────────────────────────────────────────
-var currentPlan = 'pro';
+function buildFAQ(){var c=document.getElementById('faqContainer');if(!c)return;c.innerHTML=FAQS.map(function(f,i){return'<div class="faq-item" id="faqItem'+i+'"><button class="faq-trigger" onclick="toggleFAQ('+i+')">'+f.q+'<span class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></button><div class="faq-answer">'+f.a+'</div></div>';}).join('');}
 
-// Package key mapping — maps plan+stripe key to PLAN_MAP key
-var PKG_MAP = {
-  'STRIPE_PRO_0_5':        'pro_0_5',
-  'STRIPE_PRO_5_10':       'pro_5_10',
-  'STRIPE_PRO_10_20':      'pro_10_20',
-  'STRIPE_PRO_UNLIMITED':  'pro_unlimited',
-  'STRIPE_MAX_0_10':       'max_0_10',
-  'STRIPE_MAX_10_20':      'max_10_20',
-  'STRIPE_MAX_UNLIMITED':  'max_unlimited',
-  'STRIPE_GOLD_0_10':      'gold_0_10',
-  'STRIPE_GOLD_10_20':     'gold_10_20',
-  'STRIPE_GOLD_UNLIMITED': 'gold_unlimited',
-};
+function toggleFAQ(i){var item=document.getElementById('faqItem'+i);var was=item.classList.contains('open');document.querySelectorAll('.faq-item').forEach(function(el){el.classList.remove('open');});if(!was)item.classList.add('open');}
 
-function getSelectedOption(plan) {
-  var sel = document.getElementById(plan + 'Sel');
-  if (!sel) return null;
-  var val = sel.value.split('|');
-  return { price: val[0], label: val[1], stripeKey: val[2], pkg: val[3] || PKG_MAP[val[2]] || plan+'_0_5' };
-}
+var activePlan='pro';
+function getOpt(p){var s=document.getElementById(p+'Sel');if(!s)return null;var v=s.value.split('|');return{price:v[0],label:v[1],stripeKey:v[2],pkg:v[3]};}
+function updatePrice(p){var o=getOpt(p);if(!o)return;var a=document.getElementById(p+'Amt');var u=document.getElementById(p+'Users');if(a)a.textContent='$'+parseInt(o.price).toLocaleString();if(u)u.textContent=o.label;}
+function openModal(p){activePlan=p;var o=getOpt(p);var labels={pro:'HospiceLink Pro',max:'HospiceLink Max',gold:'HospiceLink Gold'};var colors={pro:'var(--azure)',max:'var(--sage)',gold:'var(--amber)'};document.getElementById('modalPlanName').textContent=labels[p];document.getElementById('modalPlanName').style.color=colors[p];document.getElementById('modalPriceDisplay').textContent=o?'$'+parseInt(o.price).toLocaleString()+'/mo':'';document.getElementById('modalTierLabel').textContent=o?o.label:'';document.getElementById('checkoutModal').classList.add('open');document.body.style.overflow='hidden';}
+function closeModal(){document.getElementById('checkoutModal').classList.remove('open');document.body.style.overflow='';}
+function confirmCheckout(){var o=getOpt(activePlan);if(!o)return;var url=STRIPE[o.stripeKey];if(!url){alert('Contact support@wemarketplus.com to complete your subscription.');return;}if(typeof gtag!=='undefined')gtag('event','begin_checkout',{currency:'USD',value:parseInt(o.price),item_id:o.stripeKey});window.location.href=url;}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+function handleLogin(){window.location.href='login.html';}
 
-function updatePrice(plan) {
-  var opt = getSelectedOption(plan);
-  if (!opt) return;
-  var amtEl   = document.getElementById(plan + 'Amt');
-  var usersEl = document.getElementById(plan + 'Users');
-  if (amtEl)   amtEl.textContent   = '$' + parseInt(opt.price).toLocaleString();
-  if (usersEl) usersEl.textContent = opt.label;
-}
-
-function openModal(plan) {
-  currentPlan = plan;
-  var opt  = getSelectedOption(plan);
-  var labels = { pro:'HospiceLink Pro', max:'HospiceLink Max', gold:'HospiceLink Gold' };
-  var colors = { pro:'#49b6ff', max:'#8cff66', gold:'#ffd700' };
-  var prices = { pro:'$149', max:'$449', gold:'$899' };
-
-  var modal = document.getElementById('subModal');
-  if (!modal) return;
-
-  document.getElementById('modalTitle').textContent  = labels[plan] || 'HospiceLink ' + plan;
-  document.getElementById('modalPrice').textContent  = opt ? '$' + parseInt(opt.price).toLocaleString() + '/mo' : (prices[plan] + '/mo');
-  document.getElementById('modalTier').textContent   = opt ? opt.label : '';
-  document.getElementById('modalTitle').style.color  = colors[plan] || '#f4f8ff';
-
-  modal.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-}
-
-function closeModal() {
-  var modal = document.getElementById('subModal');
-  if (modal) modal.style.display = 'none';
-  document.body.style.overflow = '';
-}
-
-function confirmSubscribe() {
-  var opt = getSelectedOption(currentPlan);
-  if (!opt || !opt.stripeKey) { alert('Please select a plan.'); return; }
-
-  var url = STRIPE[opt.stripeKey];
-  if (!url) { alert('Stripe link not configured. Contact support.'); return; }
-
-  // Track conversion event
-  if (typeof gtag !== 'undefined') {
-    gtag('event', 'begin_checkout', { currency: 'USD', value: parseInt(opt.price), item_id: opt.stripeKey });
-  }
-
-  window.location.href = url;
-}
-
-// Close modal on backdrop click
-document.addEventListener('click', function(e) {
-  if (e.target && e.target.id === 'subModal') closeModal();
+document.addEventListener('DOMContentLoaded',function(){
+  buildTicker();buildFeed();buildFAQ();
+  var io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:0.08});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
 });
-
-// Close modal on Escape
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeModal();
-});
-
-// ── INIT ─────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', function() {
-  buildTicker();
-  buildLiveFeed();
-  buildProofTicker();
-  // Start ticker animation
-  var track = document.getElementById('tickerTrack');
-  if (track) {
-    var w = track.scrollWidth / 3;
-    track.style.animation = 'ticker ' + Math.max(30, w/80) + 's linear infinite';
-  }
-  // Animate fade-in elements on scroll
-  var obs = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
-    });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.fade-in').forEach(function(el) { obs.observe(el); });
-});
-</script>
-
-<!-- SUBSCRIPTION MODAL -->
-<div id="subModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)">
-  <div style="background:#0d1f35;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:36px;max-width:440px;width:100%;position:relative">
-    <button onclick="closeModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:#8b949e;font-size:22px;cursor:pointer;line-height:1">✕</button>
-    <h2 id="modalTitle" style="margin:0 0 6px;font-size:22px;font-weight:900">HospiceLink Pro</h2>
-    <p style="margin:0 0 20px;color:#8b949e;font-size:14px">You selected: <span id="modalTier" style="color:#f4f8ff;font-weight:700"></span></p>
-    <div style="background:rgba(255,255,255,.04);border-radius:12px;padding:16px;margin-bottom:20px;text-align:center">
-      <div style="font-size:32px;font-weight:900;color:#f4f8ff" id="modalPrice">$149/mo</div>
-      <div style="font-size:12px;color:#8b949e;margin-top:4px">Billed monthly · Cancel anytime</div>
-    </div>
-    <ul style="list-style:none;padding:0;margin:0 0 24px;color:#c0cce0;font-size:14px;line-height:1.8">
-      <li>✅ HIPAA-ready from day one</li>
-      <li>✅ BAA included</li>
-      <li>✅ Live in 30 minutes</li>
-      <li>✅ 30-day money-back guarantee</li>
-    </ul>
-    <button onclick="confirmSubscribe()" style="width:100%;background:linear-gradient(90deg,#49b6ff,#8cff66);color:#06111d;border:none;border-radius:999px;padding:14px;font-size:16px;font-weight:900;cursor:pointer;transition:opacity .2s" onmouseover="this.style.opacity='.9'" onmouseout="this.style.opacity='1'">
-      Proceed to Secure Checkout →
-    </button>
-    <p style="text-align:center;color:#8b949e;font-size:12px;margin:12px 0 0">🔐 Powered by Stripe · TLS 1.3 encrypted</p>
-  </div>
-</div>
-
-<script>
-function handleLogin() {
-  window.location.href = 'login.html';
-}
 </script>
 </body>
 </html>
