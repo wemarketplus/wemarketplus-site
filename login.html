@@ -44,7 +44,7 @@ body{display:flex;align-items:center;justify-content:center;min-height:100vh;pad
     <div class="logo-mark">Hospice<span>Link</span></div>
     <div class="logo-sub">HIPAA-COMPLIANT HOSPICE CRM</div>
   </div>
-  <div class="card">
+  <div class="card" id="loginCard">
     <div class="card-title">Welcome back</div>
     <div class="card-sub">Sign in to your CRM account</div>
     <div class="err" id="errMsg">Invalid email or password. Please try again.</div>
@@ -90,6 +90,7 @@ function doLogin(){
   // Set a timeout — Render cold starts can take 30-60s
   const controller = new AbortController();
   const timeoutId  = setTimeout(() => controller.abort(), 45000);
+  const warmupId   = setTimeout(() => showWarmingUp('loginCard'), 8000);
 
   fetch(BACKEND+'/api/auth/login',{
     method:      'POST',
@@ -99,7 +100,7 @@ function doLogin(){
     body:        JSON.stringify({email, password:pass})
   })
   .then(r => {
-    clearTimeout(timeoutId);
+    clearTimeout(timeoutId); clearTimeout(warmupId); hideWarmingUp('loginCard');
     if (!r.ok && r.status !== 200) {
       return r.json().then(d => { throw { status: r.status, message: d.error || 'Login failed.' }; });
     }
@@ -131,7 +132,7 @@ function doLogin(){
     window.location.href = dest;
   })
   .catch(err => {
-    clearTimeout(timeoutId);
+    clearTimeout(timeoutId); clearTimeout(warmupId); hideWarmingUp('loginCard');
     btn.textContent = 'Sign In';
     btn.disabled = false;
 
@@ -146,6 +147,25 @@ function doLogin(){
     // Network failure — never fake a login
     showError('Unable to connect. Please check your internet connection and try again.');
   });
+}
+
+
+// FIX #18: Render cold-start reassurance — shown after 8s of waiting
+function showWarmingUp(containerId, cancelFn) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  var msg = document.createElement('div');
+  msg.id  = containerId + '_warming';
+  msg.style.cssText = 'margin-top:14px;padding:12px 16px;background:rgba(73,182,255,.08);border:1px solid rgba(73,182,255,.2);border-radius:10px;font-size:13px;color:#8b9fc4;text-align:center;line-height:1.6';
+  msg.innerHTML = '<div style="color:#49b6ff;font-weight:700;margin-bottom:4px">⏳ Starting up…</div>' +
+    'HospiceLink is spinning up its secure servers. This takes up to 30 seconds on first load.<br>' +
+    '<span style="color:#f4f8ff;font-weight:600">Your information is safe — please wait.</span>';
+  el.appendChild(msg);
+  return msg;
+}
+function hideWarmingUp(containerId) {
+  var el = document.getElementById(containerId + '_warming');
+  if (el && el.parentNode) el.parentNode.removeChild(el);
 }
 
 function showError(msg){
