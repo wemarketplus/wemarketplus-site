@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HospiceLink — Activate Your Account</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;background:#081426;color:#f4f8ff}
+body{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.wrap{width:100%;max-width:440px}
+.logo{text-align:center;margin-bottom:28px}
+.logo-mark{font-size:28px;font-weight:900;color:#49b6ff;letter-spacing:-1px}
+.logo-mark span{color:#ffd700}
+.logo-sub{font-size:12px;color:#6b7fa3;margin-top:4px}
+.card{background:#0d1b31;border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:32px 28px}
+.welcome-badge{background:rgba(73,182,255,.1);border:1px solid rgba(73,182,255,.3);border-radius:10px;padding:12px 14px;margin-bottom:20px;font-size:13px;color:#49b6ff;display:flex;gap:10px;align-items:flex-start}
+.card-title{font-size:18px;font-weight:800;margin-bottom:6px}
+.card-sub{font-size:13px;color:#6b7fa3;margin-bottom:24px;line-height:1.5}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:700;color:#8b9fc4;margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase}
+.field input{width:100%;background:#0a1628;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:11px 14px;font-size:14px;color:#f4f8ff;font-family:inherit;outline:none;transition:border-color .15s}
+.field input:focus{border-color:#49b6ff}
+.strength{height:4px;border-radius:2px;margin-top:6px;background:#12253d;transition:all .2s}
+.str-weak{background:#e05555;width:33%}.str-mid{background:#fbbf24;width:66%}.str-strong{background:#8cff66;width:100%}
+.str-label{font-size:11px;color:#6b7fa3;margin-top:4px}
+.btn-main{width:100%;background:linear-gradient(90deg,#49b6ff,#8cff66);color:#081426;border:none;border-radius:999px;padding:13px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:8px;transition:opacity .15s}
+.btn-main:hover{opacity:.88}
+.btn-main:disabled{opacity:.5;cursor:not-allowed}
+.err{background:rgba(224,85,85,.12);border:1px solid rgba(224,85,85,.4);border-radius:10px;padding:10px 14px;font-size:13px;color:#f87171;margin-bottom:16px;display:none}
+.success-box{text-align:center;padding:20px 0;display:none}
+.invalid-box{text-align:center;padding:20px 0;display:none}
+.req-list{font-size:11px;color:#6b7fa3;margin-top:6px;list-style:none}
+.req-list li{padding:2px 0;transition:color .15s}
+.req-list li.met{color:#8cff66}
+.req-list li::before{content:'○ ';font-size:10px}
+.req-list li.met::before{content:'✓ '}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">
+    <div class="logo-mark">Hospice<span>Link</span></div>
+    <div class="logo-sub">HIPAA-COMPLIANT HOSPICE CRM</div>
+  </div>
+  <div class="card">
+    <div class="err" id="errMsg"></div>
+    <div class="invalid-box" id="invalidBox">
+      <div style="font-size:40px;margin-bottom:12px">⏰</div>
+      <h3 style="color:#f87171;margin-bottom:8px">Invite Link Expired</h3>
+      <p style="font-size:13px;color:#6b7fa3;line-height:1.6">This invite link has expired or already been used (links expire after 72 hours).<br>Please ask your administrator to send a new invitation.</p>
+    </div>
+    <div id="formSection">
+      <div class="welcome-badge">
+        <span style="font-size:20px;flex-shrink:0">🎉</span>
+        <div><strong style="display:block;margin-bottom:3px">Welcome to HospiceLink!</strong>Create your password to activate your account.</div>
+      </div>
+      <div class="card-title">Activate Your Account</div>
+      <div class="card-sub">Set a permanent password to secure your CRM account. You'll use this to log in going forward.</div>
+      <div class="field">
+        <label>New Password</label>
+        <input type="password" id="newPass" placeholder="Create a strong password"
+               oninput="checkStrength(this.value)" autocomplete="new-password">
+        <div class="strength" id="strengthBar"></div>
+        <div class="str-label" id="strengthLabel"></div>
+        <ul class="req-list">
+          <li id="r1">At least 8 characters</li>
+          <li id="r2">At least one uppercase letter</li>
+          <li id="r3">At least one number</li>
+          <li id="r4">At least one special character</li>
+        </ul>
+      </div>
+      <div class="field">
+        <label>Confirm Password</label>
+        <input type="password" id="confirmPass" placeholder="Re-enter your password" autocomplete="new-password">
+      </div>
+      <button class="btn-main" id="submitBtn" onclick="activateAccount()">Activate My Account →</button>
+    </div>
+    <div class="success-box" id="successBox">
+      <div style="font-size:36px;margin-bottom:10px">✅</div>
+      <h3 style="font-size:17px;font-weight:800;color:#8cff66;margin-bottom:8px">Account Activated!</h3>
+      <p style="font-size:13px;color:#8b9fc4;margin-bottom:16px">Your account is ready. Redirecting to login…</p>
+      <div id="countdown" style="font-size:13px;color:#49b6ff;font-weight:700"></div>
+    </div>
+  </div>
+</div>
+<script>
+const BACKEND     = 'https://api.wemarketplus.com';
+var inviteToken   = (new URLSearchParams(window.location.search)).get('token');
+
+if (!inviteToken) {
+  document.getElementById('formSection').style.display = 'none';
+  document.getElementById('invalidBox').style.display  = 'block';
+}
+
+function checkStrength(v) {
+  var bar = document.getElementById('strengthBar');
+  bar.className = 'strength';
+  document.getElementById('r1').className = v.length >= 8          ? 'met' : '';
+  document.getElementById('r2').className = /[A-Z]/.test(v)        ? 'met' : '';
+  document.getElementById('r3').className = /[0-9]/.test(v)        ? 'met' : '';
+  document.getElementById('r4').className = /[^a-zA-Z0-9]/.test(v) ? 'met' : '';
+  if (!v) { document.getElementById('strengthLabel').textContent = ''; return; }
+  var strong = v.length >= 10 && /[A-Z]/.test(v) && /[0-9]/.test(v) && /[^a-zA-Z0-9]/.test(v);
+  var mid    = v.length >= 8  && (/[A-Z]/.test(v) || /[0-9]/.test(v));
+  var lbl    = document.getElementById('strengthLabel');
+  if (strong) { bar.classList.add('str-strong'); lbl.textContent = 'Strong ✓'; }
+  else if (mid){ bar.classList.add('str-mid');   lbl.textContent = 'Medium'; }
+  else         { bar.classList.add('str-weak');  lbl.textContent = 'Weak'; }
+}
+
+function activateAccount() {
+  var pw   = document.getElementById('newPass').value;
+  var conf = document.getElementById('confirmPass').value;
+  var btn  = document.getElementById('submitBtn');
+  document.getElementById('errMsg').style.display = 'none';
+
+  if (pw.length < 8) { showErr('Password must be at least 8 characters.'); return; }
+  if (pw !== conf)   { showErr('Passwords do not match.'); return; }
+
+  btn.textContent = 'Activating…';
+  btn.disabled    = true;
+
+  fetch(BACKEND + '/api/auth/accept-invite', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify({ token: inviteToken, password: pw }),
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (d.error) {
+      if (d.error.includes('expired') || d.error.includes('Invalid')) {
+        document.getElementById('formSection').style.display = 'none';
+        document.getElementById('invalidBox').style.display  = 'block';
+      } else {
+        showErr(d.error);
+        btn.textContent = 'Activate My Account →';
+        btn.disabled    = false;
+      }
+      return;
+    }
+    document.getElementById('formSection').style.display = 'none';
+    document.getElementById('successBox').style.display  = 'block';
+    var secs = 3;
+    var cd   = document.getElementById('countdown');
+    var iv   = setInterval(function() {
+      cd.textContent = 'Redirecting in ' + secs + ' second' + (secs !== 1 ? 's' : '') + '…';
+      if (secs-- <= 0) { clearInterval(iv); window.location.href = 'login.html'; }
+    }, 1000);
+  })
+  .catch(function() {
+    showErr('Connection error. Please try again.');
+    btn.textContent = 'Activate My Account →';
+    btn.disabled    = false;
+  });
+}
+</script>
+</body>
+</html>
