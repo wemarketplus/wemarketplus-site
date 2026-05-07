@@ -17,8 +17,9 @@
   })).replace(/=/g,'');
   var DEMO_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.' + DEMO_PAYLOAD + '.DEMO_SIG';
 
-  localStorage.setItem('hl_token', DEMO_TOKEN);
-  localStorage.setItem('hl_user', JSON.stringify({
+  // DEMO ISOLATION: uses hl_demo_token (separate namespace — never overwrites production hl_token)
+  localStorage.setItem('hl_demo_token', DEMO_TOKEN);
+  localStorage.setItem('hl_demo_user', JSON.stringify({
     id:'demo-user', email:'demo@hospicelink.demo', role:'admin',
     crm_tier:'gold', first_name:'Demo', last_name:'Admin'
   }));
@@ -1311,7 +1312,7 @@ function aiSend(){
   msgs.scrollTop=msgs.scrollHeight;
   fetch('https://wemarketplus-backend-1.onrender.com/api/ai',{
     method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':'Bearer '+(localStorage.getItem('hl_token')||'')},
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+(localStorage.getItem('hl_demo_token')||'')},
     body:JSON.stringify({messages:[{role:'user',content:msg}],system:'You are HospiceLink '+TIER+' AI, a hospice marketing CRM assistant. Be concise and actionable.'})
   }).then(function(r){return r.json();}).then(function(data){
     b.textContent=(data&&(data.content||data.text))||'Unable to reach AI. Try again.';b.style.color='';
