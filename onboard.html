@@ -190,26 +190,75 @@ function next2(){
 }
 
 function next3(){
-  const sig=document.getElementById('baaSig').value.trim();
-  const agreed=document.getElementById('baaAgree').checked;
-  if(!sig){showErr('err3','Please enter your full name as your electronic signature.');return;}
-  if(!agreed){showErr('err3','Please read and agree to the BAA to continue.');return;}
-  onboardData.baaSig=sig;onboardData.baaDate=new Date().toISOString();
-  // Submit to backend
-  const BACKEND='https://wemarketplus-backend-1.onrender.com';
-  fetch(BACKEND+'/api/auth/onboard',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...onboardData,plan})})
-  .then(r=>r.json()).then(d=>{
-    if(d.token){
-      sessionStorage.setItem('hl_token',d.token);
-      sessionStorage.setItem('hl_user',JSON.stringify(d.user||{email:onboardData.email,role:'admin',crm_tier:plan}));
+  const sig    = document.getElementById('baaSig').value.trim();
+  const agreed = document.getElementById('baaAgree').checked;
+  if(!sig)   { showErr('err3','Please enter your full name as your electronic signature.'); return; }
+  if(!agreed){ showErr('err3','Please read and agree to the BAA to continue.'); return; }
+  onboardData.baaSig   = sig;
+  onboardData.baaDate  = new Date().toISOString();
+
+  // Show loading state — disable button, show spinner
+  const btn = document.querySelector('#step3 button') || document.querySelector('button[onclick="next3()"]');
+  if(btn){ btn.disabled = true; btn.textContent = 'Creating account...'; }
+  showErr('err3',''); // clear any previous error
+
+  // Pass stripe_session_id from URL if present (populated after Stripe checkout redirect)
+  const urlParams = new URLSearchParams(window.location.search);
+  const stripeSessionId = urlParams.get('session_id') || onboardData.stripe_session_id || null;
+
+  const BACKEND = 'https://api.wemarketplus.com';
+  const controller = new AbortController();
+  const timeoutId  = setTimeout(() => controller.abort(), 60000); // 60s for cold start
+
+  fetch(BACKEND + '/api/auth/onboard', {
+    method:  'POST',
+    headers: {'Content-Type': 'application/json'},
+    signal:  controller.signal,
+    body:    JSON.stringify({ ...onboardData, plan, stripe_session_id: stripeSessionId })
+  })
+  .then(r => {
+    clearTimeout(timeoutId);
+    return r.json().then(d => ({ ok: r.ok, status: r.status, data: d }));
+  })
+  .then(({ ok, status, data }) => {
+    if(btn){ btn.disabled = false; btn.textContent = 'Create Account'; }
+
+    if(!ok || !data.token) {
+      // Real error — show it, do NOT advance to step 4
+      const msg = data.error || data.message || 'Account creation failed. Please try again.';
+
+      if(status === 400 && data.code === 'PAYMENT_REQUIRED') {
+        showErr('err3', 'Payment verification required. Please complete your Stripe checkout first, then return to this page.');
+      } else if(status === 409) {
+        showErr('err3', 'This email is already registered. <a href="login.html" style="color:#49b6ff">Log in instead →</a>');
+      } else if(status === 402) {
+        showErr('err3', 'Payment not confirmed. Please complete checkout and try again.');
+      } else {
+        showErr('err3', msg);
+      }
+      return; // ← DO NOT advance to step 4
     }
-  }).catch(()=>{
-    sessionStorage.setItem('hl_token','demo-token');
-    sessionStorage.setItem('hl_user',JSON.stringify({email:onboardData.email,role:'admin',crm_tier:plan}));
-  }).finally(()=>{
+
+    // Success — store real session and advance
+    sessionStorage.setItem('hl_token', data.token);
+    sessionStorage.setItem('hl_user',  JSON.stringify(data.user || { email: onboardData.email, role: 'admin', crm_tier: plan }));
+
     document.getElementById('step3').classList.remove('on');
     document.getElementById('step4').classList.add('on');
     setProgress(100);
+  })
+  .catch(err => {
+    clearTimeout(timeoutId);
+    if(btn){ btn.disabled = false; btn.textContent = 'Create Account'; }
+
+    if(err.name === 'AbortError') {
+      showErr('err3', 'Connection timed out. The server is starting up — please wait 30 seconds and try again.');
+      return;
+    }
+
+    // Network error — never fake success
+    showErr('err3', 'Connection failed. Please check your internet and try again. Your data has not been submitted.');
+    // DO NOT set demo-token. DO NOT advance to step 4.
   });
 }
 
