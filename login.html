@@ -115,15 +115,15 @@ function doLogin(){
 
     // Handle forced password change (invited users)
     if (data.must_change_password) {
-      sessionStorage.setItem('hl_token', data.token);
-      sessionStorage.setItem('hl_user', JSON.stringify(data.user || { email }));
+      localStorage.setItem('hl_token', data.token); // FIX #7: localStorage persists across tabs/restarts
+      localStorage.setItem('hl_user', JSON.stringify(data.user || { email }));
       window.location.href = 'change-password.html?required=1';
       return;
     }
 
     // Store real session
-    sessionStorage.setItem('hl_token', data.token);
-    sessionStorage.setItem('hl_user', JSON.stringify(data.user || {}));
+    localStorage.setItem('hl_token', data.token); // FIX #7: localStorage persists across tabs/restarts
+    localStorage.setItem('hl_user', JSON.stringify(data.user || {}));
 
     // Redirect to correct CRM based on plan
     const plan = data.user?.crm_tier || 'pro';
