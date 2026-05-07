@@ -6,159 +6,199 @@
 <title>HospiceLink — Subscription Status</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;background:#081426;color:#f4f8ff}
+html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;background:#05080f;color:#e8edf5}
 body{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
-.wrap{width:100%;max-width:560px}
+.wrap{width:100%;max-width:520px}
 .logo{text-align:center;margin-bottom:28px}
-.logo-mark{font-size:28px;font-weight:900;color:#49b6ff;letter-spacing:-1px}
-.logo-mark span{color:#ffd700}
-.logo-sub{font-size:12px;color:#6b7fa3;margin-top:4px}
-.card{background:#0d1b31;border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:32px 28px;margin-bottom:16px}
-.status-header{display:flex;align-items:center;gap:16px;margin-bottom:24px}
-.status-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
-.icon-active{background:rgba(140,255,102,.15);border:2px solid #8cff66}
-.icon-past-due{background:rgba(251,191,36,.15);border:2px solid #fbbf24}
-.icon-cancelled{background:rgba(224,85,85,.15);border:2px solid #e05555}
-.status-title{font-size:20px;font-weight:900}
-.status-sub{font-size:13px;color:#6b7fa3;margin-top:4px}
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
-.info-cell{background:#081f38;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:14px}
-.info-label{font-size:11px;color:#6b7fa3;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
-.info-val{font-size:15px;font-weight:800;color:#f4f8ff}
-.badge-pro{color:#49b6ff}
-.badge-max{color:#8cff66}
-.badge-gold{color:#ffd700}
-.action-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
-.btn{border:none;border-radius:999px;padding:10px 20px;font-weight:800;cursor:pointer;font-size:13px;font-family:inherit;transition:opacity .1s;text-decoration:none;display:inline-block}
+.logo-mark{font-size:26px;font-weight:900;color:#4fa3e3;letter-spacing:-1px}
+.logo-mark span{color:#4fc87a}
+.logo-sub{font-size:11px;color:#6b7fa3;margin-top:4px;letter-spacing:.05em;text-transform:uppercase}
+.card{background:#0d1b31;border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:32px 28px}
+.status-badge{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:6px 16px;font-size:12px;font-weight:700;margin-bottom:20px}
+.badge-active{background:rgba(79,200,122,.12);border:1px solid rgba(79,200,122,.3);color:#4fc87a}
+.badge-suspended{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#ef4444}
+.badge-canceled{background:rgba(100,116,139,.12);border:1px solid rgba(100,116,139,.3);color:#94a3b8}
+.badge-past-due{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:#f59e0b}
+h2{font-size:20px;font-weight:800;margin-bottom:8px;letter-spacing:-.02em}
+.subtitle{font-size:13px;color:#6b7fa3;margin-bottom:24px;line-height:1.6}
+.btn{display:block;width:100%;border:none;border-radius:999px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;text-align:center;text-decoration:none;margin-bottom:10px;transition:opacity .12s}
 .btn:hover{opacity:.88}
-.btn-b{background:#49b6ff;color:#081426}
-.btn-d{background:#12253d;color:#8b9fc4;border:1px solid rgba(255,255,255,.1)}
-.btn-r{background:#e05555;color:#fff}
+.btn-primary{background:#4fc87a;color:#05080f}
+.btn-secondary{background:transparent;border:1px solid rgba(255,255,255,.15);color:#e8edf5}
+.btn-danger{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#ef4444}
+.info-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
+.info-row:last-child{border-bottom:none}
+.info-label{color:#6b7fa3}
+.info-val{font-weight:600;color:#e8edf5}
+.info-val.green{color:#4fc87a}
+.info-val.red{color:#ef4444}
+.info-val.yellow{color:#f59e0b}
+.info-box{background:rgba(255,255,255,.04);border-radius:10px;padding:14px;margin-bottom:20px}
 .divider{border:none;border-top:1px solid rgba(255,255,255,.07);margin:20px 0}
-.alert-box{border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:13px;display:flex;align-items:flex-start;gap:10px}
-.alert-warn{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.3);color:#fbbf24}
-.alert-err{background:rgba(224,85,85,.08);border:1px solid rgba(224,85,85,.3);color:#f87171}
-.features-list{list-style:none}
-.features-list li{padding:7px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:8px}
-.features-list li:last-child{border:none}
-.features-list li::before{content:'✓';color:#8cff66;font-weight:900;font-size:11px}
+.err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#f87171;display:none;margin-bottom:14px}
+#loadingState{text-align:center;color:#6b7fa3;padding:40px 0;font-size:14px}
+#contentState{display:none}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="logo">
     <div class="logo-mark">Hospice<span>Link</span></div>
-    <div class="logo-sub">SUBSCRIPTION MANAGEMENT</div>
+    <div class="logo-sub">Subscription Status</div>
   </div>
-
-  <div class="card" id="statusCard">
-    <div id="loadingMsg" style="text-align:center;padding:20px;color:#6b7fa3">Loading subscription status…</div>
-    <div id="statusContent" style="display:none">
-      <div class="status-header">
-        <div class="status-icon" id="statusIcon"></div>
-        <div>
-          <div class="status-title" id="statusTitle"></div>
-          <div class="status-sub" id="statusSub"></div>
-        </div>
+  <div class="card">
+    <div class="err" id="errMsg"></div>
+    <div id="loadingState">Loading your account status...</div>
+    <div id="contentState">
+      <div id="statusBadge" class="status-badge badge-active">Active</div>
+      <h2 id="statusTitle">Your Subscription</h2>
+      <p class="subtitle" id="statusSubtitle">Manage your HospiceLink subscription below.</p>
+      <div class="info-box">
+        <div class="info-row"><span class="info-label">Plan</span><span class="info-val" id="planName">—</span></div>
+        <div class="info-row"><span class="info-label">Status</span><span class="info-val" id="planStatus">—</span></div>
+        <div class="info-row" id="periodRow"><span class="info-label">Period Ends</span><span class="info-val" id="periodEnd">—</span></div>
+        <div class="info-row" id="deleteRow" style="display:none"><span class="info-label">Data Deleted</span><span class="info-val red" id="deleteDate">—</span></div>
       </div>
-      <div id="alertArea"></div>
-      <div class="info-grid">
-        <div class="info-cell">
-          <div class="info-label">Current Plan</div>
-          <div class="info-val" id="planName">—</div>
-        </div>
-        <div class="info-cell">
-          <div class="info-label">Billing Amount</div>
-          <div class="info-val" id="billingAmt">—</div>
-        </div>
-        <div class="info-cell">
-          <div class="info-label">Next Billing Date</div>
-          <div class="info-val" id="nextBill">—</div>
-        </div>
-        <div class="info-cell">
-          <div class="info-label">Member Since</div>
-          <div class="info-val" id="memberSince">—</div>
-        </div>
-      </div>
-      <div class="action-row">
-        <a href="#" class="btn btn-b" onclick="managePortal(event)">Manage Billing →</a>
-        <a href="index.html#pricing" class="btn btn-d">View Plans</a>
-      </div>
-      <hr class="divider">
-      <div style="font-size:12px;font-weight:700;color:#8b9fc4;margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em">Your Plan Includes</div>
-      <ul class="features-list" id="featuresList"></ul>
+      <div id="actionButtons"></div>
     </div>
-  </div>
-  <div style="text-align:center;margin-top:8px">
-    <a href="javascript:history.back()" style="color:#49b6ff;text-decoration:none;font-size:13px;font-weight:700">← Back to CRM</a>
-    &nbsp;·&nbsp;
-    <a href="login.html" style="color:#6b7fa3;text-decoration:none;font-size:13px">Sign Out</a>
   </div>
 </div>
 <script>
-const BACKEND='https://wemarketplus-backend-1.onrender.com';
-const PLAN_FEATURES={
-  pro:['Dashboard & Prospect Tracking','Referral Source Management','Pipeline View','Visit Notes & Touch Log','Follow-up Reminders','Mileage Log','Goals & Productivity','AI Referral Scorecard','HIPAA Audit Log','1 Marketer Seat'],
-  max:['Everything in Pro','Smart Scheduling','EVV / Electronic Visit Verification','Family Communication Log','Territory Heat Map','Marketer Mobile Mode','Team Reports','Analytics Dashboard','2 Marketer Seats'],
-  gold:['Everything in Max','Nurse Scheduler','Bed Availability Tracker','Telehealth Integration','AI Referral Triage','Revenue Intelligence','Leaderboard & Scorecard','Compliance Engine','Patient Portal Access','Unlimited Seats']
-};
-const PLAN_PRICES={pro:'$199/mo',max:'$349/mo',gold:'$749/mo'};
+const BACKEND = 'https://api.wemarketplus.com';
 
-window.addEventListener('DOMContentLoaded',()=>{
-  const token=sessionStorage.getItem('hl_token');
-  if(!token){window.location.href='login.html';return;}
-  fetch(BACKEND+'/api/billing/subscription',{headers:{'Authorization':'Bearer '+token}})
-  .then(r=>r.json()).then(showStatus)
-  .catch(()=>{
-    const user=JSON.parse(sessionStorage.getItem('hl_user')||'{}');
-    showStatus({status:'active',plan:user.crm_tier||'pro',nextBillingDate:'2026-06-06',createdAt:'2026-01-15',cancelAtPeriodEnd:false});
-  });
-});
+function getToken() {
+  return localStorage.getItem('hl_token') || sessionStorage.getItem('hl_token') || '';
+}
 
-function showStatus(data){
-  document.getElementById('loadingMsg').style.display='none';
-  document.getElementById('statusContent').style.display='block';
-  const plan=data.plan||'pro';
-  const status=data.status||'active';
-  const icon=document.getElementById('statusIcon');
-  const title=document.getElementById('statusTitle');
-  const sub=document.getElementById('statusSub');
-  const alert=document.getElementById('alertArea');
-  if(status==='active'&&!data.cancelAtPeriodEnd){
-    icon.className='status-icon icon-active';icon.textContent='✓';
-    title.textContent='Active Subscription';sub.textContent='Your account is in good standing.';
-  } else if(data.cancelAtPeriodEnd){
-    icon.className='status-icon icon-past-due';icon.textContent='!';
-    title.textContent='Cancellation Scheduled';
-    sub.textContent='Your account access ends at the end of this billing period.';
-    alert.innerHTML='<div class="alert-box alert-warn">⚠️ Your subscription is set to cancel. To keep access, click "Manage Billing" and reactivate.</div>';
-  } else if(status==='past_due'){
-    icon.className='status-icon icon-past-due';icon.textContent='⚠';
-    title.textContent='Payment Past Due';sub.textContent='Please update your payment method to restore full access.';
-    alert.innerHTML='<div class="alert-box alert-err">🚨 Your payment failed. Update your payment method to avoid service interruption.</div>';
+function showErr(msg) {
+  var e = document.getElementById('errMsg');
+  e.textContent = msg;
+  e.style.display = 'block';
+}
+
+function renderStatus(data) {
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('contentState').style.display = 'block';
+
+  var badge   = document.getElementById('statusBadge');
+  var title   = document.getElementById('statusTitle');
+  var subtitle = document.getElementById('statusSubtitle');
+  var buttons = document.getElementById('actionButtons');
+  var status  = data.subscription_status || 'unknown';
+  var plan    = (data.crm_tier || 'pro');
+  var planLabel = plan.charAt(0).toUpperCase() + plan.slice(1);
+
+  document.getElementById('planName').textContent = 'HospiceLink ' + planLabel;
+  document.getElementById('planStatus').textContent = status.charAt(0).toUpperCase() + status.slice(1);
+
+  if (data.current_period_end) {
+    document.getElementById('periodEnd').textContent = new Date(data.current_period_end).toLocaleDateString();
   } else {
-    icon.className='status-icon icon-cancelled';icon.textContent='✕';
-    title.textContent='Subscription Inactive';sub.textContent='Your subscription has ended.';
+    document.getElementById('periodRow').style.display = 'none';
   }
-  const planLabel={pro:'HospiceLink Pro',max:'HospiceLink Max',gold:'HospiceLink Gold'}[plan]||plan;
-  const planClass={pro:'badge-pro',max:'badge-max',gold:'badge-gold'}[plan]||'';
-  document.getElementById('planName').innerHTML=`<span class="${planClass}">${planLabel}</span>`;
-  document.getElementById('billingAmt').textContent=PLAN_PRICES[plan]||'—';
-  const next=data.nextBillingDate?new Date(data.nextBillingDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';
-  const since=data.createdAt?new Date(data.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';
-  document.getElementById('nextBill').textContent=next;
-  document.getElementById('memberSince').textContent=since;
-  const fl=document.getElementById('featuresList');
-  fl.innerHTML=(PLAN_FEATURES[plan]||[]).map(f=>`<li>${f}</li>`).join('');
+  if (data.scheduled_delete_at) {
+    document.getElementById('deleteRow').style.display = 'flex';
+    document.getElementById('deleteDate').textContent = new Date(data.scheduled_delete_at).toLocaleDateString();
+  }
+
+  if (status === 'active') {
+    badge.className = 'status-badge badge-active';
+    badge.textContent = 'Active';
+    title.textContent = 'Your Subscription is Active';
+    subtitle.textContent = 'Your CRM is fully operational.';
+    buttons.innerHTML =
+      '<a href="login.html" class="btn btn-primary">Go to My CRM</a>' +
+      '<button class="btn btn-secondary" onclick="openPortal()">Manage Billing</button>';
+  } else if (status === 'past_due') {
+    badge.className = 'status-badge badge-past-due';
+    badge.textContent = 'Payment Past Due';
+    title.textContent = 'Payment Required';
+    subtitle.textContent = 'Your payment failed. Please update your payment method to keep your account active.';
+    buttons.innerHTML =
+      '<button class="btn btn-primary" onclick="openPortal()">Update Payment Method</button>' +
+      '<a href="login.html" class="btn btn-secondary">Continue to CRM</a>';
+  } else if (status === 'suspended') {
+    badge.className = 'status-badge badge-suspended';
+    badge.textContent = 'Suspended';
+    title.textContent = 'Account Suspended';
+    subtitle.textContent = 'Your account has been suspended due to a billing issue. Update your payment method to restore access immediately.';
+    buttons.innerHTML =
+      '<button class="btn btn-primary" onclick="openPortal()">Restore Access Now</button>' +
+      '<a href="mailto:support@wemarketplus.com" class="btn btn-secondary">Contact Support</a>';
+  } else if (status === 'canceled') {
+    badge.className = 'status-badge badge-canceled';
+    badge.textContent = 'Cancelled';
+    title.textContent = 'Subscription Ended';
+    subtitle.textContent = 'Your subscription has ended. Reactivate to regain access to your CRM and all your data.';
+    buttons.innerHTML =
+      '<a href="index.html#pricing" class="btn btn-primary">Reactivate My Account</a>' +
+      '<a href="mailto:support@wemarketplus.com" class="btn btn-secondary">Contact Support</a>';
+  } else {
+    badge.className = 'status-badge badge-canceled';
+    badge.textContent = status;
+    title.textContent = 'Account Status';
+    subtitle.textContent = 'Contact support if you need help with your account.';
+    buttons.innerHTML = '<a href="mailto:support@wemarketplus.com" class="btn btn-primary">Contact Support</a>';
+  }
 }
 
-function managePortal(e){
-  e.preventDefault();
-  const token=sessionStorage.getItem('hl_token');
-  fetch(BACKEND+'/api/billing/portal',{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'}})
-  .then(r=>r.json()).then(d=>{if(d.url)window.location.href=d.url;})
-  .catch(()=>alert('Billing portal unavailable. Please contact support@wemarketplus.com'));
+function openPortal() {
+  var tok = getToken();
+  if (!tok) { showErr('Please log in first to manage billing.'); return; }
+  fetch(BACKEND + '/api/billing/portal', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+    credentials: 'include',
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (d.url) { window.location.href = d.url; }
+    else { showErr(d.error || 'Failed to open billing portal. Contact support@wemarketplus.com'); }
+  })
+  .catch(function() { showErr('Connection error. Please try again.'); });
 }
+
+function loadStatus() {
+  var tok = getToken();
+  if (!tok) {
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('contentState').style.display = 'block';
+    document.getElementById('statusBadge').className = 'status-badge badge-canceled';
+    document.getElementById('statusBadge').textContent = 'Not Logged In';
+    document.getElementById('statusTitle').textContent = 'Sign In to View Status';
+    document.getElementById('statusSubtitle').textContent = 'Please log in to view your subscription status.';
+    document.getElementById('actionButtons').innerHTML =
+      '<a href="login.html" class="btn btn-primary">Log In</a>' +
+      '<a href="index.html#pricing" class="btn btn-secondary">View Plans</a>';
+    return;
+  }
+
+  fetch(BACKEND + '/api/subscription-status', {
+    headers: { 'Authorization': 'Bearer ' + tok },
+    credentials: 'include',
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (d.error) {
+      if (d.error.includes('not found')) {
+        showErr('Account not found. Contact support@wemarketplus.com');
+      } else {
+        // Try billing subscription endpoint as fallback
+        return fetch(BACKEND + '/api/billing/subscription', {
+          headers: { 'Authorization': 'Bearer ' + tok },
+          credentials: 'include',
+        }).then(function(r2) { return r2.json(); }).then(renderStatus);
+      }
+    } else {
+      renderStatus(d);
+    }
+  })
+  .catch(function() {
+    document.getElementById('loadingState').textContent = 'Unable to load status. Check your connection.';
+  });
+}
+
+document.addEventListener('DOMContentLoaded', loadStatus);
 </script>
 </body>
 </html>
