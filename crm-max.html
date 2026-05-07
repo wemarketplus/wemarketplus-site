@@ -178,7 +178,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
     <span style="color:#49b6ff;font-weight:800;font-size:12px">⚡ HospiceLink Max — </span>
     <span id="roleLabel" style="color:#49b6ff;font-weight:800;font-size:12px">Marketer View</span>
   </div>
-  <span id="managePlanBtn" style="display:none"><a href="https://wemarketplus.com/billing" style="background:#8cff66;color:#081426;border-radius:999px;padding:5px 14px;font-weight:900;font-size:12px;text-decoration:none">Manage Plan →</a></span>
+  <span id="managePlanBtn" style="display:none"><a href="#" onclick="openBillingPortal(); return false;" style="background:#8cff66;color:#081426;border-radius:999px;padding:5px 14px;font-weight:900;font-size:12px;text-decoration:none">Manage Plan →</a></span>
 </div>
 
 <div style="background:rgba(73,182,255,.05);border:1px solid rgba(73,182,255,.15);border-radius:9px;padding:9px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
@@ -1266,7 +1266,7 @@ function aiSend(){
   var u=document.createElement('div');u.className='ai-u';u.textContent=msg;msgs.appendChild(u);
   var b=document.createElement('div');b.className='ai-b';b.style.color='#94a3b8';b.textContent='Thinking…';msgs.appendChild(b);
   msgs.scrollTop=msgs.scrollHeight;
-  fetch('https://wemarketplus-backend-1.onrender.com/api/ai',{
+  fetch('https://api.wemarketplus.com/api/ai',{
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':'Bearer '+(localStorage.getItem('hl_token')||'')},
     body:JSON.stringify({messages:[{role:'user',content:msg}],system:'You are HospiceLink '+TIER+' AI, a hospice marketing CRM assistant. Be concise and actionable.'})
@@ -1502,6 +1502,375 @@ document.addEventListener('DOMContentLoaded', function() {
   scheduleProactiveRefresh();
   setInterval(scheduleProactiveRefresh, 120000);
 })();
+
+function openBillingPortal() {
+  _fetch(BACKEND + '/api/billing/portal', { method: 'POST' })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.url) { window.location.href = d.url; }
+      else { T(d.error || 'Unable to open billing portal. Contact support@wemarketplus.com', 'e'); }
+    })
+    .catch(function() { T('Connection error opening billing portal.', 'e'); });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DATA PERSISTENCE LAYER — v3.0 (#5)
+// ALL data stored in PostgreSQL via API. No localStorage for CRM data.
+// Only UI preferences (notif settings, onboarding) stored in localStorage.
+// ═══════════════════════════════════════════════════════════════════════════
+
+var _cachedProspects = null;
+var _cachedNotes     = null;
+var _cachedTasks     = null;
+var _cachedSources   = null;
+
+// ── API PERSISTENCE FUNCTIONS ──
+async function apiLoadProspects() {
+  try {
+    var r = await _fetch(BACKEND + '/api/prospects?limit=500');
+    var d = await r.json();
+    _cachedProspects = (d.data || []);
+    return _cachedProspects;
+  } catch(e) { console.error('Load prospects error:', e); return []; }
+}
+
+async function apiSaveProspect(data) {
+  try {
+    var r = await _fetch(BACKEND + '/api/prospects', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    var d = await r.json();
+    if (d.error) throw new Error(d.error);
+    _cachedProspects = null; // bust cache
+    return d;
+  } catch(e) { T(e.message || 'Failed to save prospect.', 'e'); return null; }
+}
+
+async function apiUpdateProspect(id, data) {
+  try {
+    var r = await _fetch(BACKEND + '/api/prospects/' + id, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    var d = await r.json();
+    if (d.error) throw new Error(d.error);
+    _cachedProspects = null;
+    return d;
+  } catch(e) { T(e.message || 'Failed to update prospect.', 'e'); return null; }
+}
+
+async function apiLoadNotes(prospectId) {
+  try {
+    var url = BACKEND + '/api/notes?limit=200' + (prospectId ? '&prospect_id=' + prospectId : '');
+    var r = await _fetch(url);
+    var d = await r.json();
+    return d.data || [];
+  } catch(e) { console.error('Load notes error:', e); return []; }
+}
+
+async function apiSaveNote(data) {
+  try {
+    var r = await _fetch(BACKEND + '/api/notes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    var d = await r.json();
+    if (d.error) throw new Error(d.error);
+    return d;
+  } catch(e) { T(e.message || 'Failed to save note.', 'e'); return null; }
+}
+
+async function apiLoadTasks() {
+  try {
+    var r = await _fetch(BACKEND + '/api/tasks?limit=200');
+    var d = await r.json();
+    return d.data || [];
+  } catch(e) { console.error('Load tasks error:', e); return []; }
+}
+
+async function apiSaveTask(data) {
+  try {
+    var r = await _fetch(BACKEND + '/api/tasks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    var d = await r.json();
+    if (d.error) throw new Error(d.error);
+    return d;
+  } catch(e) { T(e.message || 'Failed to save task.', 'e'); return null; }
+}
+
+async function apiCompleteTask(id) {
+  try {
+    var r = await _fetch(BACKEND + '/api/tasks/' + id + '/complete', { method: 'PATCH' });
+    var d = await r.json();
+    if (d.error) throw new Error(d.error);
+    return d;
+  } catch(e) { T(e.message || 'Failed to complete task.', 'e'); return null; }
+}
+
+async function apiLoadReferralSources() {
+  try {
+    var r = await _fetch(BACKEND + '/api/referral-sources');
+    var d = await r.json();
+    return d.data || [];
+  } catch(e) { return []; }
+}
+
+async function apiLoadReports() {
+  try {
+    var [sum, pipe] = await Promise.all([
+      _fetch(BACKEND + '/api/reports/summary').then(function(r) { return r.json(); }),
+      _fetch(BACKEND + '/api/reports/pipeline').then(function(r) { return r.json(); }),
+    ]);
+    return { summary: sum, pipeline: pipe.data || [] };
+  } catch(e) { return { summary: {}, pipeline: [] }; }
+}
+
+// ── OVERWRITE fake renderProspects to use real API ──
+async function loadAndRenderProspects() {
+  var tbody = document.getElementById('pxTable');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="9" style="color:#6b7fa3;text-align:center;padding:20px">Loading...</td></tr>';
+  var data = await apiLoadProspects();
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="9" style="color:#6b7fa3;text-align:center;padding:20px">No prospects yet. Add your first prospect above.</td></tr>';
+    return;
+  }
+  var PMAP = { inquiry:'pill-b', pending_admission:'pill-y', admitted:'pill-g', lost:'pill-r' };
+  var q = (document.getElementById('pxSearch') && document.getElementById('pxSearch').value || '').toLowerCase();
+  var rows = data.filter(function(p) {
+    return !q || (p.patient_name||'').toLowerCase().indexOf(q) !== -1 || (p.phone||'').indexOf(q) !== -1;
+  });
+  tbody.innerHTML = rows.map(function(p) {
+    var stage = (p.stage||'inquiry').toLowerCase().replace(' ','_');
+    return '<tr>'
+      + '<td><strong>' + (p.patient_name||'') + '</strong></td>'
+      + '<td><span class="pill ' + (PMAP[stage]||'pill-b') + '">' + (p.stage||'Inquiry') + '</span></td>'
+      + '<td>' + (p.phone||'—') + '</td>'
+      + '<td>' + (p.email||'—') + '</td>'
+      + '<td>' + (p.facility_name||'—') + '</td>'
+      + '<td>' + (p.assigned_name||'—') + '</td>'
+      + '<td>' + (p.follow_up_date ? new Date(p.follow_up_date).toLocaleDateString() : '—') + '</td>'
+      + '<td><button class="btn btn-d btn-sm" onclick="editProspectById(\'' + p.id + '\')">Edit</button></td>'
+      + '</tr>';
+  }).join('');
+  var cnt = document.getElementById('recCount');
+  if (cnt) cnt.textContent = rows.length + ' of ' + data.length + ' prospects';
+}
+
+function editProspectById(id) {
+  var p = (_cachedProspects||[]).find(function(x) { return x.id === id; });
+  if (!p) { T('Prospect not found.', 'e'); return; }
+  var modal = document.getElementById('pxModal');
+  if (!modal) return;
+  var fields = { pxName: p.patient_name, pxStatus: p.stage, pxPhone: p.phone, pxEmail: p.email,
+    pxSource: p.facility_name, pxDue: p.follow_up_date ? p.follow_up_date.split('T')[0] : '' };
+  Object.keys(fields).forEach(function(k) {
+    var el = document.getElementById(k);
+    if (el) el.value = fields[k] || '';
+  });
+  modal.dataset.editId = id;
+  modal.style.display = 'flex';
+}
+
+// Override saveProspect to use API
+async function saveProspect() {
+  var name = document.getElementById('pxName') && document.getElementById('pxName').value.trim();
+  if (!name) { T('Please enter a prospect name.', 'e'); return; }
+  var modal = document.getElementById('pxModal');
+  var editId = modal && modal.dataset.editId;
+  var data = {
+    patient_name: name,
+    stage:    (document.getElementById('pxStatus') && document.getElementById('pxStatus').value) || 'inquiry',
+    phone:    (document.getElementById('pxPhone') && document.getElementById('pxPhone').value) || '',
+    email:    (document.getElementById('pxEmail') && document.getElementById('pxEmail').value) || '',
+    facility_name: (document.getElementById('pxSource') && document.getElementById('pxSource').value) || '',
+    follow_up_date: (document.getElementById('pxDue') && document.getElementById('pxDue').value) || null,
+  };
+
+  var result;
+  if (editId) {
+    result = await apiUpdateProspect(editId, data);
+    if (result) { T('Prospect updated!'); if (modal) { modal.style.display='none'; modal.dataset.editId=''; } }
+  } else {
+    result = await apiSaveProspect(data);
+    if (result) { T('Prospect added!'); if (document.getElementById('pxName')) document.getElementById('pxName').value = ''; if (modal) { modal.style.display='none'; } }
+  }
+  if (result) loadAndRenderProspects();
+}
+
+// Override notes feed to load from API
+async function loadAndBuildNotesFeed() {
+  var feed = document.getElementById('notesFeed');
+  if (!feed) return;
+  feed.innerHTML = '<div style="color:#6b7fa3;text-align:center;padding:20px;font-size:13px">Loading notes...</div>';
+  var notes = await apiLoadNotes();
+  if (!notes.length) {
+    feed.innerHTML = '<div style="color:#6b7fa3;text-align:center;padding:20px;font-size:13px">No notes yet. Log your first field visit above.</div>';
+    return;
+  }
+  var URGENCY = {
+    hot:  {color:'#ef4444',bg:'rgba(239,68,68,.12)',border:'rgba(239,68,68,.3)',label:'Hot Lead'},
+    warm: {color:'#f59e0b',bg:'rgba(245,158,11,.12)',border:'rgba(245,158,11,.3)',label:'Warm'},
+    cold: {color:'#60a5fa',bg:'rgba(96,165,250,.12)',border:'rgba(96,165,250,.3)',label:'Cold'},
+  };
+  var ROLE_COLORS = {marketer:'#4fa3e3',nurse:'#4fc87a',caregiver:'#f59e0b',admin:'#a78bfa'};
+  feed.innerHTML = notes.map(function(n) {
+    var uc = URGENCY[n.urgency] || URGENCY.warm;
+    var rc = ROLE_COLORS[n.author_role] || '#4fa3e3';
+    var dateStr = new Date(n.created_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+    return '<div style="background:#0d1b31;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:16px;margin-bottom:12px">'
+      + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
+        + '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
+          + '<strong style="color:#f4f8ff;font-size:14px">' + (n.author_name||'Unknown') + '</strong>'
+          + '<span style="background:rgba(255,255,255,.06);color:' + rc + ';padding:2px 8px;border-radius:999px;font-size:10px;font-weight:700">' + (n.author_role||'') + '</span>'
+          + (n.contact_type ? '<span style="background:#1e3050;color:#8b949e;padding:2px 8px;border-radius:999px;font-size:10px">' + n.contact_type + '</span>' : '')
+          + '<span style="background:' + uc.bg + ';border:1px solid ' + uc.border + ';color:' + uc.color + ';padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700">' + uc.label + '</span>'
+          + (n.is_hot_lead ? '<span style="background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#ef4444;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:800">HOT LEAD</span>' : '')
+        + '</div>'
+        + '<span style="font-size:11px;color:#8b949e">' + dateStr + '</span>'
+      + '</div>'
+      + '<p style="font-size:13px;color:#c0cce0;margin:0 0 8px;line-height:1.6">' + (n.summary||'') + '</p>'
+      + (n.decision_makers ? '<p style="font-size:12px;color:#8b949e;margin:0 0 4px">Decision Makers: <strong style="color:#c0cce0">' + n.decision_makers + '</strong></p>' : '')
+      + (n.patient_status  ? '<p style="font-size:12px;color:#8b949e;margin:0 0 4px">Patient Status: <strong style="color:#c0cce0">' + n.patient_status + '</strong></p>' : '')
+      + (n.barriers && n.barriers !== 'None' ? '<p style="font-size:12px;color:#8b949e;margin:0 0 4px">Barrier: <strong style="color:#c0cce0">' + n.barriers + '</strong></p>' : '')
+      + (n.next_step ? '<div style="background:rgba(79,200,122,.06);border:1px solid rgba(79,200,122,.2);border-radius:8px;padding:8px 12px;margin:8px 0;font-size:12px;color:#4fc87a;font-weight:700">Next Step: <span style="color:#c0cce0;font-weight:400">' + n.next_step + '</span></div>' : '')
+      + (n.gps_location ? '<p style="font-size:11px;color:#6c8aab;margin:0">GPS: ' + n.gps_location + '</p>' : '')
+    + '</div>';
+  }).join('');
+}
+
+// Override saveNote
+async function saveFieldNote() {
+  var summary = document.getElementById('noteSummary') && document.getElementById('noteSummary').value.trim();
+  if (!summary || summary.length < 5) { T('Please enter a note summary (at least 5 characters).', 'e'); return; }
+  var data = {
+    summary:         summary,
+    contact_type:    (document.getElementById('noteContact') && document.getElementById('noteContact').value) || null,
+    urgency:         (document.getElementById('noteUrgency') && document.getElementById('noteUrgency').value) || 'warm',
+    decision_makers: (document.getElementById('noteDMs') && document.getElementById('noteDMs').value) || '',
+    patient_status:  (document.getElementById('notePatientStatus') && document.getElementById('notePatientStatus').value) || '',
+    barriers:        (document.getElementById('noteBarriers') && document.getElementById('noteBarriers').value) || '',
+    next_step:       (document.getElementById('noteNextStep') && document.getElementById('noteNextStep').value) || '',
+    follow_up_date:  (document.getElementById('noteFollowUpDate') && document.getElementById('noteFollowUpDate').value) || null,
+    gps_location:    (document.getElementById('noteGPS') && document.getElementById('noteGPS').value) || '',
+    is_hot_lead:     !!(document.getElementById('noteHot') && document.getElementById('noteHot').checked),
+  };
+  var result = await apiSaveNote(data);
+  if (result) {
+    T('Note saved!');
+    ['noteSummary','noteContact','noteDMs','notePatientStatus','noteBarriers','noteNextStep','noteFollowUpDate','noteGPS'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    if (document.getElementById('noteHot')) document.getElementById('noteHot').checked = false;
+    loadAndBuildNotesFeed();
+  }
+}
+
+// Override tasks
+async function loadAndRenderTasks() {
+  var container = document.getElementById('taskList') || document.getElementById('tasksContainer');
+  if (!container) return;
+  container.innerHTML = '<div style="color:#6b7fa3;text-align:center;padding:20px;font-size:13px">Loading tasks...</div>';
+  var tasks = await apiLoadTasks();
+  if (!tasks.length) {
+    container.innerHTML = '<div style="color:#6b7fa3;text-align:center;padding:20px;font-size:13px">No tasks yet.</div>';
+    return;
+  }
+  var today = new Date().toDateString();
+  container.innerHTML = tasks.map(function(t) {
+    var isOverdue = t.due_date && new Date(t.due_date) < new Date() && t.status !== 'completed';
+    var dueTxt = t.due_date ? new Date(t.due_date).toLocaleDateString() : 'No due date';
+    var pColor = {low:'#6b7fa3',medium:'#4fa3e3',high:'#f59e0b',urgent:'#ef4444'}[t.priority] || '#6b7fa3';
+    return '<div style="background:#0d1b31;border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:14px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px">'
+      + '<input type="checkbox" ' + (t.status === 'completed' ? 'checked disabled' : 'onchange="completeTask(\'' + t.id + '\', this)"') + ' style="margin-top:3px;accent-color:#4fc87a">'
+      + '<div style="flex:1">'
+        + '<div style="font-weight:700;font-size:14px;color:' + (t.status === 'completed' ? '#6b7fa3' : '#e8edf5') + ';text-decoration:' + (t.status === 'completed' ? 'line-through' : 'none') + '">' + (t.title||'') + '</div>'
+        + (t.description ? '<div style="font-size:12px;color:#6b7fa3;margin-top:3px">' + t.description + '</div>' : '')
+        + '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;align-items:center">'
+          + '<span style="font-size:11px;color:' + pColor + ';font-weight:700">' + (t.priority||'medium').toUpperCase() + '</span>'
+          + '<span style="font-size:11px;color:' + (isOverdue ? '#ef4444' : '#6b7fa3') + '">' + (isOverdue ? 'OVERDUE - ' : '') + dueTxt + '</span>'
+          + (t.assigned_name ? '<span style="font-size:11px;color:#6b7fa3">Assigned: ' + t.assigned_name + '</span>' : '')
+        + '</div>'
+      + '</div>'
+    + '</div>';
+  }).join('');
+}
+
+async function completeTask(id, checkbox) {
+  checkbox.disabled = true;
+  var result = await apiCompleteTask(id);
+  if (!result) { checkbox.checked = false; checkbox.disabled = false; return; }
+  T('Task completed!');
+  loadAndRenderTasks();
+}
+
+async function saveTask() {
+  var title = document.getElementById('taskTitle') && document.getElementById('taskTitle').value.trim();
+  if (!title) { T('Task title required.', 'e'); return; }
+  var data = {
+    title:       title,
+    description: (document.getElementById('taskDesc') && document.getElementById('taskDesc').value) || '',
+    due_date:    (document.getElementById('taskDue') && document.getElementById('taskDue').value) || null,
+    priority:    (document.getElementById('taskPriority') && document.getElementById('taskPriority').value) || 'medium',
+  };
+  var result = await apiSaveTask(data);
+  if (result) {
+    T('Task created!');
+    ['taskTitle','taskDesc','taskDue'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    loadAndRenderTasks();
+  }
+}
+
+// Dashboard stats from real API
+async function loadDashboardStats() {
+  try {
+    var r = await apiLoadReports();
+    var summary = r.summary || {};
+    var stageMap = {};
+    (summary.prospects || []).forEach(function(p) { stageMap[p.stage] = parseInt(p.count)||0; });
+    var total    = Object.values(stageMap).reduce(function(a,b){return a+b;},0);
+    var admitted = stageMap.admitted || 0;
+
+    var els = {
+      statTotal:    total,
+      statAdmitted: admitted,
+      statNotes:    summary.notes_30d || 0,
+      statSources:  summary.referral_sources || 0,
+    };
+    Object.keys(els).forEach(function(k) {
+      var el = document.getElementById(k);
+      if (el) el.textContent = els[k];
+    });
+  } catch(e) { console.error('Dashboard stats error:', e); }
+}
+
+// Hook into showTab to load real data when tabs are opened
+var _origShowTab = typeof showTab === 'function' ? showTab : null;
+function showTab(name) {
+  if (_origShowTab) _origShowTab(name);
+  if (name === 'dash')    loadDashboardStats();
+  if (name === 'records') loadAndRenderProspects();
+  if (name === 'notes')   loadAndBuildNotesFeed();
+  if (name === 'tasks')   loadAndRenderTasks();
+}
+
+// Auto-load on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+  loadDashboardStats();
+  loadAndRenderProspects();
+});
+
 </script>
 </body>
 </html>
