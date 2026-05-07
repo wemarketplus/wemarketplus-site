@@ -1380,13 +1380,18 @@ document.addEventListener('DOMContentLoaded',function(){
 // RBAC: Determine role from JWT at page load — immutable, no switching
 document.addEventListener('DOMContentLoaded', function() {
   var tok = sessionStorage.getItem('hl_token') || localStorage.getItem('hl_token');
-  var role = 'marketer'; // default
-  if (tok) {
-    try {
-      var payload = JSON.parse(atob(tok.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
-      role = payload.role || 'marketer';
-    } catch(e) {}
-  }
+  // ─── TIER ENFORCEMENT ───────────────────────────────────────────────────────
+  if (!tok) { window.location.href = 'login.html?reason=auth_required'; return; }
+  var payload;
+  try {
+    payload = JSON.parse(atob(tok.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+  } catch(e) { window.location.href = 'login.html?reason=invalid_token'; return; }
+  var tier = payload.crm_tier || 'pro';
+  if (tier === 'pro')  { window.location.href = 'crm-pro.html';  return; }
+  if (tier === 'gold') { window.location.href = 'crm-gold.html'; return; }
+  // tier === 'max' — correct page, continue
+  // ────────────────────────────────────────────────────────────────────────────
+  var role = payload.role || 'marketer';
   // Set the role badge
   var badge = document.getElementById('roleBadge');
   if (badge) {
