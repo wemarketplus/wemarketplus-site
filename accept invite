@@ -85,7 +85,7 @@ body{display:flex;align-items:center;justify-content:center;min-height:100vh;pad
   </div>
 </div>
 <script>
-const BACKEND     = 'https://api.wemarketplus.com';
+const BACKEND = 'https://api.wemarketplus.com';
 var inviteToken   = (new URLSearchParams(window.location.search)).get('token');
 
 if (!inviteToken) {
