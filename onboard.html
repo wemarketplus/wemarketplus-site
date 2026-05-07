@@ -147,7 +147,8 @@ body{display:flex;align-items:center;justify-content:center;min-height:100vh;pad
 
 <script>
 const params=new URLSearchParams(window.location.search);
-const plan=params.get('plan')||'pro';
+const plan    = params.get('plan')||'pro';
+const pkgParam = params.get('pkg') || `${plan}_0_${plan==='pro'?'5':'10'}`; // e.g. 'gold_0_10'
 const onboardData={};
 
 function setProgress(pct){
@@ -214,7 +215,7 @@ function next3(){
     method:  'POST',
     headers: {'Content-Type': 'application/json'},
     signal:  controller.signal,
-    body:    JSON.stringify({ ...onboardData, plan, stripe_session_id: stripeSessionId })
+    body:    JSON.stringify({ ...onboardData, plan, package: pkgParam, stripe_session_id: stripeSessionId })
   })
   .then(r => {
     clearTimeout(timeoutId);
@@ -240,8 +241,8 @@ function next3(){
     }
 
     // Success — store real session and advance
-    sessionStorage.setItem('hl_token', data.token);
-    sessionStorage.setItem('hl_user',  JSON.stringify(data.user || { email: onboardData.email, role: 'admin', crm_tier: plan }));
+    localStorage.setItem('hl_token', data.token); // FIX #7: localStorage persists across tabs
+    localStorage.setItem('hl_user', JSON.stringify(data.user || { email: onboardData.email, role: 'admin', crm_tier: plan }));
 
     document.getElementById('step3').classList.remove('on');
     document.getElementById('step4').classList.add('on');
