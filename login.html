@@ -87,34 +87,64 @@ function doLogin(){
   btn.textContent='Signing in…';
   btn.disabled=true;
 
+  // Set a timeout — Render cold starts can take 30-60s
+  const controller = new AbortController();
+  const timeoutId  = setTimeout(() => controller.abort(), 45000);
+
   fetch(BACKEND+'/api/auth/login',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    credentials:'include',
-    body:JSON.stringify({email,password:pass})
+    method:      'POST',
+    headers:     {'Content-Type':'application/json'},
+    credentials: 'include',
+    signal:      controller.signal,
+    body:        JSON.stringify({email, password:pass})
   })
-  .then(r=>r.json())
-  .then(data=>{
-    if(data.token || data.user){
-      // Store session
-      sessionStorage.setItem('hl_token', data.token||'demo');
-      sessionStorage.setItem('hl_user', JSON.stringify(data.user||{email,role:'admin'}));
-      const plan = (data.user&&data.user.crm_tier)||'pro';
-      // Redirect to correct CRM
-      const dest = plan==='gold'?'crm-gold.html':plan==='max'?'crm-max.html':'crm-pro.html';
-      window.location.href = dest;
-    } else {
-      // Demo fallback — redirect to plan selector
-      showError(data.message||'Login failed. Check your credentials.');
-      btn.textContent='Sign In';
-      btn.disabled=false;
+  .then(r => {
+    clearTimeout(timeoutId);
+    if (!r.ok && r.status !== 200) {
+      return r.json().then(d => { throw { status: r.status, message: d.error || 'Login failed.' }; });
     }
+    return r.json();
   })
-  .catch(()=>{
-    // Backend unreachable — demo mode
-    sessionStorage.setItem('hl_token','demo-token');
-    sessionStorage.setItem('hl_user',JSON.stringify({email,role:'admin',crm_tier:'pro'}));
-    window.location.href='crm-pro.html';
+  .then(data => {
+    if (!data.token) {
+      showError(data.error || data.message || 'Login failed. Check your credentials.');
+      btn.textContent = 'Sign In';
+      btn.disabled = false;
+      return;
+    }
+
+    // Handle forced password change (invited users)
+    if (data.must_change_password) {
+      sessionStorage.setItem('hl_token', data.token);
+      sessionStorage.setItem('hl_user', JSON.stringify(data.user || { email }));
+      window.location.href = 'change-password.html?required=1';
+      return;
+    }
+
+    // Store real session
+    sessionStorage.setItem('hl_token', data.token);
+    sessionStorage.setItem('hl_user', JSON.stringify(data.user || {}));
+
+    // Redirect to correct CRM based on plan
+    const plan = data.user?.crm_tier || 'pro';
+    const dest = plan === 'gold' ? 'crm-gold.html' : plan === 'max' ? 'crm-max.html' : 'crm-pro.html';
+    window.location.href = dest;
+  })
+  .catch(err => {
+    clearTimeout(timeoutId);
+    btn.textContent = 'Sign In';
+    btn.disabled = false;
+
+    if (err.name === 'AbortError') {
+      showError('Connection timed out. The server may be starting up — please try again in 30 seconds.');
+      return;
+    }
+    if (err.status === 401) { showError('Incorrect email or password.'); return; }
+    if (err.status === 403) { showError('Account suspended. Contact support@wemarketplus.com'); return; }
+    if (err.status >= 500)  { showError('Server error. Please try again in a moment.'); return; }
+
+    // Network failure — never fake a login
+    showError('Unable to connect. Please check your internet connection and try again.');
   });
 }
 
