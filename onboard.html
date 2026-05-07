@@ -27,6 +27,7 @@ body{display:flex;align-items:center;justify-content:center;min-height:100vh;pad
 .field input::placeholder{color:#3a4d6b}
 .field select option{background:#0d1b31}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.row{grid-template-columns:1fr}.wrap{max-width:100%}.card{padding:24px 18px}}
 .btn-next{width:100%;background:#49b6ff;color:#081426;border:none;border-radius:999px;padding:13px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:8px;transition:opacity .15s}
 .btn-next:hover{opacity:.88}
 .btn-next.gold{background:#ffd700}
@@ -106,6 +107,11 @@ body{display:flex;align-items:center;justify-content:center;min-height:100vh;pad
     <div class="card">
       <div class="step-badge">STEP 3 OF 4 — BUSINESS ASSOCIATE AGREEMENT</div>
       <div class="card-title">Sign your BAA</div>
+      <div class="card-sub" style="color:#ffd700;font-weight:700;font-size:12px;margin-bottom:12px">⚖️ Required for HIPAA Compliance — Please Read</div>
+      <div style="background:#081f38;border:1px solid rgba(73,182,255,.15);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:#6b9edd;line-height:1.7">
+        <strong style="color:#f4f8ff;display:block;margin-bottom:6px">What is a Business Associate Agreement (BAA)?</strong>
+        A BAA is a legally required HIPAA contract between your hospice agency and HospiceLink. It establishes how we protect your patients' health information (PHI). <strong style="color:#49b6ff">You must sign this to use the CRM with real patient data.</strong>
+      </div>
       <div class="card-sub">HIPAA requires a Business Associate Agreement before you access any patient data.</div>
       <div class="err" id="err3"></div>
       <div class="baa-box">
