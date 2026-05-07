@@ -1,6 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+// ─── DEMO MODE: Complete API interceptor ─────────────────────────────────────
+// Intercepts ALL /api/ calls and returns realistic static data
+// Demo never hits the real backend — no 401s, no cold starts
+(function(){
+  var BACKEND = 'https://api.wemarketplus.com';
+
+  // FIX #11: Non-expiring demo token (exp = year 2099)
+  var DEMO_PAYLOAD = btoa(JSON.stringify({
+    user_id:'demo-user', tenant_id:'demo-tenant',
+    email:'demo@hospicelink.demo', role:'admin', crm_tier:'gold',
+    first_name:'Demo', last_name:'Admin',
+    exp: Math.floor(new Date('2099-01-01').getTime()/1000)
+  })).replace(/=/g,'');
+  var DEMO_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.' + DEMO_PAYLOAD + '.DEMO_SIG';
+
+  localStorage.setItem('hl_token', DEMO_TOKEN);
+  localStorage.setItem('hl_user', JSON.stringify({
+    id:'demo-user', email:'demo@hospicelink.demo', role:'admin',
+    crm_tier:'gold', first_name:'Demo', last_name:'Admin'
+  }));
+
+  // ── DEMO DATA ─────────────────────────────────────────────────
+  var DEMO = {
+    prospects: { data:[
+      {id:'d1',patient_name:'Dorothy Fleming',stage:'evaluation',urgency:'hot',
+       facility_name:'Baylor Medical Center',city:'Dallas',state:'TX',
+       ai_admit_score:9.1,assigned_to:'u-ericka',
+       assignedTo:{firstName:'Ericka',lastName:'Torres'}},
+      {id:'d2',patient_name:'Robert Castillo',stage:'pending',urgency:'warm',
+       facility_name:'Prestonwood SNF',city:'Plano',state:'TX',
+       ai_admit_score:6.4,assigned_to:'u-ericka',
+       assignedTo:{firstName:'Ericka',lastName:'Torres'}},
+      {id:'d3',patient_name:'Helen Nakamura',stage:'admitted',urgency:'warm',
+       facility_name:'Baylor Medical Center',city:'Dallas',state:'TX',
+       ai_admit_score:8.8,assigned_to:'u-ericka',
+       assignedTo:{firstName:'Ericka',lastName:'Torres'}},
+      {id:'d4',patient_name:'James Whitfield',stage:'inquiry',urgency:'cold',
+       facility_name:'North Park Rehab',city:'Dallas',state:'TX',
+       ai_admit_score:4.2,assigned_to:'u-mike',
+       assignedTo:{firstName:'Mike',lastName:'Reynolds'}},
+    ], total:4 },
+
+    notes: { data:[
+      {id:'n1',prospect_id:'d1',content:'Family meeting completed. Daughter is POA. Very receptive.',
+       author:{firstName:'Ericka',lastName:'Torres'},created_at:new Date(Date.now()-86400000).toISOString()},
+      {id:'n2',prospect_id:'d2',content:'Left voicemail with referring CM. Follow up Thu.',
+       author:{firstName:'Mike',lastName:'Reynolds'},created_at:new Date(Date.now()-172800000).toISOString()},
+    ]},
+
+    mileage: { data:[
+      {id:'m1',date:new Date().toISOString().split('T')[0],miles:47.2,
+       from_address:'Office, Dallas TX',to_address:'Baylor Medical, Dallas TX',
+       purpose:'Facility visit — Dorothy F.',user:{firstName:'Ericka',lastName:'Torres'}},
+      {id:'m2',date:new Date(Date.now()-86400000).toISOString().split('T')[0],miles:31.5,
+       from_address:'Office, Dallas TX',to_address:'Prestonwood SNF, Plano TX',
+       purpose:'Referral meeting — Dr. Patel',user:{firstName:'Mike',lastName:'Reynolds'}},
+    ], total_miles:78.7},
+
+    users: { data:[
+      {id:'u-admin',email:'admin@demoagency.com',first_name:'Demo',last_name:'Admin',
+       role:'admin',is_active:true,last_login:new Date().toISOString()},
+      {id:'u-ericka',email:'ericka@demoagency.com',first_name:'Ericka',last_name:'Torres',
+       role:'marketer',is_active:true,last_login:new Date(Date.now()-3600000).toISOString()},
+      {id:'u-mike',email:'mike@demoagency.com',first_name:'Mike',last_name:'Reynolds',
+       role:'marketer',is_active:true,last_login:new Date(Date.now()-7200000).toISOString()},
+    ], seats:{ total:10, used:3, available:7, marketers:2, nurses:0, caregivers:0 }},
+
+    referralSources: { data:[
+      {id:'rs1',name:'Baylor Medical Center',type:'Hospital',city:'Dallas',state:'TX',
+       referrals_ytd:12,admits_ytd:8,conversion_rate:66.7,
+       last_contact:new Date(Date.now()-259200000).toISOString()},
+      {id:'rs2',name:'Prestonwood SNF',type:'SNF',city:'Plano',state:'TX',
+       referrals_ytd:7,admits_ytd:4,conversion_rate:57.1,
+       last_contact:new Date(Date.now()-432000000).toISOString()},
+      {id:'rs3',name:'Dr. Patel — CM',type:'Physician',city:'Dallas',state:'TX',
+       referrals_ytd:5,admits_ytd:3,conversion_rate:60.0,
+       last_contact:new Date(Date.now()-86400000).toISOString()},
+    ]},
+
+    pipeline: { data:[
+      {stage:'inquiry',count:'4'},{stage:'contacted',count:'3'},
+      {stage:'evaluation',count:'2'},{stage:'admitted',count:'3'},{stage:'lost',count:'1'}
+    ]},
+
+    summary: { mrr:899, users:3, active7d:3 },
+
+    notifications: { data:[
+      {id:'notif1',type:'cold_alert',message:'James Whitfield — 14+ days without contact',
+       created_at:new Date().toISOString(),read:false},
+      {id:'notif2',type:'follow_up',message:'Follow up due: Robert Castillo',
+       created_at:new Date(Date.now()-3600000).toISOString(),read:false},
+    ]},
+
+    tasks: { data:[
+      {id:'t1',title:"Call Dorothy Fleming's family (POA)",priority:'urgent',status:'pending',
+       due_date:new Date().toISOString()},
+      {id:'t2',title:'Schedule consult — Robert Castillo',priority:'high',status:'pending',
+       due_date:new Date(Date.now()+86400000).toISOString()},
+    ]},
+
+    territories: { data:[
+      {id:'ter1',name:'Baylor Territory',active_prospects:8,admits_ytd:12,revenue_ytd:96000},
+      {id:'ter2',name:'North Dallas Territory',active_prospects:5,admits_ytd:7,revenue_ytd:56000},
+      {id:'ter3',name:'McKinney / Plano',active_prospects:4,admits_ytd:5,revenue_ytd:40000},
+    ]},
+
+    aiResponse: { response:"Great question! For hospice marketing, your next step with Dorothy Fleming should be scheduling a family consultation to address caregiver burnout concerns. Her AI Triage score of 9.1 indicates high admission probability.", daily_remaining: 195 },
+  };
+
+  // ── ROUTE MATCHER ─────────────────────────────────────────────
+  var _fetch = window.fetch;
+  window.fetch = function(url, opts) {
+    if (typeof url !== 'string' || !url.includes('/api/')) return _fetch(url, opts);
+
+    function ok(data) {
+      return Promise.resolve({
+        ok: true, status: 200,
+        json: function() { return Promise.resolve(data); },
+        text: function() { return Promise.resolve(JSON.stringify(data)); },
+      });
+    }
+
+    var u = url.replace(/.*\/api\//, '').split('?')[0];
+
+    if (/^prospects/.test(u))         return ok(DEMO.prospects);
+    if (/^notes/.test(u))             return ok(DEMO.notes);
+    if (/^mileage/.test(u))           return ok(DEMO.mileage);
+    if (/^users/.test(u))             return ok(DEMO.users);
+    if (/^referral-sources/.test(u))  return ok(DEMO.referralSources);
+    if (/^reports\/pipeline/.test(u)) return ok(DEMO.pipeline);
+    if (/^reports\/summary/.test(u))  return ok(DEMO.summary);
+    if (/^notifications/.test(u))     return ok(DEMO.notifications);
+    if (/^tasks/.test(u))             return ok(DEMO.tasks);
+    if (/^territories/.test(u))       return ok(DEMO.territories);
+    if (/^ai$/.test(u))               return ok(DEMO.aiResponse);
+    if (/^auth\/refresh/.test(u))     return ok({ token: DEMO_TOKEN });
+    if (/^seats/.test(u))             return ok(DEMO.users.seats);
+    if (/^audit/.test(u))             return ok({ data: [] });
+    if (/^billing/.test(u))           return ok({ url: null });
+    if (/^invites/.test(u) && opts?.method === 'POST') {
+      return ok({ message: 'Invite sent (demo only — no real email sent)' });
+    }
+
+    // Catch-all: success with empty data
+    return ok({ data: [], message: 'Demo mode' });
+  };
+})();
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>HospiceLink Pro — Interactive Demo</title>
