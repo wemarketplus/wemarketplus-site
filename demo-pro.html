@@ -11,7 +11,7 @@
   // FIX #11: Non-expiring demo token (exp = year 2099)
   var DEMO_PAYLOAD = btoa(JSON.stringify({
     user_id:'demo-user', tenant_id:'demo-tenant',
-    email:'demo@hospicelink.demo', role:'admin', crm_tier:'gold',
+    email:'demo@hospicelink.demo', role:'admin', crm_tier: 'pro',
     first_name:'Demo', last_name:'Admin',
     exp: Math.floor(new Date('2099-01-01').getTime()/1000)
   })).replace(/=/g,'');
@@ -21,7 +21,7 @@
   localStorage.setItem('hl_demo_token', DEMO_TOKEN);
   localStorage.setItem('hl_demo_user', JSON.stringify({
     id:'demo-user', email:'demo@hospicelink.demo', role:'admin',
-    crm_tier:'gold', first_name:'Demo', last_name:'Admin'
+    crm_tier: 'pro', first_name:'Demo', last_name:'Admin'
   }));
 
   // ── DEMO DATA ─────────────────────────────────────────────────
@@ -1310,7 +1310,7 @@ function aiSend(){
   var u=document.createElement('div');u.className='ai-u';u.textContent=msg;msgs.appendChild(u);
   var b=document.createElement('div');b.className='ai-b';b.style.color='#94a3b8';b.textContent='Thinking…';msgs.appendChild(b);
   msgs.scrollTop=msgs.scrollHeight;
-  fetch('https://wemarketplus-backend-1.onrender.com/api/ai',{
+  fetch('https://api.wemarketplus.com/api/ai',{
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':'Bearer '+(localStorage.getItem('hl_demo_token')||'')},
     body:JSON.stringify({messages:[{role:'user',content:msg}],system:'You are HospiceLink '+TIER+' AI, a hospice marketing CRM assistant. Be concise and actionable.'})
@@ -1419,6 +1419,30 @@ document.addEventListener('DOMContentLoaded',function(){
   var sel=document.getElementById('roleSelect');
   setRole(sel?sel.value:'marketer');
 });
+
+// Demo AI — dynamic responses based on question content (#19)
+var DEMO_AI_RESPONSES = [
+  {keywords:['admit','admission','census'], response:'Based on your pipeline, you have 3 prospects at Pending Admission stage. Dorothy F. at Baylor is clinically eligible today — her daughter Lisa is the key POA contact. I recommend an outreach call this morning.'},
+  {keywords:['referral','source','facility'], response:'Your top referral source this month is Baylor University Medical Center with 4 referrals. North Park Rehab is underperforming — only 1 referral in 90 days. Would you like a re-engagement template for their case manager?'},
+  {keywords:['note','visit','contact'], response:'You have 7 field visits logged this week. Hot leads flagged: Mary J. (Baylor - family POA reached, visit scheduled), John T. (North Park Rehab - paperwork pending). Next priority: Follow up on Dorothy F. before competitor visits tomorrow.'},
+  {keywords:['task','reminder','follow','due'], response:'You have 3 tasks due today: Call Lisa F. (Dorothy's daughter), Submit paperwork for John T., and follow up with Dr. Chen's office on referral orders. The most time-sensitive is the call to Lisa — this family is close to a decision.'},
+  {keywords:['script','say','talk','conversation'], response:'Opening script for Mary J.'s family:
+
+"Hi Mrs. Smith, this is [your name] with HospiceLink. I know this is a difficult time for your family. I wanted to reach out because Dr. Johnson mentioned that Mary's comfort would be our top priority. Could I have 10 minutes to walk you through how our team supports families just like yours?"'},
+  {keywords:['hot','urgent','priority','today'], response:'Your hot priority today: Mary J. at Baylor — family disagreement resolved, daughter Lisa is now the sole POA and is ready to meet. Contact her before 2 PM. John T. paperwork gap — insurance verification pending since yesterday.'},
+];
+
+function getDemoAIResponse(question) {
+  var q = (question || '').toLowerCase();
+  for (var i = 0; i < DEMO_AI_RESPONSES.length; i++) {
+    var entry = DEMO_AI_RESPONSES[i];
+    if (entry.keywords.some(function(k) { return q.indexOf(k) !== -1; })) {
+      return entry.response;
+    }
+  }
+  return 'Great question. Based on your current pipeline of 3 active prospects with 2 follow-ups due this week, I recommend focusing on Mary J. at Baylor today — the family is warm and timing is critical. Would you like a customized outreach script or follow-up reminder?';
+}
+
 </script>
 </body>
 </html>
