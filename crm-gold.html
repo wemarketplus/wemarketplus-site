@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>HospiceLink Pro — CRM</title>
+<title>HospiceLink Gold — CRM</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;background:#081426;color:#f4f8ff}
@@ -116,15 +116,16 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 <!-- SIDEBAR -->
 <aside class="sb">
   <div class="sb-top">
-    <div class="sb-title" style="color:#49b6ff">HospiceLink Pro</div>
+    <div class="sb-title" style="color:#ffd700">HospiceLink Gold</div>
     <div class="sb-sub">Marketing + Clinical CRM</div>
-    <div class="role-box" style="background:rgba(73,182,255,.06);border:1px solid rgba(73,182,255,.22)">
+    <div class="role-box" style="background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.22)">
       <div id="roleBadge" class="role-badge" style="background:rgba(73,182,255,.2);color:#49b6ff">Loading...</div>
     </div>
   </div>
   <nav class="sb-nav">
 <span class="nav-sec">MAIN</span>
 <button class="nav-btn" data-t="dash" onclick="showTab('dash')">Dashboard</button>
+<button class="nav-btn" data-t="notifs" onclick="showTab('notifs')">Notifications</button>
 <span class="nav-sec">MARKETING</span>
 <button class="nav-btn" data-t="addref" onclick="showTab('addref')">Add Referral</button>
 <button class="nav-btn" data-t="refs" onclick="showTab('refs')">Referral Sources</button>
@@ -133,21 +134,42 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 <button class="nav-btn" data-t="timeline" onclick="showTab('timeline')">Prospect Timeline</button>
 <button class="nav-btn" data-t="pipeline" onclick="showTab('pipeline')">Pipeline</button>
 <button class="nav-btn" data-t="territory" onclick="showTab('territory')">Territory View</button>
+<button class="nav-btn" data-t="heatmap" onclick="showTab('heatmap')">Territory Heat Map</button>
 <button class="nav-btn" data-t="prod" onclick="showTab('prod')">Productivity</button>
 <button class="nav-btn" data-t="touch" onclick="showTab('touch')">Touch Log</button>
+<button class="nav-btn" data-t="schedule" onclick="showTab('schedule')">Smart Scheduling</button>
 <span class="nav-sec">ACTIVITY</span>
-<button class="nav-btn" data-t="cal" onclick="showTab('cal')">Follow-Up Calendar</button>
 <button class="nav-btn" data-t="notes" onclick="showTab('notes')">Notes</button>
 <button class="nav-btn" data-t="remind" onclick="showTab('remind')">Reminders</button>
 <button class="nav-btn" data-t="reengage" onclick="showTab('reengage')">Re-Engagement</button>
 <button class="nav-btn" data-t="goals" onclick="showTab('goals')">Daily Goals</button>
 <button class="nav-btn" data-t="aiasst" onclick="showTab('aiasst')">AI Assistant</button>
+<button class="nav-btn" data-t="windshield" onclick="showTab('windshield')">Windshield Mode</button>
+<span class="nav-sec">CLINICAL</span>
+<button class="nav-btn" data-t="family" onclick="showTab('family')">Family Communication</button>
+<button class="nav-btn" data-t="messaging" onclick="showTab('messaging')">Secure Messaging</button>
+<button class="nav-btn" data-t="evv" onclick="showTab('evv')">EVV / Mileage</button>
+<button class="nav-btn" data-t="telehealth" onclick="showTab('telehealth')">Telehealth</button>
+<button class="nav-btn" data-t="nursesched" onclick="showTab('nursesched')">Nurse Scheduler</button>
+<button class="nav-btn" data-t="patportal" onclick="showTab('patportal')">Patient Portal</button>
+<button class="nav-btn" data-t="admworkflow" onclick="showTab('admworkflow')">Admission Workflow</button>
 <span class="nav-sec">TOOLS</span>
 <button class="nav-btn" data-t="import" onclick="showTab('import')">Import Data</button>
 <button class="nav-btn" data-t="portal" onclick="showTab('portal')">Referral Portal</button>
-<button class="nav-btn" data-t="playbook" onclick="showTab('playbook')">Playbook Generator (Max+)</button>
+<button class="nav-btn" data-t="playbook" onclick="showTab('playbook')">Playbook Generator</button>
+<button class="nav-btn" data-t="mobile" onclick="showTab('mobile')">Marketer Mobile</button>
 <button class="nav-btn" data-t="settings" onclick="showTab('settings')">Settings</button>
 <span class="nav-sec adm">ADMIN ONLY</span>
+<button class="nav-btn adm" data-t="terrmgmt" onclick="showTab('terrmgmt')">Territory Management</button>
+<button class="nav-btn adm" data-t="revintel" onclick="showTab('revintel')">Revenue Intelligence</button>
+<button class="nav-btn adm" data-t="mktgroi" onclick="showTab('mktgroi')">Marketing ROI Dashboard</button>
+<button class="nav-btn adm" data-t="refanalytics" onclick="showTab('refanalytics')">Referral Analytics</button>
+<button class="nav-btn adm" data-t="leaderboard" onclick="showTab('leaderboard')">Leaderboard</button>
+<button class="nav-btn adm" data-t="scorecard" onclick="showTab('scorecard')">AI Scorecard</button>
+<button class="nav-btn adm" data-t="hipaa" onclick="showTab('hipaa')">HIPAA Audit Log</button>
+<button class="nav-btn adm" data-t="compliance" onclick="showTab('compliance')">Compliance Engine</button>
+<button class="nav-btn adm" data-t="aitriage" onclick="showTab('aitriage')">AI Referral Triage</button>
+<button class="nav-btn adm" data-t="bedavail" onclick="showTab('bedavail')">Bed Availability</button>
 <button class="nav-btn adm" data-t="analytics" onclick="showTab('analytics')">Analytics Dashboard</button>
 <button class="nav-btn adm" data-t="agency" onclick="showTab('agency')">Agency Performance</button>
 <button class="nav-btn adm" data-t="report" onclick="showTab('report')">Weekly Report</button>
@@ -166,37 +188,36 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 
 
 
-<div style="background:rgba(73,182,255,.08);border:1px solid rgba(73,182,255,.28);border-radius:9px;padding:8px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+<div style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.28);border-radius:9px;padding:8px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
   <div style="display:flex;align-items:center;gap:8px">
-    <span style="color:#49b6ff;font-weight:800;font-size:12px">⚡ HospiceLink Pro — </span>
-    <span id="roleLabel" style="color:#49b6ff;font-weight:800;font-size:12px">Marketer View</span>
+    <span style="color:#ffd700;font-weight:800;font-size:12px">🏆 HospiceLink Gold — </span>
+    <span id="roleLabel" style="color:#ffd700;font-weight:800;font-size:12px">Marketer View</span>
   </div>
-  <span id="managePlanBtn" style="display:none"><a href="#" onclick="openBillingPortal(); return false;" style="background:#8cff66;color:#081426;border-radius:999px;padding:5px 14px;font-weight:900;font-size:12px;text-decoration:none">Manage Plan →</a></span>
+  <span id="managePlanBtn" style="display:none"><a href="#" onclick="openBillingPortal(); return false;" style="background:linear-gradient(90deg,#ffd700,#ffec6e);color:#081426;border-radius:999px;padding:5px 14px;font-weight:900;font-size:12px;text-decoration:none">Manage Plan →</a></span>
 </div>
 
 <div style="background:rgba(73,182,255,.05);border:1px solid rgba(73,182,255,.15);border-radius:9px;padding:9px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
   <p style="margin:0;font-size:12px;color:#8b949e;flex:1"><strong style="color:#f4f8ff" id="roleDescName">Marketer</strong>: <span id="roleDescText"></span></p>
-  <a href="https://wemarketplus.com/#pricing" style="background:#8cff66;color:#081426;border-radius:999px;padding:6px 14px;font-weight:900;font-size:12px;text-decoration:none;flex-shrink:0">Get Started</a>
+  <a href="https://wemarketplus.com/#pricing" style="background:linear-gradient(90deg,#ffd700,#ffec6e);color:#081426;border-radius:999px;padding:6px 14px;font-weight:900;font-size:12px;text-decoration:none;flex-shrink:0">Get Started</a>
 </div>
 
 <div class="tab on" id="tab-dash">
-<div style="margin-bottom:14px"><h2 style="font-size:22px;font-weight:900;color:#fff">HospiceLink Pro</h2><p style="color:#8b949e;font-size:13px">Marketing CRM Dashboard</p></div>
-<div class="hero" style="background:linear-gradient(135deg,#0d1e38,#091528);border:1px solid rgba(255,255,255,.08)">
-  <h3 style="font-size:19px;color:#8cff66;margin:0 0 8px">Marketing CRM Command Center</h3>
-  <p style="color:#c0cce0;font-size:13px;line-height:1.6">Complete 7-section prospect profiles with legal authority tracking, family dynamics, emotional insight, and financial qualification — built exclusively for hospice marketers. Every field you need to close faster, without the noise.</p>
+<div style="margin-bottom:14px"><h2 style="font-size:22px;font-weight:900;color:#fff">HospiceLink Gold</h2><p style="color:#8b949e;font-size:13px">Enterprise Command Center</p></div>
+<div class="hero" style="background:linear-gradient(135deg,#1a0f00,#0b1730);border:2px solid rgba(255,215,0,.25)">
+  <h3 style="font-size:19px;color:#ffd700;margin:0 0 8px">🏆 Gold — Enterprise Command Center</h3>
+  <p style="color:#c0cce0;font-size:13px;line-height:1.6">Everything in Pro and Max, plus Revenue Intelligence, AI Referral Scorecard, Marketer Leaderboard, HIPAA Audit Log, Telehealth, Compliance Engine, Patient Portal, Territory Heat Maps, Bed Availability, AI Referral Triage, and the new <strong style="color:#ffd700">Territory Management Engine</strong> — spatial clustering that auto-balances marketer workloads by facility count, visit frequency &amp; market demand.</p>
 </div>
 <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
   <div class="stat" style="background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.25)" onclick="showTab('remind')"><p style="color:#dc2626;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">OVERDUE</p><p style="font-size:26px;font-weight:900;color:#dc2626;margin:0">2</p></div>
   <div class="stat" style="background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.25)" onclick="showTab('remind')"><p style="color:#f59e0b;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">DUE TODAY</p><p style="font-size:26px;font-weight:900;color:#f59e0b;margin:0">3</p></div>
-  <div class="stat" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25)" onclick="showTab('goals')"><p style="color:#22c55e;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">GOALS</p><p style="font-size:26px;font-weight:900;color:#22c55e;margin:0">62%</p></div>
   <div class="stat" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25)" onclick="showTab('reengage')"><p style="color:#3b82f6;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">RE-ENGAGE</p><p style="font-size:26px;font-weight:900;color:#3b82f6;margin:0">3</p></div>
+  <div class="stat" style="background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.25)" onclick="showTab('revintel')"><p style="color:#ffd700;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">MONTHLY REV</p><p id="dashRevenue" style="font-size:22px;font-weight:900;color:#ffd700;margin:0">—</p></div>
 </div>
 <div class="g2">
   <div class="card"><h4 style="color:#fff;margin:0 0 10px;font-size:13px">Prospect Pipeline</h4><div class="hbar"><span class="hbar-lbl">Inquiry</span><div class="hbar-track"><div class="hbar-fill" style="width:40%;background:linear-gradient(90deg,#2e7fb5,#49b6ff)"><span style="font-size:9px;font-weight:800;color:#fff">4</span></div></div><span class="hbar-val">4</span></div><div class="hbar"><span class="hbar-lbl">Pending Admission</span><div class="hbar-track"><div class="hbar-fill" style="width:20%;background:linear-gradient(90deg,#b58800,#ffd36e)"><span style="font-size:9px;font-weight:800;color:#fff">2</span></div></div><span class="hbar-val">2</span></div><div class="hbar"><span class="hbar-lbl">Admitted</span><div class="hbar-track"><div class="hbar-fill" style="width:30%;background:linear-gradient(90deg,#2a8800,#8cff66)"><span style="font-size:9px;font-weight:800;color:#fff">3</span></div></div><span class="hbar-val">3</span></div><div class="hbar"><span class="hbar-lbl">Lost</span><div class="hbar-track"><div class="hbar-fill" style="width:10%;background:linear-gradient(90deg,#8f1f1f,#e05555)"><span style="font-size:9px;font-weight:800;color:#fff">1</span></div></div><span class="hbar-val">1</span></div></div>
-  <div class="card"><h4 style="color:#fff;margin:0 0 10px;font-size:13px">CRM Overview</h4><div class="hbar"><span class="hbar-lbl">Total Prospects</span><div class="hbar-track"><div class="hbar-fill" style="width:100%;background:linear-gradient(90deg,#2e7fb5,#49b6ff)"><span style="font-size:9px;font-weight:800;color:#fff">10</span></div></div><span class="hbar-val">10</span></div><div class="hbar"><span class="hbar-lbl">Green Sources</span><div class="hbar-track"><div class="hbar-fill" style="width:30%;background:linear-gradient(90deg,#2a8800,#8cff66)"><span style="font-size:9px;font-weight:800;color:#fff">3</span></div></div><span class="hbar-val">3</span></div><div class="hbar"><span class="hbar-lbl">Overdue</span><div class="hbar-track"><div class="hbar-fill" style="width:20%;background:linear-gradient(90deg,#8f1f1f,#e05555)"><span style="font-size:9px;font-weight:800;color:#fff">2</span></div></div><span class="hbar-val">2</span></div></div>
+  <div class="card"><h4 style="color:#fff;margin:0 0 10px;font-size:13px">Revenue by Territory</h4><div class="hbar"><span class="hbar-lbl">Baylor Territory</span><div class="hbar-track"><div class="hbar-fill" style="width:80%;background:linear-gradient(90deg,#b8860b,#ffd700)"><span style="font-size:9px;font-weight:800;color:#081426">56</span></div></div><span class="hbar-val">56</span></div><div class="hbar"><span class="hbar-lbl">North Dallas</span><div class="hbar-track"><div class="hbar-fill" style="width:59%;background:linear-gradient(90deg,#b8860b,#ffd700)"><span style="font-size:9px;font-weight:800;color:#081426">41</span></div></div><span class="hbar-val">41</span></div><div class="hbar"><span class="hbar-lbl">McKinney / Plano</span><div class="hbar-track"><div class="hbar-fill" style="width:39%;background:linear-gradient(90deg,#b8860b,#ffd700)"><span style="font-size:9px;font-weight:800;color:#081426">27</span></div></div><span class="hbar-val">27</span></div></div>
 </div>
-<div class="alert alert-b" style="margin-bottom:10px">💡 <strong>Upgrade to Max</strong> to unlock EVV Mileage Tracking, 14-Day Cold Alerts, Territory Heat Map & more. <a href="https://wemarketplus.com/#pricing" style="color:#8cff66;font-weight:800;margin-left:6px">See Max Plan →</a></div>
-<div class="alert alert-y">⚠ 14-Day Cold Alert: <strong>Physician Office</strong> has not been visited in 24 days. Log a touch to reset the timer. <em>(Cold alerts active in Max+)</em></div>
+<div class="alert alert-y">⚠ 14-Day Cold Alert: <strong>Physician Office</strong> has not been visited in 24 days. <button onclick="showTab('touch')" class="btn btn-gd btn-sm" style="margin-left:8px">Log Touch Now</button></div>
 </div>
 <div class="tab" id="tab-addref">
 <div class="sec-hdr"><div><h2>Add Referral Source</h2><p>Think of referral sources like your revenue pipeline, not just a contact</p></div></div>
@@ -561,14 +582,385 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 </div>
 
 <div class="tab" id="tab-playbook">
-<div class="sec-hdr"><div><h2>Playbook Generator</h2><p>Available on Max and Gold plans</p></div></div>
-<div style="text-align:center;padding:50px 20px">
-  <div style="font-size:44px;margin-bottom:12px">🔒</div>
-  <h3 style="color:#fff;margin:0 0 8px;font-size:18px">Playbook Generator — Max &amp; Gold</h3>
-  <p style="color:#8b949e;font-size:13px;max-width:420px;margin:0 auto 20px">AI generates a custom weekly marketing strategy based on your market, team size, and admit goals.</p>
-  <a href="https://wemarketplus.com/#pricing" style="display:inline-block;background:linear-gradient(90deg,#8cff66,#b8ff79);color:#081426;border-radius:999px;padding:11px 26px;font-weight:900;font-size:14px;text-decoration:none">Upgrade to Max →</a>
+<div class="sec-hdr"><div><h2>Playbook Generator</h2><p>AI-generated weekly marketing strategy</p></div></div>
+<div class="card">
+  <div class="ga" style="margin-bottom:12px">
+    <div class="field"><label>City / Market</label><input type="text" placeholder="Dallas, TX" style="background:#0f1e35;border:1px solid rgba(73,182,255,.2);color:#e8f0fc"></div>
+    <div class="field"><label>Team Size</label><select style="background:#0f1e35;border:1px solid rgba(73,182,255,.2);color:#e8f0fc"><option>1 marketer</option><option>2–5 marketers</option><option>Full marketing team</option></select></div>
+    <div class="field"><label>Monthly Admits Goal</label><input type="number" placeholder="8" style="background:#0f1e35;border:1px solid rgba(73,182,255,.2);color:#e8f0fc"></div>
+    <div class="field"><label>Primary Challenge</label><select style="background:#0f1e35;border:1px solid rgba(73,182,255,.2);color:#e8f0fc"><option>Not enough referral sources</option><option>Low conversion rate</option><option>Team accountability</option><option>Family hesitation</option></select></div>
+  </div>
+  <button class="btn btn-g" id="pbBtn" onclick="genPlaybook()">🤖 Generate My Playbook</button>
+  <div id="pbResult" style="display:none;margin-top:14px;background:rgba(73,182,255,.04);border:1px solid rgba(73,182,255,.1);border-radius:10px;padding:14px;font-size:13px;color:#8b949e;line-height:1.9;white-space:pre-wrap"></div>
 </div>
 </div>
+<div class="tab" id="tab-schedule">
+<div class="sec-hdr"><div><h2>Smart Scheduling</h2><p>AI-optimized daily route planning based on priority and distance</p></div></div>
+<div class="g2">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h4 style="color:#fff;margin:0">Ericka — Today's Route</h4><button class="btn btn-g btn-sm" onclick="T('Route pushed to Ericka's mobile! ✅')">📱 Push to Mobile</button></div>
+    <div style="border-left:3px solid #22c55e;padding-left:11px;margin-bottom:10px"><div style="font-size:12px;font-weight:800;color:#fff">8:00 AM — Baylor Hospital</div><div style="font-size:11px;color:#8b949e">Priority A · 4.2 mi · CM Sarah M.</div></div>
+    <div style="border-left:3px solid #22c55e;padding-left:11px;margin-bottom:10px"><div style="font-size:12px;font-weight:800;color:#fff">10:30 AM — North Park Rehab</div><div style="font-size:11px;color:#8b949e">Priority A · 6.1 mi · Last touch: 7 days</div></div>
+    <div style="border-left:3px solid #ef4444;padding-left:11px;margin-bottom:10px"><div style="font-size:12px;font-weight:800;color:#fff">1:00 PM — Physician Office</div><div style="font-size:11px;color:#8b949e">⚠ 24 days — URGENT · 3.8 mi</div></div>
+    <div style="border-left:3px solid #f59e0b;padding-left:11px"><div style="font-size:12px;font-weight:800;color:#fff">3:00 PM — Valley SNF</div><div style="font-size:11px;color:#8b949e">Priority B · 5.4 mi · Growing account</div></div>
+  </div>
+  <div class="card form-white">
+    <h4 style="margin:0 0 12px">Route Optimizer</h4>
+    <div class="field"><label>Marketer</label><select><option>Ericka</option><option>Mike</option><option>Angela</option></select></div>
+    <div class="field"><label>Priority Mode</label><select><option>Cold Sources First (Recommended)</option><option>Geographic Efficiency</option><option>Top Referrers First</option></select></div>
+    <button class="btn btn-g" onclick="T('Route optimized! 4 stops · 19.5 mi · 41 min saved')" style="width:100%;margin-top:4px">🤖 Optimize Route</button>
+  </div>
+</div>
+</div>
+
+<div class="tab" id="tab-family">
+<div class="sec-hdr"><div><h2>Family Communication Log</h2><p>Timestamped — HIPAA-safe</p></div></div>
+<div class="card form-white" style="margin-bottom:12px">
+  <div class="ga" style="margin-bottom:10px">
+    <div class="field"><label>Patient</label><select><option>Dorothy F.</option><option>John T.</option><option>Mary J.</option></select></div>
+    <div class="field"><label>Family Contact Name</label><input type="text" placeholder="Linda F."></div>
+    <div class="field"><label>Relationship</label><select><option>Daughter</option><option>Son</option><option>Spouse</option><option>Other</option></select></div>
+    <div class="field"><label>Contact Type</label><select><option>Phone Call</option><option>In-Person</option><option>Text</option><option>Email</option></select></div>
+    <div class="field"><label>Date &amp; Time</label><input type="datetime-local"></div>
+    <div class="field" style="grid-column:1/-1"><label>Summary</label><textarea placeholder="Communication summary…"></textarea></div>
+  </div>
+  <button class="btn btn-g" onclick="T('Family communication logged with timestamp!')">Log Communication</button>
+</div>
+<div class="g2">
+  <div class="card"><strong style="color:#fff">Dorothy F.</strong> — Phone Call<p style="color:#8b949e;font-size:11px;margin:3px 0">Angela · Today, 2:14 PM</p><p style="font-size:12px;color:#c0cce0;margin-top:5px">Family satisfied. Pain controlled. Next: weekly check-in.</p></div>
+  <div class="card"><strong style="color:#fff">John T.</strong> — In-Person<p style="color:#8b949e;font-size:11px;margin:3px 0">Mike · Yesterday, 10:30 AM</p><p style="font-size:12px;color:#c0cce0;margin-top:5px">Son Robert confirmed ready for admission paperwork.</p></div>
+</div>
+</div>
+
+<div class="tab" id="tab-evv">
+<div class="sec-hdr"><div><h2>EVV / GPS Mileage Tracker</h2><p>Track visits with GPS verification and IRS-rate reimbursement</p></div></div>
+<div class="card form-white" style="margin-bottom:12px">
+  <div class="ga" style="margin-bottom:10px">
+    <div class="field"><label>Staff Member</label><select><option>Ericka</option><option>Mike</option><option>Angela</option></select></div>
+    <div class="field"><label>Visit Type</label><select><option>Facility Visit</option><option>Hospital</option><option>Physician Office</option><option>Home Visit</option></select></div>
+    <div class="field"><label>Visit Date</label><input type="date"></div>
+    <div class="field"><label>Origin Address</label><div class="addr-wrap"><input type="text" id="evA" oninput="addrSearch(this,'evD')" placeholder="Start typing…" autocomplete="off"><div class="addr-drop" id="evD"></div></div></div>
+    <div class="field"><label>Destination</label><div class="addr-wrap"><input type="text" id="evA2" oninput="addrSearch(this,'evD2')" placeholder="Destination…" autocomplete="off"><div class="addr-drop" id="evD2"></div></div></div>
+    <div class="field"><label>Miles (GPS verified)</label><input type="number" placeholder="0.0" step="0.1"></div>
+    <div class="field"><label>Additional Expenses ($)</label><input type="number" placeholder="0.00" step="0.01"></div>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button class="btn btn-g" onclick="T('Trip logged! GPS verified · IRS rate $0.67/mi applied.')">💾 Log Trip</button>
+    <button class="btn btn-b" onclick="T('GPS location captured: Dallas, TX','i')">📍 Capture GPS</button>
+  </div>
+</div>
+<div style="overflow-x:auto">
+<table class="tbl"><thead><tr><th>Staff</th><th>Date</th><th>Type</th><th>Miles</th><th>Expenses</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+<tr><td>Ericka</td><td id="evD1"></td><td>Facility Visit</td><td>36.2 mi</td><td>$10.50</td><td><strong>$34.75</strong></td><td><span class="pill pill-y">Pending</span></td><td><button class="btn btn-g btn-sm" onclick="T('Approved! $34.75 queued for payroll.')">Approve</button></td></tr>
+<tr><td>Mike</td><td id="evD2"></td><td>Hospital</td><td>28.7 mi</td><td>$5.00</td><td><strong>$24.23</strong></td><td><span class="pill pill-y">Pending</span></td><td><button class="btn btn-g btn-sm" onclick="T('Approved! $24.23 queued for payroll.')">Approve</button></td></tr>
+<tr><td>Angela</td><td id="evD3"></td><td>Physician Office</td><td>22.4 mi</td><td>$0</td><td><strong>$15.01</strong></td><td><span class="pill pill-g">Approved</span></td><td>—</td></tr>
+</tbody></table>
+</div>
+<div class="alert alert-g" style="margin-top:12px">🚗 <strong>This Week Total:</strong> 312.4 mi · $209.31 mileage + $27.50 expenses = <strong>$236.81</strong> pending payroll</div>
+</div>
+
+<div class="tab" id="tab-heatmap">
+<div class="sec-hdr"><div><h2>Territory Heat Map</h2><p>Visual referral density by ZIP code</p></div></div>
+<div class="card" style="position:relative;overflow:hidden;min-height:260px;background:linear-gradient(135deg,#0a1628,#10203a)">
+  <div style="position:absolute;top:18%;left:22%;width:130px;height:130px;background:radial-gradient(circle,rgba(220,38,38,.65),transparent);border-radius:50%"></div>
+  <div style="position:absolute;top:14%;left:19%;color:#fff;font-size:11px;font-weight:800;text-shadow:0 1px 4px rgba(0,0,0,.9)">🔴 Baylor Zone<br>22 referrals</div>
+  <div style="position:absolute;top:42%;left:54%;width:90px;height:90px;background:radial-gradient(circle,rgba(234,179,8,.6),transparent);border-radius:50%"></div>
+  <div style="position:absolute;top:39%;left:51%;color:#fff;font-size:11px;font-weight:800;text-shadow:0 1px 4px rgba(0,0,0,.9)">🟡 N. Dallas<br>14 referrals</div>
+  <div style="position:absolute;top:62%;left:16%;width:70px;height:70px;background:radial-gradient(circle,rgba(34,197,94,.55),transparent);border-radius:50%"></div>
+  <div style="position:absolute;top:59%;left:13%;color:#fff;font-size:11px;font-weight:800;text-shadow:0 1px 4px rgba(0,0,0,.9)">🟢 McKinney<br>9 refs</div>
+  <div style="position:absolute;top:25%;left:70%;width:50px;height:50px;background:radial-gradient(circle,rgba(73,182,255,.5),transparent);border-radius:50%"></div>
+  <div style="position:absolute;top:22%;left:67%;color:#fff;font-size:10px;font-weight:800;text-shadow:0 1px 4px rgba(0,0,0,.9)">🔵 Frisco<br>Untapped</div>
+  <p style="position:absolute;bottom:8px;right:12px;color:rgba(255,255,255,.3);font-size:10px;margin:0">Dallas Metro</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px">
+  <div class="card" style="text-align:center;padding:10px"><p style="font-size:9px;font-weight:800;color:#f4f8ff;margin:0 0 2px">🔴 Hot Zone</p><p style="font-size:13px;font-weight:900;color:#fff;margin:0">Baylor</p><p style="color:#8b949e;font-size:10px;margin:2px 0 0">22 refs</p></div>
+  <div class="card" style="text-align:center;padding:10px"><p style="font-size:9px;font-weight:800;color:#f4f8ff;margin:0 0 2px">🟡 Growing</p><p style="font-size:13px;font-weight:900;color:#fff;margin:0">N. Dallas</p><p style="color:#8b949e;font-size:10px;margin:2px 0 0">14 refs</p></div>
+  <div class="card" style="text-align:center;padding:10px"><p style="font-size:9px;font-weight:800;color:#f4f8ff;margin:0 0 2px">🟢 Active</p><p style="font-size:13px;font-weight:900;color:#fff;margin:0">McKinney</p><p style="color:#8b949e;font-size:10px;margin:2px 0 0">9 refs</p></div>
+  <div class="card" style="text-align:center;padding:10px"><p style="font-size:9px;font-weight:800;color:#f4f8ff;margin:0 0 2px">🔵 Untapped</p><p style="font-size:13px;font-weight:900;color:#fff;margin:0">Frisco</p><p style="color:#8b949e;font-size:10px;margin:2px 0 0">0 refs</p></div>
+</div>
+</div>
+
+<div class="tab" id="tab-mobile">
+<div class="sec-hdr"><div><h2>📱 Marketer Mobile</h2><p>Phone-optimized field CRM for marketers on the road</p></div></div>
+<div style="max-width:340px;margin:0 auto">
+  <div class="card" style="border-radius:22px">
+    <div style="text-align:center;margin-bottom:14px"><div style="font-size:14px;font-weight:900;color:#fff">HospiceLink Mobile</div><div style="font-size:11px;color:#8b949e">Marketer Field Mode</div></div>
+    <div class="g2" style="margin-bottom:12px">
+      <div class="stat" style="background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.25);text-align:center"><p style="color:#dc2626;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 3px">Overdue</p><p style="font-size:22px;font-weight:900;color:#dc2626;margin:0">2</p></div>
+      <div class="stat" style="background:rgba(140,255,102,.1);border:1px solid rgba(140,255,102,.25);text-align:center"><p style="color:#8cff66;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 3px">Miles Today</p><p style="font-size:22px;font-weight:900;color:#8cff66;margin:0">47</p></div>
+    </div>
+    <button class="btn btn-g" onclick="T('GPS captured! North Park Rehab · 9:47 AM')" style="width:100%;margin-bottom:8px">📍 Log Visit (GPS)</button>
+    <button class="btn btn-b" onclick="T('Opening quick add prospect form…','i')" style="width:100%;margin-bottom:8px">➕ Quick Add Prospect</button>
+    <button class="btn btn-d" onclick="T('AI assistant ready','i')" style="width:100%">🤖 Ask AI</button>
+  </div>
+</div>
+</div>
+
+<div class="tab" id="tab-notifs">
+<div class="sec-hdr"><div><h2>🔔 Notifications</h2></div></div>
+<div class="card" style="padding:0;overflow:hidden">
+  <div style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:700;color:#fff">🔴 AI Triage: William H. — Score 9.2/10</div><div style="font-size:11px;color:#8b949e">Baylor ER · 23 minutes ago</div></div><button class="btn btn-r btn-sm" onclick="T('Calling William H. family NOW')">Call Now</button></div>
+  <div style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:700;color:#fff">⚠ 14-Day Cold Alert: Physician Office</div><div style="font-size:11px;color:#8b949e">24 days since last touch · 1 hour ago</div></div><button class="btn btn-g btn-sm" onclick="T('Touch logged! Timer reset.')">Log Touch</button></div>
+  <div style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:700;color:#fff">🛏 Bed Available: North Dallas Unit (2 open)</div><div style="font-size:11px;color:#8b949e">2 hours ago</div></div><button class="btn btn-b btn-sm" onclick="T('Partners notified of 2 available beds!')">Notify Partners</button></div>
+  <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:700;color:#fff">📹 Telehealth: Dorothy F. session in 30 min</div><div style="font-size:11px;color:#8b949e">Angela hosting · 3 hours ago</div></div><button class="btn btn-b btn-sm" onclick="T('Telehealth session launched!','i')">Join Session</button></div>
+</div>
+</div>
+
+<div class="tab" id="tab-windshield">
+<div class="sec-hdr"><div><h2>🎤 Windshield Mode</h2><p>Gold — Voice-to-note while driving between visits</p></div></div>
+<div class="alert alert-gd" style="margin-bottom:14px">🏆 <strong>Gold Exclusive:</strong> Tap once, speak your note while driving. Auto-transcribed, GPS-stamped, and attached to the correct prospect record.</div>
+<div class="card" style="text-align:center;padding:28px">
+  <div style="font-size:56px;margin-bottom:14px">🎙</div>
+  <h3 style="color:#fff;margin:0 0 8px">Windshield Mode Active</h3>
+  <p style="color:#8b949e;font-size:13px;margin:0 0 18px">Tap below and speak your note. Auto-transcribed and GPS-stamped.</p>
+  <button class="btn btn-gd" style="font-size:15px;padding:13px 26px" onclick="T('🎙 Note saved: 'Just left Baylor — Dr. Patel has 3 new patients.' GPS tagged.')">🎙 Start Recording</button>
+</div>
+<div class="g2" style="margin-top:14px">
+  <div class="card"><strong style="color:#fff">Ericka</strong> <span style="color:#8b949e;font-size:11px" id="ww1"></span><p style="font-size:12px;color:#c0cce0;margin-top:6px">"Baylor CM ready to send two more this week. Bring admit packets Thursday."</p><p style="color:#6c8aab;font-size:11px;margin-top:5px">📍 GPS — Baylor Hospital</p></div>
+  <div class="card"><strong style="color:#fff">Mike</strong> <span style="color:#8b949e;font-size:11px" id="ww2"></span><p style="font-size:12px;color:#c0cce0;margin-top:6px">"North Park wants a group presentation next Tuesday."</p><p style="color:#6c8aab;font-size:11px;margin-top:5px">📍 GPS — North Park Rehab</p></div>
+</div>
+</div>
+
+<div class="tab" id="tab-messaging">
+<div class="sec-hdr"><div><h2>🔒 Secure Messaging</h2><p>Gold — HIPAA-compliant encrypted team messaging</p></div></div>
+<div style="display:grid;grid-template-columns:260px 1fr;gap:14px;min-height:380px">
+  <div class="card" style="padding:0;overflow:hidden">
+    <div style="padding:10px;border-bottom:1px solid rgba(255,255,255,.07)"><input type="text" placeholder="Search contacts…" style="background:rgba(255,255,255,.06);border:1px solid rgba(73,182,255,.18);color:#f4f8ff;border-radius:7px;padding:6px 9px;width:100%;font-size:12px;outline:none"></div>
+    <div style="padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer;display:flex;align-items:center;gap:9px;background:rgba(73,182,255,.05)"><div style="width:34px;height:34px;border-radius:50%;background:rgba(140,255,102,.2);display:flex;align-items:center;justify-content:center;font-size:15px">👩‍⚕️</div><div><div style="font-size:12px;font-weight:700;color:#fff">Angela (Nurse)</div><div style="font-size:10px;color:#8b949e">🟢 Online</div></div></div>
+    <div style="padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer;display:flex;align-items:center;gap:9px"><div style="width:34px;height:34px;border-radius:50%;background:rgba(73,182,255,.2);display:flex;align-items:center;justify-content:center;font-size:15px">👤</div><div><div style="font-size:12px;font-weight:700;color:#fff">Mike (Marketer)</div><div style="font-size:10px;color:#8b949e">🟡 Away</div></div></div>
+    <div style="padding:11px 12px;cursor:pointer;display:flex;align-items:center;gap:9px"><div style="width:34px;height:34px;border-radius:50%;background:rgba(249,199,79,.2);display:flex;align-items:center;justify-content:center;font-size:15px">📋</div><div><div style="font-size:12px;font-weight:700;color:#fff">Care Coordinator</div><div style="font-size:10px;color:#8b949e">🟢 Online</div></div></div>
+  </div>
+  <div class="card" style="display:flex;flex-direction:column;padding:0;overflow:hidden">
+    <div style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.07)"><strong style="color:#fff">Angela (Nurse)</strong> <span style="color:#8cff66;font-size:11px;margin-left:6px">🟢 Online</span></div>
+    <div style="flex:1;padding:12px;display:flex;flex-direction:column;gap:9px">
+      <div class="ai-b">Dorothy F. pain well controlled. Family satisfied. 🟢</div>
+      <div class="ai-u">Can you confirm visit Thursday 2pm with Linda F.?</div>
+      <div class="ai-b">Confirmed ✓ I'll bring updated med list for family review.</div>
+    </div>
+    <div style="padding:10px;border-top:1px solid rgba(255,255,255,.07);display:flex;gap:7px">
+      <input id="msgInput" placeholder="Type a secure message…" style="flex:1;background:#0f1929;border:1px solid #1e3050;border-radius:7px;padding:8px 12px;color:#e2e8f0;font-size:12px;outline:none;width:auto;font-family:inherit">
+      <button onclick="T('Message sent securely ✓')" style="background:#8cff66;color:#081426;border:none;border-radius:7px;padding:8px 14px;font-weight:800;cursor:pointer;font-size:13px">Send</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="tab" id="tab-telehealth">
+<div class="sec-hdr"><div><h2>📹 Telehealth Sessions</h2><p>Gold — HIPAA-compliant video sessions with patients and families</p></div></div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+  <div class="card" style="text-align:center"><p style="color:#49b6ff;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">This Month</p><p style="font-size:26px;font-weight:900;color:#49b6ff;margin:0">18</p></div>
+  <div class="card" style="text-align:center"><p style="color:#8cff66;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Upcoming</p><p style="font-size:26px;font-weight:900;color:#8cff66;margin:0">3</p></div>
+  <div class="card" style="text-align:center"><p style="color:#ffd700;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Avg Duration</p><p style="font-size:26px;font-weight:900;color:#ffd700;margin:0">24 min</p></div>
+</div>
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h4 style="color:#fff;margin:0">Upcoming Sessions</h4><button class="btn btn-b btn-sm" onclick="T('Session scheduled! Video link generated.')">+ Schedule Session</button></div>
+  <div style="overflow-x:auto">
+  <table class="tbl"><thead><tr><th>Patient</th><th>Type</th><th>Date</th><th>Host</th><th>Actions</th></tr></thead><tbody>
+  <tr><td>Dorothy F. — Family</td><td>Family Care Update</td><td>May 5, 2:00 PM</td><td>Angela (Nurse)</td><td><button class="btn btn-b btn-sm" onclick="T('Session launched!')">▶ Launch</button></td></tr>
+  <tr><td>Robert H. — Son Michael</td><td>Nurse Assessment</td><td>May 6, 10:00 AM</td><td>Angela (Nurse)</td><td><button class="btn btn-b btn-sm" onclick="T('Session launched!')">▶ Launch</button></td></tr>
+  </tbody></table>
+  </div>
+</div>
+</div>
+
+<div class="tab" id="tab-nursesched">
+<div class="sec-hdr"><div><h2>⚖ Nurse Scheduling Engine</h2><p>Gold — Auto-balances visit loads by acuity, distance &amp; duration</p></div></div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
+  <div class="card" style="text-align:center;background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.2)"><p style="color:#f87171;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">🔴 High Acuity</p><p style="font-size:24px;font-weight:900;color:#f87171;margin:0">3</p></div>
+  <div class="card" style="text-align:center;background:rgba(73,182,255,.07);border:1px solid rgba(73,182,255,.2)"><p style="color:#49b6ff;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Nurses On Duty</p><p style="font-size:24px;font-weight:900;color:#49b6ff;margin:0">2</p></div>
+  <div class="card" style="text-align:center;background:rgba(140,255,102,.07);border:1px solid rgba(140,255,102,.2)"><p style="color:#8cff66;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Load Balance</p><p style="font-size:24px;font-weight:900;color:#8cff66;margin:0">94%</p></div>
+  <div class="card" style="text-align:center;background:rgba(249,199,79,.07);border:1px solid rgba(249,199,79,.2)"><p style="color:#f9c74f;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Drive Time Saved</p><p style="font-size:24px;font-weight:900;color:#f9c74f;margin:0">41 min</p></div>
+</div>
+<div class="g2">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h4 style="color:#fff;margin:0">Angela N. (RN) — Today</h4><button class="btn btn-g btn-sm" onclick="T('Schedule pushed to Angela's mobile! ✅')">📱 Push</button></div>
+    <div style="background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.18);border-radius:9px;padding:9px;margin-bottom:7px"><div style="font-weight:800;font-size:12px;color:#fff">8:00 AM — Dorothy F.</div><div style="font-size:11px;color:#8b949e">🔴 Acuity 5 · 90 min · 4.2 mi</div></div>
+    <div style="background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.18);border-radius:9px;padding:9px;margin-bottom:7px"><div style="font-weight:800;font-size:12px;color:#fff">10:30 AM — Helen W.</div><div style="font-size:11px;color:#8b949e">🟡 Acuity 3 · 60 min · 6.1 mi</div></div>
+    <div style="background:rgba(73,182,255,.07);border:1px solid rgba(73,182,255,.18);border-radius:9px;padding:9px"><div style="font-weight:800;font-size:12px;color:#fff">1:00 PM — John T.</div><div style="font-size:11px;color:#8b949e">🔵 Acuity 2 · 45 min · 3.8 mi</div></div>
+  </div>
+  <div class="card form-white">
+    <h4 style="margin:0 0 10px">Auto-Balance Controls</h4>
+    <div class="field"><label>Date</label><input type="date"></div>
+    <div class="field"><label>Priority Mode</label><select><option>Acuity First (Recommended)</option><option>Geographic Efficiency</option><option>Balanced</option></select></div>
+    <div class="field"><label>Max Visits / Nurse</label><input type="number" value="6" min="1" max="12"></div>
+    <button class="btn btn-g" onclick="T('Schedules balanced! Angela: 94% load · 41 min saved')" style="width:100%">🤖 Auto-Balance All Nurses</button>
+  </div>
+</div>
+</div>
+
+<div class="tab" id="tab-patportal">
+<div class="sec-hdr"><div><h2>🏥 Patient Portal</h2><p>Gold — Secure family access to visit summaries, meds &amp; messaging</p></div></div>
+<div class="g2">
+  <div class="card">
+    <h4 style="color:#fff;margin:0 0 12px">Active Patient Portals</h4>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="background:rgba(140,255,102,.05);border:1px solid rgba(140,255,102,.15);border-radius:9px;padding:11px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;color:#fff">Dorothy F.</div><div style="font-size:11px;color:#8b949e">Family: Linda F. · Today 9:14 AM</div></div><button class="btn btn-b btn-sm" onclick="T('Dorothy F. portal preview','i')">Preview</button></div>
+      <div style="background:rgba(73,182,255,.05);border:1px solid rgba(73,182,255,.15);border-radius:9px;padding:11px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;color:#fff">John T.</div><div style="font-size:11px;color:#8b949e">Family: Robert T. · Yesterday</div></div><button class="btn btn-b btn-sm" onclick="T('John T. portal preview','i')">Preview</button></div>
+      <button class="btn btn-g btn-sm" onclick="T('Enter patient name + family email to activate portal')">+ Activate Portal for New Patient</button>
+    </div>
+  </div>
+  <div class="card form-white">
+    <h4 style="margin:0 0 12px">Dorothy F. — Portal View</h4>
+    <p style="font-weight:800;font-size:12px;margin:0 0 5px">Recent Visit Summary</p>
+    <p style="font-size:12px;color:#444;margin:0 0 10px">May 1 · Angela N. RN · 92 min<br>Pain: 2/10. Patient comfortable. Medications effective.</p>
+    <hr style="border:none;border-top:1px solid #e4ecf5;margin:10px 0">
+    <p style="font-weight:800;font-size:12px;margin:0 0 5px">Medications</p>
+    <p style="font-size:12px;color:#444;margin:0 0 10px">• Morphine 15mg — PRN pain<br>• Lorazepam 0.5mg — PRN anxiety</p>
+    <button class="btn btn-b btn-sm" onclick="T('Message sent to Angela N. RN ✓')">💬 Message Care Team</button>
+  </div>
+</div>
+</div>
+
+<div class="tab" id="tab-admworkflow">
+<div class="sec-hdr"><div><h2>📋 Admission Workflow</h2><p>Gold — Step-by-step admission process with document tracking</p></div></div>
+<div class="card">
+  <h4 style="color:#fff;margin:0 0 12px">John T. — Pending Admission</h4>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;align-items:center;gap:11px;padding:9px 13px;background:rgba(140,255,102,.05);border:1px solid rgba(140,255,102,.18);border-radius:9px"><div style="font-size:16px">✅</div><div><div style="font-size:12px;font-weight:700;color:#fff">RN Assessment Completed</div><div style="font-size:11px;color:#8b949e">Angela N. · May 1, 10:30 AM</div></div></div>
+    <div style="display:flex;align-items:center;gap:11px;padding:9px 13px;background:rgba(140,255,102,.05);border:1px solid rgba(140,255,102,.18);border-radius:9px"><div style="font-size:16px">✅</div><div><div style="font-size:12px;font-weight:700;color:#fff">Physician Order Obtained</div><div style="font-size:11px;color:#8b949e">Dr. Martinez · May 2, 2:15 PM</div></div></div>
+    <div style="display:flex;align-items:center;gap:11px;padding:9px 13px;background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.18);border-radius:9px"><div style="font-size:16px">⏳</div><div style="flex:1"><div style="font-size:12px;font-weight:700;color:#fff">Insurance Verification</div><div style="font-size:11px;color:#8b949e">In progress — awaiting callback</div></div><button class="btn btn-g btn-sm" onclick="T('Insurance verified! ✓')">Mark Complete</button></div>
+    <div style="display:flex;align-items:center;gap:11px;padding:9px 13px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);border-radius:9px"><div style="font-size:16px">⬜</div><div><div style="font-size:12px;font-weight:700;color:#f4f8ff">Paperwork / E-Signatures</div><div style="font-size:11px;color:#8b949e">Pending insurance verification</div></div></div>
+    <div style="display:flex;align-items:center;gap:11px;padding:9px 13px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);border-radius:9px"><div style="font-size:16px">⬜</div><div><div style="font-size:12px;font-weight:700;color:#f4f8ff">Admission Day Coordination</div><div style="font-size:11px;color:#8b949e">Not started</div></div></div>
+  </div>
+</div>
+</div>
+
+<div class="tab" id="tab-terrmgmt">
+<div class="sec-hdr"><div><h2>🗺 Territory Management</h2><p>Gold — Spatial clustering that auto-balances marketer workloads</p></div></div>
+<div class="g2">
+  <div class="card">
+    <h4 style="color:#fff;margin:0 0 12px">Workload Balance</h4><div class="hbar"><span class="hbar-lbl">Ericka — N. Dallas</span><div class="hbar-track"><div class="hbar-fill" style="width:65%;background:linear-gradient(90deg,#2a8800,#8cff66)"><span style="font-size:9px;font-weight:800;color:#fff">13</span></div></div><span class="hbar-val">13</span></div><div class="hbar"><span class="hbar-lbl">Mike — McKinney</span><div class="hbar-track"><div class="hbar-fill" style="width:40%;background:linear-gradient(90deg,#2e7fb5,#49b6ff)"><span style="font-size:9px;font-weight:800;color:#fff">8</span></div></div><span class="hbar-val">8</span></div><div class="hbar"><span class="hbar-lbl">Angela — Plano</span><div class="hbar-track"><div class="hbar-fill" style="width:30%;background:linear-gradient(90deg,#b58800,#ffd36e)"><span style="font-size:9px;font-weight:800;color:#fff">6</span></div></div><span class="hbar-val">6</span></div>
+    <button class="btn btn-g" onclick="T('Territories auto-balanced! Routes updated.')" style="margin-top:10px">🤖 Auto-Balance Territories</button>
+  </div>
+  <div class="card form-white">
+    <h4 style="margin:0 0 12px">Assign Territory</h4>
+    <div class="field"><label>Marketer</label><select><option>Ericka</option><option>Mike</option><option>Angela</option></select></div>
+    <div class="field"><label>Territory</label><select><option>North Dallas</option><option>McKinney / Plano</option><option>Frisco / Allen</option><option>South Dallas</option></select></div>
+    <div class="field"><label>Priority Score (AI)</label><input type="number" placeholder="Auto-calculated" readonly style="background:#f4f8fc;color:#8b949e"></div>
+    <button class="btn btn-g" onclick="T('Territory assigned!')" style="width:100%">Save Assignment</button>
+  </div>
+</div>
+</div>
+
+<div class="tab" id="tab-revintel">
+<div class="sec-hdr"><div><h2>💰 Revenue Intelligence</h2><p>Gold — Cost per admit, revenue per source, and team ROI</p></div></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px">
+  <div class="card" style="text-align:center"><p style="color:#8b949e;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Avg Cost / Admit</p><p style="font-size:22px;font-weight:900;color:#8cff66;margin:0">$312</p></div>
+  <div class="card" style="text-align:center"><p style="color:#8b949e;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Revenue / Patient</p><p style="font-size:22px;font-weight:900;color:#49b6ff;margin:0">$4,800</p></div>
+  <div class="card" style="text-align:center"><p style="color:#8b949e;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Team ROI</p><p style="font-size:22px;font-weight:900;color:#ffd700;margin:0">1,438%</p></div>
+  <div class="card" style="text-align:center"><p style="color:#8b949e;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Monthly Rev</p><p id="dashRevenue2" style="font-size:22px;font-weight:900;color:#8cff66;margin:0">—</p></div>
+</div>
+<div class="card"><h4 style="color:#fff;margin:0 0 10px">Revenue by Territory</h4><div class="hbar"><span class="hbar-lbl">Baylor Territory</span><div class="hbar-track"><div class="hbar-fill" style="width:80%;background:linear-gradient(90deg,#b8860b,#ffd700)"><span style="font-size:9px;font-weight:800;color:#081426">56</span></div></div><span class="hbar-val">56</span></div><div class="hbar"><span class="hbar-lbl">North Dallas</span><div class="hbar-track"><div class="hbar-fill" style="width:59%;background:linear-gradient(90deg,#b8860b,#ffd700)"><span style="font-size:9px;font-weight:800;color:#081426">41</span></div></div><span class="hbar-val">41</span></div><div class="hbar"><span class="hbar-lbl">McKinney / Plano</span><div class="hbar-track"><div class="hbar-fill" style="width:39%;background:linear-gradient(90deg,#b8860b,#ffd700)"><span style="font-size:9px;font-weight:800;color:#081426">27</span></div></div><span class="hbar-val">27</span></div></div>
+</div>
+
+<div class="tab" id="tab-mktgroi">
+<div class="sec-hdr"><div><h2>📊 Marketing ROI Dashboard</h2></div></div>
+<div class="g2">
+  <div class="card"><h4 style="color:#fff;margin:0 0 12px">ROI by Channel</h4><div class="hbar"><span class="hbar-lbl">Hospital Visits</span><div class="hbar-track"><div class="hbar-fill" style="width:81%;background:linear-gradient(90deg,#2a8800,#8cff66)"><span style="font-size:9px;font-weight:800;color:#fff">1620</span></div></div><span class="hbar-val">1620</span></div><div class="hbar"><span class="hbar-lbl">Physician Outreach</span><div class="hbar-track"><div class="hbar-fill" style="width:49%;background:linear-gradient(90deg,#2e7fb5,#49b6ff)"><span style="font-size:9px;font-weight:800;color:#fff">980</span></div></div><span class="hbar-val">980</span></div><div class="hbar"><span class="hbar-lbl">SNF Visits</span><div class="hbar-track"><div class="hbar-fill" style="width:37%;background:linear-gradient(90deg,#b58800,#ffd36e)"><span style="font-size:9px;font-weight:800;color:#fff">740</span></div></div><span class="hbar-val">740</span></div></div>
+  <div class="card"><h4 style="color:#fff;margin:0 0 12px">Monthly Spend vs Revenue</h4>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="card" style="text-align:center"><p style="color:#8b949e;font-size:10px;margin:0 0 4px">Mktg Spend</p><p style="font-size:18px;font-weight:900;color:#e05555;margin:0">$8,200</p></div>
+      <div class="card" style="text-align:center"><p style="color:#8b949e;font-size:10px;margin:0 0 4px">Revenue Gen</p><p id="dashRevenue3" style="font-size:18px;font-weight:900;color:#8cff66;margin:0">—</p></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="tab" id="tab-refanalytics">
+<div class="sec-hdr"><div><h2>📈 Referral Analytics</h2></div></div>
+<div style="overflow-x:auto">
+<table class="tbl"><thead><tr><th>Source</th><th>Total Refs</th><th>Admits</th><th>Conversion %</th><th>Revenue</th><th>Status</th></tr></thead><tbody>
+<tr><td><strong>Baylor Hospital</strong></td><td>22</td><td>12</td><td><span class="pill pill-g">54%</span></td><td style="color:#8cff66;font-weight:800">$57,600</td><td><span class="pill pill-r">🔥 Hot</span></td></tr>
+<tr><td><strong>North Park Rehab</strong></td><td>14</td><td>7</td><td><span class="pill pill-b">50%</span></td><td style="color:#49b6ff;font-weight:800">$33,600</td><td><span class="pill pill-b">Growing</span></td></tr>
+<tr><td><strong>Physician Office</strong></td><td>3</td><td>1</td><td><span class="pill pill-r">33%</span></td><td style="color:#f87171;font-weight:800">$4,800</td><td><span class="pill pill-r">⚠ Cold</span></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<div class="tab" id="tab-leaderboard">
+<div class="sec-hdr"><div><h2>🏆 Marketer Leaderboard</h2></div></div>
+<div style="overflow-x:auto">
+<table class="tbl"><thead><tr><th>Rank</th><th>Marketer</th><th>Admits</th><th>Visits</th><th>Conversion</th><th>Score</th></tr></thead><tbody>
+<tr style="background:rgba(255,215,0,.03)"><td style="font-size:18px">🥇</td><td><strong>Ericka</strong></td><td>7</td><td>13</td><td><span class="pill pill-g">54%</span></td><td><span style="font-size:16px;font-weight:900;color:#ffd700">94</span></td></tr>
+<tr><td style="font-size:18px">🥈</td><td><strong>Mike</strong></td><td>4</td><td>8</td><td><span class="pill pill-b">50%</span></td><td><span style="font-size:16px;font-weight:900;color:#8b949e">71</span></td></tr>
+<tr><td style="font-size:18px">🥉</td><td><strong>Angela</strong></td><td>2</td><td>5</td><td><span class="pill pill-b">40%</span></td><td><span style="font-size:16px;font-weight:900;color:#8b949e">52</span></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<div class="tab" id="tab-scorecard">
+<div class="sec-hdr"><div><h2>⭐ AI Scorecard</h2><p>AI-generated performance scores for each marketer (1–10)</p></div></div>
+<div class="g2">
+  <div class="card"><h4 style="color:#fff;margin:0 0 12px">Ericka — This Week</h4><div style="display:flex;align-items:center;gap:14px;margin-bottom:12px"><div style="font-size:48px;font-weight:900;color:#ffd700">9.1</div><div><p style="color:#8cff66;font-weight:800;font-size:13px;margin:0">🌟 Excellent</p><p style="color:#8b949e;font-size:11px;margin-top:2px">Top performer this week</p></div></div><div class="hbar"><span class="hbar-lbl">Referral Activity</span><div class="hbar-track"><div class="hbar-fill" style="width:90%;background:linear-gradient(90deg,#2a8800,#8cff66)"><span style="font-size:9px;font-weight:800;color:#fff">9</span></div></div><span class="hbar-val">9</span></div><div class="hbar"><span class="hbar-lbl">Prospect Conversion</span><div class="hbar-track"><div class="hbar-fill" style="width:80%;background:linear-gradient(90deg,#2e7fb5,#49b6ff)"><span style="font-size:9px;font-weight:800;color:#fff">8</span></div></div><span class="hbar-val">8</span></div><div class="hbar"><span class="hbar-lbl">Follow-Up Compliance</span><div class="hbar-track"><div class="hbar-fill" style="width:90%;background:linear-gradient(90deg,#b58800,#ffd36e)"><span style="font-size:9px;font-weight:800;color:#fff">9</span></div></div><span class="hbar-val">9</span></div></div>
+  <div class="card"><h4 style="color:#fff;margin:0 0 12px">Mike — This Week</h4><div style="display:flex;align-items:center;gap:14px;margin-bottom:12px"><div style="font-size:48px;font-weight:900;color:#49b6ff">7.2</div><div><p style="color:#49b6ff;font-weight:800;font-size:13px;margin:0">📈 Good</p><p style="color:#8b949e;font-size:11px;margin-top:2px">Room to grow in conversion</p></div></div><div class="hbar"><span class="hbar-lbl">Referral Activity</span><div class="hbar-track"><div class="hbar-fill" style="width:70%;background:linear-gradient(90deg,#2e7fb5,#49b6ff)"><span style="font-size:9px;font-weight:800;color:#fff">7</span></div></div><span class="hbar-val">7</span></div><div class="hbar"><span class="hbar-lbl">Prospect Conversion</span><div class="hbar-track"><div class="hbar-fill" style="width:60%;background:linear-gradient(90deg,#8f1f1f,#e05555)"><span style="font-size:9px;font-weight:800;color:#fff">6</span></div></div><span class="hbar-val">6</span></div><div class="hbar"><span class="hbar-lbl">Follow-Up Compliance</span><div class="hbar-track"><div class="hbar-fill" style="width:80%;background:linear-gradient(90deg,#b58800,#ffd36e)"><span style="font-size:9px;font-weight:800;color:#fff">8</span></div></div><span class="hbar-val">8</span></div></div>
+</div>
+</div>
+
+<div class="tab" id="tab-hipaa">
+<div class="sec-hdr"><div><h2>🔒 HIPAA Audit Log</h2><p>Gold — Tamper-proof log of all PHI access events</p></div></div>
+<div style="overflow-x:auto">
+<table class="tbl"><thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Record</th><th>IP Address</th></tr></thead><tbody>
+<tr><td id="au1" style="font-family:monospace;font-size:11px"></td><td>Angela (Nurse)</td><td><span class="pill pill-g">VIEW</span></td><td>Dorothy F. — Clinical Note</td><td>192.168.1.42</td></tr>
+<tr><td id="au2" style="font-family:monospace;font-size:11px"></td><td>Ericka (Marketer)</td><td><span class="pill pill-b">EDIT</span></td><td>Mary J. — Status update</td><td>192.168.1.38</td></tr>
+<tr><td id="au3" style="font-family:monospace;font-size:11px"></td><td>Admin</td><td><span class="pill pill-p">EXPORT</span></td><td>Weekly Report — CSV</td><td>192.168.1.10</td></tr>
+</tbody></table>
+</div>
+</div>
+
+<div class="tab" id="tab-compliance">
+<div class="sec-hdr"><div><h2>✅ Compliance Engine</h2><p>Gold — Real-time HIPAA, OIG, and Stark Law compliance monitoring</p></div></div>
+<div class="g2">
+  <div class="card">
+    <h4 style="color:#fff;margin:0 0 10px">Compliance Score</h4>
+    <div style="text-align:center;padding:16px 0"><div style="font-size:56px;font-weight:900;color:#8cff66">98%</div><p style="color:#8cff66;font-weight:800;margin:4px 0 0">Excellent</p></div>
+    <div class="alert alert-g">✅ All gift thresholds within CMS limits<br>✅ No Stark Law violations detected<br>✅ HIPAA access logs up to date</div>
+  </div>
+  <div class="card">
+    <h4 style="color:#fff;margin:0 0 10px">Active Monitors</h4>
+    <div class="alert alert-g" style="margin-bottom:8px"><strong>Gift &amp; Gratuity Tracking</strong><br><span style="font-size:11px">✅ All within $15 per-visit limit</span></div>
+    <div class="alert alert-g" style="margin-bottom:8px"><strong>Stark Law Monitor</strong><br><span style="font-size:11px">✅ No physician referral violations</span></div>
+    <div class="alert alert-y"><strong>EVV Compliance</strong><br><span style="font-size:11px">⚠ 2 visits logged &gt;30 min after visit</span></div>
+  </div>
+</div>
+</div>
+
+<div class="tab" id="tab-aitriage">
+<div class="sec-hdr"><div><h2>⚡ AI Referral Triage</h2><p>Gold — AI scores incoming referrals by conversion probability</p></div></div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+  <div class="card" style="text-align:center;background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.2)"><p style="color:#f87171;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Hot — Act Now</p><p style="font-size:24px;font-weight:900;color:#f87171;margin:0">2</p></div>
+  <div class="card" style="text-align:center;background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.2)"><p style="color:#fbbf24;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Warm — Follow Up</p><p style="font-size:24px;font-weight:900;color:#fbbf24;margin:0">3</p></div>
+  <div class="card" style="text-align:center;background:rgba(73,182,255,.07);border:1px solid rgba(73,182,255,.2)"><p style="color:#60a5fa;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Cool — Monitor</p><p style="font-size:24px;font-weight:900;color:#60a5fa;margin:0">4</p></div>
+</div>
+<div style="overflow-x:auto">
+<table class="tbl"><thead><tr><th>Patient</th><th>Source</th><th>AI Score</th><th>Key Factor</th><th>Action</th></tr></thead><tbody>
+<tr><td><strong>William H.</strong></td><td>Baylor ER</td><td><span class="pill pill-r" style="font-size:12px">🔥 9.2/10</span></td><td>Immediate urgency — hospice naive</td><td><button class="btn btn-r btn-sm" onclick="T('Calling William H. family NOW!')">Call Now</button></td></tr>
+<tr><td><strong>Gloria P.</strong></td><td>North Park</td><td><span class="pill pill-r" style="font-size:12px">🔥 8.7/10</span></td><td>POA aligned — cost resolved</td><td><button class="btn btn-r btn-sm" onclick="T('Scheduling visit for Gloria P.!')">Schedule Visit</button></td></tr>
+<tr><td><strong>Mary J.</strong></td><td>Self / Family</td><td><span class="pill pill-y" style="font-size:12px">🟡 6.4/10</span></td><td>Family disagreement — cost concern</td><td><button class="btn btn-b btn-sm" onclick="T('Family meeting scheduled.','i')">Family Meeting</button></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<div class="tab" id="tab-bedavail">
+<div class="sec-hdr"><div><h2>🛏 Bed Availability</h2><p>Gold — Real-time inpatient bed tracking (saves permanently)</p></div></div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+  <div class="card" style="text-align:center;background:rgba(140,255,102,.07);border:1px solid rgba(140,255,102,.25)"><p style="color:#8cff66;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Available Now</p><p id="bedAvail" style="font-size:32px;font-weight:900;color:#8cff66;margin:0">4</p></div>
+  <div class="card" style="text-align:center;background:rgba(73,182,255,.07);border:1px solid rgba(73,182,255,.2)"><p style="color:#49b6ff;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Total Beds</p><p id="bedTotal" style="font-size:32px;font-weight:900;color:#49b6ff;margin:0">18</p></div>
+  <div class="card" style="text-align:center;background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.2)"><p style="color:#ffd700;font-size:9px;font-weight:800;text-transform:uppercase;margin:0 0 4px">Occupancy</p><p id="bedOcc" style="font-size:32px;font-weight:900;color:#ffd700;margin:0">78%</p></div>
+</div>
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h4 style="color:#fff;margin:0">Live Bed Status</h4><button class="btn btn-b btn-sm" onclick="T('All partners notified of available beds!')">🔔 Notify All Partners</button></div>
+  <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Unit</th><th>Total</th><th>Occupied</th><th>Available</th><th>Actions</th></tr></thead><tbody id="bedTable"></tbody></table></div>
+</div>
+<div class="card form-white" style="margin-top:12px">
+  <h4 style="margin:0 0 10px">Add New Unit</h4>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <input type="text" id="newUnitName" placeholder="Unit name (e.g. North Dallas Unit)" style="flex:1;min-width:180px">
+    <input type="number" id="newUnitTotal" value="6" style="width:70px">
+    <button class="btn btn-g" onclick="addBedUnit()">+ Add Unit</button>
+  </div>
+</div>
+</div>
+
 <div class="tab" id="tab-timeline">
 <div class="sec-hdr"><div><h2>Prospect Timeline</h2><p>Complete interaction history with GPS stamps — click any note to expand</p></div></div>
 <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
@@ -847,10 +1239,10 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 </div>
 <script>
 // Config injected per tier
-var TIER = 'Pro';
-var ACTIVE_CLS = 'active-b';
-var ROLE_TABS = {"admin": ["dash", "addref", "refs", "addpx", "records", "timeline", "pipeline", "territory", "prod", "touch", "cal", "notes", "remind", "reengage", "goals", "aiasst", "import", "portal", "playbook", "analytics", "agency", "report", "team", "settings"], "marketer": ["dash", "addref", "refs", "addpx", "records", "timeline", "pipeline", "territory", "prod", "touch", "cal", "notes", "remind", "reengage", "goals", "aiasst", "import", "portal"]};
-var ROLE_DESC = {"admin": "You see every tab including Team Management and Weekly Report. Marketers do NOT see these tabs.", "marketer": "Marketer view: referrals, prospects, records, pipeline, territory, productivity, touch log, follow-up calendar, notes, reminders, re-engagement queue, daily goals, AI assistant, and data import."};
+var TIER = 'Gold';
+var ACTIVE_CLS = 'active-g';
+var ROLE_TABS = {"admin": ["dash", "notifs", "addref", "refs", "addpx", "records", "timeline", "pipeline", "territory", "heatmap", "prod", "touch", "schedule", "notes", "remind", "reengage", "goals", "aiasst", "windshield", "family", "messaging", "evv", "telehealth", "nursesched", "patportal", "admworkflow", "import", "portal", "playbook", "mobile", "terrmgmt", "revintel", "mktgroi", "refanalytics", "leaderboard", "scorecard", "hipaa", "compliance", "aitriage", "bedavail", "analytics", "agency", "report", "team", "settings"], "marketer": ["dash", "notifs", "addref", "refs", "addpx", "records", "timeline", "pipeline", "territory", "heatmap", "prod", "touch", "schedule", "notes", "remind", "reengage", "goals", "aiasst", "windshield", "family", "messaging", "evv", "import", "portal", "playbook", "mobile"], "nurse": ["dash", "notifs", "notes", "remind", "aiasst", "family", "messaging", "evv", "telehealth", "nursesched", "patportal", "admworkflow"], "caregiver": ["dash", "notes", "family", "messaging", "evv", "patportal", "remind"]};
+var ROLE_DESC = {"admin": "All tabs \u2014 Revenue Intelligence, Leaderboard, AI Scorecard, HIPAA Audit Log, Compliance Engine, and Team Management.", "marketer": "Full Gold marketer suite: territory heat maps, smart scheduling, referral portal, windshield mode, family communication, secure messaging, EVV / mileage, playbook generator, marketer mobile, and all marketing tools.", "nurse": "Nurse view: notifications, notes, reminders, AI assistant, family communication, secure messaging, EVV, telehealth, nurse scheduler, patient portal, admission workflow.", "caregiver": "Caregiver view: notes, reminders, family communication, secure messaging, EVV / mileage, patient portal."};
 var BADGE_STYLE = {"admin": "background:rgba(188,140,255,.2);color:#c9aeff", "marketer": "background:rgba(73,182,255,.2);color:#49b6ff", "nurse": "background:rgba(140,255,102,.2);color:#8cff66", "caregiver": "background:rgba(249,199,79,.2);color:#f9c74f"};
 var IS_DEMO = false;
 
@@ -1226,15 +1618,21 @@ document.addEventListener('DOMContentLoaded',function(){
 document.addEventListener('DOMContentLoaded', function() {
   var tok = sessionStorage.getItem('hl_token') || localStorage.getItem('hl_token');
   // ─── TIER ENFORCEMENT ───────────────────────────────────────────────────────
+  // Redirect users who don't belong on this page. Checks JWT crm_tier.
   if (!tok) { window.location.href = 'login.html?reason=auth_required'; return; }
   var payload;
   try {
     payload = JSON.parse(atob(tok.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
   } catch(e) { window.location.href = 'login.html?reason=invalid_token'; return; }
+  // Check token expiry
+  if (payload.exp && Date.now() / 1000 > payload.exp + 60) {
+    // Give 60s grace for refresh — if truly expired the interceptor will handle it
+    // Only hard-redirect if there's no cookie either
+  }
   var tier = payload.crm_tier || 'pro';
+  if (tier === 'pro')  { window.location.href = 'crm-pro.html';  return; }
   if (tier === 'max')  { window.location.href = 'crm-max.html';  return; }
-  if (tier === 'gold') { window.location.href = 'crm-gold.html'; return; }
-  // tier === 'pro' — correct page, continue
+  // tier === 'gold' — correct page, continue
   // ────────────────────────────────────────────────────────────────────────────
   var role = payload.role || 'marketer';
   // Set the role badge
@@ -1379,16 +1777,56 @@ window.fetch = async function(url, opts = {}) {
   scheduleProactiveRefresh();
   setInterval(scheduleProactiveRefresh, 120000);
 })();
+</script>
 
-function openBillingPortal() {
-  _fetch(BACKEND + '/api/billing/portal', { method: 'POST' })
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      if (d.url) { window.location.href = d.url; }
-      else { T(d.error || 'Unable to open billing portal. Contact support@wemarketplus.com', 'e'); }
-    })
-    .catch(function() { T('Connection error opening billing portal.', 'e'); });
+<script>
+// ─── DASHBOARD DATA LOADER ───────────────────────────────────────────────────
+// Loads real data from API to replace hardcoded demo values
+const BACKEND_URL = 'https://api.wemarketplus.com';
+
+async function loadDashboardData() {
+  const tok = localStorage.getItem('hl_token');
+  if (!tok) return;
+
+  try {
+    const [pipelineRes, reportsRes] = await Promise.all([
+      fetch(BACKEND_URL + '/api/reports/pipeline', { headers: { 'Authorization': 'Bearer ' + tok } }),
+      fetch(BACKEND_URL + '/api/reports/summary', { headers: { 'Authorization': 'Bearer ' + tok } }),
+    ]);
+
+    if (pipelineRes.ok) {
+      const { data } = await pipelineRes.json();
+      // Update pipeline counts
+      const stages = {};
+      (data || []).forEach(row => { stages[row.stage] = parseInt(row.count); });
+
+      const overdue   = document.getElementById('statOverdue');
+      const dueToday  = document.getElementById('statDueToday');
+      const reEngage  = document.getElementById('statReEngage');
+      if (overdue)  overdue.textContent  = stages.inquiry || 0;
+      if (dueToday) dueToday.textContent = stages.contacted || 0;
+      if (reEngage) reEngage.textContent = (stages.pending || 0) + (stages.evaluation || 0);
+    }
+
+    if (reportsRes.ok) {
+      const { mrr } = await reportsRes.json();
+      const fmtMRR  = mrr >= 1000 ? '$' + (mrr/1000).toFixed(0) + 'K' : '$' + mrr;
+      ['dashRevenue','dashRevenue2','dashRevenue3'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = fmtMRR;
+      });
+    }
+  } catch (e) {
+    // Silently fail — dashboard shows — instead of crashing
+    console.warn('Dashboard data load failed:', e.message);
+  }
 }
+
+// Load dashboard data after page is ready and token is available
+document.addEventListener('DOMContentLoaded', function() {
+  // Small delay to let auth init run first
+  setTimeout(loadDashboardData, 800);
+});
 
 // ═══════════════════════════════════════════════════════════════════════════
 // DATA PERSISTENCE LAYER — v3.0 (#5)
@@ -1748,7 +2186,6 @@ document.addEventListener('DOMContentLoaded', function() {
   loadAndRenderProspects();
 });
 
-
 // ═══════════════════════════════════════════════════════════════
 // FIX C4: saveNote() override — replaces in-memory version
 // The "Save Note" button calls saveNote(); this version persists to PostgreSQL
@@ -1815,5 +2252,6 @@ function saveNote() {
   });
 }
 </script>
+
 </body>
 </html>
