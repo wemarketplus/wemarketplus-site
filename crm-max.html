@@ -1212,50 +1212,7 @@ function notesCaptureGPS(){
     {enableHighAccuracy:true,timeout:8000}
   );
 }
-function saveNote(){
-  var summary=document.getElementById('noteSummary')&&document.getElementById('noteSummary').value.trim();
-  var nextStep=document.getElementById('noteNextStep')&&document.getElementById('noteNextStep').value;
-  var err=document.getElementById('noteErr');
-  var nsBox=document.getElementById('nextStepBox');
-  if(!summary||!nextStep){
-    if(err)err.style.display='block';
-    if(nsBox&&!nextStep)nsBox.style.borderColor='rgba(239,68,68,.4)';
-    return;
-  }
-  if(err)err.style.display='none';
-  if(nsBox)nsBox.style.borderColor='rgba(73,182,255,.25)';
-  var now=new Date();
-  var dateStr=now.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' · '+now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-  var steps=NEXT_STEPS_BY_ROLE[currentRole]||NEXT_STEPS_BY_ROLE.marketer;
-  var step=steps.find(function(s){return s.v===nextStep;});
-  var urgency=document.getElementById('noteUrgency')&&document.getElementById('noteUrgency').value||'warm';
-  var hotFlag=HOT_KEYWORDS.some(function(kw){return (summary+' '+(document.getElementById('notePatStatus')&&document.getElementById('notePatStatus').value||'')).toLowerCase().indexOf(kw)!==-1;})||urgency==='hot';
-  var names={marketer:'Ericka',nurse:'Angela RN',caregiver:'Caregiver',admin:'Admin'};
-  savedNotes.unshift({
-    author:document.getElementById('noteAuthor')&&document.getElementById('noteAuthor').value||names[currentRole]||'Ericka',
-    role:currentRole,date:dateStr,
-    contactType:document.getElementById('noteContactType')&&document.getElementById('noteContactType').value,
-    urgency:urgency,
-    summary:summary,
-    decisionMakers:document.getElementById('noteDecision')&&document.getElementById('noteDecision').value,
-    patientStatus:document.getElementById('notePatStatus')&&document.getElementById('notePatStatus').value,
-    barriers:document.getElementById('noteBarriers')&&document.getElementById('noteBarriers').value||'None',
-    nextStepLabel:step?step.l:'',
-    assignedTo:document.getElementById('noteAssigned')&&document.getElementById('noteAssigned').value,
-    followUpDate:document.getElementById('noteFollowDate')&&document.getElementById('noteFollowDate').value,
-    followUpTime:document.getElementById('noteFollowTime')&&document.getElementById('noteFollowTime').value,
-    gps:noteGPS,hot:hotFlag
-  });
-  // Reset form
-  ['noteSummary','noteDecision','notePatStatus','noteAssigned','noteFollowDate','noteFollowTime'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
-  var ns=document.getElementById('noteNextStep');if(ns)ns.value='';
-  var nb=document.getElementById('hotBanner');if(nb)nb.style.display='none';
-  var gd=document.getElementById('gpsNote');if(gd){gd.style.display='none';}
-  noteGPS=null;
-  var gb=document.getElementById('gpsBtn');if(gb){gb.textContent='📍 Capture GPS';gb.disabled=false;}
-  buildNotesFeed();
-  T('Note saved!'+(noteGPS?' 📍 GPS: '+noteGPS:''));
-}
+
 
 
 // ── AI ─────────────────────────────────────────────────────────
@@ -1452,7 +1409,39 @@ document.addEventListener('DOMContentLoaded', function() {
     return _refreshing;
   }
 
-  window.fetch = async function(url, opts = {}) {
+  
+// ─── BAA_REQUIRED HANDLER ─────────────────────────────────────────────────
+// If the API returns 403 BAA_REQUIRED, redirect user to sign-baa or show guidance
+// This is injected into the window.fetch override to catch it globally
+(function() {
+  var _origFetch = window.fetch;
+  window.fetch = async function(url, opts) {
+    var response = await _origFetch(url, opts);
+    // Clone to read body without consuming it
+    if (response.status === 403) {
+      var cloned = response.clone();
+      try {
+        var data = await cloned.json();
+        if (data.code === 'BAA_REQUIRED') {
+          // Show modal instead of silent failure
+          var overlay = document.createElement('div');
+          overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:99999;display:flex;align-items:center;justify-content:center';
+          overlay.innerHTML = '<div style="background:#0d1b31;border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:32px;max-width:480px;text-align:center;color:#f4f8ff">' +
+            '<div style="font-size:36px;margin-bottom:12px">⚠️</div>' +
+            '<h2 style="color:#f59e0b;margin-bottom:12px">BAA Signature Required</h2>' +
+            '<p style="color:#8b9fc4;font-size:14px;line-height:1.6;margin-bottom:20px">HIPAA requires a signed Business Associate Agreement before patient data can be accessed. Please check your activation email or contact support.</p>' +
+            '<a href="mailto:support@wemarketplus.com" style="display:inline-block;background:#49b6ff;color:#081426;padding:10px 24px;border-radius:999px;text-decoration:none;font-weight:700;font-size:13px">Contact Support</a>' +
+            '</div>';
+          document.body.appendChild(overlay);
+          overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
+        }
+      } catch(e) { /* non-JSON 403, ignore */ }
+    }
+    return response;
+  };
+})();
+
+window.fetch = async function(url, opts = {}) {
     // Inject auth header for API calls
     if (typeof url === 'string' && url.includes(BACKEND)) {
       opts.headers = opts.headers || {};
@@ -1871,6 +1860,72 @@ document.addEventListener('DOMContentLoaded', function() {
   loadAndRenderProspects();
 });
 
+
+// ═══════════════════════════════════════════════════════════════
+// FIX C4: saveNote() override — replaces in-memory version
+// The "Save Note" button calls saveNote(); this version persists to PostgreSQL
+// JavaScript uses the LAST function definition, so this override wins
+// ═══════════════════════════════════════════════════════════════
+function saveNote() {
+  var summary  = document.getElementById('noteSummary') && document.getElementById('noteSummary').value.trim();
+  var nextStep = (document.getElementById('noteNextStep') && document.getElementById('noteNextStep').value) ||
+                 (document.getElementById('nextStep') && document.getElementById('nextStep').value) || '';
+  var errEl    = document.getElementById('noteErr');
+  var nsBox    = document.getElementById('nextStepBox');
+  if (!summary || summary.length < 3) {
+    if (errEl) errEl.style.display = 'block';
+    return;
+  }
+  if (errEl) errEl.style.display = 'none';
+  if (nsBox) nsBox.style.borderColor = '';
+
+  var data = {
+    summary:         summary,
+    contact_type:    (document.getElementById('noteContactType') || document.getElementById('noteContact')) &&
+                     ((document.getElementById('noteContactType') || document.getElementById('noteContact')).value) || null,
+    urgency:         (document.getElementById('noteUrgency') && document.getElementById('noteUrgency').value) || 'warm',
+    decision_makers: (document.getElementById('noteDecision') && document.getElementById('noteDecision').value) ||
+                     (document.getElementById('noteDMs') && document.getElementById('noteDMs').value) || '',
+    patient_status:  (document.getElementById('notePatStatus') && document.getElementById('notePatStatus').value) ||
+                     (document.getElementById('notePatientStatus') && document.getElementById('notePatientStatus').value) || '',
+    barriers:        (document.getElementById('noteBarriers') && document.getElementById('noteBarriers').value) || '',
+    next_step:       nextStep,
+    follow_up_date:  (document.getElementById('noteFollowDate') && document.getElementById('noteFollowDate').value) ||
+                     (document.getElementById('noteFollowUpDate') && document.getElementById('noteFollowUpDate').value) || null,
+    follow_up_time:  (document.getElementById('noteFollowTime') && document.getElementById('noteFollowTime').value) ||
+                     (document.getElementById('noteFollowUpTime') && document.getElementById('noteFollowUpTime').value) || '',
+    gps_location:    (typeof noteGPS !== 'undefined' ? noteGPS : null) ||
+                     (document.getElementById('noteGPS') && document.getElementById('noteGPS').value) || '',
+    is_hot_lead:     !!(document.getElementById('hotBanner') && document.getElementById('hotBanner').style.display !== 'none') ||
+                     !!(document.getElementById('noteHot') && document.getElementById('noteHot').checked),
+  };
+
+  // Call API (async note save with visual feedback)
+  var btn = document.querySelector('[onclick="saveNote()"]') || document.querySelector('.btn-save-note');
+  if (btn) { btn.textContent = 'Saving…'; btn.disabled = true; }
+
+  apiSaveNote(data).then(function(result) {
+    if (result) {
+      T('Note saved!');
+      // Reset form fields
+      var resetIds = ['noteSummary','noteDecision','notePatStatus','noteAssigned','noteFollowDate','noteFollowTime',
+                      'noteDMs','notePatientStatus','noteFollowUpDate','noteFollowUpTime','noteGPS','noteBarriers'];
+      resetIds.forEach(function(id) { var el = document.getElementById(id); if (el) el.value = ''; });
+      var nsEl = document.getElementById('noteNextStep') || document.getElementById('nextStep');
+      if (nsEl) nsEl.value = '';
+      if (typeof noteGPS !== 'undefined') noteGPS = null;
+      var nb = document.getElementById('hotBanner'); if (nb) nb.style.display = 'none';
+      var gb = document.getElementById('gpsBtn'); if (gb) { gb.textContent = '📍 Capture GPS'; gb.disabled = false; }
+      var gd = document.getElementById('gpsNote'); if (gd) gd.style.display = 'none';
+      // Reload notes feed from API
+      if (typeof loadAndBuildNotesFeed === 'function') loadAndBuildNotesFeed();
+    }
+    if (btn) { btn.textContent = 'Save Note'; btn.disabled = false; }
+  }).catch(function() {
+    T('Failed to save note. Check your connection.', 'e');
+    if (btn) { btn.textContent = 'Save Note'; btn.disabled = false; }
+  });
+}
 </script>
 </body>
 </html>
