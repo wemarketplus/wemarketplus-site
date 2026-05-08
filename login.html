@@ -107,10 +107,17 @@ function doLogin(){
     return r.json();
   })
   .then(data => {
-    if (!data.token) {
+    if (!data.token && data.code !== 'TENANT_SUSPENDED') {
       showError(data.error || data.message || 'Login failed. Check your credentials.');
       btn.textContent = 'Sign In';
       btn.disabled = false;
+      return;
+    }
+    // Suspended account: store limited token and redirect to recovery
+    if (data.code === 'TENANT_SUSPENDED' && data.token && data.recovery_url) {
+      localStorage.setItem('hl_token', data.token);
+      localStorage.setItem('hl_suspended', 'true');
+      window.location.href = data.recovery_url;
       return;
     }
 
@@ -141,7 +148,22 @@ function doLogin(){
       return;
     }
     if (err.status === 401) { showError('Incorrect email or password.'); return; }
-    if (err.status === 403) { showError('Account suspended. Contact support@wemarketplus.com'); return; }
+    if (err.status === 403) {
+      if (err.code === 'TENANT_SUSPENDED' && err.token && err.recovery_url) {
+        // Store limited token so subscription-status.html can call billing portal
+        localStorage.setItem('hl_token', err.token);
+        localStorage.setItem('hl_suspended', 'true');
+        window.location.href = err.recovery_url;
+        return;
+      }
+      showError('Account suspended or cancelled.');
+      var errEl = document.getElementById('errMsg');
+      if (errEl) {
+        errEl.innerHTML = 'Account suspended or cancelled. <a href="subscription-status.html" style="color:#49b6ff;font-weight:700">Manage your subscription</a> to restore access.';
+      }
+      return;
+    }
+    if (err.status === 429) { showError('Too many login attempts. Please wait and try again.'); return; }
     if (err.status >= 500)  { showError('Server error. Please try again in a moment.'); return; }
 
     // Network failure — never fake a login
