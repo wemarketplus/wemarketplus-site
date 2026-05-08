@@ -179,11 +179,22 @@ function loadStatus() {
   })
   .then(function(r) { return r.json(); })
   .then(function(d) {
+    // Handle BAA required — show sign-baa link
+    if (d.code === 'BAA_REQUIRED') {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('contentState').style.display = 'block';
+      document.getElementById('statusBadge').className = 'status-badge badge-suspended';
+      document.getElementById('statusBadge').textContent = 'BAA Required';
+      document.getElementById('statusTitle').textContent = 'BAA Signature Required';
+      document.getElementById('statusSubtitle').textContent = 'HIPAA requires a signed Business Associate Agreement before you can access patient data. Please check your activation email for the sign-BAA link.';
+      document.getElementById('actionButtons').innerHTML =
+        '<a href="mailto:support@wemarketplus.com" class="btn btn-primary">Request New Activation Link</a>';
+      return;
+    }
     if (d.error) {
       if (d.error.includes('not found')) {
         showErr('Account not found. Contact support@wemarketplus.com');
       } else {
-        // Try billing subscription endpoint as fallback
         return fetch(BACKEND + '/api/billing/subscription', {
           headers: { 'Authorization': 'Bearer ' + tok },
           credentials: 'include',
