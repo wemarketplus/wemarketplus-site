@@ -115,12 +115,12 @@ textarea.fi{resize:vertical;min-height:72px}
     </div>
   </div>
   <nav class="sb-nav" id="sideNav"></nav>
-  <div class="sb-foot">CommunityLink Max CRM Demo &bull; <a href="../index.html#communitylink">Back to Site</a></div>
+  <div class="sb-foot">CommunityLink Max CRM Demo &bull; <a href="index.html#communitylink">Back to Site</a></div>
 </aside>
 <div class="main">
   <div class="topbar">
     <div><div class="page-title" id="pageTitle">Executive Dashboard</div><div class="page-sub">Sunrise Senior Living — February 2026</div></div>
-    <button class="tb-btn" onclick="window.open('pricing.html','_blank')">Subscribe to Max CRM</button>
+    <button class="tb-btn" onclick="window.open('https://buy.stripe.com/5kQ14odssbU31qTdJHfEk0t','_blank')">Subscribe to Max CRM</button>
   </div>
   <div class="content" id="mainContent"></div>
 </div>
@@ -196,10 +196,11 @@ var NAV={
     {sec:'MAIN',items:[{k:'dashboard',l:'Dashboard'},{k:'leads',l:'Lead Pipeline'},{k:'refs',l:'Referral Sources'},{k:'tours',l:'Tour Scheduler'}]},
     {sec:'OPERATIONS',items:[{k:'apartments',l:'Apartment Inventory'},{k:'makeready',l:'Make-Ready Board'},{k:'maintenance',l:'Maintenance'},{k:'housekeeping',l:'Housekeeping'}]},
     {sec:'FINANCIAL',items:[{k:'ledger',l:'Financial Ledger'},{k:'revenue',l:'Revenue Leakage'},{k:'concessions',l:'Concession Approvals'},{k:'loc',l:'LOC Calculator'},{k:'competitors',l:'Competitor Intel'}]},
-    {sec:'TOOLS',items:[{k:'tasks',l:'Tasks'},{k:'reports',l:'Reports'},{k:'settings',l:'Settings'}]},
+    {sec:'TOOLS',items:[{k:'aircall',l:'📞 Aircall — Call · Text · Email'},{k:'tasks',l:'Tasks'},{k:'reports',l:'Reports'},{k:'settings',l:'Settings'}]},
   ],
   marketer:[
     {sec:'SALES',items:[{k:'dashboard',l:'Sales Dashboard'},{k:'leads',l:'Lead Pipeline'},{k:'tours',l:'Tours'},{k:'refs',l:'Referral Sources'},{k:'tasks',l:'Tasks'}]},
+    {sec:'OUTREACH',items:[{k:'aircall',l:'📞 Aircall — Call · Text · Email'}]},
   ],
   maintenance:[
     {sec:'MY WORK',items:[{k:'dashboard',l:'My Queue'},{k:'maintenance',l:'Maintenance Tickets'},{k:'makeready',l:'Make-Ready Tasks'},{k:'tasks',l:'Tasks'}]},
@@ -221,7 +222,7 @@ function buildNav(){
 }
 function go(key){
   ACTIVE=key;buildNav();
-  var titles={dashboard:'Dashboard',occupancy:'Occupancy Overview',leads:'Lead Pipeline',tours:'Tour Scheduler',refs:'Referral Sources',apartments:'Apartment Inventory',makeready:'Make-Ready Board',maintenance:'Maintenance Tickets',housekeeping:'Housekeeping Tasks',ledger:'Financial Ledger',revenue:'Revenue Leakage',concessions:'Concession Approvals',loc:'LOC Pricing Calculator',competitors:'Competitor Intel',tasks:'Tasks',reports:'Reports Center',settings:'Settings'};
+  var titles={dashboard:'Dashboard',occupancy:'Occupancy Overview',leads:'Lead Pipeline',tours:'Tour Scheduler',refs:'Referral Sources',apartments:'Apartment Inventory',makeready:'Make-Ready Board',maintenance:'Maintenance Tickets',housekeeping:'Housekeeping Tasks',ledger:'Financial Ledger',revenue:'Revenue Leakage',concessions:'Concession Approvals',loc:'LOC Pricing Calculator',competitors:'Competitor Intel',tasks:'Tasks',reports:'Reports Center',settings:'Settings',aircall:'Aircall — Call · Text · Email'};
   document.getElementById('pageTitle').textContent=titles[key]||key;
   render(key);
 }
@@ -236,9 +237,10 @@ function changeRole(role){
 }
 function render(key){
   var mc=document.getElementById('mainContent');
-  var fns={dashboard:rDash,occupancy:rOccupancy,leads:rLeads,tours:rTours,refs:rRefs,apartments:rApartments,makeready:rMakeReady,maintenance:rMaintenance,housekeeping:rHousekeeping,tasks:rTasks,reports:rReports,settings:rSettings,ledger:rLedger,revenue:rRevenue,concessions:rConcessions,loc:rLOC,competitors:rCompetitors};
+  var fns={dashboard:rDash,occupancy:rOccupancy,leads:rLeads,tours:rTours,refs:rRefs,apartments:rApartments,makeready:rMakeReady,maintenance:rMaintenance,housekeeping:rHousekeeping,tasks:rTasks,reports:rReports,settings:rSettings,ledger:rLedger,revenue:rRevenue,concessions:rConcessions,loc:rLOC,competitors:rCompetitors,aircall:rAircall};
   if(fns[key]) mc.innerHTML=fns[key]();
   else mc.innerHTML='<div class="card"><p style="color:#6b7fa3;padding:20px">Loading…</p></div>';
+  if(key==='aircall') setTimeout(acDemoInit, 10);
 }
 function h(s){if(!s&&s!==0)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function T(msg,type){var t=document.getElementById('toast');t.textContent=msg;t.className='show'+(type==='e'?' err':'');setTimeout(function(){t.className='';},3000);}
@@ -533,7 +535,7 @@ function exportGoldReport(){
 // ─── SETTINGS ─────────────────────────────────────────────────────
 function rSettings(){
   return '<div class="card"><div class="card-hd"><div class="card-t">Community Settings</div></div><div class="fg"><div class="fl"><div class="flb">Community Name</div><input class="fi" value="Sunrise Senior Living"></div><div class="fl"><div class="flb">Total Units</div><input class="fi" type="number" value="'+APTS.length+'"></div><div class="fl"><div class="flb">Phone</div><input class="fi" value="(214) 555-0100"></div><div class="fl"><div class="flb">City</div><input class="fi" value="Dallas, TX"></div></div><button class="btn btn-a" onclick="T(\'Settings saved!\')">Save Settings</button></div>'
-    +'<div class="card"><div class="card-t" style="margin-bottom:8px">Subscription</div><div style="font-size:13px;color:#c8d6e8;margin-bottom:10px">Plan: <strong style="color:#4fc87a">CommunityLink Max CRM — $1,999/month</strong> (Demo)</div><a href="pricing.html" class="btn btn-a" style="text-decoration:none;display:inline-block">View Pricing Plans</a></div>'
+    +'<div class="card"><div class="card-t" style="margin-bottom:8px">Subscription</div><div style="font-size:13px;color:#c8d6e8;margin-bottom:10px">Plan: <strong style="color:#4fc87a">CommunityLink Max CRM — $1,999/month</strong> (Demo)</div><a href="communitylink pricing.html" class="btn btn-a" style="text-decoration:none;display:inline-block">View Pricing Plans</a></div>'
     +'<div class="card"><div class="card-t" style="margin-bottom:8px">User Seats</div><div style="font-size:13px;color:#c8d6e8;margin-bottom:10px">5 of 30 seats used (Max plan)</div><button class="btn btn-a btn-sm" onclick="T(\'Invite sent! Check email.\')">+ Invite User</button></div>';
 }
 
@@ -894,6 +896,169 @@ function saveCompetitor(){
 
 function clearConArea(){document.getElementById('conAddArea').innerHTML='';}
 function clearCompArea(){document.getElementById('compAddArea').innerHTML='';}
+
+// ─── AIRCALL (Demo) ─────────────────────────────────────────────
+function rAircall(){
+  return '<style>.ac-ch-btn{padding:7px 18px;border-radius:999px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.05);color:#8ba4c4;font-family:inherit;transition:background .12s}.ac-ch-btn.ac-on{background:linear-gradient(135deg,#f59e0b,#d97706);color:#06080e;border-color:transparent}</style>'
+    +'<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:18px">'
+      +'<div style="font-size:11px;color:#6b7fa3">Reach leads and referral partners directly from CommunityLink. All interactions auto-logged.</div>'
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap">'
+        +'<span style="background:rgba(79,200,122,.1);border:1px solid rgba(79,200,122,.25);border-radius:999px;padding:4px 12px;font-size:11px;font-weight:800;color:#4fc87a">🚀 Max Exclusive</span>'
+        +'<span style="background:rgba(79,200,122,.08);border:1px solid rgba(79,200,122,.2);border-radius:999px;padding:4px 12px;font-size:11px;font-weight:800;color:#4fc87a">● Connected (Demo)</span>'
+      +'</div>'
+    +'</div>'
+    +'<div style="background:rgba(61,158,232,.06);border:1px solid rgba(61,158,232,.15);border-radius:9px;padding:9px 14px;margin-bottom:16px;font-size:12px;color:#3d9ee8">👁 <strong>Demo Mode:</strong> No actual messages are sent. All actions simulate live Aircall behavior.</div>'
+    +'<div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">'
+      +'<button id="acBtn-call" class="ac-ch-btn ac-on" onclick="acDemoChannel(\'call\')">📞 Call</button>'
+      +'<button id="acBtn-text" class="ac-ch-btn" onclick="acDemoChannel(\'text\')">💬 Text</button>'
+      +'<button id="acBtn-email" class="ac-ch-btn" onclick="acDemoChannel(\'email\')">✉️ Email</button>'
+    +'</div>'
+    // CALL PANEL
+    +'<div id="acPanel-call">'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">'
+        +'<div><div class="card"><div class="card-hd"><div class="card-t">📞 Make a Call</div></div>'
+          +'<div style="display:flex;flex-direction:column;gap:10px">'
+            +'<div class="fl"><div class="flb">Contact</div>'
+              +'<select class="fi" id="acCallContact" onchange="acDemoFillPhone()">'
+                +'<option value="">— Select lead or referral partner —</option>'
+                +'<optgroup label="Hot Leads"><option value="Dorothy Harrison|(214)555-0142">Dorothy Harrison · (214)555-0142</option><option value="Gloria Tran|(469)555-0391">Gloria Tran · (469)555-0391</option><option value="Edna Michaels|(214)555-0567">Edna Michaels · (214)555-0567</option></optgroup>'
+                +'<optgroup label="Referral Partners"><option value="Dr. Amanda Chen|(214)555-0181">Dr. Amanda Chen</option><option value="Sarah Kim RN|(214)555-0182">Sarah Kim RN — Parkland</option></optgroup>'
+              +'</select></div>'
+            +'<div class="fl"><div class="flb">Phone</div><input class="fi" id="acCallPhone" placeholder="(214) 555-0000"></div>'
+            +'<div class="fl"><div class="flb">Purpose</div><select class="fi" id="acCallPurpose"><option>Lead Follow-Up</option><option>Tour Confirmation</option><option>Move-In Coordination</option><option>Referral Partner Touch-Base</option></select></div>'
+            +'<div class="fl"><div class="flb">Pre-Call Notes</div><textarea class="fi" id="acCallNotes" rows="2" placeholder="Key points…"></textarea></div>'
+            +'<div style="display:flex;gap:8px"><button class="btn btn-a" style="flex:1" onclick="acDemoStartCall()">📞 Call via Aircall</button><button class="btn btn-x btn-sm" onclick="T(\'Scheduled!\')">🗓 Schedule</button></div>'
+          +'</div></div></div>'
+        +'<div id="acLiveCallWrap" style="display:none" class="card">'
+          +'<div style="background:rgba(79,200,122,.06);border:1px solid rgba(79,200,122,.25);border-radius:12px;padding:16px;text-align:center">'
+            +'<div style="font-size:32px;margin-bottom:4px">📞</div>'
+            +'<div id="acLiveCallName" style="font-size:15px;font-weight:900;color:#4fc87a;margin-bottom:2px">—</div>'
+            +'<div id="acLiveCallTimer" style="font-size:13px;color:#4b6278;margin-bottom:12px">0:00</div>'
+            +'<div style="display:flex;gap:8px;justify-content:center"><button id="acMuteBtn" class="btn btn-x btn-sm" onclick="acDemoMute()">🎙 Mute</button><button class="btn btn-x btn-sm" onclick="T(\'Transferring…\')">↗ Transfer</button><button class="btn btn-r btn-sm" onclick="acDemoEndCall()">⬛ End</button></div>'
+          +'</div></div>'
+      +'</div>'
+      +'<div class="card" style="margin-top:14px"><div class="card-hd"><div class="card-t">📋 Post-Call Log</div></div>'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'
+          +'<div class="fl"><div class="flb">Outcome</div><select class="fi" id="acCallOutcome"><option value="">Select…</option><option>Connected — tour scheduled</option><option>Connected — follow-up set</option><option>Left voicemail</option><option>No answer</option><option>Referral committed</option></select></div>'
+          +'<div class="fl"><div class="flb">Next Action</div><input class="fi" id="acCallNext" placeholder="e.g. Send proposal…"></div>'
+          +'<div class="fl"><div class="flb">Follow-Up Date</div><input class="fi" type="date" id="acCallFollowDate"></div>'
+          +'<div class="fl"><div class="flb">Summary</div><textarea class="fi" id="acCallSummary" rows="2" placeholder="What was discussed…"></textarea></div>'
+        +'</div>'
+        +'<button class="btn btn-g" style="margin-top:10px" onclick="acDemoSaveCall()">💾 Save Log + Queue Follow-Up</button>'
+      +'</div>'
+    +'</div>'
+    // TEXT PANEL
+    +'<div id="acPanel-text" style="display:none"><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">'
+      +'<div class="card"><div class="card-hd"><div class="card-t">💬 Send Text</div></div>'
+        +'<div style="display:flex;flex-direction:column;gap:10px">'
+          +'<div class="fl"><div class="flb">To</div><select class="fi" id="acTextContact" onchange="acDemoFillTextPhone()"><option value="">— Select —</option><option value="Dorothy Harrison|(214)555-0142">Dorothy Harrison</option><option value="Gloria Tran|(469)555-0391">Gloria Tran</option><option value="Dr. Amanda Chen|(214)555-0181">Dr. Amanda Chen</option></select></div>'
+          +'<div class="fl"><div class="flb">Phone</div><input class="fi" id="acTextPhone" placeholder="(214) 555-0000"></div>'
+          +'<div class="fl"><div class="flb">Template</div><select class="fi" onchange="acDemoTextTpl(this)"><option value="">— Insert —</option><option value="Hi {name}! This is Sarah from Sunrise Senior Living. We have a lovely unit available — would you like to tour this week?">Tour Invite</option><option value="Hi {name}, just following up on your inquiry. Are you available for a quick call?">Follow-Up</option><option value="Hi {name}, confirming your tour tomorrow at 10am. We\'re excited to see you!">Tour Reminder</option></select></div>'
+          +'<div class="fl"><div class="flb">Message <span id="acTxtCnt" style="color:#4b6278;font-weight:400">0/160</span></div><textarea class="fi" id="acTextBody" rows="5" placeholder="Type message…" oninput="document.getElementById(\'acTxtCnt\').textContent=this.value.length+\'/160\'"></textarea></div>'
+          +'<div style="display:flex;gap:8px"><button class="btn btn-a" style="flex:1" onclick="acDemoSendText()">💬 Send (Demo)</button><button class="btn btn-x btn-sm" onclick="T(\'Scheduled\')">🗓</button></div>'
+        +'</div>'
+      +'</div>'
+      +'<div class="card">'
+        +'<div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);border-radius:8px;padding:9px 12px;margin-bottom:14px;font-size:12px;color:#f59e0b">⚠ Use first names only. No health or financial details.</div>'
+        +'<div class="card-hd" style="margin-bottom:10px"><div class="card-t">📊 7-Day Text Stats</div></div>'
+        +'<div style="display:flex;flex-direction:column;gap:0"><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="font-size:12px;color:#8ba4c4">Texts Sent</span><span style="font-weight:800;color:#f4f8ff">18</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="font-size:12px;color:#8ba4c4">Response Rate</span><span style="font-weight:800;color:#4fc87a">61%</span></div><div style="display:flex;justify-content:space-between;padding:8px 0"><span style="font-size:12px;color:#8ba4c4">Tours Booked via Text</span><span style="font-weight:800;color:#f59e0b">3</span></div></div>'
+        +'<div style="margin-top:14px"><div style="font-size:10px;font-weight:800;text-transform:uppercase;color:#1e3a5f;margin-bottom:8px">Last Thread — Dorothy</div>'
+          +'<div style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);border-radius:10px 10px 3px 10px;padding:8px 12px;font-size:12px;color:#f4f8ff;max-width:82%;margin-left:auto;margin-bottom:6px">Hi Dorothy! Confirming your tour Friday at 10am — still good?</div>'
+          +'<div style="background:#071120;border:1px solid rgba(255,255,255,.08);border-radius:10px 10px 10px 3px;padding:8px 12px;font-size:12px;color:#c8d6e8;max-width:82%">Yes! James will be joining me. Looking forward to it!</div>'
+        +'</div>'
+      +'</div>'
+    +'</div></div>'
+    // EMAIL PANEL
+    +'<div id="acPanel-email" style="display:none"><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">'
+      +'<div class="card"><div class="card-hd"><div class="card-t">✉️ Compose Email</div></div>'
+        +'<div style="display:flex;flex-direction:column;gap:10px">'
+          +'<div class="fl"><div class="flb">To</div><select class="fi" id="acEmailContact" onchange="acDemoFillEmail()"><option value="">— Select —</option><option value="Dorothy Harrison|jharrison.poa@email.com">Dorothy Harrison (POA)</option><option value="Gloria Tran|gtran.family@email.com">Gloria Tran (Family)</option><option value="Dr. Amanda Chen|a.chen@dallasmedical.com">Dr. Amanda Chen</option><option value="Sarah Kim RN|s.kim@parkland.org">Sarah Kim RN</option></select></div>'
+          +'<div class="fl"><div class="flb">Email</div><input class="fi" id="acEmailAddr" type="email" placeholder="contact@email.com"></div>'
+          +'<div class="fl"><div class="flb">CC</div><input class="fi" id="acEmailCC" type="email" placeholder="optional"></div>'
+          +'<div class="fl"><div class="flb">Template</div><select class="fi" onchange="acDemoEmailTpl(this)"><option value="">— Template —</option><option value="tour">Tour Confirmation</option><option value="proposal">Proposal / Rate Sheet</option><option value="thank">Thank You — Referral</option><option value="followup">General Follow-Up</option><option value="movein">Move-In Prep</option></select></div>'
+          +'<div class="fl"><div class="flb">Subject</div><input class="fi" id="acEmailSubject" placeholder="Subject…"></div>'
+          +'<div class="fl"><div class="flb">Body</div><textarea class="fi" id="acEmailBody" rows="7" style="min-height:130px" placeholder="Email body…"></textarea></div>'
+          +'<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-a" style="flex:1" onclick="acDemoSendEmail()">✉️ Send (Demo)</button><button class="btn btn-x btn-sm" onclick="T(\'Scheduled\')">🗓</button><button class="btn btn-x btn-sm" onclick="T(\'Draft saved\')">📄</button></div>'
+        +'</div>'
+      +'</div>'
+      +'<div>'
+        +'<div class="card"><div class="card-hd" style="margin-bottom:10px"><div class="card-t">📊 Email — 30 Days</div></div><div style="display:flex;flex-direction:column;gap:0"><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="font-size:12px;color:#8ba4c4">Emails Sent</span><span style="font-weight:800;color:#f4f8ff">54</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="font-size:12px;color:#8ba4c4">Open Rate</span><span style="font-weight:800;color:#4fc87a">68%</span></div><div style="display:flex;justify-content:space-between;padding:8px 0"><span style="font-size:12px;color:#8ba4c4">Move-Ins Attributed</span><span style="font-weight:800;color:#f59e0b">4</span></div></div></div>'
+        +'<div class="card" style="margin-top:0"><div class="card-hd" style="margin-bottom:10px"><div class="card-t">📬 Recent</div></div>'
+          +'<div style="padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)"><div style="display:flex;justify-content:space-between"><strong style="font-size:12px;color:#f4f8ff">Dorothy Harrison</strong><span class="badge-g">Replied</span></div><div style="font-size:11px;color:#4b6278">Tour Confirmation · 1 day ago</div></div>'
+          +'<div style="padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)"><div style="display:flex;justify-content:space-between"><strong style="font-size:12px;color:#f4f8ff">Dr. Amanda Chen</strong><span class="badge-a">Opened</span></div><div style="font-size:11px;color:#4b6278">Thank You Referral · 3 days ago</div></div>'
+          +'<div style="padding:9px 0"><div style="display:flex;justify-content:space-between"><strong style="font-size:12px;color:#f4f8ff">Walter Simmons</strong><span class="badge-x">Sent</span></div><div style="font-size:11px;color:#4b6278">Follow-Up · 5 days ago</div></div>'
+        +'</div>'
+      +'</div>'
+    +'</div></div>'
+    // LOG
+    +'<div class="card" style="margin-top:6px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div class="card-t">📋 Activity Log</div><span style="font-size:11px;color:#4b6278">Demo — no real messages sent</span></div>'
+      +'<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Type</th><th>Contact</th><th>Direction</th><th>Status</th><th>Team Member</th><th>Time</th><th>Outcome</th></tr></thead><tbody>'
+        +'<tr><td><span class="badge bb">📞 Call</span></td><td><strong style="color:#f4f8ff">Dorothy Harrison</strong></td><td>↗ Out</td><td>5m 18s</td><td>Sarah M.</td><td>Today 10:22am</td><td><span class="badge bg">Tour confirmed</span></td></tr>'
+        +'<tr><td><span class="badge ba">💬 Text</span></td><td><strong style="color:#f4f8ff">Gloria Tran</strong></td><td>↗ Out</td><td>Delivered</td><td>Sarah M.</td><td>Yesterday</td><td><span class="badge bg">Replied</span></td></tr>'
+        +'<tr><td><span class="badge bx">✉️ Email</span></td><td><strong style="color:#f4f8ff">Dr. Amanda Chen</strong></td><td>↗ Out</td><td>Opened</td><td>Sarah M.</td><td>2 days ago</td><td><span class="badge ba">No reply</span></td></tr>'
+        +'<tr><td><span class="badge bb">📞 Call</span></td><td><strong style="color:#f4f8ff">Sarah Kim RN</strong></td><td>↙ In</td><td>3m 47s</td><td>Admin</td><td>3 days ago</td><td><span class="badge bg">2 referrals</span></td></tr>'
+      +'</tbody></table></div>'
+    +'</div>';
+}
+
+var AC_EMAIL_TPL={
+  'tour':{s:'Your Tour at Sunrise Senior Living is Confirmed!',b:'Dear [Name],\n\nYour tour is confirmed!\n\n📅 Date: [Date]\n🕙 Time: 10:00 AM\n📍 Address: 1234 Sunrise Dr, Dallas TX\n\nWe\'re excited to meet you!\n\n[Your Name] | Sunrise Senior Living'},
+  'proposal':{s:'Your Personalized Care & Pricing Overview',b:'Dear [Name],\n\nThank you for your interest. Here is your personalized pricing:\n\nIL: from $3,200/mo\nAL: from $4,500/mo\nMC: from $5,800/mo\n\n[Your Name] | [Phone]'},
+  'thank':{s:'Thank You for Your Referral!',b:'Dear [Name],\n\nThank you for trusting us with your referral. We\'ll make sure they have an exceptional experience.\n\nGratefully,\n[Your Name]'},
+  'followup':{s:'Following Up — Sunrise Senior Living',b:'Dear [Name],\n\nI wanted to follow up and check in. We\'d love to help your family find the right home.\n\nDo you have 10 minutes this week?\n\n[Your Name] | [Phone]'},
+  'movein':{s:'Welcome to Sunrise Senior Living — Move-In Details',b:'Dear [Name],\n\nWe\'re so excited to welcome [Resident] to Sunrise Senior Living!\n\n📅 Move-In Date: [Date]\n🏠 Unit: [Unit]\n\nSee you soon!\n[Your Name]'}
+};
+
+var _acTimer=null,_acSecs=0,_acMuted=false;
+function acDemoInit(){ acDemoChannel('call'); }
+function acDemoChannel(ch){
+  ['call','text','email'].forEach(function(c){
+    var btn=document.getElementById('acBtn-'+c), panel=document.getElementById('acPanel-'+c);
+    if(btn) btn.className='ac-ch-btn'+(c===ch?' ac-on':'');
+    if(panel) panel.style.display=c===ch?'':'none';
+  });
+}
+function acDemoFillPhone(){ var s=document.getElementById('acCallContact'),p=document.getElementById('acCallPhone'); if(s&&p) p.value=s.value.split('|')[1]||''; }
+function acDemoFillTextPhone(){ var s=document.getElementById('acTextContact'),p=document.getElementById('acTextPhone'); if(s&&p) p.value=s.value.split('|')[1]||''; }
+function acDemoFillEmail(){ var s=document.getElementById('acEmailContact'),e=document.getElementById('acEmailAddr'); if(s&&e) e.value=s.value.split('|')[1]||''; }
+function acDemoTextTpl(sel){ var b=document.getElementById('acTextBody'); if(b&&sel.value){ b.value=sel.value; var c=document.getElementById('acTxtCnt'); if(c) c.textContent=b.value.length+'/160'; } }
+function acDemoEmailTpl(sel){ var t=AC_EMAIL_TPL[sel.value]; if(!t)return; var s=document.getElementById('acEmailSubject'),b=document.getElementById('acEmailBody'); if(s)s.value=t.s; if(b)b.value=t.b; }
+function acDemoStartCall(){
+  var phone=(document.getElementById('acCallPhone')||{}).value;
+  var sel=document.getElementById('acCallContact');
+  var name=sel&&sel.value?sel.value.split('|')[0]:(phone||'Contact');
+  if(!phone){T('Enter a phone number first','e');return;}
+  T('📞 Connecting to '+name+' via Aircall… (Demo)');
+  var w=document.getElementById('acLiveCallWrap'),nm=document.getElementById('acLiveCallName'),ti=document.getElementById('acLiveCallTimer');
+  if(w)w.style.display=''; if(nm)nm.textContent=name;
+  _acSecs=0;_acMuted=false;
+  if(_acTimer)clearInterval(_acTimer);
+  _acTimer=setInterval(function(){ _acSecs++; var m=Math.floor(_acSecs/60),s=_acSecs%60; if(ti)ti.textContent=m+':'+(s<10?'0':'')+s; },1000);
+}
+function acDemoEndCall(){ if(_acTimer)clearInterval(_acTimer); var w=document.getElementById('acLiveCallWrap'); if(w)w.style.display='none'; T('Call ended. Log the outcome below.'); }
+function acDemoMute(){ _acMuted=!_acMuted; var btn=document.getElementById('acMuteBtn'); if(btn)btn.textContent=_acMuted?'🔇 Unmute':'🎙 Mute'; T(_acMuted?'Muted':'Unmuted'); }
+function acDemoSaveCall(){
+  var o=(document.getElementById('acCallOutcome')||{}).value; if(!o){T('Select an outcome first','e');return;}
+  var s=document.getElementById('acCallContact'); var name=s&&s.value?s.value.split('|')[0]:'Contact';
+  T('📞 Call log saved for '+name+'! Follow-up queued. (Demo)');
+}
+function acDemoSendText(){
+  var phone=(document.getElementById('acTextPhone')||{}).value;
+  var body=(document.getElementById('acTextBody')||{}).value.trim();
+  var s=document.getElementById('acTextContact'); var name=s&&s.value?s.value.split('|')[0]:'Contact';
+  if(!phone){T('Enter a phone number first','e');return;} if(!body){T('Message is required','e');return;}
+  T('💬 Text sent to '+name+'! (Demo — no real message sent)');
+  var tb=document.getElementById('acTextBody'); if(tb)tb.value='';
+}
+function acDemoSendEmail(){
+  var to=(document.getElementById('acEmailAddr')||{}).value.trim();
+  var subj=(document.getElementById('acEmailSubject')||{}).value.trim();
+  var body=(document.getElementById('acEmailBody')||{}).value.trim();
+  var s=document.getElementById('acEmailContact'); var name=s&&s.value?s.value.split('|')[0]:'Contact';
+  if(!to){T('Enter recipient email','e');return;} if(!subj){T('Subject required','e');return;} if(!body){T('Body required','e');return;}
+  T('✉️ Email sent to '+name+'! (Demo — no real email sent)');
+  ['acEmailAddr','acEmailCC','acEmailSubject','acEmailBody'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+}
 </script>
 </body>
 </html>
