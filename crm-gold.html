@@ -111,6 +111,30 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 </style>
 </head>
 <body>
+<script>
+// CRM Tier Enforcement — runs before any tab renders
+// Prevents Pro users from accessing Gold UI directly via URL
+(function enforceCrmTier() {
+  var tok = localStorage.getItem('hl_token') || sessionStorage.getItem('hl_token') || '';
+  if (!tok) { window.location.href = 'login.html'; return; }
+  try {
+    var payload = JSON.parse(atob(tok.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+    var tier    = (payload.crm_tier || 'pro').toLowerCase();
+    var page    = window.location.pathname.split('/').pop();
+    var correct = tier === 'gold' ? 'crm-gold.html' : tier === 'max' ? 'crm-max.html' : 'crm-pro.html';
+    if (page !== correct) {
+      // Wrong tier — redirect to correct CRM silently
+      window.location.replace(correct);
+      return;
+    }
+  } catch(e) {
+    // Malformed token — send to login
+    localStorage.removeItem('hl_token'); sessionStorage.removeItem('hl_token');
+    window.location.href = 'login.html';
+  }
+})();
+</script>
+
 <div class="layout">
 
 <!-- SIDEBAR -->
@@ -158,6 +182,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 <button class="nav-btn" data-t="portal" onclick="showTab('portal')">Referral Portal</button>
 <button class="nav-btn" data-t="playbook" onclick="showTab('playbook')">Playbook Generator</button>
 <button class="nav-btn" data-t="mobile" onclick="showTab('mobile')">Marketer Mobile</button>
+<button class="nav-btn" data-t="aircall" onclick="showTab('aircall')" style="color:#ffd700">📞 Aircall — Call · Text · Email</button>
 <button class="nav-btn" data-t="settings" onclick="showTab('settings')">Settings</button>
 <span class="nav-sec adm">ADMIN ONLY</span>
 <button class="nav-btn adm" data-t="terrmgmt" onclick="showTab('terrmgmt')">Territory Management</button>
@@ -1233,6 +1258,496 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 </div>
 
 
+<!-- ═══════════════════════════════════════════════════════════════
+     AIRCALL TAB — Call · Text · Email (Gold Exclusive)
+     Connects to Aircall API via backend proxy at /api/aircall/*
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="tab" id="tab-aircall">
+<div class="sec-hdr">
+  <div>
+    <h2>📞 Aircall — Call · Text · Email</h2>
+    <p>Reach referral sources and prospects without leaving HospiceLink. All activity auto-logged.</p>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span style="background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.3);border-radius:999px;padding:4px 12px;font-size:11px;font-weight:800;color:#ffd700">🏆 Gold Exclusive</span>
+    <span id="acStatus" style="background:rgba(140,255,102,.12);border:1px solid rgba(140,255,102,.3);border-radius:999px;padding:4px 12px;font-size:11px;font-weight:800;color:#8cff66">● Connected</span>
+  </div>
+</div>
+
+<!-- Channel selector -->
+<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+  <button id="acTab-call"  class="btn btn-gd" onclick="acSwitchChannel('call')"  style="min-width:110px">📞 Call</button>
+  <button id="acTab-text"  class="btn btn-d"  onclick="acSwitchChannel('text')"  style="min-width:110px">💬 Text</button>
+  <button id="acTab-email" class="btn btn-d"  onclick="acSwitchChannel('email')" style="min-width:110px">✉️ Email</button>
+  <div style="flex:1"></div>
+  <button class="btn btn-d btn-sm" onclick="acLoadLog()">↻ Refresh Log</button>
+</div>
+
+<!-- CALL panel -->
+<div id="acPanel-call">
+<div class="g2">
+  <div>
+    <div class="card">
+      <p style="font-weight:800;color:#ffd700;font-size:13px;margin-bottom:12px">📞 Make a Call</p>
+      <div class="field"><label>Contact</label>
+        <select id="acCallContact" onchange="acFillPhone()">
+          <option value="">— Select referral source or prospect —</option>
+          <optgroup label="Referral Sources">
+            <option value="Sarah M.|(214)555-0110">Sarah M. — North Park Rehab · (214)555-0110</option>
+            <option value="Dr. Patel|(214)555-0122">Dr. Patel — Baylor Hospital · (214)555-0122</option>
+            <option value="Office Mgr|(972)555-0133">Office Mgr — Physician Office · (972)555-0133</option>
+          </optgroup>
+          <optgroup label="Prospects">
+            <option value="Dorothy Fleming|(214)555-0200">Dorothy Fleming · (214)555-0200</option>
+            <option value="Robert Castillo|(214)555-0201">Robert Castillo · (214)555-0201</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="field"><label>Phone Number</label><input type="tel" id="acCallPhone" placeholder="(214) 555-0000"></div>
+      <div class="field"><label>Call Purpose</label>
+        <select id="acCallPurpose">
+          <option>Referral Follow-Up</option>
+          <option>Prospect Family Outreach</option>
+          <option>Cold Source Re-Engagement</option>
+          <option>Admission Update</option>
+          <option>Relationship Maintenance</option>
+          <option>Scheduling / Appointment</option>
+        </select>
+      </div>
+      <div class="field"><label>Notes (pre-call)</label><textarea id="acCallNotes" placeholder="Key talking points before the call…"></textarea></div>
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="btn btn-g" style="flex:1" onclick="acStartCall()">📞 Call Now via Aircall</button>
+        <button class="btn btn-d btn-sm" onclick="acScheduleCall()">🗓 Schedule</button>
+      </div>
+    </div>
+    <!-- Active call widget (hidden until call starts) -->
+    <div id="acActiveCall" style="display:none" class="card" style="">
+      <div style="background:rgba(140,255,102,.08);border:1px solid rgba(140,255,102,.3);border-radius:12px;padding:14px;text-align:center">
+        <div style="font-size:28px;margin-bottom:4px">📞</div>
+        <div style="font-weight:900;color:#8cff66;font-size:15px" id="acCallerName">—</div>
+        <div style="font-size:12px;color:#8b949e;margin:4px 0 10px" id="acCallTimer">0:00</div>
+        <div style="display:flex;gap:8px;justify-content:center">
+          <button class="btn btn-d btn-sm" id="acMuteBtn" onclick="acToggleMute()">🎙 Mute</button>
+          <button class="btn btn-d btn-sm" onclick="T('Call transferred via Aircall')">↗ Transfer</button>
+          <button class="btn btn-r btn-sm" onclick="acEndCall()">⬛ End Call</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="card">
+      <p style="font-weight:800;color:#ffd700;font-size:13px;margin-bottom:12px">📋 Post-Call Notes</p>
+      <div class="field"><label>Call Outcome</label>
+        <select id="acCallOutcome">
+          <option value="">Select outcome…</option>
+          <option>Connected — great conversation</option>
+          <option>Connected — left follow-up task</option>
+          <option>Left voicemail</option>
+          <option>No answer — will retry</option>
+          <option>Referral committed</option>
+          <option>Prospect advancing to next stage</option>
+          <option>Not interested</option>
+        </select>
+      </div>
+      <div class="field"><label>Next Step After This Call</label><input type="text" id="acCallNext" placeholder="e.g. Schedule in-service for next Tuesday"></div>
+      <div class="field"><label>Follow-Up Date</label><input type="date" id="acCallFollowDate"></div>
+      <div class="field"><label>Summary</label><textarea id="acCallSummary" placeholder="What was discussed, decisions made, commitments…"></textarea></div>
+      <button class="btn btn-b btn-full" style="margin-top:4px" onclick="acSaveCallLog()">💾 Save Call Log + Queue Reminder</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- TEXT panel -->
+<div id="acPanel-text" style="display:none">
+<div class="g2">
+  <div>
+    <div class="card">
+      <p style="font-weight:800;color:#49b6ff;font-size:13px;margin-bottom:12px">💬 Send a Text Message</p>
+      <div class="field"><label>To</label>
+        <select id="acTextContact" onchange="acFillTextPhone()">
+          <option value="">— Select contact —</option>
+          <optgroup label="Referral Sources">
+            <option value="Sarah M.|(214)555-0110">Sarah M. — North Park Rehab</option>
+            <option value="Dr. Patel|(214)555-0122">Dr. Patel — Baylor Hospital</option>
+          </optgroup>
+          <optgroup label="Prospects / Family">
+            <option value="Dorothy Fleming|(214)555-0200">Dorothy Fleming (patient family)</option>
+            <option value="Robert Castillo|(214)555-0201">Robert Castillo (patient family)</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="field"><label>Phone</label><input type="tel" id="acTextPhone" placeholder="(214) 555-0000"></div>
+      <div class="field">
+        <label>Quick Templates</label>
+        <select onchange="acApplyTemplate(this,'acTextBody')">
+          <option value="">— Insert template —</option>
+          <option value="Hi {name}, this is {marketer} from {agency}. Just wanted to touch base — do you have a few minutes this week to connect? We have some great families we're supporting right now.">Referral Touch-Base</option>
+          <option value="Hi {name}, following up on our earlier conversation. Please let us know if you have any patients who might benefit from hospice care. We're available 24/7 — just call or text.">Referral Follow-Up</option>
+          <option value="Hi {name}, this is {marketer} with {agency}. We'd love to schedule a brief in-service at your facility. Would any morning this week work?">In-Service Request</option>
+          <option value="Hi {name}, just checking in on {patient}. Our team is here for anything you or the family needs. Feel free to reach out anytime.">Family Check-In</option>
+        </select>
+      </div>
+      <div class="field"><label>Message <span id="acTextCount" style="color:#8b949e;font-size:10px">0 / 160</span></label>
+        <textarea id="acTextBody" rows="5" placeholder="Type your message…" oninput="document.getElementById('acTextCount').textContent=(this.value.length)+' / 160'"></textarea>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="btn btn-b" style="flex:1" onclick="acSendText()">💬 Send Text via Aircall</button>
+        <button class="btn btn-d btn-sm" onclick="acScheduleText()">🗓 Schedule</button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="card">
+      <p style="font-weight:800;color:#8b949e;font-size:12px;margin-bottom:10px">HIPAA NOTICE</p>
+      <div class="alert alert-y" style="margin-bottom:12px">⚠ <strong>Do not include PHI in text messages.</strong> Use first name only and general terms. All texts are logged to the HIPAA Audit trail.</div>
+      <p style="font-weight:800;color:#ffd700;font-size:13px;margin-bottom:10px">📊 Text Activity — Last 7 Days</p>
+      <div id="acTextStats">
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)"><span style="color:#c0cce0;font-size:13px">Texts Sent</span><span style="color:#f4f8ff;font-weight:900">14</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)"><span style="color:#c0cce0;font-size:13px">Replies Received</span><span style="color:#8cff66;font-weight:900">9</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)"><span style="color:#c0cce0;font-size:13px">Response Rate</span><span style="color:#8cff66;font-weight:900">64%</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0"><span style="color:#c0cce0;font-size:13px">Opt-Outs</span><span style="color:#f87171;font-weight:900">0</span></div>
+      </div>
+      <div id="acTextThread" style="margin-top:14px">
+        <p style="font-size:11px;font-weight:800;text-transform:uppercase;color:#334d6e;margin-bottom:8px">LAST THREAD — Sarah M.</p>
+        <div style="background:#1e3a5f;border-radius:10px 10px 3px 10px;padding:8px 12px;font-size:12px;color:#e2e8f0;max-width:82%;margin-bottom:6px;align-self:flex-end;margin-left:auto">Hey Sarah! Just checking in — do you have any referrals coming up this week?</div>
+        <div style="background:#132213;border:1px solid rgba(140,255,102,.15);border-radius:10px 10px 10px 3px;padding:8px 12px;font-size:12px;color:#c8f7c5;max-width:82%;margin-bottom:6px">Yes! Actually have two families you should meet. Call me tomorrow AM?</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- EMAIL panel -->
+<div id="acPanel-email" style="display:none">
+<div class="g2">
+  <div>
+    <div class="card form-white">
+      <p style="font-weight:800;color:#49b6ff;font-size:13px;margin-bottom:12px">✉️ Compose Email</p>
+      <div class="field"><label>To</label>
+        <select id="acEmailContact" onchange="acFillEmail()">
+          <option value="">— Select contact —</option>
+          <optgroup label="Referral Sources">
+            <option value="Sarah M.|sarah.m@northparkrehab.com">Sarah M. — sarah.m@northparkrehab.com</option>
+            <option value="Dr. Patel|dr.patel@baylorhealth.com">Dr. Patel — dr.patel@baylorhealth.com</option>
+            <option value="Office Mgr|office@physoffice.com">Office Mgr — office@physoffice.com</option>
+          </optgroup>
+          <optgroup label="Prospects / Family">
+            <option value="Dorothy Fleming|dfleming.family@email.com">Dorothy Fleming family</option>
+            <option value="Robert Castillo|rcastillo.family@email.com">Robert Castillo family</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="field"><label>To (Email)</label><input type="email" id="acEmailAddr" placeholder="contact@facility.com"></div>
+      <div class="field"><label>CC (optional)</label><input type="email" id="acEmailCC" placeholder="cc@agency.com"></div>
+      <div class="field">
+        <label>Template</label>
+        <select onchange="acApplyEmailTemplate(this)">
+          <option value="">— Use template —</option>
+          <option value="in-service">In-Service Invitation</option>
+          <option value="thank-you">Thank You — Referral</option>
+          <option value="follow-up">General Follow-Up</option>
+          <option value="patient-update">Patient Update (Family)</option>
+          <option value="cold-re-engage">Cold Source Re-Engagement</option>
+        </select>
+      </div>
+      <div class="field"><label>Subject</label><input type="text" id="acEmailSubject" placeholder="Subject line…"></div>
+      <div class="field"><label>Body</label><textarea id="acEmailBody" rows="8" placeholder="Email body…" style="min-height:160px"></textarea></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+        <button class="btn btn-b" style="flex:1;min-width:120px" onclick="acSendEmail()">✉️ Send via Aircall</button>
+        <button class="btn btn-d btn-sm" onclick="acScheduleEmail()">🗓 Schedule</button>
+        <button class="btn btn-d btn-sm" onclick="acSaveDraft()">📄 Save Draft</button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="card">
+      <p style="font-weight:800;color:#ffd700;font-size:13px;margin-bottom:10px">📊 Email Activity — Last 30 Days</p>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)"><span style="color:#c0cce0;font-size:13px">Emails Sent</span><span style="color:#f4f8ff;font-weight:900">47</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)"><span style="color:#c0cce0;font-size:13px">Open Rate</span><span style="color:#8cff66;font-weight:900">71%</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)"><span style="color:#c0cce0;font-size:13px">Reply Rate</span><span style="color:#8cff66;font-weight:900">38%</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0"><span style="color:#c0cce0;font-size:13px">Referrals Attributed</span><span style="color:#ffd700;font-weight:900">6</span></div>
+    </div>
+    <div class="card" style="margin-top:0">
+      <p style="font-weight:800;color:#ffd700;font-size:13px;margin-bottom:10px">📬 Recent Emails</p>
+      <div id="acEmailLog">
+        <div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+          <div style="display:flex;justify-content:space-between;align-items:center"><strong style="font-size:12px;color:#f4f8ff">Dr. Patel</strong><span class="pill pill-g" style="font-size:10px">Opened</span></div>
+          <div style="font-size:11px;color:#8b949e">In-Service Invitation — Baylor Hospital · 2 days ago</div>
+        </div>
+        <div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+          <div style="display:flex;justify-content:space-between;align-items:center"><strong style="font-size:12px;color:#f4f8ff">Sarah M.</strong><span class="pill pill-g" style="font-size:10px">Replied</span></div>
+          <div style="font-size:11px;color:#8b949e">Thank You — Referral · 4 days ago</div>
+        </div>
+        <div style="padding:8px 0">
+          <div style="display:flex;justify-content:space-between;align-items:center"><strong style="font-size:12px;color:#f4f8ff">Office Mgr</strong><span class="pill pill-y" style="font-size:10px">Sent</span></div>
+          <div style="font-size:11px;color:#8b949e">Cold Source Re-Engagement · 6 days ago</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Activity Log (shared) -->
+<div class="card" style="margin-top:6px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <p style="font-weight:800;color:#ffd700;font-size:13px;margin:0">📋 Aircall Activity Log</p>
+    <span style="font-size:11px;color:#8b949e">Auto-logged to HIPAA Audit Trail</span>
+  </div>
+  <div style="overflow-x:auto">
+  <table class="tbl" id="acLogTable">
+    <thead><tr><th>Type</th><th>Contact</th><th>Direction</th><th>Duration / Status</th><th>Marketer</th><th>Logged</th><th>Outcome</th></tr></thead>
+    <tbody id="acLogBody">
+      <tr><td><span class="pill pill-b" style="font-size:10px">📞 Call</span></td><td><strong>Dr. Patel</strong><br><small style="color:#888">Baylor Hospital</small></td><td>↗ Outbound</td><td>4m 32s</td><td>Ericka T.</td><td>Today 9:14am</td><td><span class="pill pill-g" style="font-size:10px">Connected</span></td></tr>
+      <tr><td><span class="pill pill-p" style="font-size:10px">💬 Text</span></td><td><strong>Sarah M.</strong><br><small style="color:#888">North Park Rehab</small></td><td>↗ Outbound</td><td>Delivered</td><td>Ericka T.</td><td>Yesterday 2:30pm</td><td><span class="pill pill-g" style="font-size:10px">Replied</span></td></tr>
+      <tr><td><span class="pill pill-y" style="font-size:10px">✉️ Email</span></td><td><strong>Office Mgr</strong><br><small style="color:#888">Physician Office</small></td><td>↗ Outbound</td><td>Opened</td><td>Mike R.</td><td>2 days ago</td><td><span class="pill pill-y" style="font-size:10px">No reply yet</span></td></tr>
+      <tr><td><span class="pill pill-b" style="font-size:10px">📞 Call</span></td><td><strong>Dorothy Fleming</strong><br><small style="color:#888">Family / POA</small></td><td>↙ Inbound</td><td>6m 11s</td><td>Angela N.</td><td>2 days ago</td><td><span class="pill pill-g" style="font-size:10px">Advancing</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ── Channel switcher ────────────────────────────────────────────
+  window.acSwitchChannel = function(ch) {
+    ['call','text','email'].forEach(function(c) {
+      var btn   = document.getElementById('acTab-'+c);
+      var panel = document.getElementById('acPanel-'+c);
+      if (!btn || !panel) return;
+      var on = (c === ch);
+      btn.className   = on ? 'btn btn-gd' : 'btn btn-d';
+      panel.style.display = on ? '' : 'none';
+    });
+  };
+
+  // ── Prefill helpers ─────────────────────────────────────────────
+  window.acFillPhone = function() {
+    var sel = document.getElementById('acCallContact');
+    var ph  = document.getElementById('acCallPhone');
+    if (!sel || !ph) return;
+    var parts = sel.value.split('|');
+    ph.value = parts[1] || '';
+  };
+  window.acFillTextPhone = function() {
+    var sel = document.getElementById('acTextContact');
+    var ph  = document.getElementById('acTextPhone');
+    if (!sel || !ph) return;
+    ph.value = sel.value.split('|')[1] || '';
+  };
+  window.acFillEmail = function() {
+    var sel = document.getElementById('acEmailContact');
+    var em  = document.getElementById('acEmailAddr');
+    if (!sel || !em) return;
+    em.value = sel.value.split('|')[1] || '';
+  };
+
+  // ── Template apply ──────────────────────────────────────────────
+  window.acApplyTemplate = function(sel, targetId) {
+    var body = document.getElementById(targetId);
+    if (!body || !sel.value) return;
+    body.value = sel.value;
+    var cnt = document.getElementById('acTextCount');
+    if (cnt) cnt.textContent = body.value.length + ' / 160';
+  };
+
+  var EMAIL_TEMPLATES = {
+    'in-service': {
+      subject: 'In-Service Opportunity — HospiceLink Care Team',
+      body: 'Dear [Contact Name],\n\nI hope you\'re having a great week. I\'d love to schedule a brief 15-minute in-service for your team — we have some really valuable updates on our services and care approach that I think your staff would find beneficial.\n\nWould any morning this week or next work for a visit?\n\nWarm regards,\n[Your Name]\n[Agency Name] | [Phone]'
+    },
+    'thank-you': {
+      subject: 'Thank You for Your Referral',
+      body: 'Dear [Contact Name],\n\nThank you so much for the recent referral. We truly appreciate your trust in us to care for your patients and their families.\n\nOur team is already in contact and working to ensure the best possible transition. Please don\'t hesitate to reach out at any time with questions.\n\nGratefully,\n[Your Name]\n[Agency Name] | [Phone]'
+    },
+    'follow-up': {
+      subject: 'Following Up — Checking In',
+      body: 'Dear [Contact Name],\n\nI wanted to follow up from our last conversation and check in on how things are going. If there are any patients who could benefit from our hospice services, we\'d love to help.\n\nWould you have 10 minutes for a brief call this week?\n\nBest,\n[Your Name]\n[Agency Name] | [Phone]'
+    },
+    'patient-update': {
+      subject: 'Care Update — [Patient First Name]',
+      body: 'Dear [Family Member Name],\n\nI wanted to reach out to provide a brief update on [Patient First Name]\'s care. Our team has been attentive to comfort and quality of life, and we are here for anything you need.\n\nPlease don\'t hesitate to call or text me directly at any time — day or night.\n\nWith care,\n[Your Name]\n[Agency Name] | [Phone]'
+    },
+    'cold-re-engage': {
+      subject: 'Checking In — It\'s Been a While!',
+      body: 'Dear [Contact Name],\n\nIt\'s been some time since we last connected, and I wanted to personally reach out. We\'ve made some significant improvements to our care team and services, and I\'d love to reintroduce what we can offer your patients.\n\nCould we schedule a quick 10-minute call or a drop-by visit?\n\nWarm regards,\n[Your Name]\n[Agency Name] | [Phone]'
+    }
+  };
+
+  window.acApplyEmailTemplate = function(sel) {
+    var t = EMAIL_TEMPLATES[sel.value];
+    if (!t) return;
+    var subj = document.getElementById('acEmailSubject');
+    var body = document.getElementById('acEmailBody');
+    if (subj) subj.value = t.subject;
+    if (body) body.value = t.body;
+  };
+
+  // ── Call actions ────────────────────────────────────────────────
+  var _callInterval = null;
+  var _callSecs = 0;
+  var _muted = false;
+
+  window.acStartCall = function() {
+    var phone = (document.getElementById('acCallPhone') || {}).value;
+    var sel   = document.getElementById('acCallContact');
+    var name  = sel && sel.value ? sel.value.split('|')[0] : (phone || 'Unknown');
+    if (!phone) { T('Enter a phone number first','w'); return; }
+
+    // POST to backend proxy
+    _fetch(BACKEND + '/api/aircall/calls', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ to: phone, contact_name: name,
+        purpose: (document.getElementById('acCallPurpose')||{}).value || 'Referral Follow-Up' })
+    }).then(function(r){ return r.json(); })
+      .then(function(d){
+        if (d.error) { T(d.error,'e'); return; }
+        T('📞 Connecting call to ' + name + ' via Aircall…','i');
+        var w = document.getElementById('acActiveCall');
+        var nm = document.getElementById('acCallerName');
+        var ti = document.getElementById('acCallTimer');
+        if (w) w.style.display = '';
+        if (nm) nm.textContent = name;
+        _callSecs = 0; _muted = false;
+        if (_callInterval) clearInterval(_callInterval);
+        _callInterval = setInterval(function(){
+          _callSecs++;
+          var m = Math.floor(_callSecs/60), s = _callSecs % 60;
+          if (ti) ti.textContent = m + ':' + (s<10?'0':'')+s;
+        }, 1000);
+      })
+      .catch(function(){ T('Could not connect to Aircall. Check integration settings.','e'); });
+  };
+
+  window.acEndCall = function() {
+    if (_callInterval) clearInterval(_callInterval);
+    var w = document.getElementById('acActiveCall');
+    if (w) w.style.display = 'none';
+    T('Call ended. Fill in post-call notes and save the log.','i');
+  };
+
+  window.acToggleMute = function() {
+    _muted = !_muted;
+    var btn = document.getElementById('acMuteBtn');
+    if (btn) btn.textContent = _muted ? '🔇 Unmute' : '🎙 Mute';
+    T(_muted ? 'Microphone muted' : 'Microphone active');
+  };
+
+  window.acScheduleCall = function() {
+    T('Scheduled call added to Smart Scheduling queue','i');
+  };
+
+  window.acSaveCallLog = function() {
+    var outcome  = (document.getElementById('acCallOutcome')||{}).value;
+    var summary  = (document.getElementById('acCallSummary')||{}).value;
+    var nextStep = (document.getElementById('acCallNext')||{}).value;
+    var followDate = (document.getElementById('acCallFollowDate')||{}).value;
+    if (!outcome) { T('Select a call outcome first','w'); return; }
+    var sel  = document.getElementById('acCallContact');
+    var name = sel && sel.value ? sel.value.split('|')[0] : 'Contact';
+
+    _fetch(BACKEND + '/api/aircall/log', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ type:'call', contact_name:name,
+        outcome: outcome, summary: summary,
+        next_step: nextStep, follow_up_date: followDate || null })
+    }).then(function(){ acLoadLog(); T('📞 Call log saved! Reminder queued.','s'); })
+      .catch(function(){ T('Save failed — check connection','e'); });
+  };
+
+  // ── Text actions ────────────────────────────────────────────────
+  window.acSendText = function() {
+    var phone = (document.getElementById('acTextPhone')||{}).value;
+    var body  = (document.getElementById('acTextBody')||{}).value.trim();
+    var sel   = document.getElementById('acTextContact');
+    var name  = sel && sel.value ? sel.value.split('|')[0] : 'Contact';
+    if (!phone) { T('Enter a phone number first','w'); return; }
+    if (!body)  { T('Message body is required','w'); return; }
+
+    _fetch(BACKEND + '/api/aircall/sms', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ to: phone, contact_name: name, body: body })
+    }).then(function(r){ return r.json(); })
+      .then(function(d){
+        if (d.error) { T(d.error,'e'); return; }
+        T('💬 Text sent to '+name+'!','s');
+        var tb = document.getElementById('acTextBody');
+        if (tb) tb.value = '';
+        acLoadLog();
+      })
+      .catch(function(){ T('Text failed — check Aircall connection','e'); });
+  };
+
+  window.acScheduleText = function() { T('Text scheduled — will send at specified time','i'); };
+
+  // ── Email actions ───────────────────────────────────────────────
+  window.acSendEmail = function() {
+    var to      = (document.getElementById('acEmailAddr')||{}).value.trim();
+    var subject = (document.getElementById('acEmailSubject')||{}).value.trim();
+    var body    = (document.getElementById('acEmailBody')||{}).value.trim();
+    var sel     = document.getElementById('acEmailContact');
+    var name    = sel && sel.value ? sel.value.split('|')[0] : 'Contact';
+    if (!to)      { T('Enter a recipient email','w'); return; }
+    if (!subject) { T('Subject line required','w'); return; }
+    if (!body)    { T('Email body is required','w'); return; }
+
+    _fetch(BACKEND + '/api/aircall/email', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ to: to, contact_name: name,
+        subject: subject, body: body,
+        cc: (document.getElementById('acEmailCC')||{}).value.trim() || null })
+    }).then(function(r){ return r.json(); })
+      .then(function(d){
+        if (d.error) { T(d.error,'e'); return; }
+        T('✉️ Email sent to '+name+'!','s');
+        ['acEmailAddr','acEmailCC','acEmailSubject','acEmailBody'].forEach(function(id){
+          var el=document.getElementById(id); if(el) el.value='';
+        });
+        acLoadLog();
+      })
+      .catch(function(){ T('Email failed — check Aircall connection','e'); });
+  };
+
+  window.acScheduleEmail = function() { T('Email scheduled','i'); };
+  window.acSaveDraft    = function() { T('Draft saved','s'); };
+
+  // ── Log loader ──────────────────────────────────────────────────
+  window.acLoadLog = function() {
+    _fetch(BACKEND + '/api/aircall/log')
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        var rows = d.data || d || [];
+        var tb   = document.getElementById('acLogBody');
+        if (!tb || !rows.length) return;
+        var icons = {call:'📞 Call',text:'💬 Text',email:'✉️ Email'};
+        var pillCls = {call:'pill-b',text:'pill-p',email:'pill-y'};
+        tb.innerHTML = rows.slice(0,20).map(function(r){
+          var t = new Date(r.created_at||Date.now());
+          var rel = t.toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+          return '<tr>'
+            +'<td><span class="pill '+pillCls[r.type||'call']+'" style="font-size:10px">'+icons[r.type||'call']+'</span></td>'
+            +'<td><strong>'+r.contact_name+'</strong></td>'
+            +'<td>↗ Outbound</td>'
+            +'<td>'+(r.duration||r.status||'—')+'</td>'
+            +'<td>'+(r.user_name||'—')+'</td>'
+            +'<td>'+rel+'</td>'
+            +'<td><span class="pill pill-g" style="font-size:10px">'+(r.outcome||'Logged')+'</span></td>'
+            +'</tr>';
+        }).join('');
+      })
+      .catch(function(){/* silent — log remains static if API unavailable */});
+  };
+})();
+</script>
+</div>
+<!-- ═══ END AIRCALL TAB ═══ -->
+
+
 </div>
 </div>
 
@@ -1241,8 +1756,8 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 // Config injected per tier
 var TIER = 'Gold';
 var ACTIVE_CLS = 'active-g';
-var ROLE_TABS = {"admin": ["dash", "notifs", "addref", "refs", "addpx", "records", "timeline", "pipeline", "territory", "heatmap", "prod", "touch", "schedule", "notes", "remind", "reengage", "goals", "aiasst", "windshield", "family", "messaging", "evv", "telehealth", "nursesched", "patportal", "admworkflow", "import", "portal", "playbook", "mobile", "terrmgmt", "revintel", "mktgroi", "refanalytics", "leaderboard", "scorecard", "hipaa", "compliance", "aitriage", "bedavail", "analytics", "agency", "report", "team", "settings"], "marketer": ["dash", "notifs", "addref", "refs", "addpx", "records", "timeline", "pipeline", "territory", "heatmap", "prod", "touch", "schedule", "notes", "remind", "reengage", "goals", "aiasst", "windshield", "family", "messaging", "evv", "import", "portal", "playbook", "mobile"], "nurse": ["dash", "notifs", "notes", "remind", "aiasst", "family", "messaging", "evv", "telehealth", "nursesched", "patportal", "admworkflow"], "caregiver": ["dash", "notes", "family", "messaging", "evv", "patportal", "remind"]};
-var ROLE_DESC = {"admin": "All tabs \u2014 Revenue Intelligence, Leaderboard, AI Scorecard, HIPAA Audit Log, Compliance Engine, and Team Management.", "marketer": "Full Gold marketer suite: territory heat maps, smart scheduling, referral portal, windshield mode, family communication, secure messaging, EVV / mileage, playbook generator, marketer mobile, and all marketing tools.", "nurse": "Nurse view: notifications, notes, reminders, AI assistant, family communication, secure messaging, EVV, telehealth, nurse scheduler, patient portal, admission workflow.", "caregiver": "Caregiver view: notes, reminders, family communication, secure messaging, EVV / mileage, patient portal."};
+var ROLE_TABS = {"admin": ["dash", "notifs", "addref", "refs", "addpx", "records", "timeline", "pipeline", "territory", "heatmap", "prod", "touch", "schedule", "notes", "remind", "reengage", "goals", "aiasst", "windshield", "family", "messaging", "evv", "telehealth", "nursesched", "patportal", "admworkflow", "import", "portal", "playbook", "mobile", "aircall", "terrmgmt", "revintel", "mktgroi", "refanalytics", "leaderboard", "scorecard", "hipaa", "compliance", "aitriage", "bedavail", "analytics", "agency", "report", "team", "settings"], "marketer": ["dash", "notifs", "addref", "refs", "addpx", "records", "timeline", "pipeline", "territory", "heatmap", "prod", "touch", "schedule", "notes", "remind", "reengage", "goals", "aiasst", "windshield", "family", "messaging", "evv", "import", "portal", "playbook", "mobile", "aircall"], "nurse": ["dash", "notifs", "notes", "remind", "aiasst", "family", "messaging", "evv", "telehealth", "nursesched", "patportal", "admworkflow"], "caregiver": ["dash", "notes", "family", "messaging", "evv", "patportal", "remind"]};
+var ROLE_DESC = {"admin": "All tabs \u2014 Revenue Intelligence, Leaderboard, AI Scorecard, HIPAA Audit Log, Compliance Engine, and Team Management.", "marketer": "Full Gold marketer suite: territory heat maps, smart scheduling, referral portal, windshield mode, family communication, secure messaging, EVV / mileage, playbook generator, marketer mobile, Aircall (call, text, email), and all marketing tools.", "nurse": "Nurse view: notifications, notes, reminders, AI assistant, family communication, secure messaging, EVV, telehealth, nurse scheduler, patient portal, admission workflow.", "caregiver": "Caregiver view: notes, reminders, family communication, secure messaging, EVV / mileage, patient portal."};
 var BADGE_STYLE = {"admin": "background:rgba(188,140,255,.2);color:#c9aeff", "marketer": "background:rgba(73,182,255,.2);color:#49b6ff", "nurse": "background:rgba(140,255,102,.2);color:#8cff66", "caregiver": "background:rgba(249,199,79,.2);color:#f9c74f"};
 var IS_DEMO = false;
 
@@ -2250,6 +2765,21 @@ function saveNote() {
     T('Failed to save note. Check your connection.', 'e');
     if (btn) { btn.textContent = 'Save Note'; btn.disabled = false; }
   });
+}
+
+function openBillingPortal() {
+  var btn = document.querySelector('[onclick*="openBillingPortal"]');
+  if (btn) { btn.textContent = 'Opening...'; btn.style.opacity = '0.6'; btn.style.pointerEvents = 'none'; }
+  var restore = function() {
+    if (btn) { btn.textContent = 'Manage Plan →'; btn.style.opacity = ''; btn.style.pointerEvents = ''; }
+  };
+  _fetch(BACKEND + '/api/billing/portal', { method: 'POST' })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.url) { window.location.href = d.url; }
+      else { restore(); T(d.error || 'Unable to open billing portal. Contact support@wemarketplus.com', 'e'); }
+    })
+    .catch(function() { restore(); T('Connection error. Please try again.', 'e'); });
 }
 </script>
 
