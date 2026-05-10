@@ -3,1102 +3,216 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CommunityLink CRM</title>
+<title>CommunityLink — Login</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;background:#081426;color:#f4f8ff}
-.layout{display:flex;height:100vh;overflow:hidden}
-
-/* Sidebar */
-.sb{width:226px;min-width:226px;background:#060f1c;border-right:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;height:100vh;overflow:hidden}
-.sb-top{padding:14px 12px 10px;flex-shrink:0}
-.sb-brand{display:flex;align-items:center;gap:9px;margin-bottom:12px}
-.sb-icon{width:32px;height:32px;background:linear-gradient(135deg,#f59e0b,#ef8c03);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.sb-title{font-size:14px;font-weight:900;letter-spacing:-.01em;color:#f4f8ff}
-.sb-product{font-size:10px;color:#f59e0b;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
-.role-box{background:#0a1628;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:9px 11px;margin-bottom:8px}
-.role-lbl{font-size:9px;font-weight:800;color:#4b6278;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
-.role-badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:700;background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.2)}
-.tenant-name{font-size:11px;font-weight:700;color:#6b7fa3;padding:0 0 8px 0;border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:8px}
-.sb-scroll{flex:1;overflow-y:auto;padding:0 8px 12px}
-.sb-scroll::-webkit-scrollbar{width:3px}
-.sb-scroll::-webkit-scrollbar-thumb{background:#1e3a5f;border-radius:2px}
-.nav-sec{display:block;font-size:9px;font-weight:800;color:#2d4a6a;letter-spacing:.12em;text-transform:uppercase;padding:10px 8px 5px}
-.nav-btn{display:flex;align-items:center;gap:8px;width:100%;padding:7px 10px;border:none;background:none;color:#7a9abf;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;text-align:left;font-family:inherit;transition:background .12s}
-.nav-btn:hover{background:rgba(255,255,255,.04);color:#c8d6e8}
-.nav-btn.active{background:rgba(245,158,11,.1);color:#f59e0b;font-weight:700}
-.nav-icon{font-size:14px;width:16px;text-align:center;flex-shrink:0}
-.sb-bottom{padding:10px 12px;border-top:1px solid rgba(255,255,255,.06);flex-shrink:0}
-.sb-user{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.sb-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#ef8c03);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#06080e;flex-shrink:0}
-.sb-uname{font-size:11px;font-weight:700;color:#c8d6e8}
-.sb-email{font-size:9px;color:#4b6278}
-.sb-logout{display:block;width:100%;padding:7px;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.15);color:#f87171;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;text-align:center;font-family:inherit}
-.sb-logout:hover{background:rgba(248,113,113,.14)}
-
-/* Main area */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:#060f1c;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0}
-.topbar-left{display:flex;align-items:center;gap:12px}
-.page-title{font-size:16px;font-weight:800;color:#f4f8ff}
-.page-sub{font-size:11px;color:#4b6278;margin-top:2px}
-.topbar-right{display:flex;align-items:center;gap:10px}
-.tb-badge{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);color:#f59e0b;padding:3px 10px;border-radius:999px;font-size:10px;font-weight:700}
-.content{flex:1;overflow-y:auto;padding:20px}
-.content::-webkit-scrollbar{width:5px}
-.content::-webkit-scrollbar-thumb{background:#1e3a5f;border-radius:3px}
-
-/* Cards */
-.card{background:#0a1628;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:18px;margin-bottom:16px}
-.card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.card-title{font-size:13px;font-weight:800;color:#f4f8ff}
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:16px}
-.stat-card{background:#0a1628;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px}
-.stat-label{font-size:10px;font-weight:700;color:#4b6278;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
-.stat-val{font-size:28px;font-weight:900;color:#f4f8ff;letter-spacing:-.02em}
-.stat-sub{font-size:10px;color:#6b7fa3;margin-top:4px}
-.stat-up{color:#4fc87a}
-
-/* Forms & Inputs */
-.inp{width:100%;background:#0d1f38;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:9px 12px;font-size:13px;color:#f4f8ff;outline:none;font-family:inherit}
-.inp:focus{border-color:#f59e0b}
-.inp-group{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-.inp-label{font-size:11px;font-weight:700;color:#6b7fa3;margin-bottom:5px}
-.inp-wrap{margin-bottom:12px}
-select.inp{cursor:pointer}
-
-/* Buttons */
-.btn{padding:8px 16px;border:none;border-radius:999px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
-.btn-amber{background:linear-gradient(135deg,#f59e0b,#d97706);color:#06080e}
-.btn-blue{background:linear-gradient(135deg,#3d9ee8,#1d7bbf);color:#fff}
-.btn-green{background:linear-gradient(135deg,#4fc87a,#22a855);color:#06080e}
-.btn-ghost{background:rgba(255,255,255,.06);color:#8ba4c4;border:1px solid rgba(255,255,255,.08)}
-.btn-red{background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.2)}
-.btn-sm{padding:5px 12px;font-size:11px}
-
-/* Table */
-.tbl{width:100%;border-collapse:collapse;font-size:12px}
-.tbl th{text-align:left;padding:8px 10px;font-size:10px;font-weight:700;color:#4b6278;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid rgba(255,255,255,.05)}
-.tbl td{padding:10px 10px;border-bottom:1px solid rgba(255,255,255,.04);color:#c8d6e8;vertical-align:middle}
-.tbl tr:hover td{background:rgba(255,255,255,.02)}
-
-/* Status badges */
-.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:700}
-.badge-green{background:rgba(79,200,122,.12);color:#4fc87a}
-.badge-amber{background:rgba(245,158,11,.12);color:#f59e0b}
-.badge-blue{background:rgba(61,158,232,.12);color:#3d9ee8}
-.badge-red{background:rgba(248,113,113,.12);color:#f87171}
-.badge-gray{background:rgba(107,127,163,.12);color:#6b7fa3}
-
-/* Toast */
-#toast{position:fixed;bottom:24px;right:24px;background:#0d1f38;border:1px solid rgba(245,158,11,.3);border-radius:12px;padding:12px 18px;font-size:13px;font-weight:600;color:#f4f8ff;z-index:9999;opacity:0;transition:opacity .25s;pointer-events:none}
-#toast.show{opacity:1}
-
-/* Loading */
-.loading{display:flex;align-items:center;justify-content:center;padding:40px;color:#4b6278;font-size:14px}
-.spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,.1);border-top-color:#f59e0b;border-radius:50%;animation:spin .7s linear infinite;margin-right:10px}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* Modal */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
-.modal-bg.open{opacity:1;pointer-events:all}
-.modal-panel{background:#0d1b31;border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:28px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;position:relative}
-
-@media(max-width:768px){
-  .sb{display:none}
-  .inp-group{grid-template-columns:1fr}
-  .stat-grid{grid-template-columns:1fr 1fr}
-}
+body{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-wrap{width:100%;max-width:420px}
+.logo{text-align:center;margin-bottom:28px}
+.logo-mark{font-size:28px;font-weight:900;color:#49b6ff;letter-spacing:-1px}
+.logo-mark span{color:#f59e0b}
+.logo-sub{font-size:12px;color:#6b7fa3;margin-top:4px;letter-spacing:.05em}
+.card{background:#0d1b31;border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:32px 28px}
+.card-title{font-size:18px;font-weight:800;margin-bottom:6px}
+.card-sub{font-size:13px;color:#6b7fa3;margin-bottom:24px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:700;color:#8b9fc4;margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase}
+.field input{width:100%;background:#0a1628;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:11px 14px;font-size:14px;color:#f4f8ff;font-family:inherit;outline:none;transition:border-color .15s}
+.field input:focus{border-color:#f59e0b}
+.field input::placeholder{color:#3a4d6b}
+.forgot{text-align:right;margin-top:6px}
+.forgot a{font-size:12px;color:#49b6ff;text-decoration:none}
+.btn-login{width:100%;background:#f59e0b;color:#06080e;border:none;border-radius:999px;padding:13px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:8px;transition:opacity .15s}
+.btn-login:hover{opacity:.88}
+.divider{text-align:center;font-size:12px;color:#3a4d6b;margin:18px 0;position:relative}
+.divider::before,.divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:rgba(255,255,255,.07)}
+.divider::before{left:0}.divider::after{right:0}
+.msg{text-align:center;margin-top:20px;font-size:13px;color:#6b7fa3}
+.msg a{color:#49b6ff;text-decoration:none;font-weight:700}
+.err{background:rgba(224,85,85,.12);border:1px solid rgba(224,85,85,.4);border-radius:10px;padding:10px 14px;font-size:13px;color:#f87171;margin-bottom:16px;display:none}
+.badge-hipaa{display:inline-flex;align-items:center;gap:6px;background:#091c30;border:1px solid rgba(73,182,255,.2);border-radius:999px;padding:4px 12px;font-size:11px;color:#6b9edd;margin-top:16px}
+.badge-hipaa::before{content:'🔒';font-size:12px}
+.footer-ctr{text-align:center}
+.role-hint{background:#081f38;border:1px solid rgba(255,215,0,.15);border-radius:10px;padding:10px 14px;font-size:12px;color:#8b9fc4;margin-bottom:18px}
+.role-hint strong{color:#ffd700}
 </style>
 </head>
 <body>
-<div class="layout">
-
-<!-- SIDEBAR -->
-<aside class="sb" id="sidebar">
-  <div class="sb-top">
-    <div class="sb-brand">
-      <div class="sb-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#06080e" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
-      <div><div class="sb-title">CommunityLink</div><div class="sb-product">We Market Plus</div></div>
-    </div>
-    <div class="role-box">
-      <div class="role-lbl">Signed in as</div>
-      <div class="role-badge" id="sbRoleBadge">Loading…</div>
-    </div>
-    <div class="tenant-name" id="sbTenantName">Loading community…</div>
+<div class="login-wrap">
+  <div class="logo">
+    <div class="logo-mark">Hospice<span>Link</span></div>
+    <div class="logo-sub">HIPAA-COMPLIANT HOSPICE CRM</div>
   </div>
-
-  <div class="sb-scroll">
-    <div id="sideNav"></div>
-  </div>
-
-  <div class="sb-bottom">
-    <div class="sb-user">
-      <div class="sb-avatar" id="sbAvatar">?</div>
-      <div>
-        <div class="sb-uname" id="sbName">Loading…</div>
-        <div class="sb-email" id="sbEmail"></div>
-      </div>
+  <div class="card" id="loginCard">
+    <div class="card-title">Welcome back</div>
+    <div class="card-sub">Sign in to your CRM account</div>
+    <div class="err" id="errMsg">Invalid email or password. Please try again.</div>
+    <div class="field">
+      <label>Email Address</label>
+      <input type="email" id="emailIn" placeholder="you@agency.com" autocomplete="email">
     </div>
-    <button class="sb-logout" onclick="logout()">Sign Out</button>
-  </div>
-</aside>
-
-<!-- MAIN -->
-<div class="main">
-  <div class="topbar">
-    <div class="topbar-left">
-      <div>
-        <div class="page-title" id="pageTitle">Dashboard</div>
-        <div class="page-sub" id="pageSub">Loading…</div>
-      </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="passIn" placeholder="••••••••" autocomplete="current-password">
+      <div class="forgot"><a href="forgot-password.html">Forgot password?</a></div>
     </div>
-    <div class="topbar-right">
-      <span class="tb-badge" id="tierBadge">CL Pro</span>
-    </div>
+    <button class="btn-login" onclick="doLogin()">Sign In</button>
+    <div class="msg">Don't have an account? <a href="index.html#pricing">View Plans</a></div>
   </div>
-
-  <div class="content" id="mainContent">
-    <div class="loading"><div class="spinner"></div>Loading dashboard…</div>
+  <div class="footer-ctr">
+    <div class="badge-hipaa">HIPAA-Compliant &amp; SOC 2 Ready</div>
+    <div style="margin-top:12px;font-size:11px;color:#3a4d6b">
+      <a href="privacy.html" style="color:#3a4d6b;text-decoration:none">Privacy Policy</a> &nbsp;·&nbsp;
+      <a href="tos.html" style="color:#3a4d6b;text-decoration:none">Terms of Service</a>
+    </div>
   </div>
 </div>
-</div>
-
-<div id="toast"></div>
-
 <script>
-// ── Config ───────────────────────────────────────────────────────
-var BACKEND = 'https://api.wemarketplus.com';
-var TOKEN   = localStorage.getItem('cl_token') || localStorage.getItem('hl_token') || '';
-var USER    = {};
-
-// ── Auth helper ─────────────────────────────────────────────────
-function authFetch(url, opts) {
-  opts = opts || {};
-  opts.headers = Object.assign({ 'Content-Type':'application/json', 'Authorization':'Bearer '+TOKEN }, opts.headers || {});
-  return fetch(url, opts).then(function(r) {
-    if (r.status === 401) { logout(); return Promise.reject(new Error('Unauthorized')); }
-    return r;
-  });
-}
-
-function T(msg, type) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.borderColor = type==='e' ? 'rgba(248,113,113,.4)' : 'rgba(245,158,11,.3)';
-  t.classList.add('show');
-  setTimeout(function() { t.classList.remove('show'); }, 3000);
-}
-
-function logout() {
-  localStorage.removeItem('cl_token');
-  localStorage.removeItem('hl_token');
-  window.location.href = '../communitylink/login.html';
-}
-
-// ── Role-based navigation defs ───────────────────────────────────
-var NAV_DEFS = {
-  admin: [
-    { sec: 'Sales & Outreach', items:[
-      {icon:'📊',label:'Dashboard',key:'dashboard'},
-      {icon:'👥',label:'Lead Pipeline',key:'leads'},
-      {icon:'🏥',label:'Referral Sources',key:'referrals'},
-      {icon:'🗓',label:'Tour Scheduler',key:'tours'},
-      {icon:'📍',label:'GPS Check-In',key:'gps'},
-      {icon:'🚗',label:'Mileage Tracker',key:'mileage'},
-      {icon:'📝',label:'Outreach Log',key:'outreach'},
-    ]},
-    { sec: 'Operations', items:[
-      {icon:'🏠',label:'Apartment Inventory',key:'apartments'},
-      {icon:'🔧',label:'Make-Ready Board',key:'makeready'},
-      {icon:'⚙️',label:'Maintenance',key:'maintenance'},
-      {icon:'🧹',label:'Housekeeping',key:'housekeeping'},
-    ]},
-    { sec: 'Financial', items:[
-      {icon:'💰',label:'Financial Ledger',key:'ledger'},
-      {icon:'📈',label:'Revenue Leakage',key:'revenue'},
-      {icon:'🤝',label:'Concessions',key:'concessions'},
-      {icon:'🔢',label:'LOC Pricing',key:'loc'},
-      {icon:'🏆',label:'Competitors',key:'competitors'},
-    ]},
-    { sec: 'Management', items:[
-      {icon:'📋',label:'Reports',key:'reports'},
-      {icon:'👤',label:'Users & Seats',key:'users'},
-      {icon:'⚙️',label:'Settings',key:'settings'},
-    ]},
-  ],
-  marketer: [
-    { sec: 'My Work', items:[
-      {icon:'📊',label:'Dashboard',key:'dashboard'},
-      {icon:'👥',label:'My Leads',key:'leads'},
-      {icon:'🏥',label:'Referral Sources',key:'referrals'},
-      {icon:'🗓',label:'Tours',key:'tours'},
-      {icon:'📍',label:'GPS Check-In',key:'gps'},
-      {icon:'🚗',label:'Mileage',key:'mileage'},
-      {icon:'📝',label:'Outreach Log',key:'outreach'},
-      {icon:'✅',label:'My Tasks',key:'tasks'},
-    ]},
-  ],
-  director: [
-    { sec: 'Overview', items:[
-      {icon:'📊',label:'Executive Dashboard',key:'dashboard'},
-      {icon:'🏠',label:'Occupancy Overview',key:'apartments'},
-      {icon:'👥',label:'Lead Pipeline',key:'leads'},
-    ]},
-    { sec: 'Operations', items:[
-      {icon:'🔧',label:'Make-Ready',key:'makeready'},
-      {icon:'⚙️',label:'Maintenance',key:'maintenance'},
-      {icon:'🧹',label:'Housekeeping',key:'housekeeping'},
-    ]},
-    { sec: 'Financial', items:[
-      {icon:'💰',label:'Financial Ledger',key:'ledger'},
-      {icon:'📈',label:'Revenue Leakage',key:'revenue'},
-      {icon:'📋',label:'Reports',key:'reports'},
-    ]},
-  ],
-  maintenance: [
-    { sec: 'Maintenance', items:[
-      {icon:'📊',label:'My Queue',key:'dashboard'},
-      {icon:'⚙️',label:'Tickets',key:'maintenance'},
-      {icon:'🔧',label:'Make-Ready',key:'makeready'},
-    ]},
-  ],
-  housekeeping: [
-    { sec: 'Housekeeping', items:[
-      {icon:'📊',label:'My Queue',key:'dashboard'},
-      {icon:'🧹',label:'Tasks',key:'housekeeping'},
-      {icon:'🔧',label:'Make-Ready',key:'makeready'},
-    ]},
-  ],
-  owner: [
-    { sec: 'Investor View', items:[
-      {icon:'📊',label:'Portfolio Dashboard',key:'dashboard'},
-      {icon:'💰',label:'Financial Ledger',key:'ledger'},
-      {icon:'📈',label:'Revenue Leakage',key:'revenue'},
-      {icon:'🏆',label:'Competitor Intel',key:'competitors'},
-      {icon:'📋',label:'Reports',key:'reports'},
-    ]},
-  ],
-};
-
-var activeSec = 'dashboard';
-
-function buildNav() {
-  var role = USER.role || 'marketer';
-  var defs = NAV_DEFS[role] || NAV_DEFS.marketer;
-  var nav = document.getElementById('sideNav');
-  nav.innerHTML = '';
-  defs.forEach(function(grp) {
-    nav.innerHTML += '<span class="nav-sec">' + grp.sec + '</span>';
-    grp.items.forEach(function(item) {
-      nav.innerHTML += '<button class="nav-btn' + (activeSec===item.key?' active':'') + '" onclick="showSection(\'' + item.key + '\')">'
-        + '<span class="nav-icon">' + item.icon + '</span>' + item.label + '</button>';
-    });
-  });
-}
-
-function showSection(key) {
-  activeSec = key;
-  buildNav();
-  var titles = {
-    dashboard:'Dashboard', leads:'Lead Pipeline', referrals:'Referral Sources',
-    tours:'Tour Scheduler', gps:'GPS Check-In', mileage:'Mileage Tracker',
-    outreach:'Outreach Log', tasks:'My Tasks', apartments:'Apartment Inventory',
-    makeready:'Make-Ready Board', maintenance:'Maintenance Tickets',
-    housekeeping:'Housekeeping Tasks', ledger:'Financial Ledger',
-    revenue:'Revenue Leakage', concessions:'Concession Approvals',
-    loc:'LOC Pricing Calculator', competitors:'Competitor Benchmarking',
-    reports:'Reports Center', users:'Users & Seats', settings:'Admin Settings',
-  };
-  document.getElementById('pageTitle').textContent = titles[key] || key;
-  document.getElementById('mainContent').innerHTML = '<div class="loading"><div class="spinner"></div>Loading…</div>';
-  loadPanel(key);
-}
-
-// ── Panel loaders (API-backed) ────────────────────────────────────
-function loadPanel(key) {
-  var handlers = {
-    dashboard:   loadDashboard,
-    leads:       loadLeads,
-    referrals:   loadReferrals,
-    apartments:  loadApartments,
-    makeready:   loadMakeReady,
-    maintenance: loadMaintenance,
-    housekeeping:loadHousekeeping,
-    tours:       loadTours,
-    gps:         loadGPS,
-    mileage:     loadMileage,
-    outreach:    loadOutreach,
-    tasks:       loadTasks,
-    ledger:      loadLedger,
-    revenue:     loadRevenue,
-    concessions: loadConcessions,
-    loc:         loadLOC,
-    competitors: loadCompetitors,
-    reports:     loadReports,
-    users:       loadUsers,
-    settings:    loadSettings,
-  };
-  var fn = handlers[key] || function() { renderFallback(key); };
-  fn();
-}
-
-function renderFallback(key) {
-  document.getElementById('mainContent').innerHTML = '<div class="card"><p style="color:#6b7fa3;padding:20px 0">'+key+' module loading…</p></div>';
-}
-
-// ── Dashboard ────────────────────────────────────────────────────
-function loadDashboard() {
-  var tierCl = (USER.crm_tier||'').replace('cl_','');
-  authFetch(BACKEND+'/api/cl/dashboard').then(function(r){return r.json();}).then(function(d){
-    if(d.error){renderFallback('dashboard');return;}
-    var tier = USER.crm_tier||'cl_pro';
-    renderDashboard(d, tier);
-  }).catch(function(){renderOfflineDashboard();});
-}
-
-function renderDashboard(d, tier) {
-  var isGold = tier==='cl_gold'||tier==='cl_max';
-  var isMax  = tier==='cl_max';
-  var role   = USER.role||'marketer';
-  var mc = document.getElementById('mainContent');
-  var html = '<div class="stat-grid">';
-  html += stat('Active Leads', d.active_leads||'—', '');
-  html += stat('Tours This Month', d.tours_month||'—', '');
-  html += stat('Move-Ins (This Mo)', d.move_ins||'—', '');
-  if(isGold) html += stat('Occupancy Rate', (d.occupancy||'—')+'%', '↑ vs last month');
-  if(isMax)  html += stat('Monthly Revenue', '$'+(d.revenue||'—'), '');
-  html += stat('Open Tasks', d.open_tasks||'—', '');
-  html += '</div>';
-  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">';
-  html += '<div class="card"><div class="card-hd"><div class="card-title">Hot Leads</div><button class="btn btn-amber btn-sm" onclick="showSection(\'leads\')">View All</button></div>';
-  html += '<p style="color:#6b7fa3;font-size:12px;padding:8px 0">Loading leads…</p></div>';
-  html += '<div class="card"><div class="card-hd"><div class="card-title">Today\'s Tasks</div></div>';
-  html += '<p style="color:#6b7fa3;font-size:12px;padding:8px 0">Loading tasks…</p></div>';
-  html += '</div>';
-  mc.innerHTML = html;
-  // Load leads and tasks asynchronously into those placeholders
-  loadDashboardLeads();
-  loadDashboardTasks();
-}
-
-function renderOfflineDashboard() {
-  document.getElementById('mainContent').innerHTML = [
-    '<div class="stat-grid">',
-    stat('Active Leads','—',''),stat('Tours This Month','—',''),
-    stat('Move-Ins','—',''),stat('Open Tasks','—',''),
-    '</div>',
-    '<div class="card"><div class="card-hd"><div class="card-title">Getting started</div></div>',
-    '<p style="color:#6b7fa3;font-size:13px">Welcome to CommunityLink. Use the sidebar to navigate to Leads, Apartments, and more.</p></div>'
-  ].join('');
-}
-
-function stat(label,val,sub){
-  return '<div class="stat-card"><div class="stat-label">'+label+'</div><div class="stat-val">'+val+'</div>'+(sub?'<div class="stat-sub">'+sub+'</div>':'')+'</div>';
-}
-
-function loadDashboardLeads() {
-  authFetch(BACKEND+'/api/cl/leads?urgency=hot&limit=4').then(function(r){return r.json();}).then(function(d){
-    var cards = document.querySelectorAll('.card');
-    if(!cards[0]) return;
-    var html = '<div class="card-hd"><div class="card-title">Hot Leads</div><button class="btn btn-amber btn-sm" onclick="showSection(\'leads\')">View All</button></div>';
-    var leads = (d.data||[]).slice(0,4);
-    if(!leads.length){html+='<p style="color:#6b7fa3;font-size:12px;padding:8px 0">No hot leads right now.</p>';}
-    leads.forEach(function(l){
-      html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)">'
-        +'<div><div style="font-size:13px;font-weight:700;color:#f4f8ff">'+escH(l.name)+'</div>'
-        +'<div style="font-size:11px;color:#6b7fa3">'+escH(l.care_type||'')+'&bull;'+escH(l.status||'')+'</div></div>'
-        +'<button class="btn btn-amber btn-sm" onclick="openLeadDetail(\''+l.id+'\')">View</button></div>';
-    });
-    cards[0].innerHTML = html;
-  }).catch(function(){});
-}
-
-function loadDashboardTasks() {
-  authFetch(BACKEND+'/api/cl/tasks?status=open&limit=5').then(function(r){return r.json();}).then(function(d){
-    var cards = document.querySelectorAll('.card');
-    if(!cards[1]) return;
-    var html = '<div class="card-hd"><div class="card-title">Today\'s Tasks</div><button class="btn btn-ghost btn-sm" onclick="showSection(\'tasks\')">All Tasks</button></div>';
-    var tasks = (d.data||[]).slice(0,5);
-    if(!tasks.length){html+='<p style="color:#6b7fa3;font-size:12px;padding:8px 0">No open tasks.</p>';}
-    tasks.forEach(function(t){
-      html+='<div style="display:flex;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04)">'
-        +'<input type="checkbox" onchange="completeTask(\''+t.id+'\',this)" style="accent-color:#f59e0b;flex-shrink:0">'
-        +'<div style="flex:1"><div style="font-size:12px;color:#c8d6e8">'+escH(t.title)+'</div>'
-        +'<div style="font-size:10px;color:#4b6278">Due '+escH(t.due_date||'')+'</div></div></div>';
-    });
-    cards[1].innerHTML = html;
-  }).catch(function(){});
-}
-
-function completeTask(id, cb) {
-  authFetch(BACKEND+'/api/cl/tasks/'+id+'/complete', {method:'PATCH'}).then(function(){T('Task completed!');}).catch(function(){cb.checked=false;T('Failed to complete task.','e');});
-}
-
-// ── Leads ────────────────────────────────────────────────────────
-function loadLeads() {
-  authFetch(BACKEND+'/api/cl/leads').then(function(r){return r.json();}).then(function(d){
-    renderLeads(d.data||[]);
-  }).catch(function(){renderLeads([]);});
-}
-
-function renderLeads(leads) {
-  var html = '<div class="card"><div class="card-hd"><div class="card-title">Lead Pipeline</div>'
-    + '<button class="btn btn-amber btn-sm" onclick="showAddLead()">+ Add Lead</button></div>';
-  if(!leads.length){
-    html += '<p style="color:#6b7fa3;padding:20px 0;text-align:center">No leads yet. Add your first lead to get started.</p></div>';
-  } else {
-    html += '<div style="overflow-x:auto"><table class="tbl"><thead><tr>'
-      +'<th>Name</th><th>Care Type</th><th>Status</th><th>Urgency</th><th>Source</th><th>Follow-up</th><th></th>'
-      +'</tr></thead><tbody>';
-    leads.forEach(function(l){
-      var urg = l.urgency==='hot'?'badge-red':l.urgency==='warm'?'badge-amber':'badge-gray';
-      var stat = l.status==='Move In'?'badge-green':l.status==='Inquiry'?'badge-blue':'badge-gray';
-      html+='<tr><td style="font-weight:700;color:#f4f8ff">'+escH(l.name)+'</td><td>'+escH(l.care_type||'')+'</td>'
-        +'<td><span class="badge '+stat+'">'+escH(l.status||'')+'</span></td>'
-        +'<td><span class="badge '+urg+'">'+capitalize(l.urgency||'')+'</span></td>'
-        +'<td>'+escH(l.source||'')+'</td><td>'+escH(l.follow_up_date||'')+'</td>'
-        +'<td><button class="btn btn-ghost btn-sm" onclick="openLeadDetail(\''+l.id+'\')">View</button></td></tr>';
-    });
-    html += '</tbody></table></div></div>';
-  }
-  document.getElementById('mainContent').innerHTML = html;
-}
-
-function showAddLead() {
-  var mc = document.getElementById('mainContent');
-  var form = '<div class="card"><div class="card-hd"><div class="card-title">Add New Lead</div>'
-    +'<button class="btn btn-ghost btn-sm" onclick="loadLeads()">Cancel</button></div>'
-    +'<div class="inp-group"><div class="inp-wrap"><div class="inp-label">Full Name *</div><input class="inp" id="lName" placeholder="Dorothy Harrison"></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Phone</div><input class="inp" id="lPhone" placeholder="(214) 555-0100"></div></div>'
-    +'<div class="inp-group"><div class="inp-wrap"><div class="inp-label">Care Type</div><select class="inp" id="lCare"><option>Independent Living</option><option>Assisted Living</option><option>Memory Care</option></select></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Status</div><select class="inp" id="lStatus"><option>Inquiry</option><option>Tour Scheduled</option><option>Proposal Sent</option><option>Follow-up</option><option>Move In</option><option>Lost</option></select></div></div>'
-    +'<div class="inp-group"><div class="inp-wrap"><div class="inp-label">Urgency</div><select class="inp" id="lUrg"><option value="warm">Warm</option><option value="hot">Hot</option><option value="cold">Cold</option></select></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Referral Source</div><input class="inp" id="lSource" placeholder="Physician / Family / Web"></div></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Notes</div><textarea class="inp" id="lNotes" rows="3" placeholder="Intake notes…"></textarea></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Follow-up Date</div><input class="inp" type="date" id="lFU"></div>'
-    +'<button class="btn btn-amber" onclick="saveLead()">Save Lead</button></div>';
-  mc.innerHTML = form;
-}
-
-function saveLead() {
-  var data = {
-    name: document.getElementById('lName').value.trim(),
-    phone: document.getElementById('lPhone').value.trim(),
-    care_type: document.getElementById('lCare').value,
-    status: document.getElementById('lStatus').value,
-    urgency: document.getElementById('lUrg').value,
-    source: document.getElementById('lSource').value.trim(),
-    notes: document.getElementById('lNotes').value.trim(),
-    follow_up_date: document.getElementById('lFU').value||null,
-  };
-  if(!data.name){T('Name is required.','e');return;}
-  authFetch(BACKEND+'/api/cl/leads',{method:'POST',body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(d){
-    if(d.error){T(d.error,'e');return;}
-    T('Lead saved!');
-    loadLeads();
-  }).catch(function(){T('Failed to save lead.','e');});
-}
-
-function openLeadDetail(id) {
-  authFetch(BACKEND+'/api/cl/leads/'+id).then(function(r){return r.json();}).then(function(d){
-    if(d.error){T('Lead not found.','e');return;}
-    var l=d;
-    document.getElementById('mainContent').innerHTML='<div class="card"><div class="card-hd">'
-      +'<div class="card-title">'+escH(l.name||'Lead')+'</div>'
-      +'<button class="btn btn-ghost btn-sm" onclick="loadLeads()">← Back</button></div>'
-      +'<div class="inp-group"><div><div class="inp-label">Care Type</div><div style="color:#c8d6e8">'+escH(l.care_type||'—')+'</div></div>'
-      +'<div><div class="inp-label">Status</div><div style="color:#c8d6e8">'+escH(l.status||'—')+'</div></div></div>'
-      +'<div class="inp-group"><div><div class="inp-label">Phone</div><div style="color:#c8d6e8">'+escH(l.phone||'—')+'</div></div>'
-      +'<div><div class="inp-label">Source</div><div style="color:#c8d6e8">'+escH(l.source||'—')+'</div></div></div>'
-      +'<div class="inp-wrap"><div class="inp-label">Notes</div><div style="color:#c8d6e8;font-size:13px;white-space:pre-wrap">'+escH(l.notes||'No notes.')+'</div></div>'
-      +'</div>';
-  }).catch(function(){T('Error loading lead.','e');});
-}
-
-// ── Apartments ───────────────────────────────────────────────────
-function loadApartments() {
-  authFetch(BACKEND+'/api/cl/apartments').then(function(r){return r.json();}).then(function(d){
-    renderApartments(d.data||[]);
-  }).catch(function(){renderApartments([]);});
-}
-
-function renderApartments(apts) {
-  var statusColors={'available':'badge-green','occupied':'badge-gray','reserved':'badge-amber','on_notice':'badge-amber','make_ready':'badge-blue','maintenance':'badge-red','offline':'badge-red'};
-  var html='<div class="card"><div class="card-hd"><div class="card-title">Apartment Inventory</div>'
-    +(isAdmin()?'<button class="btn btn-amber btn-sm" onclick="showAddApartment()">+ Add Unit</button>':'')+'</div>';
-  if(!apts.length){
-    html+='<p style="color:#6b7fa3;padding:20px 0;text-align:center">No units configured. Add apartments to track inventory.</p></div>';
-  } else {
-    html+='<div style="overflow-x:auto"><table class="tbl"><thead><tr>'
-      +'<th>Unit</th><th>Type</th><th>Care Level</th><th>Status</th><th>Resident</th><th>Rate/Mo</th><th>Make-Ready Tasks</th>'+(isAdmin()?'<th></th>':'')+'</tr></thead><tbody>';
-    apts.forEach(function(a){
-      var sc=statusColors[a.status]||'badge-gray';
-      html+='<tr><td style="font-weight:700;color:#f4f8ff">'+escH(a.unit_number)+'</td><td>'+escH(a.unit_type||'')+'</td><td>'+escH(a.care_level||'')+'</td>'
-        +'<td><span class="badge '+sc+'">'+capitalize(a.status||'')+'</span></td>'
-        +'<td>'+escH(a.resident_name||'Vacant')+'</td>'
-        +'<td>'+(a.monthly_rate?'$'+Number(a.monthly_rate).toLocaleString():'—')+'</td>'
-        +'<td>'+(a.open_mr_tasks>0?'<span style="color:#f59e0b;font-weight:700">'+a.open_mr_tasks+' open</span>':'<span style="color:#4fc87a">✓ Clear</span>')+'</td>'
-        +(isAdmin()?'<td><button class="btn btn-ghost btn-sm" onclick="editApartment(\''+a.id+'\',\''+escH(a.status)+'\')">Edit Status</button></td>':'')
-        +'</tr>';
-    });
-    html+='</tbody></table></div></div>';
-  }
-  document.getElementById('mainContent').innerHTML=html;
-}
-
-function showAddApartment() {
-  document.getElementById('mainContent').innerHTML='<div class="card"><div class="card-hd"><div class="card-title">Add Unit</div>'
-    +'<button class="btn btn-ghost btn-sm" onclick="loadApartments()">Cancel</button></div>'
-    +'<div class="inp-group"><div class="inp-wrap"><div class="inp-label">Unit Number *</div><input class="inp" id="aNum" placeholder="101"></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Unit Type</div><input class="inp" id="aType" placeholder="Studio / 1BR / 2BR"></div></div>'
-    +'<div class="inp-group"><div class="inp-wrap"><div class="inp-label">Care Level</div><select class="inp" id="aCare"><option>IL</option><option>AL</option><option>MC</option></select></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Monthly Rate ($)</div><input class="inp" type="number" id="aRate" placeholder="3200"></div></div>'
-    +'<button class="btn btn-amber" onclick="saveApartment()">Save Unit</button></div>';
-}
-
-function saveApartment() {
-  var data={unit_number:document.getElementById('aNum').value.trim(),unit_type:document.getElementById('aType').value.trim(),care_level:document.getElementById('aCare').value,monthly_rate:document.getElementById('aRate').value||null};
-  if(!data.unit_number){T('Unit number required.','e');return;}
-  authFetch(BACKEND+'/api/cl/apartments',{method:'POST',body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(d){
-    if(d.error){T(d.error,'e');return;}
-    T('Unit added!');loadApartments();
-  }).catch(function(){T('Failed to save unit.','e');});
-}
-
-function editApartment(id, currentStatus) {
-  var newStatus = prompt('New status (available, occupied, reserved, on_notice, make_ready, maintenance, offline):', currentStatus);
-  if(!newStatus) return;
-  authFetch(BACKEND+'/api/cl/apartments/'+id,{method:'PATCH',body:JSON.stringify({status:newStatus})}).then(function(r){return r.json();}).then(function(d){
-    if(d.error){T(d.error,'e');return;}
-    T('Unit updated!');loadApartments();
-  }).catch(function(){T('Failed to update.','e');});
-}
-
-// ── Make-Ready ───────────────────────────────────────────────────
-function loadMakeReady() {
-  authFetch(BACKEND+'/api/cl/make-ready').then(function(r){return r.json();}).then(function(d){
-    renderMakeReady(d.data||[]);
-  }).catch(function(){renderMakeReady([]);});
-}
-
-function renderMakeReady(items) {
-  var html='<div class="card"><div class="card-hd"><div class="card-title">Make-Ready Board</div>'
-    +(isAdmin()?'<button class="btn btn-amber btn-sm" onclick="showAddMakeReady()">+ New Ticket</button>':'')+'</div>';
-  if(!items.length){html+='<p style="color:#6b7fa3;padding:20px 0;text-align:center">No make-ready tickets.</p></div>';}
-  else {
-    items.forEach(function(t){
-      var pct=t.pct||0;
-      var badge=pct===100?'badge-green':pct>50?'badge-amber':'badge-blue';
-      html+='<div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05)">'
-        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'
-        +'<div style="font-weight:700;color:#f4f8ff">Unit '+escH(t.unit_number||'?')+' — '+escH(t.unit_type||'')+'</div>'
-        +'<span class="badge '+badge+'">'+pct+'% Complete</span></div>'
-        +'<div style="background:rgba(255,255,255,.06);border-radius:99px;height:5px;margin-bottom:8px">'
-        +'<div style="background:#f59e0b;height:100%;border-radius:99px;width:'+pct+'%"></div></div>'
-        +'<div style="font-size:11px;color:#6b7fa3">Move-out: '+escH(t.move_out_date||'—')+'  •  Target: '+escH(t.target_date||'—')+'  •  Assigned: '+escH(t.assigned_to_name||'Unassigned')+'</div>'
-        +'</div>';
-    });
-    html+='</div>';
-  }
-  document.getElementById('mainContent').innerHTML=html;
-}
-
-function showAddMakeReady() {
-  document.getElementById('mainContent').innerHTML='<div class="card"><div class="card-hd"><div class="card-title">New Make-Ready Ticket</div>'
-    +'<button class="btn btn-ghost btn-sm" onclick="loadMakeReady()">Cancel</button></div>'
-    +'<div class="inp-group"><div class="inp-wrap"><div class="inp-label">Unit #</div><input class="inp" id="mrUnit" placeholder="101"></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Unit Type</div><input class="inp" id="mrType" placeholder="1BR"></div></div>'
-    +'<div class="inp-group"><div class="inp-wrap"><div class="inp-label">Move-out Date</div><input class="inp" type="date" id="mrMoveOut"></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Target Ready Date</div><input class="inp" type="date" id="mrTarget"></div></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Notes</div><textarea class="inp" id="mrNotes" rows="2" placeholder="Specific tasks…"></textarea></div>'
-    +'<button class="btn btn-amber" onclick="saveMakeReady()">Create Ticket</button></div>';
-}
-
-function saveMakeReady() {
-  var data={unit_number:document.getElementById('mrUnit').value.trim(),unit_type:document.getElementById('mrType').value.trim(),move_out_date:document.getElementById('mrMoveOut').value||null,target_date:document.getElementById('mrTarget').value||null,notes:document.getElementById('mrNotes').value.trim()};
-  if(!data.unit_number){T('Unit number required.','e');return;}
-  authFetch(BACKEND+'/api/cl/make-ready',{method:'POST',body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(d){
-    if(d.error){T(d.error,'e');return;}
-    T('Make-ready ticket created!');loadMakeReady();
-  }).catch(function(){T('Failed.','e');});
-}
-
-// ── Maintenance / Housekeeping ────────────────────────────────────
-function loadMaintenance() { loadTickets('maintenance'); }
-function loadHousekeeping() { loadTickets('housekeeping'); }
-
-function loadTickets(type) {
-  authFetch(BACKEND+'/api/cl/'+type).then(function(r){return r.json();}).then(function(d){
-    renderTickets(type, d.data||[]);
-  }).catch(function(){renderTickets(type,[]);});
-}
-
-function renderTickets(type, tickets) {
-  var label = type==='maintenance'?'Maintenance Tickets':'Housekeeping Tasks';
-  var html='<div class="card"><div class="card-hd"><div class="card-title">'+label+'</div>'
-    +(isAdmin()?'<button class="btn btn-amber btn-sm" onclick="showAddTicket(\''+type+'\')">+ Add</button>':'')+'</div>';
-  if(!tickets.length){html+='<p style="color:#6b7fa3;padding:20px 0;text-align:center">No '+type+' tickets.</p></div>';}
-  else {
-    html+='<table class="tbl"><thead><tr><th>Unit</th><th>Title</th><th>Priority</th><th>Status</th><th>Assigned</th><th></th></tr></thead><tbody>';
-    tickets.forEach(function(t){
-      var pc=t.priority==='urgent'?'badge-red':t.priority==='high'?'badge-amber':'badge-gray';
-      var sc=t.status==='completed'?'badge-green':t.status==='in_progress'?'badge-blue':'badge-gray';
-      html+='<tr><td style="font-weight:700">'+escH(t.unit_number||'—')+'</td><td>'+escH(t.title)+'</td>'
-        +'<td><span class="badge '+pc+'">'+capitalize(t.priority||'')+'</span></td>'
-        +'<td><span class="badge '+sc+'">'+capitalize(t.status||'')+'</span></td>'
-        +'<td>'+escH(t.assigned_to_name||'Unassigned')+'</td>'
-        +'<td><button class="btn btn-ghost btn-sm" onclick="updateTicketStatus(\''+type+'\',\''+t.id+'\',\''+t.status+'\')">Update</button></td></tr>';
-    });
-    html+='</tbody></table></div>';
-  }
-  document.getElementById('mainContent').innerHTML=html;
-}
-
-function showAddTicket(type) {
-  document.getElementById('mainContent').innerHTML='<div class="card"><div class="card-hd"><div class="card-title">Add '+capitalize(type)+' Ticket</div>'
-    +'<button class="btn btn-ghost btn-sm" onclick="loadTickets(\''+type+'\')">Cancel</button></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Title *</div><input class="inp" id="tkTitle" placeholder="Issue description"></div>'
-    +'<div class="inp-group"><div class="inp-wrap"><div class="inp-label">Unit</div><input class="inp" id="tkUnit" placeholder="101"></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Priority</div><select class="inp" id="tkPri"><option value="medium">Medium</option><option value="high">High</option><option value="urgent">Urgent</option><option value="low">Low</option></select></div></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Description</div><textarea class="inp" id="tkDesc" rows="3"></textarea></div>'
-    +'<button class="btn btn-amber" onclick="saveTicket(\''+type+'\')">Save</button></div>';
-}
-
-function saveTicket(type) {
-  var data={title:document.getElementById('tkTitle').value.trim(),unit_number:document.getElementById('tkUnit').value.trim(),priority:document.getElementById('tkPri').value,description:document.getElementById('tkDesc').value.trim()};
-  if(!data.title){T('Title required.','e');return;}
-  authFetch(BACKEND+'/api/cl/'+type,{method:'POST',body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(d){
-    if(d.error){T(d.error,'e');return;}
-    T(capitalize(type)+' ticket saved!');loadTickets(type);
-  }).catch(function(){T('Failed.','e');});
-}
-
-function updateTicketStatus(type, id, current) {
-  var next=current==='open'?'in_progress':current==='in_progress'?'completed':'open';
-  authFetch(BACKEND+'/api/cl/'+type+'/'+id,{method:'PATCH',body:JSON.stringify({status:next})}).then(function(){T('Status updated!');loadTickets(type);}).catch(function(){T('Failed.','e');});
-}
-
-// ── Tours / GPS / Mileage / Outreach ────────────────────────────
-function loadTours(){renderSimpleForm('tours','Tour Scheduler','Schedule a Community Tour',
-  [{id:'tName',label:'Prospect Name',type:'text',ph:'Dorothy Harrison'},{id:'tDate',label:'Tour Date & Time',type:'datetime-local'},{id:'tType',label:'Tour Type',type:'select',opts:['In-Person','Virtual','Phone Consultation']},{id:'tNotes',label:'Notes',type:'textarea'}],'scheduleTour');}
-
-function scheduleTour(){
-  T('Tour scheduled and confirmed!');
-}
-
-function loadGPS(){
-  document.getElementById('mainContent').innerHTML='<div class="card"><div class="card-hd"><div class="card-title">GPS Check-In</div></div>'
-    +'<p style="color:#6b7fa3;font-size:13px;margin-bottom:16px">Log your outreach visit with real-time GPS location.</p>'
-    +'<div class="inp-wrap"><div class="inp-label">Facility / Contact Visited</div><input class="inp" id="gpsOrg" placeholder="Dallas Medical Group"></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Contact Name</div><input class="inp" id="gpsPerson" placeholder="Dr. Amanda Chen"></div>'
-    +'<div class="inp-wrap" id="gpsLocWrap"><div class="inp-label">GPS Location</div><input class="inp" id="gpsLoc" placeholder="Click Capture GPS…" readonly></div>'
-    +'<div style="display:flex;gap:10px;margin-top:12px">'
-    +'<button class="btn btn-ghost" onclick="captureGPS()">📍 Capture GPS</button>'
-    +'<button class="btn btn-amber" onclick="logGPS()">Log Check-In</button></div></div>';
-}
-
-function captureGPS(){
-  var el=document.getElementById('gpsLoc');
-  if(!navigator.geolocation){el.value='GPS not available';return;}
-  el.value='Detecting…';
-  navigator.geolocation.getCurrentPosition(function(p){
-    el.value=p.coords.latitude.toFixed(5)+', '+p.coords.longitude.toFixed(5);
-  },function(){el.value='Permission denied';});
-}
-
-function logGPS(){
-  var org=document.getElementById('gpsOrg').value.trim();
-  var loc=document.getElementById('gpsLoc').value;
-  if(!org){T('Facility name required.','e');return;}
-  authFetch(BACKEND+'/api/cl/outreach',{method:'POST',body:JSON.stringify({organization:org,contact_name:document.getElementById('gpsPerson').value.trim(),gps_location:loc,visit_type:'GPS Check-In'})}).then(function(r){return r.json();}).then(function(d){
-    if(d.error){T(d.error,'e');return;}
-    T('✓ Check-in logged with GPS!');
-  }).catch(function(){T('Failed to log.','e');});
-}
-
-function loadMileage(){renderSimpleForm('mileage','Mileage Tracker','Log Trip',
-  [{id:'mlDist',label:'Distance (miles)',type:'number',ph:'12.4'},{id:'mlDate',label:'Date',type:'date'},{id:'mlPurpose',label:'Purpose',type:'text',ph:'Referral visit — Dallas Medical Group'},{id:'mlNotes',label:'Notes',type:'textarea'}],'saveMileage');}
-
-function saveMileage(){
-  var dist=document.getElementById('mlDist').value;
-  var date=document.getElementById('mlDate').value;
-  if(!dist||!date){T('Distance and date required.','e');return;}
-  T('Mileage entry saved! '+dist+' miles logged.');
-}
-
-function loadOutreach(){
-  authFetch(BACKEND+'/api/cl/outreach').then(function(r){return r.json();}).then(function(d){
-    var items=d.data||[];
-    var html='<div class="card"><div class="card-hd"><div class="card-title">Outreach Log</div><button class="btn btn-amber btn-sm" onclick="loadGPS()">Log Visit</button></div>';
-    if(!items.length){html+='<p style="color:#6b7fa3;padding:20px 0;text-align:center">No outreach visits logged yet.</p>';}
-    else {
-      html+='<table class="tbl"><thead><tr><th>Date</th><th>Organization</th><th>Contact</th><th>Type</th><th>GPS</th></tr></thead><tbody>';
-      items.forEach(function(i){html+='<tr><td>'+escH(i.visit_date||i.created_at||'')+'</td><td>'+escH(i.organization||'')+'</td><td>'+escH(i.contact_name||'')+'</td><td>'+escH(i.visit_type||'')+'</td><td style="font-size:10px;color:#4b6278">'+escH(i.gps_location||'—')+'</td></tr>';});
-      html+='</tbody></table>';
-    }
-    html+='</div>';
-    document.getElementById('mainContent').innerHTML=html;
-  }).catch(function(){document.getElementById('mainContent').innerHTML='<div class="card"><p style="color:#6b7fa3;padding:20px 0">Failed to load outreach log.</p></div>';});
-}
-
-function loadTasks(){
-  authFetch(BACKEND+'/api/cl/tasks').then(function(r){return r.json();}).then(function(d){
-    var items=d.data||[];
-    var html='<div class="card"><div class="card-hd"><div class="card-title">My Tasks</div><button class="btn btn-amber btn-sm" onclick="showAddTask()">+ Task</button></div>';
-    if(!items.length){html+='<p style="color:#6b7fa3;padding:20px 0;text-align:center">No tasks. Add one above.</p>';}
-    else{
-      html+='<table class="tbl"><thead><tr><th></th><th>Task</th><th>Due</th><th>Priority</th></tr></thead><tbody>';
-      items.forEach(function(t){
-        var pc=t.priority==='urgent'?'badge-red':t.priority==='high'?'badge-amber':'badge-gray';
-        var done=t.status==='completed';
-        html+='<tr><td><input type="checkbox" '+(done?'checked':'')+' onchange="completeTask(\''+t.id+'\',this)" style="accent-color:#f59e0b"></td>'
-          +'<td style="'+(done?'text-decoration:line-through;color:#4b6278':'')+'"">'+escH(t.title)+'</td>'
-          +'<td>'+escH(t.due_date||'—')+'</td><td><span class="badge '+pc+'">'+capitalize(t.priority||'medium')+'</span></td></tr>';
-      });
-      html+='</tbody></table>';
-    }
-    html+='</div>';
-    document.getElementById('mainContent').innerHTML=html;
-  }).catch(function(){document.getElementById('mainContent').innerHTML='<div class="card"><p style="color:#6b7fa3;padding:20px 0">Failed to load tasks.</p></div>';});
-}
-
-function showAddTask(){
-  document.getElementById('mainContent').innerHTML='<div class="card"><div class="card-hd"><div class="card-title">Add Task</div><button class="btn btn-ghost btn-sm" onclick="loadTasks()">Cancel</button></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Title *</div><input class="inp" id="tkTitle" placeholder="Follow up with Dr. Chen"></div>'
-    +'<div class="inp-group"><div class="inp-wrap"><div class="inp-label">Due Date</div><input class="inp" type="date" id="tkDue"></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Priority</div><select class="inp" id="tkPri"><option value="medium">Medium</option><option value="high">High</option><option value="urgent">Urgent</option><option value="low">Low</option></select></div></div>'
-    +'<button class="btn btn-amber" onclick="saveNewTask()">Save Task</button></div>';
-}
-
-function saveNewTask(){
-  var data={title:document.getElementById('tkTitle').value.trim(),due_date:document.getElementById('tkDue').value||null,priority:document.getElementById('tkPri').value};
-  if(!data.title){T('Title required.','e');return;}
-  authFetch(BACKEND+'/api/cl/tasks',{method:'POST',body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(d){
-    if(d.error){T(d.error,'e');return;}
-    T('Task saved!');loadTasks();
-  }).catch(function(){T('Failed.','e');});
-}
-
-// ── Financial panels (Max only) ──────────────────────────────────
-function loadLedger(){requireMax(function(){
-  authFetch(BACKEND+'/api/cl/revenue').then(function(r){return r.json();}).then(function(d){
-    var data=d.data||d;
-    var html='<div class="card"><div class="card-hd"><div class="card-title">Financial Ledger</div></div>'
-      +'<div class="stat-grid">'
-      +stat('Total Revenue','$'+(data.total_revenue||'—'),'This month')
-      +stat('Total Expenses','$'+(data.total_expenses||'—'),'This month')
-      +stat('Net Income','$'+(data.net_income||'—'),'')
-      +stat('Occupancy Rev/Unit','$'+(data.avg_rate||'—'),'Avg monthly')
-      +'</div>'
-      +'<p style="color:#6b7fa3;font-size:12px;margin-top:12px">Detailed ledger entries visible when data is synced from accounting system.</p>'
-      +'</div>';
-    document.getElementById('mainContent').innerHTML=html;
-  }).catch(function(){document.getElementById('mainContent').innerHTML='<div class="card"><p style="color:#6b7fa3">Financial data unavailable.</p></div>';});
-});}
-
-function loadRevenue(){requireMax(function(){
-  document.getElementById('mainContent').innerHTML='<div class="card"><div class="card-hd"><div class="card-title">Revenue Leakage Tracker</div></div>'
-    +'<div class="stat-grid">'
-    +stat('Identified Leakage','$15,750','Across 8 issues')
-    +stat('Recoverable','$11,340','72%')
-    +stat('Avg Days Unresolved','14','')
-    +'</div>'
-    +'<table class="tbl"><thead><tr><th>Issue</th><th>Unit</th><th>Amount</th><th>Days Open</th><th>Status</th></tr></thead><tbody>'
-    +'<tr><td>Uncollected move-out fee</td><td>204</td><td style="color:#f87171">$1,800</td><td>22</td><td><span class="badge badge-amber">Pending</span></td></tr>'
-    +'<tr><td>Rate below market (IL)</td><td>108</td><td style="color:#f87171">$350/mo</td><td>180</td><td><span class="badge badge-blue">Renewing</span></td></tr>'
-    +'<tr><td>Concession not recovered</td><td>312</td><td style="color:#f87171">$2,400</td><td>45</td><td><span class="badge badge-amber">Review</span></td></tr>'
-    +'</tbody></table></div>';
-});}
-
-function loadConcessions(){
-  authFetch(BACKEND+'/api/cl/concessions').then(function(r){return r.json();}).then(function(d){
-    var items=d.data||[];
-    var html='<div class="card"><div class="card-hd"><div class="card-title">Concession Approvals</div>'
-      +(isAdmin()?'<button class="btn btn-amber btn-sm" onclick="showAddConcession()">+ New</button>':'')+'</div>';
-    if(!items.length){html+='<p style="color:#6b7fa3;padding:20px 0">No pending concessions.</p>';}
-    else{
-      html+='<table class="tbl"><thead><tr><th>Resident</th><th>Type</th><th>Value</th><th>Reason</th><th>Status</th>'+(isAdmin()?'<th></th>':'')+'</tr></thead><tbody>';
-      items.forEach(function(c){
-        var sc=c.status==='approved'?'badge-green':c.status==='denied'?'badge-red':'badge-amber';
-        html+='<tr><td style="font-weight:700">'+escH(c.resident_name)+'</td><td>'+escH(c.concession_type)+'</td><td style="color:#f59e0b">$'+Number(c.value||0).toLocaleString()+'</td><td>'+escH(c.reason||'—')+'</td>'
-          +'<td><span class="badge '+sc+'">'+capitalize(c.status)+'</span></td>'
-          +(isAdmin()&&c.status==='pending'?'<td><button class="btn btn-green btn-sm" onclick="decideConcession(\''+c.id+'\',\'approved\')" style="margin-right:6px">Approve</button><button class="btn btn-red btn-sm" onclick="decideConcession(\''+c.id+'\',\'denied\')">Deny</button></td>':'<td></td>')
-          +'</tr>';
-      });
-      html+='</tbody></table>';
-    }
-    html+='</div>';
-    document.getElementById('mainContent').innerHTML=html;
-  }).catch(function(){document.getElementById('mainContent').innerHTML='<div class="card"><p style="color:#6b7fa3">Failed to load concessions.</p></div>';});
-}
-
-function showAddConcession(){
-  document.getElementById('mainContent').innerHTML='<div class="card"><div class="card-hd"><div class="card-title">New Concession Request</div><button class="btn btn-ghost btn-sm" onclick="loadConcessions()">Cancel</button></div>'
-    +'<div class="inp-group"><div class="inp-wrap"><div class="inp-label">Resident Name *</div><input class="inp" id="cResident" placeholder="Dorothy Harrison"></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Type</div><select class="inp" id="cType"><option>First Month Free</option><option>Rate Reduction</option><option>Move-In Fee Waiver</option><option>Security Deposit Reduction</option><option>Custom</option></select></div></div>'
-    +'<div class="inp-group"><div class="inp-wrap"><div class="inp-label">Value ($)</div><input class="inp" type="number" id="cValue" placeholder="500"></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Reason</div><input class="inp" id="cReason" placeholder="Competitive market — competitor offering"></div></div>'
-    +'<button class="btn btn-amber" onclick="saveConcession()">Submit for Approval</button></div>';
-}
-
-function saveConcession(){
-  var data={resident_name:document.getElementById('cResident').value.trim(),concession_type:document.getElementById('cType').value,value:document.getElementById('cValue').value||0,reason:document.getElementById('cReason').value.trim()};
-  if(!data.resident_name){T('Resident name required.','e');return;}
-  authFetch(BACKEND+'/api/cl/concessions',{method:'POST',body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(d){
-    if(d.error){T(d.error,'e');return;}
-    T('Concession submitted!');loadConcessions();
-  }).catch(function(){T('Failed.','e');});
-}
-
-function decideConcession(id,decision){
-  authFetch(BACKEND+'/api/cl/concessions/'+id,{method:'PATCH',body:JSON.stringify({status:decision})}).then(function(){T('Concession '+decision+'!');loadConcessions();}).catch(function(){T('Failed.','e');});
-}
-
-function loadLOC(){requireMax(function(){
-  authFetch(BACKEND+'/api/cl/loc-pricing').then(function(r){return r.json();}).then(function(d){
-    var p=d||{};
-    document.getElementById('mainContent').innerHTML='<div class="card"><div class="card-hd"><div class="card-title">LOC Pricing Calculator</div></div>'
-      +'<p style="color:#6b7fa3;font-size:13px;margin-bottom:16px">Set base rates and care level multipliers to instantly price prospective residents.</p>'
-      +'<div class="inp-group">'
-      +'<div class="inp-wrap"><div class="inp-label">Base Rate — IL ($/mo)</div><input class="inp" id="locIL" value="'+(p.il_base||3200)+'" type="number"></div>'
-      +'<div class="inp-wrap"><div class="inp-label">Base Rate — AL ($/mo)</div><input class="inp" id="locAL" value="'+(p.al_base||4500)+'" type="number"></div>'
-      +'<div class="inp-wrap"><div class="inp-label">Base Rate — MC ($/mo)</div><input class="inp" id="locMC" value="'+(p.mc_base||5800)+'" type="number"></div>'
-      +'<div class="inp-wrap"><div class="inp-label">LOC Add-on per Level ($)</div><input class="inp" id="locAdd" value="'+(p.loc_addon||150)+'" type="number"></div>'
-      +'</div>'
-      +'<button class="btn btn-amber" onclick="saveLOC()">Save Rates</button>'
-      +'<div style="margin-top:20px;padding:16px;background:#0d1f38;border-radius:10px">'
-      +'<div class="inp-label" style="margin-bottom:10px">Quick Estimate</div>'
-      +'<div class="inp-group"><div class="inp-wrap"><div class="inp-label">Care Level</div><select class="inp" id="estCare"><option value="IL">Independent Living</option><option value="AL">Assisted Living</option><option value="MC">Memory Care</option></select></div>'
-      +'<div class="inp-wrap"><div class="inp-label">LOC Score (1-5)</div><input class="inp" type="number" id="estLOC" min="1" max="5" value="2"></div></div>'
-      +'<button class="btn btn-blue" onclick="calcLOC()">Calculate Rate</button>'
-      +'<div id="locResult" style="margin-top:12px;font-size:18px;font-weight:800;color:#f59e0b"></div>'
-      +'</div></div>';
-  }).catch(function(){document.getElementById('mainContent').innerHTML='<div class="card"><p style="color:#6b7fa3">LOC data unavailable.</p></div>';});
-});}
-
-function calcLOC(){
-  var care=document.getElementById('estCare').value;
-  var loc=parseInt(document.getElementById('estLOC').value)||1;
-  var bases={IL:parseInt(document.getElementById('locIL').value)||3200,AL:parseInt(document.getElementById('locAL').value)||4500,MC:parseInt(document.getElementById('locMC').value)||5800};
-  var addon=parseInt(document.getElementById('locAdd').value)||150;
-  var total=bases[care]+(loc-1)*addon;
-  document.getElementById('locResult').textContent='Estimated Rate: $'+total.toLocaleString()+'/month';
-}
-
-function saveLOC(){
-  var data={il_base:parseInt(document.getElementById('locIL').value),al_base:parseInt(document.getElementById('locAL').value),mc_base:parseInt(document.getElementById('locMC').value),loc_addon:parseInt(document.getElementById('locAdd').value)};
-  authFetch(BACKEND+'/api/cl/loc-pricing',{method:'PUT',body:JSON.stringify(data)}).then(function(){T('LOC rates saved!');}).catch(function(){T('Failed to save.','e');});
-}
-
-function loadCompetitors(){requireMax(function(){
-  authFetch(BACKEND+'/api/cl/competitors').then(function(r){return r.json();}).then(function(d){
-    var items=d.data||[];
-    var html='<div class="card"><div class="card-hd"><div class="card-title">Competitor Benchmarking</div>'
-      +(isAdmin()?'<button class="btn btn-amber btn-sm" onclick="showAddCompetitor()">+ Add</button>':'')+'</div>';
-    if(!items.length){html+='<p style="color:#6b7fa3;padding:20px 0">No competitors tracked yet.</p>';}
-    else{
-      html+='<table class="tbl"><thead><tr><th>Community</th><th>Distance</th><th>IL Rate</th><th>AL Rate</th><th>Occupancy</th><th>Notes</th></tr></thead><tbody>';
-      items.forEach(function(c){html+='<tr><td style="font-weight:700">'+escH(c.name)+'</td><td>'+escH(c.distance_miles||'—')+'mi</td><td>'+escH(c.il_rate?'$'+c.il_rate:'—')+'</td><td>'+escH(c.al_rate?'$'+c.al_rate:'—')+'</td><td>'+escH(c.occupancy_pct?c.occupancy_pct+'%':'—')+'</td><td>'+escH(c.notes||'—')+'</td></tr>';});
-      html+='</tbody></table>';
-    }
-    html+='</div>';
-    document.getElementById('mainContent').innerHTML=html;
-  }).catch(function(){document.getElementById('mainContent').innerHTML='<div class="card"><p style="color:#6b7fa3">Competitor data unavailable.</p></div>';});
-});}
-
-function showAddCompetitor(){
-  document.getElementById('mainContent').innerHTML='<div class="card"><div class="card-hd"><div class="card-title">Add Competitor</div><button class="btn btn-ghost btn-sm" onclick="loadCompetitors()">Cancel</button></div>'
-    +'<div class="inp-group"><div class="inp-wrap"><div class="inp-label">Community Name *</div><input class="inp" id="compName" placeholder="Sunrise Gardens"></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Distance (miles)</div><input class="inp" id="compDist" type="number" placeholder="2.4"></div></div>'
-    +'<div class="inp-group"><div class="inp-wrap"><div class="inp-label">IL Rate ($/mo)</div><input class="inp" id="compIL" type="number" placeholder="3100"></div>'
-    +'<div class="inp-wrap"><div class="inp-label">AL Rate ($/mo)</div><input class="inp" id="compAL" type="number" placeholder="4200"></div></div>'
-    +'<div class="inp-group"><div class="inp-wrap"><div class="inp-label">Occupancy (%)</div><input class="inp" id="compOcc" type="number" placeholder="88"></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Notes</div><input class="inp" id="compNotes" placeholder="Strong IL, weak memory care"></div></div>'
-    +'<button class="btn btn-amber" onclick="saveCompetitor()">Save Competitor</button></div>';
-}
-
-function saveCompetitor(){
-  var data={name:document.getElementById('compName').value.trim(),distance_miles:document.getElementById('compDist').value||null,il_rate:document.getElementById('compIL').value||null,al_rate:document.getElementById('compAL').value||null,occupancy_pct:document.getElementById('compOcc').value||null,notes:document.getElementById('compNotes').value.trim()};
-  if(!data.name){T('Name required.','e');return;}
-  authFetch(BACKEND+'/api/cl/competitors',{method:'POST',body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(d){
-    if(d.error){T(d.error,'e');return;}
-    T('Competitor added!');loadCompetitors();
-  }).catch(function(){T('Failed.','e');});
-}
-
-// ── Referrals ────────────────────────────────────────────────────
-function loadReferrals(){
-  authFetch(BACKEND+'/api/cl/referral-sources').then(function(r){return r.json();}).then(function(d){
-    var items=d.data||[];
-    var html='<div class="card"><div class="card-hd"><div class="card-title">Referral Sources</div>'
-      +(isAdmin()?'<button class="btn btn-amber btn-sm" onclick="showAddReferral()">+ Add Source</button>':'')+'</div>';
-    if(!items.length){html+='<p style="color:#6b7fa3;padding:20px 0">No referral sources yet.</p>';}
-    else{
-      html+='<table class="tbl"><thead><tr><th>Name</th><th>Type</th><th>Organization</th><th>Referrals Sent</th><th>Last Activity</th></tr></thead><tbody>';
-      items.forEach(function(r){html+='<tr><td style="font-weight:700">'+escH(r.name||r.contact_name||'')+'</td><td>'+escH(r.type||r.source_type||'')+'</td><td>'+escH(r.organization||r.facility_name||'')+'</td><td>'+escH(r.referral_count||r.total_referrals||'—')+'</td><td>'+escH(r.last_activity||r.updated_at||'—')+'</td></tr>';});
-      html+='</tbody></table>';
-    }
-    html+='</div>';
-    document.getElementById('mainContent').innerHTML=html;
-  }).catch(function(){document.getElementById('mainContent').innerHTML='<div class="card"><p style="color:#6b7fa3">Failed to load referral sources.</p></div>';});
-}
-
-function showAddReferral(){
-  document.getElementById('mainContent').innerHTML='<div class="card"><div class="card-hd"><div class="card-title">Add Referral Source</div><button class="btn btn-ghost btn-sm" onclick="loadReferrals()">Cancel</button></div>'
-    +'<div class="inp-group"><div class="inp-wrap"><div class="inp-label">Contact Name *</div><input class="inp" id="rName" placeholder="Dr. Amanda Chen"></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Organization</div><input class="inp" id="rOrg" placeholder="Dallas Medical Group"></div></div>'
-    +'<div class="inp-group"><div class="inp-wrap"><div class="inp-label">Type</div><select class="inp" id="rType"><option>Physician</option><option>Hospital</option><option>Social Worker</option><option>Rehab Facility</option><option>Community / Event</option><option>Family / Word of Mouth</option><option>Online</option></select></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Phone</div><input class="inp" id="rPhone" placeholder="(214) 555-0100"></div></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Notes</div><textarea class="inp" id="rNotes" rows="2"></textarea></div>'
-    +'<button class="btn btn-amber" onclick="saveReferral()">Save Source</button></div>';
-}
-
-function saveReferral(){
-  var data={name:document.getElementById('rName').value.trim(),contact_name:document.getElementById('rName').value.trim(),organization:document.getElementById('rOrg').value.trim(),facility_name:document.getElementById('rOrg').value.trim(),type:document.getElementById('rType').value,source_type:document.getElementById('rType').value,phone:document.getElementById('rPhone').value.trim(),notes:document.getElementById('rNotes').value.trim()};
-  if(!data.name){T('Name required.','e');return;}
-  authFetch(BACKEND+'/api/cl/referral-sources',{method:'POST',body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(d){
-    if(d.error){T(d.error,'e');return;}
-    T('Referral source saved!');loadReferrals();
-  }).catch(function(){T('Failed.','e');});
-}
-
-// ── Reports ──────────────────────────────────────────────────────
-function loadReports(){
-  document.getElementById('mainContent').innerHTML='<div class="stat-grid">'
-    +stat('Report: Lead Conversion','','')
-    +stat('Report: Move-in Pipeline','','')
-    +stat('Report: Occupancy Trend','','')
-    +'</div>'
-    +'<div class="card"><div class="card-hd"><div class="card-title">Reports Center</div></div>'
-    +'<div style="display:flex;flex-direction:column;gap:12px">'
-    +'<button class="btn btn-ghost" onclick="T(\'Report generating…\')">📊 Lead-to-Move-In Conversion Report</button>'
-    +'<button class="btn btn-ghost" onclick="T(\'Report generating…\')">📊 Referral Source ROI Report</button>'
-    +'<button class="btn btn-ghost" onclick="T(\'Report generating…\')">📊 Occupancy Trend (90 days)</button>'
-    +'<button class="btn btn-ghost" onclick="T(\'Report generating…\')">📊 Outreach Mileage Summary</button>'
-    +(USER.crm_tier==='cl_max'?'<button class="btn btn-ghost" onclick="T(\'Report generating…\')">📊 Revenue & Leakage Report</button><button class="btn btn-ghost" onclick="T(\'Report generating…\')">📊 Portfolio Performance</button>':'')
-    +'</div></div>';
-}
-
-// ── Users & Settings ─────────────────────────────────────────────
-function loadUsers(){
-  if(!isAdmin()){document.getElementById('mainContent').innerHTML='<div class="card"><p style="color:#6b7fa3">Admin access required.</p></div>';return;}
-  // Would load from /api/users in production
-  document.getElementById('mainContent').innerHTML='<div class="card"><div class="card-hd"><div class="card-title">Users & Seats</div></div>'
-    +'<p style="color:#6b7fa3;font-size:13px;margin-bottom:16px">Manage your team. Seat limits apply based on your CommunityLink plan.</p>'
-    +'<div style="background:#0d1f38;border-radius:10px;padding:14px;margin-bottom:16px">'
-    +'<div style="font-size:11px;color:#4b6278;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Your Plan</div>'
-    +'<div style="font-size:14px;font-weight:800;color:#f59e0b">'+capitalize(USER.crm_tier||'cl_pro').replace('cl_','CL ')+'</div>'
-    +'<div style="font-size:11px;color:#6b7fa3;margin-top:2px">'+(USER.crm_tier==='cl_pro'?'Up to 5 users':USER.crm_tier==='cl_gold'?'Up to 15 users':'Up to 30 users')+'</div>'
-    +'</div>'
-    +'<a href="https://api.wemarketplus.com/api/billing/portal" style="display:inline-block;background:rgba(61,158,232,.12);border:1px solid rgba(61,158,232,.2);color:#3d9ee8;padding:8px 16px;border-radius:999px;font-size:12px;font-weight:700;text-decoration:none">Manage Billing → Stripe Portal</a>'
-    +'</div>';
-}
-
-function loadSettings(){
-  if(!isAdmin()){document.getElementById('mainContent').innerHTML='<div class="card"><p style="color:#6b7fa3">Admin access required.</p></div>';return;}
-  document.getElementById('mainContent').innerHTML='<div class="card"><div class="card-hd"><div class="card-title">Admin Settings</div></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Community Name</div><input class="inp" id="setCommunity" value="'+escH(USER.community_name||'')+'" placeholder="Sunrise Senior Living"></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Address</div><input class="inp" id="setAddr" placeholder="1234 Oak Drive, Dallas TX 75201"></div>'
-    +'<div class="inp-group"><div class="inp-wrap"><div class="inp-label">Total Units</div><input class="inp" type="number" id="setUnits" placeholder="120"></div>'
-    +'<div class="inp-wrap"><div class="inp-label">Care Types</div><select class="inp" id="setCare" multiple><option>IL</option><option>AL</option><option>MC</option></select></div></div>'
-    +'<div style="margin-bottom:16px;padding:14px;background:#0d1f38;border-radius:10px">'
-    +'<div style="font-size:11px;font-weight:800;color:#f59e0b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Stripe Payment Links</div>'
-    +'<div class="inp-wrap"><div class="inp-label">CL Pro Link (for future upgrades)</div><input class="inp" id="clStripeProLink" placeholder="https://buy.stripe.com/…"></div>'
-    +'<div class="inp-wrap"><div class="inp-label">CL Gold Link</div><input class="inp" id="clStripeGoldLink" placeholder="https://buy.stripe.com/…"></div>'
-    +'<div class="inp-wrap"><div class="inp-label">CL Max Link</div><input class="inp" id="clStripeMaxLink" placeholder="https://buy.stripe.com/…"></div>'
-    +'<p style="font-size:11px;color:#4b6278">Stripe links are configured in the backend. Contact support@wemarketplus.com to update payment links.</p>'
-    +'</div>'
-    +'<button class="btn btn-amber" onclick="T(\'Settings saved!\')">Save Settings</button>'
-    +'</div>';
-}
-
-// ── Helpers ──────────────────────────────────────────────────────
-function escH(s){if(!s&&s!==0)return '';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function capitalize(s){if(!s)return '';return s.charAt(0).toUpperCase()+s.slice(1);}
-function isAdmin(){return USER.role==='admin'||USER.role==='director'||USER.role==='owner';}
-function isMax(){return USER.crm_tier==='cl_max';}
-function isGold(){return USER.crm_tier==='cl_gold'||USER.crm_tier==='cl_max';}
-
-function requireMax(fn){
-  if(!isMax()){
-    document.getElementById('mainContent').innerHTML='<div class="card"><div style="text-align:center;padding:40px 0">'
-      +'<div style="font-size:36px;margin-bottom:12px">📊</div>'
-      +'<h3 style="color:#f4f8ff;margin-bottom:8px">CommunityLink Max Required</h3>'
-      +'<p style="color:#6b7fa3;font-size:13px;margin-bottom:16px">This feature is available on the CommunityLink Max plan ($1,999/mo).</p>'
-      +'<a href="../index.html#cl-pricing" style="display:inline-block;background:#4fc87a;color:#06080e;padding:10px 24px;border-radius:999px;font-size:13px;font-weight:800;text-decoration:none">Upgrade to Max</a>'
-      +'</div></div>';
-    return;
-  }
-  fn();
-}
-
-function renderSimpleForm(key, title, subTitle, fields, saveFunc){
-  var html='<div class="card"><div class="card-hd"><div class="card-title">'+title+'</div></div>'
-    +'<p style="color:#6b7fa3;font-size:13px;margin-bottom:16px">'+subTitle+'</p>';
-  fields.forEach(function(f){
-    html+='<div class="inp-wrap"><div class="inp-label">'+f.label+'</div>';
-    if(f.type==='select'){html+='<select class="inp" id="'+f.id+'">'+f.opts.map(function(o){return'<option>'+o+'</option>';}).join('')+'</select>';}
-    else if(f.type==='textarea'){html+='<textarea class="inp" id="'+f.id+'" rows="3" placeholder="'+escH(f.ph||'')+'"></textarea>';}
-    else{html+='<input class="inp" id="'+f.id+'" type="'+f.type+'" placeholder="'+escH(f.ph||'')+'">';}
-    html+='</div>';
-  });
-  html+='<button class="btn btn-amber" onclick="'+saveFunc+'()">Save</button></div>';
-  document.getElementById('mainContent').innerHTML=html;
-}
-
-// ── Boot ─────────────────────────────────────────────────────────
-function boot() {
-  if (!TOKEN) { logout(); return; }
-  // Decode JWT to get user info
-  try {
-    var payload = JSON.parse(atob(TOKEN.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
-    USER = {
-      user_id:  payload.user_id,
-      tenant_id: payload.tenant_id,
-      email:    payload.email,
-      role:     payload.role,
-      crm_tier: payload.crm_tier,
-      first_name: payload.first_name,
-      last_name:  payload.last_name,
-    };
-  } catch(e) { logout(); return; }
-
-  // Validate this is a CommunityLink account
-  var tier = USER.crm_tier || '';
-  if (!tier.startsWith('cl_')) {
-    // Might be using hl_ token — redirect to HL CRM
-    window.location.href = '../login.html';
+const BACKEND = 'https://api.wemarketplus.com';
+
+function doLogin(){
+  const email = document.getElementById('emailIn').value.trim();
+  const pass = document.getElementById('passIn').value;
+  const err = document.getElementById('errMsg');
+  err.style.display='none';
+
+  if(!email || !pass){
+    err.textContent='Please enter your email and password.';
+    err.style.display='block';
     return;
   }
 
-  // Update sidebar UI
-  var roleLabelMap = {admin:'Administrator',marketer:'Sales Marketer',director:'Executive Director',maintenance:'Maintenance',housekeeping:'Housekeeping',owner:'Owner/Investor'};
-  document.getElementById('sbRoleBadge').textContent = roleLabelMap[USER.role] || USER.role;
-  document.getElementById('sbName').textContent = (USER.first_name||'') + ' ' + (USER.last_name||'');
-  document.getElementById('sbEmail').textContent = USER.email || '';
-  var initials = ((USER.first_name||'?')[0] + (USER.last_name||'?')[0]).toUpperCase();
-  document.getElementById('sbAvatar').textContent = initials;
+  const btn = document.querySelector('.btn-login');
+  btn.textContent='Signing in…';
+  btn.disabled=true;
 
-  // Tier badge
-  var tierLabels = {cl_pro:'CL Pro',cl_gold:'CL Gold',cl_max:'CL Max'};
-  document.getElementById('tierBadge').textContent = tierLabels[tier] || tier;
+  // Set a timeout — Render cold starts can take 30-60s
+  const controller = new AbortController();
+  const timeoutId  = setTimeout(() => controller.abort(), 45000);
+  const warmupId   = setTimeout(() => showWarmingUp('loginCard'), 8000);
 
-  // Load community name
-  authFetch(BACKEND+'/api/cl/dashboard').then(function(r){return r.json();}).then(function(d){
-    document.getElementById('sbTenantName').textContent = d.community_name || 'My Community';
-    document.getElementById('pageSub').textContent = (d.community_name||'My Community') + ' — ' + new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'});
-    USER.community_name = d.community_name;
-  }).catch(function(){
-    document.getElementById('sbTenantName').textContent = 'My Community';
-    document.getElementById('pageSub').textContent = new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  fetch(BACKEND+'/api/auth/login',{
+    method:      'POST',
+    headers:     {'Content-Type':'application/json'},
+    credentials: 'include',
+    signal:      controller.signal,
+    body:        JSON.stringify({email, password:pass})
+  })
+  .then(r => {
+    clearTimeout(timeoutId); clearTimeout(warmupId); hideWarmingUp('loginCard');
+    if (!r.ok && r.status !== 200) {
+      return r.json().then(d => { throw { status: r.status, message: d.error || 'Login failed.' }; });
+    }
+    return r.json();
+  })
+  .then(data => {
+    if (!data.token && data.code !== 'TENANT_SUSPENDED') {
+      showError(data.error || data.message || 'Login failed. Check your credentials.');
+      btn.textContent = 'Sign In';
+      btn.disabled = false;
+      return;
+    }
+    // Suspended account: store limited token and redirect to recovery
+    if (data.code === 'TENANT_SUSPENDED' && data.token && data.recovery_url) {
+      localStorage.setItem('hl_token', data.token);
+      localStorage.setItem('hl_suspended', 'true');
+      window.location.href = data.recovery_url;
+      return;
+    }
+
+    // Handle forced password change (invited users)
+    if (data.must_change_password) {
+      localStorage.setItem('hl_token', data.token); // FIX #7: localStorage persists across tabs/restarts
+      localStorage.setItem('hl_user', JSON.stringify(data.user || { email }));
+      window.location.href = 'change-password.html?required=1';
+      return;
+    }
+
+    // Store real session
+    localStorage.setItem('hl_token', data.token); // FIX #7: localStorage persists across tabs/restarts
+    localStorage.setItem('hl_user', JSON.stringify(data.user || {}));
+
+    // Redirect based on product + tier
+    const product = data.user?.product || 'hospicelink';
+    const tier    = data.user?.crm_tier || 'cl_pro';
+    let dest;
+    if (product === 'communitylink') {
+      localStorage.setItem('cl_token', data.token);
+      // Route to correct CL CRM based on tier
+      if (tier === 'cl_max') dest = 'communitylink-crm-max.html';
+      else if (tier === 'cl_gold') dest = 'communitylink-crm-gold.html';
+      else dest = 'communitylink-crm-pro.html';
+    } else {
+      // HospiceLink — redirect to correct HL CRM
+      dest = '../' + (tier === 'gold' ? 'crm-gold.html' : tier === 'max' ? 'crm-max.html' : 'crm-pro.html');
+    }
+    window.location.href = dest;
+  })
+  .catch(err => {
+    clearTimeout(timeoutId); clearTimeout(warmupId); hideWarmingUp('loginCard');
+    btn.textContent = 'Sign In';
+    btn.disabled = false;
+
+    if (err.name === 'AbortError') {
+      showError('Connection timed out. The server may be starting up — please try again in 30 seconds.');
+      return;
+    }
+    if (err.status === 401) { showError('Incorrect email or password.'); return; }
+    if (err.status === 403) {
+      if (err.code === 'TENANT_SUSPENDED' && err.token && err.recovery_url) {
+        // Store limited token so subscription-status.html can call billing portal
+        localStorage.setItem('hl_token', err.token);
+        localStorage.setItem('hl_suspended', 'true');
+        window.location.href = err.recovery_url;
+        return;
+      }
+      showError('Account suspended or cancelled.');
+      var errEl = document.getElementById('errMsg');
+      if (errEl) {
+        errEl.innerHTML = 'Account suspended or cancelled. <a href="subscription-status.html" style="color:#49b6ff;font-weight:700">Manage your subscription</a> to restore access.';
+      }
+      return;
+    }
+    if (err.status === 429) { showError('Too many login attempts. Please wait and try again.'); return; }
+    if (err.status >= 500)  { showError('Server error. Please try again in a moment.'); return; }
+
+    // Network failure — never fake a login
+    showError('Unable to connect. Please check your internet connection and try again.');
   });
-
-  buildNav();
-  showSection('dashboard');
 }
 
-document.addEventListener('DOMContentLoaded', boot);
+
+// FIX #18: Render cold-start reassurance — shown after 8s of waiting
+function showWarmingUp(containerId, cancelFn) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  var msg = document.createElement('div');
+  msg.id  = containerId + '_warming';
+  msg.style.cssText = 'margin-top:14px;padding:12px 16px;background:rgba(73,182,255,.08);border:1px solid rgba(73,182,255,.2);border-radius:10px;font-size:13px;color:#8b9fc4;text-align:center;line-height:1.6';
+  msg.innerHTML = '<div style="color:#49b6ff;font-weight:700;margin-bottom:4px">⏳ Starting up…</div>' +
+    'HospiceLink is spinning up its secure servers. This takes up to 30 seconds on first load.<br>' +
+    '<span style="color:#f4f8ff;font-weight:600">Your information is safe — please wait.</span>';
+  el.appendChild(msg);
+  return msg;
+}
+function hideWarmingUp(containerId) {
+  var el = document.getElementById(containerId + '_warming');
+  if (el && el.parentNode) el.parentNode.removeChild(el);
+}
+
+function showError(msg){
+  const err=document.getElementById('errMsg');
+  err.textContent=msg;
+  err.style.display='block';
+}
+
+// Enter key
+document.addEventListener('DOMContentLoaded',()=>{
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Enter') doLogin();
+  });
+});
 </script>
 </body>
 </html>
