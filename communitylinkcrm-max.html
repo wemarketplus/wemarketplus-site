@@ -107,15 +107,15 @@ textarea.fi{resize:vertical;min-height:72px}
 <script>
 (function(){
   var tok = localStorage.getItem('cl_token') || localStorage.getItem('hl_token') || '';
-  if(!tok){ window.location.href = 'login.html'; return; }
+  if(!tok){ window.location.href = 'communitylink login.html'; return; }
   try {
     var p = JSON.parse(atob(tok.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
     var tier = (p.crm_tier||'cl_pro').toLowerCase();
-    if(!tier.startsWith('cl_')){ window.location.href = '../login.html'; return; }
+    if(!tier.startsWith('cl_')){ window.location.href = 'communitylink login.html'; return; }
     var page = window.location.pathname.split('/').pop();
-    var correct = tier==='cl_max'?'communitylink-crm-max.html':tier==='cl_gold'?'communitylink-crm-gold.html':'communitylink-crm-pro.html';
+    var correct = tier==='cl_max'?'communitylinkcrm-max.html':tier==='cl_gold'?'communitylinkcrm-gold.html':'communitylinkcrm-pro.html';
     if(page !== correct){ window.location.replace(correct); }
-  } catch(e){ localStorage.removeItem('cl_token'); window.location.href = 'login.html'; }
+  } catch(e){ localStorage.removeItem('cl_token'); window.location.href = 'communitylink login.html'; }
 })();
 </script>
 
@@ -143,7 +143,7 @@ textarea.fi{resize:vertical;min-height:72px}
   </div>
   <nav class="sb-nav" id="sideNav"></nav>
   <div class="sb-foot">
-    <a href="../index.html" class="back-btn">← We Market Plus</a>
+    <a href="index.html" class="back-btn">← We Market Plus</a>
   </div>
 </aside>
 
@@ -555,7 +555,7 @@ textarea.fi{resize:vertical;min-height:72px}
   <div style="font-size:13px;color:#c8d6e8;margin-bottom:8px">Plan: <strong style="color:#4fc87a">CommunityLink Max — $1,999/month</strong></div>
   <div style="display:flex;gap:8px">
     <button class="btn btn-a" onclick="openBillingPortal()">Manage Billing</button>
-    <a href="../index.html#cl-pricing" class="btn btn-x" style="text-decoration:none">Upgrade Plan</a>
+    <a href="mailto:info@wemarketplus.com?subject=CommunityLink Enterprise" class="btn btn-x" style="text-decoration:none">Contact Sales</a>
   </div>
 </div>
 <div class="card">
@@ -757,11 +757,456 @@ textarea.fi{resize:vertical;min-height:72px}
 </div><!-- end main -->
 </div><!-- end layout -->
 
+<!-- ═══════════════════════════════════════════════════════════════
+     AIRCALL TAB — Call · Text · Email  (CommunityLink Max Exclusive)
+     Injected as a real .tab div; shown/hidden by showTab()
+     ═══════════════════════════════════════════════════════════════ -->
+<style>
+.ac-ch-btn{padding:7px 18px;border-radius:999px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.05);color:#8ba4c4;font-family:inherit;transition:background .12s,color .12s}
+.ac-ch-btn.ac-on{background:linear-gradient(135deg,#f59e0b,#d97706);color:#06080e;border-color:transparent}
+.ac-thread-u{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);border-radius:10px 10px 3px 10px;padding:8px 12px;font-size:12px;color:#f4f8ff;max-width:82%;align-self:flex-end;margin-left:auto}
+.ac-thread-b{background:#071120;border:1px solid rgba(255,255,255,.08);border-radius:10px 10px 10px 3px;padding:8px 12px;font-size:12px;color:#c8d6e8;max-width:82%}
+</style>
+
+<div class="tab" id="tab-aircall">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:18px">
+  <div>
+    <div class="sec-h">📞 Aircall — Call · Text · Email</div>
+    <div class="sec-sub">Reach leads and referral partners directly from CommunityLink. Every interaction auto-logged.</div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <span style="background:rgba(79,200,122,.1);border:1px solid rgba(79,200,122,.25);border-radius:999px;padding:4px 12px;font-size:11px;font-weight:800;color:#4fc87a">🚀 Max Exclusive</span>
+    <span id="acConnStatus" style="background:rgba(79,200,122,.08);border:1px solid rgba(79,200,122,.2);border-radius:999px;padding:4px 12px;font-size:11px;font-weight:800;color:#4fc87a">● Connected</span>
+  </div>
+</div>
+
+<!-- Channel switcher -->
+<div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;align-items:center">
+  <button id="acBtn-call"  class="ac-ch-btn ac-on" onclick="acChannel('call')">📞 Call</button>
+  <button id="acBtn-text"  class="ac-ch-btn"        onclick="acChannel('text')">💬 Text</button>
+  <button id="acBtn-email" class="ac-ch-btn"         onclick="acChannel('email')">✉️ Email</button>
+  <div style="flex:1"></div>
+  <button class="btn btn-x btn-sm" onclick="acRefreshLog()">↻ Refresh Log</button>
+</div>
+
+<!-- ── CALL PANEL ─────────────────────────────────────── -->
+<div id="acPanel-call">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+  <div>
+    <div class="card">
+      <div class="card-h"><div class="card-t">📞 Make a Call</div></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="fl"><div class="flb">Contact</div>
+          <select class="fi" id="acCallContact" onchange="acFillCallPhone()">
+            <option value="">— Select lead or referral partner —</option>
+            <optgroup label="Hot Leads">
+              <option value="Dorothy Harrison|(214)555-0142">Dorothy Harrison · (214)555-0142</option>
+              <option value="Gloria Tran|(469)555-0391">Gloria Tran · (469)555-0391</option>
+              <option value="Edna Michaels|(214)555-0567">Edna Michaels · (214)555-0567</option>
+            </optgroup>
+            <optgroup label="Referral Partners">
+              <option value="Dr. Amanda Chen|(214)555-0181">Dr. Amanda Chen — Dallas Medical Group · (214)555-0181</option>
+              <option value="Sarah Kim RN|(214)555-0182">Sarah Kim RN — Parkland Hospital · (214)555-0182</option>
+              <option value="Tom Walsh SW|(214)555-0183">Tom Walsh SW — Methodist Senior Care · (214)555-0183</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="fl"><div class="flb">Phone Number</div><input class="fi" id="acCallPhone" type="tel" placeholder="(214) 555-0000"></div>
+        <div class="fl"><div class="flb">Call Purpose</div>
+          <select class="fi" id="acCallPurpose">
+            <option>Lead Follow-Up</option>
+            <option>Tour Confirmation</option>
+            <option>Move-In Coordination</option>
+            <option>Referral Partner Touch-Base</option>
+            <option>Proposal Discussion</option>
+            <option>Objection Handling</option>
+            <option>Family / POA Outreach</option>
+          </select>
+        </div>
+        <div class="fl"><div class="flb">Pre-Call Notes</div><textarea class="fi" id="acCallNotes" rows="2" placeholder="Key points to cover…"></textarea></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-a" style="flex:1" onclick="acStartCall()">📞 Call via Aircall</button>
+          <button class="btn btn-x btn-sm" onclick="T('Call scheduled in calendar','w')">🗓 Schedule</button>
+        </div>
+      </div>
+    </div>
+    <!-- Live call widget -->
+    <div id="acLiveCall" style="display:none" class="card">
+      <div style="background:rgba(79,200,122,.06);border:1px solid rgba(79,200,122,.25);border-radius:12px;padding:16px;text-align:center">
+        <div style="font-size:32px;margin-bottom:4px">📞</div>
+        <div id="acLiveCallName" style="font-size:15px;font-weight:900;color:#4fc87a;margin-bottom:2px">—</div>
+        <div id="acLiveCallTimer" style="font-size:13px;color:#4b6278;margin-bottom:12px">0:00</div>
+        <div style="display:flex;gap:8px;justify-content:center">
+          <button id="acMuteBtn" class="btn btn-x btn-sm" onclick="acToggleMute()">🎙 Mute</button>
+          <button class="btn btn-x btn-sm" onclick="T('Transferring call…')">↗ Transfer</button>
+          <button class="btn btn-r btn-sm" onclick="acEndCall()">⬛ End</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="card">
+      <div class="card-h"><div class="card-t">📋 Post-Call Log</div></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="fl"><div class="flb">Outcome</div>
+          <select class="fi" id="acCallOutcome">
+            <option value="">Select outcome…</option>
+            <option>Connected — tour scheduled</option>
+            <option>Connected — follow-up set</option>
+            <option>Connected — move-in advancing</option>
+            <option>Left voicemail</option>
+            <option>No answer — will retry</option>
+            <option>Referral committed</option>
+            <option>Not interested at this time</option>
+          </select>
+        </div>
+        <div class="fl"><div class="flb">Next Action</div><input class="fi" id="acCallNext" placeholder="e.g. Send proposal, confirm tour date…"></div>
+        <div class="fl"><div class="flb">Follow-Up Date</div><input class="fi" type="date" id="acCallFollowDate"></div>
+        <div class="fl"><div class="flb">Summary</div><textarea class="fi" id="acCallSummary" rows="3" placeholder="What was discussed, decisions, commitments…"></textarea></div>
+        <button class="btn btn-g" onclick="acSaveCallLog()">💾 Save Log + Queue Follow-Up</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ── TEXT PANEL ─────────────────────────────────────── -->
+<div id="acPanel-text" style="display:none">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+  <div>
+    <div class="card">
+      <div class="card-h"><div class="card-t">💬 Send Text Message</div></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="fl"><div class="flb">To</div>
+          <select class="fi" id="acTextContact" onchange="acFillTextPhone()">
+            <option value="">— Select contact —</option>
+            <optgroup label="Leads / Family">
+              <option value="Dorothy Harrison|(214)555-0142">Dorothy Harrison</option>
+              <option value="Gloria Tran|(469)555-0391">Gloria Tran</option>
+              <option value="Walter Simmons|(972)555-0278">Walter Simmons</option>
+            </optgroup>
+            <optgroup label="Referral Partners">
+              <option value="Dr. Amanda Chen|(214)555-0181">Dr. Amanda Chen</option>
+              <option value="Sarah Kim RN|(214)555-0182">Sarah Kim RN</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="fl"><div class="flb">Phone</div><input class="fi" id="acTextPhone" type="tel" placeholder="(214) 555-0000"></div>
+        <div class="fl"><div class="flb">Quick Templates</div>
+          <select class="fi" onchange="acApplyTextTemplate(this)">
+            <option value="">— Insert template —</option>
+            <option value="Hi {name}! This is {counselor} from Sunrise Senior Living. We have a lovely unit available that would be perfect for your family member. Would you like to schedule a tour this week?">Tour Invite</option>
+            <option value="Hi {name}, just following up on your recent inquiry. I'd love to connect — are you available for a quick call or a tour visit?">Inquiry Follow-Up</option>
+            <option value="Hi {name}, this is {counselor} — confirming your tour tomorrow at {time}. We're so excited to show you around! See you then.">Tour Reminder</option>
+            <option value="Hi {name}, thank you for thinking of us! We'd love to help your patient/client find a great home. Let's connect soon.">Referral Thanks</option>
+            <option value="Hi {name}, just wanted to check in. We have availability across all care levels and would love to reconnect with you.">Re-Engagement</option>
+          </select>
+        </div>
+        <div class="fl">
+          <div class="flb">Message <span id="acTextCount" style="color:#4b6278;font-weight:400">0/160</span></div>
+          <textarea class="fi" id="acTextBody" rows="5" placeholder="Type message…" oninput="document.getElementById('acTextCount').textContent=this.value.length+'/160'"></textarea>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-a" style="flex:1" onclick="acSendText()">💬 Send via Aircall</button>
+          <button class="btn btn-x btn-sm" onclick="T('Text scheduled','w')">🗓 Schedule</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="card">
+      <div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#f59e0b">
+        ⚠ <strong>Privacy reminder:</strong> Use first names only in texts. Do not include financial or health details. All texts are logged.
+      </div>
+      <div class="card-h" style="margin-bottom:10px"><div class="card-t">📊 Text Activity — 7 Days</div></div>
+      <div style="display:flex;flex-direction:column;gap:0">
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="font-size:12px;color:#8ba4c4">Texts Sent</span><span style="font-weight:800;color:#f4f8ff">18</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="font-size:12px;color:#8ba4c4">Replies Received</span><span style="font-weight:800;color:#4fc87a">11</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="font-size:12px;color:#8ba4c4">Response Rate</span><span style="font-weight:800;color:#4fc87a">61%</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0"><span style="font-size:12px;color:#8ba4c4">Tours Booked via Text</span><span style="font-weight:800;color:#f59e0b">3</span></div>
+      </div>
+      <div style="margin-top:14px">
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:#1e3a5f;letter-spacing:.08em;margin-bottom:8px">Last Thread — Dorothy Harrison</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div class="ac-thread-u">Hi Dorothy! This is Sarah from Sunrise Senior Living. We'd love to confirm your tour for Friday at 10am — does that still work?</div>
+          <div class="ac-thread-b">Yes, that works perfectly! James (my son) will be joining me. Looking forward to it!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ── EMAIL PANEL ────────────────────────────────────── -->
+<div id="acPanel-email" style="display:none">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+  <div>
+    <div class="card">
+      <div class="card-h"><div class="card-t">✉️ Compose Email</div></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="fl"><div class="flb">To</div>
+          <select class="fi" id="acEmailContact" onchange="acFillEmailAddr()">
+            <option value="">— Select contact —</option>
+            <optgroup label="Leads / Family">
+              <option value="Dorothy Harrison|jharrison.poa@email.com">Dorothy Harrison (POA — James)</option>
+              <option value="Gloria Tran|gtran.family@email.com">Gloria Tran (Family Contact)</option>
+              <option value="Walter Simmons|wsimmons@email.com">Walter Simmons</option>
+            </optgroup>
+            <optgroup label="Referral Partners">
+              <option value="Dr. Amanda Chen|a.chen@dallasmedical.com">Dr. Amanda Chen</option>
+              <option value="Sarah Kim RN|s.kim@parkland.org">Sarah Kim RN — Parkland Hospital</option>
+              <option value="Tom Walsh SW|t.walsh@methodist.org">Tom Walsh SW — Methodist</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="fl"><div class="flb">Email Address</div><input class="fi" id="acEmailAddr" type="email" placeholder="contact@email.com"></div>
+        <div class="fl"><div class="flb">CC (optional)</div><input class="fi" id="acEmailCC" type="email" placeholder="director@community.com"></div>
+        <div class="fl"><div class="flb">Template</div>
+          <select class="fi" onchange="acApplyEmailTemplate(this)">
+            <option value="">— Use template —</option>
+            <option value="tour-confirm">Tour Confirmation</option>
+            <option value="proposal">Proposal / Rate Sheet</option>
+            <option value="thank-referral">Thank You — Referral Partner</option>
+            <option value="follow-up">General Follow-Up</option>
+            <option value="move-in-prep">Move-In Preparation</option>
+            <option value="cold-re-engage">Cold Lead Re-Engagement</option>
+          </select>
+        </div>
+        <div class="fl"><div class="flb">Subject</div><input class="fi" id="acEmailSubject" placeholder="Subject line…"></div>
+        <div class="fl"><div class="flb">Body</div><textarea class="fi" id="acEmailBody" rows="8" style="min-height:160px" placeholder="Email body…"></textarea></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-a" style="flex:1;min-width:110px" onclick="acSendEmail()">✉️ Send via Aircall</button>
+          <button class="btn btn-x btn-sm" onclick="T('Email scheduled','w')">🗓 Schedule</button>
+          <button class="btn btn-x btn-sm" onclick="T('Draft saved')">📄 Draft</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="card">
+      <div class="card-h" style="margin-bottom:10px"><div class="card-t">📊 Email Activity — 30 Days</div></div>
+      <div style="display:flex;flex-direction:column;gap:0">
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="font-size:12px;color:#8ba4c4">Emails Sent</span><span style="font-weight:800;color:#f4f8ff">54</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="font-size:12px;color:#8ba4c4">Open Rate</span><span style="font-weight:800;color:#4fc87a">68%</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="font-size:12px;color:#8ba4c4">Reply Rate</span><span style="font-weight:800;color:#4fc87a">41%</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0"><span style="font-size:12px;color:#8ba4c4">Move-Ins Attributed</span><span style="font-weight:800;color:#f59e0b">4</span></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:0">
+      <div class="card-h" style="margin-bottom:10px"><div class="card-t">📬 Recent Emails</div></div>
+      <div id="acEmailLog">
+        <div style="padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+          <div style="display:flex;justify-content:space-between"><strong style="font-size:12px;color:#f4f8ff">Dorothy Harrison (POA)</strong><span class="badge bg" style="font-size:10px">Replied</span></div>
+          <div style="font-size:11px;color:#4b6278;margin-top:2px">Tour Confirmation — Fri 10am · 1 day ago</div>
+        </div>
+        <div style="padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+          <div style="display:flex;justify-content:space-between"><strong style="font-size:12px;color:#f4f8ff">Dr. Amanda Chen</strong><span class="badge ba" style="font-size:10px">Opened</span></div>
+          <div style="font-size:11px;color:#4b6278;margin-top:2px">Thank You — Referral Partner · 3 days ago</div>
+        </div>
+        <div style="padding:9px 0">
+          <div style="display:flex;justify-content:space-between"><strong style="font-size:12px;color:#f4f8ff">Walter Simmons</strong><span class="badge bx" style="font-size:10px">Sent</span></div>
+          <div style="font-size:11px;color:#4b6278;margin-top:2px">General Follow-Up · 5 days ago</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ── ACTIVITY LOG (shared) ────────────────────────── -->
+<div class="card" style="margin-top:6px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <div class="card-t">📋 Aircall Activity Log</div>
+    <span style="font-size:11px;color:#4b6278">All interactions logged automatically</span>
+  </div>
+  <div style="overflow-x:auto">
+  <table class="tbl">
+    <thead><tr><th>Type</th><th>Contact</th><th>Direction</th><th>Duration / Status</th><th>Team Member</th><th>Logged</th><th>Outcome</th></tr></thead>
+    <tbody id="acLogBody">
+      <tr><td><span class="badge bb">📞 Call</span></td><td><strong style="color:#f4f8ff">Dorothy Harrison</strong><br><small style="color:#4b6278">Lead — IL</small></td><td>↗ Outbound</td><td>5m 18s</td><td>Sarah M.</td><td>Today 10:22am</td><td><span class="badge bg">Tour confirmed</span></td></tr>
+      <tr><td><span class="badge ba">💬 Text</span></td><td><strong style="color:#f4f8ff">Gloria Tran</strong><br><small style="color:#4b6278">Lead — MC</small></td><td>↗ Outbound</td><td>Delivered</td><td>Sarah M.</td><td>Yesterday 3:15pm</td><td><span class="badge bg">Replied</span></td></tr>
+      <tr><td><span class="badge bx">✉️ Email</span></td><td><strong style="color:#f4f8ff">Dr. Amanda Chen</strong><br><small style="color:#4b6278">Referral Partner</small></td><td>↗ Outbound</td><td>Opened</td><td>Sarah M.</td><td>2 days ago</td><td><span class="badge ba">No reply yet</span></td></tr>
+      <tr><td><span class="badge bb">📞 Call</span></td><td><strong style="color:#f4f8ff">Sarah Kim RN</strong><br><small style="color:#4b6278">Referral Partner</small></td><td>↙ Inbound</td><td>3m 47s</td><td>Admin</td><td>3 days ago</td><td><span class="badge bg">2 referrals sent</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ── Channel switcher ─────────────────────────────────────────
+  window.acChannel = function(ch){
+    ['call','text','email'].forEach(function(c){
+      var btn=document.getElementById('acBtn-'+c);
+      var panel=document.getElementById('acPanel-'+c);
+      if(btn) btn.className='ac-ch-btn'+(c===ch?' ac-on':'');
+      if(panel) panel.style.display=c===ch?'':'none';
+    });
+  };
+
+  // ── Prefill helpers ──────────────────────────────────────────
+  window.acFillCallPhone = function(){
+    var sel=document.getElementById('acCallContact'), ph=document.getElementById('acCallPhone');
+    if(sel&&ph) ph.value=sel.value.split('|')[1]||'';
+  };
+  window.acFillTextPhone = function(){
+    var sel=document.getElementById('acTextContact'), ph=document.getElementById('acTextPhone');
+    if(sel&&ph) ph.value=sel.value.split('|')[1]||'';
+  };
+  window.acFillEmailAddr = function(){
+    var sel=document.getElementById('acEmailContact'), em=document.getElementById('acEmailAddr');
+    if(sel&&em) em.value=sel.value.split('|')[1]||'';
+  };
+
+  // ── Text template ────────────────────────────────────────────
+  window.acApplyTextTemplate = function(sel){
+    var body=document.getElementById('acTextBody');
+    if(body&&sel.value){ body.value=sel.value; var c=document.getElementById('acTextCount'); if(c) c.textContent=body.value.length+'/160'; }
+  };
+
+  // ── Email templates ──────────────────────────────────────────
+  var EMAIL_TPL={
+    'tour-confirm':{subject:'Your Tour at Sunrise Senior Living is Confirmed!',body:'Dear [Name],\n\nWe\'re so excited to meet you! Your tour at Sunrise Senior Living is confirmed:\n\n📅 Date: [Date]\n🕙 Time: [Time]\n📍 Location: [Address]\n\nPlease bring any questions — our team will be ready to walk you through every detail.\n\nSee you soon!\n[Your Name] | [Title]\nSunrise Senior Living | [Phone]'},
+    'proposal':{subject:'Your Personalized Care & Pricing Overview',body:'Dear [Name],\n\nThank you for your interest in Sunrise Senior Living. Based on your conversation with our team, here is a personalized overview of our care options and pricing:\n\n[Insert care level details and rates here]\n\nWe\'d love to connect and answer any questions. Please reply to this email or call us anytime.\n\nWarmly,\n[Your Name] | [Phone]'},
+    'thank-referral':{subject:'Thank You for Your Referral!',body:'Dear [Name],\n\nThank you so much for your trust and referral! We truly appreciate the confidence you place in us.\n\nOur team is already following up and ensuring the family receives the best possible experience from day one.\n\nWith gratitude,\n[Your Name]\nSunrise Senior Living | [Phone]'},
+    'follow-up':{subject:'Following Up — Sunrise Senior Living',body:'Dear [Name],\n\nI just wanted to reach out and follow up from our last conversation. We\'re still thinking of you and would love to help your family find the right home.\n\nDo you have 10 minutes for a call this week? I\'m happy to answer any questions or schedule a tour at your convenience.\n\nBest,\n[Your Name] | [Phone]'},
+    'move-in-prep':{subject:'Welcome to Sunrise Senior Living — Move-In Details',body:'Dear [Name],\n\nWe are so thrilled to welcome [Resident Name] to Sunrise Senior Living! Here is everything you need to know before move-in day:\n\n📅 Move-In Date: [Date]\n🏠 Unit: [Unit Number and Type]\n🕙 Check-In Time: [Time]\n\nIf you have any questions or need anything before the big day, please don\'t hesitate to reach out.\n\nWith excitement,\n[Your Name] | [Phone]'},
+    'cold-re-engage':{subject:'We\'d Love to Reconnect — Sunrise Senior Living',body:'Dear [Name],\n\nIt\'s been a while since we last connected, and I wanted to personally reach out. We have some wonderful new availability and would love to show you what\'s new at Sunrise Senior Living.\n\nWould you be open to a quick call or a fresh tour? We\'d love the opportunity to reconnect.\n\nWarm regards,\n[Your Name] | [Phone]'}
+  };
+  window.acApplyEmailTemplate = function(sel){
+    var t=EMAIL_TPL[sel.value]; if(!t)return;
+    var s=document.getElementById('acEmailSubject'), b=document.getElementById('acEmailBody');
+    if(s) s.value=t.subject; if(b) b.value=t.body;
+  };
+
+  // ── Call actions ─────────────────────────────────────────────
+  var _callTimer=null, _callSecs=0, _muted=false;
+  window.acStartCall = function(){
+    var phone=(document.getElementById('acCallPhone')||{}).value;
+    var sel=document.getElementById('acCallContact');
+    var name=sel&&sel.value?sel.value.split('|')[0]:(phone||'Contact');
+    if(!phone){ T('Enter or select a phone number first','w'); return; }
+    fetch(BACKEND+'/api/aircall/calls',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({to:phone,contact_name:name,purpose:(document.getElementById('acCallPurpose')||{}).value||''})
+    }).then(function(r){return r.json();}).then(function(d){
+      if(d.error){ T(d.error,'e'); return; }
+      T('📞 Connecting to '+name+' via Aircall…');
+      var w=document.getElementById('acLiveCall');
+      var nm=document.getElementById('acLiveCallName');
+      var ti=document.getElementById('acLiveCallTimer');
+      if(w) w.style.display=''; if(nm) nm.textContent=name;
+      _callSecs=0; _muted=false;
+      if(_callTimer) clearInterval(_callTimer);
+      _callTimer=setInterval(function(){
+        _callSecs++;
+        var m=Math.floor(_callSecs/60),s=_callSecs%60;
+        if(ti) ti.textContent=m+':'+(s<10?'0':'')+s;
+      },1000);
+    }).catch(function(){ T('Could not connect to Aircall. Check integration settings.','e'); });
+  };
+  window.acEndCall = function(){
+    if(_callTimer) clearInterval(_callTimer);
+    var w=document.getElementById('acLiveCall'); if(w) w.style.display='none';
+    T('Call ended. Complete the post-call log below.');
+  };
+  window.acToggleMute = function(){
+    _muted=!_muted;
+    var btn=document.getElementById('acMuteBtn'); if(btn) btn.textContent=_muted?'🔇 Unmute':'🎙 Mute';
+    T(_muted?'Microphone muted':'Microphone active');
+  };
+  window.acSaveCallLog = function(){
+    var outcome=(document.getElementById('acCallOutcome')||{}).value;
+    if(!outcome){ T('Select a call outcome first','w'); return; }
+    var sel=document.getElementById('acCallContact');
+    var name=sel&&sel.value?sel.value.split('|')[0]:'Contact';
+    fetch(BACKEND+'/api/aircall/log',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({type:'call',contact_name:name,outcome:outcome,
+        summary:(document.getElementById('acCallSummary')||{}).value||'',
+        next_step:(document.getElementById('acCallNext')||{}).value||'',
+        follow_up_date:(document.getElementById('acCallFollowDate')||{}).value||null})
+    }).then(function(){ T('📞 Call log saved! Follow-up queued.'); acRefreshLog(); })
+      .catch(function(){ T('Save failed. Check connection.','e'); });
+  };
+
+  // ── Text actions ─────────────────────────────────────────────
+  window.acSendText = function(){
+    var phone=(document.getElementById('acTextPhone')||{}).value;
+    var body=(document.getElementById('acTextBody')||{}).value.trim();
+    var sel=document.getElementById('acTextContact');
+    var name=sel&&sel.value?sel.value.split('|')[0]:'Contact';
+    if(!phone){ T('Enter a phone number first','w'); return; }
+    if(!body)  { T('Message is required','w'); return; }
+    fetch(BACKEND+'/api/aircall/sms',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({to:phone,contact_name:name,body:body})
+    }).then(function(r){return r.json();}).then(function(d){
+      if(d.error){ T(d.error,'e'); return; }
+      T('💬 Text sent to '+name+'!');
+      var tb=document.getElementById('acTextBody'); if(tb) tb.value='';
+      acRefreshLog();
+    }).catch(function(){ T('Text failed. Check Aircall connection.','e'); });
+  };
+
+  // ── Email actions ────────────────────────────────────────────
+  window.acSendEmail = function(){
+    var to=(document.getElementById('acEmailAddr')||{}).value.trim();
+    var subject=(document.getElementById('acEmailSubject')||{}).value.trim();
+    var body=(document.getElementById('acEmailBody')||{}).value.trim();
+    var sel=document.getElementById('acEmailContact');
+    var name=sel&&sel.value?sel.value.split('|')[0]:'Contact';
+    if(!to)      { T('Enter a recipient email','w'); return; }
+    if(!subject) { T('Subject line required','w'); return; }
+    if(!body)    { T('Email body required','w'); return; }
+    fetch(BACKEND+'/api/aircall/email',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({to:to,contact_name:name,subject:subject,body:body,
+        cc:(document.getElementById('acEmailCC')||{}).value.trim()||null})
+    }).then(function(r){return r.json();}).then(function(d){
+      if(d.error){ T(d.error,'e'); return; }
+      T('✉️ Email sent to '+name+'!');
+      ['acEmailAddr','acEmailCC','acEmailSubject','acEmailBody'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+      acRefreshLog();
+    }).catch(function(){ T('Email failed. Check Aircall connection.','e'); });
+  };
+
+  // ── Log refresh ──────────────────────────────────────────────
+  window.acRefreshLog = function(){
+    fetch(BACKEND+'/api/aircall/log')
+      .then(function(r){return r.json();})
+      .then(function(d){
+        var rows=d.data||d||[];
+        var tb=document.getElementById('acLogBody');
+        if(!tb||!rows.length) return;
+        var icons={call:'📞 Call',text:'💬 Text',email:'✉️ Email'};
+        var cls={call:'bb',text:'ba',email:'bx'};
+        tb.innerHTML=rows.slice(0,20).map(function(r){
+          var rel=new Date(r.created_at||Date.now()).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+          return '<tr><td><span class="badge '+cls[r.type||'call']+'">'+icons[r.type||'call']+'</span></td>'
+            +'<td><strong style="color:#f4f8ff">'+r.contact_name+'</strong></td>'
+            +'<td>↗ Outbound</td>'
+            +'<td>'+(r.duration||r.status||'—')+'</td>'
+            +'<td>'+(r.user_name||'—')+'</td>'
+            +'<td>'+rel+'</td>'
+            +'<td><span class="badge bg">'+(r.outcome||'Logged')+'</span></td></tr>';
+        }).join('');
+      }).catch(function(){/* silent */});
+  };
+
+  // ── Init ─────────────────────────────────────────────────────
+  window.initAircall = function(){
+    acChannel('call');
+    acRefreshLog();
+  };
+})();
+</script>
+</div>
+<!-- ═══ END AIRCALL TAB ═══ -->
+
 <div id="tc"></div>
 
 <script>
 // ── Config ───────────────────────────────────────────────────────
 const BACKEND = 'https://api.wemarketplus.com';
+const CL_STRIPE_OWN     = 'https://buy.stripe.com/5kQ14odssbU31qTdJHfEk0t';
+const CL_STRIPE_UPGRADE = null; // Max plan — no higher tier
 const _origFetch = window.fetch;
 let _refreshing = null;
 
@@ -771,7 +1216,7 @@ async function refreshToken(){
   if(_refreshing) return _refreshing;
   _refreshing = _origFetch(BACKEND+'/api/auth/refresh',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'}})
     .then(async r=>{ if(!r.ok) throw new Error(); const d=await r.json(); if(d.token){localStorage.setItem('cl_token',d.token);return d.token;} throw new Error(); })
-    .catch(()=>{ localStorage.removeItem('cl_token'); window.location.href='login.html?reason=session_expired'; throw new Error(); })
+    .catch(()=>{ localStorage.removeItem('cl_token'); window.location.href='communitylink login.html'; throw new Error(); })
     .finally(()=>{ _refreshing=null; });
   return _refreshing;
 }
@@ -801,10 +1246,10 @@ function T(msg, type){
 
 // ── Role system ──────────────────────────────────────────────────
 const ROLE_TABS = {
-  admin:        ['dash','addlead','leads','addref','refs','tours','gps','mileage','outreach','tasks','notes','ai','apartments','makeready','maintenance','housekeeping','ledger','revenue','concessions','loc','competitors','reports','team','settings'],
-  director:     ['dash','apartments','leads','makeready','maintenance','housekeeping','ledger','revenue','concessions','reports'],
+  admin:        ['dash','addlead','leads','addref','refs','tours','gps','mileage','outreach','tasks','notes','ai','apartments','makeready','maintenance','housekeeping','ledger','revenue','concessions','loc','competitors','aircall','reports','team','settings'],
+  director:     ['dash','apartments','leads','makeready','maintenance','housekeeping','ledger','revenue','concessions','aircall','reports'],
   owner:        ['dash','ledger','revenue','concessions','competitors','reports'],
-  marketer:     ['dash','addlead','leads','addref','refs','tours','gps','mileage','outreach','tasks','notes','ai'],
+  marketer:     ['dash','addlead','leads','addref','refs','tours','gps','mileage','outreach','tasks','notes','ai','aircall'],
   maintenance:  ['dash','maintenance','makeready','tasks'],
   housekeeping: ['dash','housekeeping','makeready','tasks'],
 };
@@ -819,6 +1264,7 @@ const NAV_DEF = [
   { sec:'ACTIVITY',    items:[{id:'tasks',label:'Tasks'},{id:'notes',label:'Activity Notes'},{id:'ai',label:'AI Sales Assistant'}] },
   { sec:'OPERATIONS',  items:[{id:'apartments',label:'Apartment Inventory'},{id:'makeready',label:'Make-Ready Board'},{id:'maintenance',label:'Maintenance Tickets'},{id:'housekeeping',label:'Housekeeping Tasks'}] },
   { sec:'FINANCIAL',   items:[{id:'ledger',label:'Financial Ledger'},{id:'revenue',label:'Revenue Leakage'},{id:'concessions',label:'Concession Approvals'},{id:'loc',label:'LOC Pricing Calculator'},{id:'competitors',label:'Competitor Intel'}] },
+  { sec:'OUTREACH',    items:[{id:'aircall',label:'📞 Aircall — Call · Text · Email'}] },
   { sec:'ADMIN',       items:[{id:'reports',label:'Reports',adm:true},{id:'team',label:'Team Management',adm:true},{id:'settings',label:'Settings',adm:true}], adm:true },
 ];
 
@@ -864,6 +1310,7 @@ function showTab(id){
   if(id==='concessions') loadConcessions();
   if(id==='loc')         loadLOC();
   if(id==='competitors') loadCompetitors();
+  if(id==='aircall')     initAircall();
 }
 
 function setRole(role){
