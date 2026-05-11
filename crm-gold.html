@@ -202,7 +202,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 
   </nav>
   <div class="sb-foot">
-    <a href="/" class="back-btn">← Back to Website</a>
+    <a href="/" class="back-btn">← Back to the Website</a>
   </div>
 </aside>
 
@@ -216,13 +216,13 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 <div style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.28);border-radius:9px;padding:8px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
   <div style="display:flex;align-items:center;gap:8px">
     <span style="color:#ffd700;font-weight:800;font-size:12px">🏆 HospiceLink Gold — </span>
-    <span id="roleLabel" style="color:#ffd700;font-weight:800;font-size:12px">Marketer View</span>
+    <span id="roleLabel" style="color:#ffd700;font-weight:800;font-size:12px">Sales/Admissions View</span>
   </div>
   <span id="managePlanBtn" style="display:none"><a href="#" onclick="openBillingPortal(); return false;" style="background:linear-gradient(90deg,#ffd700,#ffec6e);color:#081426;border-radius:999px;padding:5px 14px;font-weight:900;font-size:12px;text-decoration:none">Manage Plan →</a></span>
 </div>
 
 <div style="background:rgba(73,182,255,.05);border:1px solid rgba(73,182,255,.15);border-radius:9px;padding:9px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-  <p style="margin:0;font-size:12px;color:#8b949e;flex:1"><strong style="color:#f4f8ff" id="roleDescName">Marketer</strong>: <span id="roleDescText"></span></p>
+  <p style="margin:0;font-size:12px;color:#8b949e;flex:1"><strong style="color:#f4f8ff" id="roleDescName">Sales/Admissions</strong>: <span id="roleDescText"></span></p>
   <a href="https://wemarketplus.com/#pricing" style="background:linear-gradient(90deg,#ffd700,#ffec6e);color:#081426;border-radius:999px;padding:6px 14px;font-weight:900;font-size:12px;text-decoration:none;flex-shrink:0">Get Started</a>
 </div>
 
@@ -335,7 +335,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 <div class="card">
   <input type="text" id="pxSearch" oninput="renderProspects()" placeholder="Search by name, phone, email…" style="margin-bottom:10px;background:#0f1e35;border:1px solid rgba(73,182,255,.2);color:#e8f0fc;border-radius:8px;padding:8px 10px;width:100%;font-size:12px;outline:none">
   <div style="overflow-x:auto">
-  <table class="tbl"><thead><tr><th>Name</th><th>Status</th><th>Phone</th><th>Email</th><th>Source</th><th>Marketer</th><th>Next Step</th><th>Due</th><th>Actions</th></tr></thead>
+  <table class="tbl"><thead><tr><th>Name</th><th>Status</th><th>Phone</th><th>Email</th><th>Source</th><th>Sales/Admissions</th><th>Next Step</th><th>Due</th><th>Actions</th></tr></thead>
   <tbody id="pxTable"></tbody></table>
   </div>
 </div>
@@ -591,15 +591,15 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
     <div class="g2" style="margin-bottom:10px">
       <div class="field"><label>Full Name</label><input type="text" placeholder="Jane Smith" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#f0f5ff"></div>
       <div class="field"><label>Email</label><input type="email" placeholder="jane@agency.com" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#f0f5ff"></div>
-      <div class="field" style="grid-column:1/-1"><label>Role</label><select style="background:#0a1628;border:1px solid rgba(73,182,255,.3);color:#f0f5ff;width:100%;border-radius:8px;padding:8px 10px;font-family:inherit;font-size:12px"><option value="">Select a role</option><option>Marketer</option><option>Admin</option><option>Nurse</option><option>Caregiver</option></select></div>
+      <div class="field" style="grid-column:1/-1"><label>Role</label><select style="background:#0a1628;border:1px solid rgba(73,182,255,.3);color:#f0f5ff;width:100%;border-radius:8px;padding:8px 10px;font-family:inherit;font-size:12px"><option value="">Select a role</option><option>Sales/Admissions</option><option>Admin</option><option>Nurse</option><option>Caregiver</option></select></div>
     </div>
     <button class="btn btn-g" onclick="T('Invite sent! Team member receives login link.')">Send Invite</button>
   </div>
   <div style="overflow-x:auto">
   <table class="tbl"><thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Last Active</th><th>Actions</th></tr></thead><tbody>
   <tr><td><strong>You (Admin)</strong></td><td>Admin</td><td><span class="pill pill-p">Admin</span></td><td>Now</td><td>—</td></tr>
-  <tr><td><strong>Ericka</strong></td><td>Marketer</td><td><span class="pill pill-g">Active</span></td><td>Today</td><td><button class="btn btn-d btn-sm" onclick="T('Edit in live CRM','i')" style="margin-right:4px">Edit</button><button class="btn btn-r btn-sm" onclick="T('Ericka removed.','w')">Remove</button></td></tr>
-  <tr><td><strong>Mike</strong></td><td>Marketer</td><td><span class="pill pill-g">Active</span></td><td>Today</td><td><button class="btn btn-d btn-sm" onclick="T('Edit in live CRM','i')" style="margin-right:4px">Edit</button><button class="btn btn-r btn-sm" onclick="T('Mike removed.','w')">Remove</button></td></tr>
+  <tr><td><strong>Ericka</strong></td><td>Sales/Admissions</td><td><span class="pill pill-g">Active</span></td><td>Today</td><td><button class="btn btn-d btn-sm" onclick="T('Edit in live CRM','i')" style="margin-right:4px">Edit</button><button class="btn btn-r btn-sm" onclick="T('Ericka removed.','w')">Remove</button></td></tr>
+  <tr><td><strong>Mike</strong></td><td>Sales/Admissions</td><td><span class="pill pill-g">Active</span></td><td>Today</td><td><button class="btn btn-d btn-sm" onclick="T('Edit in live CRM','i')" style="margin-right:4px">Edit</button><button class="btn btn-r btn-sm" onclick="T('Mike removed.','w')">Remove</button></td></tr>
   <tr><td><strong>Angela</strong></td><td>Nurse</td><td><span class="pill pill-g">Active</span></td><td>Today</td><td><button class="btn btn-d btn-sm" onclick="T('Edit in live CRM','i')" style="margin-right:4px">Edit</button><button class="btn btn-r btn-sm" onclick="T('Angela removed.','w')">Remove</button></td></tr>
   </tbody></table>
   </div>
@@ -631,7 +631,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
   </div>
   <div class="card form-white">
     <h4 style="margin:0 0 12px">Route Optimizer</h4>
-    <div class="field"><label>Marketer</label><select><option>Ericka</option><option>Mike</option><option>Angela</option></select></div>
+    <div class="field"><label>Sales/Admissions</label><select><option>Ericka</option><option>Mike</option><option>Angela</option></select></div>
     <div class="field"><label>Priority Mode</label><select><option>Cold Sources First (Recommended)</option><option>Geographic Efficiency</option><option>Top Referrers First</option></select></div>
     <button class="btn btn-g" onclick="T('Route optimized! 4 stops · 19.5 mi · 41 min saved')" style="width:100%;margin-top:4px">🤖 Optimize Route</button>
   </div>
@@ -859,7 +859,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
   </div>
   <div class="card form-white">
     <h4 style="margin:0 0 12px">Assign Territory</h4>
-    <div class="field"><label>Marketer</label><select><option>Ericka</option><option>Mike</option><option>Angela</option></select></div>
+    <div class="field"><label>Sales/Admissions</label><select><option>Ericka</option><option>Mike</option><option>Angela</option></select></div>
     <div class="field"><label>Territory</label><select><option>North Dallas</option><option>McKinney / Plano</option><option>Frisco / Allen</option><option>South Dallas</option></select></div>
     <div class="field"><label>Priority Score (AI)</label><input type="number" placeholder="Auto-calculated" readonly style="background:#f4f8fc;color:#8b949e"></div>
     <button class="btn btn-g" onclick="T('Territory assigned!')" style="width:100%">Save Assignment</button>
@@ -905,7 +905,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 <div class="tab" id="tab-leaderboard">
 <div class="sec-hdr"><div><h2>🏆 Marketer Leaderboard</h2></div></div>
 <div style="overflow-x:auto">
-<table class="tbl"><thead><tr><th>Rank</th><th>Marketer</th><th>Admits</th><th>Visits</th><th>Conversion</th><th>Score</th></tr></thead><tbody>
+<table class="tbl"><thead><tr><th>Rank</th><th>Sales/Admissions</th><th>Admits</th><th>Visits</th><th>Conversion</th><th>Score</th></tr></thead><tbody>
 <tr style="background:rgba(255,215,0,.03)"><td style="font-size:18px">🥇</td><td><strong>Ericka</strong></td><td>7</td><td>13</td><td><span class="pill pill-g">54%</span></td><td><span style="font-size:16px;font-weight:900;color:#ffd700">94</span></td></tr>
 <tr><td style="font-size:18px">🥈</td><td><strong>Mike</strong></td><td>4</td><td>8</td><td><span class="pill pill-b">50%</span></td><td><span style="font-size:16px;font-weight:900;color:#8b949e">71</span></td></tr>
 <tr><td style="font-size:18px">🥉</td><td><strong>Angela</strong></td><td>2</td><td>5</td><td><span class="pill pill-b">40%</span></td><td><span style="font-size:16px;font-weight:900;color:#8b949e">52</span></td></tr>
@@ -1114,7 +1114,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 <div class="card">
   <h4 style="color:#fff;margin:0 0 14px">Marketer Leaderboard — May 2026</h4>
   <div style="overflow-x:auto">
-  <table class="tbl"><thead><tr><th>Rank</th><th>Marketer</th><th>Admits</th><th>Prospects</th><th>Visits</th><th>Follow-Up %</th><th>Conversion</th><th>Score</th></tr></thead><tbody>
+  <table class="tbl"><thead><tr><th>Rank</th><th>Sales/Admissions</th><th>Admits</th><th>Prospects</th><th>Visits</th><th>Follow-Up %</th><th>Conversion</th><th>Score</th></tr></thead><tbody>
     <tr style="background:rgba(255,215,0,.03)"><td style="font-size:18px">🥇</td><td><strong>Ericka</strong><br><small style="color:#8b949e">North Dallas</small></td><td style="color:#8cff66;font-weight:900">7</td><td>13</td><td>13</td><td><span class="pill pill-g">92%</span></td><td><span class="pill pill-g">54%</span></td><td style="font-size:16px;font-weight:900;color:#ffd700">94</td></tr>
     <tr><td style="font-size:18px">🥈</td><td><strong>Mike</strong><br><small style="color:#8b949e">McKinney</small></td><td style="color:#49b6ff;font-weight:900">4</td><td>8</td><td>8</td><td><span class="pill pill-b">78%</span></td><td><span class="pill pill-b">50%</span></td><td style="font-size:16px;font-weight:900;color:#8b949e">71</td></tr>
     <tr><td style="font-size:18px">🥉</td><td><strong>Angela</strong><br><small style="color:#8b949e">Plano / Allen</small></td><td style="color:#8b949e;font-weight:900">2</td><td>5</td><td>5</td><td><span class="pill pill-y">65%</span></td><td><span class="pill pill-y">40%</span></td><td style="font-size:16px;font-weight:900;color:#8b949e">52</td></tr>
@@ -1497,7 +1497,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
   </div>
   <div style="overflow-x:auto">
   <table class="tbl" id="acLogTable">
-    <thead><tr><th>Type</th><th>Contact</th><th>Direction</th><th>Duration / Status</th><th>Marketer</th><th>Logged</th><th>Outcome</th></tr></thead>
+    <thead><tr><th>Type</th><th>Contact</th><th>Direction</th><th>Duration / Status</th><th>Sales/Admissions</th><th>Logged</th><th>Outcome</th></tr></thead>
     <tbody id="acLogBody">
       <tr><td><span class="pill pill-b" style="font-size:10px">📞 Call</span></td><td><strong>Dr. Patel</strong><br><small style="color:#888">Baylor Hospital</small></td><td>↗ Outbound</td><td>4m 32s</td><td>Ericka T.</td><td>Today 9:14am</td><td><span class="pill pill-g" style="font-size:10px">Connected</span></td></tr>
       <tr><td><span class="pill pill-p" style="font-size:10px">💬 Text</span></td><td><strong>Sarah M.</strong><br><small style="color:#888">North Park Rehab</small></td><td>↗ Outbound</td><td>Delivered</td><td>Ericka T.</td><td>Yesterday 2:30pm</td><td><span class="pill pill-g" style="font-size:10px">Replied</span></td></tr>
@@ -1510,7 +1510,50 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 
 <script>
 (function(){
-  // ── Channel switcher ────────────────────────────────────────────
+
+  // ══════════════════════════════════════════════════════════
+  // UNIFIED NOTE WRITER — posts every Aircall activity to /api/notes
+  // so all communication history appears in the Notes tab timeline
+  // ══════════════════════════════════════════════════════════
+  function _postNoteFromAircall(noteData) {
+    // noteData = { contact_name, comm_type, summary, outcome, next_step, follow_up_date }
+    var TYPE_ICONS = {call:'📞', text:'💬', email:'✉️', missed_call:'📵', failed_text:'⚠️', failed_email:'⚠️'};
+    var icon = TYPE_ICONS[noteData.comm_type] || '📋';
+    var payload = {
+      summary:         icon + ' [Aircall ' + (noteData.comm_type||'').replace(/_/g,' ') + '] ' + (noteData.contact_name||'') + ' — ' + (noteData.summary||noteData.outcome||''),
+      contact_type:    noteData.comm_type === 'call' || noteData.comm_type === 'missed_call' ? 'Phone Call' :
+                       noteData.comm_type === 'text' ? 'Text Message' :
+                       noteData.comm_type === 'email' ? 'Email' : 'Other',
+      urgency:         'warm',
+      next_step:       noteData.next_step || '',
+      follow_up_date:  noteData.follow_up_date || null,
+      follow_up_time:  '',
+      barriers:        '',
+      decision_makers: '',
+      patient_status:  '',
+      gps_location:    '',
+      is_hot_lead:     false,
+      // Extra fields for Aircall activity
+      aircall_type:    noteData.comm_type,
+      aircall_contact: noteData.contact_name,
+      aircall_outcome: noteData.outcome,
+    };
+    payload.authored_by = 'AIRCALL';
+    payload.author_display = 'AIRCALL';
+    // POST to /api/notes (same endpoint manual notes use)
+    _fetch(BACKEND + '/api/notes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }).then(function() {
+      // Refresh notes feed if on notes tab
+      if (typeof loadAndBuildNotesFeed === 'function') loadAndBuildNotesFeed();
+    }).catch(function(err) {
+      console.error('[Aircall→Notes] Failed to sync note:', err);
+    });
+  }
+
+  // ── Channel switcher ──────────────────────────────────────────
   window.acSwitchChannel = function(ch) {
     ['call','text','email'].forEach(function(c) {
       var btn   = document.getElementById('acTab-'+c);
@@ -1524,211 +1567,212 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 
   // ── Prefill helpers ─────────────────────────────────────────────
   window.acFillPhone = function() {
-    var sel = document.getElementById('acCallContact');
-    var ph  = document.getElementById('acCallPhone');
-    if (!sel || !ph) return;
-    var parts = sel.value.split('|');
-    ph.value = parts[1] || '';
+    var sel=document.getElementById('acCallContact'), ph=document.getElementById('acCallPhone');
+    if(sel&&ph) ph.value=sel.value.split('|')[1]||'';
   };
   window.acFillTextPhone = function() {
-    var sel = document.getElementById('acTextContact');
-    var ph  = document.getElementById('acTextPhone');
-    if (!sel || !ph) return;
-    ph.value = sel.value.split('|')[1] || '';
+    var sel=document.getElementById('acTextContact'), ph=document.getElementById('acTextPhone');
+    if(sel&&ph) ph.value=sel.value.split('|')[1]||'';
   };
   window.acFillEmail = function() {
-    var sel = document.getElementById('acEmailContact');
-    var em  = document.getElementById('acEmailAddr');
-    if (!sel || !em) return;
-    em.value = sel.value.split('|')[1] || '';
+    var sel=document.getElementById('acEmailContact'), em=document.getElementById('acEmailAddr');
+    if(sel&&em) em.value=sel.value.split('|')[1]||'';
   };
 
-  // ── Template apply ──────────────────────────────────────────────
+  // ── Text template ─────────────────────────────────────────────
   window.acApplyTemplate = function(sel, targetId) {
-    var body = document.getElementById(targetId);
-    if (!body || !sel.value) return;
-    body.value = sel.value;
-    var cnt = document.getElementById('acTextCount');
-    if (cnt) cnt.textContent = body.value.length + ' / 160';
+    var body=document.getElementById(targetId);
+    if(body&&sel.value){body.value=sel.value;var c=document.getElementById('acTextCount');if(c)c.textContent=body.value.length+' / 160';}
   };
 
+  // ── Email templates ───────────────────────────────────────────
   var EMAIL_TEMPLATES = {
-    'in-service': {
-      subject: 'In-Service Opportunity — HospiceLink Care Team',
-      body: 'Dear [Contact Name],\n\nI hope you\'re having a great week. I\'d love to schedule a brief 15-minute in-service for your team — we have some really valuable updates on our services and care approach that I think your staff would find beneficial.\n\nWould any morning this week or next work for a visit?\n\nWarm regards,\n[Your Name]\n[Agency Name] | [Phone]'
-    },
-    'thank-you': {
-      subject: 'Thank You for Your Referral',
-      body: 'Dear [Contact Name],\n\nThank you so much for the recent referral. We truly appreciate your trust in us to care for your patients and their families.\n\nOur team is already in contact and working to ensure the best possible transition. Please don\'t hesitate to reach out at any time with questions.\n\nGratefully,\n[Your Name]\n[Agency Name] | [Phone]'
-    },
-    'follow-up': {
-      subject: 'Following Up — Checking In',
-      body: 'Dear [Contact Name],\n\nI wanted to follow up from our last conversation and check in on how things are going. If there are any patients who could benefit from our hospice services, we\'d love to help.\n\nWould you have 10 minutes for a brief call this week?\n\nBest,\n[Your Name]\n[Agency Name] | [Phone]'
-    },
-    'patient-update': {
-      subject: 'Care Update — [Patient First Name]',
-      body: 'Dear [Family Member Name],\n\nI wanted to reach out to provide a brief update on [Patient First Name]\'s care. Our team has been attentive to comfort and quality of life, and we are here for anything you need.\n\nPlease don\'t hesitate to call or text me directly at any time — day or night.\n\nWith care,\n[Your Name]\n[Agency Name] | [Phone]'
-    },
-    'cold-re-engage': {
-      subject: 'Checking In — It\'s Been a While!',
-      body: 'Dear [Contact Name],\n\nIt\'s been some time since we last connected, and I wanted to personally reach out. We\'ve made some significant improvements to our care team and services, and I\'d love to reintroduce what we can offer your patients.\n\nCould we schedule a quick 10-minute call or a drop-by visit?\n\nWarm regards,\n[Your Name]\n[Agency Name] | [Phone]'
-    }
+    'in-service':{subject:'In-Service Opportunity — HospiceLink Care Team',body:'Dear [Contact Name],\n\nI hope you\'re having a great week. I\'d love to schedule a brief 15-minute in-service for your team.\n\nWarm regards,\n[Your Name]\n[Agency Name] | [Phone]'},
+    'thank-you':{subject:'Thank You for Your Referral',body:'Dear [Contact Name],\n\nThank you so much for the recent referral. We truly appreciate your trust.\n\nGratefully,\n[Your Name]\n[Agency Name] | [Phone]'},
+    'follow-up':{subject:'Following Up — Checking In',body:'Dear [Contact Name],\n\nI wanted to follow up from our last conversation.\n\nBest,\n[Your Name]\n[Agency Name] | [Phone]'},
+    'patient-update':{subject:'Care Update — [Patient First Name]',body:'Dear [Family Member Name],\n\nI wanted to provide a brief update. Our team is here for anything you need.\n\nWith care,\n[Your Name]\n[Agency Name] | [Phone]'},
+    'cold-re-engage':{subject:'Checking In — It\'s Been a While!',body:'Dear [Contact Name],\n\nIt\'s been some time since we last connected. I\'d love to reconnect.\n\nWarm regards,\n[Your Name]\n[Agency Name] | [Phone]'}
   };
-
   window.acApplyEmailTemplate = function(sel) {
-    var t = EMAIL_TEMPLATES[sel.value];
-    if (!t) return;
-    var subj = document.getElementById('acEmailSubject');
-    var body = document.getElementById('acEmailBody');
-    if (subj) subj.value = t.subject;
-    if (body) body.value = t.body;
+    var t=EMAIL_TEMPLATES[sel.value]; if(!t)return;
+    var s=document.getElementById('acEmailSubject'), b=document.getElementById('acEmailBody');
+    if(s)s.value=t.subject; if(b)b.value=t.body;
   };
 
-  // ── Call actions ────────────────────────────────────────────────
-  var _callInterval = null;
-  var _callSecs = 0;
-  var _muted = false;
-
+  // ── Call actions ──────────────────────────────────────────────
+  var _callInterval=null, _callSecs=0, _muted=false;
   window.acStartCall = function() {
-    var phone = (document.getElementById('acCallPhone') || {}).value;
-    var sel   = document.getElementById('acCallContact');
-    var name  = sel && sel.value ? sel.value.split('|')[0] : (phone || 'Unknown');
-    if (!phone) { T('Enter a phone number first','w'); return; }
-
-    // POST to backend proxy
-    _fetch(BACKEND + '/api/aircall/calls', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ to: phone, contact_name: name,
-        purpose: (document.getElementById('acCallPurpose')||{}).value || 'Referral Follow-Up' })
-    }).then(function(r){ return r.json(); })
+    var phone=(document.getElementById('acCallPhone')||{}).value;
+    var sel=document.getElementById('acCallContact');
+    var name=sel&&sel.value?sel.value.split('|')[0]:(phone||'Unknown');
+    if(!phone){T('Enter a phone number first','w');return;}
+    _fetch(BACKEND+'/api/aircall/calls',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({to:phone, contact_name:name,
+        purpose:(document.getElementById('acCallPurpose')||{}).value||''})
+    }).then(function(r){return r.json();})
       .then(function(d){
-        if (d.error) { T(d.error,'e'); return; }
-        T('📞 Connecting call to ' + name + ' via Aircall…','i');
-        var w = document.getElementById('acActiveCall');
-        var nm = document.getElementById('acCallerName');
-        var ti = document.getElementById('acCallTimer');
-        if (w) w.style.display = '';
-        if (nm) nm.textContent = name;
-        _callSecs = 0; _muted = false;
-        if (_callInterval) clearInterval(_callInterval);
-        _callInterval = setInterval(function(){
+        if(d.error){T(d.error,'e');return;}
+        T('📞 Connecting to '+name+' via Aircall…','i');
+        var w=document.getElementById('acActiveCall'), nm=document.getElementById('acCallerName'), ti=document.getElementById('acCallTimer');
+        if(w)w.style.display=''; if(nm)nm.textContent=name;
+        _callSecs=0; _muted=false;
+        if(_callInterval)clearInterval(_callInterval);
+        _callInterval=setInterval(function(){
           _callSecs++;
-          var m = Math.floor(_callSecs/60), s = _callSecs % 60;
-          if (ti) ti.textContent = m + ':' + (s<10?'0':'')+s;
-        }, 1000);
+          var m=Math.floor(_callSecs/60), s=_callSecs%60;
+          if(ti)ti.textContent=m+':'+(s<10?'0':'')+s;
+        },1000);
       })
-      .catch(function(){ T('Could not connect to Aircall. Check integration settings.','e'); });
+      .catch(function(){
+        T('Could not connect to Aircall.','e');
+        // Log failed call attempt as a note
+        _postNoteFromAircall({
+          comm_type:'missed_call', contact_name:name,
+          summary:'Call attempt failed — connection error', outcome:'Failed connection'
+        });
+      });
   };
-
   window.acEndCall = function() {
-    if (_callInterval) clearInterval(_callInterval);
-    var w = document.getElementById('acActiveCall');
-    if (w) w.style.display = 'none';
+    if(_callInterval)clearInterval(_callInterval);
+    var w=document.getElementById('acActiveCall'); if(w)w.style.display='none';
     T('Call ended. Fill in post-call notes and save the log.','i');
   };
-
   window.acToggleMute = function() {
-    _muted = !_muted;
-    var btn = document.getElementById('acMuteBtn');
-    if (btn) btn.textContent = _muted ? '🔇 Unmute' : '🎙 Mute';
-    T(_muted ? 'Microphone muted' : 'Microphone active');
+    _muted=!_muted;
+    var btn=document.getElementById('acMuteBtn');
+    if(btn)btn.textContent=_muted?'🔇 Unmute':'🎙 Mute';
+    T(_muted?'Microphone muted':'Microphone active');
   };
+  window.acScheduleCall = function() { T('Scheduled call added to Smart Scheduling queue','i'); };
 
-  window.acScheduleCall = function() {
-    T('Scheduled call added to Smart Scheduling queue','i');
-  };
-
+  // ── Save call log → Notes timeline ───────────────────────────
   window.acSaveCallLog = function() {
-    var outcome  = (document.getElementById('acCallOutcome')||{}).value;
-    var summary  = (document.getElementById('acCallSummary')||{}).value;
-    var nextStep = (document.getElementById('acCallNext')||{}).value;
-    var followDate = (document.getElementById('acCallFollowDate')||{}).value;
-    if (!outcome) { T('Select a call outcome first','w'); return; }
-    var sel  = document.getElementById('acCallContact');
-    var name = sel && sel.value ? sel.value.split('|')[0] : 'Contact';
+    var outcome   =(document.getElementById('acCallOutcome')||{}).value;
+    var summary   =(document.getElementById('acCallSummary')||{}).value;
+    var nextStep  =(document.getElementById('acCallNext')||{}).value;
+    var followDate=(document.getElementById('acCallFollowDate')||{}).value;
+    if(!outcome){T('Select a call outcome first','w');return;}
+    var sel=document.getElementById('acCallContact');
+    var name=sel&&sel.value?sel.value.split('|')[0]:'Contact';
 
-    _fetch(BACKEND + '/api/aircall/log', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ type:'call', contact_name:name,
-        outcome: outcome, summary: summary,
-        next_step: nextStep, follow_up_date: followDate || null })
-    }).then(function(){ acLoadLog(); T('📞 Call log saved! Reminder queued.','s'); })
-      .catch(function(){ T('Save failed — check connection','e'); });
+    // 1. Write to /api/aircall/log (Aircall activity log)
+    _fetch(BACKEND+'/api/aircall/log',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({type:'call', contact_name:name,
+        outcome:outcome, summary:summary,
+        next_step:nextStep, follow_up_date:followDate||null})
+    }).then(function(){acLoadLog();})
+      .catch(function(){});
+
+    // 2. Write to /api/notes (unified Notes timeline) ← THE KEY SYNC
+    _postNoteFromAircall({
+      comm_type:'call', contact_name:name,
+      summary:summary||outcome,
+      outcome:outcome,
+      next_step:nextStep,
+      follow_up_date:followDate||null
+    });
+
+    T('📞 Call logged + note saved to Notes tab!','s');
+    // Reset form
+    ['acCallOutcome','acCallSummary','acCallNext','acCallFollowDate'].forEach(function(id){
+      var el=document.getElementById(id); if(el)el.value='';
+    });
   };
 
-  // ── Text actions ────────────────────────────────────────────────
+  // ── Text send → Notes timeline ────────────────────────────────
   window.acSendText = function() {
-    var phone = (document.getElementById('acTextPhone')||{}).value;
-    var body  = (document.getElementById('acTextBody')||{}).value.trim();
-    var sel   = document.getElementById('acTextContact');
-    var name  = sel && sel.value ? sel.value.split('|')[0] : 'Contact';
-    if (!phone) { T('Enter a phone number first','w'); return; }
-    if (!body)  { T('Message body is required','w'); return; }
+    var phone=(document.getElementById('acTextPhone')||{}).value;
+    var body=(document.getElementById('acTextBody')||{}).value.trim();
+    var sel=document.getElementById('acTextContact');
+    var name=sel&&sel.value?sel.value.split('|')[0]:'Contact';
+    if(!phone){T('Enter a phone number first','w');return;}
+    if(!body){T('Message body is required','w');return;}
 
-    _fetch(BACKEND + '/api/aircall/sms', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ to: phone, contact_name: name, body: body })
-    }).then(function(r){ return r.json(); })
+    _fetch(BACKEND+'/api/aircall/sms',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({to:phone, contact_name:name, body:body})
+    }).then(function(r){return r.json();})
       .then(function(d){
-        if (d.error) { T(d.error,'e'); return; }
+        if(d.error){T(d.error,'e');return;}
         T('💬 Text sent to '+name+'!','s');
-        var tb = document.getElementById('acTextBody');
-        if (tb) tb.value = '';
+        var tb=document.getElementById('acTextBody'); if(tb)tb.value='';
         acLoadLog();
+        // Sync to Notes timeline
+        _postNoteFromAircall({
+          comm_type:'text', contact_name:name,
+          summary:'Text sent: '+body.substring(0,120)+(body.length>120?'…':''),
+          outcome:'Sent'
+        });
       })
-      .catch(function(){ T('Text failed — check Aircall connection','e'); });
+      .catch(function(){
+        T('Text failed — check Aircall connection','e');
+        // Log failed text as note
+        _postNoteFromAircall({
+          comm_type:'failed_text', contact_name:name,
+          summary:'Text failed to send to '+name, outcome:'Delivery failure'
+        });
+      });
   };
+  window.acScheduleText = function(){T('Text scheduled','i');};
 
-  window.acScheduleText = function() { T('Text scheduled — will send at specified time','i'); };
-
-  // ── Email actions ───────────────────────────────────────────────
+  // ── Email send → Notes timeline ───────────────────────────────
   window.acSendEmail = function() {
-    var to      = (document.getElementById('acEmailAddr')||{}).value.trim();
-    var subject = (document.getElementById('acEmailSubject')||{}).value.trim();
-    var body    = (document.getElementById('acEmailBody')||{}).value.trim();
-    var sel     = document.getElementById('acEmailContact');
-    var name    = sel && sel.value ? sel.value.split('|')[0] : 'Contact';
-    if (!to)      { T('Enter a recipient email','w'); return; }
-    if (!subject) { T('Subject line required','w'); return; }
-    if (!body)    { T('Email body is required','w'); return; }
+    var to=(document.getElementById('acEmailAddr')||{}).value.trim();
+    var subject=(document.getElementById('acEmailSubject')||{}).value.trim();
+    var body=(document.getElementById('acEmailBody')||{}).value.trim();
+    var sel=document.getElementById('acEmailContact');
+    var name=sel&&sel.value?sel.value.split('|')[0]:'Contact';
+    if(!to){T('Enter a recipient email','w');return;}
+    if(!subject){T('Subject line required','w');return;}
+    if(!body){T('Email body is required','w');return;}
 
-    _fetch(BACKEND + '/api/aircall/email', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ to: to, contact_name: name,
-        subject: subject, body: body,
-        cc: (document.getElementById('acEmailCC')||{}).value.trim() || null })
-    }).then(function(r){ return r.json(); })
+    _fetch(BACKEND+'/api/aircall/email',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({to:to, contact_name:name,
+        subject:subject, body:body,
+        cc:(document.getElementById('acEmailCC')||{}).value.trim()||null})
+    }).then(function(r){return r.json();})
       .then(function(d){
-        if (d.error) { T(d.error,'e'); return; }
+        if(d.error){T(d.error,'e');return;}
         T('✉️ Email sent to '+name+'!','s');
         ['acEmailAddr','acEmailCC','acEmailSubject','acEmailBody'].forEach(function(id){
-          var el=document.getElementById(id); if(el) el.value='';
+          var el=document.getElementById(id); if(el)el.value='';
         });
         acLoadLog();
+        // Sync to Notes timeline
+        _postNoteFromAircall({
+          comm_type:'email', contact_name:name,
+          summary:'Email sent — Subject: '+subject,
+          outcome:'Sent'
+        });
       })
-      .catch(function(){ T('Email failed — check Aircall connection','e'); });
+      .catch(function(){
+        T('Email failed — check Aircall connection','e');
+        _postNoteFromAircall({
+          comm_type:'failed_email', contact_name:name,
+          summary:'Email failed to send — Subject: '+subject,
+          outcome:'Delivery failure'
+        });
+      });
   };
+  window.acScheduleEmail = function(){T('Email scheduled','i');};
+  window.acSaveDraft    = function(){T('Draft saved','s');};
 
-  window.acScheduleEmail = function() { T('Email scheduled','i'); };
-  window.acSaveDraft    = function() { T('Draft saved','s'); };
-
-  // ── Log loader ──────────────────────────────────────────────────
+  // ── Log refresh ───────────────────────────────────────────────
   window.acLoadLog = function() {
-    _fetch(BACKEND + '/api/aircall/log')
-      .then(function(r){ return r.json(); })
+    _fetch(BACKEND+'/api/aircall/log')
+      .then(function(r){return r.json();})
       .then(function(d){
-        var rows = d.data || d || [];
-        var tb   = document.getElementById('acLogBody');
-        if (!tb || !rows.length) return;
-        var icons = {call:'📞 Call',text:'💬 Text',email:'✉️ Email'};
-        var pillCls = {call:'pill-b',text:'pill-p',email:'pill-y'};
-        tb.innerHTML = rows.slice(0,20).map(function(r){
-          var t = new Date(r.created_at||Date.now());
-          var rel = t.toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+        var rows=d.data||d||[];
+        var tb=document.getElementById('acLogBody');
+        if(!tb||!rows.length)return;
+        var icons={call:'📞 Call',text:'💬 Text',email:'✉️ Email'};
+        var pillCls={call:'pill-b',text:'pill-p',email:'pill-y'};
+        tb.innerHTML=rows.slice(0,20).map(function(r){
+          var t=new Date(r.created_at||Date.now());
+          var rel=t.toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
           return '<tr>'
             +'<td><span class="pill '+pillCls[r.type||'call']+'" style="font-size:10px">'+icons[r.type||'call']+'</span></td>'
             +'<td><strong>'+r.contact_name+'</strong></td>'
@@ -1740,8 +1784,9 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
             +'</tr>';
         }).join('');
       })
-      .catch(function(){/* silent — log remains static if API unavailable */});
+      .catch(function(){});
   };
+
 })();
 </script>
 </div>
@@ -1757,7 +1802,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 var TIER = 'Gold';
 var ACTIVE_CLS = 'active-g';
 var ROLE_TABS = {"admin": ["dash", "notifs", "addref", "refs", "addpx", "records", "timeline", "pipeline", "territory", "heatmap", "prod", "touch", "schedule", "notes", "remind", "reengage", "goals", "aiasst", "windshield", "family", "messaging", "evv", "telehealth", "nursesched", "patportal", "admworkflow", "import", "portal", "playbook", "mobile", "aircall", "terrmgmt", "revintel", "mktgroi", "refanalytics", "leaderboard", "scorecard", "hipaa", "compliance", "aitriage", "bedavail", "analytics", "agency", "report", "team", "settings"], "marketer": ["dash", "notifs", "addref", "refs", "addpx", "records", "timeline", "pipeline", "territory", "heatmap", "prod", "touch", "schedule", "notes", "remind", "reengage", "goals", "aiasst", "windshield", "family", "messaging", "evv", "import", "portal", "playbook", "mobile", "aircall"], "nurse": ["dash", "notifs", "notes", "remind", "aiasst", "family", "messaging", "evv", "telehealth", "nursesched", "patportal", "admworkflow"], "caregiver": ["dash", "notes", "family", "messaging", "evv", "patportal", "remind"]};
-var ROLE_DESC = {"admin": "All tabs \u2014 Revenue Intelligence, Leaderboard, AI Scorecard, HIPAA Audit Log, Compliance Engine, and Team Management.", "marketer": "Full Gold marketer suite: territory heat maps, smart scheduling, referral portal, windshield mode, family communication, secure messaging, EVV / mileage, playbook generator, marketer mobile, Aircall (call, text, email), and all marketing tools.", "nurse": "Nurse view: notifications, notes, reminders, AI assistant, family communication, secure messaging, EVV, telehealth, nurse scheduler, patient portal, admission workflow.", "caregiver": "Caregiver view: notes, reminders, family communication, secure messaging, EVV / mileage, patient portal."};
+var ROLE_DESC = {"admin": "All tabs \u2014 Revenue Intelligence, Leaderboard, AI Scorecard, HIPAA Audit Log, Compliance Engine, and Team Management.", "marketer": "Full Gold Sales/Admissions suite: territory heat maps, smart scheduling, referral portal, windshield mode, family communication, secure messaging, EVV / mileage, playbook generator, marketer mobile, Aircall (call, text, email), and all marketing tools.", "nurse": "Nurse view: notifications, notes, reminders, AI assistant, family communication, secure messaging, EVV, telehealth, nurse scheduler, patient portal, admission workflow.", "caregiver": "Caregiver view: notes, reminders, family communication, secure messaging, EVV / mileage, patient portal."};
 var BADGE_STYLE = {"admin": "background:rgba(188,140,255,.2);color:#c9aeff", "marketer": "background:rgba(73,182,255,.2);color:#49b6ff", "nurse": "background:rgba(140,255,102,.2);color:#8cff66", "caregiver": "background:rgba(249,199,79,.2);color:#f9c74f"};
 var IS_DEMO = false;
 
@@ -1835,12 +1880,12 @@ function setRole(role) {
   var desc=ROLE_DESC[role]||'';
   var tabs=ROLE_TABS[role]||[];
   // Update description
-  var dn=document.getElementById('roleDescName');if(dn)dn.textContent=role.charAt(0).toUpperCase()+role.slice(1);
+  var ROLE_DISPLAY={'admin':'Admin','marketer':'Sales/Admissions','nurse':'Nurse','caregiver':'Caregiver'}; var dn=document.getElementById('roleDescName');if(dn)dn.textContent=ROLE_DISPLAY[role]||role.charAt(0).toUpperCase()+role.slice(1);
   var dt=document.getElementById('roleDescText');if(dt)dt.textContent=desc;
   // Update badge
   var badge=document.getElementById('roleBadge');
   if(badge){
-    badge.textContent=role.charAt(0).toUpperCase()+role.slice(1);
+    badge.textContent=ROLE_DISPLAY[role]||role.charAt(0).toUpperCase()+role.slice(1);
     var bs=BADGE_STYLE[role]||'';
     badge.setAttribute('style','display:inline-block;padding:2px 10px;border-radius:999px;font-size:10px;font-weight:800;margin-top:5px;'+bs);
   }
@@ -1940,8 +1985,8 @@ function buildNotesFeed(){
     return '<div style="background:#0d1b31;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:16px;margin-bottom:12px">'
       +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap;gap:6px">'
         +'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
-          +'<strong style="color:#f4f8ff;font-size:14px">'+n.author+'</strong>'
-          +'<span style="background:rgba('+hexToRgb(rc)+','+'0.18);color:'+rc+';padding:2px 8px;border-radius:999px;font-size:10px;font-weight:800">'+n.role+'</span>'
+          +(n.type==='aircall'?'<strong style="color:#f59e0b;font-size:13px;letter-spacing:.04em">[AIRCALL]</strong>':'<strong style="color:#f4f8ff;font-size:14px">'+n.author+'</strong>')
+          +(n.type==='aircall'?'<span style="background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:#f59e0b;padding:2px 10px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:.06em">AIRCALL</span>':'<span style="background:rgba('+hexToRgb(rc)+','+'0.18);color:'+rc+';padding:2px 8px;border-radius:999px;font-size:10px;font-weight:800">'+n.role+'</span>')
           +(n.contactType?'<span style="background:#1e3050;color:#8b949e;padding:2px 8px;border-radius:999px;font-size:10px">'+n.contactType+'</span>':'')
           +'<span style="background:'+uc.bg+';border:1px solid '+uc.border+';color:'+uc.color+';padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700">'+uc.label+'</span>'
           +(n.hot?'<span style="background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#ef4444;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:800">🔥 HOT LEAD</span>':'')
