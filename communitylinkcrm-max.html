@@ -133,7 +133,7 @@ textarea.fi{resize:vertical;min-height:72px}
       <select class="role-sel" id="roleSel" onchange="setRole(this.value)">
         <option value="admin">Administrator</option>
         <option value="director">Executive Director</option>
-        <option value="sales_admissions">Sales/Admissions</option>
+        <option value="salesadmissions">Sales/Admissions</option>
         <option value="owner">Owner / Investor</option>
         <option value="marketer">Sales Marketer</option>
         <option value="maintenance">Maintenance</option>
@@ -769,6 +769,123 @@ textarea.fi{resize:vertical;min-height:72px}
 </div><!-- end main -->
 </div><!-- end layout -->
 
+<!-- ═══ PAID REFERRAL PORTAL ══════════════════════════════════════ -->
+<div class="tab" id="tab-paidrefs">
+<div class="sec-h">💰 Paid Referral Portal</div>
+<div class="sec-sub">Track paid leads from A Place for Mom, Caring.com, SeniorAdvisor, and other paid referral partners. All paid referrals automatically sync to the Lead Pipeline.</div>
+<div id="paidRefStats" class="stats"></div>
+<div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
+  <select class="fi" id="prSourceFilter" style="width:180px" onchange="filterPaidRefs()">
+    <option value="">All Sources</option>
+    <option value="A Place for Mom">A Place for Mom</option>
+    <option value="Caring.com">Caring.com</option>
+    <option value="SeniorAdvisor">SeniorAdvisor</option>
+    <option value="Other">Other</option>
+  </select>
+  <select class="fi" id="prStageFilter" style="width:180px" onchange="filterPaidRefs()">
+    <option value="">All Stages</option>
+    <option>New Referral</option><option>Contact Attempted</option>
+    <option>Family Reached</option><option>Assessment Scheduled</option>
+    <option>Tour Scheduled</option><option>Touring</option>
+    <option>Deposit Pending</option><option>Approved</option>
+    <option>Move-In Scheduled</option><option>Moved In</option>
+    <option>Lost</option>
+  </select>
+  <button class="btn btn-a btn-sm" onclick="showAddPaidRef()">+ Add Paid Referral</button>
+</div>
+<div class="card" id="paidRefTable">
+  <div style="color:var(--text-muted);text-align:center;padding:40px;font-size:13px">Loading paid referrals…</div>
+</div>
+</div>
+<!-- ═══ END PAID REFERRAL PORTAL ═══ -->
+
+<!-- ═══ GIFT & GRATUITY TRACKING ════════════════════════════════════ -->
+<div class="tab" id="tab-gift">
+<div class="sec-h">🎁 Gift & Gratuity Tracking</div>
+<div class="sec-sub">Track all gifts and gratuities given to referral contacts. CMS compliance requires all gifts stay within the per-visit limit.</div>
+<div id="giftLimitBanner" class="alert alert-y" style="margin-bottom:14px;display:none"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+  <div>
+    <div class="card">
+      <div class="card-h"><div class="card-t">Log Gift or Gratuity</div></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="fl"><div class="flb">Recipient Name *</div><input class="fi" id="gft-recipient" placeholder="Dr. Smith, Sarah Jones…"></div>
+        <div class="fl"><div class="flb">Facility Name</div><input class="fi" id="gft-facility" placeholder="North Park Rehab"></div>
+        <div class="fl"><div class="flb">Referral Source</div><input class="fi" id="gft-source" placeholder="Case manager, discharge planner…"></div>
+        <div class="fl"><div class="flb">Visit Date *</div><input class="fi" type="date" id="gft-date"></div>
+        <div class="fl"><div class="flb">Gift Type *</div>
+          <select class="fi" id="gft-type">
+            <option value="">Select type…</option>
+            <option value="Meal">Meal / Food</option>
+            <option value="Gift Card">Gift Card</option>
+            <option value="Branded Item">Branded Item / Merchandise</option>
+            <option value="Flowers">Flowers / Plants</option>
+            <option value="Coffee">Coffee / Beverages</option>
+            <option value="Event Ticket">Event Ticket</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="fl"><div class="flb">Gift Value ($) * <span id="giftLimitLabel" style="color:var(--amber);font-weight:400;font-size:10px"></span></div>
+          <input class="fi" type="number" id="gft-value" placeholder="0.00" step="0.01" min="0" oninput="checkGiftLimit(this.value)">
+        </div>
+        <div id="giftLimitWarning" style="display:none;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);border-radius:8px;padding:8px 12px;font-size:12px;color:#f87171">
+          ⚠ This amount exceeds the allowed gift/gratuity limit. Please adjust before saving.
+        </div>
+        <div class="fl"><div class="flb">Visit Purpose</div><input class="fi" id="gft-purpose" placeholder="Relationship visit, in-service, lunch…"></div>
+        <div class="fl"><div class="flb">Notes</div><textarea class="fi" id="gft-notes" rows="2" placeholder="Any additional context…"></textarea></div>
+        <button class="btn btn-a" onclick="saveGiftLog()">💾 Save Gift Log</button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="card" id="giftStatsCard">
+      <div class="card-h"><div class="card-t">Compliance Summary</div></div>
+      <div id="giftStats"><div style="color:var(--text-muted);font-size:12px">Loading…</div></div>
+    </div>
+    <div class="card" style="margin-top:0" id="giftRecentCard">
+      <div class="card-h"><div class="card-t">Recent Logs</div><button class="btn btn-x btn-sm" onclick="initGiftGratuity()">↻ Refresh</button></div>
+      <div id="giftLogTable" style="overflow-x:auto"><div style="color:var(--text-muted);font-size:12px">Loading…</div></div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- ═══ END GIFT & GRATUITY ═══ -->
+
+<!-- ═══ ALERT SETTINGS ═══════════════════════════════════════════════ -->
+<div class="tab" id="tab-alertsettings">
+<div class="sec-h">🔔 Alert & Notification Settings</div>
+<div class="sec-sub">Control who receives automated email alerts for key events. Admin-only.</div>
+<div id="alertSettingsContent">
+  <div style="color:var(--text-muted);text-align:center;padding:40px">Loading alert settings…</div>
+</div>
+</div>
+<!-- ═══ END ALERT SETTINGS ═══ -->
+
+<!-- ═══ FINANCIAL SETTINGS ════════════════════════════════════════════ -->
+<div class="tab" id="tab-finsettings">
+<div class="sec-h">💵 Financial Settings</div>
+<div class="sec-sub">Admin-editable financial thresholds. Changes apply immediately to all users.</div>
+<div class="g2">
+  <div class="card">
+    <div class="card-h"><div class="card-t">Reimbursement Rates</div></div>
+    <div style="display:flex;flex-direction:column;gap:14px" id="finSettingsForm">
+      <div style="color:var(--text-muted);font-size:12px">Loading settings…</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-h"><div class="card-t">How These Settings Work</div></div>
+    <div style="font-size:12px;color:var(--text-muted);line-height:1.8">
+      <div>• <strong>Mileage Rate</strong> — IRS standard or custom rate per mile</div>
+      <div>• <strong>Gift/Gratuity Limit</strong> — max per visit per CMS compliance</div>
+      <div>• Changes apply immediately to new records</div>
+      <div>• Historical records retain the rate that was active when logged</div>
+      <div>• All changes are logged in the audit trail</div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- ═══ END FINANCIAL SETTINGS ═══ -->
+
 <!-- ═══════════════════════════════════════════════════════════════
      AIRCALL TAB — Call · Text · Email  (CommunityLink Max Exclusive)
      Injected as a real .tab div; shown/hidden by showTab()
@@ -1067,10 +1184,9 @@ textarea.fi{resize:vertical;min-height:72px}
       next_step:    noteData.next_step || '',
       follow_up_date: noteData.follow_up_date || null,
       note_type:    'aircall',
+      aircall_source: 'AIRCALL',
     };
 
-    payload.authored_by = 'AIRCALL';
-    payload.author_display = 'AIRCALL';
     // POST to /api/cl/notes (same endpoint manual notes use)
     fetch(BACKEND+'/api/cl/notes', {
       method:'POST',
@@ -1335,13 +1451,14 @@ function T(msg, type){
 
 // ── Role system ──────────────────────────────────────────────────
 const ROLE_TABS = {
-  admin:           ['dash','addlead','leads','referrals','addref','refs','tours','gps','mileage','outreach','tasks','notes','ai','apartments','makeready','maintenance','housekeeping','ledger','revenue','concessions','loc','competitors','aircall','reports','team','settings'],
-  director:        ['dash','apartments','leads','referrals','makeready','maintenance','housekeeping','ledger','revenue','concessions','aircall','notes','tasks','reports'],
-  sales_admissions:['dash','addlead','leads','referrals','addref','refs','tours','gps','mileage','outreach','tasks','notes','ai','apartments','makeready','maintenance','housekeeping','ledger','revenue','concessions','loc','aircall'],
-  owner:           ['dash','leads','referrals','ledger','revenue','concessions','competitors','reports'],
-  marketer:        ['dash','addlead','leads','referrals','addref','refs','tours','gps','mileage','outreach','tasks','notes','ai','aircall'],
-  maintenance:     ['dash','maintenance','makeready','apartments','tasks'],
-  housekeeping:    ['dash','housekeeping','makeready','maintenance','apartments','tasks'],
+  admin:          ['dash','addlead','leads','referrals','paidrefs','addref','refs','tours','gps','mileage','outreach','tasks','notes','ai','apartments','makeready','maintenance','housekeeping','ledger','revenue','concessions','loc','competitors','aircall','reports','gift','alertsettings','finsettings','team','settings'],
+  director:       ['dash','apartments','leads','referrals','paidrefs','addlead','addref','refs','tours','gps','mileage','outreach','makeready','maintenance','housekeeping','ledger','revenue','concessions','loc','tasks','notes','ai','aircall','gift','reports'],
+  // Sales/Admissions = Director minus Reports
+  salesadmissions:['dash','apartments','leads','referrals','paidrefs','addlead','addref','refs','tours','gps','mileage','outreach','makeready','maintenance','housekeeping','ledger','revenue','concessions','loc','tasks','notes','ai','aircall','gift'],
+  owner:          ['dash','leads','referrals','ledger','revenue','concessions','competitors','reports'],
+  marketer:       ['dash','addlead','leads','referrals','paidrefs','addref','refs','tours','gps','mileage','outreach','tasks','notes','ai','aircall','gift'],
+  maintenance:    ['dash','maintenance','makeready','apartments','tasks'],
+  housekeeping:   ['dash','housekeeping','makeready','maintenance','apartments','tasks'],
 };
 
 let currentRole = 'admin';
@@ -1349,13 +1466,12 @@ const ACTIVE_CLS = 'on';
 
 const NAV_DEF = [
   { sec:'MAIN',        items:[{id:'dash',label:'Dashboard'}] },
-  { sec:'SALES',       items:[{id:'addlead',label:'Add Lead'},{id:'leads',label:'Lead Pipeline'},{id:'referrals',label:'Referral Pipeline'},{id:'refs',label:'Referral Sources'},{id:'addref',label:'Add Referral Source'},{id:'tours',label:'Tour Scheduler'}] },
-  { sec:'OUTREACH',    items:[{id:'gps',label:'GPS Check-In'},{id:'mileage',label:'Mileage Tracker'},{id:'outreach',label:'Outreach Log'}] },
+  { sec:'SALES',       items:[{id:'addlead',label:'Add Lead'},{id:'leads',label:'Lead Pipeline'},{id:'referrals',label:'Referral Pipeline'},{id:'paidrefs',label:'💰 Paid Referral Portal'},{id:'refs',label:'Referral Sources'},{id:'addref',label:'Add Referral Source'},{id:'tours',label:'Tour Scheduler'}] },
+  { sec:'OUTREACH',    items:[{id:'gps',label:'GPS Check-In'},{id:'mileage',label:'Mileage Tracker'},{id:'outreach',label:'Outreach Log'},{id:'aircall',label:'📞 Aircall — Call · Text · Email'}] },
   { sec:'ACTIVITY',    items:[{id:'tasks',label:'Tasks'},{id:'notes',label:'Activity Notes'},{id:'ai',label:'AI Sales Assistant'}] },
   { sec:'OPERATIONS',  items:[{id:'apartments',label:'Apartment Inventory'},{id:'makeready',label:'Make-Ready Board'},{id:'maintenance',label:'Maintenance Tickets'},{id:'housekeeping',label:'Housekeeping Tasks'}] },
   { sec:'FINANCIAL',   items:[{id:'ledger',label:'Financial Ledger'},{id:'revenue',label:'Revenue Leakage'},{id:'concessions',label:'Concession Approvals'},{id:'loc',label:'LOC Pricing Calculator'},{id:'competitors',label:'Competitor Intel'}] },
-  { sec:'OUTREACH',    items:[{id:'aircall',label:'📞 Aircall — Call · Text · Email'}] },
-  { sec:'ADMIN',       items:[{id:'reports',label:'Reports',adm:true},{id:'team',label:'Team Management',adm:true},{id:'settings',label:'Settings',adm:true}], adm:true },
+  { sec:'ADMIN',       items:[{id:'reports',label:'Reports',adm:true},{id:'gift',label:'Gift & Gratuity',adm:true},{id:'alertsettings',label:'Alert Settings',adm:true},{id:'finsettings',label:'Financial Settings',adm:true},{id:'team',label:'Team Management',adm:true},{id:'settings',label:'Settings',adm:true}], adm:true },
 ];
 
 function buildNav(){
@@ -1401,17 +1517,21 @@ function showTab(id){
   if(id==='loc')         loadLOC();
   if(id==='competitors') loadCompetitors();
   if(id==='referrals')   initReferrals();
+  if(id==='paidrefs')    initPaidReferrals();
+  if(id==='gift')        initGiftGratuity();
+  if(id==='alertsettings') initAlertSettings();
+  if(id==='finsettings') initFinSettings();
   if(id==='aircall')     initAircall();
 }
 
 function setRole(role){
   currentRole = role;
   const badge = document.getElementById('roleBadge');
-  const labels = {admin:'Administrator',director:'Executive Director',sales_admissions:'Sales/Admissions',owner:'Owner / Investor',marketer:'Sales/Admissions',maintenance:'Maintenance',housekeeping:'Housekeeping'};
+  const labels = {admin:'Administrator',director:'Executive Director',salesadmissions:'Sales/Admissions',owner:'Owner / Investor',marketer:'Sales Marketer',maintenance:'Maintenance',housekeeping:'Housekeeping'};
   badge.textContent = labels[role]||role;
   // Redirect to appropriate default for role
   if(!(ROLE_TABS[role]||[]).includes(currentTabId)){
-    const defaults = {director:'apartments', owner:'ledger', maintenance:'maintenance', housekeeping:'housekeeping'};
+    const defaults = {director:'dash',salesadmissions:'dash',owner:'dash',maintenance:'maintenance',housekeeping:'housekeeping'};
     showTab(defaults[role]||'dash');
   } else buildNav();
 }
@@ -1745,7 +1865,7 @@ async function loadNotes(){
       const isAircall = n.note_type === 'aircall' && n.comm_type;
       const meta  = isAircall ? (COMM_META[n.comm_type]||COMM_META.manual) : COMM_META.manual;
       const ts    = n.created_at ? new Date(n.created_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) : '';
-      const author= (n.authored_by === 'AIRCALL' || n.note_type === 'aircall') ? '[AIRCALL]' : n.created_by_name || n.user_name || 'Team';
+      const author= n.aircall_source === 'AIRCALL' ? 'AIRCALL' : (n.created_by_name || n.user_name || 'Team');
       // Strip icon prefix from summary for clean display
       const cleanSummary = (n.summary||'').replace(/^[^\]]+\]\s*/,'');
 
@@ -1762,7 +1882,7 @@ async function loadNotes(){
         ${n.next_step ? `<div style="font-size:12px;color:#8ba4c4;margin-bottom:4px"><span style="font-weight:700;color:#f59e0b">Next Step:</span> ${escH(n.next_step)}</div>` : ''}
         ${n.follow_up_date ? `<div style="font-size:12px;color:#8ba4c4;margin-bottom:4px"><span style="font-weight:700;color:#4fc87a">Follow-Up:</span> ${escH(n.follow_up_date)}</div>` : ''}
         <div style="display:flex;align-items:center;gap:6px;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.06)">
-          ${(n.authored_by==="AIRCALL"||n.note_type==="aircall") ? '<span style="background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:#f59e0b;padding:2px 10px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:.06em">[AIRCALL]</span>' : '<span style="font-size:10px;font-weight:800;color:#f59e0b;background:rgba(245,158,11,.1);border-radius:999px;padding:1px 8px">'+escH(author)+'</span>'}
+          ${n.aircall_source==='AIRCALL'?'<span style="font-size:10px;font-weight:900;color:#49b6ff;background:rgba(61,158,232,.15);border:1px solid rgba(61,158,232,.3);border-radius:4px;padding:2px 8px">AIRCALL</span>':'<span style="font-size:10px;font-weight:800;color:#f59e0b;background:rgba(245,158,11,.1);border-radius:999px;padding:1px 8px">'+escH(author)+'</span>'}
         </div>
       </div>`;
     }).join('');
@@ -2415,7 +2535,7 @@ function showInviteForm(){
     +'<input id="inv-email" style="width:100%;background:#0d1f38;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:9px 12px;font-size:13px;color:#f4f8ff;outline:none" placeholder="colleague@community.com"></div>'
     +'<div style="margin-bottom:16px"><div style="font-size:11px;font-weight:700;color:#4b6278;margin-bottom:5px">Role</div>'
     +'<select id="inv-role" style="width:100%;background:#0d1f38;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:9px 12px;font-size:13px;color:#f4f8ff;outline:none">'
-    +'<option>Marketer</option><option>Sales/Admissions</option><option>Executive Director</option><option>Maintenance</option><option>Housekeeping</option>'
+    +'<option>Marketer</option><option>Director of Sales</option><option>Executive Director</option><option>Maintenance</option><option>Housekeeping</option>'
     +'</select></div>'
     +'<div style="display:flex;gap:8px">'
     +'<button style="padding:10px 20px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#06080e;border:none;border-radius:999px;font-weight:700;cursor:pointer;font-family:inherit" onclick="sendInvite()">Send Invite</button>'
@@ -2457,6 +2577,420 @@ function saveSettings(){
 
 
 function closeInviteModal(){var el=document.getElementById('inviteFormModal');if(el)el.remove();}
+
+// ════════════════════════════════════════════════════════════════
+// PAID REFERRALS
+// ════════════════════════════════════════════════════════════════
+let _allPaidRefs = [];
+const PR_STAGES = ['New Referral','Contact Attempted','Family Reached','Assessment Scheduled',
+  'Tour Scheduled','Touring','Deposit Pending','Approved','Move-In Scheduled','Moved In','Lost'];
+
+async function initPaidReferrals() {
+  try {
+    const d = await clFetch('/paid-referrals');
+    _allPaidRefs = d.data || [];
+    renderPaidRefStats(d.stats || []);
+    renderPaidRefTable(_allPaidRefs);
+  } catch(e) {
+    document.getElementById('paidRefTable').innerHTML =
+      '<div style="color:var(--text-muted);text-align:center;padding:30px">Could not load paid referrals. Check connection.</div>';
+  }
+}
+
+function renderPaidRefStats(stats) {
+  const el = document.getElementById('paidRefStats');
+  if (!el) return;
+  const total = _allPaidRefs.length;
+  const hot = _allPaidRefs.filter(r => r.urgency === 'hot').length;
+  const pendFees = _allPaidRefs.filter(r => r.fee_status === 'pending').reduce((s,r) => s + parseFloat(r.referral_fee||0), 0);
+  const paidFees = _allPaidRefs.filter(r => r.fee_status === 'paid').reduce((s,r) => s + parseFloat(r.referral_fee||0), 0);
+  const movedIn = _allPaidRefs.filter(r => r.stage === 'Moved In').length;
+  el.innerHTML = `
+    <div class="stat"><div class="sl">Total Referrals</div><div class="sv">${total}</div><div class="ss">All paid sources</div></div>
+    <div class="stat"><div class="sl">Hot Urgency</div><div class="sv sr">${hot}</div><div class="ss">Need immediate contact</div></div>
+    <div class="stat"><div class="sl">Pending Fees</div><div class="sv sa">$${pendFees.toLocaleString()}</div><div class="ss">On move-in</div></div>
+    <div class="stat"><div class="sl">Fees Paid</div><div class="sv sg">$${paidFees.toLocaleString()}</div><div class="ss">Confirmed move-ins</div></div>
+    <div class="stat"><div class="sl">Moved In</div><div class="sv sg">${movedIn}</div><div class="ss">Converted</div></div>`;
+}
+
+function filterPaidRefs() {
+  const src = (document.getElementById('prSourceFilter')||{}).value||'';
+  const stage = (document.getElementById('prStageFilter')||{}).value||'';
+  const filtered = _allPaidRefs.filter(r =>
+    (!src || r.source_name === src) && (!stage || r.stage === stage)
+  );
+  renderPaidRefTable(filtered);
+}
+
+function renderPaidRefTable(refs) {
+  const el = document.getElementById('paidRefTable');
+  if (!el) return;
+  if (!refs.length) {
+    el.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:40px;font-size:13px">No paid referrals found. Click "+ Add Paid Referral" to log one manually, or connect your A Place for Mom / Caring.com webhook.</div>';
+    return;
+  }
+  const STAGE_CLS = {'New Referral':'bb','Contact Attempted':'bx','Family Reached':'ba',
+    'Tour Scheduled':'bg','Deposit Pending':'br','Moved In':'bg','Lost':'br'};
+  el.innerHTML = '<div style="overflow-x:auto"><table class="tbl"><thead><tr>'
+    + '<th>Prospect</th><th>Source</th><th>Care Level</th><th>Stage</th>'
+    + '<th>Urgency</th><th>Fee</th><th>Fee Status</th><th>Assigned</th><th>Received</th><th>Actions</th>'
+    + '</tr></thead><tbody>'
+    + refs.map(r => {
+      const sc = STAGE_CLS[r.stage]||'bx';
+      const fc = r.fee_status==='paid'?'bg':r.fee_status==='pending'?'ba':'bx';
+      const uc = r.urgency==='hot'?'br':r.urgency==='warm'?'ba':'bb';
+      const dt = r.received_at ? new Date(r.received_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '—';
+      return `<tr>
+        <td><div style="font-weight:700;color:var(--text-1)">${escH(r.prospect_name)}</div>
+            <div style="font-size:10px;color:var(--text-muted)">${escH(r.prospect_phone||'')} ${r.prospect_email?'· '+escH(r.prospect_email):''}</div></td>
+        <td><div style="font-weight:600">${escH(r.source_name)}</div>
+            <div style="font-size:10px;color:var(--text-muted)">${escH(r.source_contact||'')}</div></td>
+        <td>${escH(r.care_level||'—')}</td>
+        <td><span class="badge ${sc}">${escH(r.stage)}</span></td>
+        <td><span class="badge ${uc}">${(r.urgency||'warm').toUpperCase()}</span></td>
+        <td>${r.referral_fee?'$'+parseFloat(r.referral_fee).toLocaleString():'—'}</td>
+        <td><span class="badge ${fc}">${escH(r.fee_status||'pending')}</span></td>
+        <td style="font-size:11px">${escH(r.assigned_name||'Unassigned')}</td>
+        <td style="font-size:11px;color:var(--text-muted)">${dt}</td>
+        <td style="white-space:nowrap">
+          <button class="btn btn-a btn-sm" onclick="advancePaidRef('${r.id}')" style="margin-right:4px">Advance</button>
+          <button class="btn btn-x btn-sm" onclick="viewPaidRefDetail('${r.id}')">Detail</button>
+        </td></tr>`;
+    }).join('')
+    + '</tbody></table></div>';
+}
+
+async function advancePaidRef(id) {
+  try {
+    const d = await (await clFetch(`/paid-referrals/${id}/advance`, {method:'PUT', body:JSON.stringify({})})).json?.() || {};
+    if (d.error) { T(d.error, 'e'); return; }
+    T('Referral advanced to: ' + (d.data?.stage||'next stage'));
+    initPaidReferrals();
+  } catch(e) { T('Advance failed', 'e'); }
+}
+
+async function clFetchJson(path, opts) {
+  const r = await clFetch(path, opts);
+  if (typeof r.json === 'function') return r.json();
+  return r;
+}
+
+function viewPaidRefDetail(id) {
+  const r = _allPaidRefs.find(x => x.id === id); if (!r) return;
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center';
+  modal.innerHTML = `<div style="background:#0a1628;border:1px solid rgba(245,158,11,.3);border-radius:16px;padding:28px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <div style="font-size:15px;font-weight:800;color:var(--text-1)">Paid Referral — ${escH(r.prospect_name)}</div>
+      <button style="background:none;border:none;color:var(--text-muted);font-size:20px;cursor:pointer" onclick="this.closest('[style*=fixed]').remove()">&times;</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px">
+      ${[['Source',r.source_name],['Contact',r.source_contact||'—'],['Phone',r.prospect_phone||'—'],
+         ['Email',r.prospect_email||'—'],['Budget',r.budget_range||'—'],['Care Level',r.care_level||'—'],
+         ['Move-In Timeline',r.move_in_timeframe||'—'],['Care Needs',r.care_needs||'—'],
+         ['Urgency',r.urgency],['Referral Fee',r.referral_fee?'$'+r.referral_fee:'—'],
+         ['Fee Status',r.fee_status],['Stage',r.stage],
+         ['Family Contact',r.family_contact_name||'—'],['Family Phone',r.family_contact_phone||'—']
+        ].map(([l,v]) => `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+          <div style="color:var(--text-muted)">${l}</div><div style="font-weight:600;color:var(--text-1)">${escH(String(v))}</div>
+        </div>`).join('')}
+    </div>
+    ${r.source_notes?`<div style="margin-top:14px;background:rgba(255,255,255,.04);border-radius:8px;padding:12px"><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">SOURCE NOTES</div><div style="font-size:12px;color:var(--text-2)">${escH(r.source_notes)}</div></div>`:''}
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="btn btn-a" onclick="advancePaidRef('${r.id}');this.closest('[style*=fixed]').remove()">Advance Stage</button>
+      <button class="btn btn-x" onclick="this.closest('[style*=fixed]').remove()">Close</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+}
+
+function showAddPaidRef() {
+  const sources = ['A Place for Mom','Caring.com','SeniorAdvisor','Hospital Discharge','Physician Referral','Social Worker','Case Manager','Family Self-Referral','Other'];
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center';
+  modal.innerHTML = `<div style="background:#0a1628;border:1px solid rgba(245,158,11,.3);border-radius:16px;padding:28px;width:100%;max-width:580px;max-height:90vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <div style="font-size:15px;font-weight:800;color:var(--text-1)">Add Paid Referral</div>
+      <button style="background:none;border:none;color:var(--text-muted);font-size:20px;cursor:pointer" onclick="this.closest('[style*=fixed]').remove()">&times;</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="fl fw"><div class="flb">Prospect Name *</div><input class="fi" id="apr-name" placeholder="Dorothy Harrison"></div>
+      <div class="fl"><div class="flb">Referral Source *</div>
+        <select class="fi" id="apr-source">${sources.map(s=>`<option value="${s}">${s}</option>`).join('')}</select></div>
+      <div class="fl"><div class="flb">Phone</div><input class="fi" id="apr-phone" type="tel" placeholder="(214) 555-0100"></div>
+      <div class="fl"><div class="flb">Email</div><input class="fi" id="apr-email" type="email" placeholder="contact@email.com"></div>
+      <div class="fl"><div class="flb">Care Level</div>
+        <select class="fi" id="apr-care"><option>Independent Living</option><option>Assisted Living</option><option>Memory Care</option><option>Undecided</option></select></div>
+      <div class="fl"><div class="flb">Budget Range</div><input class="fi" id="apr-budget" placeholder="$3,000–$4,500/mo"></div>
+      <div class="fl"><div class="flb">Move-In Timeframe</div>
+        <select class="fi" id="apr-timeline"><option>ASAP</option><option>30 days</option><option>60 days</option><option>90 days</option><option>6+ months</option></select></div>
+      <div class="fl"><div class="flb">Urgency</div>
+        <select class="fi" id="apr-urgency"><option value="hot">🔴 Hot</option><option value="warm" selected>🟡 Warm</option><option value="cold">🔵 Cold</option></select></div>
+      <div class="fl"><div class="flb">Referral Fee ($)</div><input class="fi" id="apr-fee" type="number" placeholder="2000"></div>
+      <div class="fl"><div class="flb">Source Contact Name</div><input class="fi" id="apr-srccontact" placeholder="Sarah M."></div>
+      <div class="fl fw"><div class="flb">Care Needs</div><textarea class="fi" id="apr-careneeds" rows="2" placeholder="Memory care, fall risk, requires 2-person assist…"></textarea></div>
+      <div class="fl fw"><div class="flb">Source Notes</div><textarea class="fi" id="apr-notes" rows="2" placeholder="Notes from A Place for Mom, family background…"></textarea></div>
+      <div class="fl"><div class="flb">Family Contact Name</div><input class="fi" id="apr-fcname" placeholder="James Harrison (Son)"></div>
+      <div class="fl"><div class="flb">Family Phone</div><input class="fi" id="apr-fcphone" type="tel" placeholder="(214) 555-0101"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="btn btn-a" onclick="submitNewPaidRef(this)">Save Paid Referral + Alert Team</button>
+      <button class="btn btn-x" onclick="this.closest('[style*=fixed]').remove()">Cancel</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+}
+
+async function submitNewPaidRef(btn) {
+  const name = (document.getElementById('apr-name')||{}).value?.trim();
+  if (!name) { T('Prospect name is required', 'e'); return; }
+  btn.disabled = true; btn.textContent = 'Saving…';
+  const data = {
+    prospect_name: name,
+    source_name: (document.getElementById('apr-source')||{}).value||'',
+    prospect_phone: (document.getElementById('apr-phone')||{}).value||'',
+    prospect_email: (document.getElementById('apr-email')||{}).value||'',
+    care_level: (document.getElementById('apr-care')||{}).value||'',
+    budget_range: (document.getElementById('apr-budget')||{}).value||'',
+    move_in_timeframe: (document.getElementById('apr-timeline')||{}).value||'',
+    urgency: (document.getElementById('apr-urgency')||{}).value||'warm',
+    referral_fee: parseFloat((document.getElementById('apr-fee')||{}).value)||null,
+    source_contact: (document.getElementById('apr-srccontact')||{}).value||'',
+    care_needs: (document.getElementById('apr-careneeds')||{}).value||'',
+    source_notes: (document.getElementById('apr-notes')||{}).value||'',
+    family_contact_name: (document.getElementById('apr-fcname')||{}).value||'',
+    family_contact_phone: (document.getElementById('apr-fcphone')||{}).value||'',
+  };
+  try {
+    const r = await clFetch('/paid-referrals', {method:'POST', body: JSON.stringify(data)});
+    const d = typeof r.json === 'function' ? await r.json() : r;
+    if (d.error) { T(d.error, 'e'); btn.disabled=false; btn.textContent='Save Paid Referral + Alert Team'; return; }
+    T('✅ Paid referral saved! Team alert sent. Lead pipeline updated.');
+    btn.closest('[style*="position:fixed"]')?.remove();
+    initPaidReferrals();
+  } catch(e) { T('Save failed. Check connection.', 'e'); btn.disabled=false; btn.textContent='Save Paid Referral + Alert Team'; }
+}
+
+// ════════════════════════════════════════════════════════════════
+// GIFT & GRATUITY
+// ════════════════════════════════════════════════════════════════
+let _giftLimit = 15.00;
+
+async function initGiftGratuity() {
+  try {
+    const d = await clFetch('/gift') || {};
+    const data = await (typeof d.json === 'function' ? d.json() : d);
+    _giftLimit = data.gift_limit || 15.00;
+    document.getElementById('giftLimitLabel').textContent = `(Limit: $${_giftLimit}/visit)`;
+    const banner = document.getElementById('giftLimitBanner');
+    if (banner) { banner.style.display='none'; }
+    renderGiftStats(data.data || []);
+    renderGiftTable(data.data || []);
+  } catch(e) {
+    _giftLimit = 15.00;
+    document.getElementById('giftLimitLabel').textContent = '(Limit: $15.00/visit)';
+    renderGiftStats([]); renderGiftTable([]);
+  }
+}
+
+function checkGiftLimit(val) {
+  const v = parseFloat(val);
+  const warn = document.getElementById('giftLimitWarning');
+  if (warn) warn.style.display = (v > _giftLimit) ? 'block' : 'none';
+}
+
+function renderGiftStats(logs) {
+  const el = document.getElementById('giftStats'); if (!el) return;
+  const total = logs.length;
+  const totalVal = logs.reduce((s,l) => s + parseFloat(l.gift_value||0), 0);
+  const violations = logs.filter(l => !l.compliance_ok).length;
+  const thisMonth = logs.filter(l => {
+    const d = new Date(l.visit_date||l.created_at);
+    const now = new Date();
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  }).length;
+  el.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:0">
+      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="color:var(--text-muted);font-size:12px">Per-Visit Limit</span><span style="font-weight:800;color:var(--amber)">$${_giftLimit.toFixed(2)}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="color:var(--text-muted);font-size:12px">Total Logged</span><span style="font-weight:800;color:var(--text-1)">${total}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="color:var(--text-muted);font-size:12px">This Month</span><span style="font-weight:800;color:var(--text-1)">${thisMonth}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="color:var(--text-muted);font-size:12px">Total Value</span><span style="font-weight:800;color:var(--text-1)">$${totalVal.toFixed(2)}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:7px 0"><span style="color:var(--text-muted);font-size:12px">Compliance Violations</span><span style="font-weight:800;color:${violations>0?'#f87171':'#4fc87a'}">${violations}</span></div>
+    </div>`;
+}
+
+function renderGiftTable(logs) {
+  const el = document.getElementById('giftLogTable'); if (!el) return;
+  if (!logs.length) { el.innerHTML = '<div style="color:var(--text-muted);font-size:12px;padding:12px">No gift logs yet.</div>'; return; }
+  el.innerHTML = '<table class="tbl"><thead><tr><th>Date</th><th>Recipient</th><th>Type</th><th>Value</th><th>Facility</th><th>Logged By</th><th>Status</th></tr></thead><tbody>'
+    + logs.map(l => {
+      const ok = l.compliance_ok !== false;
+      return `<tr>
+        <td style="font-size:11px">${l.visit_date||'—'}</td>
+        <td><div style="font-weight:600;color:var(--text-1)">${escH(l.recipient_name)}</div></td>
+        <td>${escH(l.gift_type||'—')}</td>
+        <td style="font-weight:700;color:${ok?'var(--green)':'#f87171'}">$${parseFloat(l.gift_value||0).toFixed(2)}</td>
+        <td style="font-size:11px;color:var(--text-muted)">${escH(l.facility_name||'—')}</td>
+        <td style="font-size:11px">${escH(l.logged_by_name||'—')}</td>
+        <td><span class="badge ${ok?'bg':'br'}">${ok?'✅ OK':'⚠ Over Limit'}</span></td>
+      </tr>`;
+    }).join('')
+    + '</tbody></table>';
+}
+
+async function saveGiftLog() {
+  const recipient = (document.getElementById('gft-recipient')||{}).value?.trim();
+  const date = (document.getElementById('gft-date')||{}).value;
+  const type = (document.getElementById('gft-type')||{}).value;
+  const val = (document.getElementById('gft-value')||{}).value;
+  if (!recipient||!date||!type||!val) { T('Fill all required fields (*)', 'e'); return; }
+  if (parseFloat(val) > _giftLimit) {
+    if (!confirm(`Value $${val} exceeds limit $${_giftLimit}. Save anyway?`)) return;
+  }
+  const data = {
+    recipient_name: recipient,
+    facility_name: (document.getElementById('gft-facility')||{}).value||'',
+    referral_source: (document.getElementById('gft-source')||{}).value||'',
+    visit_date: date, gift_type: type, gift_value: parseFloat(val),
+    visit_purpose: (document.getElementById('gft-purpose')||{}).value||'',
+    notes: (document.getElementById('gft-notes')||{}).value||'',
+  };
+  try {
+    const r = await fetch(BACKEND + '/api/gift', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+getToken() },
+      body: JSON.stringify(data),
+    });
+    const d = await r.json();
+    if (d.error) { T(d.error, 'e'); return; }
+    T(d.compliance_ok ? '✅ Gift logged — within compliance limit.' : '⚠ Gift logged — OVER compliance limit!', d.compliance_ok ? 's' : 'w');
+    ['gft-recipient','gft-facility','gft-source','gft-date','gft-type','gft-value','gft-purpose','gft-notes']
+      .forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+    initGiftGratuity();
+  } catch(e) { T('Save failed', 'e'); }
+}
+
+// ════════════════════════════════════════════════════════════════
+// ALERT SETTINGS
+// ════════════════════════════════════════════════════════════════
+const ALERT_TYPES = [
+  {key:'paid_referral',  label:'New Paid Referral',        desc:'A Place for Mom, Caring.com, etc.'},
+  {key:'organic_lead',   label:'New Organic Lead',          desc:'Walk-ins, website, direct inquiries'},
+  {key:'tour',           label:'Tour Scheduled',            desc:'When a tour is booked'},
+  {key:'move_in',        label:'Move-In Confirmed',         desc:'When a resident moves in'},
+  {key:'lost_lead',      label:'Lead Marked Lost',          desc:'When a lead is marked as lost'},
+  {key:'failed_payment', label:'Failed Payment',            desc:'Billing / subscription failure'},
+];
+
+async function initAlertSettings() {
+  const el = document.getElementById('alertSettingsContent'); if (!el) return;
+  try {
+    const d = await clFetch('/alert-settings');
+    const data = typeof d.json === 'function' ? await d.json() : d;
+    const settings = {};
+    (data.data || []).forEach(s => { settings[s.alert_type] = s; });
+    el.innerHTML = '<div style="display:flex;flex-direction:column;gap:12px">'
+      + ALERT_TYPES.map(at => {
+        const s = settings[at.key] || { enabled: true, channel: 'email', recipient_roles: ['admin','director','salesadmissions'] };
+        const roles = s.recipient_roles || [];
+        return `<div class="card">
+          <div class="card-h"><div>
+            <div class="card-t">${at.label}</div>
+            <div style="font-size:11px;color:var(--text-muted)">${at.desc}</div>
+          </div>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="checkbox" id="alt-${at.key}" ${s.enabled?'checked':''} style="width:16px;height:16px">
+            <span style="font-size:12px;color:var(--text-muted)">Enabled</span>
+          </label></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+            ${['admin','director','salesadmissions','marketer'].map(role =>
+              `<label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px">
+                <input type="checkbox" class="alt-role-${at.key}" value="${role}" ${roles.includes(role)?'checked':''}>
+                ${role}
+              </label>`
+            ).join('')}
+          </div>
+          <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
+            <span style="font-size:11px;color:var(--text-muted)">Channel:</span>
+            <select class="fi" id="alt-ch-${at.key}" style="width:120px;padding:4px 8px">
+              ${['email','sms','inapp','all'].map(ch => `<option value="${ch}" ${s.channel===ch?'selected':''}>${ch}</option>`).join('')}
+            </select>
+            <button class="btn btn-a btn-sm" onclick="saveAlertSetting('${at.key}')">Save</button>
+          </div>
+        </div>`;
+      }).join('')
+      + '</div>';
+  } catch(e) { el.innerHTML = '<div style="color:var(--text-muted);padding:20px">Admin access required.</div>'; }
+}
+
+async function saveAlertSetting(type) {
+  const enabled = (document.getElementById('alt-'+type)||{}).checked ?? true;
+  const channel = (document.getElementById('alt-ch-'+type)||{}).value || 'email';
+  const roleCheckboxes = document.querySelectorAll(`.alt-role-${type}:checked`);
+  const recipient_roles = Array.from(roleCheckboxes).map(cb => cb.value);
+  try {
+    await clFetch('/alert-settings/'+type, {
+      method: 'PUT',
+      body: JSON.stringify({ enabled, channel, recipient_roles }),
+    });
+    T('Alert setting saved for: ' + type);
+  } catch(e) { T('Save failed', 'e'); }
+}
+
+// ════════════════════════════════════════════════════════════════
+// FINANCIAL SETTINGS
+// ════════════════════════════════════════════════════════════════
+const FIN_SETTINGS_DEF = [
+  {key:'mileage_rate',       label:'Mileage Reimbursement Rate', hint:'Per mile (IRS 2024: $0.67)', prefix:'$', suffix:'/mile'},
+  {key:'gift_gratuity_limit',label:'Gift & Gratuity Limit',      hint:'Per visit — CMS compliance', prefix:'$', suffix:'/visit'},
+  {key:'parking_max',        label:'Parking Expense Max',        hint:'Per day maximum', prefix:'$', suffix:'/day'},
+  {key:'meal_max',           label:'Meal Expense Max',           hint:'Per person if allowed', prefix:'$', suffix:''},
+  {key:'referral_fee_default',label:'Default Referral Fee',      hint:'Default when adding paid referral', prefix:'$', suffix:''},
+];
+
+async function initFinSettings() {
+  const el = document.getElementById('finSettingsForm'); if (!el) return;
+  let current = {};
+  try {
+    const r = await fetch(BACKEND + '/api/settings/financial', {
+      headers: { 'Authorization':'Bearer '+getToken() }
+    });
+    const d = await r.json();
+    (d.data||[]).forEach(s => { current[s.setting_key] = s.setting_value; });
+  } catch(e) {}
+
+  el.innerHTML = FIN_SETTINGS_DEF.map(s => `
+    <div>
+      <div style="font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:4px">${s.label}</div>
+      <div style="font-size:10px;color:var(--text-muted);margin-bottom:6px">${s.hint}</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span style="color:var(--text-muted)">${s.prefix}</span>
+        <input class="fi" id="fs-${s.key}" value="${current[s.key]||''}" placeholder="Enter value" style="max-width:140px">
+        <span style="color:var(--text-muted)">${s.suffix}</span>
+        <button class="btn btn-a btn-sm" onclick="saveFinSetting('${s.key}')">Save</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function saveFinSetting(key) {
+  const val = (document.getElementById('fs-'+key)||{}).value?.trim();
+  if (!val) { T('Enter a value', 'e'); return; }
+  try {
+    const r = await fetch(BACKEND + '/api/settings/financial/'+key, {
+      method: 'PUT',
+      headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+getToken() },
+      body: JSON.stringify({ value: val }),
+    });
+    const d = await r.json();
+    if (d.error) { T(d.error, 'e'); return; }
+    T('✅ '+key+' updated to '+val);
+    // Refresh gift limit if that was changed
+    if (key === 'gift_gratuity_limit') _giftLimit = parseFloat(val);
+  } catch(e) { T('Save failed', 'e'); }
+}
+
+
 
 // ── Referral Pipeline ──────────────────────────────────────────
 const REFERRAL_STAGES_CRM = ['New Referral','Contact Attempted','Family Reached',
@@ -2632,6 +3166,438 @@ async function submitNewReferral(){
     document.querySelector('[style*="position:fixed"]')?.remove();
     initReferrals();
   } catch(e){ T('Save failed. Check connection.','e'); }
+}
+
+// ════════════════════════════════════════════════════════════════
+// PAID REFERRAL PORTAL — Live CRM
+// ════════════════════════════════════════════════════════════════
+let _paidRefs = [];
+const PR_STAGES = ['New Referral','Contact Attempted','Family Reached','Assessment Scheduled',
+  'Tour Scheduled','Touring','Deposit Pending','Approved','Move-In Scheduled','Moved In','Lost'];
+
+async function initPaidReferrals() {
+  try {
+    const d = await clFetch('/paid-referrals');
+    _paidRefs = d.data || [];
+    renderPaidRefStats(d.stats || []);
+    renderPaidRefTable(_paidRefs);
+  } catch(e) { T('Could not load paid referrals', 'e'); }
+}
+
+function filterPaidRefs() {
+  const src = (document.getElementById('prSourceFilter')||{}).value || '';
+  const stg = (document.getElementById('prStageFilter')||{}).value || '';
+  const filtered = _paidRefs.filter(r =>
+    (!src || r.source_name === src) && (!stg || r.stage === stg)
+  );
+  renderPaidRefTable(filtered);
+}
+
+function renderPaidRefStats(stats) {
+  const total = _paidRefs.length;
+  const hot = _paidRefs.filter(r => r.urgency === 'hot').length;
+  const movedIn = _paidRefs.filter(r => r.stage === 'Moved In').length;
+  const pendingFees = _paidRefs.filter(r => r.fee_status === 'pending')
+    .reduce((s, r) => s + (parseFloat(r.referral_fee) || 0), 0);
+  const el = document.getElementById('paidRefStats');
+  if (!el) return;
+  el.innerHTML = [
+    ['Total Referrals', total, 'All paid sources'],
+    ['Hot Leads', hot, 'Need immediate action', '#f87171'],
+    ['Moved In', movedIn, 'Converted this period', '#4fc87a'],
+    ['Pending Fees', '$' + pendingFees.toLocaleString(), 'Awaiting move-in', '#f59e0b'],
+  ].map(([l,v,s,col='var(--text-primary)']) =>
+    `<div class="stat"><div class="sl">${l}</div><div class="sv" style="color:${col}">${v}</div><div class="ss">${s}</div></div>`
+  ).join('');
+}
+
+function renderPaidRefTable(refs) {
+  const el = document.getElementById('paidRefTable');
+  if (!el) return;
+  const BADGE = {
+    'New Referral':'bb','Contact Attempted':'bx','Family Reached':'ba',
+    'Assessment Scheduled':'ba','Tour Scheduled':'bg','Touring':'bg',
+    'Deposit Pending':'br','Approved':'bg','Move-In Scheduled':'bg','Moved In':'bg','Lost':'br'
+  };
+  if (!refs.length) {
+    el.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:40px;font-size:13px">No paid referrals yet. Click + Add Paid Referral or connect your referral partner portal.</div>';
+    return;
+  }
+  el.innerHTML = '<div class="card-h"><div class="card-t">Paid Referrals (' + refs.length + ')</div></div>'
+    + '<div style="overflow-x:auto"><table class="tbl"><thead><tr>'
+    + '<th>Prospect</th><th>Source</th><th>Stage</th><th>Urgency</th><th>Care Level</th>'
+    + '<th>Fee</th><th>Fee Status</th><th>Received</th><th>Actions</th>'
+    + '</tr></thead><tbody>'
+    + refs.map(r => {
+      const bc = BADGE[r.stage] || 'bb';
+      const fc = r.fee_status==='paid'?'bg':r.fee_status==='pending'?'ba':'bx';
+      const ts = r.received_at ? new Date(r.received_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '—';
+      return `<tr>
+        <td><div style="font-weight:700;color:var(--text-primary)">${escH(r.prospect_name)}</div>
+            <div style="font-size:10px;color:var(--text-muted)">${escH(r.prospect_phone||'')} ${r.prospect_email?'· '+escH(r.prospect_email):''}</div></td>
+        <td><div style="font-weight:600">${escH(r.source_name)}</div>
+            <div style="font-size:10px;color:var(--text-muted)">${escH(r.source_contact||'')}</div></td>
+        <td><span class="badge ${bc}">${escH(r.stage)}</span></td>
+        <td><span class="badge ${r.urgency==='hot'?'br':r.urgency==='warm'?'ba':'bb'}">${escH(r.urgency||'warm')}</span></td>
+        <td>${escH(r.care_level||'—')}</td>
+        <td>${r.referral_fee?'$'+parseFloat(r.referral_fee).toLocaleString():'—'}</td>
+        <td><span class="badge ${fc}">${escH(r.fee_status||'pending')}</span></td>
+        <td style="font-size:11px;color:var(--text-muted)">${ts}</td>
+        <td style="white-space:nowrap">
+          <button class="btn btn-a btn-sm" onclick="advancePaidRef('${escH(r.id)}')" style="margin-right:4px">Advance</button>
+          <button class="btn btn-x btn-sm" onclick="viewPaidRef('${escH(r.id)}')">Detail</button>
+        </td></tr>`;
+    }).join('')
+    + '</tbody></table></div>';
+}
+
+function showAddPaidRef() {
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  modal.innerHTML = `<div style="background:#0a1628;border:1px solid rgba(245,158,11,.25);border-radius:16px;padding:28px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <div><div style="font-size:15px;font-weight:800;color:var(--text-primary)">Add Paid Referral</div>
+           <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Auto-syncs to Lead Pipeline and sends email alerts</div></div>
+      <button style="background:none;border:none;color:var(--text-muted);font-size:20px;cursor:pointer" onclick="this.closest('[style*=fixed]').remove()">&times;</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="fl fw"><div class="flb">Prospect Name *</div><input class="fi" id="pr-name" placeholder="Dorothy Harrison"></div>
+      <div class="fl"><div class="flb">Care Level</div>
+        <select class="fi" id="pr-care"><option value="">Select…</option>
+          <option>Independent Living</option><option>Assisted Living</option>
+          <option>Memory Care</option><option>Respite</option><option>Undecided</option>
+        </select></div>
+      <div class="fl"><div class="flb">Prospect Phone</div><input class="fi" id="pr-phone" type="tel" placeholder="(214) 555-0100"></div>
+      <div class="fl"><div class="flb">Prospect Email</div><input class="fi" id="pr-email" type="email" placeholder="prospect@email.com"></div>
+      <div class="fl"><div class="flb">Referral Source *</div>
+        <select class="fi" id="pr-source">
+          <option value="">Select source…</option>
+          <option value="A Place for Mom">A Place for Mom</option>
+          <option value="Caring.com">Caring.com</option>
+          <option value="SeniorAdvisor">SeniorAdvisor</option>
+          <option value="Hospital Discharge">Hospital Discharge</option>
+          <option value="Physician Referral">Physician Referral</option>
+          <option value="Social Worker">Social Worker</option>
+          <option value="Case Manager">Case Manager</option>
+          <option value="Other">Other</option>
+        </select></div>
+      <div class="fl"><div class="flb">Urgency</div>
+        <select class="fi" id="pr-urgency"><option value="warm">Warm</option><option value="hot">Hot</option><option value="cold">Cold</option></select></div>
+      <div class="fl"><div class="flb">Budget Range</div><input class="fi" id="pr-budget" placeholder="$3,000–$4,500/mo"></div>
+      <div class="fl"><div class="flb">Move-In Timeframe</div><input class="fi" id="pr-timeline" placeholder="30–60 days, ASAP…"></div>
+      <div class="fl"><div class="flb">Referral Fee ($)</div><input class="fi" id="pr-fee" type="number" placeholder="2000" min="0"></div>
+      <div class="fl"><div class="flb">Source Contact Name</div><input class="fi" id="pr-sc-name" placeholder="Jane at APFM"></div>
+      <div class="fl fw"><div class="flb">Care Needs / Notes</div><textarea class="fi" id="pr-needs" rows="2" placeholder="Memory issues, mobility needs, dietary restrictions…"></textarea></div>
+      <div class="fl fw"><div class="flb">Source Notes</div><textarea class="fi" id="pr-source-notes" rows="2" placeholder="Notes sent by the referral partner…"></textarea></div>
+      <div class="fl fw"><div class="flb">Family Contact</div><input class="fi" id="pr-family" placeholder="James (son) – (214) 555-0200"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="btn btn-a" style="flex:1" onclick="submitPaidRef()">💰 Save + Send Alert</button>
+      <button class="btn btn-x" onclick="this.closest('[style*=fixed]').remove()">Cancel</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+}
+
+async function submitPaidRef() {
+  const name = (document.getElementById('pr-name')||{}).value?.trim();
+  const source = (document.getElementById('pr-source')||{}).value;
+  if (!name || !source) { T('Prospect name and referral source are required', 'e'); return; }
+  const data = {
+    prospect_name: name,
+    prospect_phone: (document.getElementById('pr-phone')||{}).value || '',
+    prospect_email: (document.getElementById('pr-email')||{}).value || '',
+    care_level: (document.getElementById('pr-care')||{}).value || '',
+    source_name: source,
+    urgency: (document.getElementById('pr-urgency')||{}).value || 'warm',
+    budget_range: (document.getElementById('pr-budget')||{}).value || '',
+    move_in_timeframe: (document.getElementById('pr-timeline')||{}).value || '',
+    referral_fee: parseFloat((document.getElementById('pr-fee')||{}).value) || null,
+    source_contact: (document.getElementById('pr-sc-name')||{}).value || '',
+    care_needs: (document.getElementById('pr-needs')||{}).value || '',
+    source_notes: (document.getElementById('pr-source-notes')||{}).value || '',
+    family_contact_name: (document.getElementById('pr-family')||{}).value || '',
+  };
+  try {
+    const r = await postJSON(BACKEND + '/api/cl/paid-referrals', data);
+    const d = await r.json();
+    if (d.error) { T(d.error, 'e'); return; }
+    T('✅ Paid referral saved! Alert emails sent. Lead added to pipeline.');
+    document.querySelector('[style*="position:fixed"]')?.remove();
+    initPaidReferrals();
+  } catch(e) { T('Save failed — check connection', 'e'); }
+}
+
+async function advancePaidRef(id) {
+  try {
+    const r = await postJSON(BACKEND + '/api/cl/paid-referrals/' + id + '/advance', {});
+    const d = await r.json();
+    if (d.error) { T(d.error, 'e'); return; }
+    T('Referral advanced to: ' + d.data.stage);
+    initPaidReferrals();
+  } catch(e) { T('Could not advance referral', 'e'); }
+}
+
+function viewPaidRef(id) {
+  const r = _paidRefs.find(x => x.id === id);
+  if (!r) return;
+  const detail = [
+    'PAID REFERRAL DETAIL',
+    'Prospect: ' + r.prospect_name,
+    'Phone: ' + (r.prospect_phone || '—'),
+    'Email: ' + (r.prospect_email || '—'),
+    'Source: ' + r.source_name,
+    'Care Level: ' + (r.care_level || '—'),
+    'Budget: ' + (r.budget_range || '—'),
+    'Stage: ' + r.stage,
+    'Urgency: ' + r.urgency,
+    'Fee: ' + (r.referral_fee ? '$' + r.referral_fee : '—'),
+    'Fee Status: ' + r.fee_status,
+    '',
+    'Care Needs: ' + (r.care_needs || '—'),
+    'Source Notes: ' + (r.source_notes || 'None'),
+  ].join('\n');
+  alert(detail);
+}
+
+// ════════════════════════════════════════════════════════════════
+// GIFT & GRATUITY — Live CRM
+// ════════════════════════════════════════════════════════════════
+let _giftLimit = 15.00;
+
+async function initGiftGratuity() {
+  try {
+    const d = await clFetch('/gift');
+    // Note: gift routes are on /api/gift not /api/cl/gift
+    // Use direct fetch with auth
+    const r = await _fetch(BACKEND + '/api/gift');
+    const data = await r.json();
+    _giftLimit = data.gift_limit || 15.00;
+
+    // Update UI labels
+    const limitLabel = document.getElementById('giftLimitLabel');
+    if (limitLabel) limitLabel.textContent = 'Limit: $' + _giftLimit.toFixed(2) + '/visit';
+    const banner = document.getElementById('giftLimitBanner');
+    if (banner) {
+      banner.textContent = 'Current gift/gratuity limit: $' + _giftLimit.toFixed(2) + ' per visit (CMS compliance)';
+      banner.style.display = 'block';
+    }
+
+    renderGiftStats(data.data || []);
+    renderGiftTable(data.data || []);
+  } catch(e) {
+    T('Could not load gift logs', 'e');
+    // Still show limit from default
+    const limitLabel = document.getElementById('giftLimitLabel');
+    if (limitLabel) limitLabel.textContent = 'Limit: $15.00/visit';
+  }
+}
+
+function checkGiftLimit(val) {
+  const v = parseFloat(val) || 0;
+  const w = document.getElementById('giftLimitWarning');
+  if (w) w.style.display = v > _giftLimit ? 'block' : 'none';
+}
+
+function renderGiftStats(logs) {
+  const el = document.getElementById('giftStats');
+  if (!el) return;
+  const total = logs.reduce((s, l) => s + (parseFloat(l.gift_value) || 0), 0);
+  const violations = logs.filter(l => !l.compliance_ok).length;
+  const thisMonth = logs.filter(l => l.visit_date && l.visit_date.slice(0, 7) === new Date().toISOString().slice(0, 7));
+  el.innerHTML = [
+    ['Total Gifts Logged', logs.length, ''],
+    ['Total Value', '$' + total.toFixed(2), 'All time'],
+    ['This Month', thisMonth.length, 'Logs'],
+    ['Compliance Issues', violations, violations > 0 ? 'Action needed!' : 'All clear'],
+  ].map(([l, v, s]) => `
+    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+      <span style="font-size:12px;color:var(--text-muted)">${l}</span>
+      <span style="font-weight:800;color:${l==='Compliance Issues'&&parseInt(v)>0?'#f87171':'var(--text-primary)'}">${v}</span>
+    </div>`).join('');
+}
+
+function renderGiftTable(logs) {
+  const el = document.getElementById('giftLogTable');
+  if (!el) return;
+  if (!logs.length) {
+    el.innerHTML = '<div style="color:var(--text-muted);font-size:12px;text-align:center;padding:20px">No gift logs yet.</div>';
+    return;
+  }
+  el.innerHTML = '<table class="tbl"><thead><tr><th>Date</th><th>Recipient</th><th>Type</th><th>Value</th><th>Logged By</th><th>Status</th></tr></thead><tbody>'
+    + logs.slice(0, 20).map(l => {
+      const ok = l.compliance_ok !== false;
+      return `<tr>
+        <td style="font-size:11px">${l.visit_date || '—'}</td>
+        <td><div style="font-weight:600">${escH(l.recipient_name)}</div>
+            <div style="font-size:10px;color:var(--text-muted)">${escH(l.facility_name||'')}</div></td>
+        <td>${escH(l.gift_type)}</td>
+        <td style="font-weight:700;color:${ok?'var(--text-primary)':'#f87171'}">$${parseFloat(l.gift_value||0).toFixed(2)}</td>
+        <td style="font-size:11px">${escH(l.logged_by_name||'—')}</td>
+        <td><span class="badge ${ok?'bg':'br'}">${ok?'OK':'OVER LIMIT'}</span></td>
+      </tr>`;
+    }).join('')
+    + '</tbody></table>';
+}
+
+async function saveGiftLog() {
+  const recipient = (document.getElementById('gft-recipient')||{}).value?.trim();
+  const date = (document.getElementById('gft-date')||{}).value;
+  const type = (document.getElementById('gft-type')||{}).value;
+  const value = (document.getElementById('gft-value')||{}).value;
+  if (!recipient || !date || !type || !value) { T('Fill in all required fields', 'e'); return; }
+  if (parseFloat(value) > _giftLimit) {
+    if (!confirm('This gift value exceeds the $' + _giftLimit + ' limit. Save anyway with compliance flag?')) return;
+  }
+  try {
+    const r = await _fetch(BACKEND + '/api/gift', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        recipient_name: recipient,
+        facility_name: (document.getElementById('gft-facility')||{}).value || '',
+        referral_source: (document.getElementById('gft-source')||{}).value || '',
+        visit_date: date,
+        gift_type: type,
+        gift_value: parseFloat(value),
+        visit_purpose: (document.getElementById('gft-purpose')||{}).value || '',
+        notes: (document.getElementById('gft-notes')||{}).value || '',
+      }),
+    });
+    const d = await r.json();
+    if (d.error) { T(d.error, 'e'); return; }
+    T(d.compliance_ok ? '✅ Gift logged — within compliance limit' : '⚠️ Gift logged — marked over limit', d.compliance_ok ? 's' : 'w');
+    ['gft-recipient','gft-facility','gft-source','gft-date','gft-type','gft-value','gft-purpose','gft-notes'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.value = '';
+    });
+    document.getElementById('giftLimitWarning').style.display = 'none';
+    initGiftGratuity();
+  } catch(e) { T('Save failed — check connection', 'e'); }
+}
+
+// ════════════════════════════════════════════════════════════════
+// ALERT SETTINGS — Live CRM
+// ════════════════════════════════════════════════════════════════
+const ALERT_TYPES = [
+  { key: 'paid_referral',  label: 'New Paid Referral',    desc: 'Email alert when a paid referral is received from APFM, Caring.com, etc.' },
+  { key: 'tour',           label: 'Tour Scheduled',        desc: 'Alert when a tour is booked.' },
+  { key: 'move_in',        label: 'Move-In Confirmed',     desc: 'Alert when a lead converts to move-in.' },
+  { key: 'lost_lead',      label: 'Lead Marked Lost',      desc: 'Alert when a lead is marked as lost.' },
+  { key: 'organic_lead',   label: 'Organic Lead Received', desc: 'Alert when a new organic lead is added.' },
+  { key: 'failed_payment', label: 'Failed Payment',        desc: 'Admin alert for Stripe payment failures.' },
+];
+const ALERT_ROLES = ['admin', 'director', 'salesadmissions', 'marketer'];
+
+async function initAlertSettings() {
+  const el = document.getElementById('alertSettingsContent');
+  if (!el) return;
+  try {
+    const d = await clFetch('/alert-settings');
+    const settings = {};
+    (d.data || []).forEach(s => { settings[s.alert_type] = s; });
+    el.innerHTML = '<div class="card"><div class="card-h"><div class="card-t">Notification Rules</div>'
+      + '<button class="btn btn-a btn-sm" onclick="saveAllAlerts()">💾 Save All</button></div>'
+      + ALERT_TYPES.map(at => {
+        const s = settings[at.key] || { enabled: true, recipient_roles: ['admin','director','salesadmissions'], channel: 'email' };
+        const roles = s.recipient_roles || [];
+        return `<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:14px;margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+            <div>
+              <div style="font-weight:700;color:var(--text-primary);font-size:13px">${at.label}</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px">${at.desc}</div>
+            </div>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+              <input type="checkbox" id="alt-en-${at.key}" ${s.enabled?'checked':''} style="width:16px;height:16px;cursor:pointer">
+              <span style="font-size:11px;color:var(--text-muted)">Enabled</span>
+            </label>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <span style="font-size:11px;color:var(--text-muted)">Notify:</span>
+            ${ALERT_ROLES.map(role => `<label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:11px;color:var(--text-muted)">
+              <input type="checkbox" data-key="${at.key}" data-role="${role}" ${roles.includes(role)?'checked':''}> ${role}</label>`).join('')}
+            <select id="alt-ch-${at.key}" style="margin-left:auto;background:#060e1b;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:4px 8px;color:var(--text-primary);font-size:11px;font-family:inherit">
+              <option value="email" ${s.channel==='email'?'selected':''}>Email</option>
+              <option value="sms"   ${s.channel==='sms'?'selected':''}>SMS</option>
+              <option value="inapp" ${s.channel==='inapp'?'selected':''}>In-App</option>
+              <option value="all"   ${s.channel==='all'?'selected':''}>All Channels</option>
+            </select>
+          </div>
+        </div>`;
+      }).join('')
+      + '</div>';
+  } catch(e) {
+    el.innerHTML = '<div class="alert alert-y">Alert settings require Admin access.</div>';
+  }
+}
+
+async function saveAllAlerts() {
+  const promises = ALERT_TYPES.map(async at => {
+    const enabled = (document.getElementById('alt-en-' + at.key)||{}).checked ?? true;
+    const channel = (document.getElementById('alt-ch-' + at.key)||{}).value || 'email';
+    const roles = ALERT_ROLES.filter(role => {
+      const cb = document.querySelector(`input[data-key="${at.key}"][data-role="${role}"]`);
+      return cb && cb.checked;
+    });
+    try {
+      await postJSON(BACKEND + '/api/cl/alert-settings/' + at.key,
+        { enabled, recipient_roles: roles, channel });
+    } catch(e) { console.error('Alert save failed:', at.key, e.message); }
+  });
+  await Promise.allSettled(promises);
+  T('✅ Alert settings saved!');
+}
+
+// ════════════════════════════════════════════════════════════════
+// FINANCIAL SETTINGS — Live CRM
+// ════════════════════════════════════════════════════════════════
+const FIN_SETTINGS_META = {
+  mileage_rate:       { label: 'Mileage Reimbursement Rate', unit: '$/mile', placeholder: '0.67', hint: 'IRS standard rate or custom rate' },
+  gift_gratuity_limit:{ label: 'Gift & Gratuity Limit',      unit: '$/visit', placeholder: '15.00', hint: 'CMS compliance max per visit' },
+};
+
+async function initFinSettings() {
+  const el = document.getElementById('finSettingsForm');
+  if (!el) return;
+  try {
+    const d = await _fetch(BACKEND + '/api/settings/financial');
+    const data = await d.json();
+    const current = {};
+    (data.data || []).forEach(s => { current[s.setting_key] = s.setting_value; });
+
+    el.innerHTML = Object.entries(FIN_SETTINGS_META).map(([key, meta]) => `
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">${meta.label}</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div style="position:relative;flex:1">
+            <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:13px">$</span>
+            <input class="fi" id="fin-${key}" value="${escH(current[key]||meta.placeholder)}"
+              style="padding-left:22px" placeholder="${meta.placeholder}">
+          </div>
+          <span style="font-size:11px;color:var(--text-muted)">${meta.unit}</span>
+          <button class="btn btn-a btn-sm" onclick="saveFinSetting('${key}')">Save</button>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:4px">${meta.hint}</div>
+      </div>`).join('')
+      + '<div style="margin-top:8px"><div style="font-size:11px;color:var(--text-muted)">Last updated: ' + (data.data?.[0]?.updated_at ? new Date(data.data[0].updated_at).toLocaleString() : 'Never') + '</div></div>';
+  } catch(e) {
+    el.innerHTML = '<div style="color:var(--red);font-size:12px">Could not load settings. Admin access required.</div>';
+  }
+}
+
+async function saveFinSetting(key) {
+  const val = (document.getElementById('fin-' + key)||{}).value?.trim();
+  if (!val) { T('Value is required', 'e'); return; }
+  try {
+    const r = await _fetch(BACKEND + '/api/settings/financial/' + key, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ value: val }),
+    });
+    const d = await r.json();
+    if (d.error) { T(d.error, 'e'); return; }
+    T('✅ ' + key.replace(/_/g,' ') + ' updated to: ' + val);
+    if (key === 'gift_gratuity_limit') _giftLimit = parseFloat(val);
+  } catch(e) { T('Save failed', 'e'); }
 }
 
 </script>
