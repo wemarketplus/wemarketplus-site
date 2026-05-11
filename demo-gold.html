@@ -270,6 +270,162 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 .alert-g{background:rgba(140,255,102,.07);border:1px solid rgba(140,255,102,.2);color:#8cff66}
 .alert-r{background:rgba(224,85,85,.07);border:1px solid rgba(224,85,85,.2);color:#f87171}
 .alert-gd{background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.2);color:#ffd700}
+
+/* ════════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE STYLES — Enterprise SaaS Quality
+   Targets: phones (≤640px), tablets (641-1024px)
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Mobile Variables ─────────────────────────────────────────── */
+@media (max-width:1024px) {
+  :root { --sidebar: 200px; }
+}
+
+/* ── Tablet ────────────────────────────────────────────────────── */
+@media (max-width:900px) {
+  .g2 { grid-template-columns: 1fr !important; }
+  .g3 { grid-template-columns: 1fr 1fr !important; }
+  .stats { grid-template-columns: repeat(2,1fr) !important; }
+  table.tbl td, table.tbl th { font-size:11px !important; padding:8px 6px !important; }
+}
+
+/* ── Mobile (phone) ────────────────────────────────────────────── */
+@media (max-width:640px) {
+  /* Hide sidebar, show mobile bottom nav */
+  .sidebar, #sidebar { display:none !important; }
+  .main, #main { margin-left:0 !important; width:100% !important; }
+  .topbar { padding:10px 14px !important; }
+  .content { padding:12px !important; }
+
+  /* Mobile bottom navigation */
+  #mobile-nav {
+    display:flex !important;
+    position:fixed;
+    bottom:0;left:0;right:0;
+    background:#0a1628;
+    border-top:1px solid rgba(255,255,255,.08);
+    z-index:1000;
+    padding:0;
+    height:60px;
+    box-shadow:0 -4px 20px rgba(0,0,0,.3);
+  }
+  .main { padding-bottom:70px !important; }
+
+  /* Mobile nav buttons */
+  .mob-nav-btn {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:2px;
+    padding:6px 2px;
+    border:none;
+    background:none;
+    color:#6b7fa3;
+    font-size:9px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:inherit;
+    border-top:2px solid transparent;
+    transition:all .15s;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+  }
+  .mob-nav-btn.active {
+    color:#f59e0b;
+    border-top-color:#f59e0b;
+    background:rgba(245,158,11,.06);
+  }
+  .mob-nav-btn .mob-icon { font-size:20px; line-height:1; }
+
+  /* Cards */
+  .card { padding:14px !important; border-radius:12px !important; }
+  .card-hd { flex-wrap:wrap !important; gap:8px !important; }
+
+  /* Stats grid */
+  .stats {
+    grid-template-columns: 1fr 1fr !important;
+    gap:8px !important;
+  }
+  .stat { padding:10px !important; border-radius:10px !important; }
+  .sv { font-size:22px !important; }
+
+  /* Tables — horizontal scroll */
+  .tbl-wrap, .tbl-scroll { overflow-x:auto !important; -webkit-overflow-scrolling:touch; }
+  table.tbl { min-width:500px; }
+  table.tbl th, table.tbl td { font-size:11px !important; padding:8px 6px !important; white-space:nowrap; }
+
+  /* Forms */
+  .fl { flex-direction:column !important; }
+  .ga { grid-template-columns:1fr !important; }
+  input.fi, select.fi, textarea.fi {
+    font-size:16px !important; /* prevents iOS zoom */
+    padding:10px 12px !important;
+  }
+
+  /* Grids → single column */
+  .g2, .g3, [style*="grid-template-columns:1fr 1fr"],
+  [style*="grid-template-columns:1fr 1fr 1fr"] {
+    display:flex !important;
+    flex-direction:column !important;
+  }
+  [style*="grid-template-columns:repeat"] {
+    display:flex !important;
+    flex-direction:column !important;
+  }
+
+  /* Modals */
+  .op-modal > div {
+    max-width:100% !important;
+    margin:0 !important;
+    border-radius:18px 18px 0 0 !important;
+    max-height:92vh !important;
+    overflow-y:auto;
+  }
+  .op-modal {
+    align-items:flex-end !important;
+    padding:0 !important;
+  }
+
+  /* Pipeline cards */
+  .pipeline-col { min-width:260px !important; }
+
+  /* Buttons */
+  .btn { padding:9px 14px !important; font-size:12px !important; }
+  .btn-sm { padding:6px 10px !important; font-size:11px !important; }
+
+  /* Topbar */
+  .topbar-title { font-size:14px !important; }
+  .topbar-right { gap:6px !important; }
+  #liveTag { display:none !important; }
+
+  /* Role selector */
+  .role-box { padding:10px !important; }
+  .role-sel { font-size:13px !important; }
+
+  /* Sidebar toggle button */
+  #mob-menu-btn { display:flex !important; }
+
+  /* Headers */
+  .sec-h { font-size:18px !important; }
+  .sec-sub { font-size:12px !important; }
+}
+
+/* ── Very small phones ─────────────────────────────────────────── */
+@media (max-width:380px) {
+  .stats { grid-template-columns: 1fr !important; }
+  .sv { font-size:20px !important; }
+  .mob-nav-btn { font-size:8px !important; }
+  .mob-nav-btn .mob-icon { font-size:18px !important; }
+}
+
+/* ── Always hide mobile nav on desktop ─────────────────────────── */
+@media (min-width:641px) {
+  #mobile-nav { display:none !important; }
+  #mob-menu-btn { display:none !important; }
+}
+
 </style>
 </head>
 <body>
@@ -2582,6 +2738,551 @@ function getDemoAIResponse(question) {
   }
   return 'Great question. Based on your current pipeline of 3 active prospects with 2 follow-ups due this week, I recommend focusing on Mary J. at Baylor today — the family is warm and timing is critical. Would you like a customized outreach script or follow-up reminder?';
 }
+
+
+// ════════════════════════════════════════════════════════════════
+// UNIFIED MODAL SYSTEM — Real forms for all critical buttons
+// Replaces all prompt() calls with proper modal dialogs
+// ════════════════════════════════════════════════════════════════
+
+// ── Generic modal helpers ──────────────────────────────────────
+function showModal(id){ var m=document.getElementById(id); if(m) m.style.display='flex'; }
+function closeModal(id){ var m=document.getElementById(id); if(m) m.style.display='none'; }
+function closeTopModal(btn){ var m=btn.closest('.op-modal'); if(m) m.style.display='none'; }
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){document.querySelectorAll('.op-modal').forEach(function(m){m.style.display='none';});}});
+
+// ════════════════════════════════════════════════════════════════
+// ADD LEAD — Full form modal
+// ════════════════════════════════════════════════════════════════
+function addLeadPrompt(){
+  var existing = document.getElementById('modal-add-lead');
+  if(existing){ existing.style.display='flex'; return; }
+  var m = document.createElement('div');
+  m.id = 'modal-add-lead';
+  m.className = 'op-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  m.innerHTML = [
+    '<div style="background:#0a1628;border:1px solid rgba(61,158,232,.35);border-radius:18px;padding:28px;width:100%;max-width:640px;max-height:92vh;overflow-y:auto">',
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">',
+    '<div><div style="font-size:16px;font-weight:900;color:#f4f8ff">+ Add New Lead</div>',
+    '<div style="font-size:11px;color:#6b7fa3;margin-top:2px">Lead will appear in pipeline, dashboard, and referral tracking</div></div>',
+    '<button onclick="closeTopModal(this)" style="background:none;border:none;color:#6b7fa3;font-size:22px;cursor:pointer;line-height:1">&times;</button>',
+    '</div>',
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">',
+    fld('Prospect Name *','al-name','text','Dorothy Harrison','grid-column:1/-1'),
+    fld('Phone','al-phone','tel','(214) 555-0100'),
+    fld('Email','al-email','email','contact@email.com'),
+    fld2('Care Level *','al-care',['Independent Living','Assisted Living','Memory Care','Undecided']),
+    fld2('Lead Source','al-source',['A Place for Mom','Caring.com','SeniorAdvisor','Physician Referral','Hospital Discharge','Social Worker','Family Self-Referral','Website','Walk-In','Event','Other']),
+    fld('Budget Range','al-budget','text','$3,000–$4,500/mo'),
+    fld2('Urgency','al-urgency',['Hot','Warm','Cold']),
+    fld2('Pipeline Stage','al-stage',['Inquiry','Tour Scheduled','Touring','Proposal Sent','Deposit Pending','Approved','Move-In Scheduled']),
+    fld('Move-In Timeline','al-timeline','text','30 days'),
+    fld('Tour Date','al-tourdate','date',''),
+    fld('Follow-Up Date','al-followdate','date',''),
+    fld2('Assigned To','al-assigned',['Sarah M.','Mike R.','Angela T.','Unassigned']),
+    '<div style="grid-column:1/-1"><div class="flb">Notes</div><textarea class="fi" id="al-notes" rows="3" placeholder="Initial inquiry details, family notes, urgency context…" style="width:100%;resize:vertical"></textarea></div>',
+    '</div>',
+    '<div style="display:flex;gap:10px;margin-top:18px">',
+    '<button class="btn btn-a" style="flex:1;padding:12px;font-size:14px" onclick="saveNewLead()">&#128190; Save Lead + Add to Pipeline</button>',
+    '<button class="btn btn-x" onclick="closeTopModal(this)">Cancel</button>',
+    '</div></div>'
+  ].join('');
+  document.body.appendChild(m);
+  // Set default follow-up to +2 days
+  var fd = document.getElementById('al-followdate');
+  if(fd) fd.value = new Date(Date.now()+2*86400000).toISOString().split('T')[0];
+}
+
+function saveNewLead(){
+  var name = (document.getElementById('al-name')||{}).value.trim();
+  if(!name){ T('Prospect name is required','e'); return; }
+  var care    = (document.getElementById('al-care')||{}).value||'Independent Living';
+  var source  = (document.getElementById('al-source')||{}).value||'Direct';
+  var urgency = (document.getElementById('al-urgency')||{}).value||'Warm';
+  var stage   = (document.getElementById('al-stage')||{}).value||'Inquiry';
+  var phone   = (document.getElementById('al-phone')||{}).value||'';
+  var email   = (document.getElementById('al-email')||{}).value||'';
+  var budget  = (document.getElementById('al-budget')||{}).value||'';
+  var timeline= (document.getElementById('al-timeline')||{}).value||'';
+  var tourdate= (document.getElementById('al-tourdate')||{}).value||'';
+  var followdt= (document.getElementById('al-followdate')||{}).value||'';
+  var assigned= (document.getElementById('al-assigned')||{}).value||'Unassigned';
+  var notes   = (document.getElementById('al-notes')||{}).value||'';
+
+  var newLead = {
+    id:++nextId, name:name, care:care, status:stage, urgency:urgency,
+    source:source, phone:phone, email:email, budget:budget,
+    move_in_timeline:timeline, tour_date:tourdate,
+    fu:followdt, notes:notes, assigned:assigned,
+    created_at:new Date().toISOString(),
+  };
+  LEADS.unshift(newLead);
+
+  // Sync to Notes timeline
+  NOTES.unshift({
+    id:++nextId, type:'manual', comm_type:'manual',
+    contact_name:name, summary:'New lead added: '+name+' ('+care+') — Source: '+source,
+    outcome:'Lead created', next_step:stage==='Tour Scheduled'?'Prepare for tour':'Follow up within 48 hours',
+    follow_up_date:followdt, created_at:new Date().toISOString(), user_name:'Admin',
+  });
+
+  T('Lead added: '+name+' — now in pipeline!');
+  closeModal('modal-add-lead');
+  if(typeof render==='function') render('leads');
+}
+
+// ════════════════════════════════════════════════════════════════
+// ADD SOURCE — Full form modal
+// ════════════════════════════════════════════════════════════════
+function addRefPrompt(){
+  var existing = document.getElementById('modal-add-source');
+  if(existing){ existing.style.display='flex'; return; }
+  var m = document.createElement('div');
+  m.id = 'modal-add-source';
+  m.className = 'op-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  m.innerHTML = [
+    '<div style="background:#0a1628;border:1px solid rgba(167,139,250,.35);border-radius:18px;padding:28px;width:100%;max-width:580px;max-height:92vh;overflow-y:auto">',
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">',
+    '<div><div style="font-size:16px;font-weight:900;color:#f4f8ff">+ Add Referral Source</div>',
+    '<div style="font-size:11px;color:#6b7fa3">Source will appear in lead dropdowns, activity notes, and ROI tracking</div></div>',
+    '<button onclick="closeTopModal(this)" style="background:none;border:none;color:#6b7fa3;font-size:22px;cursor:pointer">&times;</button>',
+    '</div>',
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">',
+    fld('Contact Name *','as-name','text','Dr. Amanda Chen','grid-column:1/-1'),
+    fld('Organization / Facility','as-org','text','Baylor Medical Center'),
+    fld('Title / Role','as-title','text','Physician'),
+    fld('Phone','as-phone','tel','(214) 555-0100'),
+    fld('Email','as-email','email','dr.chen@baylor.com'),
+    fld2('Referral Type','as-type',['Physician','Hospital Discharge','Social Worker','Case Manager','Nurse','Facility','Placement Agency','A Place for Mom','Caring.com','SeniorAdvisor','Family Referral','Event','Other']),
+    fld2('Relationship Status','as-status',['Active','Warm','Cold','New','Lost']),
+    fld2('Assigned Marketer','as-assigned',['Sarah M.','Mike R.','Angela T.','Unassigned']),
+    '<div style="display:flex;align-items:center;gap:10px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:10px;grid-column:1/-1">',
+    '<input type="checkbox" id="as-paid" style="width:16px;height:16px">',
+    '<label for="as-paid" style="font-size:12px;font-weight:700;color:#f59e0b;cursor:pointer">This is a PAID referral source (APFM, Caring.com, etc.)</label>',
+    '</div>',
+    '<div style="grid-column:1/-1"><div class="flb">Notes</div><textarea class="fi" id="as-notes" rows="2" placeholder="Relationship history, visit frequency, referral volume…" style="width:100%;resize:vertical"></textarea></div>',
+    '</div>',
+    '<div style="display:flex;gap:10px;margin-top:18px">',
+    '<button class="btn btn-a" style="flex:1;padding:12px;font-size:14px" onclick="saveNewSource()">&#128190; Save Referral Source</button>',
+    '<button class="btn btn-x" onclick="closeTopModal(this)">Cancel</button>',
+    '</div></div>'
+  ].join('');
+  document.body.appendChild(m);
+}
+
+function saveNewSource(){
+  var name = (document.getElementById('as-name')||{}).value.trim();
+  if(!name){ T('Contact name is required','e'); return; }
+  var org  = (document.getElementById('as-org')||{}).value||'';
+  var type = (document.getElementById('as-type')||{}).value||'Other';
+  var paid = (document.getElementById('as-paid')||{}).checked||false;
+  REFERRALS.push({
+    id:++nextId, name:name, org:org,
+    type:type+(paid?' (Paid)':''), leads:0,
+    last:new Date().toISOString().split('T')[0],
+    status:(document.getElementById('as-status')||{}).value||'New',
+    phone:(document.getElementById('as-phone')||{}).value||'',
+    email:(document.getElementById('as-email')||{}).value||'',
+    notes:(document.getElementById('as-notes')||{}).value||'',
+    isPaid:paid,
+  });
+  T('Source added: '+name+' — now in referral directory!');
+  closeModal('modal-add-source');
+  if(typeof render==='function') render('refs');
+}
+
+// ════════════════════════════════════════════════════════════════
+// ADD UNIT — Full form modal
+// ════════════════════════════════════════════════════════════════
+function addAptPrompt(){
+  var existing = document.getElementById('modal-add-unit');
+  if(existing){ existing.style.display='flex'; return; }
+  var m = document.createElement('div');
+  m.id = 'modal-add-unit';
+  m.className = 'op-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  m.innerHTML = [
+    '<div style="background:#0a1628;border:1px solid rgba(79,200,122,.35);border-radius:18px;padding:28px;width:100%;max-width:620px;max-height:92vh;overflow-y:auto">',
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">',
+    '<div><div style="font-size:16px;font-weight:900;color:#f4f8ff">+ Add Apartment Unit</div>',
+    '<div style="font-size:11px;color:#6b7fa3">Unit will sync to inventory, financial ledger, and occupancy dashboard</div></div>',
+    '<button onclick="closeTopModal(this)" style="background:none;border:none;color:#6b7fa3;font-size:22px;cursor:pointer">&times;</button>',
+    '</div>',
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">',
+    fld('Unit Number *','au-unit','text','101',''),
+    fld2('Floor Plan','au-type',['Studio','1BR/1BA','1BR/1BA Deluxe','2BR/1BA','2BR/2BA','Companion Suite','Memory Care Suite']),
+    fld('Square Footage','au-sqft','number','650'),
+    fld2('Care Level','au-care',['Independent Living','Assisted Living','Memory Care']),
+    fld2('Occupancy Status','au-status',['available','occupied','on_notice','make_ready','offline']),
+    fld2('Maintenance Status','au-maint',['Good','Needs Attention','In Progress','Complete']),
+    fld2('Housekeeping Status','au-hk',['Clean','Needs Cleaning','In Progress']),
+    fld('Monthly Rent ($)','au-rate','number','3500'),
+    fld('Prior Year Market Value ($)','au-mkt-prev','number','3200'),
+    fld('Current Year Market Value ($)','au-mkt-curr','number','3500'),
+    fld('Concession Amount ($)','au-concession','number','0'),
+    fld('Current Resident','au-resident','text',''),
+    fld('Move-Out Date','au-moveout','date',''),
+    fld('Ready Date','au-readydate','date',''),
+    '<div style="grid-column:1/-1"><div class="flb">Notes</div><textarea class="fi" id="au-notes" rows="2" placeholder="Unit notes, special features, maintenance history…" style="width:100%"></textarea></div>',
+    '</div>',
+    '<div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:12px;margin-top:12px;font-size:12px;color:#f59e0b">',
+    '&#128274; Only Executive Director and Admin can edit rent, market value, and financial data. All changes are audit-logged.',
+    '</div>',
+    '<div style="display:flex;gap:10px;margin-top:18px">',
+    '<button class="btn btn-a" style="flex:1;padding:12px;font-size:14px" onclick="saveNewUnit()">&#128190; Save Unit + Sync to Ledger</button>',
+    '<button class="btn btn-x" onclick="closeTopModal(this)">Cancel</button>',
+    '</div></div>'
+  ].join('');
+  document.body.appendChild(m);
+}
+
+function saveNewUnit(){
+  var unit = (document.getElementById('au-unit')||{}).value.trim();
+  if(!unit){ T('Unit number is required','e'); return; }
+  var rate = parseFloat((document.getElementById('au-rate')||{}).value)||0;
+  APTS.push({
+    id:++nextId, unit:unit,
+    type:(document.getElementById('au-type')||{}).value||'1BR/1BA',
+    care:(document.getElementById('au-care')||{}).value||'IL',
+    sqft:parseInt((document.getElementById('au-sqft')||{}).value)||0,
+    status:(document.getElementById('au-status')||{}).value||'available',
+    resident:(document.getElementById('au-resident')||{}).value||'',
+    rate:rate,
+    mkt_prev:parseFloat((document.getElementById('au-mkt-prev')||{}).value)||rate,
+    mkt_curr:parseFloat((document.getElementById('au-mkt-curr')||{}).value)||rate,
+    concession:parseFloat((document.getElementById('au-concession')||{}).value)||0,
+    maint:(document.getElementById('au-maint')||{}).value||'Good',
+    hk:(document.getElementById('au-hk')||{}).value||'Clean',
+    moveout:(document.getElementById('au-moveout')||{}).value||'',
+    readydate:(document.getElementById('au-readydate')||{}).value||'',
+    notes:(document.getElementById('au-notes')||{}).value||'',
+    mrTasks:0,
+  });
+  // Add to financial ledger if rate > 0
+  if(rate > 0 && typeof REVENUE_MONTHS !== 'undefined') {
+    REVENUE_MONTHS.forEach(function(m){ m.bud += rate; });
+  }
+  T('Unit '+unit+' added! Inventory + ledger updated.');
+  closeModal('modal-add-unit');
+  if(typeof render==='function') render('apartments');
+}
+
+// ════════════════════════════════════════════════════════════════
+// ADD NEW TICKET — Full form modal
+// ════════════════════════════════════════════════════════════════
+function addMaintPrompt(){
+  var existing = document.getElementById('modal-add-ticket');
+  if(existing){ existing.style.display='flex'; return; }
+  var unitOpts = typeof APTS !== 'undefined' ? APTS.map(function(a){return '<option value="'+a.unit+'">Unit '+a.unit+(a.resident?' — '+a.resident:'')+'</option>';}).join('') : '';
+  var m = document.createElement('div');
+  m.id = 'modal-add-ticket';
+  m.className = 'op-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  m.innerHTML = [
+    '<div style="background:#0a1628;border:1px solid rgba(248,113,113,.35);border-radius:18px;padding:28px;width:100%;max-width:580px;max-height:92vh;overflow-y:auto">',
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">',
+    '<div><div style="font-size:16px;font-weight:900;color:#f4f8ff">+ New Maintenance Ticket</div>',
+    '<div style="font-size:11px;color:#6b7fa3">Ticket auto-populates maintenance board, make-ready workflow, and assigned tasks</div></div>',
+    '<button onclick="closeTopModal(this)" style="background:none;border:none;color:#6b7fa3;font-size:22px;cursor:pointer">&times;</button>',
+    '</div>',
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">',
+    '<div><div class="flb">Unit Number *</div><select class="fi" id="mt-unit"><option value="Common">Common Area</option>'+unitOpts+'</select></div>',
+    fld2('Service Type','mt-type',['Plumbing','Electrical','HVAC','Appliance','Carpentry','Painting','Flooring','Landscaping','Cleaning','General Repair','Safety & Compliance','Other']),
+    fld2('Priority','mt-priority',['Urgent','High','Medium','Low']),
+    fld2('Assigned To','mt-assigned',['Maintenance Team','Mike R.','External Contractor','Unassigned']),
+    fld('Issue Summary *','mt-issue','text','Describe the issue briefly','grid-column:1/-1'),
+    fld('Due Date','mt-due','date',''),
+    fld2('Status','mt-status',['open','in_progress','waiting_parts','completed']),
+    '<div style="grid-column:1/-1"><div class="flb">Full Description</div><textarea class="fi" id="mt-desc" rows="3" placeholder="Detailed description, location within unit, photos context…" style="width:100%"></textarea></div>',
+    '</div>',
+    '<div style="display:flex;gap:10px;margin-top:18px">',
+    '<button class="btn btn-a" style="flex:1;padding:12px;font-size:14px" onclick="saveNewTicket()">&#128190; Create Ticket</button>',
+    '<button class="btn btn-x" onclick="closeTopModal(this)">Cancel</button>',
+    '</div></div>'
+  ].join('');
+  document.body.appendChild(m);
+  // Set default due date to +3 days
+  var dd = document.getElementById('mt-due');
+  if(dd) dd.value = new Date(Date.now()+3*86400000).toISOString().split('T')[0];
+}
+
+function addMRPrompt(){
+  // Make-ready ticket = variant of maintenance
+  var existing = document.getElementById('modal-add-mr');
+  if(existing){ existing.style.display='flex'; return; }
+  var m = document.createElement('div');
+  m.id = 'modal-add-mr';
+  m.className = 'op-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  var unitOpts = typeof APTS !== 'undefined' ? APTS.filter(function(a){return a.status!=='occupied';}).map(function(a){return '<option>'+a.unit+'</option>';}).join('') : '';
+  m.innerHTML = [
+    '<div style="background:#0a1628;border:1px solid rgba(245,158,11,.35);border-radius:18px;padding:28px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto">',
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">',
+    '<div><div style="font-size:16px;font-weight:900;color:#f4f8ff">+ New Make-Ready Ticket</div>',
+    '<div style="font-size:11px;color:#6b7fa3">Auto-creates task checklist and syncs to make-ready board</div></div>',
+    '<button onclick="closeTopModal(this)" style="background:none;border:none;color:#6b7fa3;font-size:22px;cursor:pointer">&times;</button>',
+    '</div>',
+    '<div style="display:flex;flex-direction:column;gap:12px">',
+    '<div><div class="flb">Unit Number *</div><select class="fi" id="mr-unit"><option value="">Select unit…</option>'+unitOpts+'</select></div>',
+    fld('Move-Out Date','mr-moveout','date',''),
+    fld('Target Ready Date','mr-target','date',''),
+    fld2('Assigned To','mr-assigned',['Maintenance Team','Housekeeping Team','Both','Unassigned']),
+    '<div><div class="flb">Make-Ready Tasks</div>',
+    '<div style="display:flex;flex-direction:column;gap:6px;background:#060e1b;border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:12px">',
+    ['Trash out','Locks changed','Deep cleaning','Paint touch-up','Carpet/floor cleaning','Appliance check','HVAC filter','Final inspection'].map(function(t){
+      return '<label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer"><input type="checkbox" class="mr-task-cb" value="'+t+'" checked style="width:14px;height:14px">'+t+'</label>';
+    }).join(''),
+    '</div></div>',
+    '</div>',
+    '<div style="display:flex;gap:10px;margin-top:18px">',
+    '<button class="btn btn-a" style="flex:1;padding:12px;font-size:14px" onclick="saveNewMR()">&#128190; Create Make-Ready Ticket</button>',
+    '<button class="btn btn-x" onclick="closeTopModal(this)">Cancel</button>',
+    '</div></div>'
+  ].join('');
+  document.body.appendChild(m);
+  // Set default dates
+  var mo = document.getElementById('mr-moveout');
+  var td = document.getElementById('mr-target');
+  if(mo) mo.value = new Date(Date.now()+7*86400000).toISOString().split('T')[0];
+  if(td) td.value = new Date(Date.now()+14*86400000).toISOString().split('T')[0];
+}
+
+function saveNewTicket(){
+  var issue = (document.getElementById('mt-issue')||{}).value.trim();
+  if(!issue){ T('Issue summary is required','e'); return; }
+  var ticketNum = 'M-'+(typeof MAINT_TICKETS!=='undefined'?MAINT_TICKETS.length+1:1).toString().padStart(3,'0');
+  var newTicket = {
+    id:++nextId, ticket:ticketNum,
+    unit:(document.getElementById('mt-unit')||{}).value||'Common',
+    type:(document.getElementById('mt-type')||{}).value||'General Repair',
+    issue:issue,
+    desc:(document.getElementById('mt-desc')||{}).value||'',
+    priority:(document.getElementById('mt-priority')||{}).value||'Medium',
+    assignee:(document.getElementById('mt-assigned')||{}).value||'Unassigned',
+    due:(document.getElementById('mt-due')||{}).value||'',
+    status:(document.getElementById('mt-status')||{}).value||'open',
+    resident:'', created:new Date().toISOString().split('T')[0],
+  };
+  if(typeof MAINT_TICKETS !== 'undefined') MAINT_TICKETS.unshift(newTicket);
+  T('Ticket '+ticketNum+' created! Maintenance board updated.');
+  closeModal('modal-add-ticket');
+  if(typeof render==='function') render('maintenance');
+}
+
+function saveNewMR(){
+  var unit = (document.getElementById('mr-unit')||{}).value;
+  if(!unit){ T('Select a unit','e'); return; }
+  var tasks = Array.from(document.querySelectorAll('.mr-task-cb:checked')).map(function(cb){return cb.value;});
+  if(!tasks.length) tasks = ['Trash out','Cleaning','Inspection'];
+  var newMR = {
+    id:++nextId, unit:unit,
+    type:'Unit Turn',
+    moveout:(document.getElementById('mr-moveout')||{}).value||'TBD',
+    target:(document.getElementById('mr-target')||{}).value||'TBD',
+    pct:0, tasks:tasks,
+    assignee:(document.getElementById('mr-assigned')||{}).value||'TBD',
+  };
+  if(typeof MR_TICKETS !== 'undefined') MR_TICKETS.unshift(newMR);
+  T('Make-ready ticket created for Unit '+unit+'!');
+  closeModal('modal-add-mr');
+  if(typeof render==='function') render('makeready');
+}
+
+// ════════════════════════════════════════════════════════════════
+// ASSIGN TASK / ADD HOUSEKEEPING TASK — Full form modal
+// ════════════════════════════════════════════════════════════════
+function addHKPrompt(){
+  var existing = document.getElementById('modal-add-task');
+  if(existing){ existing.style.display='flex'; return; }
+  var m = document.createElement('div');
+  m.id = 'modal-add-task';
+  m.className = 'op-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  m.innerHTML = [
+    '<div style="background:#0a1628;border:1px solid rgba(167,139,250,.35);border-radius:18px;padding:28px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto">',
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">',
+    '<div><div style="font-size:16px;font-weight:900;color:#f4f8ff">+ Assign Task</div>',
+    '<div style="font-size:11px;color:#6b7fa3">Task appears in user dashboard, calendar, and task list</div></div>',
+    '<button onclick="closeTopModal(this)" style="background:none;border:none;color:#6b7fa3;font-size:22px;cursor:pointer">&times;</button>',
+    '</div>',
+    '<div style="display:flex;flex-direction:column;gap:12px">',
+    fld('Task Title *','hk-task','text','Deep clean Unit 204 — move-out turnover'),
+    '<div><div class="flb">Assign To</div>',
+    '<select class="fi" id="hk-assignee"><option>Housekeeping Team</option><option>Angela T.</option><option>Maria L.</option><option>Maintenance Team</option><option>Mike R.</option><option>Sarah M.</option><option>All Staff</option></select></div>',
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">',
+    fld2('Task Type','hk-type',['Housekeeping','Maintenance','Make-Ready','Administrative','Sales','Follow-Up','Other']),
+    fld2('Priority','hk-priority',['Urgent','High','Normal','Low']),
+    fld('Due Date','hk-due','date',''),
+    '<div><div class="flb">Related Unit / Lead</div><input class="fi" id="hk-related" placeholder="Unit 204, Dorothy H., etc."></div>',
+    '</div>',
+    '<div><div class="flb">Notes</div><textarea class="fi" id="hk-notes" rows="2" placeholder="Task details, special instructions…" style="width:100%"></textarea></div>',
+    '<div style="display:flex;align-items:center;gap:10px">',
+    '<input type="checkbox" id="hk-calendar" checked style="width:16px;height:16px">',
+    '<label for="hk-calendar" style="font-size:12px;color:#c8d6e8;cursor:pointer">Add to calendar if due date is set</label>',
+    '</div>',
+    '</div>',
+    '<div style="display:flex;gap:10px;margin-top:18px">',
+    '<button class="btn btn-a" style="flex:1;padding:12px;font-size:14px" onclick="saveNewTask()">&#128190; Assign Task</button>',
+    '<button class="btn btn-x" onclick="closeTopModal(this)">Cancel</button>',
+    '</div></div>'
+  ].join('');
+  document.body.appendChild(m);
+  // Default due date +1 day
+  var dd = document.getElementById('hk-due');
+  if(dd) dd.value = new Date(Date.now()+86400000).toISOString().split('T')[0];
+}
+
+function addTaskGold(){ addHKPrompt(); } // alias
+
+function saveNewTask(){
+  var task = (document.getElementById('hk-task')||{}).value.trim();
+  if(!task){ T('Task title is required','e'); return; }
+  var newTask = {
+    id:++nextId, task:task,
+    assignee:(document.getElementById('hk-assignee')||{}).value||'Unassigned',
+    type:(document.getElementById('hk-type')||{}).value||'Housekeeping',
+    priority:(document.getElementById('hk-priority')||{}).value||'Normal',
+    unit:(document.getElementById('hk-related')||{}).value||'',
+    status:'not_started',
+    due:(document.getElementById('hk-due')||{}).value||new Date(Date.now()+86400000).toISOString().split('T')[0],
+    notes:(document.getElementById('hk-notes')||{}).value||'',
+  };
+  if(typeof HK_TASKS !== 'undefined') HK_TASKS.unshift(newTask);
+  if(typeof TASKS !== 'undefined') TASKS.unshift(newTask);
+  T('Task assigned to '+newTask.assignee+'!');
+  closeModal('modal-add-task');
+  if(typeof render==='function') {
+    var cur = typeof ACTIVE !== 'undefined' ? ACTIVE : '';
+    if(cur === 'housekeeping') render('housekeeping');
+    else if(cur === 'tasks') render('tasks');
+    else render('tasks');
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+// LEDGER ADD ENTRY — Full form modal
+// ════════════════════════════════════════════════════════════════
+function addLedgerEntry(){
+  var existing = document.getElementById('modal-add-ledger');
+  if(existing){ existing.style.display='flex'; return; }
+  var m = document.createElement('div');
+  m.id = 'modal-add-ledger';
+  m.className = 'op-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  m.innerHTML = [
+    '<div style="background:#0a1628;border:1px solid rgba(79,200,122,.35);border-radius:18px;padding:28px;width:100%;max-width:560px;max-height:92vh;overflow-y:auto">',
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">',
+    '<div><div style="font-size:16px;font-weight:900;color:#f4f8ff">+ Add Ledger Entry</div>',
+    '<div style="font-size:11px;color:#6b7fa3">Entry syncs to financial reports, occupancy revenue, and investor analytics</div></div>',
+    '<button onclick="closeTopModal(this)" style="background:none;border:none;color:#6b7fa3;font-size:22px;cursor:pointer">&times;</button>',
+    '</div>',
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">',
+    fld('Date','le-date','date',''),
+    fld2('Entry Type','le-type',['Monthly Rent','Move-In Revenue','Security Deposit','Concession','Referral Fee','Maintenance Expense','Operating Expense','Reimbursement','Write-Off','Other Revenue','Other Expense']),
+    fld('Amount ($)','le-amount','number','0'),
+    fld2('Category','le-cat',['Revenue','Expense','Deposit','Concession','Adjustment']),
+    fld('Unit / Resident','le-unit','text','Unit 101 — Dorothy H.'),
+    fld2('Status','le-status',['Posted','Pending','Approved','Rejected']),
+    '<div style="grid-column:1/-1"><div class="flb">Notes</div><textarea class="fi" id="le-notes" rows="2" placeholder="Entry description, reference number, approval notes…" style="width:100%"></textarea></div>',
+    '</div>',
+    '<div style="display:flex;gap:10px;margin-top:18px">',
+    '<button class="btn btn-a" style="flex:1;padding:12px;font-size:14px" onclick="saveLedgerEntry()">&#128190; Post to Ledger</button>',
+    '<button class="btn btn-x" onclick="closeTopModal(this)">Cancel</button>',
+    '</div></div>'
+  ].join('');
+  document.body.appendChild(m);
+  var dd = document.getElementById('le-date');
+  if(dd) dd.value = new Date().toISOString().split('T')[0];
+}
+
+function saveLedgerEntry(){
+  var amount = parseFloat((document.getElementById('le-amount')||{}).value)||0;
+  var type = (document.getElementById('le-type')||{}).value||'Other';
+  if(!amount){ T('Amount is required','e'); return; }
+  var cat = (document.getElementById('le-cat')||{}).value||'Revenue';
+  var isRevenue = cat === 'Revenue' || cat === 'Deposit';
+  // Update REVENUE_MONTHS for current month
+  if(typeof REVENUE_MONTHS !== 'undefined' && REVENUE_MONTHS.length) {
+    if(isRevenue) REVENUE_MONTHS[0].act += amount;
+    else REVENUE_MONTHS[0].act -= amount;
+  }
+  T('Ledger entry posted: '+type+' $'+amount.toFixed(2));
+  closeModal('modal-add-ledger');
+  if(typeof render==='function') render('ledger');
+}
+
+// ════════════════════════════════════════════════════════════════
+// NEW REQUEST WORKFLOW
+// ════════════════════════════════════════════════════════════════
+var REQUESTS = [
+  {id:901,title:'HVAC filter replacement — Unit 104',requester:'Mike R.',type:'Maintenance',status:'approved',priority:'Medium',due:'2026-02-15',notes:'Quarterly replacement due.',created:'2026-02-10'},
+  {id:902,title:'Linen supply restock — 2nd floor',requester:'Angela T.',type:'Housekeeping',status:'pending',priority:'Normal',due:'2026-02-14',notes:'Running low on fresh linens.',created:'2026-02-11'},
+];
+
+function showNewRequest(){
+  var existing = document.getElementById('modal-new-request');
+  if(existing){ existing.style.display='flex'; return; }
+  var m = document.createElement('div');
+  m.id = 'modal-new-request';
+  m.className = 'op-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  m.innerHTML = [
+    '<div style="background:#0a1628;border:1px solid rgba(61,158,232,.35);border-radius:18px;padding:28px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto">',
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">',
+    '<div><div style="font-size:16px;font-weight:900;color:#f4f8ff">+ New Request</div>',
+    '<div style="font-size:11px;color:#6b7fa3">Request routes to the appropriate team for approval</div></div>',
+    '<button onclick="closeTopModal(this)" style="background:none;border:none;color:#6b7fa3;font-size:22px;cursor:pointer">&times;</button>',
+    '</div>',
+    '<div style="display:flex;flex-direction:column;gap:12px">',
+    fld('Request Title *','rq-title','text','Describe your request briefly'),
+    fld2('Request Type','rq-type',['Maintenance','Housekeeping','Supplies','Staffing','Financial','Safety','Operational','Marketing','Other']),
+    fld2('Priority','rq-priority',['Urgent','High','Normal','Low']),
+    fld2('Requested For','rq-for',['Self','Resident','Common Area','Unit','Department']),
+    fld('Unit / Location','rq-location','text','Unit 204 or Common Area'),
+    fld('Due Date Needed','rq-due','date',''),
+    '<div><div class="flb">Full Description</div><textarea class="fi" id="rq-desc" rows="3" placeholder="Detailed description of the request, any urgency context, approval needed?" style="width:100%"></textarea></div>',
+    '</div>',
+    '<div style="display:flex;gap:10px;margin-top:18px">',
+    '<button class="btn btn-a" style="flex:1;padding:12px;font-size:14px" onclick="saveNewRequest()">&#128190; Submit Request</button>',
+    '<button class="btn btn-x" onclick="closeTopModal(this)">Cancel</button>',
+    '</div></div>'
+  ].join('');
+  document.body.appendChild(m);
+  var dd = document.getElementById('rq-due');
+  if(dd) dd.value = new Date(Date.now()+3*86400000).toISOString().split('T')[0];
+}
+
+function saveNewRequest(){
+  var title = (document.getElementById('rq-title')||{}).value.trim();
+  if(!title){ T('Request title is required','e'); return; }
+  REQUESTS.unshift({
+    id:++nextId, title:title,
+    requester:typeof ROLE!=='undefined'?ROLE:'Team',
+    type:(document.getElementById('rq-type')||{}).value||'Operational',
+    priority:(document.getElementById('rq-priority')||{}).value||'Normal',
+    location:(document.getElementById('rq-location')||{}).value||'',
+    status:'pending',
+    due:(document.getElementById('rq-due')||{}).value||'',
+    notes:(document.getElementById('rq-desc')||{}).value||'',
+    created:new Date().toISOString().split('T')[0],
+  });
+  T('Request submitted! Routed to management for approval.');
+  closeModal('modal-new-request');
+}
+
+// ════════════════════════════════════════════════════════════════
+// FIELD BUILDER HELPERS (DRY)
+// ════════════════════════════════════════════════════════════════
+function fld(label, id, type, placeholder, gridStyle){
+  var gs = gridStyle ? ' style="'+gridStyle+'"' : '';
+  return '<div'+gs+'><div class="flb">'+label+'</div><input class="fi" type="'+type+'" id="'+id+'" placeholder="'+(placeholder||'')+'"></div>';
+}
+function fld2(label, id, options){
+  return '<div><div class="flb">'+label+'</div><select class="fi" id="'+id+'">'+options.map(function(o){return '<option>'+o+'</option>';}).join('')+'</select></div>';
+}
+
 
 </script>
 </body>
