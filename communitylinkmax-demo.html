@@ -105,6 +105,7 @@ textarea.fi{resize:vertical;min-height:72px}
       <div class="role-lbl">Viewing As</div>
       <select class="role-sel" id="roleSelect" onchange="changeRole(this.value)">
         <option value="director">Executive Director</option>
+        <option value="salesadmissions">Sales/Admissions</option>
         <option value="owner">Owner / Investor</option>
         <option value="admin">Administrator</option>
         <option value="marketer">Sales Marketer</option>
@@ -228,19 +229,28 @@ var NAV={
   ],
   // Admin: all CRM + ops + financial tools + system settings
   admin:[
-    {sec:'MAIN',items:[{k:'dashboard',l:'Dashboard'},{k:'leads',l:'Lead Pipeline'},{k:'referrals',l:'Referral Pipeline'},{k:'refs',l:'Referral Sources'},{k:'tours',l:'Tour Scheduler'}]},
+    {sec:'MAIN',items:[{k:'dashboard',l:'Dashboard'},{k:'leads',l:'Lead Pipeline'},{k:'referrals',l:'Referral Pipeline'},{k:'paidrefs',l:'💰 Paid Referral Portal'},{k:'refs',l:'Referral Sources'},{k:'tours',l:'Tour Scheduler'}]},
     {sec:'OPERATIONS',items:[{k:'apartments',l:'Apartment Inventory'},{k:'makeready',l:'Make-Ready Board'},{k:'maintenance',l:'Maintenance'},{k:'housekeeping',l:'Housekeeping'}]},
     {sec:'FINANCIAL',items:[{k:'ledger',l:'Financial Ledger'},{k:'revenue',l:'Revenue Leakage'},{k:'concessions',l:'Concession Approvals'},{k:'loc',l:'LOC Calculator'},{k:'competitors',l:'Competitor Intel'}]},
-    {sec:'ACTIVITY',items:[{k:'notes',l:'📋 Activity Notes'},{k:'tasks',l:'Tasks'}]},{sec:'TOOLS',items:[{k:'aircall',l:'☎️ Aircall — Call · Text · Email'},{k:'reports',l:'Reports'},{k:'settings',l:'Settings'}]},
+    {sec:'ACTIVITY',items:[{k:'notes',l:'📋 Activity Notes'},{k:'tasks',l:'Tasks'}]},{sec:'TOOLS',items:[{k:'aircall',l:'☎️ Aircall — Call · Text · Email'},{k:'gift',l:'🎁 Gift & Gratuity'},{k:'alertsettings',l:'🔔 Alert Settings'},{k:'finsettings',l:'💵 Financial Settings'},{k:'reports',l:'Reports'},{k:'settings',l:'Settings'}]},
   ],
   // Sales Marketer: sales and outreach only — no financials, no ops beyond viewing
   marketer:[
     {sec:'SALES',items:[{k:'dashboard',l:'Sales Dashboard'},{k:'leads',l:'Lead Pipeline'},{k:'referrals',l:'Referral Pipeline'},{k:'tours',l:'Tours'},{k:'refs',l:'Referral Sources'},{k:'tasks',l:'Tasks'}]},
-    {sec:'ACTIVITY',items:[{k:'notes',l:'📋 Activity Notes'},{k:'tasks',l:'Tasks'}]},{sec:'OUTREACH',items:[{k:'aircall',l:'☎️ Aircall — Call · Text · Email'}]},
+    {sec:'ACTIVITY',items:[{k:'notes',l:'📋 Activity Notes'},{k:'tasks',l:'Tasks'}]},{sec:'SALES',items:[{k:'paidrefs',l:'💰 Paid Referrals'},{k:'gift',l:'🎁 Gift & Gratuity'}]},{sec:'OUTREACH',items:[{k:'aircall',l:'☎️ Aircall — Call · Text · Email'}]},{sec:'TOOLS',items:[{k:'paidrefs',l:'💰 Paid Referral Portal'},{k:'gift',l:'🎁 Gift & Gratuity'}]},
   ],
   // Maintenance: their work queue only — can see apartments/make-ready to coordinate
   maintenance:[
     {sec:'MY WORK',items:[{k:'dashboard',l:'My Queue'},{k:'maintenance',l:'Maintenance Tickets'},{k:'makeready',l:'Make-Ready Tasks'},{k:'apartments',l:'Unit Status'},{k:'tasks',l:'Tasks'}]},
+  ],
+  // Sales/Admissions: same as Executive Director EXCEPT Reports
+  salesadmissions:[
+    {sec:'EXECUTIVE',items:[{k:'dashboard',l:'Sales/Admissions Dashboard'},{k:'occupancy',l:'Occupancy Overview'}]},
+    {sec:'SALES',items:[{k:'leads',l:'Lead Pipeline'},{k:'referrals',l:'Referral Pipeline'},{k:'tours',l:'Tour Scheduler'},{k:'refs',l:'Referral Sources'}]},
+    {sec:'OPERATIONS',items:[{k:'apartments',l:'Apartment Inventory'},{k:'makeready',l:'Make-Ready Board'},{k:'maintenance',l:'Maintenance Tickets'},{k:'housekeeping',l:'Housekeeping Tasks'}]},
+    {sec:'FINANCIAL',items:[{k:'ledger',l:'Financial Ledger'},{k:'revenue',l:'Revenue Leakage'},{k:'concessions',l:'Concession Approvals'},{k:'loc',l:'LOC Calculator'}]},
+    {sec:'ACTIVITY',items:[{k:'notes',l:'📋 Activity Notes'},{k:'tasks',l:'Tasks'}]},
+    {sec:'SALES',items:[{k:'paidrefs',l:'💰 Paid Referrals'},{k:'gift',l:'🎁 Gift & Gratuity'}]},{sec:'OUTREACH',items:[{k:'aircall',l:'☎️ Aircall — Call · Text · Email'}]},{sec:'TOOLS',items:[{k:'paidrefs',l:'💰 Paid Referral Portal'},{k:'gift',l:'🎁 Gift & Gratuity'}]},
   ],
   // Housekeeping: cleaning queue — can see make-ready/maintenance to coordinate
   housekeeping:[
@@ -260,24 +270,24 @@ function buildNav(){
 }
 function go(key){
   ACTIVE=key;buildNav();
-  var titles={dashboard:'Dashboard',occupancy:'Occupancy Overview',leads:'Lead Pipeline',referrals:'Referral Pipeline',notes:'Activity Notes',tours:'Tour Scheduler',refs:'Referral Sources',apartments:'Apartment Inventory',makeready:'Make-Ready Board',maintenance:'Maintenance Tickets',housekeeping:'Housekeeping Tasks',ledger:'Financial Ledger',revenue:'Revenue Leakage',concessions:'Concession Approvals',loc:'LOC Pricing Calculator',competitors:'Competitor Intel',tasks:'Tasks',reports:'Reports Center',settings:'Settings',aircall:'Aircall — Call · Text · Email'};
+  var titles={dashboard:'Dashboard',occupancy:'Occupancy Overview',leads:'Lead Pipeline',notes:'Activity Notes',paidrefs:'Paid Referral Portal',gift:'Gift & Gratuity Tracking',alertsettings:'Alert Settings',finsettings:'Financial Settings',referrals:'Referral Pipeline',notes:'Activity Notes',paidrefs:'Paid Referral Portal',gift:'Gift & Gratuity Tracking',alertsettings:'Alert Settings',finsettings:'Financial Settings',tours:'Tour Scheduler',refs:'Referral Sources',apartments:'Apartment Inventory',makeready:'Make-Ready Board',maintenance:'Maintenance Tickets',housekeeping:'Housekeeping Tasks',ledger:'Financial Ledger',revenue:'Revenue Leakage',concessions:'Concession Approvals',loc:'LOC Pricing Calculator',competitors:'Competitor Intel',tasks:'Tasks',reports:'Reports Center',settings:'Settings',aircall:'Aircall — Call · Text · Email',paidrefs:'Paid Referral Portal',gift:'Gift & Gratuity Tracking',alertsettings:'Alert Settings',finsettings:'Financial Settings'};
   document.getElementById('pageTitle').textContent=titles[key]||key;
   render(key);
 }
 function changeRole(role){
   ROLE=role;
-  var labels={director:'Executive Director',owner:'Owner / Investor',admin:'Administrator',marketer:'Sales Marketer',maintenance:'Maintenance',housekeeping:'Housekeeping'};
+  var labels={director:'Executive Director',salesadmissions:'Sales/Admissions',owner:'Owner / Investor',admin:'Administrator',marketer:'Sales Marketer',maintenance:'Maintenance',housekeeping:'Housekeeping'};
   document.getElementById('roleBadge').textContent=labels[role]||role;
   // Owner and Director both start at dashboard for a full overview
-  var defaults={director:'dashboard',owner:'dashboard',admin:'dashboard',marketer:'dashboard',maintenance:'maintenance',housekeeping:'housekeeping'};
+  var defaults={director:'dashboard',salesadmissions:'dashboard',owner:'dashboard',admin:'dashboard',marketer:'dashboard',maintenance:'maintenance',housekeeping:'housekeeping'};
   ACTIVE=defaults[role]||'dashboard';
   buildNav();render(ACTIVE);
-  var titleMap={maintenance:'Maintenance Tickets',housekeeping:'Housekeeping Tasks',owner:'Portfolio Dashboard',director:'Executive Dashboard'};
+  var titleMap={maintenance:'Maintenance Tickets',housekeeping:'Housekeeping Tasks',owner:'Portfolio Dashboard',director:'Executive Dashboard',salesadmissions:'Sales/Admissions Dashboard'};
   document.getElementById('pageTitle').textContent=titleMap[role]||'Dashboard';
 }
 function render(key){
   var mc=document.getElementById('mainContent');
-  var fns={dashboard:rDash,occupancy:rOccupancy,leads:rLeads,referrals:rReferrals,tours:rTours,refs:rRefs,apartments:rApartments,makeready:rMakeReady,maintenance:rMaintenance,housekeeping:rHousekeeping,tasks:rTasks,notes:rNotes,reports:rReports,settings:rSettings,ledger:rLedger,revenue:rRevenue,concessions:rConcessions,loc:rLOC,competitors:rCompetitors,aircall:rAircall};
+  var fns={dashboard:rDash,occupancy:rOccupancy,leads:rLeads,referrals:rReferrals,paidrefs:rPaidRefs,tours:rTours,refs:rRefs,apartments:rApartments,makeready:rMakeReady,maintenance:rMaintenance,housekeeping:rHousekeeping,tasks:rTasks,notes:rNotes,gift:rGiftGratuity,alertsettings:rAlertSettings,finsettings:rFinSettings,reports:rReports,settings:rSettings,ledger:rLedger,revenue:rRevenue,concessions:rConcessions,loc:rLOC,competitors:rCompetitors,aircall:rAircall};
   if(fns[key]) mc.innerHTML=fns[key]();
   else mc.innerHTML='<div class="card"><p style="color:#6b7fa3;padding:20px">Loading…</p></div>';
   if(key==='loc') setTimeout(buildLOCTable, 10);
@@ -287,7 +297,64 @@ function h(s){if(!s&&s!==0)return'';return String(s).replace(/&/g,'&amp;').repla
 function T(msg,type){var t=document.getElementById('toast');t.textContent=msg;t.className='show'+(type==='e'?' err':'');setTimeout(function(){t.className='';},3000);}
 
 // ─── DASHBOARD ─────────────────────────────────────────────────
+
+// ─── SALES/ADMISSIONS DASHBOARD ────────────────────────────────
+function rSalesAdmissionsDash(){
+  var hot=LEADS.filter(function(l){return l.urgency==='Hot';}).length;
+  var tours=LEADS.filter(function(l){return l.status==='Tour Scheduled';}).length;
+  var occ=APTS.filter(function(a){return a.status==='occupied';}).length;
+  var avail=APTS.filter(function(a){return a.status==='available';}).length;
+  var rate=APTS.length?Math.round(occ/APTS.length*100):0;
+  var paidRefs=PAID_REFERRALS.filter(function(r){return r.type==='Paid'&&r.stage!=='Moved In'&&r.stage!=='Lost';}).length;
+  var parts=[];
+  parts.push('<div style="background:linear-gradient(135deg,rgba(245,158,11,.05),rgba(61,158,232,.03));border:1px solid rgba(245,158,11,.2);border-radius:14px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">');
+  parts.push('<div><div style="font-size:11px;font-weight:700;color:#f59e0b;letter-spacing:.06em;text-transform:uppercase">Sales/Admissions</div>');
+  parts.push('<div style="font-size:22px;font-weight:900;color:#f4f8ff">Sunrise Senior Living</div>');
+  parts.push('<div style="font-size:12px;color:#6b7fa3">Sales & Operations View — Reports require Executive Director access</div></div>');
+  parts.push('<div style="display:flex;gap:8px;flex-wrap:wrap">');
+  parts.push('<button class="btn btn-a btn-sm" onclick="go(\'leads\')">Lead Pipeline</button>');
+  parts.push('<button class="btn btn-g btn-sm" onclick="go(\'referrals\')">Referrals</button>');
+  parts.push('<button class="btn btn-x btn-sm" onclick="go(\'tours\')">Tours</button>');
+  parts.push('</div></div>');
+  parts.push('<div class="stats">');
+  parts.push('<div class="stat" onclick="go(\'leads\')"><div class="sl">Hot Leads</div><div class="sv sr">'+hot+'</div><div class="ss">Need attention</div></div>');
+  parts.push('<div class="stat" onclick="go(\'tours\')"><div class="sl">Tours Scheduled</div><div class="sv sa">'+tours+'</div><div class="ss">This week</div></div>');
+  parts.push('<div class="stat" onclick="go(\'occupancy\')"><div class="sl">Occupancy</div><div class="sv sg">'+rate+'%</div><div class="ss">'+occ+'/'+APTS.length+' units</div></div>');
+  parts.push('<div class="stat" onclick="go(\'apartments\')"><div class="sl">Available Units</div><div class="sv sg">'+avail+'</div><div class="ss">Ready to show</div></div>');
+  parts.push('<div class="stat" onclick="go(\'referrals\')"><div class="sl">Active Paid Referrals</div><div class="sv sa">'+paidRefs+'</div><div class="ss">In pipeline</div></div>');
+  parts.push('</div>');
+  parts.push('<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">');
+  parts.push('<div><div class="card"><div class="card-hd"><div class="card-t">Hot Leads</div><button class="btn btn-a btn-sm" onclick="go(\'leads\')">All Leads</button></div>');
+  parts.push(LEADS.filter(function(l){return l.urgency==='Hot';}).slice(0,4).map(function(l){
+    return '<div style="padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)"><div style="display:flex;justify-content:space-between;align-items:center"><strong style="font-size:12px;color:#f4f8ff">'+h(l.name)+'</strong><span class="badge br">Hot</span></div><div style="font-size:10px;color:#4b6278">'+h(l.care)+' \u2022 '+h(l.status)+'</div></div>';
+  }).join(''));
+  parts.push('</div>');
+  parts.push('<div class="card" style="margin-top:0"><div class="card-hd"><div class="card-t">Paid Referrals</div><button class="btn btn-g btn-sm" onclick="go(\'referrals\')">View All</button></div>');
+  parts.push(PAID_REFERRALS.filter(function(r){return r.stage!=='Moved In'&&r.stage!=='Lost';}).slice(0,4).map(function(r){
+    return '<div style="padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)"><div style="display:flex;justify-content:space-between"><strong style="font-size:12px;color:#f4f8ff">'+h(r.name)+'</strong><span class="badge '+(r.type==='Paid'?'ba':'bb')+'">'+r.type+'</span></div><div style="font-size:10px;color:#4b6278">'+h(r.stage)+' \u2022 '+h(r.source)+'</div></div>';
+  }).join(''));
+  parts.push('</div></div>');
+  parts.push('<div>');
+  parts.push('<div class="card"><div class="card-hd"><div class="card-t">Operations Status</div><button class="btn btn-x btn-sm" onclick="go(\'apartments\')">Units</button></div>');
+  parts.push([['Occupied','occupied','#4fc87a'],['Available','available','#3d9ee8'],['Make-Ready','make_ready','#f59e0b'],['On-Notice','on_notice','#f87171']].map(function(e){
+    var cnt=APTS.filter(function(a){return a.status===e[1];}).length;
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)"><div style="display:flex;align-items:center;gap:8px"><div style="width:8px;height:8px;border-radius:50%;background:'+e[2]+'"></div><span style="font-size:12px;color:#c8d6e8">'+e[0]+'</span></div><span style="font-weight:800;font-size:14px;color:'+e[2]+'">'+cnt+'</span></div>';
+  }).join(''));
+  parts.push('</div>');
+  parts.push('<div class="card" style="margin-top:0"><div class="card-hd"><div class="card-t">Quick Actions</div></div><div style="display:flex;flex-direction:column;gap:8px">');
+  parts.push('<button class="btn btn-a" onclick="go(\'leads\')">+ Add Lead</button>');
+  parts.push('<button class="btn btn-g" onclick="go(\'tours\')">Schedule Tour</button>');
+  parts.push('<button class="btn btn-x" onclick="go(\'notes\')">Log Activity Note</button>');
+  parts.push('<button class="btn btn-x" onclick="go(\'aircall\')">Open Aircall</button>');
+  parts.push('</div></div></div></div>');
+  parts.push('<div style="background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.2);border-radius:9px;padding:10px 14px;margin-top:6px;font-size:12px;color:#f87171;display:flex;align-items:center;gap:8px">');
+  parts.push('<span>&#128274;</span> Reports and financial analytics require Executive Director or Admin access.');
+  parts.push('</div>');
+  return parts.join('');
+}
+
 function rDash(){
+  if(ROLE==='salesadmissions'){return rSalesAdmissionsDash();}
   var occ=APTS.filter(function(a){return a.status==='occupied';}).length;
   var avail=APTS.filter(function(a){return a.status==='available';}).length;
   var mr=APTS.filter(function(a){return a.status==='make_ready';}).length;
@@ -1379,6 +1446,189 @@ function _addNoteFromAircall(noteData) {
   // If Notes tab is active, refresh it
   if(ACTIVE==='notes') render('notes');
 }
+
+
+// ════════════════════════════════════════════════════════════════
+// PAID REFERRAL PORTAL (DEMO)
+// ════════════════════════════════════════════════════════════════
+var DEMO_PAID_REFS = [
+  {id:'pr1',prospect_name:'Dorothy Harrison',source_name:'A Place for Mom',prospect_phone:'(214)555-0142',care_level:'Independent Living',budget_range:'$3,200–$4,000/mo',move_in_timeframe:'30 days',urgency:'hot',referral_fee:2000,fee_status:'pending',stage:'Tour Scheduled',source_contact:'Rachel (APFM Advisor)',source_notes:'Family toured 3 other communities. Very motivated. Son James is POA.',received_at:new Date(Date.now()-3600000).toISOString(),assigned_name:'Sarah M.'},
+  {id:'pr2',prospect_name:'Gloria Tran',source_name:'Caring.com',prospect_phone:'(469)555-0391',care_level:'Memory Care',budget_range:'$5,000–$6,500/mo',move_in_timeframe:'ASAP',urgency:'hot',referral_fee:1500,fee_status:'pending',stage:'Assessment Scheduled',source_contact:'Caring.com Lead',source_notes:'MCI diagnosis confirmed. Family ready to move quickly.',received_at:new Date(Date.now()-86400000).toISOString(),assigned_name:'Sarah M.'},
+  {id:'pr3',prospect_name:'Walter Simmons',source_name:'SeniorAdvisor',prospect_phone:'(972)555-0278',care_level:'Assisted Living',budget_range:'$4,000–$5,000/mo',move_in_timeframe:'60 days',urgency:'warm',referral_fee:1800,fee_status:'pending',stage:'New Referral',source_contact:'SA Platform',source_notes:'VA benefits confirmed.',received_at:new Date(Date.now()-172800000).toISOString(),assigned_name:'Unassigned'},
+  {id:'pr4',prospect_name:'James Owens',source_name:'A Place for Mom',prospect_phone:'(972)555-0678',care_level:'Memory Care',budget_range:'$5,500+/mo',move_in_timeframe:'Moved In',urgency:'',referral_fee:2000,fee_status:'paid',stage:'Moved In',source_contact:'Rachel (APFM)',source_notes:'Successfully moved in Jan 28.',received_at:new Date(Date.now()-2592000000).toISOString(),assigned_name:'Sarah M.'},
+];
+var PR_STAGES_D = ['New Referral','Contact Attempted','Family Reached','Assessment Scheduled','Tour Scheduled','Touring','Deposit Pending','Approved','Move-In Scheduled','Moved In','Lost'];
+
+function rPaidRefs(){
+  var hot=DEMO_PAID_REFS.filter(function(r){return r.urgency==='hot';}).length;
+  var pendFees=DEMO_PAID_REFS.filter(function(r){return r.fee_status==='pending';}).reduce(function(s,r){return s+parseFloat(r.referral_fee||0);},0);
+  var paidFees=DEMO_PAID_REFS.filter(function(r){return r.fee_status==='paid';}).reduce(function(s,r){return s+parseFloat(r.referral_fee||0);},0);
+  var movedIn=DEMO_PAID_REFS.filter(function(r){return r.stage==='Moved In';}).length;
+  var parts=[];
+  parts.push('<div class="stats">');
+  parts.push('<div class="stat"><div class="sl">Total Paid Referrals</div><div class="sv">'+DEMO_PAID_REFS.length+'</div><div class="ss">All sources</div></div>');
+  parts.push('<div class="stat"><div class="sl">Hot Urgency</div><div class="sv sr">'+hot+'</div><div class="ss">Contact immediately</div></div>');
+  parts.push('<div class="stat"><div class="sl">Pending Fees</div><div class="sv sa">$'+pendFees.toLocaleString()+'</div><div class="ss">On move-in</div></div>');
+  parts.push('<div class="stat"><div class="sl">Fees Collected</div><div class="sv sg">$'+paidFees.toLocaleString()+'</div><div class="ss">Confirmed</div></div>');
+  parts.push('<div class="stat"><div class="sl">Moved In</div><div class="sv sg">'+movedIn+'</div><div class="ss">Converted</div></div>');
+  parts.push('</div>');
+  parts.push('<div class="card" style="margin-bottom:14px">');
+  parts.push('<div class="card-hd"><div class="card-t">Paid Referral Pipeline</div>');
+  parts.push('<button class="btn btn-a btn-sm" onclick="addDemoPaidRef()">+ Add Paid Referral</button></div>');
+  parts.push('<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">');
+  ['New Referral','Tour Scheduled','Assessment Scheduled','Deposit Pending','Moved In','Lost'].forEach(function(stage){
+    var cnt=DEMO_PAID_REFS.filter(function(r){return r.stage===stage;}).length;
+    var col={'New Referral':'#3d9ee8','Tour Scheduled':'#4fc87a','Assessment Scheduled':'#f59e0b','Moved In':'#4fc87a','Lost':'#f87171','Deposit Pending':'#f87171'}[stage]||'#8ba4c4';
+    parts.push('<div style="background:#071120;border:1px solid '+col+'33;border-radius:10px;padding:8px 12px;min-width:80px;text-align:center"><div style="font-size:16px;font-weight:900;color:'+col+'">'+cnt+'</div><div style="font-size:9px;color:#6b7fa3;margin-top:2px">'+stage+'</div></div>');
+  });
+  parts.push('</div>');
+  parts.push('<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Prospect</th><th>Source</th><th>Care</th><th>Stage</th><th>Urgency</th><th>Fee</th><th>Status</th><th>Actions</th></tr></thead><tbody>');
+  DEMO_PAID_REFS.forEach(function(r){
+    var sc={'New Referral':'bb','Tour Scheduled':'bg','Assessment Scheduled':'ba','Moved In':'bg','Lost':'br','Deposit Pending':'br'}[r.stage]||'bx';
+    var uc=r.urgency==='hot'?'br':r.urgency==='warm'?'ba':'bb';
+    var fc=r.fee_status==='paid'?'bg':r.fee_status==='pending'?'ba':'bx';
+    parts.push('<tr><td><div style="font-weight:700;color:#f4f8ff">'+h(r.prospect_name)+'</div><div style="font-size:10px;color:#4b6278">'+h(r.prospect_phone||'')+'</div></td>');
+    parts.push('<td><div style="font-weight:600">'+h(r.source_name)+'</div><div style="font-size:10px;color:#4b6278">'+h(r.source_contact||'')+'</div></td>');
+    parts.push('<td>'+h(r.care_level||'—')+'</td>');
+    parts.push('<td><span class="badge '+sc+'">'+h(r.stage)+'</span></td>');
+    parts.push('<td>'+(r.urgency?'<span class="badge '+uc+'">'+r.urgency.toUpperCase()+'</span>':'—')+'</td>');
+    parts.push('<td>'+(r.referral_fee?'$'+parseFloat(r.referral_fee).toLocaleString():'—')+'</td>');
+    parts.push('<td><span class="badge '+fc+'">'+h(r.fee_status||'pending')+'</span></td>');
+    parts.push('<td style="white-space:nowrap"><button class="btn btn-a btn-sm" onclick="advanceDemoPaidRef(\''+r.id+'\')" style="margin-right:4px">Advance</button><button class="btn btn-x btn-sm" onclick="showDemoPaidRefDetail(\''+r.id+'\')">Detail</button></td></tr>');
+  });
+  parts.push('</tbody></table></div></div>');
+  return parts.join('');
+}
+function addDemoPaidRef(){
+  var name=prompt('Prospect name:');if(!name)return;
+  var src=prompt('Referral source:','A Place for Mom')||'Other';
+  var fee=parseFloat(prompt('Referral fee ($):','2000'))||0;
+  DEMO_PAID_REFS.unshift({id:'pr'+Date.now(),prospect_name:name,source_name:src,prospect_phone:'',care_level:'Assisted Living',budget_range:'—',move_in_timeframe:'60 days',urgency:'warm',referral_fee:fee,fee_status:'pending',stage:'New Referral',source_contact:'',source_notes:'',received_at:new Date().toISOString(),assigned_name:'Sarah M.'});
+  T('Paid referral added: '+name+' — Team alert sent (Demo)');render('paidrefs');
+}
+function advanceDemoPaidRef(id){
+  var r=DEMO_PAID_REFS.find(function(x){return x.id===id;});if(!r)return;
+  var idx=PR_STAGES_D.indexOf(r.stage);
+  if(r.stage==='Moved In'){T(r.prospect_name+' already moved in!','w');return;}
+  if(idx<PR_STAGES_D.length-2){r.stage=PR_STAGES_D[idx+1];if(r.stage==='Moved In'&&r.fee_status==='pending')r.fee_status='paid';T(r.prospect_name+' advanced to: '+r.stage);render('paidrefs');}
+  else{var reason=prompt('Mark as Lost — reason:','Not interested');if(reason){r.stage='Lost';r.fee_status='na';T(r.prospect_name+' marked Lost.');render('paidrefs');}}
+}
+function showDemoPaidRefDetail(id){
+  var r=DEMO_PAID_REFS.find(function(x){return x.id===id;});if(!r)return;
+  alert('REFERRAL DETAIL\nName: '+r.prospect_name+'\nSource: '+r.source_name+'\nCare: '+r.care_level+'\nBudget: '+r.budget_range+'\nTimeline: '+r.move_in_timeframe+'\nUrgency: '+(r.urgency||'—').toUpperCase()+'\nStage: '+r.stage+'\nFee: $'+(r.referral_fee||0)+' ('+r.fee_status+')\nContact: '+r.prospect_phone+'\n\nSource Notes:\n'+r.source_notes);
+}
+
+// ════════════════════════════════════════════════════════════════
+// GIFT & GRATUITY (DEMO)
+// ════════════════════════════════════════════════════════════════
+var DEMO_GIFT_LIMIT=15.00;
+var DEMO_GIFT_LOGS=[
+  {id:'g1',recipient_name:'Sarah M.',facility_name:'North Park Rehab',gift_type:'Meal',gift_value:12.50,visit_date:'2026-02-10',compliance_ok:true,logged_by_name:'Ericka T.'},
+  {id:'g2',recipient_name:'Dr. Patel',facility_name:'Baylor Hospital',gift_type:'Branded Item',gift_value:15.00,visit_date:'2026-02-08',compliance_ok:true,logged_by_name:'Ericka T.'},
+  {id:'g3',recipient_name:'Office Staff',facility_name:'Prestonwood SNF',gift_type:'Coffee',gift_value:22.00,visit_date:'2026-02-05',compliance_ok:false,logged_by_name:'Mike R.'},
+];
+function rGiftGratuity(){
+  var totalVal=DEMO_GIFT_LOGS.reduce(function(s,l){return s+parseFloat(l.gift_value||0);},0);
+  var violations=DEMO_GIFT_LOGS.filter(function(l){return !l.compliance_ok;}).length;
+  var parts=[];
+  parts.push('<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">');
+  parts.push('<div><div class="card"><div class="card-hd"><div class="card-t">Log Gift / Gratuity</div></div>');
+  parts.push('<div style="display:flex;flex-direction:column;gap:10px">');
+  parts.push('<div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:8px 12px;font-size:12px;color:#f59e0b">Per-visit limit: <strong>$'+DEMO_GIFT_LIMIT.toFixed(2)+'</strong> (Admin can change in Financial Settings)</div>');
+  parts.push('<div class="fl"><div class="flb">Recipient Name *</div><input class="fi" id="dg-recipient" placeholder="Dr. Smith…"></div>');
+  parts.push('<div class="fl"><div class="flb">Facility</div><input class="fi" id="dg-facility" placeholder="North Park Rehab"></div>');
+  parts.push('<div class="fl"><div class="flb">Visit Date *</div><input class="fi" type="date" id="dg-date"></div>');
+  parts.push('<div class="fl"><div class="flb">Gift Type *</div><select class="fi" id="dg-type"><option value="">Select…</option><option>Meal</option><option>Gift Card</option><option>Branded Item</option><option>Flowers</option><option>Coffee</option><option>Other</option></select></div>');
+  parts.push('<div class="fl"><div class="flb">Gift Value ($) <span style="color:#f59e0b;font-size:10px;font-weight:400">Limit: $'+DEMO_GIFT_LIMIT+'</span></div><input class="fi" type="number" id="dg-value" placeholder="0.00" step="0.01" oninput="checkDemoGiftLimit(this.value)"></div>');
+  parts.push('<div id="dgWarn" style="display:none;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);border-radius:8px;padding:8px 12px;font-size:12px;color:#f87171">&#x26A0; Exceeds the $'+DEMO_GIFT_LIMIT+' per-visit limit!</div>');
+  parts.push('<div class="fl"><div class="flb">Visit Purpose</div><input class="fi" id="dg-purpose" placeholder="Relationship visit, in-service…"></div>');
+  parts.push('<button class="btn btn-a" onclick="saveDemoGiftLog()">&#x1F4BE; Save Gift Log</button>');
+  parts.push('</div></div></div>');
+  parts.push('<div><div class="card"><div class="card-hd"><div class="card-t">Compliance Summary</div></div>');
+  parts.push('<div style="display:flex;flex-direction:column;gap:0">');
+  parts.push('<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="font-size:12px;color:#8ba4c4">Per-Visit Limit</span><span style="font-weight:800;color:#f59e0b">$'+DEMO_GIFT_LIMIT.toFixed(2)+'</span></div>');
+  parts.push('<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="font-size:12px;color:#8ba4c4">Total Logged</span><span style="font-weight:800;color:#f4f8ff">'+DEMO_GIFT_LOGS.length+'</span></div>');
+  parts.push('<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="font-size:12px;color:#8ba4c4">Total Value</span><span style="font-weight:800;color:#f4f8ff">$'+totalVal.toFixed(2)+'</span></div>');
+  parts.push('<div style="display:flex;justify-content:space-between;padding:7px 0"><span style="font-size:12px;color:#8ba4c4">Compliance Violations</span><span style="font-weight:800;color:'+(violations>0?'#f87171':'#4fc87a')+'">'+violations+'</span></div>');
+  parts.push('</div></div>');
+  parts.push('<div class="card" style="margin-top:0"><div class="card-hd"><div class="card-t">Recent Logs</div></div>');
+  parts.push('<table class="tbl"><thead><tr><th>Date</th><th>Recipient</th><th>Type</th><th>Value</th><th>Status</th></tr></thead><tbody>');
+  DEMO_GIFT_LOGS.forEach(function(l){
+    parts.push('<tr><td style="font-size:11px">'+l.visit_date+'</td><td><div style="font-weight:600;color:#f4f8ff">'+h(l.recipient_name)+'</div><div style="font-size:10px;color:#4b6278">'+h(l.facility_name||'')+'</div></td><td style="font-size:11px">'+h(l.gift_type)+'</td><td style="font-weight:700;color:'+(l.compliance_ok?'#4fc87a':'#f87171')+'">$'+parseFloat(l.gift_value).toFixed(2)+'</td><td><span class="badge '+(l.compliance_ok?'bg':'br')+'">'+(l.compliance_ok?'OK':'Over Limit')+'</span></td></tr>');
+  });
+  parts.push('</tbody></table></div></div></div>');
+  return parts.join('');
+}
+function checkDemoGiftLimit(val){var w=document.getElementById('dgWarn');if(w)w.style.display=(parseFloat(val)>DEMO_GIFT_LIMIT)?'block':'none';}
+function saveDemoGiftLog(){
+  var rec=document.getElementById('dg-recipient'),date=document.getElementById('dg-date'),type=document.getElementById('dg-type'),val=document.getElementById('dg-value');
+  if(!rec||!rec.value.trim()||!date||!date.value||!type||!type.value||!val||!val.value){T('Fill all required fields (*)','e');return;}
+  var gv=parseFloat(val.value);
+  if(gv>DEMO_GIFT_LIMIT&&!confirm('Value exceeds $'+DEMO_GIFT_LIMIT+' limit. Save anyway?'))return;
+  DEMO_GIFT_LOGS.unshift({id:'g'+Date.now(),recipient_name:rec.value.trim(),facility_name:(document.getElementById('dg-facility')||{}).value||'',gift_type:type.value,gift_value:gv,visit_date:date.value,visit_purpose:(document.getElementById('dg-purpose')||{}).value||'',compliance_ok:gv<=DEMO_GIFT_LIMIT,logged_by_name:'You'});
+  T(gv<=DEMO_GIFT_LIMIT?'Gift logged — within compliance.':'Gift logged — OVER the $'+DEMO_GIFT_LIMIT+' limit!');
+  [rec,date,type,val].forEach(function(el){if(el)el.value='';});render('gift');
+}
+
+// ════════════════════════════════════════════════════════════════
+// ALERT SETTINGS (DEMO)
+// ════════════════════════════════════════════════════════════════
+var DEMO_ALERTS={'paid_referral':{enabled:true,channel:'email',roles:['admin','director','salesadmissions']},'organic_lead':{enabled:true,channel:'email',roles:['admin','director','salesadmissions']},'tour':{enabled:true,channel:'email',roles:['admin','director','salesadmissions']},'move_in':{enabled:true,channel:'email',roles:['admin','director','salesadmissions']},'lost_lead':{enabled:false,channel:'email',roles:['admin','director']},'failed_payment':{enabled:true,channel:'email',roles:['admin']}};
+var ALERT_DEFS_D=[{key:'paid_referral',label:'New Paid Referral',desc:'A Place for Mom, Caring.com, SeniorAdvisor, etc.'},{key:'organic_lead',label:'New Organic Lead',desc:'Website, walk-in, direct inquiry'},{key:'tour',label:'Tour Scheduled',desc:'When a tour is booked'},{key:'move_in',label:'Move-In Confirmed',desc:'When a resident moves in'},{key:'lost_lead',label:'Lead Marked Lost',desc:'When a lead is marked lost'},{key:'failed_payment',label:'Failed Payment',desc:'Billing or subscription failure'}];
+function rAlertSettings(){
+  var parts=[];
+  parts.push('<div style="display:flex;flex-direction:column;gap:12px">');
+  ALERT_DEFS_D.forEach(function(at){
+    var s=DEMO_ALERTS[at.key]||{enabled:true,channel:'email',roles:['admin']};
+    parts.push('<div class="card"><div class="card-hd"><div><div class="card-t">'+at.label+'</div><div style="font-size:11px;color:#6b7fa3">'+at.desc+'</div></div>');
+    parts.push('<label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="da-'+at.key+'" '+(s.enabled?'checked':'')+' style="width:16px;height:16px"><span style="font-size:12px;color:#8ba4c4">Enabled</span></label></div>');
+    parts.push('<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">');
+    ['admin','director','salesadmissions','marketer'].forEach(function(role){
+      parts.push('<label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px"><input type="checkbox" class="da-role-'+at.key+'" value="'+role+'" '+(s.roles.includes(role)?'checked':'')+'>'+role+'</label>');
+    });
+    parts.push('</div><div style="margin-top:8px;display:flex;gap:8px;align-items:center"><span style="font-size:11px;color:#6b7fa3">Channel:</span>');
+    parts.push('<select class="fi" id="da-ch-'+at.key+'" style="width:120px;padding:4px 8px">');
+    ['email','sms','inapp','all'].forEach(function(ch){parts.push('<option value="'+ch+'" '+(s.channel===ch?'selected':'')+'>'+ch+'</option>');});
+    parts.push('</select><button class="btn btn-a btn-sm" onclick="saveDemoAlertSetting(\''+at.key+'\')">Save</button></div></div>');
+  });
+  parts.push('</div>');
+  return parts.join('');
+}
+function saveDemoAlertSetting(type){
+  var enabled=(document.getElementById('da-'+type)||{}).checked??true;
+  var channel=(document.getElementById('da-ch-'+type)||{}).value||'email';
+  var roles=Array.from(document.querySelectorAll('.da-role-'+type+':checked')).map(function(cb){return cb.value;});
+  DEMO_ALERTS[type]={enabled:enabled,channel:channel,roles:roles};
+  T('Alert setting saved: '+type+' is now '+(enabled?'ON':'OFF')+' via '+channel);
+}
+
+// ════════════════════════════════════════════════════════════════
+// FINANCIAL SETTINGS (DEMO)
+// ════════════════════════════════════════════════════════════════
+var DEMO_FIN_SETTINGS={mileage_rate:'0.67',gift_gratuity_limit:'15.00',parking_max:'20.00',meal_max:'25.00',referral_fee_default:'2000'};
+var FIN_DEFS_D=[{key:'mileage_rate',label:'Mileage Reimbursement Rate',hint:'Per mile (IRS 2024: $0.67)',suffix:'/mile'},{key:'gift_gratuity_limit',label:'Gift & Gratuity Limit',hint:'Per visit — CMS compliance',suffix:'/visit'},{key:'parking_max',label:'Parking Expense Max',hint:'Per day max',suffix:'/day'},{key:'meal_max',label:'Meal Expense Max',hint:'Per person if allowed',suffix:''},{key:'referral_fee_default',label:'Default Referral Fee',hint:'Auto-fill when adding paid referral',suffix:''}];
+function rFinSettings(){
+  var parts=[];
+  parts.push('<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">');
+  parts.push('<div class="card"><div class="card-hd"><div class="card-t">Reimbursement & Compliance Rates</div></div><div style="display:flex;flex-direction:column;gap:14px">');
+  FIN_DEFS_D.forEach(function(s){
+    parts.push('<div><div style="font-size:11px;font-weight:700;color:#8ba4c4;margin-bottom:2px">'+s.label+'</div><div style="font-size:10px;color:#6b7fa3;margin-bottom:6px">'+s.hint+'</div><div style="display:flex;gap:8px;align-items:center"><span style="color:#6b7fa3">$</span><input class="fi" id="df-'+s.key+'" value="'+DEMO_FIN_SETTINGS[s.key]+'" style="max-width:120px"><span style="color:#6b7fa3">'+s.suffix+'</span><button class="btn btn-a btn-sm" onclick="saveDemoFinSetting(\''+s.key+'\')">Save</button></div></div>');
+  });
+  parts.push('</div></div>');
+  parts.push('<div class="card"><div class="card-hd"><div class="card-t">How These Settings Work</div></div><div style="font-size:12px;color:#8ba4c4;line-height:1.8"><div>&#x2022; <strong>Mileage Rate</strong> &mdash; per-mile reimbursement rate</div><div>&#x2022; <strong>Gift/Gratuity Limit</strong> &mdash; max per visit, CMS compliance</div><div>&#x2022; Changes apply immediately to new records</div><div>&#x2022; Historical records retain the rate logged at that time</div><div style="margin-top:10px;background:rgba(79,200,122,.08);border:1px solid rgba(79,200,122,.2);border-radius:8px;padding:10px;font-size:11px;color:#4fc87a">&#x1F512; Admin-only access. All changes are audit logged.</div></div></div>');
+  parts.push('</div>');
+  return parts.join('');
+}
+function saveDemoFinSetting(key){
+  var val=(document.getElementById('df-'+key)||{}).value?.trim();
+  if(!val){T('Enter a value','e');return;}
+  var old=DEMO_FIN_SETTINGS[key];
+  DEMO_FIN_SETTINGS[key]=val;
+  if(key==='gift_gratuity_limit') DEMO_GIFT_LIMIT=parseFloat(val);
+  T('&#x2705; '+key+' updated: $'+old+' to $'+val+' (Demo)');
+}
+
+
 
 function acDemoInit(){ acDemoChannel('call'); }
 function acDemoChannel(ch){
