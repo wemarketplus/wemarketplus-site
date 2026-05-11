@@ -4376,5 +4376,72 @@ function _buildMobFAB(){
 })();
 
 </script>
+
+<script>
+
+// ════════════════════════════════════════════════════════════════
+// HIPAA COMPLIANCE: Auto-logout on inactivity (15 minutes)
+// Required for HIPAA Technical Safeguards §164.312(a)(2)(iii)
+// ════════════════════════════════════════════════════════════════
+(function initHIPAASession() {
+  var INACTIVITY_MS = 15 * 60 * 1000;   // 15 minutes
+  var WARNING_MS    = 13 * 60 * 1000;   // warn at 13 minutes
+  var _idleTimer = null;
+  var _warnTimer = null;
+  var _warned = false;
+
+  function resetTimers() {
+    clearTimeout(_idleTimer);
+    clearTimeout(_warnTimer);
+    _warned = false;
+    // Dismiss warning if shown
+    var w = document.getElementById('hipaa-timeout-warn');
+    if (w) w.style.display = 'none';
+
+    _warnTimer = setTimeout(function() {
+      showTimeoutWarning();
+    }, WARNING_MS);
+
+    _idleTimer = setTimeout(function() {
+      doAutoLogout();
+    }, INACTIVITY_MS);
+  }
+
+  function showTimeoutWarning() {
+    _warned = true;
+    var warn = document.getElementById('hipaa-timeout-warn');
+    if (!warn) {
+      warn = document.createElement('div');
+      warn.id = 'hipaa-timeout-warn';
+      warn.style.cssText = 'position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#1e3a5f;border:1px solid rgba(245,158,11,.5);border-radius:12px;padding:14px 20px;z-index:99999;display:flex;align-items:center;gap:14px;box-shadow:0 4px 24px rgba(0,0,0,.4);max-width:420px;width:calc(100% - 32px)';
+      warn.innerHTML = '<span style="font-size:22px">⏱</span><div style="flex:1"><div style="font-size:13px;font-weight:800;color:#f4f8ff">Session Expiring Soon</div><div style="font-size:12px;color:#8ba4c4;margin-top:2px">You will be logged out in 2 minutes due to inactivity. Click to stay logged in.</div></div><button onclick="resetHIPAATimer()" style="background:#f59e0b;color:#06080e;border:none;border-radius:8px;padding:8px 14px;font-weight:800;cursor:pointer;font-size:12px;font-family:inherit;white-space:nowrap">Stay Logged In</button>';
+      document.body.appendChild(warn);
+    }
+    warn.style.display = 'flex';
+  }
+
+  function doAutoLogout() {
+    // Clear tokens
+    localStorage.removeItem('hl_token');
+    localStorage.removeItem('hl_refresh');
+    sessionStorage.removeItem('hl_token');
+    sessionStorage.removeItem('op_token');
+    // Show final message
+    document.body.innerHTML = '<div style="position:fixed;inset:0;background:#04080f;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;color:#f4f8ff;font-family:sans-serif"><div style="font-size:48px">🔒</div><div style="font-size:20px;font-weight:900">Session Expired</div><div style="font-size:14px;color:#6b7fa3;text-align:center;max-width:320px">You were automatically logged out after 15 minutes of inactivity. This protects patient data under HIPAA regulations.</div><a href="/" style="background:#f59e0b;color:#06080e;padding:12px 28px;border-radius:999px;font-weight:900;text-decoration:none;font-size:14px;margin-top:8px">Return to Login</a></div>';
+  }
+
+  // Listen to user activity
+  ['mousedown','mousemove','keydown','touchstart','scroll','click'].forEach(function(evt) {
+    document.addEventListener(evt, resetTimers, { passive: true });
+  });
+
+  // Expose for the "Stay Logged In" button
+  window.resetHIPAATimer = resetTimers;
+
+  // Start
+  resetTimers();
+})();
+
+</script>
 </body>
 </html>
