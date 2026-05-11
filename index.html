@@ -299,6 +299,17 @@ footer{background:#030508;border-top:1px solid var(--border);padding:52px 28px 3
 .nav-dropdown-wrap:hover .nav-dropdown,.nav-dropdown-trigger:focus+.nav-dropdown{opacity:1;visibility:visible}
 .nav-dropdown a{display:block;padding:7px 14px;font-size:13px;color:#c8d6e8;border-radius:8px;white-space:nowrap;text-decoration:none;transition:background .1s}
 .nav-dropdown a:hover{background:rgba(255,255,255,.07);color:#fff}
+
+/* Tier rows — replaces select dropdowns */
+.plan-tiers{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.plan-tier-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 14px;transition:border-color .12s}
+.plan-tier-row:hover{border-color:rgba(255,255,255,.18)}
+.tier-info{display:flex;flex-direction:column;gap:2px}
+.tier-users{font-size:12px;font-weight:600;color:var(--text-3)}
+.tier-price{font-size:20px;font-weight:900;color:var(--text-1);letter-spacing:-.02em;line-height:1}
+.tier-mo{font-size:12px;font-weight:500;color:var(--text-3)}
+.btn-tier{border:none;border-radius:999px;padding:8px 20px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;font-family:inherit;transition:opacity .1s}
+.btn-tier:hover{opacity:.85}
 </style>
 </head>
 <body>
@@ -604,16 +615,42 @@ footer{background:#030508;border-top:1px solid var(--border);padding:52px 28px 3
   </div>
   <div class="pricing-grid" style="margin-top:38px">
     <!-- PRO -->
+        <!-- HOSPICELINK PRO -->
     <div class="plan-card reveal">
       <div class="plan-tier-badge" style="background:var(--azure-dim);color:var(--azure);border:1px solid var(--azure-border)">Starter</div>
       <div class="plan-name">HospiceLink Pro</div>
       <div class="plan-tagline">Get organized &mdash; stop losing referrals to spreadsheets</div>
       <div class="plan-blurb">Complete prospect profiles, referral source management, follow-up reminders, AI assistant, and weekly reports. Most users see improvement within 48 hours.</div>
-      <div class="plan-select"><select id="proSel" onchange="updatePrice('pro')"><option value="149|0-5 Users|STRIPE_PRO_0_5|pro_0_5">0&ndash;5 Users &mdash; $149/mo</option><option value="249|5-10 Users|STRIPE_PRO_5_10|pro_5_10">5&ndash;10 Users &mdash; $249/mo</option><option value="349|10-20 Users|STRIPE_PRO_10_20|pro_10_20">10&ndash;20 Users &mdash; $349/mo</option><option value="449|Unlimited Users|STRIPE_PRO_UNLIMITED|pro_unlimited">Unlimited Users &mdash; $449/mo</option></select></div>
-      <div class="plan-price-row"><div><div style="font-size:11px;color:var(--text-3);margin-bottom:3px" id="proUsers">0&ndash;5 Users</div><div class="plan-amount" id="proAmt">$149</div></div><div class="plan-period">per month<br>cancel anytime</div></div>
-      <ul class="plan-features"><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Complete prospect pipeline &mdash; Inquiry to Admitted</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Referral source management with status tracking</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Follow-up reminders auto-set from due dates</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Weekly report emailed every Monday at 7am</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>AI Assistant available 24/7</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>One-click CSV importer</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Referral Portal &amp; BAA included</li></ul>
-      <div class="plan-actions"><button class="btn-subscribe" style="background:var(--azure);color:#06080e" onclick="openModal('pro')">Subscribe to Pro</button><button class="btn-demo-link" onclick="window.location.href='communitylinkpro-demo.html'">View Pro Demo</button></div>
+      <ul class="plan-features">
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Complete prospect pipeline &mdash; Inquiry to Admitted</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Referral source management with status tracking</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Follow-up reminders auto-set from due dates</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Weekly report emailed every Monday at 7am</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>AI Assistant available 24/7</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>One-click CSV importer</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Referral Portal &amp; BAA included</li>
+      </ul>
+      <div class="plan-tiers">
+        <div class="plan-tier-row">
+          <div class="tier-info"><span class="tier-users">0&ndash;5 Users</span><span class="tier-price">$149<span class="tier-mo">/mo</span></span></div>
+          <button class="btn-tier" style="background:var(--azure);color:#06080e" onclick="openModalDirect('149','0–5 Users','STRIPE_PRO_0_5','pro_0_5','HospiceLink Pro','var(--azure)')">Subscribe</button>
+        </div>
+        <div class="plan-tier-row">
+          <div class="tier-info"><span class="tier-users">5&ndash;10 Users</span><span class="tier-price">$249<span class="tier-mo">/mo</span></span></div>
+          <button class="btn-tier" style="background:var(--azure);color:#06080e" onclick="openModalDirect('249','5–10 Users','STRIPE_PRO_5_10','pro_5_10','HospiceLink Pro','var(--azure)')">Subscribe</button>
+        </div>
+        <div class="plan-tier-row">
+          <div class="tier-info"><span class="tier-users">10&ndash;20 Users</span><span class="tier-price">$349<span class="tier-mo">/mo</span></span></div>
+          <button class="btn-tier" style="background:var(--azure);color:#06080e" onclick="openModalDirect('349','10–20 Users','STRIPE_PRO_10_20','pro_10_20','HospiceLink Pro','var(--azure)')">Subscribe</button>
+        </div>
+        <div class="plan-tier-row">
+          <div class="tier-info"><span class="tier-users">Unlimited Users</span><span class="tier-price">$449<span class="tier-mo">/mo</span></span></div>
+          <button class="btn-tier" style="background:var(--azure);color:#06080e" onclick="openModalDirect('449','Unlimited Users','STRIPE_PRO_UNLIMITED','pro_unlimited','HospiceLink Pro','var(--azure)')">Subscribe</button>
+        </div>
+      </div>
+      <button class="btn-demo-link" onclick="window.location.href='demo-pro.html'" style="margin-top:10px">View Pro Demo</button>
     </div>
+
     <!-- MAX -->
     <div class="plan-card featured reveal">
       <div class="featured-badge">Best Value</div>
@@ -621,24 +658,66 @@ footer{background:#030508;border-top:1px solid var(--border);padding:52px 28px 3
       <div class="plan-name">HospiceLink Max</div>
       <div class="plan-tagline">Grow your referrals &mdash; full team, full visibility</div>
       <div class="plan-blurb">Everything in Pro, plus EVV mileage, 14-day cold alerts, territory heat map, smart scheduling, and AI playbook generation.</div>
-      <div class="plan-select"><select id="maxSel" onchange="updatePrice('max')"><option value="449|0-10 Users|STRIPE_MAX_0_10|max_0_10">0&ndash;10 Users &mdash; $449/mo</option><option value="649|10-20 Users|STRIPE_MAX_10_20|max_10_20">10&ndash;20 Users &mdash; $649/mo</option><option value="849|Unlimited Users|STRIPE_MAX_UNLIMITED|max_unlimited">Unlimited Users &mdash; $849/mo</option></select></div>
-      <div class="plan-price-row"><div><div style="font-size:11px;color:var(--text-3);margin-bottom:3px" id="maxUsers">0&ndash;10 Users</div><div class="plan-amount" id="maxAmt">$449</div></div><div class="plan-period">per month<br>cancel anytime</div></div>
-      <ul class="plan-features"><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Everything in Pro</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>EVV / GPS mileage &amp; compliance log</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Territory Heat Map with ZIP color-coding</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>14-Day Cold Source Alerts</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>AI Playbook Generator</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Family Communication Log</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Admin &amp; Marketer roles</li></ul>
-      <div class="plan-actions"><button class="btn-subscribe" style="background:var(--sage);color:#06080e" onclick="openModal('max')">Subscribe to Max</button><button class="btn-demo-link" onclick="window.location.href='communitylinkmax-demo.html'">View Max Demo</button></div>
+      <ul class="plan-features">
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Everything in Pro</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>EVV / GPS mileage &amp; compliance log</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Territory Heat Map with ZIP color-coding</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>14-Day Cold Source Alerts</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>AI Playbook Generator</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Family Communication Log</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Admin &amp; Marketer roles</li>
+      </ul>
+      <div class="plan-tiers">
+        <div class="plan-tier-row">
+          <div class="tier-info"><span class="tier-users">0&ndash;10 Users</span><span class="tier-price">$449<span class="tier-mo">/mo</span></span></div>
+          <button class="btn-tier" style="background:var(--sage);color:#06080e" onclick="openModalDirect('449','0–10 Users','STRIPE_MAX_0_10','max_0_10','HospiceLink Max','var(--sage)')">Subscribe</button>
+        </div>
+        <div class="plan-tier-row">
+          <div class="tier-info"><span class="tier-users">10&ndash;20 Users</span><span class="tier-price">$649<span class="tier-mo">/mo</span></span></div>
+          <button class="btn-tier" style="background:var(--sage);color:#06080e" onclick="openModalDirect('649','10–20 Users','STRIPE_MAX_10_20','max_10_20','HospiceLink Max','var(--sage)')">Subscribe</button>
+        </div>
+        <div class="plan-tier-row">
+          <div class="tier-info"><span class="tier-users">Unlimited Users</span><span class="tier-price">$849<span class="tier-mo">/mo</span></span></div>
+          <button class="btn-tier" style="background:var(--sage);color:#06080e" onclick="openModalDirect('849','Unlimited Users','STRIPE_MAX_UNLIMITED','max_unlimited','HospiceLink Max','var(--sage)')">Subscribe</button>
+        </div>
+      </div>
+      <button class="btn-demo-link" onclick="window.location.href='demo-max.html'" style="margin-top:10px">View Max Demo</button>
     </div>
+
     <!-- GOLD -->
     <div class="plan-card premium reveal">
       <div class="plan-tier-badge" style="background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border)">Enterprise</div>
       <div class="plan-name" style="color:var(--amber)">HospiceLink Gold</div>
       <div class="plan-tagline">Dominate your territory &mdash; the complete command center</div>
       <div class="plan-blurb">Everything in Max plus Revenue Intelligence, AI Referral Triage, Windshield Mode, Telehealth, Nurse Scheduling, HIPAA Audit Log, and full 4-role access.</div>
-      <div class="plan-select"><select id="goldSel" onchange="updatePrice('gold')" style="border-color:var(--amber-border);color:var(--amber)"><option value="749|0-10 Users|STRIPE_GOLD_0_10|gold_0_10">0&ndash;10 Users &mdash; $749/mo</option><option value="999|10-20 Users|STRIPE_GOLD_10_20|gold_10_20">10&ndash;20 Users &mdash; $999/mo</option><option value="1299|Unlimited Users|STRIPE_GOLD_UNLIMITED|gold_unlimited">Unlimited Users &mdash; $1,299/mo</option></select></div>
-      <div class="plan-price-row" style="border-color:var(--amber-border)"><div><div style="font-size:11px;color:var(--text-3);margin-bottom:3px" id="goldUsers">0&ndash;10 Users</div><div class="plan-amount premium-color" id="goldAmt">$749</div></div><div class="plan-period">per month<br>cancel anytime</div></div>
-      <ul class="plan-features"><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Everything in Max</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Windshield Voice Mode</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Revenue Intelligence &amp; forecasting</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>AI Referral Triage (1&ndash;10 scoring)</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Telehealth &amp; Patient Portal</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Nurse Scheduling Engine</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>HIPAA Audit Log</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Aircall — Call, Text &amp; Email from CRM</li><li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>4-role access: Admin, Marketer, Nurse, Caregiver</li></ul>
-      <div class="plan-actions"><button class="btn-subscribe" style="background:var(--amber);color:#06080e" onclick="openModal('gold')">Subscribe to Gold</button><button class="btn-demo-link" onclick="window.location.href='communitylinkgold-demo.html'" style="border-color:var(--amber-border);color:var(--amber)">View Gold Demo</button></div>
+      <ul class="plan-features">
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Everything in Max</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Windshield Voice Mode</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Revenue Intelligence &amp; forecasting</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>AI Referral Triage (1&ndash;10 scoring)</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Telehealth &amp; Patient Portal</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Nurse Scheduling Engine</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>HIPAA Audit Log</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Aircall &mdash; Call, Text &amp; Email from CRM</li>
+        <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>4-role access: Admin, Marketer, Nurse, Caregiver</li>
+      </ul>
+      <div class="plan-tiers">
+        <div class="plan-tier-row">
+          <div class="tier-info"><span class="tier-users">0&ndash;10 Users</span><span class="tier-price">$749<span class="tier-mo">/mo</span></span></div>
+          <button class="btn-tier" style="background:var(--amber);color:#06080e" onclick="openModalDirect('749','0–10 Users','STRIPE_GOLD_0_10','gold_0_10','HospiceLink Gold','var(--amber)')">Subscribe</button>
+        </div>
+        <div class="plan-tier-row">
+          <div class="tier-info"><span class="tier-users">10&ndash;20 Users</span><span class="tier-price">$999<span class="tier-mo">/mo</span></span></div>
+          <button class="btn-tier" style="background:var(--amber);color:#06080e" onclick="openModalDirect('999','10–20 Users','STRIPE_GOLD_10_20','gold_10_20','HospiceLink Gold','var(--amber)')">Subscribe</button>
+        </div>
+        <div class="plan-tier-row">
+          <div class="tier-info"><span class="tier-users">Unlimited Users</span><span class="tier-price">$1,299<span class="tier-mo">/mo</span></span></div>
+          <button class="btn-tier" style="background:var(--amber);color:#06080e" onclick="openModalDirect('1299','Unlimited Users','STRIPE_GOLD_UNLIMITED','gold_unlimited','HospiceLink Gold','var(--amber)')">Subscribe</button>
+        </div>
+      </div>
+      <button class="btn-demo-link" onclick="window.location.href='demo-gold.html'" style="margin-top:10px;border-color:var(--amber-border);color:var(--amber)">View Gold Demo</button>
     </div>
-  </div>
-  <!-- Full comparison -->
+    <!-- Full comparison -->
   <div style="margin-top:56px" class="reveal">
     <h3 style="font-family:'Instrument Serif',Georgia,serif;font-size:24px;color:var(--text-1);text-align:center;margin-bottom:20px;font-weight:400;letter-spacing:-.02em">Full Feature Comparison</h3>
     <div class="compare-wrap">
@@ -957,7 +1036,7 @@ footer{background:#030508;border-top:1px solid var(--border);padding:52px 28px 3
     <!-- Contact CTA below pricing -->
     <div style="text-align:center;margin-top:36px;padding:28px;background:#0a1628;border:1px solid rgba(255,255,255,.07);border-radius:16px">
       <p style="color:#8b9fc4;font-size:14px;margin-bottom:12px">Ready to see CommunityLink in action at your community?</p>
-      <a href="mailto:info@wemarketplus.com?subject=CommunityLink Demo Request" style="display:inline-block;background:#f59e0b;color:#06080e;border-radius:999px;padding:12px 28px;font-size:14px;font-weight:800;text-decoration:none">Book a Live Demo</a>
+      <a href="mailto:info@wemarketplus.com?subject=CommunityLink Demo Request" style="display:inline-block;background:#f59e0b;color:#06080e;border-radius:999px;padding:12px 28px;font-size:14px;font-weight:800;text-decoration:none">Schedule a Demo</a>
     </div>
   </div>
 </section>
@@ -1008,9 +1087,27 @@ function toggleFAQ(i){var item=document.getElementById('faqItem'+i);var was=item
 var activePlan='pro';
 function getOpt(p){var s=document.getElementById(p+'Sel');if(!s)return null;var v=s.value.split('|');return{price:v[0],label:v[1],stripeKey:v[2],pkg:v[3]};}
 function updatePrice(p){var o=getOpt(p);if(!o)return;var a=document.getElementById(p+'Amt');var u=document.getElementById(p+'Users');if(a)a.textContent='$'+parseInt(o.price).toLocaleString();if(u)u.textContent=o.label;}
-function openModal(p){activePlan=p;var o=getOpt(p);var labels={pro:'HospiceLink Pro',max:'HospiceLink Max',gold:'HospiceLink Gold'};var colors={pro:'var(--azure)',max:'var(--sage)',gold:'var(--amber)'};document.getElementById('modalPlanName').textContent=labels[p];document.getElementById('modalPlanName').style.color=colors[p];document.getElementById('modalPriceDisplay').textContent=o?'$'+parseInt(o.price).toLocaleString()+'/mo':'';document.getElementById('modalTierLabel').textContent=o?o.label:'';document.getElementById('checkoutModal').classList.add('open');document.body.style.overflow='hidden';}
+function openModal(p){
+  var tiers={
+    pro:{price:'149',label:'0–5 Users',sk:'STRIPE_PRO_0_5',pkg:'pro_0_5',name:'HospiceLink Pro',color:'var(--azure)'},
+    max:{price:'449',label:'0–10 Users',sk:'STRIPE_MAX_0_10',pkg:'max_0_10',name:'HospiceLink Max',color:'var(--sage)'},
+    gold:{price:'749',label:'0–10 Users',sk:'STRIPE_GOLD_0_10',pkg:'gold_0_10',name:'HospiceLink Gold',color:'var(--amber)'}
+  };
+  var t=tiers[p]; if(t) openModalDirect(t.price,t.label,t.sk,t.pkg,t.name,t.color);
+}
+
+function openModalDirect(price, label, stripeKey, pkg, planName, planColor){
+  activePlan = pkg;
+  window._directTier = {price:price, label:label, stripeKey:stripeKey, pkg:pkg};
+  document.getElementById('modalPlanName').textContent  = planName || '';
+  document.getElementById('modalPlanName').style.color  = planColor || '#f4f8ff';
+  document.getElementById('modalPriceDisplay').textContent = '$' + parseInt(price).toLocaleString() + '/mo';
+  document.getElementById('modalTierLabel').textContent = label;
+  document.getElementById('checkoutModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
 function closeModal(){document.getElementById('checkoutModal').classList.remove('open');document.body.style.overflow='';}
-function confirmCheckout(){var o=getOpt(activePlan);if(!o)return;var url=STRIPE[o.stripeKey];if(!url){alert('Contact support@wemarketplus.com to complete your subscription.');return;}if(typeof gtag!=='undefined')gtag('event','begin_checkout',{currency:'USD',value:parseInt(o.price),item_id:o.stripeKey});window.location.href=url;}
+function confirmCheckout(){var o=window._directTier||(activePlan?getOpt(activePlan):null);if(!o)return;var url=STRIPE[o.stripeKey];if(!url){alert('Contact support@wemarketplus.com to complete your subscription.');return;}if(typeof gtag!=='undefined')gtag('event','begin_checkout',{currency:'USD',value:parseInt(o.price),item_id:o.stripeKey});window.location.href=url;}
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModal();closeClModal();}});
 function handleLogin(){
   // Show product selection if coming from bottom of page
