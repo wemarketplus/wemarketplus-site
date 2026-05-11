@@ -133,6 +133,7 @@ textarea.fi{resize:vertical;min-height:72px}
       <select class="role-sel" id="roleSel" onchange="setRole(this.value)">
         <option value="admin">Administrator</option>
         <option value="director">Executive Director</option>
+        <option value="sales_admissions">Sales/Admissions</option>
         <option value="owner">Owner / Investor</option>
         <option value="marketer">Sales Marketer</option>
         <option value="maintenance">Maintenance</option>
@@ -143,7 +144,7 @@ textarea.fi{resize:vertical;min-height:72px}
   </div>
   <nav class="sb-nav" id="sideNav"></nav>
   <div class="sb-foot">
-    <a href="index.html" class="back-btn">← We Market Plus</a>
+    <a href="index.html" class="back-btn">← Back to the Website</a>
   </div>
 </aside>
 
@@ -233,6 +234,17 @@ textarea.fi{resize:vertical;min-height:72px}
       <tbody id="leadTable"><tr><td colspan="7" style="color:#4b6278;text-align:center;padding:20px">Loading leads…</td></tr></tbody>
     </table>
   </div>
+</div>
+</div>
+
+<!-- ═══ REFERRAL PIPELINE ══════════════════════════════════════ -->
+<div class="tab" id="tab-referrals">
+<div class="sec-h">Referral Pipeline</div>
+<div class="sec-sub">Track paid and organic referrals from A Place for Mom, Caring.com, hospitals, and partners through every stage to move-in.</div>
+<div id="referralStats" class="stats"></div>
+<div id="referralStages" class="card" style="margin-bottom:14px"></div>
+<div id="referralTable" class="card">
+  <div style="color:#4b6278;text-align:center;padding:40px">Loading referral pipeline…</div>
 </div>
 </div>
 
@@ -1034,6 +1046,44 @@ textarea.fi{resize:vertical;min-height:72px}
 
 <script>
 (function(){
+
+  // ══════════════════════════════════════════════════════════
+  // UNIFIED NOTE WRITER — syncs every Aircall activity to /api/cl/notes
+  // so all communication appears in the unified Notes tab timeline
+  // ══════════════════════════════════════════════════════════
+  function _postNoteFromAircall(noteData) {
+    var TYPE_LABELS = {call:'Phone Call', text:'Text Message', email:'Email',
+                       missed_call:'Missed Call', failed_text:'Failed Text', failed_email:'Failed Email'};
+    var TYPE_ICONS  = {call:'📞', text:'💬', email:'✉️',
+                       missed_call:'📵', failed_text:'⚠️', failed_email:'⚠️'};
+    var icon  = TYPE_ICONS[noteData.comm_type]  || '📋';
+    var label = TYPE_LABELS[noteData.comm_type] || noteData.comm_type;
+
+    var payload = {
+      comm_type:    noteData.comm_type,
+      contact_name: noteData.contact_name || '',
+      summary:      icon + ' [' + label + '] ' + (noteData.contact_name||'') + ' — ' + (noteData.summary||noteData.outcome||''),
+      outcome:      noteData.outcome || '',
+      next_step:    noteData.next_step || '',
+      follow_up_date: noteData.follow_up_date || null,
+      note_type:    'aircall',
+    };
+
+    payload.authored_by = 'AIRCALL';
+    payload.author_display = 'AIRCALL';
+    // POST to /api/cl/notes (same endpoint manual notes use)
+    fetch(BACKEND+'/api/cl/notes', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    }).then(function(){
+      // Refresh notes feed if currently on notes tab
+      if(typeof loadNotes === 'function') loadNotes();
+    }).catch(function(err){
+      console.error('[Aircall→Notes] Sync failed:', err);
+    });
+  }
+
   // ── Channel switcher ─────────────────────────────────────────
   window.acChannel = function(ch){
     ['call','text','email'].forEach(function(c){
@@ -1044,7 +1094,7 @@ textarea.fi{resize:vertical;min-height:72px}
     });
   };
 
-  // ── Prefill helpers ──────────────────────────────────────────
+  // ── Prefill helpers ───────────────────────────────────────────
   window.acFillCallPhone = function(){
     var sel=document.getElementById('acCallContact'), ph=document.getElementById('acCallPhone');
     if(sel&&ph) ph.value=sel.value.split('|')[1]||'';
@@ -1058,28 +1108,28 @@ textarea.fi{resize:vertical;min-height:72px}
     if(sel&&em) em.value=sel.value.split('|')[1]||'';
   };
 
-  // ── Text template ────────────────────────────────────────────
+  // ── Text template ─────────────────────────────────────────────
   window.acApplyTextTemplate = function(sel){
     var body=document.getElementById('acTextBody');
-    if(body&&sel.value){ body.value=sel.value; var c=document.getElementById('acTextCount'); if(c) c.textContent=body.value.length+'/160'; }
+    if(body&&sel.value){body.value=sel.value;var c=document.getElementById('acTextCount');if(c)c.textContent=body.value.length+'/160';}
   };
 
-  // ── Email templates ──────────────────────────────────────────
+  // ── Email templates ───────────────────────────────────────────
   var EMAIL_TPL={
-    'tour-confirm':{subject:'Your Tour at Sunrise Senior Living is Confirmed!',body:'Dear [Name],\n\nWe\'re so excited to meet you! Your tour at Sunrise Senior Living is confirmed:\n\n📅 Date: [Date]\n🕙 Time: [Time]\n📍 Location: [Address]\n\nPlease bring any questions — our team will be ready to walk you through every detail.\n\nSee you soon!\n[Your Name] | [Title]\nSunrise Senior Living | [Phone]'},
-    'proposal':{subject:'Your Personalized Care & Pricing Overview',body:'Dear [Name],\n\nThank you for your interest in Sunrise Senior Living. Based on your conversation with our team, here is a personalized overview of our care options and pricing:\n\n[Insert care level details and rates here]\n\nWe\'d love to connect and answer any questions. Please reply to this email or call us anytime.\n\nWarmly,\n[Your Name] | [Phone]'},
-    'thank-referral':{subject:'Thank You for Your Referral!',body:'Dear [Name],\n\nThank you so much for your trust and referral! We truly appreciate the confidence you place in us.\n\nOur team is already following up and ensuring the family receives the best possible experience from day one.\n\nWith gratitude,\n[Your Name]\nSunrise Senior Living | [Phone]'},
-    'follow-up':{subject:'Following Up — Sunrise Senior Living',body:'Dear [Name],\n\nI just wanted to reach out and follow up from our last conversation. We\'re still thinking of you and would love to help your family find the right home.\n\nDo you have 10 minutes for a call this week? I\'m happy to answer any questions or schedule a tour at your convenience.\n\nBest,\n[Your Name] | [Phone]'},
-    'move-in-prep':{subject:'Welcome to Sunrise Senior Living — Move-In Details',body:'Dear [Name],\n\nWe are so thrilled to welcome [Resident Name] to Sunrise Senior Living! Here is everything you need to know before move-in day:\n\n📅 Move-In Date: [Date]\n🏠 Unit: [Unit Number and Type]\n🕙 Check-In Time: [Time]\n\nIf you have any questions or need anything before the big day, please don\'t hesitate to reach out.\n\nWith excitement,\n[Your Name] | [Phone]'},
-    'cold-re-engage':{subject:'We\'d Love to Reconnect — Sunrise Senior Living',body:'Dear [Name],\n\nIt\'s been a while since we last connected, and I wanted to personally reach out. We have some wonderful new availability and would love to show you what\'s new at Sunrise Senior Living.\n\nWould you be open to a quick call or a fresh tour? We\'d love the opportunity to reconnect.\n\nWarm regards,\n[Your Name] | [Phone]'}
+    'tour-confirm':{subject:'Your Tour at Sunrise Senior Living is Confirmed!',body:'Dear [Name],\n\nYour tour is confirmed.\n\nSee you soon!\n[Your Name]'},
+    'proposal':{subject:'Your Personalized Care & Pricing Overview',body:'Dear [Name],\n\nThank you for your interest.\n\n[Your Name]'},
+    'thank-referral':{subject:'Thank You for Your Referral!',body:'Dear [Name],\n\nThank you for your trust.\n\nGratefully,\n[Your Name]'},
+    'follow-up':{subject:'Following Up',body:'Dear [Name],\n\nI wanted to follow up.\n\n[Your Name]'},
+    'move-in-prep':{subject:'Welcome — Move-In Details',body:'Dear [Name],\n\nWe are so excited to welcome [Resident]!\n\n[Your Name]'},
+    'cold-re-engage':{subject:'We\'d Love to Reconnect',body:'Dear [Name],\n\nIt\'s been a while — we\'d love to show you what\'s new.\n\n[Your Name]'}
   };
   window.acApplyEmailTemplate = function(sel){
     var t=EMAIL_TPL[sel.value]; if(!t)return;
     var s=document.getElementById('acEmailSubject'), b=document.getElementById('acEmailBody');
-    if(s) s.value=t.subject; if(b) b.value=t.body;
+    if(s)s.value=t.subject; if(b)b.value=t.body;
   };
 
-  // ── Call actions ─────────────────────────────────────────────
+  // ── Call actions ──────────────────────────────────────────────
   var _callTimer=null, _callSecs=0, _muted=false;
   window.acStartCall = function(){
     var phone=(document.getElementById('acCallPhone')||{}).value;
@@ -1091,44 +1141,64 @@ textarea.fi{resize:vertical;min-height:72px}
     }).then(function(r){return r.json();}).then(function(d){
       if(d.error){ T(d.error,'e'); return; }
       T('📞 Connecting to '+name+' via Aircall…');
-      var w=document.getElementById('acLiveCall');
-      var nm=document.getElementById('acLiveCallName');
-      var ti=document.getElementById('acLiveCallTimer');
-      if(w) w.style.display=''; if(nm) nm.textContent=name;
-      _callSecs=0; _muted=false;
-      if(_callTimer) clearInterval(_callTimer);
+      var w=document.getElementById('acLiveCall'), nm=document.getElementById('acLiveCallName'), ti=document.getElementById('acLiveCallTimer');
+      if(w)w.style.display=''; if(nm)nm.textContent=name;
+      _callSecs=0;_muted=false;
+      if(_callTimer)clearInterval(_callTimer);
       _callTimer=setInterval(function(){
-        _callSecs++;
-        var m=Math.floor(_callSecs/60),s=_callSecs%60;
-        if(ti) ti.textContent=m+':'+(s<10?'0':'')+s;
+        _callSecs++;var m=Math.floor(_callSecs/60),s=_callSecs%60;
+        if(ti)ti.textContent=m+':'+(s<10?'0':'')+s;
       },1000);
-    }).catch(function(){ T('Could not connect to Aircall. Check integration settings.','e'); });
+    }).catch(function(){
+      T('Could not connect to Aircall.','e');
+      _postNoteFromAircall({
+        comm_type:'missed_call', contact_name:name,
+        summary:'Call attempt failed — could not connect', outcome:'Connection failure'
+      });
+    });
   };
   window.acEndCall = function(){
-    if(_callTimer) clearInterval(_callTimer);
-    var w=document.getElementById('acLiveCall'); if(w) w.style.display='none';
+    if(_callTimer)clearInterval(_callTimer);
+    var w=document.getElementById('acLiveCall'); if(w)w.style.display='none';
     T('Call ended. Complete the post-call log below.');
   };
   window.acToggleMute = function(){
     _muted=!_muted;
-    var btn=document.getElementById('acMuteBtn'); if(btn) btn.textContent=_muted?'🔇 Unmute':'🎙 Mute';
+    var btn=document.getElementById('acMuteBtn'); if(btn)btn.textContent=_muted?'🔇 Unmute':'🎙 Mute';
     T(_muted?'Microphone muted':'Microphone active');
   };
+
+  // ── Save call log → Notes timeline ───────────────────────────
   window.acSaveCallLog = function(){
     var outcome=(document.getElementById('acCallOutcome')||{}).value;
     if(!outcome){ T('Select a call outcome first','w'); return; }
     var sel=document.getElementById('acCallContact');
     var name=sel&&sel.value?sel.value.split('|')[0]:'Contact';
+    var summary=(document.getElementById('acCallSummary')||{}).value||'';
+    var nextStep=(document.getElementById('acCallNext')||{}).value||'';
+    var followDate=(document.getElementById('acCallFollowDate')||{}).value||null;
+
+    // 1. Write to Aircall activity log
     fetch(BACKEND+'/api/aircall/log',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({type:'call',contact_name:name,outcome:outcome,
-        summary:(document.getElementById('acCallSummary')||{}).value||'',
-        next_step:(document.getElementById('acCallNext')||{}).value||'',
-        follow_up_date:(document.getElementById('acCallFollowDate')||{}).value||null})
-    }).then(function(){ T('📞 Call log saved! Follow-up queued.'); acRefreshLog(); })
-      .catch(function(){ T('Save failed. Check connection.','e'); });
+        summary:summary,next_step:nextStep,follow_up_date:followDate})
+    }).then(function(){ acRefreshLog(); }).catch(function(){});
+
+    // 2. Write to unified Notes timeline ← THE KEY SYNC
+    _postNoteFromAircall({
+      comm_type:'call', contact_name:name,
+      summary:summary||outcome, outcome:outcome,
+      next_step:nextStep, follow_up_date:followDate
+    });
+
+    T('📞 Call logged + note saved to Notes tab!');
+    // Reset form
+    ['acCallOutcome','acCallSummary','acCallNext','acCallFollowDate'].forEach(function(id){
+      var el=document.getElementById(id); if(el)el.value='';
+    });
   };
 
-  // ── Text actions ─────────────────────────────────────────────
+  // ── Text send → Notes timeline ────────────────────────────────
   window.acSendText = function(){
     var phone=(document.getElementById('acTextPhone')||{}).value;
     var body=(document.getElementById('acTextBody')||{}).value.trim();
@@ -1141,12 +1211,21 @@ textarea.fi{resize:vertical;min-height:72px}
     }).then(function(r){return r.json();}).then(function(d){
       if(d.error){ T(d.error,'e'); return; }
       T('💬 Text sent to '+name+'!');
-      var tb=document.getElementById('acTextBody'); if(tb) tb.value='';
+      var tb=document.getElementById('acTextBody'); if(tb)tb.value='';
       acRefreshLog();
-    }).catch(function(){ T('Text failed. Check Aircall connection.','e'); });
+      _postNoteFromAircall({
+        comm_type:'text', contact_name:name,
+        summary:'Text sent: '+body.substring(0,120)+(body.length>120?'…':''),
+        outcome:'Sent'
+      });
+    }).catch(function(){
+      T('Text failed.','e');
+      _postNoteFromAircall({comm_type:'failed_text',contact_name:name,
+        summary:'Text to '+name+' failed to deliver',outcome:'Delivery failure'});
+    });
   };
 
-  // ── Email actions ────────────────────────────────────────────
+  // ── Email send → Notes timeline ───────────────────────────────
   window.acSendEmail = function(){
     var to=(document.getElementById('acEmailAddr')||{}).value.trim();
     var subject=(document.getElementById('acEmailSubject')||{}).value.trim();
@@ -1154,7 +1233,7 @@ textarea.fi{resize:vertical;min-height:72px}
     var sel=document.getElementById('acEmailContact');
     var name=sel&&sel.value?sel.value.split('|')[0]:'Contact';
     if(!to)      { T('Enter a recipient email','w'); return; }
-    if(!subject) { T('Subject line required','w'); return; }
+    if(!subject) { T('Subject required','w'); return; }
     if(!body)    { T('Email body required','w'); return; }
     fetch(BACKEND+'/api/aircall/email',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({to:to,contact_name:name,subject:subject,body:body,
@@ -1162,19 +1241,28 @@ textarea.fi{resize:vertical;min-height:72px}
     }).then(function(r){return r.json();}).then(function(d){
       if(d.error){ T(d.error,'e'); return; }
       T('✉️ Email sent to '+name+'!');
-      ['acEmailAddr','acEmailCC','acEmailSubject','acEmailBody'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+      ['acEmailAddr','acEmailCC','acEmailSubject','acEmailBody'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
       acRefreshLog();
-    }).catch(function(){ T('Email failed. Check Aircall connection.','e'); });
+      _postNoteFromAircall({
+        comm_type:'email', contact_name:name,
+        summary:'Email sent — Subject: '+subject,
+        outcome:'Sent'
+      });
+    }).catch(function(){
+      T('Email failed.','e');
+      _postNoteFromAircall({comm_type:'failed_email',contact_name:name,
+        summary:'Email to '+name+' failed — Subject: '+subject,outcome:'Delivery failure'});
+    });
   };
 
-  // ── Log refresh ──────────────────────────────────────────────
+  // ── Log refresh ───────────────────────────────────────────────
   window.acRefreshLog = function(){
     fetch(BACKEND+'/api/aircall/log')
       .then(function(r){return r.json();})
       .then(function(d){
         var rows=d.data||d||[];
         var tb=document.getElementById('acLogBody');
-        if(!tb||!rows.length) return;
+        if(!tb||!rows.length)return;
         var icons={call:'📞 Call',text:'💬 Text',email:'✉️ Email'};
         var cls={call:'bb',text:'ba',email:'bx'};
         tb.innerHTML=rows.slice(0,20).map(function(r){
@@ -1187,14 +1275,15 @@ textarea.fi{resize:vertical;min-height:72px}
             +'<td>'+rel+'</td>'
             +'<td><span class="badge bg">'+(r.outcome||'Logged')+'</span></td></tr>';
         }).join('');
-      }).catch(function(){/* silent */});
+      }).catch(function(){});
   };
 
-  // ── Init ─────────────────────────────────────────────────────
+  // ── Init ──────────────────────────────────────────────────────
   window.initAircall = function(){
     acChannel('call');
     acRefreshLog();
   };
+
 })();
 </script>
 </div>
@@ -1246,12 +1335,13 @@ function T(msg, type){
 
 // ── Role system ──────────────────────────────────────────────────
 const ROLE_TABS = {
-  admin:        ['dash','addlead','leads','addref','refs','tours','gps','mileage','outreach','tasks','notes','ai','apartments','makeready','maintenance','housekeeping','ledger','revenue','concessions','loc','competitors','aircall','reports','team','settings'],
-  director:     ['dash','apartments','leads','makeready','maintenance','housekeeping','ledger','revenue','concessions','aircall','reports'],
-  owner:        ['dash','ledger','revenue','concessions','competitors','reports'],
-  marketer:     ['dash','addlead','leads','addref','refs','tours','gps','mileage','outreach','tasks','notes','ai','aircall'],
-  maintenance:  ['dash','maintenance','makeready','tasks'],
-  housekeeping: ['dash','housekeeping','makeready','tasks'],
+  admin:           ['dash','addlead','leads','referrals','addref','refs','tours','gps','mileage','outreach','tasks','notes','ai','apartments','makeready','maintenance','housekeeping','ledger','revenue','concessions','loc','competitors','aircall','reports','team','settings'],
+  director:        ['dash','apartments','leads','referrals','makeready','maintenance','housekeeping','ledger','revenue','concessions','aircall','notes','tasks','reports'],
+  sales_admissions:['dash','addlead','leads','referrals','addref','refs','tours','gps','mileage','outreach','tasks','notes','ai','apartments','makeready','maintenance','housekeeping','ledger','revenue','concessions','loc','aircall'],
+  owner:           ['dash','leads','referrals','ledger','revenue','concessions','competitors','reports'],
+  marketer:        ['dash','addlead','leads','referrals','addref','refs','tours','gps','mileage','outreach','tasks','notes','ai','aircall'],
+  maintenance:     ['dash','maintenance','makeready','apartments','tasks'],
+  housekeeping:    ['dash','housekeeping','makeready','maintenance','apartments','tasks'],
 };
 
 let currentRole = 'admin';
@@ -1259,7 +1349,7 @@ const ACTIVE_CLS = 'on';
 
 const NAV_DEF = [
   { sec:'MAIN',        items:[{id:'dash',label:'Dashboard'}] },
-  { sec:'SALES',       items:[{id:'addlead',label:'Add Lead'},{id:'leads',label:'Lead Pipeline'},{id:'refs',label:'Referral Sources'},{id:'addref',label:'Add Referral Source'},{id:'tours',label:'Tour Scheduler'}] },
+  { sec:'SALES',       items:[{id:'addlead',label:'Add Lead'},{id:'leads',label:'Lead Pipeline'},{id:'referrals',label:'Referral Pipeline'},{id:'refs',label:'Referral Sources'},{id:'addref',label:'Add Referral Source'},{id:'tours',label:'Tour Scheduler'}] },
   { sec:'OUTREACH',    items:[{id:'gps',label:'GPS Check-In'},{id:'mileage',label:'Mileage Tracker'},{id:'outreach',label:'Outreach Log'}] },
   { sec:'ACTIVITY',    items:[{id:'tasks',label:'Tasks'},{id:'notes',label:'Activity Notes'},{id:'ai',label:'AI Sales Assistant'}] },
   { sec:'OPERATIONS',  items:[{id:'apartments',label:'Apartment Inventory'},{id:'makeready',label:'Make-Ready Board'},{id:'maintenance',label:'Maintenance Tickets'},{id:'housekeeping',label:'Housekeeping Tasks'}] },
@@ -1310,13 +1400,14 @@ function showTab(id){
   if(id==='concessions') loadConcessions();
   if(id==='loc')         loadLOC();
   if(id==='competitors') loadCompetitors();
+  if(id==='referrals')   initReferrals();
   if(id==='aircall')     initAircall();
 }
 
 function setRole(role){
   currentRole = role;
   const badge = document.getElementById('roleBadge');
-  const labels = {admin:'Administrator',director:'Executive Director',owner:'Owner / Investor',marketer:'Sales Marketer',maintenance:'Maintenance',housekeeping:'Housekeeping'};
+  const labels = {admin:'Administrator',director:'Executive Director',sales_admissions:'Sales/Admissions',owner:'Owner / Investor',marketer:'Sales/Admissions',maintenance:'Maintenance',housekeeping:'Housekeeping'};
   badge.textContent = labels[role]||role;
   // Redirect to appropriate default for role
   if(!(ROLE_TABS[role]||[]).includes(currentTabId)){
@@ -1620,41 +1711,66 @@ async function deleteTask(id){
 
 // ── Notes ────────────────────────────────────────────────────────
 async function loadNotes(){
+  // Populate lead selector
   const d = await clFetch('/leads');
   const leads = d.data||[];
   const sel = document.getElementById('nt-lead');
   if(sel && leads.length){
     sel.innerHTML = '<option value="">— General Note —</option>'+leads.map(l=>`<option value="${l.id}">${escH(l.name)}</option>`).join('');
   }
-  // Load recent notes from first few leads
+
+  // Load unified notes (manual + Aircall) from API
   const feed = document.getElementById('notesFeed');
   if(!feed) return;
-  feed.innerHTML = `
-    <div style="background:#071120;border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:12px">
-      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-        <div style="font-weight:700;color:#f4f8ff;font-size:13px">Dorothy Harrison</div>
-        <div style="font-size:10px;color:#4b6278">Feb 11 · Phone Call</div>
-      </div>
-      <div style="font-size:12px;color:#c8d6e8;line-height:1.6">Spoke with her son James. She's recovering from a hip replacement at Parkland. Very warm lead — touring Feb 14. He wants 2BR if available.</div>
-      <div style="font-size:11px;color:#f59e0b;margin-top:5px">Next: Tour confirmation call Feb 13</div>
-    </div>
-    <div style="background:#071120;border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:12px">
-      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-        <div style="font-weight:700;color:#f4f8ff;font-size:13px">Gloria Tran</div>
-        <div style="font-size:10px;color:#4b6278">Feb 10 · Family Meeting</div>
-      </div>
-      <div style="font-size:12px;color:#c8d6e8;line-height:1.6">Met with daughter Lisa and son Kevin. MNSD diagnosis confirmed. They want MC. Budget $5,800/mo. Proposal sent Feb 10.</div>
-      <div style="font-size:11px;color:#f87171;margin-top:5px">HOT — decision expected this week</div>
-    </div>
-    <div style="background:#071120;border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:12px">
-      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-        <div style="font-weight:700;color:#f4f8ff;font-size:13px">Parkland Hospital Outreach</div>
-        <div style="font-size:10px;color:#4b6278">Feb 11 · Hospital Visit</div>
-      </div>
-      <div style="font-size:12px;color:#c8d6e8;line-height:1.6">Visited discharge planner Sarah Kim RN. Left AL brochures. She mentioned 3 potential discharges this week. Great relationship opportunity.</div>
-      <div style="font-size:11px;color:#4fc87a;margin-top:5px">Follow-up: bring gift basket, schedule lunch-and-learn</div>
-    </div>`;
+  feed.innerHTML = '<div style="color:#4b6278;text-align:center;padding:20px;font-size:12px">Loading activity timeline…</div>';
+
+  try {
+    const nd = await clFetch('/notes');
+    const notes = nd.data || [];
+    if(!notes.length){
+      feed.innerHTML = '<div style="color:#4b6278;text-align:center;padding:24px;font-size:13px">No activity yet. Notes from calls, texts, emails, and manual entries will all appear here.</div>';
+      return;
+    }
+    const COMM_META = {
+      call:        {icon:'📞',label:'Call',          color:'#3d9ee8', bg:'rgba(61,158,232,.12)',  border:'rgba(61,158,232,.28)'},
+      text:        {icon:'💬',label:'Text',          color:'#a78bfa', bg:'rgba(167,139,250,.12)', border:'rgba(167,139,250,.28)'},
+      email:       {icon:'✉️',label:'Email',         color:'#f59e0b', bg:'rgba(245,158,11,.12)',  border:'rgba(245,158,11,.28)'},
+      missed_call: {icon:'📵',label:'Missed Call',   color:'#f87171', bg:'rgba(248,113,113,.12)', border:'rgba(248,113,113,.28)'},
+      failed_text: {icon:'⚠️',label:'Failed Text',   color:'#f87171', bg:'rgba(248,113,113,.12)', border:'rgba(248,113,113,.28)'},
+      failed_email:{icon:'⚠️',label:'Failed Email',  color:'#f87171', bg:'rgba(248,113,113,.12)', border:'rgba(248,113,113,.28)'},
+      manual:      {icon:'📝',label:'Manual Note',   color:'#4fc87a', bg:'rgba(79,200,122,.08)',  border:'rgba(79,200,122,.22)'},
+    };
+
+    feed.innerHTML = notes.map(n => {
+      const isAircall = n.note_type === 'aircall' && n.comm_type;
+      const meta  = isAircall ? (COMM_META[n.comm_type]||COMM_META.manual) : COMM_META.manual;
+      const ts    = n.created_at ? new Date(n.created_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) : '';
+      const author= (n.authored_by === 'AIRCALL' || n.note_type === 'aircall') ? '[AIRCALL]' : n.created_by_name || n.user_name || 'Team';
+      // Strip icon prefix from summary for clean display
+      const cleanSummary = (n.summary||'').replace(/^[^\]]+\]\s*/,'');
+
+      return `<div style="background:#0a1628;border:1px solid ${meta.border};border-radius:12px;padding:14px 16px;margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="background:${meta.bg};border:1px solid ${meta.border};border-radius:999px;padding:3px 10px;font-size:11px;font-weight:800;color:${meta.color}">${meta.icon} ${meta.label}</span>
+            ${n.contact_name ? `<span style="font-size:12px;font-weight:700;color:#f4f8ff">${escH(n.contact_name)}</span>` : ''}
+          </div>
+          <span style="font-size:11px;color:#6b7fa3">${ts}</span>
+        </div>
+        ${cleanSummary ? `<div style="font-size:13px;color:#c8d6e8;margin-bottom:6px;line-height:1.5">${escH(cleanSummary)}</div>` : ''}
+        ${n.outcome ? `<div style="font-size:12px;color:#8ba4c4;margin-bottom:4px"><span style="font-weight:700;color:#c8d6e8">Outcome:</span> ${escH(n.outcome)}</div>` : ''}
+        ${n.next_step ? `<div style="font-size:12px;color:#8ba4c4;margin-bottom:4px"><span style="font-weight:700;color:#f59e0b">Next Step:</span> ${escH(n.next_step)}</div>` : ''}
+        ${n.follow_up_date ? `<div style="font-size:12px;color:#8ba4c4;margin-bottom:4px"><span style="font-weight:700;color:#4fc87a">Follow-Up:</span> ${escH(n.follow_up_date)}</div>` : ''}
+        <div style="display:flex;align-items:center;gap:6px;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.06)">
+          ${(n.authored_by==="AIRCALL"||n.note_type==="aircall") ? '<span style="background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:#f59e0b;padding:2px 10px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:.06em">[AIRCALL]</span>' : '<span style="font-size:10px;font-weight:800;color:#f59e0b;background:rgba(245,158,11,.1);border-radius:999px;padding:1px 8px">'+escH(author)+'</span>'}
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e){
+    feed.innerHTML = '<div style="color:#4b6278;text-align:center;padding:20px">Could not load notes. Check connection.</div>';
+  }
 }
+
 
 async function saveNote(){
   const summary = document.getElementById('nt-summary').value.trim();
@@ -2299,7 +2415,7 @@ function showInviteForm(){
     +'<input id="inv-email" style="width:100%;background:#0d1f38;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:9px 12px;font-size:13px;color:#f4f8ff;outline:none" placeholder="colleague@community.com"></div>'
     +'<div style="margin-bottom:16px"><div style="font-size:11px;font-weight:700;color:#4b6278;margin-bottom:5px">Role</div>'
     +'<select id="inv-role" style="width:100%;background:#0d1f38;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:9px 12px;font-size:13px;color:#f4f8ff;outline:none">'
-    +'<option>Marketer</option><option>Director of Sales</option><option>Executive Director</option><option>Maintenance</option><option>Housekeeping</option>'
+    +'<option>Marketer</option><option>Sales/Admissions</option><option>Executive Director</option><option>Maintenance</option><option>Housekeeping</option>'
     +'</select></div>'
     +'<div style="display:flex;gap:8px">'
     +'<button style="padding:10px 20px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#06080e;border:none;border-radius:999px;font-weight:700;cursor:pointer;font-family:inherit" onclick="sendInvite()">Send Invite</button>'
@@ -2341,6 +2457,183 @@ function saveSettings(){
 
 
 function closeInviteModal(){var el=document.getElementById('inviteFormModal');if(el)el.remove();}
+
+// ── Referral Pipeline ──────────────────────────────────────────
+const REFERRAL_STAGES_CRM = ['New Referral','Contact Attempted','Family Reached',
+  'Assessment Scheduled','Tour Scheduled','Touring','Deposit Pending','Approved',
+  'Move-In Scheduled','Moved In','Lost'];
+const STAGE_BADGE_CRM = {
+  'New Referral':'bb','Contact Attempted':'bx','Family Reached':'ba',
+  'Assessment Scheduled':'ba','Tour Scheduled':'bg','Touring':'bg',
+  'Deposit Pending':'br','Approved':'bg','Move-In Scheduled':'bg',
+  'Moved In':'bg','Lost':'br'
+};
+
+async function initReferrals(){
+  try {
+    const d = await clFetch('/referrals');
+    renderReferralPipeline(d.data||[]);
+  } catch(e){ renderReferralPipeline([]); }
+}
+
+function renderReferralPipeline(refs){
+  // Stats
+  const paidFees = refs.filter(r=>r.feeStatus==='Paid').reduce((s,r)=>s+(r.fee||0),0);
+  const pending  = refs.filter(r=>r.feeStatus==='Pending').reduce((s,r)=>s+(r.fee||0),0);
+  const movedIn  = refs.filter(r=>r.stage==='Moved In').length;
+  const paid     = refs.filter(r=>r.type==='Paid').length;
+
+  const stats = document.getElementById('referralStats');
+  if(stats) stats.innerHTML = [
+    ['Total Referrals',refs.length,'All sources'],
+    ['Paid Referrals',paid,'APFM, Caring, SA'],
+    ['Fees Paid','$'+paidFees.toLocaleString(),'Confirmed move-ins'],
+    ['Pending Fees','$'+pending.toLocaleString(),'On move-in'],
+    ['Moved In',movedIn,'This period'],
+  ].map(([l,v,s])=>`<div class="stat"><div class="sl">${l}</div><div class="sv">${v}</div><div class="ss">${s}</div></div>`).join('');
+
+  // Stage pipeline
+  const stages = document.getElementById('referralStages');
+  if(stages){
+    stages.innerHTML = '<div class="card-h"><div class="card-t">Pipeline by Stage</div>'
+      +'<button class="btn btn-a btn-sm" onclick="showAddReferral()">+ Add Referral</button></div>'
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap">'
+      +REFERRAL_STAGES_CRM.map(stage=>{
+        const cnt = refs.filter(r=>r.stage===stage).length;
+        const col = {'New Referral':'#3d9ee8','Family Reached':'#f59e0b','Tour Scheduled':'#4fc87a',
+          'Deposit Pending':'#f87171','Moved In':'#4fc87a','Lost':'#f87171'}[stage]||'#8ba4c4';
+        return `<div style="background:#060e1b;border:1px solid ${col}33;border-radius:10px;padding:10px 14px;min-width:80px;text-align:center">
+          <div style="font-size:18px;font-weight:900;color:${col}">${cnt}</div>
+          <div style="font-size:10px;color:#6b7fa3;margin-top:2px">${escH(stage)}</div></div>`;
+      }).join('')+'</div>';
+  }
+
+  // Table
+  const tbl = document.getElementById('referralTable');
+  if(tbl){
+    if(!refs.length){
+      tbl.innerHTML = '<div style="color:#4b6278;text-align:center;padding:40px">No referrals yet. Click + Add Referral to get started.</div>';
+      return;
+    }
+    tbl.innerHTML = '<div class="card-h"><div class="card-t">All Referrals</div>'
+      +'<div style="display:flex;gap:8px"><select class="fi" id="crmRefTypeF" style="width:150px" onchange="filterCrmRefs()">'
+      +'<option value="">All Types</option><option value="Paid">Paid</option><option value="Organic">Organic</option></select>'
+      +'<select class="fi" id="crmRefStageF" style="width:180px" onchange="filterCrmRefs()">'
+      +'<option value="">All Stages</option>'
+      +REFERRAL_STAGES_CRM.map(s=>`<option>${escH(s)}</option>`).join('')
+      +'</select></div></div>'
+      +'<div style="overflow-x:auto"><table class="tbl"><thead><tr>'
+      +'<th>Prospect</th><th>Stage</th><th>Source</th><th>Type</th><th>Fee</th><th>Fee Status</th><th>Care</th><th>Assigned</th><th>Actions</th>'
+      +'</tr></thead><tbody id="refTbody">'
+      +buildRefRows(refs)
+      +'</tbody></table></div>';
+  }
+}
+
+let _allRefs = [];
+function filterCrmRefs(){
+  const tf = (document.getElementById('crmRefTypeF')||{}).value||'';
+  const sf = (document.getElementById('crmRefStageF')||{}).value||'';
+  const filtered = _allRefs.filter(r=>(!tf||r.type===tf)&&(!sf||r.stage===sf));
+  const tb = document.getElementById('refTbody');
+  if(tb) tb.innerHTML = buildRefRows(filtered);
+}
+function buildRefRows(refs){
+  if(!refs.length) return '<tr><td colspan="9" style="color:#4b6278;text-align:center;padding:20px">No referrals match filter.</td></tr>';
+  return refs.map(r=>{
+    const sc = STAGE_BADGE_CRM[r.stage]||'bx';
+    const fc = r.fee_status==='Paid'?'bg':r.fee_status==='Pending'?'ba':'bx';
+    return `<tr>
+      <td><div style="font-weight:700;color:#f4f8ff">${escH(r.prospect_name||'')}</div>
+          <div style="font-size:10px;color:#4b6278">${escH(r.source||'')}</div></td>
+      <td><span class="badge ${sc}">${escH(r.stage||'New Referral')}</span></td>
+      <td>${escH(r.partner||r.source||'')}</td>
+      <td><span class="badge ${r.type==='Paid'?'ba':'bb'}">${escH(r.type||'Organic')}</span></td>
+      <td>${r.fee?'$'+Number(r.fee).toLocaleString():'—'}</td>
+      <td><span class="badge ${fc}">${escH(r.fee_status||'N/A')}</span></td>
+      <td>${escH(r.care_level||'')}</td>
+      <td>${escH(r.assigned_to||'')}</td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-a btn-sm" onclick="advanceCrmRef('${escH(r.id)}')" style="margin-right:4px">Advance</button>
+        <button class="btn btn-x btn-sm" onclick="showTab('leads')">View Lead</button>
+      </td></tr>`;
+  }).join('');
+}
+async function advanceCrmRef(id){
+  try {
+    const r = await postJSON(BACKEND+'/api/cl/referrals/'+id+'/advance',{});
+    const d = await r.json();
+    if(d.error){ T(d.error,'e'); return; }
+    T('Referral advanced to: '+d.stage);
+    initReferrals();
+  } catch(e){ T('Update failed','e'); }
+}
+function showAddReferral(){
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center';
+  modal.innerHTML = `<div style="background:#0a1628;border:1px solid rgba(245,158,11,.25);border-radius:16px;padding:28px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <div style="font-size:15px;font-weight:800;color:#f4f8ff">Add Referral</div>
+      <button style="background:none;border:none;color:#6b7fa3;font-size:18px;cursor:pointer" onclick="this.closest('[style*=fixed]').remove()">&times;</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="fl fw"><div class="flb">Prospect Name *</div><input class="fi" id="nr-name" placeholder="Dorothy Harrison"></div>
+      <div class="fl"><div class="flb">Care Level</div>
+        <select class="fi" id="nr-care"><option>Independent Living</option><option>Assisted Living</option><option>Memory Care</option><option>Undecided</option></select></div>
+      <div class="fl"><div class="flb">Referral Source *</div>
+        <select class="fi" id="nr-source">
+          <option value="A Place for Mom">A Place for Mom</option>
+          <option value="Caring.com">Caring.com</option>
+          <option value="SeniorAdvisor">SeniorAdvisor</option>
+          <option value="Hospital Discharge">Hospital Discharge</option>
+          <option value="Physician Referral">Physician Referral</option>
+          <option value="Social Worker">Social Worker</option>
+          <option value="Case Manager">Case Manager</option>
+          <option value="Family / Self">Family / Self</option>
+          <option value="Website">Website</option>
+          <option value="Other">Other</option>
+        </select></div>
+      <div class="fl"><div class="flb">Type</div>
+        <select class="fi" id="nr-type"><option value="Paid">Paid</option><option value="Organic">Organic</option></select></div>
+      <div class="fl"><div class="flb">Referral Fee ($)</div><input class="fi" id="nr-fee" type="number" placeholder="2000" value="0"></div>
+      <div class="fl"><div class="flb">Phone</div><input class="fi" id="nr-phone" type="tel" placeholder="(214) 555-0100"></div>
+      <div class="fl"><div class="flb">Urgency</div>
+        <select class="fi" id="nr-urgency"><option value="warm">Warm</option><option value="hot">Hot</option><option value="cold">Cold</option></select></div>
+      <div class="fl"><div class="flb">Assigned To</div><input class="fi" id="nr-assigned" placeholder="Sales Counselor"></div>
+      <div class="fl fw"><div class="flb">Notes</div><textarea class="fi" id="nr-notes" rows="2" placeholder="Initial notes, context…"></textarea></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="btn btn-a" onclick="submitNewReferral()">Save Referral</button>
+      <button class="btn btn-x" onclick="this.closest('[style*=fixed]').remove()">Cancel</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+}
+async function submitNewReferral(){
+  const name = (document.getElementById('nr-name')||{}).value?.trim();
+  if(!name){ T('Prospect name is required','e'); return; }
+  const data = {
+    prospect_name: name,
+    care_level: (document.getElementById('nr-care')||{}).value||'',
+    source: (document.getElementById('nr-source')||{}).value||'',
+    type: (document.getElementById('nr-type')||{}).value||'Organic',
+    fee: parseFloat((document.getElementById('nr-fee')||{}).value)||0,
+    phone: (document.getElementById('nr-phone')||{}).value||'',
+    urgency: (document.getElementById('nr-urgency')||{}).value||'warm',
+    assigned_to: (document.getElementById('nr-assigned')||{}).value||'',
+    notes: (document.getElementById('nr-notes')||{}).value||'',
+    stage: 'New Referral',
+  };
+  try {
+    const r = await postJSON(BACKEND+'/api/cl/referrals', data);
+    const d = await r.json();
+    if(d.error){ T(d.error,'e'); return; }
+    T('Referral added: '+name);
+    document.querySelector('[style*="position:fixed"]')?.remove();
+    initReferrals();
+  } catch(e){ T('Save failed. Check connection.','e'); }
+}
+
 </script>
 </body>
 </html>
