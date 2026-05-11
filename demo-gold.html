@@ -47,9 +47,9 @@
 
     notes: { data:[
       {id:'n1',prospect_id:'d1',content:'Family meeting completed. Daughter is POA. Very receptive.',
-       author:{firstName:'[AIRCALL]',lastName:''},created_at:new Date(Date.now()-86400000).toISOString()},
+       author:{firstName:'Ericka',lastName:'Torres'},created_at:new Date(Date.now()-86400000).toISOString()},
       {id:'n2',prospect_id:'d2',content:'Left voicemail with referring CM. Follow up Thu.',
-       author:{firstName:'[AIRCALL]',lastName:''},created_at:new Date(Date.now()-172800000).toISOString()},
+       author:{firstName:'Mike',lastName:'Reynolds'},created_at:new Date(Date.now()-172800000).toISOString()},
     ]},
 
     mileage: { data:[
@@ -282,8 +282,8 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
     <div class="sb-sub">Interactive Demo</div>
     <div class="role-box" style="background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.22)">
       <div class="role-lbl" style="color:#ffd700">VIEWING AS</div>
-      <select id="roleSelect" class="role-sel" onchange="setRole(this.value)" style="border:1px solid rgba(255,215,0,.35)"><option value="admin">Admin</option><option value="marketer" selected>Sales/Admissions</option><option value="nurse">Nurse</option><option value="caregiver">Caregiver</option></select>
-      <div id="roleBadge" class="role-badge" style="background:rgba(73,182,255,.2);color:#49b6ff">Sales/Admissions</div>
+      <select id="roleSelect" class="role-sel" onchange="setRole(this.value)" style="border:1px solid rgba(255,215,0,.35)"><option value="admin">Admin</option><option value="marketer" selected>Marketer</option><option value="nurse">Nurse</option><option value="caregiver">Caregiver</option></select>
+      <div id="roleBadge" class="role-badge" style="background:rgba(73,182,255,.2);color:#49b6ff">Marketer</div>
     </div>
   </div>
   <nav class="sb-nav">
@@ -358,13 +358,13 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 <div style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.28);border-radius:9px;padding:8px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
   <div style="display:flex;align-items:center;gap:8px">
     <span style="color:#ffd700;font-weight:800;font-size:12px">👁 DEMO HospiceLink Gold — </span>
-    <span id="roleLabel" style="color:#ffd700;font-weight:800;font-size:12px">Sales/Admissions View</span>
+    <span id="roleLabel" style="color:#ffd700;font-weight:800;font-size:12px">Marketer View</span>
   </div>
   <a href="https://wemarketplus.com/#pricing" style="background:linear-gradient(90deg,#ffd700,#ffec6e);color:#081426;border-radius:999px;padding:5px 14px;font-weight:900;font-size:12px;text-decoration:none">Subscribe →</a>
 </div>
 
 <div style="background:rgba(73,182,255,.05);border:1px solid rgba(73,182,255,.15);border-radius:9px;padding:9px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-  <p style="margin:0;font-size:12px;color:#8b949e;flex:1"><strong style="color:#f4f8ff" id="roleDescName">Sales/Admissions</strong>: <span id="roleDescText"></span></p>
+  <p style="margin:0;font-size:12px;color:#8b949e;flex:1"><strong style="color:#f4f8ff" id="roleDescName">Marketer</strong>: <span id="roleDescText"></span></p>
   <a href="https://wemarketplus.com/#pricing" style="background:linear-gradient(90deg,#ffd700,#ffec6e);color:#081426;border-radius:999px;padding:6px 14px;font-weight:900;font-size:12px;text-decoration:none;flex-shrink:0">Get Started</a>
 </div>
 
@@ -477,7 +477,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 <div class="card">
   <input type="text" id="pxSearch" oninput="renderProspects()" placeholder="Search by name, phone, email…" style="margin-bottom:10px;background:#0f1e35;border:1px solid rgba(73,182,255,.2);color:#e8f0fc;border-radius:8px;padding:8px 10px;width:100%;font-size:12px;outline:none">
   <div style="overflow-x:auto">
-  <table class="tbl"><thead><tr><th>Name</th><th>Status</th><th>Phone</th><th>Email</th><th>Source</th><th>Sales/Admissions</th><th>Next Step</th><th>Due</th><th>Actions</th></tr></thead>
+  <table class="tbl"><thead><tr><th>Name</th><th>Status</th><th>Phone</th><th>Email</th><th>Source</th><th>Marketer</th><th>Next Step</th><th>Due</th><th>Actions</th></tr></thead>
   <tbody id="pxTable"></tbody></table>
   </div>
 </div>
@@ -558,6 +558,17 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
   <!-- Hot lead banner -->
   <div id="hotBanner" style="display:none;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#dc2626">
     🔥 <strong>Hot Lead Detected</strong> — Keywords suggest urgency. Consider marking Urgency as Hot.
+  </div>
+  <!-- Prospect/Referral Name (Searchable) -->
+  <div class="field form-white" style="margin-bottom:10px;position:relative">
+    <label>Prospect / Referral Name <span style="color:#dc2626;font-size:10px">Who is this note about?</span></label>
+    <input type="text" id="noteProspectInput" placeholder="Start typing a name…" autocomplete="off"
+      oninput="prospectSearch(this.value)" onfocus="prospectSearch(this.value)"
+      onblur="setTimeout(function(){var d=document.getElementById('prospectDropdown');if(d)d.style.display='none'},200)"
+      style="background:#f9fafb;border:2px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:14px;width:100%;color:#111;outline:none;transition:border-color .15s"
+      onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb';setTimeout(function(){var d=document.getElementById('prospectDropdown');if(d)d.style.display='none'},200)">
+    <input type="hidden" id="noteProspectId" value="">
+    <div id="prospectDropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.12);z-index:9999;max-height:240px;overflow-y:auto;margin-top:2px"></div>
   </div>
   <!-- Row 1 -->
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:10px">
@@ -733,15 +744,15 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
     <div class="g2" style="margin-bottom:10px">
       <div class="field"><label>Full Name</label><input type="text" placeholder="Jane Smith" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#f0f5ff"></div>
       <div class="field"><label>Email</label><input type="email" placeholder="jane@agency.com" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#f0f5ff"></div>
-      <div class="field" style="grid-column:1/-1"><label>Role</label><select style="background:#0a1628;border:1px solid rgba(73,182,255,.3);color:#f0f5ff;width:100%;border-radius:8px;padding:8px 10px;font-family:inherit;font-size:12px"><option value="">Select a role</option><option>Sales/Admissions</option><option>Admin</option><option>Nurse</option><option>Caregiver</option></select></div>
+      <div class="field" style="grid-column:1/-1"><label>Role</label><select style="background:#0a1628;border:1px solid rgba(73,182,255,.3);color:#f0f5ff;width:100%;border-radius:8px;padding:8px 10px;font-family:inherit;font-size:12px"><option value="">Select a role</option><option>Marketer</option><option>Admin</option><option>Nurse</option><option>Caregiver</option></select></div>
     </div>
     <button class="btn btn-g" onclick="T('Invite sent! Team member receives login link.')">Send Invite</button>
   </div>
   <div style="overflow-x:auto">
   <table class="tbl"><thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Last Active</th><th>Actions</th></tr></thead><tbody>
   <tr><td><strong>You (Admin)</strong></td><td>Admin</td><td><span class="pill pill-p">Admin</span></td><td>Now</td><td>—</td></tr>
-  <tr><td><strong>Ericka</strong></td><td>Sales/Admissions</td><td><span class="pill pill-g">Active</span></td><td>Today</td><td><button class="btn btn-d btn-sm" onclick="T('Edit in live CRM','i')" style="margin-right:4px">Edit</button><button class="btn btn-r btn-sm" onclick="T('Ericka removed.','w')">Remove</button></td></tr>
-  <tr><td><strong>Mike</strong></td><td>Sales/Admissions</td><td><span class="pill pill-g">Active</span></td><td>Today</td><td><button class="btn btn-d btn-sm" onclick="T('Edit in live CRM','i')" style="margin-right:4px">Edit</button><button class="btn btn-r btn-sm" onclick="T('Mike removed.','w')">Remove</button></td></tr>
+  <tr><td><strong>Ericka</strong></td><td>Marketer</td><td><span class="pill pill-g">Active</span></td><td>Today</td><td><button class="btn btn-d btn-sm" onclick="T('Edit in live CRM','i')" style="margin-right:4px">Edit</button><button class="btn btn-r btn-sm" onclick="T('Ericka removed.','w')">Remove</button></td></tr>
+  <tr><td><strong>Mike</strong></td><td>Marketer</td><td><span class="pill pill-g">Active</span></td><td>Today</td><td><button class="btn btn-d btn-sm" onclick="T('Edit in live CRM','i')" style="margin-right:4px">Edit</button><button class="btn btn-r btn-sm" onclick="T('Mike removed.','w')">Remove</button></td></tr>
   <tr><td><strong>Angela</strong></td><td>Nurse</td><td><span class="pill pill-g">Active</span></td><td>Today</td><td><button class="btn btn-d btn-sm" onclick="T('Edit in live CRM','i')" style="margin-right:4px">Edit</button><button class="btn btn-r btn-sm" onclick="T('Angela removed.','w')">Remove</button></td></tr>
   </tbody></table>
   </div>
@@ -773,7 +784,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
   </div>
   <div class="card form-white">
     <h4 style="margin:0 0 12px">Route Optimizer</h4>
-    <div class="field"><label>Sales/Admissions</label><select><option>Ericka</option><option>Mike</option><option>Angela</option></select></div>
+    <div class="field"><label>Marketer</label><select><option>Ericka</option><option>Mike</option><option>Angela</option></select></div>
     <div class="field"><label>Priority Mode</label><select><option>Cold Sources First (Recommended)</option><option>Geographic Efficiency</option><option>Top Referrers First</option></select></div>
     <button class="btn btn-g" onclick="T('Route optimized! 4 stops · 19.5 mi · 41 min saved')" style="width:100%;margin-top:4px">🤖 Optimize Route</button>
   </div>
@@ -811,8 +822,44 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
     <div class="field"><label>Miles (GPS verified)</label><input type="number" placeholder="0.0" step="0.1"></div>
     <div class="field"><label>Additional Expenses ($)</label><input type="number" placeholder="0.00" step="0.01"></div>
   </div>
+  <!-- Receipt Upload + Additional Expense -->
+  <div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);border-radius:8px;padding:14px;margin-bottom:12px">
+    <div style="font-size:11px;font-weight:700;color:#f59e0b;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em">Additional Expense + Receipt Upload</div>
+    <div class="ga" style="margin-bottom:10px">
+      <div class="field"><label>Expense Category</label>
+        <select id="hl-exp-type">
+          <option value="">None</option>
+          <option value="parking">Parking</option>
+          <option value="tolls">Tolls</option>
+          <option value="meals">Meals</option>
+          <option value="supplies">Supplies</option>
+          <option value="event">Event Expense</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="field"><label>Expense Amount ($)</label>
+        <input type="number" id="hl-exp-amt" placeholder="0.00" step="0.01">
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:10px">
+      <label>Expense Notes</label>
+      <input type="text" id="hl-exp-notes" placeholder="Parking at Baylor, client lunch...">
+    </div>
+    <div class="field"><label>Receipt Upload</label>
+      <div style="border:2px dashed rgba(245,158,11,.4);border-radius:8px;padding:20px;text-align:center;cursor:pointer;background:#fefcf7;" id="hl-drop-zone"
+           onclick="document.getElementById('hl-receipt-input').click()"
+           ondragover="event.preventDefault();" ondrop="hlHandleDrop(event)">
+        <div style="font-size:24px;margin-bottom:6px">&#128206;</div>
+        <div style="font-size:13px;font-weight:700;color:#d97706" id="hl-file-label">Click or drag receipt here</div>
+        <div style="font-size:11px;color:#9ca3af;margin-top:2px">PDF, JPG, PNG, HEIC accepted</div>
+      </div>
+      <input type="file" id="hl-receipt-input" accept=".pdf,.jpg,.jpeg,.png,.heic" style="display:none" onchange="hlHandleFileSelect(this)">
+      <div id="hl-receipt-preview" style="display:none;margin-top:8px;padding:8px;background:#f0fdf4;border-radius:6px;font-size:12px;color:#15803d"></div>
+    </div>
+  </div>
   <div style="display:flex;gap:8px">
-    <button class="btn btn-g" onclick="T('Trip logged! GPS verified · IRS rate $0.67/mi applied.')">💾 Log Trip</button>
+    <button class="btn btn-g" onclick="hlLogTrip()">&#128190; Log Trip</button>
+    <button class="btn btn-b" onclick="T('GPS location captured: Dallas, TX','i' · IRS rate $0.67/mi applied.')">💾 Log Trip</button>
     <button class="btn btn-b" onclick="T('GPS location captured: Dallas, TX','i')">📍 Capture GPS</button>
   </div>
 </div>
@@ -1001,7 +1048,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
   </div>
   <div class="card form-white">
     <h4 style="margin:0 0 12px">Assign Territory</h4>
-    <div class="field"><label>Sales/Admissions</label><select><option>Ericka</option><option>Mike</option><option>Angela</option></select></div>
+    <div class="field"><label>Marketer</label><select><option>Ericka</option><option>Mike</option><option>Angela</option></select></div>
     <div class="field"><label>Territory</label><select><option>North Dallas</option><option>McKinney / Plano</option><option>Frisco / Allen</option><option>South Dallas</option></select></div>
     <div class="field"><label>Priority Score (AI)</label><input type="number" placeholder="Auto-calculated" readonly style="background:#f4f8fc;color:#8b949e"></div>
     <button class="btn btn-g" onclick="T('Territory assigned!')" style="width:100%">Save Assignment</button>
@@ -1047,7 +1094,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 <div class="tab" id="tab-leaderboard">
 <div class="sec-hdr"><div><h2>🏆 Marketer Leaderboard</h2></div></div>
 <div style="overflow-x:auto">
-<table class="tbl"><thead><tr><th>Rank</th><th>Sales/Admissions</th><th>Admits</th><th>Visits</th><th>Conversion</th><th>Score</th></tr></thead><tbody>
+<table class="tbl"><thead><tr><th>Rank</th><th>Marketer</th><th>Admits</th><th>Visits</th><th>Conversion</th><th>Score</th></tr></thead><tbody>
 <tr style="background:rgba(255,215,0,.03)"><td style="font-size:18px">🥇</td><td><strong>Ericka</strong></td><td>7</td><td>13</td><td><span class="pill pill-g">54%</span></td><td><span style="font-size:16px;font-weight:900;color:#ffd700">94</span></td></tr>
 <tr><td style="font-size:18px">🥈</td><td><strong>Mike</strong></td><td>4</td><td>8</td><td><span class="pill pill-b">50%</span></td><td><span style="font-size:16px;font-weight:900;color:#8b949e">71</span></td></tr>
 <tr><td style="font-size:18px">🥉</td><td><strong>Angela</strong></td><td>2</td><td>5</td><td><span class="pill pill-b">40%</span></td><td><span style="font-size:16px;font-weight:900;color:#8b949e">52</span></td></tr>
@@ -1256,7 +1303,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 <div class="card">
   <h4 style="color:#fff;margin:0 0 14px">Marketer Leaderboard — May 2026</h4>
   <div style="overflow-x:auto">
-  <table class="tbl"><thead><tr><th>Rank</th><th>Sales/Admissions</th><th>Admits</th><th>Prospects</th><th>Visits</th><th>Follow-Up %</th><th>Conversion</th><th>Score</th></tr></thead><tbody>
+  <table class="tbl"><thead><tr><th>Rank</th><th>Marketer</th><th>Admits</th><th>Prospects</th><th>Visits</th><th>Follow-Up %</th><th>Conversion</th><th>Score</th></tr></thead><tbody>
     <tr style="background:rgba(255,215,0,.03)"><td style="font-size:18px">🥇</td><td><strong>Ericka</strong><br><small style="color:#8b949e">North Dallas</small></td><td style="color:#8cff66;font-weight:900">7</td><td>13</td><td>13</td><td><span class="pill pill-g">92%</span></td><td><span class="pill pill-g">54%</span></td><td style="font-size:16px;font-weight:900;color:#ffd700">94</td></tr>
     <tr><td style="font-size:18px">🥈</td><td><strong>Mike</strong><br><small style="color:#8b949e">McKinney</small></td><td style="color:#49b6ff;font-weight:900">4</td><td>8</td><td>8</td><td><span class="pill pill-b">78%</span></td><td><span class="pill pill-b">50%</span></td><td style="font-size:16px;font-weight:900;color:#8b949e">71</td></tr>
     <tr><td style="font-size:18px">🥉</td><td><strong>Angela</strong><br><small style="color:#8b949e">Plano / Allen</small></td><td style="color:#8b949e;font-weight:900">2</td><td>5</td><td>5</td><td><span class="pill pill-y">65%</span></td><td><span class="pill pill-y">40%</span></td><td style="font-size:16px;font-weight:900;color:#8b949e">52</td></tr>
@@ -1635,7 +1682,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
   </div>
   <div style="overflow-x:auto">
   <table class="tbl">
-    <thead><tr><th>Type</th><th>Contact</th><th>Direction</th><th>Duration / Status</th><th>Sales/Admissions</th><th>Logged</th><th>Outcome</th></tr></thead>
+    <thead><tr><th>Type</th><th>Contact</th><th>Direction</th><th>Duration / Status</th><th>Marketer</th><th>Logged</th><th>Outcome</th></tr></thead>
     <tbody id="acLogBody">
       <tr><td><span class="pill pill-b" style="font-size:10px">📞 Call</span></td><td><strong>Dr. Patel</strong><br><small style="color:#888">Baylor Hospital</small></td><td>↗ Outbound</td><td>4m 32s</td><td>Ericka T.</td><td>Today 9:14am</td><td><span class="pill pill-g" style="font-size:10px">Connected</span></td></tr>
       <tr><td><span class="pill pill-p" style="font-size:10px">💬 Text</span></td><td><strong>Sarah M.</strong><br><small style="color:#888">North Park Rehab</small></td><td>↗ Outbound</td><td>Delivered</td><td>Ericka T.</td><td>Yesterday 2:30pm</td><td><span class="pill pill-g" style="font-size:10px">Replied</span></td></tr>
@@ -1665,6 +1712,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
     var note = {
       id:           'ac-' + Date.now(),
       type:         'aircall',
+      aircall_source: 'AIRCALL',
       comm_type:    noteData.comm_type,
       contact_name: noteData.contact_name || '—',
       summary:      icon + ' [' + label + '] ' + (noteData.contact_name||'') + ' — ' + (noteData.summary||noteData.outcome||''),
@@ -1675,7 +1723,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
       outcome:      noteData.outcome || '',
       created_at:   now.toISOString(),
       ts_display:   ts,
-      author:       {firstName: '[AIRCALL]', lastName: ''},
+      author:       {firstName: 'Demo', lastName: 'User'},
       role:         'marketer',
       is_hot_lead:  false,
     };
@@ -1854,7 +1902,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 var TIER = 'Gold';
 var ACTIVE_CLS = 'active-g';
 var ROLE_TABS = {"admin": ["dash", "notifs", "addref", "refs", "addpx", "records", "timeline", "pipeline", "territory", "heatmap", "prod", "touch", "schedule", "notes", "remind", "reengage", "goals", "aiasst", "windshield", "family", "messaging", "evv", "telehealth", "nursesched", "patportal", "admworkflow", "import", "portal", "playbook", "mobile", "aircall", "terrmgmt", "revintel", "mktgroi", "refanalytics", "leaderboard", "scorecard", "hipaa", "compliance", "aitriage", "bedavail", "analytics", "agency", "report", "team", "settings"], "marketer": ["dash", "notifs", "addref", "refs", "addpx", "records", "timeline", "pipeline", "territory", "heatmap", "prod", "touch", "schedule", "notes", "remind", "reengage", "goals", "aiasst", "windshield", "family", "messaging", "evv", "import", "portal", "playbook", "mobile", "aircall"], "nurse": ["dash", "notifs", "notes", "remind", "aiasst", "family", "messaging", "evv", "telehealth", "nursesched", "patportal", "admworkflow"], "caregiver": ["dash", "notes", "family", "messaging", "evv", "patportal", "remind"]};
-var ROLE_DESC = {"admin": "All tabs \u2014 Revenue Intelligence, Leaderboard, AI Scorecard, HIPAA Audit Log, Compliance Engine, and Team Management.", "marketer": "Full Gold Sales/Admissions suite: territory heat maps, smart scheduling, referral portal, windshield mode, family communication, secure messaging, EVV / mileage, playbook generator, marketer mobile, Aircall (call, text, email), and all marketing tools.", "nurse": "Nurse view: notifications, notes, reminders, AI assistant, family communication, secure messaging, EVV, telehealth, nurse scheduler, patient portal, admission workflow.", "caregiver": "Caregiver view: notes, reminders, family communication, secure messaging, EVV / mileage, patient portal."};
+var ROLE_DESC = {"admin": "All tabs \u2014 Revenue Intelligence, Leaderboard, AI Scorecard, HIPAA Audit Log, Compliance Engine, and Team Management.", "marketer": "Full Gold marketer suite: territory heat maps, smart scheduling, referral portal, windshield mode, family communication, secure messaging, EVV / mileage, playbook generator, marketer mobile, Aircall (call, text, email), and all marketing tools.", "nurse": "Nurse view: notifications, notes, reminders, AI assistant, family communication, secure messaging, EVV, telehealth, nurse scheduler, patient portal, admission workflow.", "caregiver": "Caregiver view: notes, reminders, family communication, secure messaging, EVV / mileage, patient portal."};
 var BADGE_STYLE = {"admin": "background:rgba(188,140,255,.2);color:#c9aeff", "marketer": "background:rgba(73,182,255,.2);color:#49b6ff", "nurse": "background:rgba(140,255,102,.2);color:#8cff66", "caregiver": "background:rgba(249,199,79,.2);color:#f9c74f"};
 var IS_DEMO = true;
 
@@ -1933,12 +1981,12 @@ function setRole(role){
   var desc=ROLE_DESC[role]||'';
   var tabs=ROLE_TABS[role]||[];
   // Update description
-  var ROLE_DISPLAY={'admin':'Admin','marketer':'Sales/Admissions','nurse':'Nurse','caregiver':'Caregiver'}; var dn=document.getElementById('roleDescName');if(dn)dn.textContent=ROLE_DISPLAY[role]||role.charAt(0).toUpperCase()+role.slice(1);
+  var dn=document.getElementById('roleDescName');if(dn)dn.textContent=role.charAt(0).toUpperCase()+role.slice(1);
   var dt=document.getElementById('roleDescText');if(dt)dt.textContent=desc;
   // Update badge
   var badge=document.getElementById('roleBadge');
   if(badge){
-    badge.textContent=ROLE_DISPLAY[role]||role.charAt(0).toUpperCase()+role.slice(1);
+    badge.textContent=role.charAt(0).toUpperCase()+role.slice(1);
     var bs=BADGE_STYLE[role]||'';
     badge.setAttribute('style','display:inline-block;padding:2px 10px;border-radius:999px;font-size:10px;font-weight:800;margin-top:5px;'+bs);
   }
@@ -2030,6 +2078,43 @@ var savedNotes=[
 ];
 var noteGPS=null;
 
+
+function hlHandleFileSelect(input){
+  if(!input.files||!input.files[0])return;
+  hlShowFilePreview(input.files[0]);
+}
+function hlHandleDrop(e){
+  e.preventDefault();
+  var file=e.dataTransfer.files[0];
+  if(file)hlShowFilePreview(file);
+}
+function hlShowFilePreview(file){
+  window._hlReceiptFile=file;
+  var lbl=document.getElementById('hl-file-label');
+  var prev=document.getElementById('hl-receipt-preview');
+  if(lbl)lbl.textContent='OK: '+file.name+' ('+Math.round(file.size/1024)+'KB)';
+  if(prev){
+    prev.style.display='';
+    if(file.type.startsWith('image/')){
+      var r=new FileReader();
+      r.onload=function(ev){prev.innerHTML='<img src="'+ev.target.result+'" style="max-width:100%;max-height:100px;border-radius:4px;display:block;margin-bottom:4px"><span>'+file.name+'</span>';};
+      r.readAsDataURL(file);
+    } else {
+      prev.innerHTML='File: '+file.name+' ready to submit';
+    }
+  }
+}
+function hlLogTrip(){
+  var hasReceipt=!!window._hlReceiptFile;
+  var expAmt=parseFloat((document.getElementById('hl-exp-amt')||{}).value)||0;
+  var expType=(document.getElementById('hl-exp-type')||{}).value||'';
+  T('Trip logged! IRS rate $0.67/mi applied.'+(hasReceipt?' Receipt attached.':'')+(expAmt>0?' Expense: $'+expAmt.toFixed(2)+' ('+expType+').':''));
+  window._hlReceiptFile=null;
+  var els=['hl-file-label','hl-exp-amt','hl-exp-notes'];
+  els.forEach(function(id){var el=document.getElementById(id);if(el)el.value=el.tagName==='INPUT'?'':el.textContent='Click or drag receipt here';});
+  var prev=document.getElementById('hl-receipt-preview');if(prev)prev.style.display='none';
+}
+
 function buildNotesFeed(){
   var feed=document.getElementById('notesFeed');if(!feed)return;
   if(!savedNotes.length){
@@ -2059,7 +2144,7 @@ function buildNotesFeed(){
     var meta = isAircall ? (COMM_META[n.comm_type]||COMM_META.manual) : COMM_META.manual;
     var uc   = URGENCY_CONFIG[n.urgency]||URGENCY_CONFIG.warm;
     var rc   = ROLE_COLORS[n.role]||'#49b6ff';
-    var author = (n.type === 'aircall' || n.authored_by === 'AIRCALL') ? '[AIRCALL]' : (n.author ? (n.author.firstName+' '+n.author.lastName) : 'User');
+    var author = n.aircall_source ? 'AIRCALL' : (n.author ? (n.author.firstName+' '+n.author.lastName) : 'User');
     var ts = n.ts_display || (n.created_at ? new Date(n.created_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) : '');
 
     var html = '<div style="background:#0d1b31;border:1px solid '+meta.border+';border-radius:14px;padding:14px 16px;margin-bottom:10px">';
@@ -2081,6 +2166,12 @@ function buildNotesFeed(){
       : (n.summary || '');
     // Strip the icon+label prefix from Aircall summaries for clean display
     var cleanSummary = displaySummary.replace(/^[^\]]+\]\s*/,'');
+    // Show prospect/referral name this note is about
+    if(n.prospect_name && !isAircall) {
+      html += '<div style="display:inline-flex;align-items:center;gap:5px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:999px;padding:2px 10px;font-size:11px;font-weight:700;color:#d97706;margin-bottom:6px">'
+        + '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'
+        + n.prospect_name + '</div>';
+    }
     if(cleanSummary){
       html += '<div style="font-size:13px;color:#e2e8f0;margin-bottom:6px;line-height:1.5">'+cleanSummary+'</div>';
     }
@@ -2103,8 +2194,8 @@ function buildNotesFeed(){
 
     // Footer: author
     html += '<div style="display:flex;align-items:center;gap:6px;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.06)">';
-    html += (n.type==='aircall'||n.authored_by==='AIRCALL')
-      ? '<span style="background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:#f59e0b;padding:2px 10px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:.06em">[AIRCALL]</span>'
+    html += n.aircall_source
+      ? '<span style="font-size:10px;font-weight:900;color:#49b6ff;background:rgba(61,158,232,.15);border:1px solid rgba(61,158,232,.3);border-radius:4px;padding:2px 8px">AIRCALL</span>'
       : '<span style="font-size:10px;font-weight:800;color:'+rc+';background:rgba(73,182,255,.1);border-radius:999px;padding:1px 8px">'+author+'</span>';
     if(!isAircall && n.contact_type){
       html += '<span style="font-size:10px;color:#6b7fa3">'+n.contact_type+'</span>';
@@ -2114,6 +2205,146 @@ function buildNotesFeed(){
     return html;
   }).join('');
 }
+
+// ════════════════════════════════════════════════════════════════
+// PROSPECT / REFERRAL SEARCHABLE TYPEAHEAD
+// Searches across: DEMO prospects, referral sources, and contacts
+// ════════════════════════════════════════════════════════════════
+
+// Combined searchable records from all note-relevant entities
+var NOTE_CONTACTS = (function() {
+  var DEMO_DATA = null;
+  try {
+    // Build from whatever demo data is available at runtime
+    DEMO_DATA = window.DEMO_INTERCEPT_DATA || window._demoData || null;
+  } catch(e) {}
+
+  // Static seed list — updated dynamically when DEMO data loads
+  return [
+    // Prospects / Patients
+    {id:'d1', name:'Dorothy Fleming',        type:'Prospect',  sub:'Baylor Medical Center • Dallas, TX • Hot',       stage:'Evaluation'},
+    {id:'d2', name:'Robert Castillo',        type:'Prospect',  sub:'Prestonwood SNF • Plano, TX • Warm',             stage:'Pending'},
+    {id:'d3', name:'Helen Nakamura',         type:'Prospect',  sub:'Baylor Medical Center • Dallas, TX • Warm',      stage:'Admitted'},
+    {id:'d4', name:'James Whitfield',        type:'Prospect',  sub:'North Park Rehab • Dallas, TX • Cold',           stage:'Inquiry'},
+    {id:'d5', name:'Patricia Nguyen',        type:'Prospect',  sub:'Methodist Richardson • Richardson, TX • Warm',   stage:'Evaluation'},
+    {id:'d6', name:'Edward Morrison',        type:'Prospect',  sub:'UT Southwestern • Dallas, TX • Hot',             stage:'Pending Admit'},
+    // Family / POA contacts
+    {id:'f1', name:'Lisa Fleming (POA)',     type:'Family',    sub:'POA for Dorothy Fleming',                        stage:''},
+    {id:'f2', name:'Carlos Castillo (Son)',  type:'Family',    sub:'Family contact for Robert Castillo',             stage:''},
+    // Referral sources
+    {id:'r1', name:'Sarah M.',              type:'Referral Source', sub:'North Park Rehab • Case Manager',           stage:''},
+    {id:'r2', name:'Dr. Amanda Patel',      type:'Referral Source', sub:'Baylor Hospital • Physician',               stage:''},
+    {id:'r3', name:'Mike Johnson (SW)',     type:'Referral Source', sub:'Methodist Hospital • Social Worker',        stage:''},
+    {id:'r4', name:'Jennifer Torres',       type:'Referral Source', sub:'Prestonwood SNF • Discharge Planner',      stage:''},
+    {id:'r5', name:'Dr. Chen',             type:'Referral Source', sub:'Physicians Group • Physician',              stage:''},
+    {id:'r6', name:'North Park Rehab',     type:'Facility',   sub:'SNF • North Dallas',                             stage:''},
+    {id:'r7', name:'Baylor Medical Center',type:'Facility',   sub:'Hospital • Dallas, TX',                          stage:''},
+    {id:'r8', name:'Prestonwood SNF',      type:'Facility',   sub:'Skilled Nursing • Plano, TX',                    stage:''},
+  ];
+})();
+
+var _prospectSearchTimeout = null;
+
+function prospectSearch(query) {
+  var dropdown = document.getElementById('prospectDropdown');
+  if (!dropdown) return;
+
+  clearTimeout(_prospectSearchTimeout);
+  _prospectSearchTimeout = setTimeout(function() {
+    var q = (query || '').trim().toLowerCase();
+
+    // Show all when empty, filter when typing
+    var matches = q.length === 0
+      ? NOTE_CONTACTS.slice(0, 12)
+      : NOTE_CONTACTS.filter(function(c) {
+          return c.name.toLowerCase().includes(q) ||
+                 (c.sub && c.sub.toLowerCase().includes(q)) ||
+                 (c.type && c.type.toLowerCase().includes(q));
+        }).slice(0, 12);
+
+    if (!matches.length) {
+      dropdown.style.display = 'none';
+      return;
+    }
+
+    var TYPE_COLORS = {
+      'Prospect':       {bg:'rgba(239,68,68,.08)',  color:'#dc2626',  border:'rgba(239,68,68,.2)'},
+      'Family':         {bg:'rgba(245,158,11,.08)', color:'#d97706',  border:'rgba(245,158,11,.2)'},
+      'Referral Source':{bg:'rgba(59,130,246,.08)', color:'#2563eb',  border:'rgba(59,130,246,.2)'},
+      'Facility':       {bg:'rgba(16,185,129,.08)', color:'#059669',  border:'rgba(16,185,129,.2)'},
+    };
+
+    dropdown.innerHTML = matches.map(function(item) {
+      var tc = TYPE_COLORS[item.type] || TYPE_COLORS['Facility'];
+      return '<div class="prospect-option" '
+        + 'data-id="' + item.id + '" data-name="' + item.name.replace(/"/g,'&quot;') + '" '
+        + 'onclick="selectProspect(this)" '
+        + 'style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid #f3f4f6;transition:background .1s" '
+        + 'onmouseenter="this.style.background='#f9fafb'" onmouseleave="this.style.background='#fff'">'
+          + '<div style="flex-shrink:0;margin-top:1px">'
+            + '<span style="background:' + tc.bg + ';color:' + tc.color + ';border:1px solid ' + tc.border + ';border-radius:999px;padding:2px 8px;font-size:10px;font-weight:800;white-space:nowrap">'
+              + item.type
+            + '</span>'
+          + '</div>'
+          + '<div style="flex:1;min-width:0">'
+            + '<div style="font-size:13px;font-weight:700;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'
+              + highlightMatch(item.name, q)
+            + '</div>'
+            + (item.sub ? '<div style="font-size:11px;color:#6b7280;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + item.sub + '</div>' : '')
+            + (item.stage ? '<div style="font-size:10px;color:#9ca3af;margin-top:1px">Stage: ' + item.stage + '</div>' : '')
+          + '</div>'
+        + '</div>';
+    }).join('');
+
+    // Add "Add new" option at bottom
+    if (q.length > 0) {
+      dropdown.innerHTML += '<div onclick="addNewProspectContact('' + q.replace(/'/g,"\'") + '')" '
+        + 'style="padding:10px 14px;cursor:pointer;color:#6b7280;font-size:12px;display:flex;align-items:center;gap:6px;border-top:1px solid #f3f4f6;background:#fafafa" '
+        + 'onmouseenter="this.style.background='#f3f4f6'" onmouseleave="this.style.background='#fafafa'">'
+        + '<span style="font-size:16px">+</span> Add &ldquo;' + q + '&rdquo; as a new contact'
+        + '</div>';
+    }
+
+    dropdown.style.display = 'block';
+  }, 120);
+}
+
+function highlightMatch(text, query) {
+  if (!query) return text;
+  var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\]/g,'\$&') + ')', 'gi');
+  return text.replace(re, '<mark style="background:#fef3c7;color:#92400e;border-radius:2px;padding:0 1px">$1</mark>');
+}
+
+function selectProspect(el) {
+  var name = el.dataset.name;
+  var id   = el.dataset.id;
+  var input = document.getElementById('noteProspectInput');
+  var hiddenId = document.getElementById('noteProspectId');
+  if (input) input.value = name;
+  if (hiddenId) hiddenId.value = id;
+  var dropdown = document.getElementById('prospectDropdown');
+  if (dropdown) dropdown.style.display = 'none';
+  // Visual confirmation
+  if (input) {
+    input.style.borderColor = '#22c55e';
+    setTimeout(function(){ input.style.borderColor = '#e5e7eb'; }, 1500);
+  }
+}
+
+function addNewProspectContact(name) {
+  // Capitalize first letters
+  var formatted = name.replace(/\w/g, function(l){ return l.toUpperCase(); });
+  NOTE_CONTACTS.unshift({id:'new-' + Date.now(), name:formatted, type:'Prospect', sub:'Newly added', stage:'Inquiry'});
+  var input = document.getElementById('noteProspectInput');
+  var hiddenId = document.getElementById('noteProspectId');
+  if (input) input.value = formatted;
+  if (hiddenId) hiddenId.value = 'new-' + Date.now();
+  var dropdown = document.getElementById('prospectDropdown');
+  if (dropdown) dropdown.style.display = 'none';
+  T('Contact "' + formatted + '" added to your session');
+}
+
+
 
 
 function hexToRgb(hex){var r=hex.match(/\d+/g)||[];return r.slice(0,3).join(',');}
@@ -2186,6 +2417,8 @@ function saveNote(){
   var names={marketer:'Ericka',nurse:'Angela RN',caregiver:'Caregiver',admin:'Admin'};
   savedNotes.unshift({
     author:document.getElementById('noteAuthor')&&document.getElementById('noteAuthor').value||names[currentRole]||'Ericka',
+    prospect_name:(document.getElementById('noteProspectInput')||{}).value||'',
+    prospect_id:(document.getElementById('noteProspectId')||{}).value||'',
     role:currentRole,date:dateStr,
     contactType:document.getElementById('noteContactType')&&document.getElementById('noteContactType').value,
     urgency:urgency,
