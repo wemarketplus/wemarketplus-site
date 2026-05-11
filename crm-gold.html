@@ -109,159 +109,81 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 .alert-r{background:rgba(224,85,85,.07);border:1px solid rgba(224,85,85,.2);color:#f87171}
 .alert-gd{background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.2);color:#ffd700}
 
-/* ════════════════════════════════════════════════════════════════
-   MOBILE RESPONSIVE STYLES — Enterprise SaaS Quality
-   Targets: phones (≤640px), tablets (641-1024px)
-   ════════════════════════════════════════════════════════════════ */
 
-/* ── Mobile Variables ─────────────────────────────────────────── */
-@media (max-width:1024px) {
-  :root { --sidebar: 200px; }
+
+/* ── Enhanced Mobile Styles ─────────────────────────────────── */
+#mobile-nav {
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;
+  background:#0a1628;border-top:1px solid rgba(255,255,255,.08);
+  z-index:1000;height:58px;
+  box-shadow:0 -2px 20px rgba(0,0,0,.35);
 }
-
-/* ── Tablet ────────────────────────────────────────────────────── */
-@media (max-width:900px) {
-  .g2 { grid-template-columns: 1fr !important; }
-  .g3 { grid-template-columns: 1fr 1fr !important; }
-  .stats { grid-template-columns: repeat(2,1fr) !important; }
-  table.tbl td, table.tbl th { font-size:11px !important; padding:8px 6px !important; }
+.mob-nav-btn {
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:2px;padding:4px 2px;
+  border:none;background:none;color:#6b7fa3;
+  font-size:9px;font-weight:800;cursor:pointer;font-family:inherit;
+  border-top:2px solid transparent;transition:all .15s;
+  text-transform:uppercase;letter-spacing:.03em;min-width:0;
 }
-
-/* ── Mobile (phone) ────────────────────────────────────────────── */
-@media (max-width:640px) {
-  /* Hide sidebar, show mobile bottom nav */
-  .sidebar, #sidebar { display:none !important; }
-  .main, #main { margin-left:0 !important; width:100% !important; }
-  .topbar { padding:10px 14px !important; }
-  .content { padding:12px !important; }
-
-  /* Mobile bottom navigation */
-  #mobile-nav {
-    display:flex !important;
-    position:fixed;
-    bottom:0;left:0;right:0;
-    background:#0a1628;
-    border-top:1px solid rgba(255,255,255,.08);
-    z-index:1000;
-    padding:0;
-    height:60px;
-    box-shadow:0 -4px 20px rgba(0,0,0,.3);
-  }
-  .main { padding-bottom:70px !important; }
-
-  /* Mobile nav buttons */
-  .mob-nav-btn {
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:2px;
-    padding:6px 2px;
-    border:none;
-    background:none;
-    color:#6b7fa3;
-    font-size:9px;
-    font-weight:700;
-    cursor:pointer;
-    font-family:inherit;
-    border-top:2px solid transparent;
-    transition:all .15s;
-    text-transform:uppercase;
-    letter-spacing:.03em;
-  }
-  .mob-nav-btn.active {
-    color:#f59e0b;
-    border-top-color:#f59e0b;
-    background:rgba(245,158,11,.06);
-  }
-  .mob-nav-btn .mob-icon { font-size:20px; line-height:1; }
-
-  /* Cards */
-  .card { padding:14px !important; border-radius:12px !important; }
-  .card-hd { flex-wrap:wrap !important; gap:8px !important; }
-
-  /* Stats grid */
-  .stats {
-    grid-template-columns: 1fr 1fr !important;
-    gap:8px !important;
-  }
-  .stat { padding:10px !important; border-radius:10px !important; }
-  .sv { font-size:22px !important; }
-
-  /* Tables — horizontal scroll */
-  .tbl-wrap, .tbl-scroll { overflow-x:auto !important; -webkit-overflow-scrolling:touch; }
-  table.tbl { min-width:500px; }
-  table.tbl th, table.tbl td { font-size:11px !important; padding:8px 6px !important; white-space:nowrap; }
-
-  /* Forms */
-  .fl { flex-direction:column !important; }
-  .ga { grid-template-columns:1fr !important; }
-  input.fi, select.fi, textarea.fi {
-    font-size:16px !important; /* prevents iOS zoom */
-    padding:10px 12px !important;
-  }
-
-  /* Grids → single column */
-  .g2, .g3, [style*="grid-template-columns:1fr 1fr"],
-  [style*="grid-template-columns:1fr 1fr 1fr"] {
-    display:flex !important;
-    flex-direction:column !important;
-  }
-  [style*="grid-template-columns:repeat"] {
-    display:flex !important;
-    flex-direction:column !important;
-  }
-
-  /* Modals */
-  .op-modal > div {
-    max-width:100% !important;
-    margin:0 !important;
-    border-radius:18px 18px 0 0 !important;
-    max-height:92vh !important;
-    overflow-y:auto;
-  }
-  .op-modal {
-    align-items:flex-end !important;
-    padding:0 !important;
-  }
-
-  /* Pipeline cards */
-  .pipeline-col { min-width:260px !important; }
-
-  /* Buttons */
-  .btn { padding:9px 14px !important; font-size:12px !important; }
-  .btn-sm { padding:6px 10px !important; font-size:11px !important; }
-
-  /* Topbar */
-  .topbar-title { font-size:14px !important; }
-  .topbar-right { gap:6px !important; }
-  #liveTag { display:none !important; }
-
-  /* Role selector */
-  .role-box { padding:10px !important; }
-  .role-sel { font-size:13px !important; }
-
-  /* Sidebar toggle button */
-  #mob-menu-btn { display:flex !important; }
-
-  /* Headers */
-  .sec-h { font-size:18px !important; }
-  .sec-sub { font-size:12px !important; }
+.mob-nav-btn.active{color:#f59e0b;border-top-color:#f59e0b;background:rgba(245,158,11,.06);}
+.mob-icon{font-size:19px;line-height:1;display:block;}
+.mob-label{font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center;}
+@media(max-width:640px){
+  #mobile-nav{display:flex !important;}
+  .main,.sidebar+div,[class*="main"]{padding-bottom:66px !important;}
+  /* Sidebar: hidden but accessible via menu */
+  nav.sidebar,div.sidebar,.sidebar,#sidebar{display:none !important;}
+  /* Main content: full width */
+  .main{margin-left:0 !important;width:100% !important;min-width:0 !important;}
+  /* Cards: better mobile padding */
+  .card{padding:12px !important;border-radius:12px !important;margin-bottom:10px !important;}
+  .card-h,.card-hd{flex-wrap:wrap !important;gap:8px !important;}
+  /* Stats: 2-col on mobile */
+  .stats,.kpi-grid{grid-template-columns:1fr 1fr !important;gap:8px !important;}
+  .stat,.kpi{padding:10px 12px !important;border-radius:10px !important;}
+  .sv,.kpi-val{font-size:22px !important;}
+  /* Tables: scrollable */
+  table{min-width:460px;}
+  .tbl-wrap,.tbl-scroll{overflow-x:auto !important;-webkit-overflow-scrolling:touch;border-radius:8px;}
+  /* Inputs: 16px prevents iOS zoom */
+  input,select,textarea{font-size:16px !important;}
+  /* Grids to column */
+  .g2,.g3,.g4{grid-template-columns:1fr !important;}
+  /* Modals: slide up from bottom */
+  .op-modal{align-items:flex-end !important;padding:0 !important;}
+  .op-modal>div{border-radius:18px 18px 0 0 !important;max-width:100% !important;width:100% !important;max-height:88vh !important;}
+  /* Topbar: compact */
+  .topbar{padding:10px 14px !important;}
+  .topbar-title{font-size:14px !important;}
+  /* Buttons: touch-friendly */
+  .btn{min-height:38px;padding:9px 14px !important;font-size:12px !important;}
+  .btn-sm{min-height:32px;padding:6px 10px !important;font-size:11px !important;}
+  /* Form grid */
+  [style*="grid-template-columns:1fr 1fr"]{display:flex !important;flex-direction:column !important;}
+  /* Section headers */
+  .sec-h{font-size:18px !important;}
+  h2{font-size:18px !important;}
+  /* Pipeline: horizontal scroll */
+  .pipeline-wrap{overflow-x:auto !important;-webkit-overflow-scrolling:touch;}
+  .pipeline-col{min-width:240px !important;}
+  /* Chart containers */
+  canvas,svg{max-width:100% !important;height:auto !important;}
+  /* Role selector box */
+  .role-box,.role-sel-wrap{padding:10px !important;}
+  /* LOC table */
+  .loc-table-wrap{overflow-x:auto !important;}
 }
-
-/* ── Very small phones ─────────────────────────────────────────── */
-@media (max-width:380px) {
-  .stats { grid-template-columns: 1fr !important; }
-  .sv { font-size:20px !important; }
-  .mob-nav-btn { font-size:8px !important; }
-  .mob-nav-btn .mob-icon { font-size:18px !important; }
+@media(max-width:380px){
+  .stats{grid-template-columns:1fr !important;}
+  .mob-nav-btn{font-size:7px !important;}
+  .mob-icon{font-size:16px !important;}
+  .sv{font-size:18px !important;}
 }
-
-/* ── Always hide mobile nav on desktop ─────────────────────────── */
-@media (min-width:641px) {
-  #mobile-nav { display:none !important; }
-  #mob-menu-btn { display:none !important; }
+@media(min-width:641px){
+  #mobile-nav{display:none !important;}
+  #mob-fab{display:none !important;}
 }
 
 </style>
@@ -3676,5 +3598,155 @@ function fld2(label, id, options){
 
 </script>
 
+
+
+<!-- ════ MOBILE BOTTOM NAVIGATION ════════════════════════════ -->
+<div id="mobile-nav">
+  <button class="mob-nav-btn" id="mobnav-dash" onclick="(typeof go==='function'?go('dashboard'):showTab&&showTab('dash'));setMobNav('dash')">
+    <span class="mob-icon">&#127968;</span><span class="mob-label">Home</span>
+  </button>
+  <button class="mob-nav-btn" id="mobnav-leads" onclick="(typeof go==='function'?go('leads'):showTab&&showTab('leads'));setMobNav('leads')">
+    <span class="mob-icon">&#128101;</span><span class="mob-label">Leads</span>
+  </button>
+  <button class="mob-nav-btn" id="mobnav-notes" onclick="(typeof go==='function'?go('notes'):showTab&&showTab('notes'));setMobNav('notes')">
+    <span class="mob-icon">&#128203;</span><span class="mob-label">Notes</span>
+  </button>
+  <button class="mob-nav-btn" id="mobnav-aircall" onclick="(typeof go==='function'?go('aircall'):showTab&&showTab('aircall'));setMobNav('aircall')">
+    <span class="mob-icon">&#9742;&#65039;</span><span class="mob-label">Aircall</span>
+  </button>
+  <button class="mob-nav-btn" id="mobnav-menu" onclick="toggleMobMenu()">
+    <span class="mob-icon">&#9776;</span><span class="mob-label">Menu</span>
+  </button>
+</div>
+
+<!-- Mobile overlay + slide-out menu -->
+<div id="mob-menu-overlay" onclick="toggleMobMenu()" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.6)"></div>
+<div id="mob-menu-panel" style="position:fixed;top:0;left:0;bottom:0;width:290px;background:#0a1628;z-index:2001;overflow-y:auto;border-right:1px solid rgba(255,255,255,.08);transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1)">
+  <div style="padding:20px 16px 12px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#0a1628;z-index:1">
+    <div>
+      <div style="font-size:15px;font-weight:900;color:#f4f8ff">All Modules</div>
+      <div style="font-size:10px;color:#6b7fa3;margin-top:1px">Tap any section to navigate</div>
+    </div>
+    <button onclick="toggleMobMenu()" style="background:none;border:none;color:#6b7fa3;font-size:22px;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,.04)">&times;</button>
+  </div>
+  <div id="mob-menu-links" style="padding:10px 8px 80px"></div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+// MOBILE NAVIGATION + RESPONSIVE SYSTEM
+// Works across all CRM and Demo pages
+// ════════════════════════════════════════════════════════════════
+function setMobNav(key){
+  document.querySelectorAll('.mob-nav-btn').forEach(function(b){b.classList.remove('active');});
+  var el=document.getElementById('mobnav-'+key);
+  if(el)el.classList.add('active');
+}
+
+var _mobMenuOpen=false;
+function toggleMobMenu(){
+  _mobMenuOpen=!_mobMenuOpen;
+  var overlay=document.getElementById('mob-menu-overlay');
+  var panel=document.getElementById('mob-menu-panel');
+  if(panel) panel.style.transform=_mobMenuOpen?'translateX(0px)':'translateX(-100%)';
+  if(overlay) overlay.style.display=_mobMenuOpen?'block':'none';
+  if(_mobMenuOpen) _buildMobMenuLinks();
+}
+
+function _buildMobMenuLinks(){
+  var links=document.getElementById('mob-menu-links');
+  if(!links) return;
+  
+  // Try CL-style NAV (object with role keys)
+  var navItems=[];
+  if(typeof NAV!=='undefined'&&typeof ROLE!=='undefined'&&NAV[ROLE]){
+    NAV[ROLE].forEach(function(sec){
+      navItems.push({sec:sec.sec,items:sec.items.map(function(item){
+        return {k:item.k,l:item.l};
+      })});
+    });
+  }
+  // Try HL-style ROLE_TABS (array of tab keys)
+  else if(typeof ROLE_TABS!=='undefined'&&typeof currentRole!=='undefined'){
+    var tabs=ROLE_TABS[currentRole]||ROLE_TABS['admin']||[];
+    var TAB_LABELS={'dash':'Dashboard','leads':'Lead Pipeline','notes':'Notes','aircall':'Aircall',
+      'refs':'Referral Sources','pipeline':'Pipeline','territory':'Territory','records':'Prospects',
+      'timeline':'Timeline','schedule':'Smart Schedule','aiasst':'AI Assistant','evv':'Mileage/EVV',
+      'reports':'Reports','settings':'Settings','team':'Team Management'};
+    navItems=[{sec:'NAVIGATION',items:tabs.slice(0,16).map(function(k){return {k:k,l:TAB_LABELS[k]||k};})}];
+  }
+  
+  if(!navItems.length){
+    links.innerHTML='<div style="padding:12px;color:#6b7fa3;font-size:12px">Navigation not available</div>';
+    return;
+  }
+  
+  links.innerHTML=navItems.map(function(sec){
+    return '<div style="margin-bottom:4px">'
+      +'<div style="font-size:9px;font-weight:900;color:#4b6278;letter-spacing:.1em;text-transform:uppercase;padding:8px 8px 4px">'+sec.sec+'</div>'
+      +sec.items.filter(function(item){return item.l;}).map(function(item){
+        // Detect which navigation function to use
+        var navFn='';
+        if(typeof go==='function') navFn="go('"+item.k+"');toggleMobMenu();setMobNav('"+item.k+"')";
+        else if(typeof showTab==='function') navFn="showTab('"+item.k+"');toggleMobMenu()";
+        else navFn="toggleMobMenu()";
+        return '<button onclick="'+navFn+'" style="display:flex;align-items:center;width:100%;padding:10px 12px;background:none;border:none;color:#c8d6e8;font-size:13px;font-family:inherit;cursor:pointer;border-radius:8px;text-align:left;transition:background .1s" onmouseenter="this.style.background=\'rgba(255,255,255,.06)\'" onmouseleave="this.style.background=\'none\'">'+item.l+'</button>';
+      }).join('')
+      +'</div>';
+  }).join('');
+}
+
+// Mobile quick-add FAB (floating action button) 
+function _buildMobFAB(){
+  if(window.innerWidth>640) return;
+  if(document.getElementById('mob-fab')) return;
+  var fab=document.createElement('div');
+  fab.id='mob-fab';
+  fab.style.cssText='position:fixed;bottom:72px;right:16px;z-index:999;';
+  var mainBtn=document.createElement('button');
+  mainBtn.style.cssText='width:52px;height:52px;border-radius:50%;background:#f59e0b;border:none;color:#06080e;font-size:24px;cursor:pointer;box-shadow:0 4px 16px rgba(245,158,11,.4);font-family:inherit;display:flex;align-items:center;justify-content:center;transition:transform .15s';
+  mainBtn.innerHTML='&#43;';
+  mainBtn.onclick=function(){
+    var menu=document.getElementById('mob-fab-menu');
+    if(menu) menu.style.display=menu.style.display==='none'?'flex':'none';
+  };
+  var fabMenu=document.createElement('div');
+  fabMenu.id='mob-fab-menu';
+  fabMenu.style.cssText='display:none;flex-direction:column;gap:8px;align-items:flex-end;margin-bottom:8px;';
+  
+  var quickActions=[
+    {label:'Add Lead',fn:"addLeadPrompt&&addLeadPrompt()||T&&T('Add Lead')"},
+    {label:'Add Note',fn:"(typeof go==='function'?go('notes'):showTab&&showTab('notes'))"},
+    {label:'New Ticket',fn:"addMaintPrompt&&addMaintPrompt()||T&&T('New Ticket')"},
+    {label:'Log Mileage',fn:"(typeof go==='function'?go('mileage'):showTab&&showTab('evv'))"},
+  ];
+  
+  fabMenu.innerHTML=quickActions.map(function(a){
+    return '<button onclick="'+a.fn+';document.getElementById(\'mob-fab-menu\').style.display=\'none\'" style="background:#0a1628;border:1px solid rgba(245,158,11,.3);border-radius:999px;padding:8px 16px;color:#f59e0b;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;box-shadow:0 2px 12px rgba(0,0,0,.4)">'+a.label+'</button>';
+  }).join('');
+  
+  fab.appendChild(fabMenu);
+  fab.appendChild(mainBtn);
+  document.body.appendChild(fab);
+}
+
+// Init mobile features
+(function initMobile(){
+  if(window.innerWidth<=640){
+    _buildMobFAB();
+  }
+  window.addEventListener('resize',function(){
+    var fab=document.getElementById('mob-fab');
+    if(window.innerWidth<=640){
+      if(!fab) _buildMobFAB();
+      else fab.style.display='';
+    } else {
+      if(fab) fab.style.display='none';
+      if(_mobMenuOpen) toggleMobMenu();
+    }
+  });
+})();
+
+</script>
 </body>
 </html>
