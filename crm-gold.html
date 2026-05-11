@@ -108,6 +108,162 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 .alert-g{background:rgba(140,255,102,.07);border:1px solid rgba(140,255,102,.2);color:#8cff66}
 .alert-r{background:rgba(224,85,85,.07);border:1px solid rgba(224,85,85,.2);color:#f87171}
 .alert-gd{background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.2);color:#ffd700}
+
+/* ════════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE STYLES — Enterprise SaaS Quality
+   Targets: phones (≤640px), tablets (641-1024px)
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Mobile Variables ─────────────────────────────────────────── */
+@media (max-width:1024px) {
+  :root { --sidebar: 200px; }
+}
+
+/* ── Tablet ────────────────────────────────────────────────────── */
+@media (max-width:900px) {
+  .g2 { grid-template-columns: 1fr !important; }
+  .g3 { grid-template-columns: 1fr 1fr !important; }
+  .stats { grid-template-columns: repeat(2,1fr) !important; }
+  table.tbl td, table.tbl th { font-size:11px !important; padding:8px 6px !important; }
+}
+
+/* ── Mobile (phone) ────────────────────────────────────────────── */
+@media (max-width:640px) {
+  /* Hide sidebar, show mobile bottom nav */
+  .sidebar, #sidebar { display:none !important; }
+  .main, #main { margin-left:0 !important; width:100% !important; }
+  .topbar { padding:10px 14px !important; }
+  .content { padding:12px !important; }
+
+  /* Mobile bottom navigation */
+  #mobile-nav {
+    display:flex !important;
+    position:fixed;
+    bottom:0;left:0;right:0;
+    background:#0a1628;
+    border-top:1px solid rgba(255,255,255,.08);
+    z-index:1000;
+    padding:0;
+    height:60px;
+    box-shadow:0 -4px 20px rgba(0,0,0,.3);
+  }
+  .main { padding-bottom:70px !important; }
+
+  /* Mobile nav buttons */
+  .mob-nav-btn {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:2px;
+    padding:6px 2px;
+    border:none;
+    background:none;
+    color:#6b7fa3;
+    font-size:9px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:inherit;
+    border-top:2px solid transparent;
+    transition:all .15s;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+  }
+  .mob-nav-btn.active {
+    color:#f59e0b;
+    border-top-color:#f59e0b;
+    background:rgba(245,158,11,.06);
+  }
+  .mob-nav-btn .mob-icon { font-size:20px; line-height:1; }
+
+  /* Cards */
+  .card { padding:14px !important; border-radius:12px !important; }
+  .card-hd { flex-wrap:wrap !important; gap:8px !important; }
+
+  /* Stats grid */
+  .stats {
+    grid-template-columns: 1fr 1fr !important;
+    gap:8px !important;
+  }
+  .stat { padding:10px !important; border-radius:10px !important; }
+  .sv { font-size:22px !important; }
+
+  /* Tables — horizontal scroll */
+  .tbl-wrap, .tbl-scroll { overflow-x:auto !important; -webkit-overflow-scrolling:touch; }
+  table.tbl { min-width:500px; }
+  table.tbl th, table.tbl td { font-size:11px !important; padding:8px 6px !important; white-space:nowrap; }
+
+  /* Forms */
+  .fl { flex-direction:column !important; }
+  .ga { grid-template-columns:1fr !important; }
+  input.fi, select.fi, textarea.fi {
+    font-size:16px !important; /* prevents iOS zoom */
+    padding:10px 12px !important;
+  }
+
+  /* Grids → single column */
+  .g2, .g3, [style*="grid-template-columns:1fr 1fr"],
+  [style*="grid-template-columns:1fr 1fr 1fr"] {
+    display:flex !important;
+    flex-direction:column !important;
+  }
+  [style*="grid-template-columns:repeat"] {
+    display:flex !important;
+    flex-direction:column !important;
+  }
+
+  /* Modals */
+  .op-modal > div {
+    max-width:100% !important;
+    margin:0 !important;
+    border-radius:18px 18px 0 0 !important;
+    max-height:92vh !important;
+    overflow-y:auto;
+  }
+  .op-modal {
+    align-items:flex-end !important;
+    padding:0 !important;
+  }
+
+  /* Pipeline cards */
+  .pipeline-col { min-width:260px !important; }
+
+  /* Buttons */
+  .btn { padding:9px 14px !important; font-size:12px !important; }
+  .btn-sm { padding:6px 10px !important; font-size:11px !important; }
+
+  /* Topbar */
+  .topbar-title { font-size:14px !important; }
+  .topbar-right { gap:6px !important; }
+  #liveTag { display:none !important; }
+
+  /* Role selector */
+  .role-box { padding:10px !important; }
+  .role-sel { font-size:13px !important; }
+
+  /* Sidebar toggle button */
+  #mob-menu-btn { display:flex !important; }
+
+  /* Headers */
+  .sec-h { font-size:18px !important; }
+  .sec-sub { font-size:12px !important; }
+}
+
+/* ── Very small phones ─────────────────────────────────────────── */
+@media (max-width:380px) {
+  .stats { grid-template-columns: 1fr !important; }
+  .sv { font-size:20px !important; }
+  .mob-nav-btn { font-size:8px !important; }
+  .mob-nav-btn .mob-icon { font-size:18px !important; }
+}
+
+/* ── Always hide mobile nav on desktop ─────────────────────────── */
+@media (min-width:641px) {
+  #mobile-nav { display:none !important; }
+  #mob-menu-btn { display:none !important; }
+}
+
 </style>
 </head>
 <body>
@@ -216,13 +372,13 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 <div style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.28);border-radius:9px;padding:8px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
   <div style="display:flex;align-items:center;gap:8px">
     <span style="color:#ffd700;font-weight:800;font-size:12px">🏆 HospiceLink Gold — </span>
-    <span id="roleLabel" style="color:#ffd700;font-weight:800;font-size:12px">Sales/Admissions View</span>
+    <span id="roleLabel" style="color:#ffd700;font-weight:800;font-size:12px">Marketer View</span>
   </div>
   <span id="managePlanBtn" style="display:none"><a href="#" onclick="openBillingPortal(); return false;" style="background:linear-gradient(90deg,#ffd700,#ffec6e);color:#081426;border-radius:999px;padding:5px 14px;font-weight:900;font-size:12px;text-decoration:none">Manage Plan →</a></span>
 </div>
 
 <div style="background:rgba(73,182,255,.05);border:1px solid rgba(73,182,255,.15);border-radius:9px;padding:9px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-  <p style="margin:0;font-size:12px;color:#8b949e;flex:1"><strong style="color:#f4f8ff" id="roleDescName">Sales/Admissions</strong>: <span id="roleDescText"></span></p>
+  <p style="margin:0;font-size:12px;color:#8b949e;flex:1"><strong style="color:#f4f8ff" id="roleDescName">Marketer</strong>: <span id="roleDescText"></span></p>
   <a href="https://wemarketplus.com/#pricing" style="background:linear-gradient(90deg,#ffd700,#ffec6e);color:#081426;border-radius:999px;padding:6px 14px;font-weight:900;font-size:12px;text-decoration:none;flex-shrink:0">Get Started</a>
 </div>
 
@@ -335,7 +491,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 <div class="card">
   <input type="text" id="pxSearch" oninput="renderProspects()" placeholder="Search by name, phone, email…" style="margin-bottom:10px;background:#0f1e35;border:1px solid rgba(73,182,255,.2);color:#e8f0fc;border-radius:8px;padding:8px 10px;width:100%;font-size:12px;outline:none">
   <div style="overflow-x:auto">
-  <table class="tbl"><thead><tr><th>Name</th><th>Status</th><th>Phone</th><th>Email</th><th>Source</th><th>Sales/Admissions</th><th>Next Step</th><th>Due</th><th>Actions</th></tr></thead>
+  <table class="tbl"><thead><tr><th>Name</th><th>Status</th><th>Phone</th><th>Email</th><th>Source</th><th>Marketer</th><th>Next Step</th><th>Due</th><th>Actions</th></tr></thead>
   <tbody id="pxTable"></tbody></table>
   </div>
 </div>
@@ -416,6 +572,16 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
   <!-- Hot lead banner -->
   <div id="hotBanner" style="display:none;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#dc2626">
     🔥 <strong>Hot Lead Detected</strong> — Keywords suggest urgency. Consider marking Urgency as Hot.
+  </div>
+  <!-- Prospect/Referral Name (Searchable Typeahead) -->
+  <div class="field form-white" style="margin-bottom:10px;position:relative">
+    <label>Prospect / Referral Name <span style="color:#dc2626;font-size:10px">Who is this note about?</span></label>
+    <input type="text" id="noteProspectInput" placeholder="Start typing a name…" autocomplete="off"
+      oninput="prospectSearch(this.value)" onfocus="prospectSearch(this.value)"
+      onblur="setTimeout(function(){var d=document.getElementById('prospectDropdown');if(d)d.style.display='none'},200)"
+      style="background:#f9fafb;border:2px solid #e5e7eb;border-radius:8px;padding:10px 12px;font-size:14px;width:100%;color:#111;outline:none">
+    <input type="hidden" id="noteProspectId" value="">
+    <div id="prospectDropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.12);z-index:9999;max-height:240px;overflow-y:auto;margin-top:2px"></div>
   </div>
   <!-- Row 1 -->
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:10px">
@@ -591,15 +757,15 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
     <div class="g2" style="margin-bottom:10px">
       <div class="field"><label>Full Name</label><input type="text" placeholder="Jane Smith" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#f0f5ff"></div>
       <div class="field"><label>Email</label><input type="email" placeholder="jane@agency.com" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#f0f5ff"></div>
-      <div class="field" style="grid-column:1/-1"><label>Role</label><select style="background:#0a1628;border:1px solid rgba(73,182,255,.3);color:#f0f5ff;width:100%;border-radius:8px;padding:8px 10px;font-family:inherit;font-size:12px"><option value="">Select a role</option><option>Sales/Admissions</option><option>Admin</option><option>Nurse</option><option>Caregiver</option></select></div>
+      <div class="field" style="grid-column:1/-1"><label>Role</label><select style="background:#0a1628;border:1px solid rgba(73,182,255,.3);color:#f0f5ff;width:100%;border-radius:8px;padding:8px 10px;font-family:inherit;font-size:12px"><option value="">Select a role</option><option>Marketer</option><option>Admin</option><option>Nurse</option><option>Caregiver</option></select></div>
     </div>
     <button class="btn btn-g" onclick="T('Invite sent! Team member receives login link.')">Send Invite</button>
   </div>
   <div style="overflow-x:auto">
   <table class="tbl"><thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Last Active</th><th>Actions</th></tr></thead><tbody>
   <tr><td><strong>You (Admin)</strong></td><td>Admin</td><td><span class="pill pill-p">Admin</span></td><td>Now</td><td>—</td></tr>
-  <tr><td><strong>Ericka</strong></td><td>Sales/Admissions</td><td><span class="pill pill-g">Active</span></td><td>Today</td><td><button class="btn btn-d btn-sm" onclick="T('Edit in live CRM','i')" style="margin-right:4px">Edit</button><button class="btn btn-r btn-sm" onclick="T('Ericka removed.','w')">Remove</button></td></tr>
-  <tr><td><strong>Mike</strong></td><td>Sales/Admissions</td><td><span class="pill pill-g">Active</span></td><td>Today</td><td><button class="btn btn-d btn-sm" onclick="T('Edit in live CRM','i')" style="margin-right:4px">Edit</button><button class="btn btn-r btn-sm" onclick="T('Mike removed.','w')">Remove</button></td></tr>
+  <tr><td><strong>Ericka</strong></td><td>Marketer</td><td><span class="pill pill-g">Active</span></td><td>Today</td><td><button class="btn btn-d btn-sm" onclick="T('Edit in live CRM','i')" style="margin-right:4px">Edit</button><button class="btn btn-r btn-sm" onclick="T('Ericka removed.','w')">Remove</button></td></tr>
+  <tr><td><strong>Mike</strong></td><td>Marketer</td><td><span class="pill pill-g">Active</span></td><td>Today</td><td><button class="btn btn-d btn-sm" onclick="T('Edit in live CRM','i')" style="margin-right:4px">Edit</button><button class="btn btn-r btn-sm" onclick="T('Mike removed.','w')">Remove</button></td></tr>
   <tr><td><strong>Angela</strong></td><td>Nurse</td><td><span class="pill pill-g">Active</span></td><td>Today</td><td><button class="btn btn-d btn-sm" onclick="T('Edit in live CRM','i')" style="margin-right:4px">Edit</button><button class="btn btn-r btn-sm" onclick="T('Angela removed.','w')">Remove</button></td></tr>
   </tbody></table>
   </div>
@@ -631,7 +797,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
   </div>
   <div class="card form-white">
     <h4 style="margin:0 0 12px">Route Optimizer</h4>
-    <div class="field"><label>Sales/Admissions</label><select><option>Ericka</option><option>Mike</option><option>Angela</option></select></div>
+    <div class="field"><label>Marketer</label><select><option>Ericka</option><option>Mike</option><option>Angela</option></select></div>
     <div class="field"><label>Priority Mode</label><select><option>Cold Sources First (Recommended)</option><option>Geographic Efficiency</option><option>Top Referrers First</option></select></div>
     <button class="btn btn-g" onclick="T('Route optimized! 4 stops · 19.5 mi · 41 min saved')" style="width:100%;margin-top:4px">🤖 Optimize Route</button>
   </div>
@@ -859,7 +1025,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
   </div>
   <div class="card form-white">
     <h4 style="margin:0 0 12px">Assign Territory</h4>
-    <div class="field"><label>Sales/Admissions</label><select><option>Ericka</option><option>Mike</option><option>Angela</option></select></div>
+    <div class="field"><label>Marketer</label><select><option>Ericka</option><option>Mike</option><option>Angela</option></select></div>
     <div class="field"><label>Territory</label><select><option>North Dallas</option><option>McKinney / Plano</option><option>Frisco / Allen</option><option>South Dallas</option></select></div>
     <div class="field"><label>Priority Score (AI)</label><input type="number" placeholder="Auto-calculated" readonly style="background:#f4f8fc;color:#8b949e"></div>
     <button class="btn btn-g" onclick="T('Territory assigned!')" style="width:100%">Save Assignment</button>
@@ -905,7 +1071,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 <div class="tab" id="tab-leaderboard">
 <div class="sec-hdr"><div><h2>🏆 Marketer Leaderboard</h2></div></div>
 <div style="overflow-x:auto">
-<table class="tbl"><thead><tr><th>Rank</th><th>Sales/Admissions</th><th>Admits</th><th>Visits</th><th>Conversion</th><th>Score</th></tr></thead><tbody>
+<table class="tbl"><thead><tr><th>Rank</th><th>Marketer</th><th>Admits</th><th>Visits</th><th>Conversion</th><th>Score</th></tr></thead><tbody>
 <tr style="background:rgba(255,215,0,.03)"><td style="font-size:18px">🥇</td><td><strong>Ericka</strong></td><td>7</td><td>13</td><td><span class="pill pill-g">54%</span></td><td><span style="font-size:16px;font-weight:900;color:#ffd700">94</span></td></tr>
 <tr><td style="font-size:18px">🥈</td><td><strong>Mike</strong></td><td>4</td><td>8</td><td><span class="pill pill-b">50%</span></td><td><span style="font-size:16px;font-weight:900;color:#8b949e">71</span></td></tr>
 <tr><td style="font-size:18px">🥉</td><td><strong>Angela</strong></td><td>2</td><td>5</td><td><span class="pill pill-b">40%</span></td><td><span style="font-size:16px;font-weight:900;color:#8b949e">52</span></td></tr>
@@ -1114,7 +1280,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 <div class="card">
   <h4 style="color:#fff;margin:0 0 14px">Marketer Leaderboard — May 2026</h4>
   <div style="overflow-x:auto">
-  <table class="tbl"><thead><tr><th>Rank</th><th>Sales/Admissions</th><th>Admits</th><th>Prospects</th><th>Visits</th><th>Follow-Up %</th><th>Conversion</th><th>Score</th></tr></thead><tbody>
+  <table class="tbl"><thead><tr><th>Rank</th><th>Marketer</th><th>Admits</th><th>Prospects</th><th>Visits</th><th>Follow-Up %</th><th>Conversion</th><th>Score</th></tr></thead><tbody>
     <tr style="background:rgba(255,215,0,.03)"><td style="font-size:18px">🥇</td><td><strong>Ericka</strong><br><small style="color:#8b949e">North Dallas</small></td><td style="color:#8cff66;font-weight:900">7</td><td>13</td><td>13</td><td><span class="pill pill-g">92%</span></td><td><span class="pill pill-g">54%</span></td><td style="font-size:16px;font-weight:900;color:#ffd700">94</td></tr>
     <tr><td style="font-size:18px">🥈</td><td><strong>Mike</strong><br><small style="color:#8b949e">McKinney</small></td><td style="color:#49b6ff;font-weight:900">4</td><td>8</td><td>8</td><td><span class="pill pill-b">78%</span></td><td><span class="pill pill-b">50%</span></td><td style="font-size:16px;font-weight:900;color:#8b949e">71</td></tr>
     <tr><td style="font-size:18px">🥉</td><td><strong>Angela</strong><br><small style="color:#8b949e">Plano / Allen</small></td><td style="color:#8b949e;font-weight:900">2</td><td>5</td><td>5</td><td><span class="pill pill-y">65%</span></td><td><span class="pill pill-y">40%</span></td><td style="font-size:16px;font-weight:900;color:#8b949e">52</td></tr>
@@ -1497,7 +1663,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
   </div>
   <div style="overflow-x:auto">
   <table class="tbl" id="acLogTable">
-    <thead><tr><th>Type</th><th>Contact</th><th>Direction</th><th>Duration / Status</th><th>Sales/Admissions</th><th>Logged</th><th>Outcome</th></tr></thead>
+    <thead><tr><th>Type</th><th>Contact</th><th>Direction</th><th>Duration / Status</th><th>Marketer</th><th>Logged</th><th>Outcome</th></tr></thead>
     <tbody id="acLogBody">
       <tr><td><span class="pill pill-b" style="font-size:10px">📞 Call</span></td><td><strong>Dr. Patel</strong><br><small style="color:#888">Baylor Hospital</small></td><td>↗ Outbound</td><td>4m 32s</td><td>Ericka T.</td><td>Today 9:14am</td><td><span class="pill pill-g" style="font-size:10px">Connected</span></td></tr>
       <tr><td><span class="pill pill-p" style="font-size:10px">💬 Text</span></td><td><strong>Sarah M.</strong><br><small style="color:#888">North Park Rehab</small></td><td>↗ Outbound</td><td>Delivered</td><td>Ericka T.</td><td>Yesterday 2:30pm</td><td><span class="pill pill-g" style="font-size:10px">Replied</span></td></tr>
@@ -1533,13 +1699,12 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
       patient_status:  '',
       gps_location:    '',
       is_hot_lead:     false,
-      // Extra fields for Aircall activity
+      // AIRCALL source — renders as "AIRCALL" in Notes timeline
+      aircall_source:  'AIRCALL',
       aircall_type:    noteData.comm_type,
       aircall_contact: noteData.contact_name,
       aircall_outcome: noteData.outcome,
     };
-    payload.authored_by = 'AIRCALL';
-    payload.author_display = 'AIRCALL';
     // POST to /api/notes (same endpoint manual notes use)
     _fetch(BACKEND + '/api/notes', {
       method: 'POST',
@@ -1802,7 +1967,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,Arial,sans-serif;backgrou
 var TIER = 'Gold';
 var ACTIVE_CLS = 'active-g';
 var ROLE_TABS = {"admin": ["dash", "notifs", "addref", "refs", "addpx", "records", "timeline", "pipeline", "territory", "heatmap", "prod", "touch", "schedule", "notes", "remind", "reengage", "goals", "aiasst", "windshield", "family", "messaging", "evv", "telehealth", "nursesched", "patportal", "admworkflow", "import", "portal", "playbook", "mobile", "aircall", "terrmgmt", "revintel", "mktgroi", "refanalytics", "leaderboard", "scorecard", "hipaa", "compliance", "aitriage", "bedavail", "analytics", "agency", "report", "team", "settings"], "marketer": ["dash", "notifs", "addref", "refs", "addpx", "records", "timeline", "pipeline", "territory", "heatmap", "prod", "touch", "schedule", "notes", "remind", "reengage", "goals", "aiasst", "windshield", "family", "messaging", "evv", "import", "portal", "playbook", "mobile", "aircall"], "nurse": ["dash", "notifs", "notes", "remind", "aiasst", "family", "messaging", "evv", "telehealth", "nursesched", "patportal", "admworkflow"], "caregiver": ["dash", "notes", "family", "messaging", "evv", "patportal", "remind"]};
-var ROLE_DESC = {"admin": "All tabs \u2014 Revenue Intelligence, Leaderboard, AI Scorecard, HIPAA Audit Log, Compliance Engine, and Team Management.", "marketer": "Full Gold Sales/Admissions suite: territory heat maps, smart scheduling, referral portal, windshield mode, family communication, secure messaging, EVV / mileage, playbook generator, marketer mobile, Aircall (call, text, email), and all marketing tools.", "nurse": "Nurse view: notifications, notes, reminders, AI assistant, family communication, secure messaging, EVV, telehealth, nurse scheduler, patient portal, admission workflow.", "caregiver": "Caregiver view: notes, reminders, family communication, secure messaging, EVV / mileage, patient portal."};
+var ROLE_DESC = {"admin": "All tabs \u2014 Revenue Intelligence, Leaderboard, AI Scorecard, HIPAA Audit Log, Compliance Engine, and Team Management.", "marketer": "Full Gold marketer suite: territory heat maps, smart scheduling, referral portal, windshield mode, family communication, secure messaging, EVV / mileage, playbook generator, marketer mobile, Aircall (call, text, email), and all marketing tools.", "nurse": "Nurse view: notifications, notes, reminders, AI assistant, family communication, secure messaging, EVV, telehealth, nurse scheduler, patient portal, admission workflow.", "caregiver": "Caregiver view: notes, reminders, family communication, secure messaging, EVV / mileage, patient portal."};
 var BADGE_STYLE = {"admin": "background:rgba(188,140,255,.2);color:#c9aeff", "marketer": "background:rgba(73,182,255,.2);color:#49b6ff", "nurse": "background:rgba(140,255,102,.2);color:#8cff66", "caregiver": "background:rgba(249,199,79,.2);color:#f9c74f"};
 var IS_DEMO = false;
 
@@ -1880,12 +2045,12 @@ function setRole(role) {
   var desc=ROLE_DESC[role]||'';
   var tabs=ROLE_TABS[role]||[];
   // Update description
-  var ROLE_DISPLAY={'admin':'Admin','marketer':'Sales/Admissions','nurse':'Nurse','caregiver':'Caregiver'}; var dn=document.getElementById('roleDescName');if(dn)dn.textContent=ROLE_DISPLAY[role]||role.charAt(0).toUpperCase()+role.slice(1);
+  var dn=document.getElementById('roleDescName');if(dn)dn.textContent=role.charAt(0).toUpperCase()+role.slice(1);
   var dt=document.getElementById('roleDescText');if(dt)dt.textContent=desc;
   // Update badge
   var badge=document.getElementById('roleBadge');
   if(badge){
-    badge.textContent=ROLE_DISPLAY[role]||role.charAt(0).toUpperCase()+role.slice(1);
+    badge.textContent=role.charAt(0).toUpperCase()+role.slice(1);
     var bs=BADGE_STYLE[role]||'';
     badge.setAttribute('style','display:inline-block;padding:2px 10px;border-radius:999px;font-size:10px;font-weight:800;margin-top:5px;'+bs);
   }
@@ -1985,8 +2150,8 @@ function buildNotesFeed(){
     return '<div style="background:#0d1b31;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:16px;margin-bottom:12px">'
       +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap;gap:6px">'
         +'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
-          +(n.type==='aircall'?'<strong style="color:#f59e0b;font-size:13px;letter-spacing:.04em">[AIRCALL]</strong>':'<strong style="color:#f4f8ff;font-size:14px">'+n.author+'</strong>')
-          +(n.type==='aircall'?'<span style="background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:#f59e0b;padding:2px 10px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:.06em">AIRCALL</span>':'<span style="background:rgba('+hexToRgb(rc)+','+'0.18);color:'+rc+';padding:2px 8px;border-radius:999px;font-size:10px;font-weight:800">'+n.role+'</span>')
+          +'<strong style="color:#f4f8ff;font-size:14px">'+(n.aircall_source?'AIRCALL':(n.author||'User'))+'</strong>'
+          +'<span style="background:rgba('+hexToRgb(rc)+','+'0.18);color:'+rc+';padding:2px 8px;border-radius:999px;font-size:10px;font-weight:800">'+n.role+'</span>'
           +(n.contactType?'<span style="background:#1e3050;color:#8b949e;padding:2px 8px;border-radius:999px;font-size:10px">'+n.contactType+'</span>':'')
           +'<span style="background:'+uc.bg+';border:1px solid '+uc.border+';color:'+uc.color+';padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700">'+uc.label+'</span>'
           +(n.hot?'<span style="background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#ef4444;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:800">🔥 HOT LEAD</span>':'')
@@ -2603,7 +2768,7 @@ async function loadAndBuildNotesFeed() {
     return '<div style="background:#0d1b31;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:16px;margin-bottom:12px">'
       + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
         + '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
-          + '<strong style="color:#f4f8ff;font-size:14px">' + (n.author_name||'Unknown') + '</strong>'
+          + '<strong style="color:#f4f8ff;font-size:14px">' + (n.aircall_source==='AIRCALL'?'<span style="background:rgba(61,158,232,.15);color:#49b6ff;border-radius:4px;padding:1px 6px;font-size:12px;font-weight:900">AIRCALL</span>':escHtml(n.author_name||'Unknown')) + '</strong>'
           + '<span style="background:rgba(255,255,255,.06);color:' + rc + ';padding:2px 8px;border-radius:999px;font-size:10px;font-weight:700">' + (n.author_role||'') + '</span>'
           + (n.contact_type ? '<span style="background:#1e3050;color:#8b949e;padding:2px 8px;border-radius:999px;font-size:10px">' + n.contact_type + '</span>' : '')
           + '<span style="background:' + uc.bg + ';border:1px solid ' + uc.border + ';color:' + uc.color + ';padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700">' + uc.label + '</span>'
@@ -2611,6 +2776,7 @@ async function loadAndBuildNotesFeed() {
         + '</div>'
         + '<span style="font-size:11px;color:#8b949e">' + dateStr + '</span>'
       + '</div>'
+      + (n.prospect_name ? '<div style="display:inline-flex;align-items:center;gap:5px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:999px;padding:2px 10px;font-size:11px;font-weight:700;color:#d97706;margin-bottom:6px">👤 ' + escHtml(n.prospect_name) + '</div><br>' : '')
       + '<p style="font-size:13px;color:#c0cce0;margin:0 0 8px;line-height:1.6">' + (n.summary||'') + '</p>'
       + (n.decision_makers ? '<p style="font-size:12px;color:#8b949e;margin:0 0 4px">Decision Makers: <strong style="color:#c0cce0">' + n.decision_makers + '</strong></p>' : '')
       + (n.patient_status  ? '<p style="font-size:12px;color:#8b949e;margin:0 0 4px">Patient Status: <strong style="color:#c0cce0">' + n.patient_status + '</strong></p>' : '')
@@ -2621,12 +2787,149 @@ async function loadAndBuildNotesFeed() {
   }).join('');
 }
 
+// ════════════════════════════════════════════════════════════════
+// PROSPECT / REFERRAL SEARCHABLE TYPEAHEAD — Live CRM
+// Fetches from /api/prospects, /api/refs (referral sources), 
+// and /api/records in real time
+// ════════════════════════════════════════════════════════════════
+var _noteContactCache = null;
+var _prospectSearchTimeout = null;
+
+async function _loadNoteContacts() {
+  if (_noteContactCache) return _noteContactCache;
+  var contacts = [];
+  try {
+    // Load prospects
+    var pd = await _fetch(BACKEND + '/api/prospects?limit=100');
+    var pj = await pd.json();
+    (pj.data || pj || []).forEach(function(p) {
+      contacts.push({
+        id: p.id || p._id,
+        name: p.patient_name || p.name || '',
+        type: 'Prospect',
+        sub: [(p.facility_name||''),(p.city&&p.state?p.city+', '+p.state:'')].filter(Boolean).join(' • '),
+        stage: p.stage || '',
+      });
+    });
+  } catch(e) {}
+  try {
+    // Load referral sources
+    var rd = await _fetch(BACKEND + '/api/refs?limit=100');
+    var rj = await rd.json();
+    (rj.data || rj || []).forEach(function(r) {
+      contacts.push({
+        id: r.id || r._id,
+        name: r.name || r.contact_name || '',
+        type: 'Referral Source',
+        sub: [(r.facility||r.facility_name||''),(r.city&&r.state?r.city+', '+r.state:'')].filter(Boolean).join(' • '),
+        stage: r.status || '',
+      });
+    });
+  } catch(e) {}
+  _noteContactCache = contacts;
+  return contacts;
+}
+
+function prospectSearch(query) {
+  var dropdown = document.getElementById('prospectDropdown');
+  if (!dropdown) return;
+  clearTimeout(_prospectSearchTimeout);
+  _prospectSearchTimeout = setTimeout(async function() {
+    var q = (query || '').trim().toLowerCase();
+    var contacts = await _loadNoteContacts();
+    // Fallback seed data if API is empty
+    if (!contacts.length) {
+      contacts = [
+        {id:'d1',name:'Dorothy Fleming',    type:'Prospect',      sub:'Baylor Medical Center • Dallas, TX',stage:'Evaluation'},
+        {id:'d2',name:'Robert Castillo',    type:'Prospect',      sub:'Prestonwood SNF • Plano, TX',       stage:'Pending'},
+        {id:'d3',name:'Helen Nakamura',     type:'Prospect',      sub:'Baylor Medical Center • Dallas, TX',stage:'Admitted'},
+        {id:'d4',name:'James Whitfield',    type:'Prospect',      sub:'North Park Rehab • Dallas, TX',     stage:'Inquiry'},
+        {id:'r1',name:'Sarah M.',           type:'Referral Source',sub:'North Park Rehab • Case Manager',  stage:''},
+        {id:'r2',name:'Dr. Amanda Patel',   type:'Referral Source',sub:'Baylor Hospital • Physician',      stage:''},
+        {id:'r3',name:'Mike Johnson (SW)',  type:'Referral Source',sub:'Methodist • Social Worker',         stage:''},
+      ];
+    }
+    var matches = q.length === 0
+      ? contacts.slice(0, 10)
+      : contacts.filter(function(c) {
+          return c.name.toLowerCase().includes(q) ||
+                 (c.sub && c.sub.toLowerCase().includes(q)) ||
+                 (c.type && c.type.toLowerCase().includes(q));
+        }).slice(0, 10);
+
+    if (!matches.length) {
+      dropdown.style.display = 'none';
+      return;
+    }
+
+    var TYPE_COLORS = {
+      'Prospect':       {bg:'rgba(239,68,68,.08)',  color:'#dc2626', border:'rgba(239,68,68,.2)'},
+      'Referral Source':{bg:'rgba(59,130,246,.08)', color:'#2563eb', border:'rgba(59,130,246,.2)'},
+      'Family':         {bg:'rgba(245,158,11,.08)', color:'#d97706', border:'rgba(245,158,11,.2)'},
+      'Facility':       {bg:'rgba(16,185,129,.08)', color:'#059669', border:'rgba(16,185,129,.2)'},
+    };
+
+    dropdown.innerHTML = matches.map(function(item) {
+      var tc = TYPE_COLORS[item.type] || TYPE_COLORS['Facility'];
+      var hl = q ? item.name.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')','gi'),'<mark style="background:#fef3c7;color:#92400e;border-radius:2px;padding:0 1px">$1</mark>') : item.name;
+      return '<div class="prospect-option" '
+        + 'data-id="' + (item.id||'') + '" data-name="' + (item.name||'').replace(/"/g,'&quot;') + '" '
+        + 'onclick="selectProspect(this)" '
+        + 'style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid #f3f4f6" '
+        + 'onmouseenter="this.style.background='#f9fafb'" onmouseleave="this.style.background='#fff'">'
+          + '<div style="flex-shrink:0;margin-top:1px"><span style="background:' + tc.bg + ';color:' + tc.color + ';border:1px solid ' + tc.border + ';border-radius:999px;padding:2px 8px;font-size:10px;font-weight:800">' + (item.type||'') + '</span></div>'
+          + '<div style="flex:1;min-width:0">'
+            + '<div style="font-size:13px;font-weight:700;color:#111">' + hl + '</div>'
+            + (item.sub ? '<div style="font-size:11px;color:#6b7280;margin-top:1px">' + item.sub + '</div>' : '')
+            + (item.stage ? '<div style="font-size:10px;color:#9ca3af">Stage: ' + item.stage + '</div>' : '')
+          + '</div>'
+        + '</div>';
+    }).join('') +
+    (q ? '<div onclick="addNewProspectContact('' + q.replace(/'/g,"\'") + '')" style="padding:10px 14px;cursor:pointer;color:#6b7280;font-size:12px;border-top:1px solid #f3f4f6;background:#fafafa" onmouseenter="this.style.background='#f3f4f6'" onmouseleave="this.style.background='#fafafa'">+ Add &ldquo;' + q + '&rdquo; as new contact</div>' : '');
+
+    dropdown.style.display = 'block';
+  }, 120);
+}
+
+function selectProspect(el) {
+  var name = el.dataset.name;
+  var id   = el.dataset.id;
+  var input = document.getElementById('noteProspectInput');
+  var hiddenId = document.getElementById('noteProspectId');
+  if (input) input.value = name;
+  if (hiddenId) hiddenId.value = id;
+  var dropdown = document.getElementById('prospectDropdown');
+  if (dropdown) dropdown.style.display = 'none';
+  if (input) {
+    input.style.borderColor = '#22c55e';
+    setTimeout(function(){ input.style.borderColor = '#e5e7eb'; }, 1500);
+  }
+  // Invalidate cache so next open is fresh
+  _noteContactCache = null;
+}
+
+function addNewProspectContact(name) {
+  var formatted = name.replace(/\b\w/g, function(l){ return l.toUpperCase(); });
+  _noteContactCache = null;
+  var input = document.getElementById('noteProspectInput');
+  var hiddenId = document.getElementById('noteProspectId');
+  if (input) input.value = formatted;
+  if (hiddenId) hiddenId.value = 'new';
+  var dropdown = document.getElementById('prospectDropdown');
+  if (dropdown) dropdown.style.display = 'none';
+  T('"' + formatted + '" will be linked when note is saved', 'i');
+}
+
+
+
 // Override saveNote
 async function saveFieldNote() {
   var summary = document.getElementById('noteSummary') && document.getElementById('noteSummary').value.trim();
   if (!summary || summary.length < 5) { T('Please enter a note summary (at least 5 characters).', 'e'); return; }
   var data = {
     summary:         summary,
+    prospect_name:   (document.getElementById('noteProspectInput') && document.getElementById('noteProspectInput').value) || '',
+    prospect_id:     (document.getElementById('noteProspectId') && document.getElementById('noteProspectId').value) || '',
     contact_type:    (document.getElementById('noteContact') && document.getElementById('noteContact').value) || null,
     urgency:         (document.getElementById('noteUrgency') && document.getElementById('noteUrgency').value) || 'warm',
     decision_makers: (document.getElementById('noteDMs') && document.getElementById('noteDMs').value) || '',
@@ -2826,6 +3129,551 @@ function openBillingPortal() {
     })
     .catch(function() { restore(); T('Connection error. Please try again.', 'e'); });
 }
+
+// ════════════════════════════════════════════════════════════════
+// UNIFIED MODAL SYSTEM — Real forms for all critical buttons
+// Replaces all prompt() calls with proper modal dialogs
+// ════════════════════════════════════════════════════════════════
+
+// ── Generic modal helpers ──────────────────────────────────────
+function showModal(id){ var m=document.getElementById(id); if(m) m.style.display='flex'; }
+function closeModal(id){ var m=document.getElementById(id); if(m) m.style.display='none'; }
+function closeTopModal(btn){ var m=btn.closest('.op-modal'); if(m) m.style.display='none'; }
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){document.querySelectorAll('.op-modal').forEach(function(m){m.style.display='none';});}});
+
+// ════════════════════════════════════════════════════════════════
+// ADD LEAD — Full form modal
+// ════════════════════════════════════════════════════════════════
+function addLeadPrompt(){
+  var existing = document.getElementById('modal-add-lead');
+  if(existing){ existing.style.display='flex'; return; }
+  var m = document.createElement('div');
+  m.id = 'modal-add-lead';
+  m.className = 'op-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  m.innerHTML = [
+    '<div style="background:#0a1628;border:1px solid rgba(61,158,232,.35);border-radius:18px;padding:28px;width:100%;max-width:640px;max-height:92vh;overflow-y:auto">',
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">',
+    '<div><div style="font-size:16px;font-weight:900;color:#f4f8ff">+ Add New Lead</div>',
+    '<div style="font-size:11px;color:#6b7fa3;margin-top:2px">Lead will appear in pipeline, dashboard, and referral tracking</div></div>',
+    '<button onclick="closeTopModal(this)" style="background:none;border:none;color:#6b7fa3;font-size:22px;cursor:pointer;line-height:1">&times;</button>',
+    '</div>',
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">',
+    fld('Prospect Name *','al-name','text','Dorothy Harrison','grid-column:1/-1'),
+    fld('Phone','al-phone','tel','(214) 555-0100'),
+    fld('Email','al-email','email','contact@email.com'),
+    fld2('Care Level *','al-care',['Independent Living','Assisted Living','Memory Care','Undecided']),
+    fld2('Lead Source','al-source',['A Place for Mom','Caring.com','SeniorAdvisor','Physician Referral','Hospital Discharge','Social Worker','Family Self-Referral','Website','Walk-In','Event','Other']),
+    fld('Budget Range','al-budget','text','$3,000–$4,500/mo'),
+    fld2('Urgency','al-urgency',['Hot','Warm','Cold']),
+    fld2('Pipeline Stage','al-stage',['Inquiry','Tour Scheduled','Touring','Proposal Sent','Deposit Pending','Approved','Move-In Scheduled']),
+    fld('Move-In Timeline','al-timeline','text','30 days'),
+    fld('Tour Date','al-tourdate','date',''),
+    fld('Follow-Up Date','al-followdate','date',''),
+    fld2('Assigned To','al-assigned',['Sarah M.','Mike R.','Angela T.','Unassigned']),
+    '<div style="grid-column:1/-1"><div class="flb">Notes</div><textarea class="fi" id="al-notes" rows="3" placeholder="Initial inquiry details, family notes, urgency context…" style="width:100%;resize:vertical"></textarea></div>',
+    '</div>',
+    '<div style="display:flex;gap:10px;margin-top:18px">',
+    '<button class="btn btn-a" style="flex:1;padding:12px;font-size:14px" onclick="saveNewLead()">&#128190; Save Lead + Add to Pipeline</button>',
+    '<button class="btn btn-x" onclick="closeTopModal(this)">Cancel</button>',
+    '</div></div>'
+  ].join('');
+  document.body.appendChild(m);
+  // Set default follow-up to +2 days
+  var fd = document.getElementById('al-followdate');
+  if(fd) fd.value = new Date(Date.now()+2*86400000).toISOString().split('T')[0];
+}
+
+function saveNewLead(){
+  var name = (document.getElementById('al-name')||{}).value.trim();
+  if(!name){ T('Prospect name is required','e'); return; }
+  var care    = (document.getElementById('al-care')||{}).value||'Independent Living';
+  var source  = (document.getElementById('al-source')||{}).value||'Direct';
+  var urgency = (document.getElementById('al-urgency')||{}).value||'Warm';
+  var stage   = (document.getElementById('al-stage')||{}).value||'Inquiry';
+  var phone   = (document.getElementById('al-phone')||{}).value||'';
+  var email   = (document.getElementById('al-email')||{}).value||'';
+  var budget  = (document.getElementById('al-budget')||{}).value||'';
+  var timeline= (document.getElementById('al-timeline')||{}).value||'';
+  var tourdate= (document.getElementById('al-tourdate')||{}).value||'';
+  var followdt= (document.getElementById('al-followdate')||{}).value||'';
+  var assigned= (document.getElementById('al-assigned')||{}).value||'Unassigned';
+  var notes   = (document.getElementById('al-notes')||{}).value||'';
+
+  var newLead = {
+    id:++nextId, name:name, care:care, status:stage, urgency:urgency,
+    source:source, phone:phone, email:email, budget:budget,
+    move_in_timeline:timeline, tour_date:tourdate,
+    fu:followdt, notes:notes, assigned:assigned,
+    created_at:new Date().toISOString(),
+  };
+  LEADS.unshift(newLead);
+
+  // Sync to Notes timeline
+  NOTES.unshift({
+    id:++nextId, type:'manual', comm_type:'manual',
+    contact_name:name, summary:'New lead added: '+name+' ('+care+') — Source: '+source,
+    outcome:'Lead created', next_step:stage==='Tour Scheduled'?'Prepare for tour':'Follow up within 48 hours',
+    follow_up_date:followdt, created_at:new Date().toISOString(), user_name:'Admin',
+  });
+
+  T('Lead added: '+name+' — now in pipeline!');
+  closeModal('modal-add-lead');
+  if(typeof render==='function') render('leads');
+}
+
+// ════════════════════════════════════════════════════════════════
+// ADD SOURCE — Full form modal
+// ════════════════════════════════════════════════════════════════
+function addRefPrompt(){
+  var existing = document.getElementById('modal-add-source');
+  if(existing){ existing.style.display='flex'; return; }
+  var m = document.createElement('div');
+  m.id = 'modal-add-source';
+  m.className = 'op-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  m.innerHTML = [
+    '<div style="background:#0a1628;border:1px solid rgba(167,139,250,.35);border-radius:18px;padding:28px;width:100%;max-width:580px;max-height:92vh;overflow-y:auto">',
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">',
+    '<div><div style="font-size:16px;font-weight:900;color:#f4f8ff">+ Add Referral Source</div>',
+    '<div style="font-size:11px;color:#6b7fa3">Source will appear in lead dropdowns, activity notes, and ROI tracking</div></div>',
+    '<button onclick="closeTopModal(this)" style="background:none;border:none;color:#6b7fa3;font-size:22px;cursor:pointer">&times;</button>',
+    '</div>',
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">',
+    fld('Contact Name *','as-name','text','Dr. Amanda Chen','grid-column:1/-1'),
+    fld('Organization / Facility','as-org','text','Baylor Medical Center'),
+    fld('Title / Role','as-title','text','Physician'),
+    fld('Phone','as-phone','tel','(214) 555-0100'),
+    fld('Email','as-email','email','dr.chen@baylor.com'),
+    fld2('Referral Type','as-type',['Physician','Hospital Discharge','Social Worker','Case Manager','Nurse','Facility','Placement Agency','A Place for Mom','Caring.com','SeniorAdvisor','Family Referral','Event','Other']),
+    fld2('Relationship Status','as-status',['Active','Warm','Cold','New','Lost']),
+    fld2('Assigned Marketer','as-assigned',['Sarah M.','Mike R.','Angela T.','Unassigned']),
+    '<div style="display:flex;align-items:center;gap:10px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:10px;grid-column:1/-1">',
+    '<input type="checkbox" id="as-paid" style="width:16px;height:16px">',
+    '<label for="as-paid" style="font-size:12px;font-weight:700;color:#f59e0b;cursor:pointer">This is a PAID referral source (APFM, Caring.com, etc.)</label>',
+    '</div>',
+    '<div style="grid-column:1/-1"><div class="flb">Notes</div><textarea class="fi" id="as-notes" rows="2" placeholder="Relationship history, visit frequency, referral volume…" style="width:100%;resize:vertical"></textarea></div>',
+    '</div>',
+    '<div style="display:flex;gap:10px;margin-top:18px">',
+    '<button class="btn btn-a" style="flex:1;padding:12px;font-size:14px" onclick="saveNewSource()">&#128190; Save Referral Source</button>',
+    '<button class="btn btn-x" onclick="closeTopModal(this)">Cancel</button>',
+    '</div></div>'
+  ].join('');
+  document.body.appendChild(m);
+}
+
+function saveNewSource(){
+  var name = (document.getElementById('as-name')||{}).value.trim();
+  if(!name){ T('Contact name is required','e'); return; }
+  var org  = (document.getElementById('as-org')||{}).value||'';
+  var type = (document.getElementById('as-type')||{}).value||'Other';
+  var paid = (document.getElementById('as-paid')||{}).checked||false;
+  REFERRALS.push({
+    id:++nextId, name:name, org:org,
+    type:type+(paid?' (Paid)':''), leads:0,
+    last:new Date().toISOString().split('T')[0],
+    status:(document.getElementById('as-status')||{}).value||'New',
+    phone:(document.getElementById('as-phone')||{}).value||'',
+    email:(document.getElementById('as-email')||{}).value||'',
+    notes:(document.getElementById('as-notes')||{}).value||'',
+    isPaid:paid,
+  });
+  T('Source added: '+name+' — now in referral directory!');
+  closeModal('modal-add-source');
+  if(typeof render==='function') render('refs');
+}
+
+// ════════════════════════════════════════════════════════════════
+// ADD UNIT — Full form modal
+// ════════════════════════════════════════════════════════════════
+function addAptPrompt(){
+  var existing = document.getElementById('modal-add-unit');
+  if(existing){ existing.style.display='flex'; return; }
+  var m = document.createElement('div');
+  m.id = 'modal-add-unit';
+  m.className = 'op-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  m.innerHTML = [
+    '<div style="background:#0a1628;border:1px solid rgba(79,200,122,.35);border-radius:18px;padding:28px;width:100%;max-width:620px;max-height:92vh;overflow-y:auto">',
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">',
+    '<div><div style="font-size:16px;font-weight:900;color:#f4f8ff">+ Add Apartment Unit</div>',
+    '<div style="font-size:11px;color:#6b7fa3">Unit will sync to inventory, financial ledger, and occupancy dashboard</div></div>',
+    '<button onclick="closeTopModal(this)" style="background:none;border:none;color:#6b7fa3;font-size:22px;cursor:pointer">&times;</button>',
+    '</div>',
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">',
+    fld('Unit Number *','au-unit','text','101',''),
+    fld2('Floor Plan','au-type',['Studio','1BR/1BA','1BR/1BA Deluxe','2BR/1BA','2BR/2BA','Companion Suite','Memory Care Suite']),
+    fld('Square Footage','au-sqft','number','650'),
+    fld2('Care Level','au-care',['Independent Living','Assisted Living','Memory Care']),
+    fld2('Occupancy Status','au-status',['available','occupied','on_notice','make_ready','offline']),
+    fld2('Maintenance Status','au-maint',['Good','Needs Attention','In Progress','Complete']),
+    fld2('Housekeeping Status','au-hk',['Clean','Needs Cleaning','In Progress']),
+    fld('Monthly Rent ($)','au-rate','number','3500'),
+    fld('Prior Year Market Value ($)','au-mkt-prev','number','3200'),
+    fld('Current Year Market Value ($)','au-mkt-curr','number','3500'),
+    fld('Concession Amount ($)','au-concession','number','0'),
+    fld('Current Resident','au-resident','text',''),
+    fld('Move-Out Date','au-moveout','date',''),
+    fld('Ready Date','au-readydate','date',''),
+    '<div style="grid-column:1/-1"><div class="flb">Notes</div><textarea class="fi" id="au-notes" rows="2" placeholder="Unit notes, special features, maintenance history…" style="width:100%"></textarea></div>',
+    '</div>',
+    '<div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:12px;margin-top:12px;font-size:12px;color:#f59e0b">',
+    '&#128274; Only Executive Director and Admin can edit rent, market value, and financial data. All changes are audit-logged.',
+    '</div>',
+    '<div style="display:flex;gap:10px;margin-top:18px">',
+    '<button class="btn btn-a" style="flex:1;padding:12px;font-size:14px" onclick="saveNewUnit()">&#128190; Save Unit + Sync to Ledger</button>',
+    '<button class="btn btn-x" onclick="closeTopModal(this)">Cancel</button>',
+    '</div></div>'
+  ].join('');
+  document.body.appendChild(m);
+}
+
+function saveNewUnit(){
+  var unit = (document.getElementById('au-unit')||{}).value.trim();
+  if(!unit){ T('Unit number is required','e'); return; }
+  var rate = parseFloat((document.getElementById('au-rate')||{}).value)||0;
+  APTS.push({
+    id:++nextId, unit:unit,
+    type:(document.getElementById('au-type')||{}).value||'1BR/1BA',
+    care:(document.getElementById('au-care')||{}).value||'IL',
+    sqft:parseInt((document.getElementById('au-sqft')||{}).value)||0,
+    status:(document.getElementById('au-status')||{}).value||'available',
+    resident:(document.getElementById('au-resident')||{}).value||'',
+    rate:rate,
+    mkt_prev:parseFloat((document.getElementById('au-mkt-prev')||{}).value)||rate,
+    mkt_curr:parseFloat((document.getElementById('au-mkt-curr')||{}).value)||rate,
+    concession:parseFloat((document.getElementById('au-concession')||{}).value)||0,
+    maint:(document.getElementById('au-maint')||{}).value||'Good',
+    hk:(document.getElementById('au-hk')||{}).value||'Clean',
+    moveout:(document.getElementById('au-moveout')||{}).value||'',
+    readydate:(document.getElementById('au-readydate')||{}).value||'',
+    notes:(document.getElementById('au-notes')||{}).value||'',
+    mrTasks:0,
+  });
+  // Add to financial ledger if rate > 0
+  if(rate > 0 && typeof REVENUE_MONTHS !== 'undefined') {
+    REVENUE_MONTHS.forEach(function(m){ m.bud += rate; });
+  }
+  T('Unit '+unit+' added! Inventory + ledger updated.');
+  closeModal('modal-add-unit');
+  if(typeof render==='function') render('apartments');
+}
+
+// ════════════════════════════════════════════════════════════════
+// ADD NEW TICKET — Full form modal
+// ════════════════════════════════════════════════════════════════
+function addMaintPrompt(){
+  var existing = document.getElementById('modal-add-ticket');
+  if(existing){ existing.style.display='flex'; return; }
+  var unitOpts = typeof APTS !== 'undefined' ? APTS.map(function(a){return '<option value="'+a.unit+'">Unit '+a.unit+(a.resident?' — '+a.resident:'')+'</option>';}).join('') : '';
+  var m = document.createElement('div');
+  m.id = 'modal-add-ticket';
+  m.className = 'op-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  m.innerHTML = [
+    '<div style="background:#0a1628;border:1px solid rgba(248,113,113,.35);border-radius:18px;padding:28px;width:100%;max-width:580px;max-height:92vh;overflow-y:auto">',
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">',
+    '<div><div style="font-size:16px;font-weight:900;color:#f4f8ff">+ New Maintenance Ticket</div>',
+    '<div style="font-size:11px;color:#6b7fa3">Ticket auto-populates maintenance board, make-ready workflow, and assigned tasks</div></div>',
+    '<button onclick="closeTopModal(this)" style="background:none;border:none;color:#6b7fa3;font-size:22px;cursor:pointer">&times;</button>',
+    '</div>',
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">',
+    '<div><div class="flb">Unit Number *</div><select class="fi" id="mt-unit"><option value="Common">Common Area</option>'+unitOpts+'</select></div>',
+    fld2('Service Type','mt-type',['Plumbing','Electrical','HVAC','Appliance','Carpentry','Painting','Flooring','Landscaping','Cleaning','General Repair','Safety & Compliance','Other']),
+    fld2('Priority','mt-priority',['Urgent','High','Medium','Low']),
+    fld2('Assigned To','mt-assigned',['Maintenance Team','Mike R.','External Contractor','Unassigned']),
+    fld('Issue Summary *','mt-issue','text','Describe the issue briefly','grid-column:1/-1'),
+    fld('Due Date','mt-due','date',''),
+    fld2('Status','mt-status',['open','in_progress','waiting_parts','completed']),
+    '<div style="grid-column:1/-1"><div class="flb">Full Description</div><textarea class="fi" id="mt-desc" rows="3" placeholder="Detailed description, location within unit, photos context…" style="width:100%"></textarea></div>',
+    '</div>',
+    '<div style="display:flex;gap:10px;margin-top:18px">',
+    '<button class="btn btn-a" style="flex:1;padding:12px;font-size:14px" onclick="saveNewTicket()">&#128190; Create Ticket</button>',
+    '<button class="btn btn-x" onclick="closeTopModal(this)">Cancel</button>',
+    '</div></div>'
+  ].join('');
+  document.body.appendChild(m);
+  // Set default due date to +3 days
+  var dd = document.getElementById('mt-due');
+  if(dd) dd.value = new Date(Date.now()+3*86400000).toISOString().split('T')[0];
+}
+
+function addMRPrompt(){
+  // Make-ready ticket = variant of maintenance
+  var existing = document.getElementById('modal-add-mr');
+  if(existing){ existing.style.display='flex'; return; }
+  var m = document.createElement('div');
+  m.id = 'modal-add-mr';
+  m.className = 'op-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  var unitOpts = typeof APTS !== 'undefined' ? APTS.filter(function(a){return a.status!=='occupied';}).map(function(a){return '<option>'+a.unit+'</option>';}).join('') : '';
+  m.innerHTML = [
+    '<div style="background:#0a1628;border:1px solid rgba(245,158,11,.35);border-radius:18px;padding:28px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto">',
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">',
+    '<div><div style="font-size:16px;font-weight:900;color:#f4f8ff">+ New Make-Ready Ticket</div>',
+    '<div style="font-size:11px;color:#6b7fa3">Auto-creates task checklist and syncs to make-ready board</div></div>',
+    '<button onclick="closeTopModal(this)" style="background:none;border:none;color:#6b7fa3;font-size:22px;cursor:pointer">&times;</button>',
+    '</div>',
+    '<div style="display:flex;flex-direction:column;gap:12px">',
+    '<div><div class="flb">Unit Number *</div><select class="fi" id="mr-unit"><option value="">Select unit…</option>'+unitOpts+'</select></div>',
+    fld('Move-Out Date','mr-moveout','date',''),
+    fld('Target Ready Date','mr-target','date',''),
+    fld2('Assigned To','mr-assigned',['Maintenance Team','Housekeeping Team','Both','Unassigned']),
+    '<div><div class="flb">Make-Ready Tasks</div>',
+    '<div style="display:flex;flex-direction:column;gap:6px;background:#060e1b;border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:12px">',
+    ['Trash out','Locks changed','Deep cleaning','Paint touch-up','Carpet/floor cleaning','Appliance check','HVAC filter','Final inspection'].map(function(t){
+      return '<label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer"><input type="checkbox" class="mr-task-cb" value="'+t+'" checked style="width:14px;height:14px">'+t+'</label>';
+    }).join(''),
+    '</div></div>',
+    '</div>',
+    '<div style="display:flex;gap:10px;margin-top:18px">',
+    '<button class="btn btn-a" style="flex:1;padding:12px;font-size:14px" onclick="saveNewMR()">&#128190; Create Make-Ready Ticket</button>',
+    '<button class="btn btn-x" onclick="closeTopModal(this)">Cancel</button>',
+    '</div></div>'
+  ].join('');
+  document.body.appendChild(m);
+  // Set default dates
+  var mo = document.getElementById('mr-moveout');
+  var td = document.getElementById('mr-target');
+  if(mo) mo.value = new Date(Date.now()+7*86400000).toISOString().split('T')[0];
+  if(td) td.value = new Date(Date.now()+14*86400000).toISOString().split('T')[0];
+}
+
+function saveNewTicket(){
+  var issue = (document.getElementById('mt-issue')||{}).value.trim();
+  if(!issue){ T('Issue summary is required','e'); return; }
+  var ticketNum = 'M-'+(typeof MAINT_TICKETS!=='undefined'?MAINT_TICKETS.length+1:1).toString().padStart(3,'0');
+  var newTicket = {
+    id:++nextId, ticket:ticketNum,
+    unit:(document.getElementById('mt-unit')||{}).value||'Common',
+    type:(document.getElementById('mt-type')||{}).value||'General Repair',
+    issue:issue,
+    desc:(document.getElementById('mt-desc')||{}).value||'',
+    priority:(document.getElementById('mt-priority')||{}).value||'Medium',
+    assignee:(document.getElementById('mt-assigned')||{}).value||'Unassigned',
+    due:(document.getElementById('mt-due')||{}).value||'',
+    status:(document.getElementById('mt-status')||{}).value||'open',
+    resident:'', created:new Date().toISOString().split('T')[0],
+  };
+  if(typeof MAINT_TICKETS !== 'undefined') MAINT_TICKETS.unshift(newTicket);
+  T('Ticket '+ticketNum+' created! Maintenance board updated.');
+  closeModal('modal-add-ticket');
+  if(typeof render==='function') render('maintenance');
+}
+
+function saveNewMR(){
+  var unit = (document.getElementById('mr-unit')||{}).value;
+  if(!unit){ T('Select a unit','e'); return; }
+  var tasks = Array.from(document.querySelectorAll('.mr-task-cb:checked')).map(function(cb){return cb.value;});
+  if(!tasks.length) tasks = ['Trash out','Cleaning','Inspection'];
+  var newMR = {
+    id:++nextId, unit:unit,
+    type:'Unit Turn',
+    moveout:(document.getElementById('mr-moveout')||{}).value||'TBD',
+    target:(document.getElementById('mr-target')||{}).value||'TBD',
+    pct:0, tasks:tasks,
+    assignee:(document.getElementById('mr-assigned')||{}).value||'TBD',
+  };
+  if(typeof MR_TICKETS !== 'undefined') MR_TICKETS.unshift(newMR);
+  T('Make-ready ticket created for Unit '+unit+'!');
+  closeModal('modal-add-mr');
+  if(typeof render==='function') render('makeready');
+}
+
+// ════════════════════════════════════════════════════════════════
+// ASSIGN TASK / ADD HOUSEKEEPING TASK — Full form modal
+// ════════════════════════════════════════════════════════════════
+function addHKPrompt(){
+  var existing = document.getElementById('modal-add-task');
+  if(existing){ existing.style.display='flex'; return; }
+  var m = document.createElement('div');
+  m.id = 'modal-add-task';
+  m.className = 'op-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  m.innerHTML = [
+    '<div style="background:#0a1628;border:1px solid rgba(167,139,250,.35);border-radius:18px;padding:28px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto">',
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">',
+    '<div><div style="font-size:16px;font-weight:900;color:#f4f8ff">+ Assign Task</div>',
+    '<div style="font-size:11px;color:#6b7fa3">Task appears in user dashboard, calendar, and task list</div></div>',
+    '<button onclick="closeTopModal(this)" style="background:none;border:none;color:#6b7fa3;font-size:22px;cursor:pointer">&times;</button>',
+    '</div>',
+    '<div style="display:flex;flex-direction:column;gap:12px">',
+    fld('Task Title *','hk-task','text','Deep clean Unit 204 — move-out turnover'),
+    '<div><div class="flb">Assign To</div>',
+    '<select class="fi" id="hk-assignee"><option>Housekeeping Team</option><option>Angela T.</option><option>Maria L.</option><option>Maintenance Team</option><option>Mike R.</option><option>Sarah M.</option><option>All Staff</option></select></div>',
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">',
+    fld2('Task Type','hk-type',['Housekeeping','Maintenance','Make-Ready','Administrative','Sales','Follow-Up','Other']),
+    fld2('Priority','hk-priority',['Urgent','High','Normal','Low']),
+    fld('Due Date','hk-due','date',''),
+    '<div><div class="flb">Related Unit / Lead</div><input class="fi" id="hk-related" placeholder="Unit 204, Dorothy H., etc."></div>',
+    '</div>',
+    '<div><div class="flb">Notes</div><textarea class="fi" id="hk-notes" rows="2" placeholder="Task details, special instructions…" style="width:100%"></textarea></div>',
+    '<div style="display:flex;align-items:center;gap:10px">',
+    '<input type="checkbox" id="hk-calendar" checked style="width:16px;height:16px">',
+    '<label for="hk-calendar" style="font-size:12px;color:#c8d6e8;cursor:pointer">Add to calendar if due date is set</label>',
+    '</div>',
+    '</div>',
+    '<div style="display:flex;gap:10px;margin-top:18px">',
+    '<button class="btn btn-a" style="flex:1;padding:12px;font-size:14px" onclick="saveNewTask()">&#128190; Assign Task</button>',
+    '<button class="btn btn-x" onclick="closeTopModal(this)">Cancel</button>',
+    '</div></div>'
+  ].join('');
+  document.body.appendChild(m);
+  // Default due date +1 day
+  var dd = document.getElementById('hk-due');
+  if(dd) dd.value = new Date(Date.now()+86400000).toISOString().split('T')[0];
+}
+
+function addTaskGold(){ addHKPrompt(); } // alias
+
+function saveNewTask(){
+  var task = (document.getElementById('hk-task')||{}).value.trim();
+  if(!task){ T('Task title is required','e'); return; }
+  var newTask = {
+    id:++nextId, task:task,
+    assignee:(document.getElementById('hk-assignee')||{}).value||'Unassigned',
+    type:(document.getElementById('hk-type')||{}).value||'Housekeeping',
+    priority:(document.getElementById('hk-priority')||{}).value||'Normal',
+    unit:(document.getElementById('hk-related')||{}).value||'',
+    status:'not_started',
+    due:(document.getElementById('hk-due')||{}).value||new Date(Date.now()+86400000).toISOString().split('T')[0],
+    notes:(document.getElementById('hk-notes')||{}).value||'',
+  };
+  if(typeof HK_TASKS !== 'undefined') HK_TASKS.unshift(newTask);
+  if(typeof TASKS !== 'undefined') TASKS.unshift(newTask);
+  T('Task assigned to '+newTask.assignee+'!');
+  closeModal('modal-add-task');
+  if(typeof render==='function') {
+    var cur = typeof ACTIVE !== 'undefined' ? ACTIVE : '';
+    if(cur === 'housekeeping') render('housekeeping');
+    else if(cur === 'tasks') render('tasks');
+    else render('tasks');
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+// LEDGER ADD ENTRY — Full form modal
+// ════════════════════════════════════════════════════════════════
+function addLedgerEntry(){
+  var existing = document.getElementById('modal-add-ledger');
+  if(existing){ existing.style.display='flex'; return; }
+  var m = document.createElement('div');
+  m.id = 'modal-add-ledger';
+  m.className = 'op-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  m.innerHTML = [
+    '<div style="background:#0a1628;border:1px solid rgba(79,200,122,.35);border-radius:18px;padding:28px;width:100%;max-width:560px;max-height:92vh;overflow-y:auto">',
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">',
+    '<div><div style="font-size:16px;font-weight:900;color:#f4f8ff">+ Add Ledger Entry</div>',
+    '<div style="font-size:11px;color:#6b7fa3">Entry syncs to financial reports, occupancy revenue, and investor analytics</div></div>',
+    '<button onclick="closeTopModal(this)" style="background:none;border:none;color:#6b7fa3;font-size:22px;cursor:pointer">&times;</button>',
+    '</div>',
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">',
+    fld('Date','le-date','date',''),
+    fld2('Entry Type','le-type',['Monthly Rent','Move-In Revenue','Security Deposit','Concession','Referral Fee','Maintenance Expense','Operating Expense','Reimbursement','Write-Off','Other Revenue','Other Expense']),
+    fld('Amount ($)','le-amount','number','0'),
+    fld2('Category','le-cat',['Revenue','Expense','Deposit','Concession','Adjustment']),
+    fld('Unit / Resident','le-unit','text','Unit 101 — Dorothy H.'),
+    fld2('Status','le-status',['Posted','Pending','Approved','Rejected']),
+    '<div style="grid-column:1/-1"><div class="flb">Notes</div><textarea class="fi" id="le-notes" rows="2" placeholder="Entry description, reference number, approval notes…" style="width:100%"></textarea></div>',
+    '</div>',
+    '<div style="display:flex;gap:10px;margin-top:18px">',
+    '<button class="btn btn-a" style="flex:1;padding:12px;font-size:14px" onclick="saveLedgerEntry()">&#128190; Post to Ledger</button>',
+    '<button class="btn btn-x" onclick="closeTopModal(this)">Cancel</button>',
+    '</div></div>'
+  ].join('');
+  document.body.appendChild(m);
+  var dd = document.getElementById('le-date');
+  if(dd) dd.value = new Date().toISOString().split('T')[0];
+}
+
+function saveLedgerEntry(){
+  var amount = parseFloat((document.getElementById('le-amount')||{}).value)||0;
+  var type = (document.getElementById('le-type')||{}).value||'Other';
+  if(!amount){ T('Amount is required','e'); return; }
+  var cat = (document.getElementById('le-cat')||{}).value||'Revenue';
+  var isRevenue = cat === 'Revenue' || cat === 'Deposit';
+  // Update REVENUE_MONTHS for current month
+  if(typeof REVENUE_MONTHS !== 'undefined' && REVENUE_MONTHS.length) {
+    if(isRevenue) REVENUE_MONTHS[0].act += amount;
+    else REVENUE_MONTHS[0].act -= amount;
+  }
+  T('Ledger entry posted: '+type+' $'+amount.toFixed(2));
+  closeModal('modal-add-ledger');
+  if(typeof render==='function') render('ledger');
+}
+
+// ════════════════════════════════════════════════════════════════
+// NEW REQUEST WORKFLOW
+// ════════════════════════════════════════════════════════════════
+var REQUESTS = [
+  {id:901,title:'HVAC filter replacement — Unit 104',requester:'Mike R.',type:'Maintenance',status:'approved',priority:'Medium',due:'2026-02-15',notes:'Quarterly replacement due.',created:'2026-02-10'},
+  {id:902,title:'Linen supply restock — 2nd floor',requester:'Angela T.',type:'Housekeeping',status:'pending',priority:'Normal',due:'2026-02-14',notes:'Running low on fresh linens.',created:'2026-02-11'},
+];
+
+function showNewRequest(){
+  var existing = document.getElementById('modal-new-request');
+  if(existing){ existing.style.display='flex'; return; }
+  var m = document.createElement('div');
+  m.id = 'modal-new-request';
+  m.className = 'op-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  m.innerHTML = [
+    '<div style="background:#0a1628;border:1px solid rgba(61,158,232,.35);border-radius:18px;padding:28px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto">',
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">',
+    '<div><div style="font-size:16px;font-weight:900;color:#f4f8ff">+ New Request</div>',
+    '<div style="font-size:11px;color:#6b7fa3">Request routes to the appropriate team for approval</div></div>',
+    '<button onclick="closeTopModal(this)" style="background:none;border:none;color:#6b7fa3;font-size:22px;cursor:pointer">&times;</button>',
+    '</div>',
+    '<div style="display:flex;flex-direction:column;gap:12px">',
+    fld('Request Title *','rq-title','text','Describe your request briefly'),
+    fld2('Request Type','rq-type',['Maintenance','Housekeeping','Supplies','Staffing','Financial','Safety','Operational','Marketing','Other']),
+    fld2('Priority','rq-priority',['Urgent','High','Normal','Low']),
+    fld2('Requested For','rq-for',['Self','Resident','Common Area','Unit','Department']),
+    fld('Unit / Location','rq-location','text','Unit 204 or Common Area'),
+    fld('Due Date Needed','rq-due','date',''),
+    '<div><div class="flb">Full Description</div><textarea class="fi" id="rq-desc" rows="3" placeholder="Detailed description of the request, any urgency context, approval needed?" style="width:100%"></textarea></div>',
+    '</div>',
+    '<div style="display:flex;gap:10px;margin-top:18px">',
+    '<button class="btn btn-a" style="flex:1;padding:12px;font-size:14px" onclick="saveNewRequest()">&#128190; Submit Request</button>',
+    '<button class="btn btn-x" onclick="closeTopModal(this)">Cancel</button>',
+    '</div></div>'
+  ].join('');
+  document.body.appendChild(m);
+  var dd = document.getElementById('rq-due');
+  if(dd) dd.value = new Date(Date.now()+3*86400000).toISOString().split('T')[0];
+}
+
+function saveNewRequest(){
+  var title = (document.getElementById('rq-title')||{}).value.trim();
+  if(!title){ T('Request title is required','e'); return; }
+  REQUESTS.unshift({
+    id:++nextId, title:title,
+    requester:typeof ROLE!=='undefined'?ROLE:'Team',
+    type:(document.getElementById('rq-type')||{}).value||'Operational',
+    priority:(document.getElementById('rq-priority')||{}).value||'Normal',
+    location:(document.getElementById('rq-location')||{}).value||'',
+    status:'pending',
+    due:(document.getElementById('rq-due')||{}).value||'',
+    notes:(document.getElementById('rq-desc')||{}).value||'',
+    created:new Date().toISOString().split('T')[0],
+  });
+  T('Request submitted! Routed to management for approval.');
+  closeModal('modal-new-request');
+}
+
+// ════════════════════════════════════════════════════════════════
+// FIELD BUILDER HELPERS (DRY)
+// ════════════════════════════════════════════════════════════════
+function fld(label, id, type, placeholder, gridStyle){
+  var gs = gridStyle ? ' style="'+gridStyle+'"' : '';
+  return '<div'+gs+'><div class="flb">'+label+'</div><input class="fi" type="'+type+'" id="'+id+'" placeholder="'+(placeholder||'')+'"></div>';
+}
+function fld2(label, id, options){
+  return '<div><div class="flb">'+label+'</div><select class="fi" id="'+id+'">'+options.map(function(o){return '<option>'+o+'</option>';}).join('')+'</select></div>';
+}
+
+
 </script>
 
 </body>
