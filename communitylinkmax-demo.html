@@ -211,52 +211,56 @@ var nextId=200;
 
 // ─── ROLE NAV ──────────────────────────────────────────────────
 var NAV={
-  // Owner/Investor: full visibility across all departments + investor analytics
+  // Owner/Investor: full portfolio visibility
   owner:[
     {sec:'EXECUTIVE',items:[{k:'dashboard',l:'Portfolio Dashboard'},{k:'occupancy',l:'Occupancy Overview'}]},
-    {sec:'SALES',items:[{k:'leads',l:'Lead Pipeline'},{k:'referrals',l:'Referral Pipeline'},{k:'tours',l:'Tour Scheduler'},{k:'refs',l:'Referral Sources'}]},
+    {sec:'SALES',items:[{k:'leads',l:'Lead Pipeline'},{k:'referrals',l:'Referral Pipeline'},{k:'paidrefs',l:'💰 Paid Referral Portal'},{k:'tours',l:'Tour Scheduler'},{k:'refs',l:'Referral Sources'}]},
     {sec:'OPERATIONS',items:[{k:'apartments',l:'Apartment Inventory'},{k:'makeready',l:'Make-Ready Board'},{k:'maintenance',l:'Maintenance Tickets'},{k:'housekeeping',l:'Housekeeping Tasks'}]},
     {sec:'FINANCIAL',items:[{k:'ledger',l:'Financial Ledger'},{k:'revenue',l:'Revenue Leakage'},{k:'concessions',l:'Concession Approvals'},{k:'loc',l:'LOC Calculator'},{k:'competitors',l:'Competitor Intel'}]},
-    {sec:'MANAGEMENT',items:[{k:'tasks',l:'Tasks'},{k:'reports',l:'Reports'},{k:'settings',l:'Settings'}]},
+    {sec:'ACTIVITY',items:[{k:'notes',l:'📋 Activity Notes'},{k:'tasks',l:'Tasks'},{k:'aircall',l:'☎️ Aircall — Call · Text · Email'}]},
+    {sec:'MANAGEMENT',items:[{k:'reports',l:'Reports'},{k:'settings',l:'Settings'}]},
   ],
-  // Executive Director: full operational + financial + sales visibility (no owner-only billing)
+  // Executive Director: full operational + financial + sales (no owner billing controls)
   director:[
     {sec:'EXECUTIVE',items:[{k:'dashboard',l:'Executive Dashboard'},{k:'occupancy',l:'Occupancy Overview'}]},
-    {sec:'SALES',items:[{k:'leads',l:'Lead Pipeline'},{k:'referrals',l:'Referral Pipeline'},{k:'tours',l:'Tour Scheduler'},{k:'refs',l:'Referral Sources'}]},
+    {sec:'SALES',items:[{k:'leads',l:'Lead Pipeline'},{k:'referrals',l:'Referral Pipeline'},{k:'paidrefs',l:'💰 Paid Referral Portal'},{k:'tours',l:'Tour Scheduler'},{k:'refs',l:'Referral Sources'}]},
     {sec:'OPERATIONS',items:[{k:'apartments',l:'Apartment Inventory'},{k:'makeready',l:'Make-Ready Board'},{k:'maintenance',l:'Maintenance Tickets'},{k:'housekeeping',l:'Housekeeping Tasks'}]},
     {sec:'FINANCIAL',items:[{k:'ledger',l:'Financial Ledger'},{k:'revenue',l:'Revenue Leakage'},{k:'concessions',l:'Concession Approvals'},{k:'loc',l:'LOC Calculator'}]},
-    {sec:'ACTIVITY',items:[{k:'notes',l:'📋 Activity Notes'},{k:'tasks',l:'Tasks'}]},{sec:'MANAGEMENT',items:[{k:'reports',l:'Reports'}]},
+    {sec:'ACTIVITY',items:[{k:'notes',l:'📋 Activity Notes'},{k:'mileage',l:'🚗 Mileage & Expenses'},{k:'tasks',l:'Tasks'},{k:'gift',l:'🎁 Gift & Gratuity'},{k:'aircall',l:'☎️ Aircall — Call · Text · Email'}]},
+    {sec:'MANAGEMENT',items:[{k:'reports',l:'Reports'}]},
   ],
-  // Admin: all CRM + ops + financial tools + system settings
+  // Admin: everything including system settings, alert controls, financial settings
   admin:[
-    {sec:'MAIN',items:[{k:'dashboard',l:'Dashboard'},{k:'leads',l:'Lead Pipeline'},{k:'referrals',l:'Referral Pipeline'},{k:'paidrefs',l:'💰 Paid Referral Portal'},{k:'refs',l:'Referral Sources'},{k:'tours',l:'Tour Scheduler'}]},
+    {sec:'MAIN',items:[{k:'dashboard',l:'Dashboard'},{k:'occupancy',l:'Occupancy Overview'}]},
+    {sec:'SALES',items:[{k:'leads',l:'Lead Pipeline'},{k:'referrals',l:'Referral Pipeline'},{k:'paidrefs',l:'💰 Paid Referral Portal'},{k:'refs',l:'Referral Sources'},{k:'tours',l:'Tour Scheduler'}]},
     {sec:'OPERATIONS',items:[{k:'apartments',l:'Apartment Inventory'},{k:'makeready',l:'Make-Ready Board'},{k:'maintenance',l:'Maintenance'},{k:'housekeeping',l:'Housekeeping'}]},
     {sec:'FINANCIAL',items:[{k:'ledger',l:'Financial Ledger'},{k:'revenue',l:'Revenue Leakage'},{k:'concessions',l:'Concession Approvals'},{k:'loc',l:'LOC Calculator'},{k:'competitors',l:'Competitor Intel'}]},
-    {sec:'ACTIVITY',items:[{k:'notes',l:'📋 Activity Notes'},{k:'tasks',l:'Tasks'}]},{sec:'TOOLS',items:[{k:'aircall',l:'☎️ Aircall — Call · Text · Email'},{k:'gift',l:'🎁 Gift & Gratuity'},{k:'alertsettings',l:'🔔 Alert Settings'},{k:'finsettings',l:'💵 Financial Settings'},{k:'reports',l:'Reports'},{k:'settings',l:'Settings'}]},
+    {sec:'ACTIVITY',items:[{k:'notes',l:'📋 Activity Notes'},{k:'mileage',l:'🚗 Mileage & Expenses'},{k:'tasks',l:'Tasks'},{k:'gift',l:'🎁 Gift & Gratuity'},{k:'aircall',l:'☎️ Aircall — Call · Text · Email'}]},
+    {sec:'ADMIN',items:[{k:'alertsettings',l:'🔔 Alert Settings'},{k:'finsettings',l:'💵 Financial Settings'},{k:'reports',l:'Reports'},{k:'settings',l:'Settings'}]},
   ],
-  // Sales Marketer: sales and outreach only — no financials, no ops beyond viewing
+  // Sales Marketer: sales + outreach + notes — no financials
   marketer:[
-    {sec:'SALES',items:[{k:'dashboard',l:'Sales Dashboard'},{k:'leads',l:'Lead Pipeline'},{k:'referrals',l:'Referral Pipeline'},{k:'tours',l:'Tours'},{k:'refs',l:'Referral Sources'},{k:'tasks',l:'Tasks'}]},
-    {sec:'ACTIVITY',items:[{k:'notes',l:'📋 Activity Notes'},{k:'tasks',l:'Tasks'}]},{sec:'SALES',items:[{k:'paidrefs',l:'💰 Paid Referrals'},{k:'gift',l:'🎁 Gift & Gratuity'}]},{sec:'OUTREACH',items:[{k:'aircall',l:'☎️ Aircall — Call · Text · Email'}]},{sec:'TOOLS',items:[{k:'paidrefs',l:'💰 Paid Referral Portal'},{k:'gift',l:'🎁 Gift & Gratuity'}]},
+    {sec:'SALES',items:[{k:'dashboard',l:'Sales Dashboard'},{k:'leads',l:'Lead Pipeline'},{k:'referrals',l:'Referral Pipeline'},{k:'paidrefs',l:'💰 Paid Referral Portal'},{k:'tours',l:'Tours'},{k:'refs',l:'Referral Sources'}]},
+    {sec:'ACTIVITY',items:[{k:'notes',l:'📋 Activity Notes'},{k:'mileage',l:'🚗 Mileage & Expenses'},{k:'tasks',l:'Tasks'},{k:'gift',l:'🎁 Gift & Gratuity'},{k:'aircall',l:'☎️ Aircall — Call · Text · Email'}]},
   ],
-  // Maintenance: their work queue only — can see apartments/make-ready to coordinate
+  // Sales/Admissions: director-level access minus Reports
+  salesadmissions:[
+    {sec:'EXECUTIVE',items:[{k:'dashboard',l:'Sales/Admissions Dashboard'},{k:'occupancy',l:'Occupancy Overview'}]},
+    {sec:'SALES',items:[{k:'leads',l:'Lead Pipeline'},{k:'referrals',l:'Referral Pipeline'},{k:'paidrefs',l:'💰 Paid Referral Portal'},{k:'tours',l:'Tour Scheduler'},{k:'refs',l:'Referral Sources'}]},
+    {sec:'OPERATIONS',items:[{k:'apartments',l:'Apartment Inventory'},{k:'makeready',l:'Make-Ready Board'},{k:'maintenance',l:'Maintenance Tickets'},{k:'housekeeping',l:'Housekeeping Tasks'}]},
+    {sec:'FINANCIAL',items:[{k:'ledger',l:'Financial Ledger'},{k:'revenue',l:'Revenue Leakage'},{k:'concessions',l:'Concession Approvals'},{k:'loc',l:'LOC Calculator'}]},
+    {sec:'ACTIVITY',items:[{k:'notes',l:'📋 Activity Notes'},{k:'mileage',l:'🚗 Mileage & Expenses'},{k:'tasks',l:'Tasks'},{k:'gift',l:'🎁 Gift & Gratuity'},{k:'aircall',l:'☎️ Aircall — Call · Text · Email'}]},
+  ],
+  // Maintenance: their work queue only
   maintenance:[
     {sec:'MY WORK',items:[{k:'dashboard',l:'My Queue'},{k:'maintenance',l:'Maintenance Tickets'},{k:'makeready',l:'Make-Ready Tasks'},{k:'apartments',l:'Unit Status'},{k:'tasks',l:'Tasks'}]},
   ],
-  // Sales/Admissions: same as Executive Director EXCEPT Reports
-  salesadmissions:[
-    {sec:'EXECUTIVE',items:[{k:'dashboard',l:'Sales/Admissions Dashboard'},{k:'occupancy',l:'Occupancy Overview'}]},
-    {sec:'SALES',items:[{k:'leads',l:'Lead Pipeline'},{k:'referrals',l:'Referral Pipeline'},{k:'tours',l:'Tour Scheduler'},{k:'refs',l:'Referral Sources'}]},
-    {sec:'OPERATIONS',items:[{k:'apartments',l:'Apartment Inventory'},{k:'makeready',l:'Make-Ready Board'},{k:'maintenance',l:'Maintenance Tickets'},{k:'housekeeping',l:'Housekeeping Tasks'}]},
-    {sec:'FINANCIAL',items:[{k:'ledger',l:'Financial Ledger'},{k:'revenue',l:'Revenue Leakage'},{k:'concessions',l:'Concession Approvals'},{k:'loc',l:'LOC Calculator'}]},
-    {sec:'ACTIVITY',items:[{k:'notes',l:'📋 Activity Notes'},{k:'tasks',l:'Tasks'}]},
-    {sec:'SALES',items:[{k:'paidrefs',l:'💰 Paid Referrals'},{k:'gift',l:'🎁 Gift & Gratuity'}]},{sec:'OUTREACH',items:[{k:'aircall',l:'☎️ Aircall — Call · Text · Email'}]},{sec:'TOOLS',items:[{k:'paidrefs',l:'💰 Paid Referral Portal'},{k:'gift',l:'🎁 Gift & Gratuity'}]},
-  ],
-  // Housekeeping: cleaning queue — can see make-ready/maintenance to coordinate
+  // Housekeeping: their queue + coordination
   housekeeping:[
     {sec:'MY WORK',items:[{k:'dashboard',l:'My Queue'},{k:'housekeeping',l:'Housekeeping Tasks'},{k:'makeready',l:'Make-Ready Clean'},{k:'maintenance',l:'Maintenance View'},{k:'apartments',l:'Unit Status'},{k:'tasks',l:'Tasks'}]},
   ],
 };
+
 
 function buildNav(){
   var nav=document.getElementById('sideNav');
@@ -270,7 +274,7 @@ function buildNav(){
 }
 function go(key){
   ACTIVE=key;buildNav();
-  var titles={dashboard:'Dashboard',occupancy:'Occupancy Overview',leads:'Lead Pipeline',notes:'Activity Notes',paidrefs:'Paid Referral Portal',gift:'Gift & Gratuity Tracking',alertsettings:'Alert Settings',finsettings:'Financial Settings',referrals:'Referral Pipeline',notes:'Activity Notes',paidrefs:'Paid Referral Portal',gift:'Gift & Gratuity Tracking',alertsettings:'Alert Settings',finsettings:'Financial Settings',tours:'Tour Scheduler',refs:'Referral Sources',apartments:'Apartment Inventory',makeready:'Make-Ready Board',maintenance:'Maintenance Tickets',housekeeping:'Housekeeping Tasks',ledger:'Financial Ledger',revenue:'Revenue Leakage',concessions:'Concession Approvals',loc:'LOC Pricing Calculator',competitors:'Competitor Intel',tasks:'Tasks',reports:'Reports Center',settings:'Settings',aircall:'Aircall — Call · Text · Email',paidrefs:'Paid Referral Portal',gift:'Gift & Gratuity Tracking',alertsettings:'Alert Settings',finsettings:'Financial Settings'};
+  var titles={dashboard:'Dashboard',occupancy:'Occupancy Overview',leads:'Lead Pipeline',mileage:'Mileage Tracker & Expenses',notes:'Activity Notes',paidrefs:'Paid Referral Portal',gift:'Gift & Gratuity Tracking',alertsettings:'Alert Settings',finsettings:'Financial Settings',referrals:'Referral Pipeline',mileage:'Mileage Tracker & Expenses',notes:'Activity Notes',paidrefs:'Paid Referral Portal',gift:'Gift & Gratuity Tracking',alertsettings:'Alert Settings',finsettings:'Financial Settings',tours:'Tour Scheduler',refs:'Referral Sources',apartments:'Apartment Inventory',makeready:'Make-Ready Board',maintenance:'Maintenance Tickets',housekeeping:'Housekeeping Tasks',ledger:'Financial Ledger',revenue:'Revenue Leakage',concessions:'Concession Approvals',loc:'LOC Pricing Calculator',competitors:'Competitor Intel',tasks:'Tasks',reports:'Reports Center',settings:'Settings',aircall:'Aircall — Call · Text · Email',paidrefs:'Paid Referral Portal',gift:'Gift & Gratuity Tracking',alertsettings:'Alert Settings',finsettings:'Financial Settings'};
   document.getElementById('pageTitle').textContent=titles[key]||key;
   render(key);
 }
@@ -287,7 +291,7 @@ function changeRole(role){
 }
 function render(key){
   var mc=document.getElementById('mainContent');
-  var fns={dashboard:rDash,occupancy:rOccupancy,leads:rLeads,referrals:rReferrals,paidrefs:rPaidRefs,tours:rTours,refs:rRefs,apartments:rApartments,makeready:rMakeReady,maintenance:rMaintenance,housekeeping:rHousekeeping,tasks:rTasks,notes:rNotes,gift:rGiftGratuity,alertsettings:rAlertSettings,finsettings:rFinSettings,reports:rReports,settings:rSettings,ledger:rLedger,revenue:rRevenue,concessions:rConcessions,loc:rLOC,competitors:rCompetitors,aircall:rAircall};
+  var fns={dashboard:rDash,occupancy:rOccupancy,leads:rLeads,referrals:rReferrals,paidrefs:rPaidRefs,tours:rTours,refs:rRefs,apartments:rApartments,makeready:rMakeReady,maintenance:rMaintenance,housekeeping:rHousekeeping,tasks:rTasks,mileage:rMileage,notes:rNotes,gift:rGiftGratuity,alertsettings:rAlertSettings,finsettings:rFinSettings,reports:rReports,settings:rSettings,ledger:rLedger,revenue:rRevenue,concessions:rConcessions,loc:rLOC,competitors:rCompetitors,aircall:rAircall};
   if(fns[key]) mc.innerHTML=fns[key]();
   else mc.innerHTML='<div class="card"><p style="color:#6b7fa3;padding:20px">Loading…</p></div>';
   if(key==='loc') setTimeout(buildLOCTable, 10);
@@ -1183,125 +1187,534 @@ function clearCompArea(){document.getElementById('compAddArea').innerHTML='';}
 
 // ─── AIRCALL (Demo) ─────────────────────────────────────────────
 // ─── ACTIVITY NOTES (Unified Timeline) ───────────────────────
+
+// ════════════════════════════════════════════════════════════════
+// MILEAGE TRACKER + EXPENSE RECEIPT UPLOAD (DEMO)
+// ════════════════════════════════════════════════════════════════
+var DEMO_MILEAGE_RATE = 0.67; // $ per mile — admin can change
+var DEMO_MILEAGE_LOGS = [
+  {id:'ml1',date:new Date().toISOString().split('T')[0],from_addr:'Office, Dallas TX',to_addr:'Baylor Medical Center, Dallas TX',miles:14.2,purpose:'Referral visit — Dr. Patel',reimbursement:9.51,status:'approved',receipt:null,expense_type:'',expense_amt:0,submitted_by:'Sarah M.'},
+  {id:'ml2',date:new Date(Date.now()-86400000).toISOString().split('T')[0],from_addr:'Office, Dallas TX',to_addr:'North Park Rehab, Dallas TX',miles:8.7,purpose:'Tour coordination',reimbursement:5.83,status:'approved',receipt:null,expense_type:'parking',expense_amt:6.00,submitted_by:'Sarah M.'},
+  {id:'ml3',date:new Date(Date.now()-172800000).toISOString().split('T')[0],from_addr:'Office, Dallas TX',to_addr:'Prestonwood SNF, Plano TX',miles:22.4,purpose:'In-service lunch',reimbursement:15.01,status:'pending',receipt:null,expense_type:'meals',expense_amt:24.50,submitted_by:'Sarah M.'},
+];
+var DEMO_EXPENSES = [];
+
+function rMileage(){
+  var totalMiles = DEMO_MILEAGE_LOGS.reduce(function(s,l){return s+l.miles;},0);
+  var totalReimb = DEMO_MILEAGE_LOGS.reduce(function(s,l){return s+l.reimbursement;},0);
+  var pendingCount = DEMO_MILEAGE_LOGS.filter(function(l){return l.status==='pending';}).length;
+  var parts=[];
+
+  // Stats
+  parts.push('<div class="stats">');
+  parts.push('<div class="stat"><div class="sl">Total Miles</div><div class="sv">'+totalMiles.toFixed(1)+'</div><div class="ss">All logged trips</div></div>');
+  parts.push('<div class="stat"><div class="sl">Reimbursement</div><div class="sv sg">$'+totalReimb.toFixed(2)+'</div><div class="ss">@ $'+DEMO_MILEAGE_RATE+'/mile</div></div>');
+  parts.push('<div class="stat"><div class="sl">Pending Approval</div><div class="sv sa">'+pendingCount+'</div><div class="ss">Awaiting admin review</div></div>');
+  parts.push('<div class="stat"><div class="sl">Mileage Rate</div><div class="sv">$'+DEMO_MILEAGE_RATE+'</div><div class="ss">Per mile — Admin editable</div></div>');
+  parts.push('</div>');
+
+  // Two-column layout: log form + log table
+  parts.push('<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">');
+
+  // ── Log New Mileage ────────────────────────────────────────────
+  parts.push('<div class="card"><div class="card-hd"><div class="card-t">Log New Trip</div></div>');
+  parts.push('<div style="display:flex;flex-direction:column;gap:10px">');
+  parts.push('<div class="fl"><div class="flb">Date</div><input class="fi" type="date" id="ml-date" value="'+new Date().toISOString().split('T')[0]+'"></div>');
+  parts.push('<div class="fl"><div class="flb">From Address *</div><input class="fi" id="ml-from" placeholder="Office, Dallas TX"></div>');
+  parts.push('<div class="fl"><div class="flb">To Address *</div><input class="fi" id="ml-to" placeholder="Baylor Medical, Dallas TX" oninput="calcDemoMileage()"></div>');
+  parts.push('<div class="fl"><div class="flb">Mileage <span id="ml-calc-note" style="color:#4fc87a;font-size:10px;font-weight:400"></span></div>');
+  parts.push('<input class="fi" type="number" id="ml-miles" placeholder="Auto-calculated or enter manually" step="0.1" oninput="updateMileageReimb()">');
+  parts.push('<div style="font-size:11px;color:#6b7fa3;margin-top:4px">Reimbursement: <strong id="ml-reimb-preview" style="color:#4fc87a">$0.00</strong></div></div>');
+  parts.push('<div class="fl"><div class="flb">Purpose</div><input class="fi" id="ml-purpose" placeholder="Referral visit, in-service, tour coordination…"></div>');
+
+  // Additional expense section
+  parts.push('<div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);border-radius:8px;padding:12px">');
+  parts.push('<div style="font-size:11px;font-weight:700;color:#f59e0b;margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em">Additional Expense (Optional)</div>');
+  parts.push('<div style="display:flex;flex-direction:column;gap:8px">');
+  parts.push('<div class="fl"><div class="flb">Expense Category</div>');
+  parts.push('<select class="fi" id="ml-exp-type">');
+  parts.push('<option value="">None</option>');
+  ['parking','tolls','meals','supplies','event','marketing','other'].forEach(function(t){
+    parts.push('<option value="'+t+'">'+t.charAt(0).toUpperCase()+t.slice(1)+'</option>');
+  });
+  parts.push('</select></div>');
+  parts.push('<div class="fl"><div class="flb">Expense Amount ($)</div><input class="fi" type="number" id="ml-exp-amt" placeholder="0.00" step="0.01"></div>');
+  parts.push('<div class="fl"><div class="flb">Notes</div><input class="fi" id="ml-exp-notes" placeholder="Parking at hospital, client lunch…"></div>');
+
+  // Receipt upload
+  parts.push('<div class="fl"><div class="flb">Receipt Upload</div>');
+  parts.push('<div style="border:2px dashed rgba(245,158,11,.3);border-radius:8px;padding:16px;text-align:center;cursor:pointer;transition:border-color .15s" id="ml-drop-zone" onclick="document.getElementById(\'ml-receipt-input\').click()" ondragover="event.preventDefault();this.style.borderColor=\'rgba(245,158,11,.6)\'" ondragleave="this.style.borderColor=\'rgba(245,158,11,.3)\'" ondrop="handleMileageFileDrop(event)">');
+  parts.push('<div style="font-size:20px;margin-bottom:6px">📎</div>');
+  parts.push('<div style="font-size:12px;font-weight:700;color:#f59e0b" id="ml-file-label">Click or drag to upload receipt</div>');
+  parts.push('<div style="font-size:10px;color:#6b7fa3;margin-top:2px">PDF, JPG, PNG, HEIC accepted</div>');
+  parts.push('</div>');
+  parts.push('<input type="file" id="ml-receipt-input" accept=".pdf,.jpg,.jpeg,.png,.heic,.heif" style="display:none" onchange="handleMileageFileSelect(this)">');
+  parts.push('<div id="ml-receipt-preview" style="display:none;margin-top:8px;background:rgba(79,200,122,.06);border:1px solid rgba(79,200,122,.2);border-radius:6px;padding:8px;font-size:11px;color:#4fc87a"></div>');
+  parts.push('</div>');
+  parts.push('</div></div>');
+
+  parts.push('<button class="btn btn-a" onclick="saveDemoMileageLog()" style="margin-top:8px">💾 Submit Mileage Log</button>');
+  parts.push('</div></div>');
+
+  // ── Mileage History ────────────────────────────────────────────
+  parts.push('<div><div class="card"><div class="card-hd"><div class="card-t">Trip History</div><button class="btn btn-x btn-sm" onclick="render(\'mileage\')">↻ Refresh</button></div>');
+  parts.push('<div style="overflow-x:auto"><table class="tbl"><thead><tr>');
+  parts.push('<th>Date</th><th>Route</th><th>Miles</th><th>Reimb.</th><th>Expense</th><th>Status</th><th>Receipt</th>');
+  parts.push('</tr></thead><tbody>');
+  DEMO_MILEAGE_LOGS.forEach(function(l){
+    var sc = l.status==='approved'?'bg':l.status==='rejected'?'br':'ba';
+    parts.push('<tr>');
+    parts.push('<td style="font-size:11px;white-space:nowrap">'+l.date+'</td>');
+    parts.push('<td><div style="font-size:11px;color:#c8d6e8">'+h(l.from_addr)+'</div><div style="font-size:10px;color:#6b7fa3">→ '+h(l.to_addr)+'</div><div style="font-size:10px;color:#4b6278;margin-top:1px">'+h(l.purpose)+'</div></td>');
+    parts.push('<td style="font-weight:700;color:#f4f8ff">'+l.miles.toFixed(1)+'</td>');
+    parts.push('<td style="font-weight:700;color:#4fc87a">$'+l.reimbursement.toFixed(2)+'</td>');
+    parts.push('<td>'+(l.expense_amt>0?'<div style="font-size:11px">$'+l.expense_amt.toFixed(2)+'</div><div style="font-size:10px;color:#6b7fa3">'+h(l.expense_type)+'</div>':'<span style="color:#4b6278">—</span>')+'</td>');
+    parts.push('<td><span class="badge '+sc+'">'+l.status+'</span></td>');
+    parts.push('<td>'+(l.receipt?'<span style="font-size:16px" title="Receipt uploaded">📎</span>':'<span style="color:#4b6278;font-size:11px">None</span>')+'</td>');
+    parts.push('</tr>');
+  });
+  parts.push('</tbody></table></div></div>');
+  parts.push('<div class="card" style="margin-top:0"><div class="card-h"><div class="card-t">Monthly Summary</div></div>');
+  var now = new Date();
+  var monthly = DEMO_MILEAGE_LOGS.filter(function(l){
+    var d = new Date(l.date);
+    return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();
+  });
+  var monthMiles = monthly.reduce(function(s,l){return s+l.miles;},0);
+  var monthReimb = monthly.reduce(function(s,l){return s+l.reimbursement;},0);
+  var monthExp = monthly.reduce(function(s,l){return s+(l.expense_amt||0);},0);
+  parts.push('<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;font-size:12px">');
+  [['Miles this month',monthMiles.toFixed(1),'mi'],['Mileage reimb.','$'+monthReimb.toFixed(2),''],['Extra expenses','$'+monthExp.toFixed(2),'']].forEach(function(row){
+    parts.push('<div style="background:#060e1b;border-radius:8px;padding:10px;text-align:center"><div style="color:#6b7fa3;font-size:10px">'+row[0]+'</div><div style="font-size:18px;font-weight:900;color:#f4f8ff;margin-top:2px">'+row[1]+'</div><div style="font-size:10px;color:#4b6278">'+row[2]+'</div></div>');
+  });
+  parts.push('</div></div></div>');
+  parts.push('</div>');
+
+  return parts.join('');
+}
+
+function calcDemoMileage(){
+  // Simulate auto-calculation (in live CRM this calls Google Maps API)
+  var to = (document.getElementById('ml-to')||{}).value||'';
+  if(to.length > 5) {
+    var est = (Math.random()*20+5).toFixed(1);
+    var input = document.getElementById('ml-miles');
+    var note = document.getElementById('ml-calc-note');
+    if(input && !input.value) input.value = est;
+    if(note) note.textContent = '(estimated — verify before submitting)';
+    updateMileageReimb();
+  }
+}
+function updateMileageReimb(){
+  var miles = parseFloat((document.getElementById('ml-miles')||{}).value)||0;
+  var preview = document.getElementById('ml-reimb-preview');
+  if(preview) preview.textContent = '$'+(miles*DEMO_MILEAGE_RATE).toFixed(2);
+}
+function handleMileageFileSelect(input){
+  if(!input.files||!input.files[0]) return;
+  showMileageFilePreview(input.files[0]);
+}
+function handleMileageFileDrop(e){
+  e.preventDefault();
+  document.getElementById('ml-drop-zone').style.borderColor='rgba(245,158,11,.3)';
+  var file = e.dataTransfer.files[0];
+  if(file) showMileageFilePreview(file);
+}
+function showMileageFilePreview(file){
+  var label = document.getElementById('ml-file-label');
+  var preview = document.getElementById('ml-receipt-preview');
+  if(label) label.textContent = '✅ '+file.name+' ('+Math.round(file.size/1024)+'KB)';
+  if(preview){
+    preview.style.display='';
+    if(file.type.startsWith('image/')){
+      var reader = new FileReader();
+      reader.onload = function(e){
+        preview.innerHTML='<img src="'+e.target.result+'" style="max-width:100%;max-height:120px;border-radius:6px;margin-bottom:4px"><br><span>'+file.name+'</span>';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.innerHTML='📄 '+file.name+' ready to submit';
+    }
+  }
+  // Store file reference globally for form submission
+  window._mlReceiptFile = file;
+}
+function saveDemoMileageLog(){
+  var from = (document.getElementById('ml-from')||{}).value.trim();
+  var to = (document.getElementById('ml-to')||{}).value.trim();
+  var miles = parseFloat((document.getElementById('ml-miles')||{}).value)||0;
+  if(!from||!to){T('From and To addresses are required','e');return;}
+  if(!miles){T('Enter mileage','e');return;}
+  var expType = (document.getElementById('ml-exp-type')||{}).value||'';
+  var expAmt = parseFloat((document.getElementById('ml-exp-amt')||{}).value)||0;
+  var hasReceipt = !!window._mlReceiptFile;
+  DEMO_MILEAGE_LOGS.unshift({
+    id:'ml'+Date.now(),
+    date:(document.getElementById('ml-date')||{}).value||new Date().toISOString().split('T')[0],
+    from_addr:from, to_addr:to, miles:miles,
+    purpose:(document.getElementById('ml-purpose')||{}).value||'',
+    reimbursement:parseFloat((miles*DEMO_MILEAGE_RATE).toFixed(2)),
+    status:'pending',
+    receipt:hasReceipt?(window._mlReceiptFile.name):null,
+    expense_type:expType, expense_amt:expAmt,
+    submitted_by:'Sarah M.',
+  });
+  window._mlReceiptFile = null;
+  T('✅ Mileage logged'+(hasReceipt?' with receipt':'')+'! Reimbursement: $'+(miles*DEMO_MILEAGE_RATE).toFixed(2));
+  ['ml-from','ml-to','ml-miles','ml-purpose','ml-exp-amt','ml-exp-notes'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  var label=document.getElementById('ml-file-label');if(label)label.textContent='Click or drag to upload receipt';
+  var prev=document.getElementById('ml-receipt-preview');if(prev)prev.style.display='none';
+  render('mileage');
+}
+
 function rNotes(){
+  // ── Auto-fill who is adding and current date/time ──────────────
+  var ROLE_USER_NAMES = {
+    director:'Executive Director', salesadmissions:'Sales/Admissions',
+    owner:'Owner / Investor', admin:'Administrator',
+    marketer:'Sarah M. (Sales Marketer)', maintenance:'Maintenance Team', housekeeping:'Housekeeping Team'
+  };
+  var currentUser = ROLE_USER_NAMES[ROLE] || ROLE;
+  var now = new Date();
+  var dateStr = now.toLocaleDateString('en-US',{year:'numeric',month:'2-digit',day:'2-digit'});
+  var timeStr = now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});
+  var dateISO = now.toISOString().split('T')[0];
+  var dateTimeDisplay = dateStr + ' ' + timeStr;
+
+  // ── Build searchable contact list from all data sources ────────
+  var allContacts = [];
+  // Leads
+  if(typeof LEADS !== 'undefined') {
+    LEADS.forEach(function(l){
+      allContacts.push({id:'lead-'+l.id, name:l.name, type:'Lead',
+        sub:(l.care||'')+(l.status?' · '+l.status:'')+(l.phone?' · '+l.phone:''),
+        urgency:l.urgency||'warm'});
+    });
+  }
+  // Paid Referrals
+  if(typeof DEMO_PAID_REFS !== 'undefined') {
+    DEMO_PAID_REFS.filter(function(r){return r.stage!=='Moved In'&&r.stage!=='Lost';}).forEach(function(r){
+      // Avoid duplicates with leads
+      if(!allContacts.find(function(c){return c.name===r.prospect_name;})) {
+        allContacts.push({id:'ref-'+r.id, name:r.prospect_name, type:'Paid Referral',
+          sub:r.source_name+(r.care_level?' · '+r.care_level:'')+(r.prospect_phone?' · '+r.prospect_phone:''),
+          urgency:r.urgency||'warm'});
+      }
+    });
+  }
+  // Referral Sources (people/facilities we call on)
+  var refSources = [
+    {id:'rs-1', name:'Sarah M.', type:'Referral Source', sub:'North Park Rehab · Case Manager', urgency:'warm'},
+    {id:'rs-2', name:'Dr. Amanda Chen', type:'Referral Source', sub:'Dallas Medical Group · Physician', urgency:'warm'},
+    {id:'rs-3', name:'Sarah Kim RN', type:'Referral Source', sub:'Parkland Hospital · Nurse', urgency:'warm'},
+    {id:'rs-4', name:'Tom Walsh SW', type:'Referral Source', sub:'Methodist · Social Worker', urgency:'warm'},
+  ];
+  allContacts = allContacts.concat(refSources);
+
   var COMM_META={
     call:        {icon:'📞',label:'Phone Call',   color:'#3d9ee8',bg:'rgba(61,158,232,.12)',  border:'rgba(61,158,232,.28)'},
     text:        {icon:'💬',label:'Text Message', color:'#a78bfa',bg:'rgba(167,139,250,.12)', border:'rgba(167,139,250,.28)'},
     email:       {icon:'✉️',label:'Email',        color:'#f59e0b',bg:'rgba(245,158,11,.12)',  border:'rgba(245,158,11,.28)'},
     missed_call: {icon:'📵',label:'Missed Call',  color:'#f87171',bg:'rgba(248,113,113,.12)', border:'rgba(248,113,113,.28)'},
-    failed_text: {icon:'⚠️',label:'Failed Text',  color:'#f87171',bg:'rgba(248,113,113,.12)', border:'rgba(248,113,113,.28)'},
-    failed_email:{icon:'⚠️',label:'Failed Email', color:'#f87171',bg:'rgba(248,113,113,.12)', border:'rgba(248,113,113,.28)'},
+    visit:       {icon:'🤝',label:'Visit / In-Person', color:'#4fc87a',bg:'rgba(79,200,122,.08)',  border:'rgba(79,200,122,.22)'},
     manual:      {icon:'📝',label:'Manual Note',  color:'#4fc87a',bg:'rgba(79,200,122,.08)',  border:'rgba(79,200,122,.22)'},
   };
-  var html='';
-  // Add note form
-  html+='<div class="card" style="margin-bottom:14px">'
-    +'<div class="card-hd"><div class="card-t">+ Add Manual Note</div></div>'
-    +'<div style="display:flex;flex-direction:column;gap:10px">'
-      +'<div class="fl"><div class="flb">Contact / Lead</div>'
-        +'<select class="fi" id="nt-lead">'
-          +'<option value="">— General Note —</option>'
-          +LEADS.map(function(l){return'<option value="'+l.id+'">'+h(l.name)+'</option>';}).join('')
-        +'</select></div>'
-      +'<div class="fl"><div class="flb">Note Type</div>'
-        +'<select class="fi" id="nt-type">'
-          +'<option value="manual">Manual Note</option>'
-          +'<option value="call">Phone Call</option>'
-          +'<option value="text">Text Message</option>'
-          +'<option value="email">Email</option>'
-          +'<option value="visit">Visit / In-Person</option>'
-          +'<option value="missed_call">Missed Call / Voicemail</option>'
-        +'</select></div>'
-      +'<div class="fl"><div class="flb">Summary *</div>'
-        +'<textarea class="fi" id="nt-summary" rows="3" placeholder="What happened, what was discussed…"></textarea></div>'
-      +'<div class="fl"><div class="flb">Outcome</div>'
-        +'<input class="fi" id="nt-outcome" placeholder="e.g. Tour scheduled, sent proposal, left voicemail…"></div>'
-      +'<div class="fl"><div class="flb">Next Step</div>'
-        +'<input class="fi" id="nt-nextstep" placeholder="e.g. Follow up in 2 days, send pricing, confirm tour…"></div>'
-      +'<div class="fl"><div class="flb">Follow-Up Date</div>'
-        +'<input class="fi" type="date" id="nt-followdate"></div>'
-      +'<button class="btn btn-a" onclick="saveManualNote()" style="margin-top:4px">💾 Save Note</button>'
-    +'</div></div>';
 
-  // Notes timeline
-  html+='<div style="margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">'
-    +'<div style="font-size:13px;font-weight:800;color:#f4f8ff">Activity Timeline <span style="color:#4b6278;font-weight:400">('+NOTES.length+' entries)</span></div>'
-    +'<div style="display:flex;gap:8px">'
-      +'<select class="fi" id="nt-filter" style="width:150px" onchange="render(\'notes\')">'
-        +'<option value="">All Types</option>'
-        +'<option value="call">Calls</option>'
-        +'<option value="text">Texts</option>'
-        +'<option value="email">Emails</option>'
-        +'<option value="missed_call">Missed Calls</option>'
-        +'<option value="manual">Manual Notes</option>'
-      +'</select>'
-    +'</div>'
-  +'</div>';
+  var parts=[];
 
-  var filterType=document.getElementById('nt-filter')?document.getElementById('nt-filter').value:'';
-  var filtered=NOTES.filter(function(n){return !filterType||n.comm_type===filterType||n.type===filterType;});
+  // ── NOTE FORM ──────────────────────────────────────────────────
+  parts.push('<div class="card" style="margin-bottom:14px">');
+  parts.push('<div class="card-hd"><div class="card-t">+ Add Activity Note</div>');
+  parts.push('<div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#6b7fa3">');
+  parts.push('<span>&#128336;</span> Auto-logged at <strong style="color:#f59e0b">'+dateTimeDisplay+'</strong>');
+  parts.push('</div></div>');
+  parts.push('<div style="display:flex;flex-direction:column;gap:10px">');
+
+  // ── Row 1: Added By (auto) + Date/Time (auto) ──────────────────
+  parts.push('<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">');
+  parts.push('<div>');
+  parts.push('<div style="font-size:11px;font-weight:700;color:#8ba4c4;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em">Added By <span style="color:#4fc87a;font-size:9px;font-weight:400">(auto)</span></div>');
+  parts.push('<div style="background:#060e1b;border:1px solid rgba(79,200,122,.25);border-radius:8px;padding:9px 12px;display:flex;align-items:center;gap:8px">');
+  parts.push('<div style="width:28px;height:28px;border-radius:50%;background:rgba(245,158,11,.2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#f59e0b;flex-shrink:0">');
+  parts.push(currentUser.charAt(0).toUpperCase());
+  parts.push('</div>');
+  parts.push('<div><div style="font-size:13px;font-weight:700;color:#f4f8ff">'+h(currentUser)+'</div>');
+  parts.push('<div style="font-size:10px;color:#4b6278">'+h(ROLE.charAt(0).toUpperCase()+ROLE.slice(1))+'</div></div>');
+  parts.push('</div></div>');
+
+  parts.push('<div>');
+  parts.push('<div style="font-size:11px;font-weight:700;color:#8ba4c4;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em">Date &amp; Time <span style="color:#4fc87a;font-size:9px;font-weight:400">(auto)</span></div>');
+  parts.push('<div style="background:#060e1b;border:1px solid rgba(79,200,122,.25);border-radius:8px;padding:9px 12px;display:flex;align-items:center;gap:8px">');
+  parts.push('<span style="font-size:18px">&#128336;</span>');
+  parts.push('<div><div style="font-size:13px;font-weight:700;color:#f4f8ff">'+dateStr+'</div>');
+  parts.push('<div style="font-size:11px;color:#4b6278">'+timeStr+'</div></div>');
+  parts.push('</div></div>');
+  parts.push('</div>');
+
+  // ── Contact / Lead — Searchable Typeahead ─────────────────────
+  parts.push('<div style="position:relative">');
+  parts.push('<div style="font-size:11px;font-weight:700;color:#8ba4c4;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em">Contact / Lead / Referral <span style="color:#f87171;font-size:9px">Who is this note about?</span></div>');
+  parts.push('<input type="text" id="nt-contact-input" class="fi" placeholder="Start typing a name — leads, referrals, contacts appear…" autocomplete="off"');
+  parts.push(' oninput="ntContactSearch(this.value)"');
+  parts.push(' onfocus="ntContactSearch(this.value)"');
+  parts.push(' onblur="setTimeout(function(){var d=document.getElementById(\'nt-contact-dd\');if(d)d.style.display=\'none\';},200)"');
+  parts.push(' style="background:#060e1b;border:2px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 12px;font-size:13px;width:100%;color:#f4f8ff;outline:none;transition:border-color .15s"');
+  parts.push(' onfocus="this.style.borderColor=\'rgba(245,158,11,.5)\'" onblur="this.style.borderColor=\'rgba(255,255,255,.1)\'"');
+  parts.push('>');
+  parts.push('<input type="hidden" id="nt-contact-id" value="">');
+  parts.push('<input type="hidden" id="nt-contact-type" value="">');
+  // Dropdown
+  parts.push('<div id="nt-contact-dd" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#0d1e35;border:1px solid rgba(245,158,11,.3);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,.4);z-index:9999;max-height:260px;overflow-y:auto">');
+  // Pre-render all contacts as hidden options (filtered by JS)
+  parts.push('<div id="nt-contact-options">');
+  var TYPE_COLORS = {Lead:{bg:'rgba(248,113,113,.08)',color:'#f87171',border:'rgba(248,113,113,.2)'},'Paid Referral':{bg:'rgba(245,158,11,.08)',color:'#f59e0b',border:'rgba(245,158,11,.2)'},'Referral Source':{bg:'rgba(61,158,232,.08)',color:'#3d9ee8',border:'rgba(61,158,232,.2)'}};
+  allContacts.forEach(function(contact){
+    var tc = TYPE_COLORS[contact.type]||{bg:'rgba(79,200,122,.08)',color:'#4fc87a',border:'rgba(79,200,122,.2)'};
+    var urgBadge = contact.urgency==='Hot'||contact.urgency==='hot' ? '<span style="background:rgba(248,113,113,.1);color:#f87171;border-radius:999px;padding:1px 6px;font-size:9px;font-weight:900;margin-left:4px">HOT</span>' : '';
+    parts.push('<div class="nt-contact-opt" data-id="'+contact.id+'" data-name="'+h(contact.name)+'" data-type="'+contact.type+'"');
+    parts.push(' onclick="ntSelectContact(this)"');
+    parts.push(' style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.05);transition:background .1s"');
+    parts.push(' onmouseenter="this.style.background=\'rgba(255,255,255,.05)\'" onmouseleave="this.style.background=\'transparent\'">');
+    parts.push('<div style="flex-shrink:0;padding-top:2px"><span style="background:'+tc.bg+';color:'+tc.color+';border:1px solid '+tc.border+';border-radius:999px;padding:2px 8px;font-size:10px;font-weight:800">'+contact.type+'</span></div>');
+    parts.push('<div style="flex:1;min-width:0">');
+    parts.push('<div style="font-size:13px;font-weight:700;color:#f4f8ff" class="nt-opt-name">'+h(contact.name)+urgBadge+'</div>');
+    parts.push('<div style="font-size:11px;color:#6b7fa3;margin-top:1px">'+h(contact.sub)+'</div>');
+    parts.push('</div></div>');
+  });
+  // "Add new" option
+  parts.push('<div id="nt-add-new-opt" style="display:none;padding:10px 14px;cursor:pointer;color:#6b7fa3;font-size:12px;border-top:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02)" onclick="ntAddNewContact()" onmouseenter="this.style.background=\'rgba(255,255,255,.05)\'" onmouseleave="this.style.background=\'rgba(255,255,255,.02)\'">');
+  parts.push('<span style="font-size:14px">+</span> Add &ldquo;<span id="nt-add-new-name"></span>&rdquo; as a new contact');
+  parts.push('</div>');
+  parts.push('</div></div></div>');
+
+  // ── Note Type ────────────────────────────────────────────────
+  parts.push('<div class="fl"><div class="flb">Note Type</div>');
+  parts.push('<select class="fi" id="nt-type" onchange="ntUpdateTypeIcon()">');
+  parts.push('<option value="manual">📝 Manual Note</option>');
+  parts.push('<option value="call">📞 Phone Call</option>');
+  parts.push('<option value="text">💬 Text Message</option>');
+  parts.push('<option value="email">✉️ Email</option>');
+  parts.push('<option value="visit">🤝 Visit / In-Person</option>');
+  parts.push('<option value="missed_call">📵 Missed Call / Voicemail</option>');
+  parts.push('</select></div>');
+
+  // ── Summary ──────────────────────────────────────────────────
+  parts.push('<div class="fl"><div class="flb">Summary <span style="color:#f87171">*</span></div>');
+  parts.push('<textarea class="fi" id="nt-summary" rows="3" placeholder="What happened? What was discussed? Emotional tone? Key points raised…"></textarea></div>');
+
+  // ── Outcome ──────────────────────────────────────────────────
+  parts.push('<div class="fl"><div class="flb">Outcome</div>');
+  parts.push('<select class="fi" id="nt-outcome">');
+  parts.push('<option value="">Select outcome…</option>');
+  ['Tour scheduled','Proposal sent','Deposit received','Move-in confirmed',
+   'Follow-up needed','Left voicemail','No answer — will retry',
+   'Family requested more info','Not interested at this time',
+   'Competitor mentioned','Medical decline','Budget objection',
+   'Connected — great conversation','Family overwhelmed — needs time',
+   'Re-engagement scheduled'].forEach(function(o){
+    parts.push('<option>'+o+'</option>');
+  });
+  parts.push('</select></div>');
+
+  // ── Next Step (dropdown + free text) ────────────────────────
+  parts.push('<div class="fl"><div class="flb">Next Step <span style="color:#f59e0b;font-size:10px;font-weight:400">— select or type your own</span></div>');
+  parts.push('<select class="fi" id="nt-nextstep-sel" onchange="ntApplyNextStep(this)">');
+  parts.push('<option value="">Select next step…</option>');
+  ['Call family / POA','Schedule a tour','Send pricing / proposal',
+   'Send community overview / brochure','Confirm tour date',
+   'Follow up after tour','Request deposit','Confirm move-in date',
+   'Check unit readiness','Coordinate with maintenance / housekeeping',
+   'Send move-in paperwork','Contact referral source',
+   'Re-engage in 30 days','Mark as lost','Other — type below'].forEach(function(ns){
+    parts.push('<option>'+ns+'</option>');
+  });
+  parts.push('</select>');
+  parts.push('<input class="fi" id="nt-nextstep" placeholder="Or type a custom next step…" style="margin-top:6px">');
+  parts.push('</div>');
+
+  // ── Follow-Up Date (auto-suggest +2 days) ──────────────────
+  var suggestDate = new Date(now.getTime() + 2*24*60*60*1000).toISOString().split('T')[0];
+  parts.push('<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">');
+  parts.push('<div class="fl"><div class="flb">Follow-Up Date</div>');
+  parts.push('<input class="fi" type="date" id="nt-followdate" value="'+suggestDate+'"></div>');
+  parts.push('<div class="fl"><div class="flb">Pipeline Stage at Time of Note</div>');
+  parts.push('<select class="fi" id="nt-stage">');
+  parts.push('<option value="">— Select stage —</option>');
+  ['Inquiry','Tour Scheduled','Touring','Proposal Sent','Deposit Pending',
+   'Approved','Move-In Scheduled','Moved In','Lost'].forEach(function(s){parts.push('<option>'+s+'</option>');});
+  parts.push('</select></div>');
+  parts.push('</div>');
+
+  parts.push('<button class="btn btn-a" onclick="saveManualNote()" style="margin-top:4px;padding:11px 24px;font-size:14px">💾 Save Note</button>');
+  parts.push('</div></div>');
+
+  // ── Notes timeline ──────────────────────────────────────────
+  var filterType = document.getElementById('nt-filter') ? document.getElementById('nt-filter').value : '';
+  var filtered = NOTES.filter(function(n){return !filterType||n.comm_type===filterType||n.type===filterType;});
+
+  parts.push('<div style="margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">');
+  parts.push('<div style="font-size:13px;font-weight:800;color:#f4f8ff">Activity Timeline <span style="color:#4b6278;font-weight:400">('+NOTES.length+' entries)</span></div>');
+  parts.push('<div style="display:flex;gap:8px">');
+  parts.push('<select class="fi" id="nt-filter" style="width:150px" onchange="render(\'notes\')">');
+  parts.push('<option value="">All Types</option>');
+  parts.push('<option value="call">📞 Calls</option><option value="text">💬 Texts</option><option value="email">✉️ Emails</option><option value="missed_call">📵 Missed Calls</option><option value="visit">🤝 Visits</option><option value="manual">📝 Manual Notes</option>');
+  parts.push('</select>');
+  parts.push('</div></div>');
 
   if(!filtered.length){
-    html+='<div class="card"><div style="color:#4b6278;text-align:center;padding:24px;font-size:13px">No activity yet. Notes from calls, texts, emails, and manual entries all appear here.</div></div>';
-    return html;
+    parts.push('<div class="card"><div style="color:#4b6278;text-align:center;padding:24px;font-size:13px">No activity yet. Every call, text, email, and manual note appears here in one unified timeline.</div></div>');
+  } else {
+    var COMM_META2={
+      call:{icon:'📞',label:'Phone Call',color:'#3d9ee8',bg:'rgba(61,158,232,.12)',border:'rgba(61,158,232,.28)'},
+      text:{icon:'💬',label:'Text Message',color:'#a78bfa',bg:'rgba(167,139,250,.12)',border:'rgba(167,139,250,.28)'},
+      email:{icon:'✉️',label:'Email',color:'#f59e0b',bg:'rgba(245,158,11,.12)',border:'rgba(245,158,11,.28)'},
+      missed_call:{icon:'📵',label:'Missed Call',color:'#f87171',bg:'rgba(248,113,113,.12)',border:'rgba(248,113,113,.28)'},
+      visit:{icon:'🤝',label:'Visit',color:'#4fc87a',bg:'rgba(79,200,122,.08)',border:'rgba(79,200,122,.22)'},
+      manual:{icon:'📝',label:'Manual Note',color:'#4fc87a',bg:'rgba(79,200,122,.08)',border:'rgba(79,200,122,.22)'},
+    };
+    filtered.forEach(function(n){
+      var isAircall = n.type==='aircall';
+      var meta = COMM_META2[n.comm_type]||COMM_META2.manual;
+      var ts = n.created_at ? new Date(n.created_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) : '';
+      var cleanSummary = (n.summary||'').replace(/^[^\]]+\]\s*/,'');
+      parts.push('<div style="background:#0a1628;border:1px solid '+meta.border+';border-radius:12px;padding:14px 16px;margin-bottom:10px">');
+      parts.push('<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;flex-wrap:wrap;gap:6px">');
+      parts.push('<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">');
+      parts.push('<span style="background:'+meta.bg+';border:1px solid '+meta.border+';border-radius:999px;padding:3px 10px;font-size:11px;font-weight:800;color:'+meta.color+'">'+meta.icon+' '+meta.label+'</span>');
+      if(n.contact_name||n.prospect_name) parts.push('<span style="font-size:12px;font-weight:700;color:#f4f8ff">'+h(n.contact_name||n.prospect_name||'')+'</span>');
+      if(n.stage) parts.push('<span style="font-size:10px;color:#6b7fa3;background:rgba(255,255,255,.04);border-radius:4px;padding:1px 6px">'+h(n.stage)+'</span>');
+      parts.push('</div>');
+      parts.push('<span style="font-size:11px;color:#6b7fa3;white-space:nowrap">'+ts+'</span>');
+      parts.push('</div>');
+      if(cleanSummary) parts.push('<div style="font-size:13px;color:#c8d6e8;margin-bottom:6px;line-height:1.5">'+h(cleanSummary)+'</div>');
+      if(n.outcome) parts.push('<div style="font-size:12px;color:#8ba4c4;margin-bottom:4px"><span style="font-weight:700;color:#c8d6e8">Outcome:</span> '+h(n.outcome)+'</div>');
+      if(n.next_step) parts.push('<div style="font-size:12px;color:#8ba4c4;margin-bottom:4px"><span style="font-weight:700;color:#f59e0b">Next Step:</span> '+h(n.next_step)+'</div>');
+      if(n.follow_up_date) parts.push('<div style="font-size:12px;color:#8ba4c4;margin-bottom:4px"><span style="font-weight:700;color:#4fc87a">Follow-Up:</span> '+h(n.follow_up_date)+'</div>');
+      parts.push('<div style="display:flex;align-items:center;gap:6px;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.06)">');
+      parts.push(isAircall
+        ? '<span style="font-size:10px;font-weight:900;color:#49b6ff;background:rgba(61,158,232,.15);border:1px solid rgba(61,158,232,.3);border-radius:4px;padding:2px 8px">AIRCALL</span>'
+        : '<span style="font-size:10px;font-weight:800;color:#f59e0b;background:rgba(245,158,11,.1);border-radius:999px;padding:1px 8px">'+h(n.user_name||currentUser)+'</span>');
+      parts.push('</div></div>');
+    });
   }
 
-  filtered.forEach(function(n){
-    var isAircall=n.type==='aircall';
-    var meta=COMM_META[n.comm_type]||COMM_META.manual;
-    var ts=n.created_at?new Date(n.created_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):'';
-    var cleanSummary=(n.summary||'').replace(/^[^\]]+\]\s*/,'');
-
-    html+='<div style="background:#0a1628;border:1px solid '+meta.border+';border-radius:12px;padding:14px 16px;margin-bottom:10px">';
-    // Header
-    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px">';
-    html+='<div style="display:flex;align-items:center;gap:8px">';
-    html+='<span style="background:'+meta.bg+';border:1px solid '+meta.border+';border-radius:999px;padding:3px 10px;font-size:11px;font-weight:800;color:'+meta.color+'">'+meta.icon+' '+meta.label+'</span>';
-    if(n.contact_name) html+='<span style="font-size:12px;font-weight:700;color:#f4f8ff">'+h(n.contact_name)+'</span>';
-    html+='</div>';
-    html+='<span style="font-size:11px;color:#6b7fa3">'+ts+'</span>';
-    html+='</div>';
-    // Summary
-    if(cleanSummary) html+='<div style="font-size:13px;color:#c8d6e8;margin-bottom:6px;line-height:1.5">'+h(cleanSummary)+'</div>';
-    // Outcome
-    if(n.outcome) html+='<div style="font-size:12px;color:#8ba4c4;margin-bottom:4px"><span style="font-weight:700;color:#c8d6e8">Outcome:</span> '+h(n.outcome)+'</div>';
-    // Next step
-    if(n.next_step) html+='<div style="font-size:12px;color:#8ba4c4;margin-bottom:4px"><span style="font-weight:700;color:#f59e0b">Next Step:</span> '+h(n.next_step)+'</div>';
-    // Follow-up
-    if(n.follow_up_date) html+='<div style="font-size:12px;color:#8ba4c4;margin-bottom:4px"><span style="font-weight:700;color:#4fc87a">Follow-Up:</span> '+h(n.follow_up_date)+'</div>';
-    // Footer
-    html+='<div style="display:flex;align-items:center;gap:6px;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.06)">';
-    html+='<span style="font-size:10px;font-weight:800;color:#f59e0b;background:rgba(245,158,11,.1);border-radius:999px;padding:1px 8px">'+h(n.user_name||'Team')+'</span>';
-    html+='</div>';
-    html+='</div>';
-  });
-
-  return html;
+  return parts.join('');
 }
+
+// ── Notes helper functions ─────────────────────────────────────
+function ntContactSearch(q){
+  var dd = document.getElementById('nt-contact-dd');
+  var opts = document.querySelectorAll('.nt-contact-opt');
+  var addNew = document.getElementById('nt-add-new-opt');
+  var addNewName = document.getElementById('nt-add-new-name');
+  if(!dd) return;
+  var qLower = (q||'').toLowerCase().trim();
+  var anyVisible = false;
+  opts.forEach(function(opt){
+    var name = (opt.dataset.name||'').toLowerCase();
+    var type = (opt.dataset.type||'').toLowerCase();
+    var matches = !qLower || name.includes(qLower) || type.includes(qLower);
+    opt.style.display = matches ? '' : 'none';
+    // Highlight match
+    if(qLower && matches) {
+      var nameEl = opt.querySelector('.nt-opt-name');
+      if(nameEl) {
+        var orig = opt.dataset.name;
+        var re = new RegExp('('+qLower.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+        nameEl.innerHTML = h(orig).replace(re,'<mark style="background:#fef3c7;color:#92400e;border-radius:2px">$1</mark>');
+      }
+    }
+    if(matches) anyVisible = true;
+  });
+  if(addNew && addNewName) {
+    if(qLower && !anyVisible) {
+      addNewName.textContent = q;
+      addNew.style.display = '';
+    } else {
+      addNew.style.display = 'none';
+    }
+  }
+  dd.style.display = (anyVisible || (qLower && !anyVisible)) ? '' : 'none';
+}
+function ntSelectContact(el){
+  var input = document.getElementById('nt-contact-input');
+  var hidId = document.getElementById('nt-contact-id');
+  var hidType = document.getElementById('nt-contact-type');
+  var dd = document.getElementById('nt-contact-dd');
+  if(input) input.value = el.dataset.name;
+  if(hidId) hidId.value = el.dataset.id;
+  if(hidType) hidType.value = el.dataset.type;
+  if(dd) dd.style.display = 'none';
+  if(input) { input.style.borderColor='rgba(79,200,122,.5)'; setTimeout(function(){input.style.borderColor='rgba(255,255,255,.1)';},1500); }
+}
+function ntAddNewContact(){
+  var input = document.getElementById('nt-contact-input');
+  var name = input ? input.value.trim() : '';
+  if(!name) return;
+  var formatted = name.replace(/\b\w/g,function(l){return l.toUpperCase();});
+  if(input) input.value = formatted;
+  var hidId = document.getElementById('nt-contact-id');
+  var dd = document.getElementById('nt-contact-dd');
+  if(hidId) hidId.value = 'new-'+Date.now();
+  if(dd) dd.style.display = 'none';
+  T('New contact "'+formatted+'" will be saved with this note');
+}
+function ntApplyNextStep(sel){
+  var input = document.getElementById('nt-nextstep');
+  if(!sel.value || sel.value === 'Other — type below') {
+    if(input) input.focus();
+  } else {
+    if(input) input.value = sel.value;
+  }
+}
+function ntUpdateTypeIcon(){
+  // Future: update form hints based on type selected
+}
+
 
 function saveManualNote(){
   var summary=(document.getElementById('nt-summary')||{}).value.trim();
   if(!summary){T('Summary is required','e');return;}
-  var leadSel=document.getElementById('nt-lead');
-  var leadName='';
-  if(leadSel&&leadSel.value){
-    var opt=leadSel.options[leadSel.selectedIndex];
-    leadName=opt?opt.text:'';
+  // Contact from new searchable typeahead
+  var contactName=(document.getElementById('nt-contact-input')||{}).value||'';
+  var contactId=(document.getElementById('nt-contact-id')||{}).value||'';
+  // Fallback to old static select if typeahead not rendered
+  if(!contactName){
+    var leadSel=document.getElementById('nt-lead');
+    if(leadSel&&leadSel.value){
+      var opt=leadSel.options[leadSel.selectedIndex];
+      contactName=opt?opt.text:'';
+    }
   }
   var type=(document.getElementById('nt-type')||{}).value||'manual';
   var outcome=(document.getElementById('nt-outcome')||{}).value||'';
-  var nextStep=(document.getElementById('nt-nextstep')||{}).value||'';
+  // Next step: prefer dropdown selection, fall back to free text
+  var nextStepSel=(document.getElementById('nt-nextstep-sel')||{}).value||'';
+  var nextStepTxt=(document.getElementById('nt-nextstep')||{}).value||'';
+  var nextStep = (nextStepSel && nextStepSel !== 'Other — type below') ? nextStepSel : nextStepTxt;
   var followDate=(document.getElementById('nt-followdate')||{}).value||null;
+  var stage=(document.getElementById('nt-stage')||{}).value||'';
+  // Role-based author
+  var ROLE_USER_NAMES={director:'Executive Director',salesadmissions:'Sales/Admissions',owner:'Owner / Investor',admin:'Administrator',marketer:'Sarah M. (Sales Marketer)',maintenance:'Maintenance Team',housekeeping:'Housekeeping Team'};
+  var author = ROLE_USER_NAMES[ROLE] || ROLE;
 
   NOTES.unshift({
-    id:++nextId, type:type==='manual'?'manual':'aircall',
-    comm_type:type, contact_name:leadName,
-    summary:summary, outcome:outcome,
-    next_step:nextStep, follow_up_date:followDate,
-    created_at:new Date().toISOString(), user_name:'Sarah M.',
+    id:++nextId,
+    type:'manual',
+    comm_type:type,
+    contact_name:contactName,
+    contact_id:contactId,
+    summary:summary,
+    outcome:outcome,
+    next_step:nextStep,
+    follow_up_date:followDate,
+    stage:stage,
+    created_at:new Date().toISOString(),
+    user_name:author,
   });
-  T('📝 Note saved!');
-  ['nt-summary','nt-outcome','nt-nextstep','nt-followdate'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  T('📝 Note saved to activity timeline!');
+  // Reset form fields
+  ['nt-summary','nt-outcome','nt-nextstep','nt-contact-input','nt-contact-id'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
   render('notes');
 }
 
