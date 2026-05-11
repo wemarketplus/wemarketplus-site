@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://js.stripe.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; connect-src 'self' https://api.wemarketplus.com https://api.stripe.com; frame-src https://js.stripe.com;">
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>HospiceLink CRM — Built Exclusively for Hospice</title>
 <meta name="description" content="The only CRM built exclusively for hospice marketers. Track every referral, close more admits, eliminate spreadsheets. HIPAA-ready. Live in 30 minutes.">
@@ -619,6 +623,7 @@ footer{background:#030508;border-top:1px solid var(--border);padding:52px 28px 3
     <div class="plan-card reveal">
       <div class="plan-tier-badge" style="background:var(--azure-dim);color:var(--azure);border:1px solid var(--azure-border)">Starter</div>
       <div class="plan-name">HospiceLink Pro</div>
+      <div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Starting at $149/mo</div>
       <div class="plan-tagline">Get organized &mdash; stop losing referrals to spreadsheets</div>
       <div class="plan-blurb">Complete prospect profiles, referral source management, follow-up reminders, AI assistant, and weekly reports. Most users see improvement within 48 hours.</div>
       <ul class="plan-features">
@@ -656,6 +661,7 @@ footer{background:#030508;border-top:1px solid var(--border);padding:52px 28px 3
       <div class="featured-badge">Best Value</div>
       <div class="plan-tier-badge" style="background:var(--sage-dim);color:var(--sage);border:1px solid var(--sage-border)">Professional</div>
       <div class="plan-name">HospiceLink Max</div>
+      <div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Starting at $449/mo</div>
       <div class="plan-tagline">Grow your referrals &mdash; full team, full visibility</div>
       <div class="plan-blurb">Everything in Pro, plus EVV mileage, 14-day cold alerts, territory heat map, smart scheduling, and AI playbook generation.</div>
       <ul class="plan-features">
@@ -1036,7 +1042,7 @@ footer{background:#030508;border-top:1px solid var(--border);padding:52px 28px 3
     <!-- Contact CTA below pricing -->
     <div style="text-align:center;margin-top:36px;padding:28px;background:#0a1628;border:1px solid rgba(255,255,255,.07);border-radius:16px">
       <p style="color:#8b9fc4;font-size:14px;margin-bottom:12px">Ready to see CommunityLink in action at your community?</p>
-      <a href="mailto:info@wemarketplus.com?subject=CommunityLink Demo Request" style="display:inline-block;background:#f59e0b;color:#06080e;border-radius:999px;padding:12px 28px;font-size:14px;font-weight:800;text-decoration:none">Schedule a Demo</a>
+      <a href="communitylinkmax-demo.html" style="display:inline-block;background:#f59e0b;color:#06080e;border-radius:999px;padding:12px 28px;font-size:14px;font-weight:800;text-decoration:none">View Demo →</a>
     </div>
   </div>
 </section>
@@ -1052,7 +1058,7 @@ footer{background:#030508;border-top:1px solid var(--border);padding:52px 28px 3
       <small>&copy; 2026 We Market Plus LLC. All rights reserved.</small>
     </div>
     <div class="footer-col"><h6>HospiceLink</h6><a href="#preview">Platform</a><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="communitylinkpro-demo.html">Pro Demo</a><a href="communitylinkmax-demo.html">Max Demo</a><a href="communitylinkgold-demo.html">Gold Demo</a><a href="javascript:handleLogin()">Log In</a></div>
-    <div class="footer-col"><h6>CommunityLink</h6><a href="#communitylink">Overview</a><a href="#cl-pricing">Pricing</a><a href="communitylinkpro-demo.html">Pro Demo</a><a href="communitylinkgold-demo.html">Gold Demo</a><a href="communitylinkmax-demo.html">Max Demo</a><a href="mailto:info@wemarketplus.com?subject=CommunityLink Demo">Book Demo</a></div>
+    <div class="footer-col"><h6>CommunityLink</h6><a href="#communitylink">Overview</a><a href="#cl-pricing">Pricing</a><a href="communitylinkpro-demo.html">Pro Demo</a><a href="communitylinkgold-demo.html">Gold Demo</a><a href="communitylinkmax-demo.html">Max Demo</a><a href="communitylinkmax-demo.html">View Demo</a></div>
     <div class="footer-col"><h6>Legal</h6><a href="#baa">BAA Terms</a><a href="#security">Security &amp; HIPAA</a><a href="mailto:info@wemarketplus.com">Terms of Service</a><a href="mailto:info@wemarketplus.com">Privacy Policy</a></div>
     <div class="footer-col"><h6>Contact</h6><a href="mailto:info@wemarketplus.com">info@wemarketplus.com</a><a href="tel:+14697930673">(469) 793-0673</a><a href="mailto:info@wemarketplus.com">Support</a><a href="mailto:info@wemarketplus.com">Annual Pricing</a></div>
   </div>
@@ -1145,6 +1151,33 @@ document.addEventListener('DOMContentLoaded',function(){
   var io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:0.08});
   document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
 });
+</script>
+
+<!-- Cookie Consent Banner -->
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#0a1628;border-top:1px solid rgba(245,158,11,.3);padding:14px 24px;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+  <div style="font-size:12px;color:#c0cce0;max-width:600px">
+    🍪 We use essential cookies for authentication and session management. We do not use tracking cookies. 
+    <a href="#" style="color:#f59e0b">Privacy Policy</a>
+  </div>
+  <div style="display:flex;gap:8px;flex-shrink:0">
+    <button onclick="acceptCookies()" style="background:#f59e0b;color:#06080e;border:none;border-radius:999px;padding:8px 18px;font-weight:800;cursor:pointer;font-family:inherit;font-size:12px">Accept</button>
+    <button onclick="declineCookies()" style="background:rgba(255,255,255,.06);color:#c0cce0;border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:8px 18px;font-weight:600;cursor:pointer;font-family:inherit;font-size:12px">Decline Non-Essential</button>
+  </div>
+</div>
+<script>
+(function() {
+  if (!localStorage.getItem('cookie_consent')) {
+    document.getElementById('cookie-banner').style.display = 'flex';
+  }
+})();
+function acceptCookies() {
+  localStorage.setItem('cookie_consent', 'accepted');
+  document.getElementById('cookie-banner').style.display = 'none';
+}
+function declineCookies() {
+  localStorage.setItem('cookie_consent', 'declined');
+  document.getElementById('cookie-banner').style.display = 'none';
+}
 </script>
 </body>
 </html>
