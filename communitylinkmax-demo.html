@@ -115,7 +115,7 @@ textarea.fi{resize:vertical;min-height:72px}
     </div>
   </div>
   <nav class="sb-nav" id="sideNav"></nav>
-  <div class="sb-foot">CommunityLink Max CRM Demo &bull; <a href="index.html#communitylink">Back to Site</a></div>
+  <div class="sb-foot"><a href="index.html" style="color:#f59e0b;font-weight:700;text-decoration:none">← Back to the Website</a></div>
 </aside>
 <div class="main">
   <div class="topbar">
@@ -176,37 +176,75 @@ var TASKS=[
   {id:3,title:'Review Unit 103 make-ready progress',due:'2026-02-13',priority:'Med',done:false},
   {id:4,title:'Submit mileage report',due:'2026-02-14',priority:'Low',done:true},
 ];
+
+var NOTES=[
+  {id:201,type:'aircall',comm_type:'call',contact_name:'Dorothy Harrison',
+   summary:'Tour confirmed for Friday 10am. Son James attending as POA.',
+   outcome:'Connected — tour scheduled',next_step:'Prepare tour materials',
+   follow_up_date:'2026-02-14',created_at:new Date(Date.now()-3600000).toISOString(),
+   user_name:'Sarah M.'},
+  {id:202,type:'aircall',comm_type:'text',contact_name:'Gloria Tran',
+   summary:'Text sent: Hi Gloria, just confirming your proposal review tomorrow at 2pm.',
+   outcome:'Delivered',next_step:'Follow up after review',
+   follow_up_date:'2026-02-14',created_at:new Date(Date.now()-86400000).toISOString(),
+   user_name:'Sarah M.'},
+  {id:203,type:'manual',comm_type:'manual',contact_name:'Walter Simmons',
+   summary:'Family called in — son James inquiring about 2BR AL availability. Warm lead.',
+   outcome:'Inquiry logged',next_step:'Schedule tour',
+   follow_up_date:'2026-02-16',created_at:new Date(Date.now()-172800000).toISOString(),
+   user_name:'Sarah M.'},
+  {id:204,type:'aircall',comm_type:'email',contact_name:'Dr. Amanda Chen',
+   summary:'Email sent — Subject: Thank You for Your Referral!',
+   outcome:'Sent',next_step:'Follow up in 3 days',
+   follow_up_date:'2026-02-17',created_at:new Date(Date.now()-259200000).toISOString(),
+   user_name:'Admin'},
+  {id:205,type:'aircall',comm_type:'missed_call',contact_name:'Edna Michaels',
+   summary:'Call attempt failed — no answer. Left voicemail.',
+   outcome:'Voicemail left',next_step:'Try again tomorrow AM',
+   follow_up_date:'2026-02-15',created_at:new Date(Date.now()-345600000).toISOString(),
+   user_name:'Sarah M.'},
+];
 var ROLE='director';
 var ACTIVE='dashboard';
 var nextId=200;
 
 // ─── ROLE NAV ──────────────────────────────────────────────────
 var NAV={
+  // Owner/Investor: full visibility across all departments + investor analytics
+  owner:[
+    {sec:'EXECUTIVE',items:[{k:'dashboard',l:'Portfolio Dashboard'},{k:'occupancy',l:'Occupancy Overview'}]},
+    {sec:'SALES',items:[{k:'leads',l:'Lead Pipeline'},{k:'referrals',l:'Referral Pipeline'},{k:'tours',l:'Tour Scheduler'},{k:'refs',l:'Referral Sources'}]},
+    {sec:'OPERATIONS',items:[{k:'apartments',l:'Apartment Inventory'},{k:'makeready',l:'Make-Ready Board'},{k:'maintenance',l:'Maintenance Tickets'},{k:'housekeeping',l:'Housekeeping Tasks'}]},
+    {sec:'FINANCIAL',items:[{k:'ledger',l:'Financial Ledger'},{k:'revenue',l:'Revenue Leakage'},{k:'concessions',l:'Concession Approvals'},{k:'loc',l:'LOC Calculator'},{k:'competitors',l:'Competitor Intel'}]},
+    {sec:'MANAGEMENT',items:[{k:'tasks',l:'Tasks'},{k:'reports',l:'Reports'},{k:'settings',l:'Settings'}]},
+  ],
+  // Executive Director: full operational + financial + sales visibility (no owner-only billing)
   director:[
     {sec:'EXECUTIVE',items:[{k:'dashboard',l:'Executive Dashboard'},{k:'occupancy',l:'Occupancy Overview'}]},
-    {sec:'SALES',items:[{k:'leads',l:'Lead Pipeline'},{k:'tours',l:'Tour Scheduler'},{k:'refs',l:'Referral Sources'}]},
+    {sec:'SALES',items:[{k:'leads',l:'Lead Pipeline'},{k:'referrals',l:'Referral Pipeline'},{k:'tours',l:'Tour Scheduler'},{k:'refs',l:'Referral Sources'}]},
     {sec:'OPERATIONS',items:[{k:'apartments',l:'Apartment Inventory'},{k:'makeready',l:'Make-Ready Board'},{k:'maintenance',l:'Maintenance Tickets'},{k:'housekeeping',l:'Housekeeping Tasks'}]},
-    {sec:'FINANCIAL',items:[{k:'ledger',l:'Financial Ledger'},{k:'revenue',l:'Revenue Leakage'},{k:'concessions',l:'Concession Approvals'}]},
-    {sec:'MANAGEMENT',items:[{k:'tasks',l:'Tasks'},{k:'reports',l:'Reports'}]},
+    {sec:'FINANCIAL',items:[{k:'ledger',l:'Financial Ledger'},{k:'revenue',l:'Revenue Leakage'},{k:'concessions',l:'Concession Approvals'},{k:'loc',l:'LOC Calculator'}]},
+    {sec:'ACTIVITY',items:[{k:'notes',l:'📋 Activity Notes'},{k:'tasks',l:'Tasks'}]},{sec:'MANAGEMENT',items:[{k:'reports',l:'Reports'}]},
   ],
-  owner:[
-    {sec:'INVESTOR VIEW',items:[{k:'dashboard',l:'Portfolio Dashboard'},{k:'ledger',l:'Financial Ledger'},{k:'revenue',l:'Revenue Leakage'},{k:'competitors',l:'Competitor Intel'},{k:'reports',l:'Reports'}]},
-  ],
+  // Admin: all CRM + ops + financial tools + system settings
   admin:[
-    {sec:'MAIN',items:[{k:'dashboard',l:'Dashboard'},{k:'leads',l:'Lead Pipeline'},{k:'refs',l:'Referral Sources'},{k:'tours',l:'Tour Scheduler'}]},
+    {sec:'MAIN',items:[{k:'dashboard',l:'Dashboard'},{k:'leads',l:'Lead Pipeline'},{k:'referrals',l:'Referral Pipeline'},{k:'refs',l:'Referral Sources'},{k:'tours',l:'Tour Scheduler'}]},
     {sec:'OPERATIONS',items:[{k:'apartments',l:'Apartment Inventory'},{k:'makeready',l:'Make-Ready Board'},{k:'maintenance',l:'Maintenance'},{k:'housekeeping',l:'Housekeeping'}]},
     {sec:'FINANCIAL',items:[{k:'ledger',l:'Financial Ledger'},{k:'revenue',l:'Revenue Leakage'},{k:'concessions',l:'Concession Approvals'},{k:'loc',l:'LOC Calculator'},{k:'competitors',l:'Competitor Intel'}]},
-    {sec:'TOOLS',items:[{k:'aircall',l:'📞 Aircall — Call · Text · Email'},{k:'tasks',l:'Tasks'},{k:'reports',l:'Reports'},{k:'settings',l:'Settings'}]},
+    {sec:'ACTIVITY',items:[{k:'notes',l:'📋 Activity Notes'},{k:'tasks',l:'Tasks'}]},{sec:'TOOLS',items:[{k:'aircall',l:'☎️ Aircall — Call · Text · Email'},{k:'reports',l:'Reports'},{k:'settings',l:'Settings'}]},
   ],
+  // Sales Marketer: sales and outreach only — no financials, no ops beyond viewing
   marketer:[
-    {sec:'SALES',items:[{k:'dashboard',l:'Sales Dashboard'},{k:'leads',l:'Lead Pipeline'},{k:'tours',l:'Tours'},{k:'refs',l:'Referral Sources'},{k:'tasks',l:'Tasks'}]},
-    {sec:'OUTREACH',items:[{k:'aircall',l:'📞 Aircall — Call · Text · Email'}]},
+    {sec:'SALES',items:[{k:'dashboard',l:'Sales Dashboard'},{k:'leads',l:'Lead Pipeline'},{k:'referrals',l:'Referral Pipeline'},{k:'tours',l:'Tours'},{k:'refs',l:'Referral Sources'},{k:'tasks',l:'Tasks'}]},
+    {sec:'ACTIVITY',items:[{k:'notes',l:'📋 Activity Notes'},{k:'tasks',l:'Tasks'}]},{sec:'OUTREACH',items:[{k:'aircall',l:'☎️ Aircall — Call · Text · Email'}]},
   ],
+  // Maintenance: their work queue only — can see apartments/make-ready to coordinate
   maintenance:[
-    {sec:'MY WORK',items:[{k:'dashboard',l:'My Queue'},{k:'maintenance',l:'Maintenance Tickets'},{k:'makeready',l:'Make-Ready Tasks'},{k:'tasks',l:'Tasks'}]},
+    {sec:'MY WORK',items:[{k:'dashboard',l:'My Queue'},{k:'maintenance',l:'Maintenance Tickets'},{k:'makeready',l:'Make-Ready Tasks'},{k:'apartments',l:'Unit Status'},{k:'tasks',l:'Tasks'}]},
   ],
+  // Housekeeping: cleaning queue — can see make-ready/maintenance to coordinate
   housekeeping:[
-    {sec:'MY WORK',items:[{k:'dashboard',l:'My Queue'},{k:'housekeeping',l:'Housekeeping Tasks'},{k:'makeready',l:'Make-Ready Clean'},{k:'tasks',l:'Tasks'}]},
+    {sec:'MY WORK',items:[{k:'dashboard',l:'My Queue'},{k:'housekeeping',l:'Housekeeping Tasks'},{k:'makeready',l:'Make-Ready Clean'},{k:'maintenance',l:'Maintenance View'},{k:'apartments',l:'Unit Status'},{k:'tasks',l:'Tasks'}]},
   ],
 };
 
@@ -222,7 +260,7 @@ function buildNav(){
 }
 function go(key){
   ACTIVE=key;buildNav();
-  var titles={dashboard:'Dashboard',occupancy:'Occupancy Overview',leads:'Lead Pipeline',tours:'Tour Scheduler',refs:'Referral Sources',apartments:'Apartment Inventory',makeready:'Make-Ready Board',maintenance:'Maintenance Tickets',housekeeping:'Housekeeping Tasks',ledger:'Financial Ledger',revenue:'Revenue Leakage',concessions:'Concession Approvals',loc:'LOC Pricing Calculator',competitors:'Competitor Intel',tasks:'Tasks',reports:'Reports Center',settings:'Settings',aircall:'Aircall — Call · Text · Email'};
+  var titles={dashboard:'Dashboard',occupancy:'Occupancy Overview',leads:'Lead Pipeline',referrals:'Referral Pipeline',notes:'Activity Notes',tours:'Tour Scheduler',refs:'Referral Sources',apartments:'Apartment Inventory',makeready:'Make-Ready Board',maintenance:'Maintenance Tickets',housekeeping:'Housekeeping Tasks',ledger:'Financial Ledger',revenue:'Revenue Leakage',concessions:'Concession Approvals',loc:'LOC Pricing Calculator',competitors:'Competitor Intel',tasks:'Tasks',reports:'Reports Center',settings:'Settings',aircall:'Aircall — Call · Text · Email'};
   document.getElementById('pageTitle').textContent=titles[key]||key;
   render(key);
 }
@@ -230,16 +268,19 @@ function changeRole(role){
   ROLE=role;
   var labels={director:'Executive Director',owner:'Owner / Investor',admin:'Administrator',marketer:'Sales Marketer',maintenance:'Maintenance',housekeeping:'Housekeeping'};
   document.getElementById('roleBadge').textContent=labels[role]||role;
-  var defaults={director:'dashboard',owner:'ledger',admin:'dashboard',marketer:'dashboard',maintenance:'maintenance',housekeeping:'housekeeping'};
+  // Owner and Director both start at dashboard for a full overview
+  var defaults={director:'dashboard',owner:'dashboard',admin:'dashboard',marketer:'dashboard',maintenance:'maintenance',housekeeping:'housekeeping'};
   ACTIVE=defaults[role]||'dashboard';
   buildNav();render(ACTIVE);
-  document.getElementById('pageTitle').textContent=ACTIVE==='maintenance'?'Maintenance Tickets':ACTIVE==='housekeeping'?'Housekeeping Tasks':'Dashboard';
+  var titleMap={maintenance:'Maintenance Tickets',housekeeping:'Housekeeping Tasks',owner:'Portfolio Dashboard',director:'Executive Dashboard'};
+  document.getElementById('pageTitle').textContent=titleMap[role]||'Dashboard';
 }
 function render(key){
   var mc=document.getElementById('mainContent');
-  var fns={dashboard:rDash,occupancy:rOccupancy,leads:rLeads,tours:rTours,refs:rRefs,apartments:rApartments,makeready:rMakeReady,maintenance:rMaintenance,housekeeping:rHousekeeping,tasks:rTasks,reports:rReports,settings:rSettings,ledger:rLedger,revenue:rRevenue,concessions:rConcessions,loc:rLOC,competitors:rCompetitors,aircall:rAircall};
+  var fns={dashboard:rDash,occupancy:rOccupancy,leads:rLeads,referrals:rReferrals,tours:rTours,refs:rRefs,apartments:rApartments,makeready:rMakeReady,maintenance:rMaintenance,housekeeping:rHousekeeping,tasks:rTasks,notes:rNotes,reports:rReports,settings:rSettings,ledger:rLedger,revenue:rRevenue,concessions:rConcessions,loc:rLOC,competitors:rCompetitors,aircall:rAircall};
   if(fns[key]) mc.innerHTML=fns[key]();
   else mc.innerHTML='<div class="card"><p style="color:#6b7fa3;padding:20px">Loading…</p></div>';
+  if(key==='loc') setTimeout(buildLOCTable, 10);
   if(key==='aircall') setTimeout(acDemoInit, 10);
 }
 function h(s){if(!s&&s!==0)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -373,6 +414,172 @@ function rRefs(){
 }
 function addRefPrompt(){var n=prompt('Referral contact name:');if(!n)return;REFERRALS.push({id:++nextId,name:n,type:'Physician',org:prompt('Organization:','')||'',leads:0,last:'—'});T('Source added: '+n);render('refs');}
 function logRefVisit(id){var r=REFERRALS.find(function(x){return x.id===id;});if(!r)return;r.leads++;r.last=new Date().toISOString().split('T')[0];T('Visit logged for '+r.name);render('refs');}
+
+// ─── PAID REFERRAL DATA ─────────────────────────────────────────
+var PAID_REFERRALS = [
+  {id:101,source:'A Place for Mom',partner:'APFM',type:'Paid',fee:2000,feeStatus:'Pending',
+   name:'Dorothy Harrison',care:'Independent Living',stage:'Tour Scheduled',urgency:'Hot',
+   assigned:'Sarah M.',phone:'(214)555-0142',tourDate:'2026-02-14',moveInTarget:'2026-03-01',
+   notes:'Son James is POA. APFM referral fee $2,000 pending move-in.',lostReason:'',created:'2026-02-01'},
+  {id:102,source:'Caring.com',partner:'Caring',type:'Paid',fee:1500,feeStatus:'Pending',
+   name:'Gloria Tran',care:'Memory Care',stage:'Deposit Pending',urgency:'Hot',
+   assigned:'Sarah M.',phone:'(469)555-0391',tourDate:'2026-02-10',moveInTarget:'2026-02-20',
+   notes:'MNSD diagnosis. Proposal sent. Caring.com fee $1,500 on move-in.',lostReason:'',created:'2026-01-28'},
+  {id:103,source:'Dr. Amanda Chen',partner:'Internal',type:'Organic',fee:0,feeStatus:'N/A',
+   name:'Walter Simmons',care:'Assisted Living',stage:'New Referral',urgency:'Warm',
+   assigned:'Sarah M.',phone:'(972)555-0278',tourDate:'',moveInTarget:'',
+   notes:'Looking for 2BR AL. Dr. Chen referred directly.',lostReason:'',created:'2026-02-05'},
+  {id:104,source:'SeniorAdvisor',partner:'SA',type:'Paid',fee:1800,feeStatus:'Pending',
+   name:'Edna Michaels',care:'Assisted Living',stage:'Tour Scheduled',urgency:'Warm',
+   assigned:'Sarah M.',phone:'(214)555-0567',tourDate:'2026-02-15',moveInTarget:'2026-03-15',
+   notes:'VA benefits confirmed. SeniorAdvisor fee $1,800 on move-in.',lostReason:'',created:'2026-02-03'},
+  {id:105,source:'Parkland Hospital',partner:'Internal',type:'Organic',fee:0,feeStatus:'N/A',
+   name:'Raymond Flores',care:'Independent Living',stage:'Family Reached',urgency:'Cold',
+   assigned:'Sarah M.',phone:'(817)555-0456',tourDate:'',moveInTarget:'2026-04-01',
+   notes:'60-day timeline. Family researching options.',lostReason:'',created:'2026-01-15'},
+  {id:106,source:'A Place for Mom',partner:'APFM',type:'Paid',fee:2000,feeStatus:'Paid',
+   name:'James Owens',care:'Memory Care',stage:'Moved In',urgency:'',
+   assigned:'Sarah M.',phone:'(972)555-0678',tourDate:'2026-01-10',moveInTarget:'2026-01-28',
+   notes:'Moved in Jan 28. APFM fee $2,000 PAID.',lostReason:'',created:'2026-01-03'},
+];
+var REFERRAL_STAGES = ['New Referral','Contact Attempted','Family Reached','Assessment Scheduled',
+  'Tour Scheduled','Touring','Deposit Pending','Approved','Move-In Scheduled','Moved In','Lost'];
+var STAGE_COLORS = {
+  'New Referral':'#3d9ee8','Contact Attempted':'#a78bfa','Family Reached':'#f59e0b',
+  'Assessment Scheduled':'#f59e0b','Tour Scheduled':'#4fc87a','Touring':'#4fc87a',
+  'Deposit Pending':'#f87171','Approved':'#4fc87a','Move-In Scheduled':'#4fc87a',
+  'Moved In':'#4fc87a','Lost':'#f87171'
+};
+var STAGE_BADGE = {
+  'New Referral':'bb','Contact Attempted':'bx','Family Reached':'ba',
+  'Assessment Scheduled':'ba','Tour Scheduled':'bg','Touring':'bg',
+  'Deposit Pending':'br','Approved':'bg','Move-In Scheduled':'bg',
+  'Moved In':'bg','Lost':'br'
+};
+
+function rReferrals(){
+  var typeFilter = document.getElementById('rfTypeF') ? document.getElementById('rfTypeF').value : '';
+  var stageFilter = document.getElementById('rfStageF') ? document.getElementById('rfStageF').value : '';
+  var list = PAID_REFERRALS.filter(function(r){
+    return (!typeFilter||r.type===typeFilter) && (!stageFilter||r.stage===stageFilter);
+  });
+  var paidTotal = PAID_REFERRALS.filter(function(r){return r.feeStatus==='Paid';})
+    .reduce(function(s,r){return s+r.fee;},0);
+  var pending = PAID_REFERRALS.filter(function(r){return r.feeStatus==='Pending';})
+    .reduce(function(s,r){return s+r.fee;},0);
+  var movedIn = PAID_REFERRALS.filter(function(r){return r.stage==='Moved In';}).length;
+
+  var html = '<div class="stats">';
+  html += '<div class="stat"><div class="sl">Total Referrals</div><div class="sv">'+PAID_REFERRALS.length+'</div><div class="ss">All sources</div></div>';
+  html += '<div class="stat"><div class="sl">Paid Referrals</div><div class="sv sa">'+PAID_REFERRALS.filter(function(r){return r.type==='Paid';}).length+'</div><div class="ss">APFM, Caring, SA</div></div>';
+  html += '<div class="stat"><div class="sl">Fees Paid</div><div class="sv sg">$'+paidTotal.toLocaleString()+'</div><div class="ss">Confirmed move-ins</div></div>';
+  html += '<div class="stat"><div class="sl">Pending Fees</div><div class="sv sr">$'+pending.toLocaleString()+'</div><div class="ss">On move-in</div></div>';
+  html += '<div class="stat"><div class="sl">Moved In</div><div class="sv sg">'+movedIn+'</div><div class="ss">This period</div></div>';
+  html += '</div>';
+
+  // Pipeline stages
+  html += '<div class="card" style="margin-bottom:14px"><div class="card-hd"><div class="card-t">Pipeline by Stage</div><button class="btn btn-x btn-sm" onclick="render(\'referrals\')">Reset Filter</button></div>';
+  html += '<div style="display:flex;gap:8px;flex-wrap:wrap">';
+  REFERRAL_STAGES.forEach(function(stage){
+    var cnt = PAID_REFERRALS.filter(function(r){return r.stage===stage;}).length;
+    var col = STAGE_COLORS[stage]||'#8ba4c4';
+    html += '<div style="background:#071120;border:1px solid '+col+'33;border-radius:10px;padding:10px 14px;min-width:80px;text-align:center;cursor:pointer" onclick="filterRefStage(\''+stage+'\')">';
+    html += '<div style="font-size:18px;font-weight:900;color:'+col+'">'+cnt+'</div>';
+    html += '<div style="font-size:10px;color:#6b7fa3;margin-top:2px">'+stage+'</div></div>';
+  });
+  html += '</div></div>';
+
+  // Filters + table
+  html += '<div class="card"><div class="card-hd">';
+  html += '<div style="display:flex;gap:8px;flex-wrap:wrap">';
+  html += '<select class="fi" id="rfTypeF" style="width:150px" onchange="render(\'referrals\')">'; 
+  html += '<option value="">All Types</option><option value="Paid">Paid</option><option value="Organic">Organic</option>';
+  html += '</select>';
+  html += '<select class="fi" id="rfStageF" style="width:180px" onchange="render(\'referrals\')">'; 
+  html += '<option value="">All Stages</option>';
+  REFERRAL_STAGES.forEach(function(s){ html += '<option>'+s+'</option>'; });
+  html += '</select>';
+  html += '</div>';
+  html += '<button class="btn btn-a btn-sm" onclick="addReferralPrompt()">+ Add Referral</button>';
+  html += '</div>';
+  html += '<div style="overflow-x:auto"><table class="tbl"><thead><tr>';
+  html += '<th>Prospect</th><th>Stage</th><th>Source</th><th>Type</th><th>Fee</th><th>Fee Status</th><th>Care</th><th>Assigned</th><th>Tour Date</th><th>Actions</th>';
+  html += '</tr></thead><tbody>';
+  if(!list.length){
+    html += '<tr><td colspan="10" style="color:#4b6278;text-align:center;padding:20px">No referrals match filter.</td></tr>';
+  }
+  list.forEach(function(r){
+    var sc = STAGE_BADGE[r.stage]||'bx';
+    var fc = r.feeStatus==='Paid'?'bg':r.feeStatus==='Pending'?'ba':'bx';
+    html += '<tr>';
+    html += '<td><div style="font-weight:700;color:#f4f8ff">'+h(r.name)+'</div>';
+    html += '<div style="font-size:10px;color:#4b6278">'+h(r.source)+'</div></td>';
+    html += '<td><span class="badge '+sc+'">'+h(r.stage)+'</span></td>';
+    html += '<td>'+h(r.partner)+'</td>';
+    html += '<td><span class="badge '+(r.type==='Paid'?'ba':'bb')+'">'+h(r.type)+'</span></td>';
+    html += '<td>'+(r.fee?'$'+r.fee.toLocaleString():'—')+'</td>';
+    html += '<td><span class="badge '+fc+'">'+h(r.feeStatus||'N/A')+'</span></td>';
+    html += '<td>'+h(r.care)+'</td>';
+    html += '<td>'+h(r.assigned)+'</td>';
+    html += '<td>'+(r.tourDate||'—')+'</td>';
+    html += '<td style="white-space:nowrap">';
+    html += '<button class="btn btn-a btn-sm" onclick="advanceRef('+r.id+')" style="margin-right:4px">Advance</button>';
+    html += '<button class="btn btn-x btn-sm" onclick="viewRef('+r.id+')">Detail</button>';
+    html += '</td></tr>';
+  });
+  html += '</tbody></table></div></div>';
+  return html;
+}
+function filterRefStage(stage){
+  render('referrals');
+  setTimeout(function(){
+    var el=document.getElementById('rfStageF');
+    if(el){el.value=stage;render('referrals');}
+  },10);
+}
+function addReferralPrompt(){
+  var name=prompt('Prospect name:');if(!name)return;
+  var source=prompt('Referral source:','A Place for Mom')||'Unknown';
+  var type=prompt('Type (Paid / Organic):','Paid')||'Organic';
+  var fee=parseInt(prompt('Referral fee ($, 0 if none):',type==='Paid'?'2000':'0'))||0;
+  var care=prompt('Care level:','Assisted Living')||'Assisted Living';
+  PAID_REFERRALS.unshift({
+    id:++nextId,source:source,partner:source.split(' ')[0],type:type,fee:fee,
+    feeStatus:fee>0?'Pending':'N/A',name:name,care:care,stage:'New Referral',
+    urgency:'Warm',assigned:'Sarah M.',phone:'',tourDate:'',moveInTarget:'',
+    notes:'',lostReason:'',created:new Date().toISOString().split('T')[0]
+  });
+  T('Referral added: '+name);render('referrals');
+}
+function advanceRef(id){
+  var r=PAID_REFERRALS.find(function(x){return x.id===id;});if(!r)return;
+  var idx=REFERRAL_STAGES.indexOf(r.stage);
+  if(r.stage==='Moved In'){T(r.name+' already moved in!','w');return;}
+  if(r.stage==='Lost'){T(r.name+' is marked Lost — re-engage to reopen.','w');return;}
+  if(idx<REFERRAL_STAGES.length-2){
+    r.stage=REFERRAL_STAGES[idx+1];
+    if(r.stage==='Moved In'&&r.feeStatus==='Pending') r.feeStatus='Paid';
+    T(r.name+' advanced to: '+r.stage);
+    render('referrals');
+  } else {
+    var reason=prompt('Mark as Lost — reason (Not interested / Chose competitor / Pricing / Medical decline / No response / Deceased / Duplicate / Other):','Not interested');
+    if(reason){r.stage='Lost';r.lostReason=reason;r.feeStatus='N/A';T(r.name+' marked Lost.');render('referrals');}
+  }
+}
+function viewRef(id){
+  var r=PAID_REFERRALS.find(function(x){return x.id===id;});if(!r)return;
+  var msg='REFERRAL DETAIL\n'
+    +'Name: '+r.name+'\nSource: '+r.source+' ('+r.type+')'
+    +'\nStage: '+r.stage+'\nCare Level: '+r.care
+    +'\nFee: $'+r.fee+' | Status: '+r.feeStatus
+    +'\nAssigned: '+r.assigned+'\nPhone: '+(r.phone||'—')
+    +'\nTour: '+(r.tourDate||'Not scheduled')
+    +'\nTarget Move-In: '+(r.moveInTarget||'TBD')
+    +(r.lostReason?'\nLost Reason: '+r.lostReason:'')
+    +'\n\nNotes: '+r.notes;
+  alert(msg);
+}
+
 
 // ─── APARTMENTS ─────────────────────────────────────────────────
 function rApartments(){
@@ -574,45 +781,60 @@ var LOC_BASE={IL:3200,AL:4500,MC:5800,addon:150};
 // ── Owner Dashboard ──────────────────────────────────────
 function rOwnerDash(){
   var occ=APTS.filter(function(a){return a.status==='occupied';}).length;
+  var avail=APTS.filter(function(a){return a.status==='available';}).length;
   var rate=APTS.length?Math.round(occ/APTS.length*100):0;
-  return '<div style="background:linear-gradient(135deg,rgba(79,200,122,.06),rgba(61,158,232,.03));border:1px solid rgba(79,200,122,.15);border-radius:14px;padding:16px 20px;margin-bottom:16px">'
-    +'<div style="font-size:16px;font-weight:900;color:#f4f8ff">Owner / Investor Dashboard</div>'
-    +'<div style="font-size:11px;color:#6b7fa3;margin-top:2px">Sunrise Senior Living — February 2026 — Read-Only Access</div>'
+  var hot=LEADS.filter(function(l){return l.urgency==='Hot';}).length;
+  var openM=MAINT_TICKETS.filter(function(t){return t.status!=='completed';}).length;
+  var pendingFees=PAID_REFERRALS.filter(function(r){return r.feeStatus==='Pending';}).reduce(function(s,r){return s+r.fee;},0);
+  var totalRevenue=APTS.filter(function(a){return a.status==='occupied';}).reduce(function(s,a){return s+a.rate;},0);
+  return '<div style="background:linear-gradient(135deg,rgba(79,200,122,.04),rgba(245,158,11,.02));border:1px solid rgba(79,200,122,.12);border-radius:14px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">'
+    +'<div><div style="font-size:11px;font-weight:700;color:#4fc87a;letter-spacing:.06em;text-transform:uppercase">Portfolio Overview</div><div style="font-size:22px;font-weight:900;color:#f4f8ff">Sunrise Senior Living</div><div style="font-size:12px;color:#6b7fa3">Full System Visibility — Owner / Investor View</div></div>'
+    +'<div style="display:flex;gap:8px;flex-wrap:wrap">'
+      +'<button class="btn btn-a btn-sm" onclick="go(\'reports\')">View Reports</button>'
+      +'<button class="btn btn-g btn-sm" onclick="go(\'referrals\')">Referral Pipeline</button>'
     +'</div>'
+    +'</div>'
+    // KPI row
     +'<div class="stats">'
-    +'<div class="stat"><div class="sl">Monthly Revenue</div><div class="sv" style="color:#4fc87a">$161K</div><div class="ss sg">↑ 4.2% YoY</div></div>'
-    +'<div class="stat"><div class="sl">Occupancy Rate</div><div class="sv">'+rate+'%</div><div class="ss sg">↑ 2% vs Jan</div></div>'
-    +'<div class="stat"><div class="sl">NOI (Est.)</div><div class="sv">$52K</div><div class="ss">32% margin</div></div>'
-    +'<div class="stat"><div class="sl">Move-Ins (Feb)</div><div class="sv">3</div><div class="ss sg">On track</div></div>'
-    +'<div class="stat"><div class="sl">CapEx This Mo</div><div class="sv sa">$8.4K</div><div class="ss">Make-ready costs</div></div>'
-    +'<div class="stat"><div class="sl">Avg Rev/Unit</div><div class="sv">$4,280</div><div class="ss">Occupied only</div></div>'
+      +'<div class="stat" onclick="go(\'occupancy\')"><div class="sl">Occupancy Rate</div><div class="sv">'+rate+'%</div><div class="ss sg">'+occ+' / '+APTS.length+' units</div></div>'
+      +'<div class="stat" onclick="go(\'apartments\')"><div class="sl">Available Units</div><div class="sv sg">'+avail+'</div><div class="ss">Ready to show</div></div>'
+      +'<div class="stat" onclick="go(\'ledger\')"><div class="sl">Monthly Revenue</div><div class="sv sa">$'+totalRevenue.toLocaleString()+'</div><div class="ss">Occupied units rent roll</div></div>'
+      +'<div class="stat" onclick="go(\'referrals\')"><div class="sl">Pending Ref. Fees</div><div class="sv sr">$'+pendingFees.toLocaleString()+'</div><div class="ss">On move-in</div></div>'
+      +'<div class="stat" onclick="go(\'leads\')"><div class="sl">Hot Leads</div><div class="sv sr">'+hot+'</div><div class="ss">Need attention now</div></div>'
+      +'<div class="stat" onclick="go(\'maintenance\')"><div class="sl">Open Work Orders</div><div class="sv sr">'+openM+'</div><div class="ss">Maintenance tickets</div></div>'
     +'</div>'
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">'
-    +'<div class="card"><div class="card-hd"><div class="card-t">6-Month Revenue Trend</div></div>'
-    +REVENUE_MONTHS.map(function(m){
-      var maxV=190000;
-      var pct=Math.round(m.act/maxV*100);
-      var color=m.act>=m.bud?'#4fc87a':'#f87171';
-      return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:7px">'
-        +'<div style="width:45px;font-size:11px;color:#4b6278">'+m.mo+'</div>'
-        +'<div style="flex:1;height:6px;background:#071120;border-radius:3px;overflow:hidden">'
-        +'<div style="height:100%;background:'+color+';width:'+pct+'%;border-radius:3px"></div></div>'
-        +'<div style="font-size:12px;font-weight:700;color:'+color+';width:50px;text-align:right">$'+Math.round(m.act/1000)+'K</div>'
-        +'</div>';
-    }).join('')+'</div>'
-    +'<div class="card"><div class="card-hd"><div class="card-t">Key Performance Indicators</div></div>'
-    +[
-      ['Avg Revenue/Occupied Unit','$4,280','#4fc87a'],
-      ['Move-In Conversion Rate','38%','#4fc87a'],
-      ['Days to Fill (Make-Ready)','18 days','#4fc87a'],
-      ['Concession Rate','4.2%','#f59e0b'],
-      ['Resident Satisfaction','4.6/5','#4fc87a']
-    ].map(function(kpi){
-      return '<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04)">'
-        +'<span style="font-size:12px;color:#c8d6e8">'+kpi[0]+'</span>'
-        +'<span style="font-size:13px;font-weight:700;color:'+kpi[2]+'">'+kpi[1]+'</span>'
-        +'</div>';
-    }).join('')+'</div>'
+    // Three-column view: Sales + Ops + Financial
+    +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">'
+      // Sales
+      +'<div><div class="card"><div class="card-hd"><div class="card-t">Sales Activity</div><button class="btn btn-a btn-sm" onclick="go(\'leads\')">View All</button></div>'
+      +LEADS.filter(function(l){return l.urgency==='Hot';}).slice(0,3).map(function(l){
+        return '<div style="padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)"><div style="display:flex;justify-content:space-between;align-items:center"><strong style="font-size:12px;color:#f4f8ff">'+h(l.name)+'</strong><span class="badge br">Hot</span></div><div style="font-size:10px;color:#4b6278">'+h(l.care)+' &bull; '+h(l.status)+'</div></div>';
+      }).join('')+'</div>'
+      // Referral pipeline preview
+      +'<div class="card" style="margin-top:0"><div class="card-hd"><div class="card-t">Referral Pipeline</div><button class="btn btn-g btn-sm" onclick="go(\'referrals\')">Full Pipeline</button></div>'
+      +PAID_REFERRALS.filter(function(r){return r.stage!=='Moved In'&&r.stage!=='Lost';}).slice(0,3).map(function(r){
+        return '<div style="padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)"><div style="display:flex;justify-content:space-between"><strong style="font-size:12px;color:#f4f8ff">'+h(r.name)+'</strong><span class="badge '+(r.type==='Paid'?'ba':'bb')+'">'+r.type+'</span></div><div style="font-size:10px;color:#4b6278">'+h(r.stage)+' &bull; '+h(r.source)+'</div></div>';
+      }).join('')+'</div></div>'
+      // Operations
+      +'<div><div class="card"><div class="card-hd"><div class="card-t">Operations Status</div><button class="btn btn-x btn-sm" onclick="go(\'apartments\')">Units</button></div>'
+      +[['Occupied','occupied','#4fc87a'],['Available','available','#3d9ee8'],['Make-Ready','make_ready','#f59e0b'],['On-Notice','on_notice','#f87171']].map(function(e){
+        var cnt=APTS.filter(function(a){return a.status===e[1];}).length;
+        return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)"><div style="display:flex;align-items:center;gap:8px"><div style="width:8px;height:8px;border-radius:50%;background:'+e[2]+'"></div><span style="font-size:12px;color:#c8d6e8">'+e[0]+'</span></div><span style="font-weight:800;font-size:14px;color:'+e[2]+'">'+cnt+'</span></div>';
+      }).join('')+'</div>'
+      +'<div class="card" style="margin-top:0"><div class="card-hd"><div class="card-t">Maintenance</div><button class="btn btn-x btn-sm" onclick="go(\'maintenance\')">View</button></div>'
+      +'<div style="font-size:12px;color:#6b7fa3">'+openM+' open ticket'+(openM!==1?'s':'')+' — '+(MAINT_TICKETS.filter(function(t){return t.priority==='High'&&t.status!=='completed';}).length)+' high priority</div>'
+      +'</div></div>'
+      // Financial
+      +'<div><div class="card"><div class="card-hd"><div class="card-t">Financial Overview</div><button class="btn btn-a btn-sm" onclick="go(\'ledger\')">Ledger</button></div>'
+      +'<div style="display:flex;flex-direction:column;gap:0">'
+        +'<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="font-size:12px;color:#8ba4c4">Rent Roll</span><span style="font-weight:800;color:#4fc87a">$'+totalRevenue.toLocaleString()+'/mo</span></div>'
+        +'<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="font-size:12px;color:#8ba4c4">Occupancy</span><span style="font-weight:800;color:#f4f8ff">'+rate+'%</span></div>'
+        +'<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="font-size:12px;color:#8ba4c4">Pending Ref Fees</span><span style="font-weight:800;color:#f87171">$'+pendingFees.toLocaleString()+'</span></div>'
+        +'<div style="display:flex;justify-content:space-between;padding:7px 0"><span style="font-size:12px;color:#8ba4c4">Available Units</span><span style="font-weight:800;color:#3d9ee8">'+avail+' units</span></div>'
+      +'</div></div>'
+      +'<div class="card" style="margin-top:0"><div class="card-hd"><div class="card-t">Revenue Leakage</div><button class="btn btn-a btn-sm" onclick="go(\'revenue\')">View</button></div>'
+      +'<div style="font-size:12px;color:#f87171">$'+(avail*3200).toLocaleString()+'/mo potential from '+avail+' vacant units</div>'
+      +'</div></div>'
     +'</div>';
 }
 
@@ -816,12 +1038,7 @@ function buildLOCTable(){
   }).join('');
 }
 
-// Override render() to call buildLOCTable after setting innerHTML
-var _origRender=render;
-function render(key){
-  _origRender(key);
-  if(key==='loc'){setTimeout(buildLOCTable,10);}
-}
+// LOC table rebuild handled inside render() above
 
 // ── Competitor Intel ─────────────────────────────────────
 function rCompetitors(){
@@ -898,6 +1115,129 @@ function clearConArea(){document.getElementById('conAddArea').innerHTML='';}
 function clearCompArea(){document.getElementById('compAddArea').innerHTML='';}
 
 // ─── AIRCALL (Demo) ─────────────────────────────────────────────
+// ─── ACTIVITY NOTES (Unified Timeline) ───────────────────────
+function rNotes(){
+  var COMM_META={
+    call:        {icon:'📞',label:'Phone Call',   color:'#3d9ee8',bg:'rgba(61,158,232,.12)',  border:'rgba(61,158,232,.28)'},
+    text:        {icon:'💬',label:'Text Message', color:'#a78bfa',bg:'rgba(167,139,250,.12)', border:'rgba(167,139,250,.28)'},
+    email:       {icon:'✉️',label:'Email',        color:'#f59e0b',bg:'rgba(245,158,11,.12)',  border:'rgba(245,158,11,.28)'},
+    missed_call: {icon:'📵',label:'Missed Call',  color:'#f87171',bg:'rgba(248,113,113,.12)', border:'rgba(248,113,113,.28)'},
+    failed_text: {icon:'⚠️',label:'Failed Text',  color:'#f87171',bg:'rgba(248,113,113,.12)', border:'rgba(248,113,113,.28)'},
+    failed_email:{icon:'⚠️',label:'Failed Email', color:'#f87171',bg:'rgba(248,113,113,.12)', border:'rgba(248,113,113,.28)'},
+    manual:      {icon:'📝',label:'Manual Note',  color:'#4fc87a',bg:'rgba(79,200,122,.08)',  border:'rgba(79,200,122,.22)'},
+  };
+  var html='';
+  // Add note form
+  html+='<div class="card" style="margin-bottom:14px">'
+    +'<div class="card-hd"><div class="card-t">+ Add Manual Note</div></div>'
+    +'<div style="display:flex;flex-direction:column;gap:10px">'
+      +'<div class="fl"><div class="flb">Contact / Lead</div>'
+        +'<select class="fi" id="nt-lead">'
+          +'<option value="">— General Note —</option>'
+          +LEADS.map(function(l){return'<option value="'+l.id+'">'+h(l.name)+'</option>';}).join('')
+        +'</select></div>'
+      +'<div class="fl"><div class="flb">Note Type</div>'
+        +'<select class="fi" id="nt-type">'
+          +'<option value="manual">Manual Note</option>'
+          +'<option value="call">Phone Call</option>'
+          +'<option value="text">Text Message</option>'
+          +'<option value="email">Email</option>'
+          +'<option value="visit">Visit / In-Person</option>'
+          +'<option value="missed_call">Missed Call / Voicemail</option>'
+        +'</select></div>'
+      +'<div class="fl"><div class="flb">Summary *</div>'
+        +'<textarea class="fi" id="nt-summary" rows="3" placeholder="What happened, what was discussed…"></textarea></div>'
+      +'<div class="fl"><div class="flb">Outcome</div>'
+        +'<input class="fi" id="nt-outcome" placeholder="e.g. Tour scheduled, sent proposal, left voicemail…"></div>'
+      +'<div class="fl"><div class="flb">Next Step</div>'
+        +'<input class="fi" id="nt-nextstep" placeholder="e.g. Follow up in 2 days, send pricing, confirm tour…"></div>'
+      +'<div class="fl"><div class="flb">Follow-Up Date</div>'
+        +'<input class="fi" type="date" id="nt-followdate"></div>'
+      +'<button class="btn btn-a" onclick="saveManualNote()" style="margin-top:4px">💾 Save Note</button>'
+    +'</div></div>';
+
+  // Notes timeline
+  html+='<div style="margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">'
+    +'<div style="font-size:13px;font-weight:800;color:#f4f8ff">Activity Timeline <span style="color:#4b6278;font-weight:400">('+NOTES.length+' entries)</span></div>'
+    +'<div style="display:flex;gap:8px">'
+      +'<select class="fi" id="nt-filter" style="width:150px" onchange="render(\'notes\')">'
+        +'<option value="">All Types</option>'
+        +'<option value="call">Calls</option>'
+        +'<option value="text">Texts</option>'
+        +'<option value="email">Emails</option>'
+        +'<option value="missed_call">Missed Calls</option>'
+        +'<option value="manual">Manual Notes</option>'
+      +'</select>'
+    +'</div>'
+  +'</div>';
+
+  var filterType=document.getElementById('nt-filter')?document.getElementById('nt-filter').value:'';
+  var filtered=NOTES.filter(function(n){return !filterType||n.comm_type===filterType||n.type===filterType;});
+
+  if(!filtered.length){
+    html+='<div class="card"><div style="color:#4b6278;text-align:center;padding:24px;font-size:13px">No activity yet. Notes from calls, texts, emails, and manual entries all appear here.</div></div>';
+    return html;
+  }
+
+  filtered.forEach(function(n){
+    var isAircall=n.type==='aircall';
+    var meta=COMM_META[n.comm_type]||COMM_META.manual;
+    var ts=n.created_at?new Date(n.created_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):'';
+    var cleanSummary=(n.summary||'').replace(/^[^\]]+\]\s*/,'');
+
+    html+='<div style="background:#0a1628;border:1px solid '+meta.border+';border-radius:12px;padding:14px 16px;margin-bottom:10px">';
+    // Header
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px">';
+    html+='<div style="display:flex;align-items:center;gap:8px">';
+    html+='<span style="background:'+meta.bg+';border:1px solid '+meta.border+';border-radius:999px;padding:3px 10px;font-size:11px;font-weight:800;color:'+meta.color+'">'+meta.icon+' '+meta.label+'</span>';
+    if(n.contact_name) html+='<span style="font-size:12px;font-weight:700;color:#f4f8ff">'+h(n.contact_name)+'</span>';
+    html+='</div>';
+    html+='<span style="font-size:11px;color:#6b7fa3">'+ts+'</span>';
+    html+='</div>';
+    // Summary
+    if(cleanSummary) html+='<div style="font-size:13px;color:#c8d6e8;margin-bottom:6px;line-height:1.5">'+h(cleanSummary)+'</div>';
+    // Outcome
+    if(n.outcome) html+='<div style="font-size:12px;color:#8ba4c4;margin-bottom:4px"><span style="font-weight:700;color:#c8d6e8">Outcome:</span> '+h(n.outcome)+'</div>';
+    // Next step
+    if(n.next_step) html+='<div style="font-size:12px;color:#8ba4c4;margin-bottom:4px"><span style="font-weight:700;color:#f59e0b">Next Step:</span> '+h(n.next_step)+'</div>';
+    // Follow-up
+    if(n.follow_up_date) html+='<div style="font-size:12px;color:#8ba4c4;margin-bottom:4px"><span style="font-weight:700;color:#4fc87a">Follow-Up:</span> '+h(n.follow_up_date)+'</div>';
+    // Footer
+    html+='<div style="display:flex;align-items:center;gap:6px;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.06)">';
+    html+='<span style="font-size:10px;font-weight:800;color:#f59e0b;background:rgba(245,158,11,.1);border-radius:999px;padding:1px 8px">'+h(n.user_name||'Team')+'</span>';
+    html+='</div>';
+    html+='</div>';
+  });
+
+  return html;
+}
+
+function saveManualNote(){
+  var summary=(document.getElementById('nt-summary')||{}).value.trim();
+  if(!summary){T('Summary is required','e');return;}
+  var leadSel=document.getElementById('nt-lead');
+  var leadName='';
+  if(leadSel&&leadSel.value){
+    var opt=leadSel.options[leadSel.selectedIndex];
+    leadName=opt?opt.text:'';
+  }
+  var type=(document.getElementById('nt-type')||{}).value||'manual';
+  var outcome=(document.getElementById('nt-outcome')||{}).value||'';
+  var nextStep=(document.getElementById('nt-nextstep')||{}).value||'';
+  var followDate=(document.getElementById('nt-followdate')||{}).value||null;
+
+  NOTES.unshift({
+    id:++nextId, type:type==='manual'?'manual':'aircall',
+    comm_type:type, contact_name:leadName,
+    summary:summary, outcome:outcome,
+    next_step:nextStep, follow_up_date:followDate,
+    created_at:new Date().toISOString(), user_name:'Sarah M.',
+  });
+  T('📝 Note saved!');
+  ['nt-summary','nt-outcome','nt-nextstep','nt-followdate'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  render('notes');
+}
+
 function rAircall(){
   return '<style>.ac-ch-btn{padding:7px 18px;border-radius:999px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.05);color:#8ba4c4;font-family:inherit;transition:background .12s}.ac-ch-btn.ac-on{background:linear-gradient(135deg,#f59e0b,#d97706);color:#06080e;border-color:transparent}</style>'
     +'<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:18px">'
@@ -1010,6 +1350,36 @@ var AC_EMAIL_TPL={
 };
 
 var _acTimer=null,_acSecs=0,_acMuted=false;
+
+// ══════════════════════════════════════════════════════════════
+// UNIFIED NOTE WRITER (DEMO) — pushes every Aircall activity
+// into the in-memory NOTES array so it appears in the Notes tab
+// ══════════════════════════════════════════════════════════════
+function _addNoteFromAircall(noteData) {
+  var TYPE_ICONS  = {call:'📞',text:'💬',email:'✉️',missed_call:'📵',failed_text:'⚠️',failed_email:'⚠️'};
+  var TYPE_LABELS = {call:'Phone Call',text:'Text Message',email:'Email',
+                     missed_call:'Missed Call',failed_text:'Failed Text',failed_email:'Failed Email'};
+  var icon  = TYPE_ICONS[noteData.comm_type]  || '📋';
+  var label = TYPE_LABELS[noteData.comm_type] || noteData.comm_type;
+
+  NOTES.unshift({
+    id: ++nextId,
+    type: 'aircall',
+    comm_type: noteData.comm_type,
+    contact_name: noteData.contact_name || '',
+    summary: icon+' ['+label+'] '+(noteData.contact_name||'')+' — '+(noteData.summary||noteData.outcome||''),
+    outcome: noteData.outcome || '',
+    next_step: noteData.next_step || '',
+    follow_up_date: noteData.follow_up_date || null,
+    created_at: new Date().toISOString(),
+    user_name: 'Sarah M.',
+  });
+
+  T(icon+' Activity logged to Notes tab!');
+  // If Notes tab is active, refresh it
+  if(ACTIVE==='notes') render('notes');
+}
+
 function acDemoInit(){ acDemoChannel('call'); }
 function acDemoChannel(ch){
   ['call','text','email'].forEach(function(c){
@@ -1018,11 +1388,15 @@ function acDemoChannel(ch){
     if(panel) panel.style.display=c===ch?'':'none';
   });
 }
-function acDemoFillPhone(){ var s=document.getElementById('acCallContact'),p=document.getElementById('acCallPhone'); if(s&&p) p.value=s.value.split('|')[1]||''; }
-function acDemoFillTextPhone(){ var s=document.getElementById('acTextContact'),p=document.getElementById('acTextPhone'); if(s&&p) p.value=s.value.split('|')[1]||''; }
-function acDemoFillEmail(){ var s=document.getElementById('acEmailContact'),e=document.getElementById('acEmailAddr'); if(s&&e) e.value=s.value.split('|')[1]||''; }
-function acDemoTextTpl(sel){ var b=document.getElementById('acTextBody'); if(b&&sel.value){ b.value=sel.value; var c=document.getElementById('acTxtCnt'); if(c) c.textContent=b.value.length+'/160'; } }
-function acDemoEmailTpl(sel){ var t=AC_EMAIL_TPL[sel.value]; if(!t)return; var s=document.getElementById('acEmailSubject'),b=document.getElementById('acEmailBody'); if(s)s.value=t.s; if(b)b.value=t.b; }
+function acDemoFillPhone(){ var s=document.getElementById('acCallContact'),p=document.getElementById('acCallPhone'); if(s&&p)p.value=s.value.split('|')[1]||''; }
+function acDemoFillTextPhone(){ var s=document.getElementById('acTextContact'),p=document.getElementById('acTextPhone'); if(s&&p)p.value=s.value.split('|')[1]||''; }
+function acDemoFillEmail(){ var s=document.getElementById('acEmailContact'),e=document.getElementById('acEmailAddr'); if(s&&e)e.value=s.value.split('|')[1]||''; }
+function acDemoTextTpl(sel){ var b=document.getElementById('acTextBody'); if(b&&sel.value){b.value=sel.value;var c=document.getElementById('acTxtCnt');if(c)c.textContent=b.value.length+'/160';} }
+function acDemoEmailTpl(sel){
+  var t=AC_EMAIL_TPL[sel.value]; if(!t)return;
+  var s=document.getElementById('acEmailSubject'),b=document.getElementById('acEmailBody');
+  if(s)s.value=t.s; if(b)b.value=t.b;
+}
 function acDemoStartCall(){
   var phone=(document.getElementById('acCallPhone')||{}).value;
   var sel=document.getElementById('acCallContact');
@@ -1033,30 +1407,68 @@ function acDemoStartCall(){
   if(w)w.style.display=''; if(nm)nm.textContent=name;
   _acSecs=0;_acMuted=false;
   if(_acTimer)clearInterval(_acTimer);
-  _acTimer=setInterval(function(){ _acSecs++; var m=Math.floor(_acSecs/60),s=_acSecs%60; if(ti)ti.textContent=m+':'+(s<10?'0':'')+s; },1000);
+  _acTimer=setInterval(function(){_acSecs++;var m=Math.floor(_acSecs/60),s=_acSecs%60;if(ti)ti.textContent=m+':'+(s<10?'0':'')+s;},1000);
 }
-function acDemoEndCall(){ if(_acTimer)clearInterval(_acTimer); var w=document.getElementById('acLiveCallWrap'); if(w)w.style.display='none'; T('Call ended. Log the outcome below.'); }
-function acDemoMute(){ _acMuted=!_acMuted; var btn=document.getElementById('acMuteBtn'); if(btn)btn.textContent=_acMuted?'🔇 Unmute':'🎙 Mute'; T(_acMuted?'Muted':'Unmuted'); }
+function acDemoEndCall(){
+  if(_acTimer)clearInterval(_acTimer);
+  var w=document.getElementById('acLiveCallWrap'); if(w)w.style.display='none';
+  T('Call ended. Log the outcome below and save to Notes.');
+}
+function acDemoMute(){
+  _acMuted=!_acMuted;
+  var btn=document.getElementById('acMuteBtn'); if(btn)btn.textContent=_acMuted?'🔇 Unmute':'🎙 Mute';
+  T(_acMuted?'Muted':'Unmuted');
+}
+
+// ── Save call → Notes timeline ─────────────────────────────────
 function acDemoSaveCall(){
-  var o=(document.getElementById('acCallOutcome')||{}).value; if(!o){T('Select an outcome first','e');return;}
-  var s=document.getElementById('acCallContact'); var name=s&&s.value?s.value.split('|')[0]:'Contact';
-  T('📞 Call log saved for '+name+'! Follow-up queued. (Demo)');
+  var outcome=(document.getElementById('acCallOutcome')||{}).value;
+  if(!outcome){T('Select an outcome first','e');return;}
+  var sel=document.getElementById('acCallContact');
+  var name=sel&&sel.value?sel.value.split('|')[0]:'Contact';
+  var summary=(document.getElementById('acCallSummary')||{}).value||'';
+  var nextStep=(document.getElementById('acCallNext')||{}).value||'';
+  var followDate=(document.getElementById('acCallFollowDate')||{}).value||null;
+  _addNoteFromAircall({
+    comm_type:'call', contact_name:name,
+    summary:summary||outcome, outcome:outcome,
+    next_step:nextStep, follow_up_date:followDate
+  });
+  ['acCallOutcome','acCallSummary','acCallNext','acCallFollowDate'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
 }
+
+// ── Send text → Notes timeline ──────────────────────────────────
 function acDemoSendText(){
   var phone=(document.getElementById('acTextPhone')||{}).value;
   var body=(document.getElementById('acTextBody')||{}).value.trim();
-  var s=document.getElementById('acTextContact'); var name=s&&s.value?s.value.split('|')[0]:'Contact';
-  if(!phone){T('Enter a phone number first','e');return;} if(!body){T('Message is required','e');return;}
-  T('💬 Text sent to '+name+'! (Demo — no real message sent)');
+  var sel=document.getElementById('acTextContact');
+  var name=sel&&sel.value?sel.value.split('|')[0]:'Contact';
+  if(!phone){T('Enter a phone number first','e');return;}
+  if(!body){T('Message is required','e');return;}
+  _addNoteFromAircall({
+    comm_type:'text', contact_name:name,
+    summary:'Text sent: '+body.substring(0,120)+(body.length>120?'…':''),
+    outcome:'Sent'
+  });
   var tb=document.getElementById('acTextBody'); if(tb)tb.value='';
+  var cnt=document.getElementById('acTxtCnt'); if(cnt)cnt.textContent='0/160';
 }
+
+// ── Send email → Notes timeline ─────────────────────────────────
 function acDemoSendEmail(){
   var to=(document.getElementById('acEmailAddr')||{}).value.trim();
-  var subj=(document.getElementById('acEmailSubject')||{}).value.trim();
+  var subject=(document.getElementById('acEmailSubject')||{}).value.trim();
   var body=(document.getElementById('acEmailBody')||{}).value.trim();
-  var s=document.getElementById('acEmailContact'); var name=s&&s.value?s.value.split('|')[0]:'Contact';
-  if(!to){T('Enter recipient email','e');return;} if(!subj){T('Subject required','e');return;} if(!body){T('Body required','e');return;}
-  T('✉️ Email sent to '+name+'! (Demo — no real email sent)');
+  var sel=document.getElementById('acEmailContact');
+  var name=sel&&sel.value?sel.value.split('|')[0]:'Contact';
+  if(!to){T('Enter recipient email','e');return;}
+  if(!subject){T('Subject required','e');return;}
+  if(!body){T('Body required','e');return;}
+  _addNoteFromAircall({
+    comm_type:'email', contact_name:name,
+    summary:'Email sent — Subject: '+subject,
+    outcome:'Sent'
+  });
   ['acEmailAddr','acEmailCC','acEmailSubject','acEmailBody'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
 }
 </script>
