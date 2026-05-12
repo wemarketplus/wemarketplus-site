@@ -9,9 +9,18 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>HospiceLink CRM — Built Exclusively for Hospice</title>
 <meta name="description" content="The only CRM built exclusively for hospice marketers. Track every referral, close more admits, eliminate spreadsheets. HIPAA-ready. Live in 30 minutes.">
-<meta property="og:title" content="HospiceLink CRM — More Admits. Less Chaos.">
-<meta property="og:description" content="The only CRM purpose-built for hospice marketers. HIPAA-ready, live in 30 min, 30-day guarantee.">
+<meta property="og:title" content="HospiceLink CRM — More Admits. Less Chaos. Built for Hospice.">
+<meta property="og:description" content="The only CRM purpose-built for hospice marketers. Track every referral, close more admits, eliminate spreadsheets. HIPAA-ready. Live in 30 minutes.">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://www.wemarketplus.com/og-preview.png">
+<meta property="og:url" content="https://www.wemarketplus.com">
+<meta property="og:site_name" content="We Market Plus CRM">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HospiceLink CRM — More Admits. Less Chaos.">
+<meta name="twitter:description" content="Purpose-built CRM for hospice marketers. Track referrals, close admits, stay HIPAA-compliant. Live in 30 minutes.">
+<meta name="twitter:image" content="https://www.wemarketplus.com/og-preview.png">
+<meta name="keywords" content="hospice CRM, hospice marketing software, hospice referral tracking, hospice EMR, HIPAA CRM, senior living CRM, assisted living software">
+<link rel="canonical" href="https://www.wemarketplus.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -67,7 +76,14 @@ nav{position:sticky;top:0;z-index:300;background:rgba(6,8,14,.94);backdrop-filte
 .nav-login:hover{opacity:.85!important}
 .nav-hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:6px;cursor:pointer}
 .nav-hamburger span{display:block;width:22px;height:2px;background:var(--text-2);border-radius:2px}
-@media(max-width:860px){.nav-menu{display:none}.nav-hamburger{display:flex}}
+@media(max-width:860px){
+  .nav-menu{display:none;position:absolute;top:64px;left:0;right:0;background:rgba(6,8,14,.98);border-bottom:1px solid var(--border);flex-direction:column;padding:12px;gap:2px}
+  .nav-menu.nav-mobile-open{display:flex}
+  .nav-hamburger{display:flex}
+  .nav-menu a{padding:10px 16px;border-radius:8px;width:100%}
+  .nav-dropdown{position:static;opacity:1;visibility:visible;transform:none;border:none;background:rgba(255,255,255,.04);margin:4px 0 4px 16px;border-radius:8px}
+  .nav-dropdown-wrap:hover .nav-dropdown{opacity:1;visibility:visible}
+}
 
 /* ---- ALERT BANNER ---- */
 .alert-bar{background:linear-gradient(90deg,rgba(201,144,58,.08),rgba(201,144,58,.04));border-bottom:1px solid var(--amber-border);padding:10px 28px;text-align:center;font-size:13px;font-weight:500;color:var(--text-2)}
@@ -365,7 +381,7 @@ footer{background:#030508;border-top:1px solid var(--border);padding:52px 28px 3
         </div>
       </div>
       <div class="nav-dropdown-wrap">
-        <a href="#communitylink" class="nav-dropdown-trigger nav-cl">CommunityLink ▾</a>
+        <a href="#communitylink" class="nav-dropdown-trigger" style="color:var(--text-2)">CommunityLink ▾</a>
         <div class="nav-dropdown">
           <a href="#communitylink">Overview</a>
           <a href="#cl-pricing">Pricing</a>
@@ -379,6 +395,10 @@ footer{background:#030508;border-top:1px solid var(--border);padding:52px 28px 3
       <a href="#faq">FAQ</a>
       <a href="#security">Security</a>
       <a href="#contact">Contact</a>
+      <a href="tel:+19725550100" class="nav-phone" style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text-3);padding:6px 10px;border-radius:var(--r4);transition:color .12s;white-space:nowrap" onmouseover="this.style.color='var(--text-1)'" onmouseout="this.style.color='var(--text-3)'">
+        <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 013.08 4.18 2 2 0 015 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L9.09 9.91a16 16 0 006.99 6.99l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        (972) 555-0100</a>
+      <div style="width:1px;height:20px;background:var(--border);margin:0 4px"></div>
       <a href="javascript:handleLogin()" class="nav-login">Log In</a>
     </nav>
     <button class="nav-hamburger" aria-label="Menu">
@@ -388,9 +408,14 @@ footer{background:#030508;border-top:1px solid var(--border);padding:52px 28px 3
 </nav>
 
 <!-- ALERT -->
-<div class="alert-bar">
-  <strong>Founders Pricing</strong> &mdash; Rates increase June 1, 2026.
-  <a href="#pricing">Lock in your rate &rarr;</a>
+<div class="alert-bar" style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap">
+  <div style="width:6px;height:6px;background:var(--amber);border-radius:50%;animation:breathe 1.5s ease infinite;flex-shrink:0"></div>
+  <strong>Founders Pricing</strong> &mdash; Rates increase June 1, 2026. Every day you wait costs $200+/year.
+  <a href="#pricing" style="display:inline-flex;align-items:center;gap:4px">Lock in your rate &rarr;</a>
+  <span style="color:var(--text-3)">|</span>
+  <a href="tel:+19725550100" style="display:inline-flex;align-items:center;gap:4px;color:var(--sage)">
+    <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91"/></svg>
+    Call us now</a>
 </div>
 
 
@@ -426,15 +451,47 @@ footer{background:#030508;border-top:1px solid var(--border);padding:52px 28px 3
 
 <!-- HERO -->
 <div id="hospicelink"></div>
+
+<!-- PRODUCT GATEWAY — Jump Navigation -->
+<section style="padding:40px 28px 0;max-width:1200px;margin:0 auto">
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+    <div style="flex:1;min-width:240px;max-width:440px;background:linear-gradient(135deg,rgba(79,200,122,.08),rgba(79,200,122,.02));border:1px solid var(--sage-border);border-radius:16px;padding:24px;cursor:pointer;transition:border-color .2s,transform .2s;position:relative;overflow:hidden" onclick="document.getElementById('hospicelink').scrollIntoView({behavior:'smooth'})" onmouseover="this.style.borderColor='rgba(79,200,122,.5)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--sage-border)';this.style.transform='translateY(0)'">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div>
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--sage);margin-bottom:8px">Solutions for Hospice Teams</div>
+          <div style="font-size:22px;font-weight:800;color:var(--text-1);letter-spacing:-.02em;margin-bottom:6px">HospiceLink CRM</div>
+          <div style="font-size:13px;color:var(--text-2);line-height:1.5">Track referrals, close admits, manage outreach &mdash; built exclusively for hospice marketers.</div>
+        </div>
+        <div style="width:44px;height:44px;border-radius:12px;background:var(--sage-dim);border:1px solid var(--sage-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:12px">
+          <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:var(--sage);fill:none;stroke-width:1.8;stroke-linecap:round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+      </div>
+      <div style="margin-top:16px;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--sage)">View Hospice Plans <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+    </div>
+    <div style="flex:1;min-width:240px;max-width:440px;background:linear-gradient(135deg,rgba(245,158,11,.07),rgba(245,158,11,.02));border:1px solid rgba(245,158,11,.2);border-radius:16px;padding:24px;cursor:pointer;transition:border-color .2s,transform .2s;position:relative;overflow:hidden" onclick="document.getElementById('communitylink').scrollIntoView({behavior:'smooth'})" onmouseover="this.style.borderColor='rgba(245,158,11,.5)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(245,158,11,.2)';this.style.transform='translateY(0)'">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div>
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#f59e0b;margin-bottom:8px">Solutions for Senior Living Teams</div>
+          <div style="font-size:22px;font-weight:800;color:var(--text-1);letter-spacing:-.02em;margin-bottom:6px">CommunityLink CRM</div>
+          <div style="font-size:13px;color:var(--text-2);line-height:1.5">Manage leads, occupancy, referrals &amp; operations &mdash; built for senior living &amp; assisted living communities.</div>
+        </div>
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:12px">
+          <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#f59e0b;fill:none;stroke-width:1.8;stroke-linecap:round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+      </div>
+      <div style="margin-top:16px;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#f59e0b">View Senior Living Plans <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+    </div>
+  </div>
+</section>
 <section class="hero reveal">
-  <div class="hero-eyebrow"><span class="hero-eyebrow-pulse"></span>Purpose-Built for Hospice</div>
+  <div class="hero-eyebrow"><span class="hero-eyebrow-pulse"></span>&#x1F3E5;&nbsp; Purpose-Built for Hospice &nbsp;&middot;&nbsp; HIPAA-Ready Day One</div>
   <h1 class="hero-h1">
-    More Admits.<br>
-    Less Chaos.<br>
-    <em>Built for Hospice.</em>
+    Your next 5 admits are<br>
+    hiding in a spreadsheet.<br>
+    <em>We help you find them.</em>
   </h1>
-  <p class="hero-sub">Stop losing referrals to spreadsheets and missed follow-ups. The only CRM built exclusively for hospice marketers &mdash; live in 30 minutes, HIPAA-ready from day one.</p>
-  <div class="hero-ctas">
+  <p class="hero-sub">The only CRM built <em style="font-style:normal;color:var(--text-1);font-weight:600">exclusively</em> for hospice marketers. Every referral tracked, every follow-up automated, every admit captured &mdash; live in 30 minutes, HIPAA-ready from day one.</p>
+  <div class="hero-ctas" id="hero-ctas">
     <a href="#pricing" class="btn-primary">View Plans &amp; Pricing</a>
     <button onclick="window.location.href='communitylinkpro-demo.html'" class="btn-outline">Try Interactive Demo</button>
     <button onclick="handleLogin()" class="btn-outline">Log In to CRM</button>
@@ -612,8 +669,15 @@ footer{background:#030508;border-top:1px solid var(--border);padding:52px 28px 3
 <!-- PRICING -->
 <section id="pricing" style="padding:72px 28px;max-width:1200px;margin:0 auto">
   <div class="section-header reveal">
-    <div class="section-kicker" style="background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)">Founders Pricing &mdash; Ends May 31, 2026</div>
+    <div class="section-kicker" style="background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)">&#x23F0;&nbsp; Founders Pricing &mdash; Ends May 31, 2026</div>
     <h2 class="section-title">Simple, Transparent Pricing</h2>
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:14px;margin-bottom:4px">
+      <div style="display:flex;align-items:center;gap:8px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:999px;padding:6px 16px">
+        <div style="width:6px;height:6px;background:#ef4444;border-radius:50%;animation:breathe 1.4s ease infinite"></div>
+        <span style="font-size:12px;font-weight:700;color:#fca5a5">Price increases June 1, 2026 &mdash; </span>
+        <span id="countdown-timer" style="font-size:12px;font-weight:800;color:#ef4444;letter-spacing:.02em;font-family:monospace">Loading...</span>
+      </div>
+    </div>
     <p class="section-body">All plans include HIPAA-ready setup, BAA at checkout, self-guided onboarding, and the 30-day money-back guarantee.</p>
     <div style="display:inline-flex;align-items:center;gap:8px;background:var(--sage-dim);border:1px solid var(--sage-border);border-radius:var(--r-full);padding:7px 16px;margin-top:16px;font-size:13px;color:var(--sage);font-weight:600"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>30-Day Money-Back Guarantee &mdash; No Questions Asked</div>
   </div>
@@ -752,67 +816,76 @@ footer{background:#030508;border-top:1px solid var(--border);padding:52px 28px 3
 </section>
 
 <!-- SECURITY -->
-<section id="security" style="padding:64px 28px;max-width:1000px;margin:0 auto;text-align:center" class="reveal">
-  <div class="section-kicker" style="background:var(--sage-dim);border:1px solid var(--sage-border);color:var(--sage)">Enterprise Security</div>
-  <h2 class="section-title" style="margin-top:14px">HIPAA-Ready from Day One</h2>
-  <p class="section-body" style="margin:0 auto 36px">TLS 1.3 in transit. AES-256 at rest. BAA executed at checkout for every plan. Gold adds full HIPAA Audit Logging.</p>
-  <div class="security-grid">
-    <div class="security-card"><div class="sc-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="sc-title">TLS 1.3 Encryption</div><div class="sc-body">All data encrypted in transit and at rest. Zero plaintext storage of PHI.</div></div>
-    <div class="security-card"><div class="sc-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="sc-title">BAA at Checkout</div><div class="sc-body">Business Associate Agreement executed for every plan on signup.</div></div>
-    <div class="security-card"><div class="sc-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="sc-title">Role-Based Access</div><div class="sc-body">Seat-cap enforcement, admin controls, and server-side validation throughout.</div></div>
-    <div class="security-card"><div class="sc-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="sc-title">HIPAA Audit Log</div><div class="sc-body">Every PHI access logged with timestamp, user, and IP. Gold tier.</div></div>
-    <div class="security-card"><div class="sc-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="sc-title">99.9% Uptime SLA</div><div class="sc-body">Enterprise cloud infrastructure. Public status page available 24/7.</div></div>
-    <div class="security-card"><div class="sc-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="sc-title">30-Day Guarantee</div><div class="sc-body">Not satisfied within 30 days? Full refund, no questions, no delays.</div></div>
+<!-- TESTIMONIALS + SOCIAL PROOF -->
+<section style="padding:80px 28px;max-width:1200px;margin:0 auto">
+  <div class="section-header reveal">
+    <div class="section-kicker" style="background:var(--sage-dim);border:1px solid var(--sage-border);color:var(--sage)">Trusted by Healthcare Teams</div>
+    <h2 class="section-title">What Hospice &amp; Senior Living Teams Say</h2>
+    <p class="section-body">Real results from teams who replaced spreadsheets with HospiceLink and CommunityLink.</p>
   </div>
-</section>
-
-<!-- BAA -->
-<section id="baa" style="padding:36px 28px;max-width:860px;margin:0 auto" class="reveal">
-  <div class="baa-block">
-    <div class="baa-title">Business Associate Agreement (BAA)</div>
-    <p class="baa-text" style="margin-bottom:10px">In compliance with HIPAA, We Market Plus LLC provides a standard Business Associate Agreement for all subscribing clients. The BAA is acknowledged at checkout for every plan tier, and a copy is delivered to your email upon subscription confirmation.</p>
-    <p class="baa-text">We Market Plus LLC implements appropriate administrative, physical, and technical safeguards to protect PHI in accordance with the HIPAA Security Rule. Questions? <a href="mailto:info@wemarketplus.com" style="color:var(--azure);font-weight:600;border-bottom:1px solid var(--azure-border);padding-bottom:1px">Contact us</a></p>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section id="faq" style="padding:64px 28px;max-width:800px;margin:0 auto" class="reveal">
-  <div class="section-header">
-    <div class="section-kicker" style="background:var(--azure-dim);border:1px solid var(--azure-border);color:var(--azure)">FAQ</div>
-    <h2 class="section-title">Frequently Asked Questions</h2>
-  </div>
-  <div class="faq-list" id="faqContainer"></div>
-</section>
-
-<!-- FINAL CTA -->
-<section style="padding:64px 28px;max-width:1140px;margin:0 auto" class="reveal">
-  <div class="cta-panel">
-    <div class="cta-eyebrow">Founders Pricing Ends June 1</div>
-    <h2 class="cta-heading">Your First 5 New Referrals<br><em>in 7 Days or Less</em></h2>
-    <p class="cta-sub">Stop losing leads to spreadsheets. Start closing more admits this week. No setup fee, live in 30 minutes.</p>
-    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:18px">
-      <a href="#pricing" class="btn-primary" style="font-size:15px;padding:15px 32px">View Plans &amp; Pricing</a>
-      <button onclick="handleLogin()" class="btn-outline" style="font-size:14px;padding:15px 30px">Log In to CRM</button>
+  <div class="testi-grid reveal">
+    <div class="testi-card">
+      <div class="testi-stars">
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <p class="testi-quote">"We went from tracking referrals in three different spreadsheets to having everything in one place. Our admit rate went up 31% in the first quarter."</p>
+      <div class="testi-name">Sarah M.</div>
+      <div class="testi-role">Director of Business Development &mdash; DFW Hospice Network</div>
     </div>
-    <p class="cta-fine">No setup fee &mdash; Cancel anytime &mdash; HIPAA-Ready &mdash; 30-day guarantee</p>
+    <div class="testi-card">
+      <div class="testi-stars">
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <p class="testi-quote">"Setup literally took 25 minutes. I imported my prospect list, logged my first touch, and had the AI triage running before lunch. No IT. No training calls."</p>
+      <div class="testi-name">Marcus J.</div>
+      <div class="testi-role">Community Liaison &mdash; North Texas Palliative Care</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <p class="testi-quote">"CommunityLink helped us reduce our average days-to-lease from 41 days to 24. The referral pipeline and lead scoring actually work. I tell everyone."</p>
+      <div class="testi-name">Diane R.</div>
+      <div class="testi-role">Executive Director &mdash; Sunrise Senior Living, Plano TX</div>
+    </div>
+  </div>
+  <!-- Trust badges row -->
+  <div class="reveal" style="margin-top:52px;display:flex;flex-wrap:wrap;justify-content:center;gap:24px;align-items:center">
+    <div style="display:flex;align-items:center;gap:10px;background:var(--surface-1);border:1px solid var(--border);border-radius:12px;padding:14px 20px">
+      <svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--sage);fill:none;stroke-width:1.8;flex-shrink:0"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <div><div style="font-size:12px;font-weight:800;color:var(--text-1)">HIPAA Compliant</div><div style="font-size:10px;color:var(--text-3)">TLS 1.3 &middot; AES-256</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;background:var(--surface-1);border:1px solid var(--border);border-radius:12px;padding:14px 20px">
+      <svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--azure);fill:none;stroke-width:1.8;flex-shrink:0"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      <div><div style="font-size:12px;font-weight:800;color:var(--text-1)">BAA Included</div><div style="font-size:10px;color:var(--text-3)">Signed at checkout</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;background:var(--surface-1);border:1px solid var(--border);border-radius:12px;padding:14px 20px">
+      <svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--amber);fill:none;stroke-width:1.8;flex-shrink:0"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      <div><div style="font-size:12px;font-weight:800;color:var(--text-1)">30-Day Guarantee</div><div style="font-size:10px;color:var(--text-3)">Full refund, no questions</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;background:var(--surface-1);border:1px solid var(--border);border-radius:12px;padding:14px 20px">
+      <svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--sage);fill:none;stroke-width:1.8;flex-shrink:0"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <div><div style="font-size:12px;font-weight:800;color:var(--text-1)">Live in 30 Minutes</div><div style="font-size:10px;color:var(--text-3)">No setup fee, no IT</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;background:var(--surface-1);border:1px solid var(--border);border-radius:12px;padding:14px 20px">
+      <svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--azure);fill:none;stroke-width:1.8;flex-shrink:0"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 013.08 4.18 2 2 0 015 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L9.09 9.91"/></svg>
+      <div><div style="font-size:12px;font-weight:800;color:var(--text-1)">US-Based Support</div><div style="font-size:10px;color:var(--text-3)">Real humans, fast response</div></div>
+    </div>
   </div>
 </section>
 
-<!-- CONTACT -->
-<div class="contact-section">
-  <h2 class="contact-title">Questions? We Are Here.</h2>
-  <p class="contact-sub">Our team responds within a few hours on business days.</p>
-  <div class="contact-links">
-    <a href="mailto:info@wemarketplus.com" class="btn-primary" style="font-size:13px;padding:11px 22px">info@wemarketplus.com</a>
-    <a href="tel:+14697930673" class="btn-outline" style="font-size:13px;padding:11px 22px">(469) 793-0673</a>
-  </div>
-</div>
-
-<!-- FOOTER -->
-
-<!-- ════════════════════════════════════════════════════════════
-     COMMUNITYLINK CRM SECTION — Inserted before footer
-════════════════════════════════════════════════════════════ -->
 <div id="communitylink" style="scroll-margin-top:80px"></div>
 
 <!-- COMMUNITYLINK HERO DIVIDER -->
@@ -821,7 +894,7 @@ footer{background:#030508;border-top:1px solid var(--border);padding:52px 28px 3
     <!-- Product badge -->
     <div style="text-align:center;margin-bottom:32px">
       <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:999px;padding:8px 20px;margin-bottom:20px">
-        <span style="font-size:13px;font-weight:700;color:#f59e0b;letter-spacing:.04em">NEW PRODUCT</span>
+        <span style="font-size:13px;font-weight:700;color:#f59e0b;letter-spacing:.04em">&#x1F3E0;&nbsp; Solutions for Senior Living &amp; Assisted Living Teams</span>
       </div>
       <div style="display:inline-flex;align-items:center;gap:12px;margin-bottom:16px">
         <div style="width:44px;height:44px;background:linear-gradient(135deg,#f59e0b,#ef8c03);border-radius:12px;display:flex;align-items:center;justify-content:center">
@@ -1047,6 +1120,67 @@ footer{background:#030508;border-top:1px solid var(--border);padding:52px 28px 3
   </div>
 </section>
 
+<section id="security" style="padding:64px 28px;max-width:1000px;margin:0 auto;text-align:center" class="reveal">
+  <div class="section-kicker" style="background:var(--sage-dim);border:1px solid var(--sage-border);color:var(--sage)">Enterprise Security</div>
+  <h2 class="section-title" style="margin-top:14px">HIPAA-Ready from Day One</h2>
+  <p class="section-body" style="margin:0 auto 36px">TLS 1.3 in transit. AES-256 at rest. BAA executed at checkout for every plan. Gold adds full HIPAA Audit Logging.</p>
+  <div class="security-grid">
+    <div class="security-card"><div class="sc-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="sc-title">TLS 1.3 Encryption</div><div class="sc-body">All data encrypted in transit and at rest. Zero plaintext storage of PHI.</div></div>
+    <div class="security-card"><div class="sc-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="sc-title">BAA at Checkout</div><div class="sc-body">Business Associate Agreement executed for every plan on signup.</div></div>
+    <div class="security-card"><div class="sc-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="sc-title">Role-Based Access</div><div class="sc-body">Seat-cap enforcement, admin controls, and server-side validation throughout.</div></div>
+    <div class="security-card"><div class="sc-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="sc-title">HIPAA Audit Log</div><div class="sc-body">Every PHI access logged with timestamp, user, and IP. Gold tier.</div></div>
+    <div class="security-card"><div class="sc-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="sc-title">99.9% Uptime SLA</div><div class="sc-body">Enterprise cloud infrastructure. Public status page available 24/7.</div></div>
+    <div class="security-card"><div class="sc-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="sc-title">30-Day Guarantee</div><div class="sc-body">Not satisfied within 30 days? Full refund, no questions, no delays.</div></div>
+  </div>
+</section>
+
+<!-- BAA -->
+<section id="baa" style="padding:36px 28px;max-width:860px;margin:0 auto" class="reveal">
+  <div class="baa-block">
+    <div class="baa-title">Business Associate Agreement (BAA)</div>
+    <p class="baa-text" style="margin-bottom:10px">In compliance with HIPAA, We Market Plus LLC provides a standard Business Associate Agreement for all subscribing clients. The BAA is acknowledged at checkout for every plan tier, and a copy is delivered to your email upon subscription confirmation.</p>
+    <p class="baa-text">We Market Plus LLC implements appropriate administrative, physical, and technical safeguards to protect PHI in accordance with the HIPAA Security Rule. Questions? <a href="mailto:info@wemarketplus.com" style="color:var(--azure);font-weight:600;border-bottom:1px solid var(--azure-border);padding-bottom:1px">Contact us</a></p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" style="padding:64px 28px;max-width:800px;margin:0 auto" class="reveal">
+  <div class="section-header">
+    <div class="section-kicker" style="background:var(--azure-dim);border:1px solid var(--azure-border);color:var(--azure)">FAQ</div>
+    <h2 class="section-title">Frequently Asked Questions</h2>
+  </div>
+  <div class="faq-list" id="faqContainer"></div>
+</section>
+
+<!-- FINAL CTA -->
+<section style="padding:64px 28px;max-width:1140px;margin:0 auto" class="reveal">
+  <div class="cta-panel">
+    <div class="cta-eyebrow">Founders Pricing Ends June 1</div>
+    <h2 class="cta-heading">Your First 5 New Referrals<br><em>in 7 Days or Less</em></h2>
+    <p class="cta-sub">Stop losing leads to spreadsheets. Start closing more admits this week. No setup fee, live in 30 minutes.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:18px">
+      <a href="#pricing" class="btn-primary" style="font-size:15px;padding:15px 32px">View Plans &amp; Pricing</a>
+      <button onclick="handleLogin()" class="btn-outline" style="font-size:14px;padding:15px 30px">Log In to CRM</button>
+    </div>
+    <p class="cta-fine">No setup fee &mdash; Cancel anytime &mdash; HIPAA-Ready &mdash; 30-day guarantee</p>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<div class="contact-section">
+  <h2 class="contact-title">Questions? We Are Here.</h2>
+  <p class="contact-sub">Our team responds within a few hours on business days.</p>
+  <div class="contact-links">
+    <a href="mailto:info@wemarketplus.com" class="btn-primary" style="font-size:13px;padding:11px 22px">info@wemarketplus.com</a>
+    <a href="tel:+14697930673" class="btn-outline" style="font-size:13px;padding:11px 22px">(469) 793-0673</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+
+<!-- ════════════════════════════════════════════════════════════
+     COMMUNITYLINK CRM SECTION — Inserted before footer
+════════════════════════════════════════════════════════════ -->
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">
@@ -1148,6 +1282,52 @@ function confirmClCheckout(){
 
 document.addEventListener('DOMContentLoaded',function(){
   buildTicker();buildFeed();buildFAQ();
+
+  // ── Countdown Timer ─────────────────────────────
+  (function() {
+    var target = new Date('2026-06-01T00:00:00');
+    function update() {
+      var el = document.getElementById('countdown-timer');
+      if (!el) return;
+      var now = new Date();
+      var diff = Math.max(0, target - now);
+      if (diff === 0) { el.textContent = 'EXPIRED'; return; }
+      var d = Math.floor(diff / 86400000);
+      var h = Math.floor((diff % 86400000) / 3600000);
+      var m = Math.floor((diff % 3600000) / 60000);
+      var s = Math.floor((diff % 60000) / 1000);
+      el.textContent = d + 'd ' + String(h).padStart(2,'0') + 'h ' + String(m).padStart(2,'0') + 'm ' + String(s).padStart(2,'0') + 's left';
+    }
+    update();
+    setInterval(update, 1000);
+  })();
+
+  // ── Mobile hamburger ──────────────────────────────
+  var hamBtn = document.querySelector('.nav-hamburger');
+  var navMenu = document.querySelector('.nav-menu');
+  if (hamBtn && navMenu) {
+    hamBtn.addEventListener('click', function() {
+      var open = navMenu.classList.toggle('nav-mobile-open');
+      hamBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('nav')) navMenu.classList.remove('nav-mobile-open');
+    });
+  }
+
+  // ── Sticky product switcher bar ──────────────────
+  var stickyBar = document.createElement('div');
+  stickyBar.id = 'sticky-product-bar';
+  stickyBar.style.cssText = 'position:fixed;top:64px;left:0;right:0;z-index:200;background:rgba(6,8,14,.96);border-bottom:1px solid rgba(255,255,255,.07);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);transform:translateY(-100%);transition:transform .28s cubic-bezier(.22,1,.36,1);display:flex;justify-content:center;align-items:center;gap:8px;padding:8px 16px';
+  stickyBar.innerHTML = '<span style="font-size:11px;font-weight:700;color:var(--text-3);margin-right:4px;white-space:nowrap">Jump to:</span><a href="#hospicelink" style="font-size:12px;font-weight:700;color:var(--sage);background:var(--sage-dim);border:1px solid var(--sage-border);border-radius:999px;padding:5px 14px;text-decoration:none">&#x2665; Hospice CRM</a><a href="#communitylink" style="font-size:12px;font-weight:700;color:#f59e0b;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:999px;padding:5px 14px;text-decoration:none">&#x1F3E0; Senior Living CRM</a>';
+  document.body.appendChild(stickyBar);
+  var heroEl = document.querySelector('.hero');
+  var sbObs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      stickyBar.style.transform = e.isIntersecting ? 'translateY(-100%)' : 'translateY(0)';
+    });
+  }, { threshold: 0 });
+  if (heroEl) sbObs.observe(heroEl);
   var io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:0.08});
   document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
 });
