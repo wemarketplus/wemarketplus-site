@@ -1,0 +1,73 @@
+import { CheckCheck } from 'lucide-react';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { Button, Card, CardContent } from '@/shared/ui/core';
+import { useMarkAllReadMutation } from '../api/notificationsApi';
+import { useNotifications } from '../hooks/useNotifications';
+import { setFilter } from '../store/notificationsSlice';
+import { NotificationsList } from '../components/NotificationsList';
+import { cn } from '@/shared/utils/cn';
+import type { AppNotification } from '@/shared/types';
+
+const TABS: ReadonlyArray<{
+  value: 'all' | 'unread' | AppNotification['category'];
+  label: string;
+}> = [
+  { value: 'all', label: 'All' },
+  { value: 'unread', label: 'Unread' },
+  { value: 'alert', label: 'Alerts' },
+  { value: 'task', label: 'Tasks' },
+  { value: 'mention', label: 'Mentions' },
+  { value: 'system', label: 'System' },
+];
+
+export function NotificationsPage() {
+  const dispatch = useAppDispatch();
+  const filter = useAppSelector((s) => s.notifications.filter);
+  const { filtered, unreadCount } = useNotifications();
+  const [markAllRead, state] = useMarkAllReadMutation();
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="font-display text-3xl text-foreground">Notifications</h1>
+          <p className="text-sm text-muted">
+            {unreadCount} unread &middot; everything that's happened across your CRM
+          </p>
+        </div>
+        <Button
+          variant="secondary"
+          disabled={state.isLoading || unreadCount === 0}
+          onClick={() => markAllRead()}
+        >
+          <CheckCheck className="h-4 w-4" /> Mark all as read
+        </Button>
+      </div>
+
+      <Card>
+        <CardContent className="space-y-4 px-0 pt-4 pb-0">
+          <nav className="flex flex-wrap gap-1.5 px-4">
+            {TABS.map((t) => (
+              <button
+                key={t.value}
+                type="button"
+                onClick={() => dispatch(setFilter(t.value))}
+                className={cn(
+                  'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
+                  filter === t.value
+                    ? 'border-primary/40 bg-primary/15 text-primary'
+                    : 'border-white/[0.08] text-muted hover:border-white/20 hover:text-foreground',
+                )}
+              >
+                {t.label}
+              </button>
+            ))}
+          </nav>
+          <div className="border-t border-white/[0.06]">
+            <NotificationsList items={filtered} />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

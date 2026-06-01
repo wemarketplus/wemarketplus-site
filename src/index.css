@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Design tokens — extracted verbatim from the wemarketplus-site HTML
+ * (login.html, reset-password.html, crm-*.html). The site is the single
+ * source of truth for UI. Values are raw "R G B" triplets so Tailwind can
+ * apply opacity modifiers via rgb(var(--token) / <alpha-value>).
+ *
+ * The site is multi-palette:
+ *   - HospiceLink (auth + CRM): azure #49b6ff primary, gold #ffd700 accent
+ *   - CommunityLink: amber #f59e0b primary
+ *   - Landing (index.html): sage #4fc87a — applied locally on that page
+ * The active accent is driven by `--color-primary`, which product-scoped
+ * wrappers (data-product=…) can override.
+ */
+@layer base {
+  :root {
+    /* Surfaces — from login.html / crm-*.html */
+    --color-bg: 8 20 38;               /* #081426 page */
+    --color-ink: 6 8 14;               /* #06080e deepest */
+    --color-surface: 13 27 49;         /* #0d1b31 card */
+    --color-surface-raised: 10 22 40;  /* #0a1628 input bg */
+    --color-surface-elevated: 8 31 56; /* #081f38 hint boxes */
+
+    /* Text */
+    --color-foreground: 244 248 255;   /* #f4f8ff */
+    --color-muted: 107 127 163;        /* #6b7fa3 */
+    --color-muted-soft: 139 159 196;   /* #8b9fc4 labels */
+    --color-faint: 58 77 107;          /* #3a4d6b placeholder */
+
+    /* Lines — consumed at /.09 (card) and /.12 (input) */
+    --color-border: 255 255 255;
+    --color-border-strong: 255 255 255;
+
+    /* Brand accent — defaults to HospiceLink azure, overridable per product. */
+    --color-primary: 73 182 255;          /* #49b6ff */
+    --color-primary-hover: 73 182 255;    /* site darkens via opacity, not hue */
+    --color-primary-foreground: 8 20 38;  /* #081426 dark text on azure */
+
+    /* Fixed brand accents (independent of product scope) */
+    --color-azure: 73 182 255;   /* #49b6ff */
+    --color-gold: 255 215 0;     /* #ffd700 */
+    --color-amber: 245 158 11;   /* #f59e0b — CommunityLink */
+    --color-sage: 79 200 122;    /* #4fc87a — landing */
+    --color-lime: 140 255 102;   /* #8cff66 */
+
+    /* Status */
+    --color-success: 140 255 102;          /* #8cff66 */
+    --color-warning: 251 191 36;           /* #fbbf24 */
+    --color-destructive: 248 113 113;      /* #f87171 */
+    --color-destructive-foreground: 244 248 255;
+
+    /* Radii — from the site CSS */
+    --radius-sm: 8px;
+    --radius: 10px;       /* inputs */
+    --radius-lg: 12px;    /* small cards / hint boxes */
+    --radius-xl: 18px;    /* auth + dashboard cards */
+    --radius-pill: 999px; /* buttons + badges */
+  }
+
+  /* Per-product accent scopes — wrap a subtree to recolor `primary`. */
+  [data-product='communitylink'] {
+    --color-primary: 245 158 11;          /* #f59e0b */
+    --color-primary-hover: 245 158 11;
+    --color-primary-foreground: 6 8 14;   /* #06080e */
+  }
+  [data-product='hospicelink'] {
+    --color-primary: 73 182 255;
+    --color-primary-hover: 73 182 255;
+    --color-primary-foreground: 8 20 38;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  html {
+    color-scheme: dark;
+    background-color: rgb(var(--color-bg));
+  }
+
+  body {
+    background-color: rgb(var(--color-bg));
+    color: rgb(var(--color-foreground));
+    /* The site uses the system stack, NOT a webfont. Match it exactly. */
+    font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* CRM/auth dashboard headings use the system stack (matches crm-*.html /
+     login.html). `font-display` stays an alias of system for those screens. */
+  .font-display {
+    font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+    letter-spacing: -0.5px;
+    font-weight: 800;
+  }
+
+  /* The MARKETING site (index.html) uses Instrument Serif for every big
+     headline. `font-serif-display` is scoped to marketing section titles. */
+  .font-serif-display {
+    font-family: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+}
+
+@layer utilities {
+  @keyframes wm-breathe {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.3; }
+  }
+  @keyframes wm-slide-up {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes wm-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+}
