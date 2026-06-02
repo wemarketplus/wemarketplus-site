@@ -1,5 +1,5 @@
 // Single item in the live-activity ticker strip (see ActivityTicker).
-export function TickerItem({ label }: { label: string }) {
+export function TickerItem({ label, color }: { label: string; color: string }) {
   return (
     <span
       className="inline-flex items-center gap-2 whitespace-nowrap"
@@ -7,7 +7,7 @@ export function TickerItem({ label }: { label: string }) {
     >
       <span
         className="inline-block shrink-0 rounded-full"
-        style={{ width: 5, height: 5, background: '#3ecf8e' }}
+        style={{ width: 5, height: 5, background: color }}
         aria-hidden="true"
       />
       {label}

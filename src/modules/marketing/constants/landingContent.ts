@@ -14,7 +14,7 @@ import type {
 
 export const HERO = {
   eyebrow: '🏥 Purpose-Built for Hospice · HIPAA-Ready Day One',
-  title: 'Your next 5 admits are hiding in a spreadsheet.',
+  title: 'Your next 5 admits are\n hiding in a spreadsheet.',
   titleAccent: 'We help you find them.',
   subheading:
     'The only CRM built exclusively for hospice marketers. Every referral tracked, every follow-up automated, every admit captured — live in 30 minutes, HIPAA-ready from day one.',
@@ -152,12 +152,12 @@ export const TESTIMONIALS: readonly Testimonial[] = [
 ];
 
 export const SECURITY_CARDS: readonly SecurityCard[] = [
-  { title: 'TLS 1.3 Encryption', body: 'All data encrypted in transit and at rest. Zero plaintext storage of PHI.' },
-  { title: 'BAA at Checkout', body: 'Business Associate Agreement executed for every plan on signup.' },
-  { title: 'Role-Based Access', body: 'Seat-cap enforcement, admin controls, and server-side validation throughout.' },
-  { title: 'HIPAA Audit Log', body: 'Every PHI access logged with timestamp, user, and IP. Gold tier.' },
-  { title: '99.9% Uptime SLA', body: 'Enterprise cloud infrastructure. Public status page available 24/7.' },
-  { title: '30-Day Guarantee', body: 'Not satisfied within 30 days? Full refund, no questions, no delays.' },
+  { title: 'TLS 1.3 Encryption', body: 'All data encrypted in transit and at rest. Zero plaintext storage of PHI.', icon: 'encryption' },
+  { title: 'BAA at Checkout', body: 'Business Associate Agreement executed for every plan on signup.', icon: 'baa' },
+  { title: 'Role-Based Access', body: 'Seat-cap enforcement, admin controls, and server-side validation throughout.', icon: 'roles' },
+  { title: 'HIPAA Audit Log', body: 'Every PHI access logged with timestamp, user, and IP. Gold tier.', icon: 'audit' },
+  { title: '99.9% Uptime SLA', body: 'Enterprise cloud infrastructure. Public status page available 24/7.', icon: 'uptime' },
+  { title: '30-Day Guarantee', body: 'Not satisfied within 30 days? Full refund, no questions, no delays.', icon: 'guarantee' },
 ];
 
 export const FAQS: readonly Faq[] = [
@@ -197,16 +197,19 @@ export const FAQS: readonly Faq[] = [
 
 export const COMMUNITY_PILLARS: readonly CommunityPillar[] = [
   {
+    icon: 'sales',
     title: 'Sales + Outreach CRM',
     body: 'Track leads, referral sources, tours, and follow-ups. GPS check-ins, mileage logging, and competitor benchmarking built in.',
     tone: 'amber',
   },
   {
+    icon: 'operations',
     title: 'Make-Ready + Operations',
     body: 'Apartment inventory, make-ready workflows, maintenance ticketing, and housekeeping task management all synced in real time.',
     tone: 'sage',
   },
   {
+    icon: 'financial',
     title: 'Financial Command Center',
     body: 'Revenue tracking, concession approvals, LOC pricing calculator, revenue leakage detection, and investor-ready reports.',
     tone: 'azure',
@@ -225,9 +228,9 @@ export const COMMUNITY_TILES: readonly CommunityTile[] = [
 ];
 
 export const TRUST_BADGES: readonly TrustBadge[] = [
-  { title: 'HIPAA Compliant', sub: 'TLS 1.3 · AES-256' },
-  { title: 'BAA Included', sub: 'Signed at checkout' },
-  { title: '30-Day Guarantee', sub: 'Full refund, no questions' },
-  { title: 'Live in 30 Minutes', sub: 'No setup fee, no IT' },
-  { title: 'US-Based Support', sub: 'Real humans, fast response' },
+  { icon: 'shield', tone: 'sage', title: 'HIPAA Compliant', sub: 'TLS 1.3 · AES-256' },
+  { icon: 'lock', tone: 'azure', title: 'BAA Included', sub: 'Signed at checkout' },
+  { icon: 'guarantee', tone: 'amber', title: '30-Day Guarantee', sub: 'Full refund, no questions' },
+  { icon: 'clock', tone: 'sage', title: 'Live in 30 Minutes', sub: 'No setup fee, no IT' },
+  { icon: 'phone', tone: 'azure', title: 'US-Based Support', sub: 'Real humans, fast response' },
 ];

@@ -40,9 +40,18 @@ export interface Testimonial {
   quote: string;
 }
 
+export type SecurityIcon =
+  | 'encryption'
+  | 'baa'
+  | 'roles'
+  | 'audit'
+  | 'uptime'
+  | 'guarantee';
+
 export interface SecurityCard {
   title: string;
   body: string;
+  icon: SecurityIcon;
 }
 
 export interface Faq {
@@ -50,7 +59,10 @@ export interface Faq {
   a: string;
 }
 
+export type CommunityPillarIcon = 'sales' | 'operations' | 'financial';
+
 export interface CommunityPillar {
+  icon: CommunityPillarIcon;
   title: string;
   body: string;
   tone: 'amber' | 'sage' | 'azure';
@@ -62,7 +74,11 @@ export interface CommunityTile {
   body: string;
 }
 
+export type TrustBadgeIcon = 'shield' | 'lock' | 'guarantee' | 'clock' | 'phone';
+
 export interface TrustBadge {
+  icon: TrustBadgeIcon;
+  tone: 'sage' | 'azure' | 'amber';
   title: string;
   sub: string;
 }

@@ -30,7 +30,7 @@ export function PlanCard({ plan }: { plan: PricingPlan }) {
   return (
     <div
       className={cn(
-        'relative rounded-[22px] border p-[30px]',
+        'relative flex h-full flex-col rounded-[22px] border p-[30px]',
         CARD_VARIANT[plan.variant],
       )}
     >
@@ -109,7 +109,7 @@ export function PlanCard({ plan }: { plan: PricingPlan }) {
       </div>
       <Link
         to={plan.demoHref}
-        className="block rounded-pill border border-white/[0.14] py-[11px] text-center text-[13px] font-semibold text-muted transition-colors hover:border-white/[0.28] hover:text-foreground"
+        className="mt-auto block rounded-pill border border-white/[0.14] py-[11px] text-center text-[13px] font-semibold text-muted transition-colors hover:border-white/[0.28] hover:text-foreground"
       >
         {plan.demoLabel}
       </Link>

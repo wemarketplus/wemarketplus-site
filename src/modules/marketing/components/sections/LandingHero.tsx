@@ -24,7 +24,7 @@ export function LandingHero() {
           {HERO.eyebrow}
         </span>
         <h1
-          className="mx-auto mt-[30px] animate-reveal font-serif-display text-[clamp(44px,6.5vw,80px)] font-normal leading-[1.02] tracking-[-0.02em] text-foreground motion-reduce:animate-none [animation-delay:90ms]"
+          className="whitespace-pre-line mx-auto mt-[30px] animate-reveal font-serif-display text-[clamp(44px,6.5vw,80px)] font-normal leading-[1.02] tracking-[-0.02em] text-foreground motion-reduce:animate-none [animation-delay:90ms]"
         >
           {HERO.title}{' '}
           <span className="block italic text-sage">{HERO.titleAccent}</span>

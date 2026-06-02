@@ -21,6 +21,12 @@ export interface MarketingFeature {
   description: string;
 }
 
+// One entry in the live-activity ticker strip: copy + its bullet dot color.
+export interface TickerItem {
+  label: string;
+  color: string;
+}
+
 export interface MarketingUiState {
   _placeholder: true;
 }

@@ -130,10 +130,22 @@
     --color-muted: 143 163 184; /* #8fa3b8 — index.html --text-2 */
     --color-muted-soft: 143 163 184;
     --color-faint: 77 96 112; /* #4d6070 — index.html --text-3 */
+    /* The live wemarketplus.com marketing palette uses softer azure/amber than
+       the brighter CRM accents — match them so every landing azure/amber
+       element (kickers, origin card, CommunityLink) reads identically. */
+    --color-azure: 61 158 232; /* #3d9ee8 — index.html --azure */
+    --color-amber: 201 144 58; /* #c9903a — index.html --amber */
     /* Marketing cards use --surface-1 = rgba(255,255,255,.03) over the #06080e
        page, NOT the solid #0d1b31 CRM card. Re-point the opaque `surface`
        token to that flattened value so shared <Card>s match .feat-card. */
     --color-surface: 13 15 21; /* white/.03 flattened over #06080e */
+  }
+
+  /* Inside the CommunityLink band the amber accent is the brighter primary
+     (#f59e0b) — eyebrow, the "CRM" wordmark, section kickers, pillar borders —
+     not the muted #c9903a used for the gold comparison column elsewhere. */
+  .marketing-root [data-product='communitylink'] {
+    --color-amber: 245 158 11; /* #f59e0b */
   }
 }
 
@@ -179,12 +191,12 @@
 
   .ticker-wrap::before {
     left: 0;
-    background: linear-gradient(to right, #111 0%, transparent 100%);
+    background: linear-gradient(to right, #06080e 0%, transparent 100%);
   }
 
   .ticker-wrap::after {
     right: 0;
-    background: linear-gradient(to left, #111 0%, transparent 100%);
+    background: linear-gradient(to left, #06080e 0%, transparent 100%);
   }
 
   .ticker-track {

@@ -17,6 +17,7 @@ import { aiAssistantReducer } from '@/modules/ai-assistant';
 import { authApi, authReducer } from '@/modules/auth';
 import { billingApi, billingReducer } from '@/modules/billing';
 import { clFinancialReducer } from '@/modules/cl-financial';
+import { clDemoReducer } from '@/modules/cl-demo';
 import { clLeadsReducer } from '@/modules/cl-leads';
 import { clOperationsReducer } from '@/modules/cl-operations';
 import { clOutreachReducer } from '@/modules/cl-outreach';
@@ -47,6 +48,7 @@ const rootReducer = combineReducers({
   aiAssistant: aiAssistantReducer,
   auth: authReducer,
   billing: billingReducer,
+  clDemo: clDemoReducer,
   clFinancial: clFinancialReducer,
   clLeads: clLeadsReducer,
   clOperations: clOperationsReducer,

@@ -2,18 +2,38 @@ import { Product, Tier } from '@/shared/types';
 import type {
   MarketingFeature,
   MarketingTierCard,
+  TickerItem,
 } from '../types/marketingTypes';
 
+// Bullet dot palette for the activity ticker — one accent per event kind.
+export const TICKER_COLORS = {
+  muted: '#6b7280', // neutral / informational
+  green: '#3ecf8e', // positive admit / win
+  blue: '#3b82f6', // routine system event
+  amber: '#f59e0b', // follow-up / action due
+  red: '#ef4444', // alert / cold source
+} as const;
+
 // Live-activity ticker copy — scrolling strip under the marketing header.
-export const TICKER_ITEMS: readonly string[] = [
-  '45 days inactive',
-  'Weekly report delivered — Monday 7:00 AM',
-  'New admit — North Dallas Territory',
-  'Referral logged — Baylor Care Manager',
-  'Follow-up completed — John T.',
-  '14-Day Cold Alert cleared — Physician Office',
-  'AI Triage — William H. scored 9.2/10',
-  'GPS note saved — Bedside visit',
+// Each item carries its own bullet color (see TickerItem).
+export const TICKER_ITEMS: readonly TickerItem[] = [
+  { label: '45 days inactive', color: TICKER_COLORS.red },
+  {
+    label: 'Weekly report delivered — Monday 7:00 AM',
+    color: TICKER_COLORS.blue,
+  },
+  { label: 'New admit — North Dallas Territory', color: TICKER_COLORS.green },
+  { label: 'Referral logged — Baylor Care Manager', color: TICKER_COLORS.blue },
+  { label: 'Follow-up completed — John T.', color: TICKER_COLORS.amber },
+  {
+    label: '14-Day Cold Alert cleared — Physician Office',
+    color: TICKER_COLORS.red,
+  },
+  {
+    label: 'AI Triage — William H. scored 9.2/10',
+    color: TICKER_COLORS.green,
+  },
+  { label: 'GPS note saved — Bedside visit', color: TICKER_COLORS.muted },
 ];
 
 // HospiceLink tiers — prices + features verbatim from index.html #pricing.

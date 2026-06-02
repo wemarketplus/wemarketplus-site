@@ -164,6 +164,11 @@ const ClFinancialPage = lazy(() =>
 const ClReportsPage = lazy(() =>
   import('@/modules/cl-reports').then((m) => ({ default: m.ClReportsPage })),
 );
+// Self-contained CommunityLink Pro CRM demo (pixel replica of
+// communitylinkpro-demo.html — own sidebar/topbar/tabs, forced amber theme).
+const ClDemoPage = lazy(() =>
+  import('@/modules/cl-demo').then((m) => ({ default: m.ClDemoPage })),
+);
 
 // --- Owner portal ---------------------------------------------------------
 
@@ -229,6 +234,11 @@ export function AppRouter() {
         <Route path="/compliance" element={<CompliancePublicPage />} />
         <Route path="/sign-baa" element={<SignBaaPage />} />
         <Route path="/thank-you" element={<ThankYouPage />} />
+
+        {/* CommunityLink Pro CRM demo — self-contained replica of
+            communitylinkpro-demo.html. Static path outranks the generic
+            /demo/:product/:tier below, so only this exact URL gets the replica. */}
+        <Route path="/demo/communitylink/pro" element={<ClDemoPage />} />
 
         {/* Demo — public route reusing dashboard chrome under a banner */}
         <Route path="/demo/:product/:tier" element={<DemoPage />}>

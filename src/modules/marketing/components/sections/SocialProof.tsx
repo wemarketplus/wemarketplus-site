@@ -1,5 +1,7 @@
 import { Card, CardContent } from '@/shared/ui/core';
 import { SectionHeading } from '../SectionHeading';
+import { TrustBadgePill } from '../TrustBadgePill';
+import { TRUST_BADGES } from '../../constants/landingContent';
 
 // index.html "TESTIMONIALS + SOCIAL PROOF" — second testi-grid ("What Hospice
 // & Senior Living Teams Say") plus a HIPAA / BAA / guarantee trust row.
@@ -24,12 +26,6 @@ const QUOTES = [
   },
 ];
 
-const TRUST = [
-  { title: 'HIPAA Compliant', sub: 'TLS 1.3 · AES-256' },
-  { title: 'BAA Included', sub: 'Signed at checkout' },
-  { title: '30-Day Guarantee', sub: 'Full refund, no questions' },
-];
-
 export function SocialProof() {
   return (
     <section className="mx-auto max-w-[1200px] px-7 py-12">
@@ -39,7 +35,9 @@ export function SocialProof() {
         title="What Hospice & Senior Living Teams Say"
         body="Real results from teams who replaced spreadsheets with HospiceLink and CommunityLink."
       />
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-3.5">
+      {/* Cards capped to a tighter width so they read as a balanced trio rather
+          than stretching across the full container. */}
+      <div className="mx-auto grid max-w-[1040px] grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-3.5">
         {QUOTES.map((t) => (
           <Card key={t.name} className="rounded-[16px]">
             <CardContent className="p-[26px]">
@@ -55,14 +53,10 @@ export function SocialProof() {
           </Card>
         ))}
       </div>
-      <div className="mt-9 flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
-        {TRUST.map((b) => (
-          <div key={b.title} className="text-center">
-            <p className="text-sm font-bold text-foreground">{b.title}</p>
-            <p className="text-[11px] uppercase tracking-[0.08em] text-faint">
-              {b.sub}
-            </p>
-          </div>
+      {/* HIPAA / BAA / guarantee trust strip — one balanced row of icon pills. */}
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+        {TRUST_BADGES.map((b) => (
+          <TrustBadgePill key={b.title} badge={b} />
         ))}
       </div>
     </section>

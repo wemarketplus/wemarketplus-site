@@ -1,3 +1,6 @@
+import { useScrollReveal } from '@/shared/hooks';
+import { cn } from '@/shared/utils/cn';
+import { revealClass, staggerStyle } from '@/shared/utils/scrollReveal';
 import { SectionHeading } from '../SectionHeading';
 
 // index.html "VS GENERIC" — .compare table contrasting generic CRMs with
@@ -15,15 +18,24 @@ const ROWS: { feature: string; gold?: boolean }[] = [
 ];
 
 export function VsGeneric() {
+  const { ref, visible } = useScrollReveal<HTMLElement>();
+
   return (
-    <section className="mx-auto max-w-[860px] px-7 py-12">
+    <section ref={ref} className="mx-auto max-w-[860px] px-7 py-12">
       <SectionHeading
         kicker="Why HospiceLink"
         tone="azure"
         title="Generic CRMs Were Not Built for This"
         body="HubSpot and Salesforce are built for generic sales pipelines. Hospice requires referral relationship management, census workflows, and HIPAA compliance out of the box."
+        className={revealClass(visible)}
       />
-      <div className="overflow-x-auto rounded-[16px] border border-white/[0.08] bg-white/[0.03]">
+      <div
+        className={cn(
+          'overflow-x-auto rounded-[16px] border border-white/[0.08] bg-white/[0.03]',
+          revealClass(visible),
+        )}
+        style={staggerStyle(1, visible)}
+      >
         <table className="w-full border-collapse text-[13px]">
           <thead>
             <tr className="bg-white/[0.02]">

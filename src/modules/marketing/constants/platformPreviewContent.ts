@@ -14,6 +14,16 @@ export const PREVIEW_KPIS: readonly PreviewKpi[] = [
   { label: 'Admitted', value: '3', tone: 'text-sage' },
 ];
 
+// Dark-enterprise badge treatment for the pipeline pills, keyed by pill tone
+// (transparent tint + thin colored border + soft text). Scoped to this mockup
+// so the shared Pill keeps its pastel-on-light look everywhere else it's used.
+export const PREVIEW_PIPELINE_BADGE: Record<string, string> = {
+  r: 'rounded-md border border-red-500/30 bg-red-500/5 px-2.5 py-1 font-semibold text-red-400',
+  y: 'rounded-md border border-amber/40 bg-amber/5 px-2.5 py-1 font-semibold text-amber',
+  g: 'rounded-md border border-emerald-500/30 bg-emerald-500/5 px-2.5 py-1 font-semibold text-emerald-400',
+  b: 'rounded-md border border-sky-500/30 bg-sky-500/5 px-2.5 py-1 font-semibold text-sky-400',
+};
+
 export const PREVIEW_PIPELINE: readonly PreviewPipelineRow[] = [
   { name: 'Mary J.', pill: 'r', label: 'Hot', meta: 'Due Today' },
   { name: 'John T.', pill: 'y', label: 'Warm', meta: 'Due May 8' },

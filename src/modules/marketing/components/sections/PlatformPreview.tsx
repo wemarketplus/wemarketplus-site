@@ -5,6 +5,7 @@ import {
   PREVIEW_FEED,
   PREVIEW_KPIS,
   PREVIEW_PIPELINE,
+  PREVIEW_PIPELINE_BADGE,
   PREVIEW_SIDE_NAV,
 } from '../../constants/platformPreviewContent';
 
@@ -94,11 +95,16 @@ export function PlatformPreview() {
                 {PREVIEW_PIPELINE.map((p) => (
                   <div
                     key={p.name}
-                    className="flex items-center justify-between py-[7px] text-[12px]"
+                    className="flex items-center justify-between border-b border-white/[0.04] py-[9px] text-[12px] last:border-b-0"
                   >
                     <span className="font-semibold text-foreground">{p.name}</span>
                     <span className="flex items-center gap-3">
-                      <Pill tone={p.pill}>{p.label}</Pill>
+                      <Pill
+                        tone={p.pill}
+                        className={cn('inline-flex items-center', PREVIEW_PIPELINE_BADGE[p.pill])}
+                      >
+                        {p.label}
+                      </Pill>
                       <span className="w-16 text-right text-muted">{p.meta}</span>
                     </span>
                   </div>
