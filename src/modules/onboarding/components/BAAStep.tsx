@@ -1,23 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { useAppDispatch } from '@/app/hooks';
-import { setCredentials } from '@/modules/auth';
-import { extractApiErrorMessage } from '@/modules/auth/utils/errorUtils';
 import { Button, Input, Label } from '@/shared/ui/core';
-import { useOnboardMutation } from '../api/onboardingApi';
 import { useOnboarding } from '../hooks/useOnboarding';
+import { useOnboardingSubmit } from '../hooks/useOnboardingSubmit';
 import { baaSchema, type BAAFormValues } from '../schema/onboardingSchema';
-import type {
-  AccountInfo,
-  AgencyInfo,
-  OnboardRequest,
-} from '../types/onboardingTypes';
 
 export function BAAStep() {
-  const { draft, next, back, saveBAA, markCompleted } = useOnboarding();
-  const dispatch = useAppDispatch();
-  const [onboard, state] = useOnboardMutation();
+  const { draft, back } = useOnboarding();
+  const { submitBAA, isSubmitting } = useOnboardingSubmit();
 
   const {
     register,
@@ -34,35 +24,7 @@ export function BAAStep() {
 
   return (
     <form
-      onSubmit={handleSubmit(async (v) => {
-        saveBAA(v);
-        // Earlier steps must be complete to call onboard. If we don't have them,
-        // bail to step 1 — there's nothing else this hook can do without them.
-        if (
-          !draft.account.email ||
-          !draft.account.password ||
-          !draft.agency.agencyName
-        ) {
-          toast.error('Please finish the earlier steps before signing.');
-          return;
-        }
-        const payload: OnboardRequest = {
-          account: draft.account as AccountInfo,
-          agency: draft.agency as AgencyInfo,
-          baa: v,
-          stripeSessionId: draft.stripeSessionId,
-        };
-        try {
-          const result = await onboard(payload).unwrap();
-          dispatch(setCredentials({ token: result.accessToken, user: result.user }));
-          markCompleted();
-          next();
-        } catch (err) {
-          toast.error(
-            extractApiErrorMessage(err, "Couldn't activate your workspace"),
-          );
-        }
-      })}
+      onSubmit={handleSubmit(submitBAA)}
       className="space-y-5"
       noValidate
     >
@@ -128,12 +90,12 @@ export function BAAStep() {
           type="button"
           variant="ghost"
           onClick={back}
-          disabled={state.isLoading}
+          disabled={isSubmitting}
         >
           Back
         </Button>
-        <Button type="submit" size="lg" disabled={state.isLoading}>
-          {state.isLoading ? 'Activating…' : 'Sign & launch'}
+        <Button type="submit" size="lg" disabled={isSubmitting}>
+          {isSubmitting ? 'Activating…' : 'Sign & launch'}
         </Button>
       </div>
     </form>

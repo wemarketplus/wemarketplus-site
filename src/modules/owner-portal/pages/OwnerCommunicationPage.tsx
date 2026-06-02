@@ -1,14 +1,8 @@
-import { Mail, Phone, MessageSquare } from 'lucide-react';
 import { Card, CardContent } from '@/shared/ui/core';
 import { formatRelative } from '@/shared/utils/dateFormatter';
 import { OwnerScreenHeader } from '../components/OwnerScreenHeader';
 import { OWNER_COMMUNICATIONS } from '../constants/ownerFixtures';
-
-const CHANNEL_ICON = {
-  email: Mail,
-  call: Phone,
-  in_app: MessageSquare,
-} as const;
+import { CHANNEL_ICON } from '../constants/ownerScreenConstants';
 
 export function OwnerCommunicationPage() {
   return (

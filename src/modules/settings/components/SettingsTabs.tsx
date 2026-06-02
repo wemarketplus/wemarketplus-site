@@ -3,9 +3,9 @@ import { cn } from '@/shared/utils/cn';
 import {
   SETTINGS_TAB_ICONS,
   SETTINGS_TAB_LABELS,
+  SETTINGS_TABS,
 } from '../constants/settingsConstants';
 import { setActiveTab } from '../store/settingsSlice';
-import { SETTINGS_TABS } from '../types/settingsTypes';
 
 export function SettingsTabs() {
   const dispatch = useAppDispatch();

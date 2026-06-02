@@ -48,3 +48,10 @@ export const CATEGORY_LABEL: Record<ReportDefinition['category'], string> = {
   operations: 'Operations',
   compliance: 'Compliance',
 };
+
+export const CATEGORY_ORDER: ReadonlyArray<ReportDefinition['category']> = [
+  'occupancy',
+  'revenue',
+  'operations',
+  'compliance',
+];

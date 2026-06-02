@@ -1,39 +1,6 @@
-import { Phone, Sparkles, Database, MessageCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button, Card, CardContent } from '@/shared/ui/core';
-
-// Static integration tiles — mirrors the site's settings page. Each "Connect"
-// button is wired with a TODO toast until the backend exposes OAuth flows.
-const INTEGRATIONS = [
-  {
-    id: 'aircall',
-    name: 'Aircall',
-    description: 'Phone, text, and email from inside the CRM (Gold tier).',
-    icon: Phone,
-    status: 'available' as const,
-  },
-  {
-    id: 'openai',
-    name: 'AI assistant',
-    description: 'Drafts, summaries, and conversion scoring.',
-    icon: Sparkles,
-    status: 'connected' as const,
-  },
-  {
-    id: 'csv-import',
-    name: 'Data import',
-    description: 'Bulk upload referrals and prospects from CSV/Excel.',
-    icon: Database,
-    status: 'available' as const,
-  },
-  {
-    id: 'secure-messaging',
-    name: 'Secure messaging',
-    description: 'HIPAA-compliant chat (Gold tier).',
-    icon: MessageCircle,
-    status: 'available' as const,
-  },
-];
+import { INTEGRATIONS } from '../constants/settingsConstants';
 
 export function IntegrationsTab() {
   return (

@@ -1,11 +1,16 @@
 // Verbatim landing-page copy ported from wemarketplus-site/index.html.
 // Kept as data so the section components stay thin and presentational.
-
-export interface Metric {
-  value: string;
-  label: string;
-  tone: 'sage' | 'azure' | 'amber' | 'purple';
-}
+import type {
+  CommunityPillar,
+  CommunityTile,
+  Faq,
+  FeatureCard,
+  HowStep,
+  Metric,
+  SecurityCard,
+  Testimonial,
+  TrustBadge,
+} from '../types/landingTypes';
 
 export const HERO = {
   eyebrow: '🏥 Purpose-Built for Hospice · HIPAA-Ready Day One',
@@ -28,26 +33,6 @@ export const METRICS: readonly Metric[] = [
   { value: '24/7', label: 'AI Assistant', tone: 'purple' },
   { value: '30-Day', label: 'Guarantee', tone: 'sage' },
 ];
-
-export type FeatureIcon =
-  | 'pipeline'
-  | 'alert'
-  | 'map'
-  | 'ai'
-  | 'mileage'
-  | 'windshield'
-  | 'revenue'
-  | 'triage'
-  | 'audit'
-  | 'phone';
-
-export interface FeatureCard {
-  title: string;
-  body: string;
-  badge: string;
-  tone: 'azure' | 'red' | 'sage' | 'purple' | 'amber';
-  icon: FeatureIcon;
-}
 
 export const HOSPICE_FEATURE_CARDS: readonly FeatureCard[] = [
   {
@@ -122,12 +107,6 @@ export const HOSPICE_FEATURE_CARDS: readonly FeatureCard[] = [
   },
 ];
 
-export interface HowStep {
-  num: string;
-  title: string;
-  body: string;
-}
-
 export const HOW_IT_WORKS: readonly HowStep[] = [
   {
     num: '01',
@@ -151,12 +130,6 @@ export const HOW_IT_WORKS: readonly HowStep[] = [
   },
 ];
 
-export interface Testimonial {
-  name: string;
-  role: string;
-  quote: string;
-}
-
 export const TESTIMONIALS: readonly Testimonial[] = [
   {
     name: 'Maria T.',
@@ -178,11 +151,6 @@ export const TESTIMONIALS: readonly Testimonial[] = [
   },
 ];
 
-export interface SecurityCard {
-  title: string;
-  body: string;
-}
-
 export const SECURITY_CARDS: readonly SecurityCard[] = [
   { title: 'TLS 1.3 Encryption', body: 'All data encrypted in transit and at rest. Zero plaintext storage of PHI.' },
   { title: 'BAA at Checkout', body: 'Business Associate Agreement executed for every plan on signup.' },
@@ -191,11 +159,6 @@ export const SECURITY_CARDS: readonly SecurityCard[] = [
   { title: '99.9% Uptime SLA', body: 'Enterprise cloud infrastructure. Public status page available 24/7.' },
   { title: '30-Day Guarantee', body: 'Not satisfied within 30 days? Full refund, no questions, no delays.' },
 ];
-
-export interface Faq {
-  q: string;
-  a: string;
-}
 
 export const FAQS: readonly Faq[] = [
   {
@@ -232,12 +195,6 @@ export const FAQS: readonly Faq[] = [
   },
 ];
 
-export interface CommunityPillar {
-  title: string;
-  body: string;
-  tone: 'amber' | 'sage' | 'azure';
-}
-
 export const COMMUNITY_PILLARS: readonly CommunityPillar[] = [
   {
     title: 'Sales + Outreach CRM',
@@ -256,12 +213,6 @@ export const COMMUNITY_PILLARS: readonly CommunityPillar[] = [
   },
 ];
 
-export interface CommunityTile {
-  icon: string;
-  title: string;
-  body: string;
-}
-
 export const COMMUNITY_TILES: readonly CommunityTile[] = [
   { icon: '🏠', title: 'Apartment Inventory', body: 'Track every unit — available, occupied, on-notice, make-ready, and reserved.' },
   { icon: '📋', title: 'Make-Ready Workflow', body: 'Assign tasks across maintenance and housekeeping. Track completion stage by stage.' },
@@ -273,7 +224,7 @@ export const COMMUNITY_TILES: readonly CommunityTile[] = [
   { icon: '🔧', title: 'Maintenance Tickets', body: 'Resident-reported and staff-created maintenance requests with priority routing and SLA tracking.' },
 ];
 
-export const TRUST_BADGES: readonly { title: string; sub: string }[] = [
+export const TRUST_BADGES: readonly TrustBadge[] = [
   { title: 'HIPAA Compliant', sub: 'TLS 1.3 · AES-256' },
   { title: 'BAA Included', sub: 'Signed at checkout' },
   { title: '30-Day Guarantee', sub: 'Full refund, no questions' },

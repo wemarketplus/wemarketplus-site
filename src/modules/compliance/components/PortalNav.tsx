@@ -1,13 +1,6 @@
 import { NavLink } from 'react-router-dom';
-import { PORTAL_NAV, type PortalNavItem } from '../constants/portalContent';
+import { GROUPS, PORTAL_NAV } from '../constants/portalContent';
 import { cn } from '@/shared/utils/cn';
-
-const GROUPS: ReadonlyArray<PortalNavItem['group']> = [
-  'Assessment',
-  'Operations',
-  'Evidence',
-  'Security',
-];
 
 // Sub-nav for the Compliance Portal — mirrors the grouped left rail in the
 // source (Assessment / Operations / Evidence / Security).

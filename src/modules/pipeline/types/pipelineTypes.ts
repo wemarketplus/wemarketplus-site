@@ -1,6 +1,10 @@
-import type { Prospect } from '@/shared/types';
+import type { ProspectStatus } from '@/shared/types';
 
-export type { Prospect };
+export interface PipelineColumnConfig {
+  status: ProspectStatus;
+  label: string;
+  tone: string;
+}
 
 export interface PipelineUiState {
   groupBy: 'status' | 'urgency';

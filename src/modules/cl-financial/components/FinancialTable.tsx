@@ -1,13 +1,6 @@
 import { DataTable, type Column } from '@/shared/ui/data-display';
-import type { FinancialMonth } from '../types/clFinancialTypes';
+import type { FinancialMonth, FinancialTableProps } from '../types/clFinancialTypes';
 import { formatUsd } from '../utils/financialFormat';
-
-interface FinancialTableProps {
-  months: readonly FinancialMonth[];
-  // Picks which money column gets the highlighted tone. The other two are
-  // shown as muted for context.
-  highlight: 'revenue' | 'concessions' | 'leakage';
-}
 
 export function FinancialTable({ months, highlight }: FinancialTableProps) {
   const moneyCell = (key: FinancialTableProps['highlight'], value: number) =>

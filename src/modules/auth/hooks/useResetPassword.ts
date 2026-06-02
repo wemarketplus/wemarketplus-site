@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { useResetPasswordMutation } from '../api/authApi';
+import { AUTH_REDIRECT_DELAY_MS } from '../constants/authConstants';
 import { extractApiErrorMessage } from '../utils/errorUtils';
 import type { ResetPasswordRequest } from '../types/authTypes';
 
@@ -20,7 +21,7 @@ export function useResetPassword(token: string | null) {
         await resetPassword({ token, password } satisfies ResetPasswordRequest).unwrap();
         setDone(true);
         toast.success('Password updated. You can sign in now.');
-        setTimeout(() => navigate('/login', { replace: true }), 1500);
+        setTimeout(() => navigate('/login', { replace: true }), AUTH_REDIRECT_DELAY_MS);
       } catch (err) {
         toast.error(extractApiErrorMessage(err, "Couldn't reset password"));
       }

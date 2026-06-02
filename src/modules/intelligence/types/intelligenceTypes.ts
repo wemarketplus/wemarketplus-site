@@ -15,3 +15,8 @@ export interface LeaderboardRow {
 export interface IntelligenceUiState {
   range: '7d' | '30d' | 'mtd';
 }
+
+export interface RangeOption {
+  value: IntelligenceUiState['range'];
+  label: string;
+}

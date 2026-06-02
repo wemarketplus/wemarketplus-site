@@ -3,8 +3,7 @@ import type { Product, Tier } from '@/shared/types';
 // Onboarding wizard state — mirrors wemarketplus-site/onboard.html.
 // 4-step funnel: Account → Agency → BAA → Launch.
 
-export const ONBOARDING_STEPS = ['account', 'agency', 'baa', 'launch'] as const;
-export type OnboardingStep = (typeof ONBOARDING_STEPS)[number];
+export type OnboardingStep = 'account' | 'agency' | 'baa' | 'launch';
 
 export interface AccountInfo {
   firstName: string;

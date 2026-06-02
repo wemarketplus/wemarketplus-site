@@ -1,8 +1,9 @@
-import { toast } from 'sonner';
 import { Button, Card, CardContent } from '@/shared/ui/core';
 import { PortalShell } from '../components/PortalShell';
+import { useDrTest } from '../hooks/useDrTest';
 
 export function DrTestPage() {
+  const { onRun } = useDrTest();
   return (
     <PortalShell
       title="Disaster Recovery Test"
@@ -17,7 +18,7 @@ export function DrTestPage() {
               verification.
             </p>
           </div>
-          <Button onClick={() => toast.message('DR test — backend endpoint pending')}>
+          <Button onClick={onRun}>
             ▶ Run DR Test Now
           </Button>
         </CardContent>

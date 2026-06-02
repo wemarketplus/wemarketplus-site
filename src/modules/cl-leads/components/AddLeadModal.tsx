@@ -1,20 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { CareLevel, LeadStatus, Urgency } from '@/shared/types';
 import { Button, Input, Label, Select, Textarea } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
-import { CARE_LEVEL_LABELS } from '@/modules/cl-leads/constants/leadsConstants';
-import { LEAD_STATUS_LABELS } from '../constants/leadsConstants';
-import { addLead, closeAddLead } from '../store/leadsSlice';
+import { CARE_LEVEL_LABELS, LEAD_STATUS_LABELS } from '../constants/leadsConstants';
 import { newLeadSchema, type NewLeadFormValues } from '../schema/leadSchema';
+import { useAddLead } from '../hooks/useAddLead';
 
 // Add Lead modal — writes to the in-memory cl-leads slice so the new lead
 // appears in the pipeline immediately (no backend; demo behaviour).
 export function AddLeadModal() {
-  const dispatch = useAppDispatch();
-  const open = useAppSelector((s) => s.clLeads.addModalOpen);
+  const { open, close: dispatchClose, submit: dispatchSubmit } = useAddLead();
 
   const {
     register,
@@ -38,12 +34,11 @@ export function AddLeadModal() {
 
   const close = () => {
     reset();
-    dispatch(closeAddLead());
+    dispatchClose();
   };
 
   const onSubmit = (v: NewLeadFormValues) => {
-    dispatch(addLead(v));
-    toast.success(`Added ${v.name} to the pipeline`);
+    dispatchSubmit(v);
     reset();
   };
 

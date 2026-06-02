@@ -1,5 +1,8 @@
 import { Link } from 'react-router-dom';
 import { Card, CardContent, Button } from '@/shared/ui/core';
+import { SectionHeading } from '../SectionHeading';
+import { CommunityPlanCard } from '../CommunityPlanCard';
+import { COMMUNITYLINK_PLANS } from '../../constants/communityPricingPlans';
 import {
   COMMUNITY_PILLARS,
   COMMUNITY_TILES,
@@ -63,20 +66,20 @@ export function CommunityOverview() {
           <Link to="/demo/communitylink/max">
             <Button variant="secondary" size="sm">View Max Demo</Button>
           </Link>
-          <Link to="/communitylink/pricing">
+          <Link to="/#cl-pricing">
             <Button size="sm">See Pricing ↓</Button>
           </Link>
         </div>
 
-        <div className="mt-14 text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-amber">
-            Built for Senior Living
-          </p>
-          <h3 className="mt-3 font-serif-display text-2xl font-black text-foreground">
-            Everything Your Community Needs in One Platform
-          </h3>
+        <div className="mt-14">
+          <SectionHeading
+            kicker="Built for Senior Living"
+            tone="amber"
+            title="Everything Your Community Needs in One Platform"
+            body="Purpose-built for independent living, assisted living, and memory care operations teams."
+          />
         </div>
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {COMMUNITY_TILES.map((t) => (
             <Card key={t.title}>
               <CardContent className="space-y-2 px-5 py-5">
@@ -86,6 +89,21 @@ export function CommunityOverview() {
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        {/* CommunityLink pricing — "Plans for Every Community" */}
+        <div id="cl-pricing" className="mt-14">
+          <SectionHeading
+            kicker="CommunityLink Pricing"
+            tone="amber"
+            title="Plans for Every Community"
+            body="Per facility pricing. No hidden fees. Cancel anytime."
+          />
+          <div className="grid grid-cols-1 gap-[18px] md:grid-cols-3">
+            {COMMUNITYLINK_PLANS.map((plan) => (
+              <CommunityPlanCard key={plan.eyebrow} plan={plan} />
+            ))}
+          </div>
         </div>
       </div>
     </section>

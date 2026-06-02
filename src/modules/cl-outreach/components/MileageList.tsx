@@ -3,6 +3,7 @@ import { DataTable, type Column } from '@/shared/ui/data-display';
 import { formatDate } from '@/shared/utils/dateFormatter';
 import type { MileageEntry } from '@/shared/types';
 import { totalMiles } from '../utils/totalMileage';
+import type { MileageListProps } from '../types/clOutreachTypes';
 
 const columns: ReadonlyArray<Column<MileageEntry>> = [
   { key: 'date', header: 'Date', cell: (e) => formatDate(e.date) },
@@ -14,7 +15,7 @@ const columns: ReadonlyArray<Column<MileageEntry>> = [
   { key: 'purpose', header: 'Purpose', cell: (e) => e.purpose },
 ];
 
-export function MileageList({ entries }: { entries: readonly MileageEntry[] }) {
+export function MileageList({ entries }: MileageListProps) {
   return (
     <div className="space-y-4">
       <Card dense>

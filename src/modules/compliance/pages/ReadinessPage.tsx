@@ -1,20 +1,9 @@
 import { Card, CardContent } from '@/shared/ui/core';
-import { Pill, type PillProps } from '@/shared/ui/data-display';
+import { Pill } from '@/shared/ui/data-display';
 import { cn } from '@/shared/utils/cn';
 import { PortalShell } from '../components/PortalShell';
 import { useReadiness } from '../hooks/useReadiness';
-import type { ControlStatus } from '../types/complianceTypes';
-
-const STATUS_PILL: Record<ControlStatus, PillProps['tone']> = {
-  compliant: 'g',
-  partial: 'y',
-  'at-risk': 'r',
-};
-const STATUS_LABEL: Record<ControlStatus, string> = {
-  compliant: 'Compliant',
-  partial: 'Partial',
-  'at-risk': 'At risk',
-};
+import { STATUS_LABEL, STATUS_PILL } from '../constants/complianceConstants';
 
 export function ReadinessPage() {
   const { readiness } = useReadiness();

@@ -1,20 +1,12 @@
 import { Search } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { ReferralSourceStatus } from '@/shared/types';
 import { Input } from '@/shared/ui/core';
 import { cn } from '@/shared/utils/cn';
-import { REFERRAL_STATUS_LABELS } from '../constants/referralsConstants';
+import { REFERRAL_FILTER_CHIPS } from '../constants/referralsConstants';
 import {
   setReferralSearch,
   setReferralStatusFilter,
 } from '../store/referralsSlice';
-
-const CHIPS: ReadonlyArray<{ value: ReferralSourceStatus | 'all'; label: string }> = [
-  { value: 'all', label: 'All statuses' },
-  { value: ReferralSourceStatus.Green, label: REFERRAL_STATUS_LABELS.green },
-  { value: ReferralSourceStatus.Building, label: REFERRAL_STATUS_LABELS.building },
-  { value: ReferralSourceStatus.Red, label: REFERRAL_STATUS_LABELS.red },
-];
 
 export function ReferralsFilters() {
   const dispatch = useAppDispatch();
@@ -33,7 +25,7 @@ export function ReferralsFilters() {
         />
       </div>
       <div className="flex flex-wrap gap-1.5">
-        {CHIPS.map((chip) => (
+        {REFERRAL_FILTER_CHIPS.map((chip) => (
           <button
             key={chip.value}
             type="button"

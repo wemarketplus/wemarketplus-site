@@ -1,5 +1,5 @@
 import { Bot, Database, Phone, Sparkles, Upload, Webhook } from 'lucide-react';
-import type { IntegrationTile } from '../types/integrationsTypes';
+import type { IntegrationsUiState, IntegrationTile } from '../types/integrationsTypes';
 
 export const INTEGRATIONS_CATALOG: readonly IntegrationTile[] = [
   {
@@ -50,4 +50,21 @@ export const INTEGRATIONS_CATALOG: readonly IntegrationTile[] = [
     status: 'available',
     category: 'data',
   },
+];
+
+export const STATUS_TONE: Record<IntegrationTile['status'], string> = {
+  connected: 'border-success/30 bg-success/10 text-success',
+  available: 'border-white/[0.08] bg-white/[0.03] text-muted-soft',
+  beta: 'border-warning/30 bg-warning/10 text-warning',
+};
+
+export const CATEGORIES: ReadonlyArray<{
+  value: IntegrationsUiState['category'];
+  label: string;
+}> = [
+  { value: 'all', label: 'All' },
+  { value: 'data', label: 'Data' },
+  { value: 'communications', label: 'Comms' },
+  { value: 'workflow', label: 'Workflow' },
+  { value: 'analytics', label: 'Analytics' },
 ];

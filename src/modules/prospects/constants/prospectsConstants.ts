@@ -1,8 +1,11 @@
+import { ProspectStatus, Urgency } from '@/shared/types';
+import type { PillProps } from '@/shared/ui/data-display';
 import {
-  ProspectStatus,
-  Urgency,
-  type Prospect,
-} from '@/shared/types';
+  URGENCY_LABELS,
+  URGENCY_TONE,
+} from '@/shared/constants/urgencyConstants';
+
+export { URGENCY_LABELS, URGENCY_TONE };
 
 export const PROSPECTS_TAGS = {
   List: 'Prospects.List',
@@ -16,18 +19,6 @@ export const PROSPECT_STATUS_LABELS: Record<ProspectStatus, string> = {
   [ProspectStatus.Lost]: 'Lost',
 };
 
-export const URGENCY_LABELS: Record<Urgency, string> = {
-  [Urgency.Hot]: 'Hot',
-  [Urgency.Warm]: 'Warm',
-  [Urgency.Cold]: 'Cold',
-};
-
-export const URGENCY_TONE: Record<Urgency, string> = {
-  [Urgency.Hot]: 'border-destructive/30 bg-destructive/10 text-destructive',
-  [Urgency.Warm]: 'border-warning/30 bg-warning/10 text-warning',
-  [Urgency.Cold]: 'border-azure/30 bg-azure/10 text-azure',
-};
-
 export const STATUS_TONE: Record<ProspectStatus, string> = {
   [ProspectStatus.Inquiry]: 'border-azure/30 bg-azure/10 text-azure',
   [ProspectStatus.PendingAdmission]: 'border-warning/30 bg-warning/10 text-warning',
@@ -35,4 +26,31 @@ export const STATUS_TONE: Record<ProspectStatus, string> = {
   [ProspectStatus.Lost]: 'border-white/[0.08] bg-white/[0.03] text-muted',
 };
 
-export type ProspectField = keyof Prospect;
+// Pastel pill tones (matching crm-*.html .pill-*) per status/urgency.
+export const STATUS_PILL: Record<ProspectStatus, PillProps['tone']> = {
+  [ProspectStatus.Inquiry]: 'b',
+  [ProspectStatus.PendingAdmission]: 'y',
+  [ProspectStatus.Admitted]: 'g',
+  [ProspectStatus.Lost]: 'r',
+};
+
+export const URGENCY_PILL: Record<Urgency, PillProps['tone']> = {
+  [Urgency.Hot]: 'r',
+  [Urgency.Warm]: 'y',
+  [Urgency.Cold]: 'b',
+};
+
+export const STATUS_CHIPS: ReadonlyArray<{ value: ProspectStatus | 'all'; label: string }> = [
+  { value: 'all', label: 'All statuses' },
+  { value: ProspectStatus.Inquiry, label: PROSPECT_STATUS_LABELS.inquiry },
+  { value: ProspectStatus.PendingAdmission, label: PROSPECT_STATUS_LABELS.pending_admission },
+  { value: ProspectStatus.Admitted, label: PROSPECT_STATUS_LABELS.admitted },
+  { value: ProspectStatus.Lost, label: PROSPECT_STATUS_LABELS.lost },
+];
+
+export const URGENCY_CHIPS: ReadonlyArray<{ value: Urgency | 'all'; label: string }> = [
+  { value: 'all', label: 'Any urgency' },
+  { value: Urgency.Hot, label: URGENCY_LABELS.hot },
+  { value: Urgency.Warm, label: URGENCY_LABELS.warm },
+  { value: Urgency.Cold, label: URGENCY_LABELS.cold },
+];

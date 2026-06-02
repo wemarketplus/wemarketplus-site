@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { Role } from '@/shared/rbac';
 import type { ISODateString, ID, Product, Tier } from '@/shared/types';
 
@@ -63,3 +64,40 @@ export interface AuthState {
   user: AuthenticatedUser | null;
   isAuthenticated: boolean;
 }
+
+// --- Component prop types ---
+
+export interface AuthCardShellProps {
+  title: ReactNode;
+  description?: ReactNode;
+  children: ReactNode;
+  product?: Product;
+  hideFooter?: boolean;
+  maxWidth?: 420 | 440;
+}
+
+export interface AuthErrorProps {
+  children?: ReactNode;
+}
+
+export interface AuthFieldProps {
+  label: string;
+  htmlFor: string;
+  error?: string;
+  children: ReactNode;
+  helper?: ReactNode;
+}
+
+export interface PasswordStrengthMeterProps {
+  value: string;
+}
+
+// --- Password strength types ---
+
+export interface Rule {
+  key: string;
+  label: string;
+  test: (v: string) => boolean;
+}
+
+export type Strength = 'none' | 'weak' | 'mid' | 'strong';

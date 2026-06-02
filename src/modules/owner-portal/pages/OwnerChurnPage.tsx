@@ -2,20 +2,7 @@ import { AlertTriangle } from 'lucide-react';
 import { Card, CardContent } from '@/shared/ui/core';
 import { OwnerScreenHeader } from '../components/OwnerScreenHeader';
 import { OWNER_CHURN } from '../constants/ownerFixtures';
-
-const RECOVERY_LABEL = {
-  none: 'Not contacted',
-  email_sent: 'Email sent',
-  call_scheduled: 'Call scheduled',
-  recovered: 'Recovered',
-} as const;
-
-const RECOVERY_TONE = {
-  none: 'border-destructive/30 bg-destructive/10 text-destructive',
-  email_sent: 'border-warning/30 bg-warning/10 text-warning',
-  call_scheduled: 'border-azure/30 bg-azure/10 text-azure',
-  recovered: 'border-success/30 bg-success/10 text-success',
-} as const;
+import { RECOVERY_LABEL, RECOVERY_TONE } from '../constants/ownerScreenConstants';
 
 export function OwnerChurnPage() {
   return (

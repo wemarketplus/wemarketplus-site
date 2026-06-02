@@ -1,34 +1,20 @@
-import { Calendar, ScrollText, Pin, Goal } from 'lucide-react';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { cn } from '@/shared/utils/cn';
-import { setActivityTab } from '../store/activitySlice';
-import type { ActivityUiState } from '../types/activityTypes';
-
-const TABS: ReadonlyArray<{
-  value: ActivityUiState['activeTab'];
-  label: string;
-  icon: typeof Calendar;
-}> = [
-  { value: 'calendar', label: 'Calendar', icon: Calendar },
-  { value: 'notes', label: 'Notes', icon: ScrollText },
-  { value: 'reminders', label: 'Reminders', icon: Pin },
-  { value: 'goals', label: 'Daily goals', icon: Goal },
-];
+import { ACTIVITY_TABS } from '../constants/activityConstants';
+import { useActivityTabs } from '../hooks/useActivityTabs';
 
 export function ActivityTabs() {
-  const dispatch = useAppDispatch();
-  const active = useAppSelector((s) => s.activity.activeTab);
+  const { activeTab: active, setTab } = useActivityTabs();
 
   return (
     <nav className="flex flex-wrap gap-1.5">
-      {TABS.map((t) => {
+      {ACTIVITY_TABS.map((t) => {
         const Icon = t.icon;
         const selected = active === t.value;
         return (
           <button
             key={t.value}
             type="button"
-            onClick={() => dispatch(setActivityTab(t.value))}
+            onClick={() => setTab(t.value)}
             className={cn(
               'inline-flex items-center gap-2 rounded-pill border px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
               selected

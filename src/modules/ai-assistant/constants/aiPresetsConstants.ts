@@ -1,5 +1,7 @@
 import type { AiPreset } from '../types/aiAssistantTypes';
 
+export const AI_STUB_DELAY_MS = 600;
+
 // Mirrors the preset chips on wemarketplus-site's AI Assistant panel.
 export const AI_PRESETS: readonly AiPreset[] = [
   {

@@ -5,6 +5,7 @@ import type {
   OwnerCustomer,
   OwnerInsight,
   OwnerKPI,
+  OwnerMarketingChannel,
   OwnerPipelineDeal,
   OwnerRevenueMonth,
   OwnerUsageRow,
@@ -20,6 +21,13 @@ export const OWNER_KPIS: readonly OwnerKPI[] = [
   { id: 'arr', label: 'ARR', value: '$2.21M', delta: '+11.0% YoY', positive: true },
   { id: 'customers', label: 'Active customers', value: '218', delta: '+9 this month', positive: true },
   { id: 'churn', label: 'Net churn', value: '0.9%', delta: '-0.3pp', positive: true },
+];
+
+export const OWNER_MARKETING_CHANNELS: readonly OwnerMarketingChannel[] = [
+  { id: 'google', label: 'Google Ads', spend: 8400, leads: 142, conversion: 0.18 },
+  { id: 'linkedin', label: 'LinkedIn', spend: 5200, leads: 76, conversion: 0.11 },
+  { id: 'partners', label: 'Partner referrals', spend: 0, leads: 38, conversion: 0.34 },
+  { id: 'content', label: 'Content & SEO', spend: 1800, leads: 121, conversion: 0.09 },
 ];
 
 export const OWNER_REVENUE_MONTHS: readonly OwnerRevenueMonth[] = [

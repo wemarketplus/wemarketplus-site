@@ -1,10 +1,11 @@
-import { toast } from 'sonner';
 import { Button, Card, CardContent } from '@/shared/ui/core';
-import type { IntegrationTile } from '../types/integrationsTypes';
-import { STATUS_TONE } from '../utils/integrationsUtils';
+import type { IntegrationTileCardProps } from '../types/integrationsTypes';
+import { STATUS_TONE } from '../constants/integrationsConstants';
+import { useIntegrationTile } from '../hooks/useIntegrationTile';
 
-export function IntegrationTileCard({ tile }: { tile: IntegrationTile }) {
+export function IntegrationTileCard({ tile }: IntegrationTileCardProps) {
   const Icon = tile.icon;
+  const { onAction } = useIntegrationTile(tile);
   return (
     <Card>
       <CardContent className="space-y-4 px-5 py-5">
@@ -25,13 +26,7 @@ export function IntegrationTileCard({ tile }: { tile: IntegrationTile }) {
         <Button
           size="sm"
           variant={tile.status === 'connected' ? 'secondary' : 'primary'}
-          onClick={() =>
-            toast.message(
-              tile.status === 'connected'
-                ? `${tile.name} — manage flow not wired yet`
-                : `${tile.name} — connect flow pending backend OAuth`,
-            )
-          }
+          onClick={onAction}
         >
           {tile.status === 'connected' ? 'Manage' : 'Connect'}
         </Button>

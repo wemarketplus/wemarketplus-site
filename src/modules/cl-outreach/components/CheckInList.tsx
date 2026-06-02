@@ -1,9 +1,9 @@
 import { MapPin } from 'lucide-react';
 import { Card, CardContent } from '@/shared/ui/core';
 import { formatDateTime } from '@/shared/utils/dateFormatter';
-import type { GPSCheckIn } from '@/shared/types';
+import type { CheckInListProps } from '../types/clOutreachTypes';
 
-export function CheckInList({ items }: { items: readonly GPSCheckIn[] }) {
+export function CheckInList({ items }: CheckInListProps) {
   return (
     <Card>
       <CardContent className="px-0 pt-0 pb-0">

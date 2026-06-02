@@ -9,3 +9,9 @@ export interface ReportDefinition {
 export interface ClReportsUiState {
   _placeholder: true;
 }
+
+// --- Component prop types ---
+
+export interface ReportCardProps {
+  report: ReportDefinition;
+}

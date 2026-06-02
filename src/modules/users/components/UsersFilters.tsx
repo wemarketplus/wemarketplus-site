@@ -1,19 +1,14 @@
 import { Search } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { ALL_ROLES, ROLE_LABELS, type Role } from '@/shared/rbac';
 import { Input } from '@/shared/ui/core';
 import { cn } from '@/shared/utils/cn';
+import { ROLE_FILTER_CHIPS } from '../constants/usersConstants';
 import { setSearch, setSelectedRole } from '../store/usersSlice';
 
 export function UsersFilters() {
   const dispatch = useAppDispatch();
   const search = useAppSelector((s) => s.users.search);
   const selectedRole = useAppSelector((s) => s.users.selectedRole);
-
-  const chips: ReadonlyArray<{ value: Role | 'all'; label: string }> = [
-    { value: 'all', label: 'All roles' },
-    ...ALL_ROLES.map((r) => ({ value: r, label: ROLE_LABELS[r] })),
-  ];
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -27,7 +22,7 @@ export function UsersFilters() {
         />
       </div>
       <div className="flex flex-wrap gap-1.5">
-        {chips.map((chip) => (
+        {ROLE_FILTER_CHIPS.map((chip) => (
           <button
             key={chip.value}
             type="button"

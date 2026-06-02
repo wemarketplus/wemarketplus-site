@@ -1,10 +1,5 @@
 // Full Feature Comparison matrix — verbatim from index.html #pricing.
-export interface ComparisonRow {
-  feature: string;
-  pro: boolean;
-  max: boolean;
-  gold: boolean;
-}
+import type { ComparisonRow } from '../types/comparisonTypes';
 
 export const HOSPICE_COMPARISON: readonly ComparisonRow[] = [
   { feature: 'Prospect Pipeline', pro: true, max: true, gold: true },

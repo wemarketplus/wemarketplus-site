@@ -1,25 +1,23 @@
-import { Product } from '@/shared/types';
 import { MarketingShell } from '../components/MarketingShell';
-import { PricingGrid } from '../components/PricingGrid';
-import { useMarketingTiers } from '../hooks/useMarketingTiers';
+import { PlanCard } from '../components/PlanCard';
+import { PricingHeader } from '../components/PricingHeader';
+import { ComparisonTable } from '../components/sections/ComparisonTable';
+import { HOSPICELINK_PLANS } from '../constants/hospicePricingPlans';
 
 export function PricingPage() {
-  const tiers = useMarketingTiers(Product.HospiceLink);
   return (
     <MarketingShell>
-      <section className="mx-auto max-w-3xl px-6 pt-16 text-center">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-soft">
-          HospiceLink pricing
-        </p>
-        <h1 className="mt-3 font-serif-display text-4xl text-foreground">
-          Simple, per-seat pricing
-        </h1>
-        <p className="mx-auto mt-3 max-w-xl text-sm text-muted">
-          Start free, then pick the tier that matches your team. Switch any time —
-          no contracts, no surprises.
-        </p>
+      <section id="pricing" className="mx-auto max-w-[1200px] px-7 pt-[72px]">
+        <PricingHeader />
       </section>
-      <PricingGrid tiers={tiers} />
+      <section className="mx-auto max-w-[1100px] px-7 pb-12 pt-[38px]">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-[18px]">
+          {HOSPICELINK_PLANS.map((plan) => (
+            <PlanCard key={plan.name} plan={plan} />
+          ))}
+        </div>
+      </section>
+      <ComparisonTable />
     </MarketingShell>
   );
 }

@@ -1,0 +1,22 @@
+import { TICKER_ITEMS } from '../constants/marketingConstants';
+import { TickerItem } from './TickerItem';
+
+export function ActivityTicker() {
+  return (
+    <div
+      className="ticker-wrap border-b"
+      style={{ background: '#111', borderColor: '#222', height: 36 }}
+      aria-label="Live activity feed"
+    >
+      <div className="ticker-track" style={{ alignItems: 'center', height: '100%' }}>
+        {TICKER_ITEMS.map((item) => (
+          <TickerItem key={item} label={item} />
+        ))}
+        {/* Duplicate set for seamless infinite loop */}
+        {TICKER_ITEMS.map((item) => (
+          <TickerItem key={`dup-${item}`} label={item} />
+        ))}
+      </div>
+    </div>
+  );
+}

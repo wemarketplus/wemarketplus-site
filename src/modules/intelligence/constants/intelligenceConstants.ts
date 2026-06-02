@@ -1,4 +1,8 @@
-import type { IntelligenceKpi, LeaderboardRow } from '../types/intelligenceTypes';
+import type {
+  IntelligenceKpi,
+  LeaderboardRow,
+  RangeOption,
+} from '../types/intelligenceTypes';
 
 export const REVENUE_KPIS: readonly IntelligenceKpi[] = [
   { id: 'attributable', label: 'Attributable revenue', value: '$184k', delta: '+12.4%' },
@@ -13,7 +17,7 @@ export const LEADERBOARD: readonly LeaderboardRow[] = [
   { id: 'sam', marketer: 'Sam Brennan', admissions: 9, conversion: 0.28 },
 ];
 
-export const RANGES: ReadonlyArray<{ value: '7d' | '30d' | 'mtd'; label: string }> = [
+export const RANGES: ReadonlyArray<RangeOption> = [
   { value: '7d', label: 'Last 7 days' },
   { value: '30d', label: 'Last 30 days' },
   { value: 'mtd', label: 'Month to date' },

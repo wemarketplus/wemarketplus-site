@@ -1,14 +1,7 @@
 // Legal copy ported verbatim from wemarketplus-site (privacy.html, tos.html,
 // "sign baa"). Stored as structured data so LegalShell can render it and so
 // the text lives in one reviewable place.
-
-export interface LegalBlock {
-  heading?: string;
-  // Paragraphs; a string[] inside `list` renders as a bullet list.
-  paragraphs?: readonly string[];
-  list?: readonly string[];
-  callout?: { title: string; body: string };
-}
+import type { LegalBlock } from '../types/legalTypes';
 
 export const PRIVACY_EFFECTIVE = 'Effective January 1, 2024 — Last updated May 1, 2025';
 

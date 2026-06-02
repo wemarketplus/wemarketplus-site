@@ -1,4 +1,4 @@
-import type { LegalBlock } from '../constants/legalContent';
+import type { LegalBlock } from '../types/legalTypes';
 
 // Renders the structured legal copy (headings, paragraphs, bullet lists,
 // callouts) inside a LegalShell card.

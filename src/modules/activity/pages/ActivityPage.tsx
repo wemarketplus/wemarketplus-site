@@ -1,4 +1,4 @@
-import { useAppSelector } from '@/app/hooks';
+import { useActivityPage } from '../hooks/useActivityPage';
 import { ActivityTabs } from '../components/ActivityTabs';
 import { CalendarView } from '../components/CalendarView';
 import { NotesList } from '../components/NotesList';
@@ -6,7 +6,7 @@ import { RemindersView } from '../components/RemindersView';
 import { DailyGoalsView } from '../components/DailyGoalsView';
 
 export function ActivityPage() {
-  const tab = useAppSelector((s) => s.activity.activeTab);
+  const { activeTab: tab } = useActivityPage();
 
   return (
     <div className="space-y-6">

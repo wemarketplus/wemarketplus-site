@@ -27,3 +27,9 @@ export interface NewLeadInput {
   email: string;
   notes?: string;
 }
+
+// --- Component prop types ---
+
+export interface LeadsTableProps {
+  leads: readonly Lead[];
+}

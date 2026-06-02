@@ -6,12 +6,8 @@ import { closeDrawer, setFilter } from '../store/notificationsSlice';
 import { useMarkAllReadMutation } from '../api/notificationsApi';
 import { useNotifications } from '../hooks/useNotifications';
 import { NotificationsList } from './NotificationsList';
+import { NOTIFICATIONS_DRAWER_FILTERS } from '../constants/notificationsConstants';
 import { cn } from '@/shared/utils/cn';
-
-const FILTERS: ReadonlyArray<{ value: 'all' | 'unread'; label: string }> = [
-  { value: 'all', label: 'All' },
-  { value: 'unread', label: 'Unread' },
-];
 
 export function NotificationsDrawer() {
   const dispatch = useAppDispatch();
@@ -82,7 +78,7 @@ export function NotificationsDrawer() {
         </header>
 
         <nav className="flex gap-1.5 border-b border-white/[0.06] px-4 py-3">
-          {FILTERS.map((f) => (
+          {NOTIFICATIONS_DRAWER_FILTERS.map((f) => (
             <button
               key={f.value}
               type="button"

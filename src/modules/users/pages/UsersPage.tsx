@@ -5,10 +5,8 @@ import { UsersFilters } from '../components/UsersFilters';
 import { UsersTable } from '../components/UsersTable';
 
 export function UsersPage() {
-  const { users, total, page, pageSize, setPage, isLoading, isFetching, error } =
+  const { users, total, page, lastPage, setPage, isLoading, isFetching, error } =
     useUsersList();
-
-  const lastPage = Math.max(1, Math.ceil(total / pageSize));
 
   return (
     <div className="space-y-6">

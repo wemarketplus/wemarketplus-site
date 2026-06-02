@@ -1,24 +1,12 @@
-import { DataTable, Pill, type Column, type PillProps } from '@/shared/ui/data-display';
+import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
 import { formatDate } from '@/shared/utils/dateFormatter';
-import { ProspectStatus, Urgency, type Prospect } from '@/shared/types';
+import type { Prospect } from '@/shared/types';
 import {
   PROSPECT_STATUS_LABELS,
+  STATUS_PILL,
   URGENCY_LABELS,
+  URGENCY_PILL,
 } from '../constants/prospectsConstants';
-
-// Pastel pill tones (matching crm-*.html .pill-*) per status/urgency.
-const STATUS_PILL: Record<ProspectStatus, PillProps['tone']> = {
-  [ProspectStatus.Inquiry]: 'b',
-  [ProspectStatus.PendingAdmission]: 'y',
-  [ProspectStatus.Admitted]: 'g',
-  [ProspectStatus.Lost]: 'r',
-};
-
-const URGENCY_PILL: Record<Urgency, PillProps['tone']> = {
-  [Urgency.Hot]: 'r',
-  [Urgency.Warm]: 'y',
-  [Urgency.Cold]: 'b',
-};
 
 const columns: ReadonlyArray<Column<Prospect>> = [
   {

@@ -1,14 +1,5 @@
-import type { ReactNode } from 'react';
 import { Label } from '@/shared/ui/core';
-
-interface AuthFieldProps {
-  label: string;
-  htmlFor: string;
-  error?: string;
-  children: ReactNode;
-  // Optional right-aligned helper under the input (e.g. "Forgot password?").
-  helper?: ReactNode;
-}
+import type { AuthFieldProps } from '../types/authTypes';
 
 // Mirrors wemarketplus-site `.field`: label + control + 16px bottom margin.
 export function AuthField({ label, htmlFor, error, children, helper }: AuthFieldProps) {

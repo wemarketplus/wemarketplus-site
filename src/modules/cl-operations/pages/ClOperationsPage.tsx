@@ -1,16 +1,13 @@
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { cn } from '@/shared/utils/cn';
-import { OPERATIONS_VIEWS } from '../constants/clOperationsConstants';
 import { useOperations } from '../hooks/useOperations';
-import { setOperationsView } from '../store/clOperationsSlice';
-import { OccupancyHero } from '../components/OccupancyHero';
+import { useOperationsView } from '../hooks/useOperationsView';
 import { ApartmentsTable } from '../components/ApartmentsTable';
 import { MakeReadyBoard } from '../components/MakeReadyBoard';
+import { OccupancyHero } from '../components/OccupancyHero';
+import { OperationsViewNav } from '../components/OperationsViewNav';
 import { ServiceTicketsTable } from '../components/ServiceTicketsTable';
 
 export function ClOperationsPage() {
-  const dispatch = useAppDispatch();
-  const view = useAppSelector((s) => s.clOperations.view);
+  const { view, changeView } = useOperationsView();
   const { apartments, makeReady, maintenance, housekeeping, isUsingFixture } = useOperations();
 
   return (
@@ -29,23 +26,7 @@ export function ClOperationsPage() {
 
       {view === 'inventory' && <OccupancyHero apartments={apartments} />}
 
-      <nav className="flex flex-wrap gap-1.5">
-        {OPERATIONS_VIEWS.map((v) => (
-          <button
-            key={v.value}
-            type="button"
-            onClick={() => dispatch(setOperationsView(v.value))}
-            className={cn(
-              'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
-              view === v.value
-                ? 'border-primary/40 bg-primary/15 text-primary'
-                : 'border-white/[0.08] text-muted hover:border-white/20 hover:text-foreground',
-            )}
-          >
-            {v.label}
-          </button>
-        ))}
-      </nav>
+      <OperationsViewNav view={view} onViewChange={changeView} />
 
       {view === 'inventory' && <ApartmentsTable apartments={apartments} />}
       {view === 'make-ready' && <MakeReadyBoard tickets={makeReady} />}

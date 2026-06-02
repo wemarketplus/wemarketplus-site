@@ -1,16 +1,6 @@
-import { DataTable, Pill, type Column, type PillProps } from '@/shared/ui/data-display';
-import { ApartmentStatus, type Apartment } from '@/shared/types';
-import { APARTMENT_STATUS_LABEL } from '../constants/clOperationsConstants';
-
-const STATUS_PILL: Record<ApartmentStatus, PillProps['tone']> = {
-  [ApartmentStatus.Available]: 'g',
-  [ApartmentStatus.Occupied]: 'b',
-  [ApartmentStatus.Reserved]: 'p',
-  [ApartmentStatus.OnNotice]: 'y',
-  [ApartmentStatus.MakeReady]: 'y',
-  [ApartmentStatus.Maintenance]: 'r',
-  [ApartmentStatus.Offline]: 'b',
-};
+import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
+import { type Apartment } from '@/shared/types';
+import { APARTMENT_STATUS_LABEL, APARTMENT_STATUS_PILL } from '../constants/clOperationsConstants';
 
 const columns: ReadonlyArray<Column<Apartment>> = [
   {
@@ -23,7 +13,7 @@ const columns: ReadonlyArray<Column<Apartment>> = [
   {
     key: 'status',
     header: 'Status',
-    cell: (a) => <Pill tone={STATUS_PILL[a.status]}>{APARTMENT_STATUS_LABEL[a.status]}</Pill>,
+    cell: (a) => <Pill tone={APARTMENT_STATUS_PILL[a.status]}>{APARTMENT_STATUS_LABEL[a.status]}</Pill>,
   },
   { key: 'resident', header: 'Resident', cell: (a) => a.residentName ?? '—' },
   { key: 'rate', header: 'Rate', cell: (a) => `$${a.monthlyRate.toLocaleString()}` },

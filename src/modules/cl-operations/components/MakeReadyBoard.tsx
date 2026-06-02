@@ -2,14 +2,13 @@ import { Card, CardContent } from '@/shared/ui/core';
 import { formatDate } from '@/shared/utils/dateFormatter';
 import { cn } from '@/shared/utils/cn';
 import type { MakeReadyTicket } from '@/shared/types';
+import { getMakeReadyDisplayData } from '../utils/makeReadyUtils';
 
 export function MakeReadyBoard({ tickets }: { tickets: readonly MakeReadyTicket[] }) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {tickets.map((t) => {
-        const pct = Math.round(t.pctComplete * 100);
-        const overdue =
-          new Date(t.targetDate).getTime() < Date.now() && pct < 100;
+        const { pct, overdue } = getMakeReadyDisplayData(t);
         return (
           <Card key={t.id}>
             <CardContent className="space-y-3 px-5 py-5">

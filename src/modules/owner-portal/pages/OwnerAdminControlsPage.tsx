@@ -1,33 +1,10 @@
-import { Sliders, ToggleRight, UserCog } from 'lucide-react';
-import { toast } from 'sonner';
 import { Button, Card, CardContent } from '@/shared/ui/core';
 import { OwnerScreenHeader } from '../components/OwnerScreenHeader';
-
-const CONTROLS = [
-  {
-    id: 'impersonate',
-    icon: UserCog,
-    title: 'Impersonate user',
-    description: 'Sign in as any customer to reproduce an issue from their side.',
-    cta: 'Open impersonator',
-  },
-  {
-    id: 'flags',
-    icon: ToggleRight,
-    title: 'Feature flags',
-    description: 'Toggle experimental features per tenant or globally.',
-    cta: 'Manage flags',
-  },
-  {
-    id: 'system',
-    icon: Sliders,
-    title: 'System parameters',
-    description: 'Rate limits, queue depths, and AI budget controls.',
-    cta: 'Open parameters',
-  },
-];
+import { useOwnerAdminControls } from '../hooks/useOwnerAdminControls';
 
 export function OwnerAdminControlsPage() {
+  const { controls, runControl } = useOwnerAdminControls();
+
   return (
     <div className="space-y-6">
       <OwnerScreenHeader
@@ -37,7 +14,7 @@ export function OwnerAdminControlsPage() {
       />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        {CONTROLS.map((c) => {
+        {controls.map((c) => {
           const Icon = c.icon;
           return (
             <Card key={c.id}>
@@ -49,11 +26,7 @@ export function OwnerAdminControlsPage() {
                   <h2 className="text-sm font-semibold text-foreground">{c.title}</h2>
                   <p className="mt-1 text-sm text-muted">{c.description}</p>
                 </div>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => toast.message(`${c.title} — backend not wired`)}
-                >
+                <Button size="sm" variant="secondary" onClick={() => runControl(c)}>
                   {c.cta}
                 </Button>
               </CardContent>

@@ -2,7 +2,7 @@ import { Card, CardContent } from '@/shared/ui/core';
 import {
   URGENCY_LABELS,
   URGENCY_TONE,
-} from '@/modules/prospects/constants/prospectsConstants';
+} from '@/shared/constants/urgencyConstants';
 import { formatDateTime } from '@/shared/utils/dateFormatter';
 import { useProspectNotes } from '../hooks/useProspectNotes';
 

@@ -1,8 +1,9 @@
-import { toast } from 'sonner';
 import { Button, Card, CardContent } from '@/shared/ui/core';
 import { PortalShell } from '../components/PortalShell';
+import { useAccessReview } from '../hooks/useAccessReview';
 
 export function AccessReviewPage() {
+  const { onRun } = useAccessReview();
   return (
     <PortalShell
       title="Access Review"
@@ -13,9 +14,7 @@ export function AccessReviewPage() {
           <p className="text-sm text-muted">
             Last review: <span className="text-foreground">never</span>
           </p>
-          <Button
-            onClick={() => toast.message('Access review — backend endpoint pending')}
-          >
+          <Button onClick={onRun}>
             ▶ Run Access Review
           </Button>
         </CardContent>

@@ -61,7 +61,7 @@ const ThankYouPage = lazy(() =>
   import('@/modules/marketing').then((m) => ({ default: m.ThankYouPage })),
 );
 const DemoPage = lazy(() =>
-  import('@/modules/marketing/pages/DemoPage').then((m) => ({
+  import('@/modules/marketing').then((m) => ({
     default: m.DemoPage,
   })),
 );

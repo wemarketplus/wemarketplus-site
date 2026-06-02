@@ -1,11 +1,8 @@
 import { ProspectStatus } from '@/shared/types';
+import type { PipelineColumnConfig } from '../types/pipelineTypes';
 
 // Kanban column order — mirrors the site's pipeline view.
-export const PIPELINE_COLUMNS: ReadonlyArray<{
-  status: ProspectStatus;
-  label: string;
-  tone: string;
-}> = [
+export const PIPELINE_COLUMNS: ReadonlyArray<PipelineColumnConfig> = [
   {
     status: ProspectStatus.Inquiry,
     label: 'Inquiry',

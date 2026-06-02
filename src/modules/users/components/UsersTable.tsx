@@ -1,12 +1,10 @@
 import { Trash2 } from 'lucide-react';
-import { toast } from 'sonner';
-import { extractApiErrorMessage } from '@/modules/auth/utils/errorUtils';
 import { ROLE_LABELS, useRole } from '@/shared/rbac';
-import { Role } from '@/shared/rbac/types/permissionTypes';
 import { Button } from '@/shared/ui/core';
-import { DataTable, Pill, type Column, type PillProps } from '@/shared/ui/data-display';
+import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
 import { formatDate } from '@/shared/utils/dateFormatter';
-import { useDeleteUserMutation } from '../api/usersApi';
+import { ROLE_PILL } from '../constants/usersConstants';
+import { useDeleteUser } from '../hooks/useDeleteUser';
 import type { UserRecord } from '../types/usersTypes';
 import { fullName, initials } from '../utils/userDisplay';
 
@@ -15,25 +13,9 @@ interface UsersTableProps {
   isLoading: boolean;
 }
 
-const ROLE_PILL: Record<Role, PillProps['tone']> = {
-  [Role.Admin]: 'p',
-  [Role.Manager]: 'b',
-  [Role.Rep]: 'b',
-};
-
 export function UsersTable({ users, isLoading }: UsersTableProps) {
   const { is } = useRole();
-  const [deleteUser, deleteState] = useDeleteUserMutation();
-
-  const handleDelete = async (user: UserRecord) => {
-    if (!window.confirm(`Delete ${fullName(user)}? This cannot be undone.`)) return;
-    try {
-      await deleteUser(user.id).unwrap();
-      toast.success(`Deleted ${fullName(user)}`);
-    } catch (err) {
-      toast.error(extractApiErrorMessage(err, 'Failed to delete user'));
-    }
-  };
+  const { deleteUser, isDeleting } = useDeleteUser();
 
   if (isLoading) {
     return (
@@ -75,8 +57,8 @@ export function UsersTable({ users, isLoading }: UsersTableProps) {
           <Button
             variant="ghost"
             size="square"
-            onClick={() => handleDelete(u)}
-            disabled={deleteState.isLoading}
+            onClick={() => deleteUser(u)}
+            disabled={isDeleting}
             aria-label={`Delete ${fullName(u)}`}
           >
             <Trash2 className="h-4 w-4 text-destructive" />

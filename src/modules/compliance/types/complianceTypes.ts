@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 export interface AuditLogEntry {
   id: string;
   actor: string;
@@ -60,4 +62,29 @@ export interface SecurityEvent {
   type: string;
   detail: string;
   risk: 'critical' | 'high' | 'medium' | 'low';
+}
+
+// --- Portal nav (moved from constants/portalContent.ts) ---
+
+export interface PortalNavItem {
+  screen: ComplianceScreen;
+  to: string;
+  label: string;
+  group: 'Assessment' | 'Operations' | 'Evidence' | 'Security';
+}
+
+// --- Component prop types ---
+
+export interface AuditLogTableProps {
+  entries: readonly AuditLogEntry[];
+}
+
+export interface PortalShellProps {
+  title: string;
+  description: string;
+  children: ReactNode;
+}
+
+export interface BaaRecordsTableProps {
+  records: readonly BaaRecord[];
 }

@@ -1,12 +1,6 @@
-import type { ReactNode } from 'react';
 import { ShieldCheck } from 'lucide-react';
 import { PortalNav } from './PortalNav';
-
-interface PortalShellProps {
-  title: string;
-  description: string;
-  children: ReactNode;
-}
+import type { PortalShellProps } from '../types/complianceTypes';
 
 // Wraps every Compliance Portal screen with the portal header + sub-nav.
 export function PortalShell({ title, description, children }: PortalShellProps) {

@@ -2,18 +2,11 @@
 // The demo-mode readiness payload in the source is reproduced verbatim.
 import type {
   BaaRecord,
-  ComplianceScreen,
+  PortalNavItem,
   ReadinessScore,
   SecurityEvent,
   ThreatMetric,
 } from '../types/complianceTypes';
-
-export interface PortalNavItem {
-  screen: ComplianceScreen;
-  to: string;
-  label: string;
-  group: 'Assessment' | 'Operations' | 'Evidence' | 'Security';
-}
 
 export const PORTAL_NAV: readonly PortalNavItem[] = [
   { screen: 'readiness', to: '/compliance/readiness', label: 'HIPAA Readiness', group: 'Assessment' },
@@ -70,3 +63,19 @@ export const BREACH_TYPES = [
   'lost_device',
   'other',
 ] as const;
+
+export const GROUPS: ReadonlyArray<PortalNavItem['group']> = [
+  'Assessment',
+  'Operations',
+  'Evidence',
+  'Security',
+];
+
+export const TYPE_LABELS: Record<string, string> = {
+  unauthorized_phi_access: 'Unauthorized PHI access',
+  ransomware: 'Ransomware',
+  employee_error: 'Employee error',
+  vendor_breach: 'Vendor breach',
+  lost_device: 'Lost device',
+  other: 'Other',
+};

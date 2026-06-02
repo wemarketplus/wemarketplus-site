@@ -4,6 +4,18 @@ import type {
   MarketingTierCard,
 } from '../types/marketingTypes';
 
+// Live-activity ticker copy — scrolling strip under the marketing header.
+export const TICKER_ITEMS: readonly string[] = [
+  '45 days inactive',
+  'Weekly report delivered — Monday 7:00 AM',
+  'New admit — North Dallas Territory',
+  'Referral logged — Baylor Care Manager',
+  'Follow-up completed — John T.',
+  '14-Day Cold Alert cleared — Physician Office',
+  'AI Triage — William H. scored 9.2/10',
+  'GPS note saved — Bedside visit',
+];
+
 // HospiceLink tiers — prices + features verbatim from index.html #pricing.
 // Pricing is per-month at the entry user band; the page lists higher bands
 // (5–10 / 10–20 / Unlimited) which we surface as the `bands` note.

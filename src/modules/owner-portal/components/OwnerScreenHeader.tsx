@@ -1,11 +1,4 @@
-import type { ReactNode } from 'react';
-
-interface OwnerScreenHeaderProps {
-  eyebrow: string;
-  title: ReactNode;
-  description?: ReactNode;
-  actions?: ReactNode;
-}
+import type { OwnerScreenHeaderProps } from '../types/ownerPortalTypes';
 
 // One-line header used at the top of every owner-portal screen so the layout
 // stays consistent without each page hand-rolling its own.

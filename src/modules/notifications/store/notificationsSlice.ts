@@ -1,6 +1,8 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { AppNotification } from '@/shared/types';
-import type { NotificationsUiState } from '../types/notificationsTypes';
+import type {
+  NotificationFilter,
+  NotificationsUiState,
+} from '../types/notificationsTypes';
 
 const initialState: NotificationsUiState = {
   drawerOpen: false,
@@ -20,10 +22,7 @@ const notificationsSlice = createSlice({
     toggleDrawer(state) {
       state.drawerOpen = !state.drawerOpen;
     },
-    setFilter(
-      state,
-      action: PayloadAction<'all' | 'unread' | AppNotification['category']>,
-    ) {
+    setFilter(state, action: PayloadAction<NotificationFilter>) {
       state.filter = action.payload;
     },
   },

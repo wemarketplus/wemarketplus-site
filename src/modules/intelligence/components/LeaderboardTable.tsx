@@ -1,5 +1,6 @@
 import { DataTable, type Column } from '@/shared/ui/data-display';
 import type { LeaderboardRow } from '../types/intelligenceTypes';
+import { formatConversion } from '../utils/intelligenceUtils';
 
 const columns: ReadonlyArray<Column<LeaderboardRow>> = [
   {
@@ -16,7 +17,7 @@ const columns: ReadonlyArray<Column<LeaderboardRow>> = [
   {
     key: 'conversion',
     header: 'Conversion',
-    cell: (row) => `${(row.conversion * 100).toFixed(0)}%`,
+    cell: (row) => formatConversion(row.conversion),
   },
 ];
 

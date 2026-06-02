@@ -1,24 +1,11 @@
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { cn } from '@/shared/utils/cn';
+import { CATEGORIES } from '../constants/integrationsConstants';
 import { IntegrationTileCard } from '../components/IntegrationTileCard';
 import { useIntegrations } from '../hooks/useIntegrations';
-import { setIntegrationCategory } from '../store/integrationsSlice';
-import type { IntegrationsUiState } from '../types/integrationsTypes';
-
-const CATEGORIES: ReadonlyArray<{
-  value: IntegrationsUiState['category'];
-  label: string;
-}> = [
-  { value: 'all', label: 'All' },
-  { value: 'data', label: 'Data' },
-  { value: 'communications', label: 'Comms' },
-  { value: 'workflow', label: 'Workflow' },
-  { value: 'analytics', label: 'Analytics' },
-];
+import { useIntegrationsPage } from '../hooks/useIntegrationsPage';
 
 export function IntegrationsPage() {
-  const dispatch = useAppDispatch();
-  const category = useAppSelector((s) => s.integrations.category);
+  const { category, setCategory } = useIntegrationsPage();
   const { integrations, total } = useIntegrations();
 
   return (
@@ -35,7 +22,7 @@ export function IntegrationsPage() {
           <button
             key={c.value}
             type="button"
-            onClick={() => dispatch(setIntegrationCategory(c.value))}
+            onClick={() => setCategory(c.value)}
             className={cn(
               'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
               category === c.value

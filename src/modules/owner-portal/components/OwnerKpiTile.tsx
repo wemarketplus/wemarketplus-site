@@ -1,8 +1,8 @@
 import { Card, CardContent } from '@/shared/ui/core';
 import { cn } from '@/shared/utils/cn';
-import type { OwnerKPI } from '../types/ownerPortalTypes';
+import type { OwnerKpiTileProps } from '../types/ownerPortalTypes';
 
-export function OwnerKpiTile({ kpi }: { kpi: OwnerKPI }) {
+export function OwnerKpiTile({ kpi }: OwnerKpiTileProps) {
   return (
     <Card>
       <CardContent className="space-y-2 px-5 py-5">

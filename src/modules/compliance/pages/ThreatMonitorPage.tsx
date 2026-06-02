@@ -1,16 +1,9 @@
 import { Card, CardContent } from '@/shared/ui/core';
-import { Pill, StatTile, type PillProps, type StatTone } from '@/shared/ui/data-display';
+import { Pill, StatTile, type StatTone } from '@/shared/ui/data-display';
 import { formatDateTime } from '@/shared/utils/dateFormatter';
 import { PortalShell } from '../components/PortalShell';
 import { SECURITY_EVENTS, THREAT_METRICS } from '../constants/portalContent';
-import type { SecurityEvent } from '../types/complianceTypes';
-
-const RISK_PILL: Record<SecurityEvent['risk'], PillProps['tone']> = {
-  critical: 'r',
-  high: 'r',
-  medium: 'y',
-  low: 'b',
-};
+import { RISK_PILL } from '../constants/complianceConstants';
 
 export function ThreatMonitorPage() {
   return (

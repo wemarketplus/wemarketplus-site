@@ -1,28 +1,28 @@
 import { Card, CardContent } from '@/shared/ui/core';
+import { SectionHeading } from '../SectionHeading';
 import { TESTIMONIALS } from '../../constants/landingContent';
 
 // index.html "What Hospice Teams Are Saying" — 3 cards, 5-star.
 export function Testimonials() {
   return (
-    <section className="mx-auto max-w-7xl px-6 py-20">
-      <div className="mb-10 text-center">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sage">
-          Client Results
-        </p>
-        <h2 className="mt-3 font-serif-display text-3xl font-black text-foreground sm:text-4xl">
-          What Hospice Teams Are Saying
-        </h2>
-      </div>
+    <section className="mx-auto max-w-[1200px] px-7 py-20">
+      <SectionHeading
+        kicker="Client Results"
+        tone="amber"
+        title="What Hospice Teams Are Saying"
+      />
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {TESTIMONIALS.map((t) => (
-          <Card key={t.name}>
-            <CardContent className="space-y-4 px-6 py-6">
-              <div className="text-amber" aria-hidden>★★★★★</div>
-              <p className="text-sm leading-relaxed text-foreground">“{t.quote}”</p>
-              <div>
-                <p className="text-sm font-bold text-foreground">{t.name}</p>
-                <p className="text-xs text-muted">{t.role}</p>
+          <Card key={t.name} className="rounded-[16px]">
+            <CardContent className="p-[26px]">
+              <div className="mb-3.5 flex gap-[3px] text-[13px] text-amber" aria-hidden>
+                ★★★★★
               </div>
+              <p className="mb-[18px] font-serif-display text-[15px] italic leading-[1.7] text-[#c9d6e4]">
+                “{t.quote}”
+              </p>
+              <p className="text-[13px] font-bold text-foreground">{t.name}</p>
+              <p className="mt-0.5 text-[11px] text-faint">{t.role}</p>
             </CardContent>
           </Card>
         ))}

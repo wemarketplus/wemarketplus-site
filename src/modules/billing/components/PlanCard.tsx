@@ -1,11 +1,6 @@
-import { PRODUCT_LABELS, TIER_LABELS, type Product, type Tier } from '@/shared/types';
+import { PRODUCT_LABELS, TIER_LABELS } from '@/shared/types';
 import { Card, CardContent } from '@/shared/ui/core';
-
-interface PlanCardProps {
-  product: Product;
-  plan: Tier;
-  organizationName: string;
-}
+import type { PlanCardProps } from '../types/billingTypes';
 
 export function PlanCard({ product, plan, organizationName }: PlanCardProps) {
   return (

@@ -1,20 +1,11 @@
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { cn } from '@/shared/utils/cn';
-import { FINANCIAL_VIEWS } from '../constants/clFinancialConstants';
+import { FINANCIAL_VIEWS, HIGHLIGHT } from '../constants/clFinancialConstants';
 import { useFinancialHistory } from '../hooks/useFinancialHistory';
-import { setFinancialView } from '../store/clFinancialSlice';
+import { useFinancialView } from '../hooks/useFinancialView';
 import { FinancialTable } from '../components/FinancialTable';
-import type { ClFinancialUiState } from '../types/clFinancialTypes';
-
-const HIGHLIGHT: Record<ClFinancialUiState['view'], 'revenue' | 'concessions' | 'leakage'> = {
-  ledger: 'revenue',
-  leakage: 'leakage',
-  concessions: 'concessions',
-};
 
 export function ClFinancialPage() {
-  const dispatch = useAppDispatch();
-  const view = useAppSelector((s) => s.clFinancial.view);
+  const { view, setView } = useFinancialView();
   const { months, isUsingFixture } = useFinancialHistory();
 
   return (
@@ -36,7 +27,7 @@ export function ClFinancialPage() {
           <button
             key={v.value}
             type="button"
-            onClick={() => dispatch(setFinancialView(v.value))}
+            onClick={() => setView(v.value)}
             className={cn(
               'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
               view === v.value

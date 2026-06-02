@@ -1,6 +1,7 @@
 import { Card, CardContent } from '@/shared/ui/core';
 import { cn } from '@/shared/utils/cn';
 import { useDailyGoals } from '../hooks/useDailyGoals';
+import { computeGoalProgress } from '../utils/activityUtils';
 
 export function DailyGoalsView() {
   const { goals } = useDailyGoals();
@@ -8,8 +9,7 @@ export function DailyGoalsView() {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
       {goals.map((g) => {
-        const pct = Math.min(100, Math.round((g.current / g.target) * 100));
-        const hit = g.current >= g.target;
+        const { pct, hit } = computeGoalProgress(g.current, g.target);
         return (
           <Card key={g.id}>
             <CardContent className="space-y-3 px-5 py-5">

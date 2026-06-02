@@ -1,4 +1,5 @@
-import type { AuditLogEntry } from '../types/complianceTypes';
+import type { AuditLogEntry, ControlStatus, SecurityEvent } from '../types/complianceTypes';
+import type { PillProps } from '@/shared/ui/data-display';
 
 // Audit log fixture — same shape as owner-portal's audit table; module-local
 // so HIPAA-specific filtering can evolve independently.
@@ -36,3 +37,22 @@ export const AUDIT_FIXTURE: readonly AuditLogEntry[] = [
     ipAddress: '127.0.0.1',
   },
 ];
+
+export const STATUS_PILL: Record<ControlStatus, PillProps['tone']> = {
+  compliant: 'g',
+  partial: 'y',
+  'at-risk': 'r',
+};
+
+export const STATUS_LABEL: Record<ControlStatus, string> = {
+  compliant: 'Compliant',
+  partial: 'Partial',
+  'at-risk': 'At risk',
+};
+
+export const RISK_PILL: Record<SecurityEvent['risk'], PillProps['tone']> = {
+  critical: 'r',
+  high: 'r',
+  medium: 'y',
+  low: 'b',
+};

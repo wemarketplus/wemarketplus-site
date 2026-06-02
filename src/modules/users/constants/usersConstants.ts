@@ -1,3 +1,6 @@
+import { ALL_ROLES, ROLE_LABELS, Role } from '@/shared/rbac';
+import type { PillProps } from '@/shared/ui/data-display';
+
 // Mirrors wemarketplus-backend/src/users/users.constants.ts.
 export const PASSWORD_MIN_LENGTH = 8;
 export const NAME_MIN_LENGTH = 1;
@@ -11,3 +14,16 @@ export const USERS_TAGS = {
   List: 'Users.List',
   Detail: 'Users.Detail',
 } as const;
+
+// Pastel pill tone per role (matching crm-*.html .pill-*).
+export const ROLE_PILL: Record<Role, PillProps['tone']> = {
+  [Role.Admin]: 'p',
+  [Role.Manager]: 'b',
+  [Role.Rep]: 'b',
+};
+
+// Role filter chips for the users list — "All" plus one chip per role.
+export const ROLE_FILTER_CHIPS: ReadonlyArray<{ value: Role | 'all'; label: string }> = [
+  { value: 'all', label: 'All roles' },
+  ...ALL_ROLES.map((r) => ({ value: r, label: ROLE_LABELS[r] })),
+];

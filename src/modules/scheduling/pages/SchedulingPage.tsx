@@ -4,12 +4,7 @@ import { TerritoryTable } from '../components/TerritoryTable';
 import { TerritoryHeatmap } from '../components/TerritoryHeatmap';
 import { useTerritories } from '../hooks/useTerritories';
 import { setSchedulingView } from '../store/schedulingSlice';
-import type { SchedulingUiState } from '../types/schedulingTypes';
-
-const VIEWS: ReadonlyArray<{ value: SchedulingUiState['view']; label: string }> = [
-  { value: 'territories', label: 'Territory table' },
-  { value: 'heatmap', label: 'Heat map' },
-];
+import { SCHEDULING_VIEWS } from '../constants/schedulingConstants';
 
 export function SchedulingPage() {
   const dispatch = useAppDispatch();
@@ -26,7 +21,7 @@ export function SchedulingPage() {
           </p>
         </div>
         <div className="flex gap-1.5">
-          {VIEWS.map((v) => (
+          {SCHEDULING_VIEWS.map((v) => (
             <button
               key={v.value}
               type="button"

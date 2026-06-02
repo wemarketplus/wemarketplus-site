@@ -9,13 +9,14 @@ import {
   saveBAA,
 } from '../store/onboardingSlice';
 import { STEP_ORDER } from '../constants/onboardingConstants';
+import { getStepIndex, getStepProgress } from '../utils/onboardingUtils';
 import type { OnboardingStep } from '../types/onboardingTypes';
 
 export function useOnboarding() {
   const dispatch = useAppDispatch();
   const state = useAppSelector((s) => s.onboarding);
 
-  const currentIndex = STEP_ORDER.indexOf(state.currentStep);
+  const currentIndex = getStepIndex(state.currentStep);
 
   const advanceTo = useCallback(
     (step: OnboardingStep) => dispatch(goToStep(step)),
@@ -36,7 +37,7 @@ export function useOnboarding() {
     ...state,
     stepIndex: currentIndex,
     stepCount: STEP_ORDER.length,
-    progress: ((currentIndex + 1) / STEP_ORDER.length) * 100,
+    progress: getStepProgress(state.currentStep),
     advanceTo,
     next,
     back,

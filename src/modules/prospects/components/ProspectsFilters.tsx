@@ -1,32 +1,16 @@
 import { Search } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { ProspectStatus, Urgency } from '@/shared/types';
 import { Input } from '@/shared/ui/core';
 import { cn } from '@/shared/utils/cn';
 import {
-  PROSPECT_STATUS_LABELS,
-  URGENCY_LABELS,
+  STATUS_CHIPS,
+  URGENCY_CHIPS,
 } from '../constants/prospectsConstants';
 import {
   setProspectSearch,
   setStatusFilter,
   setUrgencyFilter,
 } from '../store/prospectsSlice';
-
-const STATUS_CHIPS: ReadonlyArray<{ value: ProspectStatus | 'all'; label: string }> = [
-  { value: 'all', label: 'All statuses' },
-  { value: ProspectStatus.Inquiry, label: PROSPECT_STATUS_LABELS.inquiry },
-  { value: ProspectStatus.PendingAdmission, label: PROSPECT_STATUS_LABELS.pending_admission },
-  { value: ProspectStatus.Admitted, label: PROSPECT_STATUS_LABELS.admitted },
-  { value: ProspectStatus.Lost, label: PROSPECT_STATUS_LABELS.lost },
-];
-
-const URGENCY_CHIPS: ReadonlyArray<{ value: Urgency | 'all'; label: string }> = [
-  { value: 'all', label: 'Any urgency' },
-  { value: Urgency.Hot, label: URGENCY_LABELS.hot },
-  { value: Urgency.Warm, label: URGENCY_LABELS.warm },
-  { value: Urgency.Cold, label: URGENCY_LABELS.cold },
-];
 
 export function ProspectsFilters() {
   const dispatch = useAppDispatch();

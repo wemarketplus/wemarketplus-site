@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { toast } from 'sonner';
 import { Button, Card, CardContent, Input, Label } from '@/shared/ui/core';
 import { PortalShell } from '../components/PortalShell';
+import { useEvidenceExport } from '../hooks/useEvidenceExport';
 
 export function EvidenceExportPage() {
+  const { onExportJson, onExportCsv } = useEvidenceExport();
   const [start, setStart] = useState('');
   const [end, setEnd] = useState('');
 
@@ -28,13 +29,10 @@ export function EvidenceExportPage() {
               </div>
             </div>
             <div className="flex gap-2">
-              <Button onClick={() => toast.message('Export JSON — backend pending')}>
+              <Button onClick={onExportJson}>
                 📤 Export JSON Package
               </Button>
-              <Button
-                variant="secondary"
-                onClick={() => toast.message('Export CSV — backend pending')}
-              >
+              <Button variant="secondary" onClick={onExportCsv}>
                 📊 Export CSV
               </Button>
             </div>

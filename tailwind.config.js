@@ -76,11 +76,17 @@ export default {
           from: { opacity: '0' },
           to:   { opacity: '1' },
         },
+        // Cinematic hero reveal — longer, eased, GPU-only (opacity + translateY).
+        reveal: {
+          from: { opacity: '0', transform: 'translateY(24px)' },
+          to:   { opacity: '1', transform: 'translateY(0)' },
+        },
       },
       animation: {
         breathe: 'breathe 2s ease infinite',
         'slide-up': 'slide-up 0.22s ease both',
         'fade-in': 'fade-in 0.18s ease both',
+        reveal: 'reveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both',
       },
       boxShadow: {
         card: '0 1px 0 0 rgba(255,255,255,0.03) inset, 0 12px 32px -16px rgba(0,0,0,0.5)',

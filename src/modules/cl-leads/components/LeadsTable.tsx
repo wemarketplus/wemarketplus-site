@@ -1,24 +1,14 @@
-import { useAppDispatch } from '@/app/hooks';
-import { DataTable, Pill, type Column, type PillProps } from '@/shared/ui/data-display';
+import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
 import { formatDate } from '@/shared/utils/dateFormatter';
 import { LeadStatus, type Lead } from '@/shared/types';
-import { LEAD_STATUS_LABELS } from '../constants/leadsConstants';
-import { updateLeadStatus } from '../store/leadsSlice';
+import { LEAD_STATUS_LABELS, STATUS_PILL } from '../constants/leadsConstants';
+import type { LeadsTableProps } from '../types/leadsTypes';
+import { useLeadsTable } from '../hooks/useLeadsTable';
 
-const STATUS_PILL: Record<LeadStatus, PillProps['tone']> = {
-  [LeadStatus.Inquiry]: 'b',
-  [LeadStatus.TourScheduled]: 'p',
-  [LeadStatus.Proposal]: 'y',
-  [LeadStatus.FollowUp]: 'b',
-  [LeadStatus.MoveIn]: 'g',
-  [LeadStatus.Lost]: 'r',
-};
+export function LeadsTable({ leads }: LeadsTableProps) {
+  const { onStatusChange } = useLeadsTable();
 
-export function LeadsTable({ leads }: { leads: readonly Lead[] }) {
-  const dispatch = useAppDispatch();
-
-  // Columns built inside so the status <select> can dispatch the override —
-  // mirrors the demo's inline updateLeadStatus().
+  // Columns built inside so the status <select> can close over onStatusChange.
   const columns: ReadonlyArray<Column<Lead>> = [
     {
       key: 'prospect',
@@ -40,11 +30,7 @@ export function LeadsTable({ leads }: { leads: readonly Lead[] }) {
           <select
             aria-label={`Change status for ${l.name}`}
             value={l.status}
-            onChange={(e) =>
-              dispatch(
-                updateLeadStatus({ id: l.id, status: e.target.value as LeadStatus }),
-              )
-            }
+            onChange={(e) => onStatusChange(l.id, e.target.value as LeadStatus)}
             className="rounded-md border border-[#d0dce8] bg-white px-1.5 py-1 text-[11px] text-[#111]"
           >
             {Object.values(LeadStatus).map((s) => (

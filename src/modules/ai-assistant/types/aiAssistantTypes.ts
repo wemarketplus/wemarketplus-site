@@ -16,3 +16,11 @@ export interface AiAssistantUiState {
   conversation: AiMessage[];
   isSending: boolean;
 }
+
+export interface AiMessageBubbleProps {
+  message: AiMessage;
+}
+
+export interface AiPresetChipsProps {
+  onPick: (prompt: string) => void;
+}

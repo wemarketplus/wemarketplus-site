@@ -1,14 +1,12 @@
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { cn } from '@/shared/utils/cn';
 import { OUTREACH_VIEWS } from '../constants/clOutreachConstants';
 import { useOutreach } from '../hooks/useOutreach';
-import { setOutreachView } from '../store/clOutreachSlice';
+import { useOutreachView } from '../hooks/useOutreachView';
 import { CheckInList } from '../components/CheckInList';
 import { MileageList } from '../components/MileageList';
 
 export function ClOutreachPage() {
-  const dispatch = useAppDispatch();
-  const view = useAppSelector((s) => s.clOutreach.view);
+  const { view, setView } = useOutreachView();
   const { checkIns, mileage, log, isUsingFixture } = useOutreach();
 
   return (
@@ -30,7 +28,7 @@ export function ClOutreachPage() {
           <button
             key={v.value}
             type="button"
-            onClick={() => dispatch(setOutreachView(v.value))}
+            onClick={() => setView(v.value)}
             className={cn(
               'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
               view === v.value

@@ -6,7 +6,8 @@ import {
   setDraftPrompt,
   setSending,
 } from '../store/aiAssistantSlice';
-import { stubAssistantReply } from '../utils/stubResponse';
+import { sendAiMessage } from '../api/aiAssistantApi';
+import { generateMessageId } from '../utils/aiAssistantUtils';
 
 export function useAiAssistant() {
   const dispatch = useAppDispatch();
@@ -19,7 +20,7 @@ export function useAiAssistant() {
       const now = new Date().toISOString();
       dispatch(
         appendMessage({
-          id: `m-${Date.now()}`,
+          id: generateMessageId(),
           role: 'user',
           content: trimmed,
           createdAt: now,
@@ -27,13 +28,12 @@ export function useAiAssistant() {
       );
       dispatch(setDraftPrompt(''));
       dispatch(setSending(true));
-      // Simulate latency so the typing indicator is visible.
-      await new Promise((r) => setTimeout(r, 600));
+      const reply = await sendAiMessage(trimmed);
       dispatch(
         appendMessage({
-          id: `m-${Date.now() + 1}`,
+          id: generateMessageId(),
           role: 'assistant',
-          content: stubAssistantReply(trimmed),
+          content: reply,
           createdAt: new Date().toISOString(),
         }),
       );

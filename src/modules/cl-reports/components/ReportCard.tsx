@@ -1,10 +1,11 @@
 import { Download } from 'lucide-react';
-import { toast } from 'sonner';
 import { Button, Card, CardContent } from '@/shared/ui/core';
 import { formatRelative } from '@/shared/utils/dateFormatter';
-import type { ReportDefinition } from '../types/clReportsTypes';
+import type { ReportCardProps } from '../types/clReportsTypes';
+import { useReportCard } from '../hooks/useReportCard';
 
-export function ReportCard({ report }: { report: ReportDefinition }) {
+export function ReportCard({ report }: ReportCardProps) {
+  const { onRun } = useReportCard(report);
   return (
     <Card>
       <CardContent className="space-y-3 px-5 py-5">
@@ -18,11 +19,7 @@ export function ReportCard({ report }: { report: ReportDefinition }) {
               ? `Last run ${formatRelative(report.lastRunAt)}`
               : 'Never run'}
           </p>
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={() => toast.message(`${report.title} — export pending backend`)}
-          >
+          <Button size="sm" variant="secondary" onClick={onRun}>
             <Download className="h-4 w-4" /> Run
           </Button>
         </div>

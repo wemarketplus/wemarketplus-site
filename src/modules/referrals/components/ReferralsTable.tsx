@@ -1,14 +1,11 @@
-import { DataTable, Pill, type Column, type PillProps } from '@/shared/ui/data-display';
+import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
 import { formatDate } from '@/shared/utils/dateFormatter';
-import { ReferralSourceStatus, type ReferralSource } from '@/shared/types';
-import { REFERRAL_STATUS_LABELS } from '../constants/referralsConstants';
+import type { ReferralSource } from '@/shared/types';
+import {
+  REFERRAL_STATUS_LABELS,
+  STATUS_PILL,
+} from '../constants/referralsConstants';
 import { daysSince } from '../utils/referralsUtils';
-
-const STATUS_PILL: Record<ReferralSourceStatus, PillProps['tone']> = {
-  [ReferralSourceStatus.Green]: 'g',
-  [ReferralSourceStatus.Building]: 'y',
-  [ReferralSourceStatus.Red]: 'r',
-};
 
 const columns: ReadonlyArray<Column<ReferralSource>> = [
   {

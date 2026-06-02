@@ -5,13 +5,11 @@ import {
   RotateCcw,
   Sparkles,
 } from 'lucide-react';
-import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card, CardContent } from '@/shared/ui/core';
 import { SubscriptionStatus } from '@/shared/types';
 import { useSubscription } from '../hooks/useSubscription';
-import { useOpenPortalSessionMutation } from '../api/billingApi';
-import { extractApiErrorMessage } from '@/modules/auth/utils/errorUtils';
+import { useBillingPortal } from '../hooks/useBillingPortal';
 import { PlanCard } from '../components/PlanCard';
 import {
   formatPeriodEnd,
@@ -22,16 +20,7 @@ import {
 export function SubscriptionStatusPage() {
   const navigate = useNavigate();
   const { data, isUsingFixture } = useSubscription();
-  const [openPortal, portalState] = useOpenPortalSessionMutation();
-
-  const goToPortal = async () => {
-    try {
-      const { url } = await openPortal().unwrap();
-      window.location.href = url;
-    } catch (err) {
-      toast.error(extractApiErrorMessage(err, "Couldn't open billing portal"));
-    }
-  };
+  const { goToPortal, isLoading: portalLoading } = useBillingPortal();
 
   return (
     <div className="space-y-6">
@@ -97,7 +86,7 @@ export function SubscriptionStatusPage() {
                 Update your card to keep your workspace active.
               </p>
             </div>
-            <Button onClick={goToPortal} disabled={portalState.isLoading}>
+            <Button onClick={goToPortal} disabled={portalLoading}>
               <CreditCard className="h-4 w-4" /> Update payment method
             </Button>
           </CardContent>
@@ -119,7 +108,7 @@ export function SubscriptionStatusPage() {
                 deleted.
               </p>
             </div>
-            <Button onClick={goToPortal} disabled={portalState.isLoading}>
+            <Button onClick={goToPortal} disabled={portalLoading}>
               Restore access now
             </Button>
           </CardContent>
@@ -144,7 +133,7 @@ export function SubscriptionStatusPage() {
                 .
               </p>
             </div>
-            <Button onClick={goToPortal} disabled={portalState.isLoading}>
+            <Button onClick={goToPortal} disabled={portalLoading}>
               Reactivate
             </Button>
           </CardContent>
@@ -171,7 +160,7 @@ export function SubscriptionStatusPage() {
             <Button variant="secondary" onClick={() => navigate('/')}>
               Go to my CRM
             </Button>
-            <Button onClick={goToPortal} disabled={portalState.isLoading}>
+            <Button onClick={goToPortal} disabled={portalLoading}>
               Manage billing <ArrowUpRight className="h-4 w-4" />
             </Button>
           </div>

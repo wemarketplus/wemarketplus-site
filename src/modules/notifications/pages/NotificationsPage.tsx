@@ -5,20 +5,8 @@ import { useMarkAllReadMutation } from '../api/notificationsApi';
 import { useNotifications } from '../hooks/useNotifications';
 import { setFilter } from '../store/notificationsSlice';
 import { NotificationsList } from '../components/NotificationsList';
+import { NOTIFICATIONS_PAGE_TABS } from '../constants/notificationsConstants';
 import { cn } from '@/shared/utils/cn';
-import type { AppNotification } from '@/shared/types';
-
-const TABS: ReadonlyArray<{
-  value: 'all' | 'unread' | AppNotification['category'];
-  label: string;
-}> = [
-  { value: 'all', label: 'All' },
-  { value: 'unread', label: 'Unread' },
-  { value: 'alert', label: 'Alerts' },
-  { value: 'task', label: 'Tasks' },
-  { value: 'mention', label: 'Mentions' },
-  { value: 'system', label: 'System' },
-];
 
 export function NotificationsPage() {
   const dispatch = useAppDispatch();
@@ -47,7 +35,7 @@ export function NotificationsPage() {
       <Card>
         <CardContent className="space-y-4 px-0 pt-4 pb-0">
           <nav className="flex flex-wrap gap-1.5 px-4">
-            {TABS.map((t) => (
+            {NOTIFICATIONS_PAGE_TABS.map((t) => (
               <button
                 key={t.value}
                 type="button"

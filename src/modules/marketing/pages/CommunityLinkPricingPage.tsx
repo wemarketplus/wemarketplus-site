@@ -1,25 +1,28 @@
-import { Product } from '@/shared/types';
 import { MarketingShell } from '../components/MarketingShell';
-import { PricingGrid } from '../components/PricingGrid';
-import { useMarketingTiers } from '../hooks/useMarketingTiers';
+import { CommunityPlanCard } from '../components/CommunityPlanCard';
+import { SectionHeading } from '../components/SectionHeading';
+import { COMMUNITYLINK_PLANS } from '../constants/communityPricingPlans';
 
 export function CommunityLinkPricingPage() {
-  const tiers = useMarketingTiers(Product.CommunityLink);
   return (
     <MarketingShell>
-      <section className="mx-auto max-w-3xl px-6 pt-16 text-center">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-soft">
-          CommunityLink pricing
-        </p>
-        <h1 className="mt-3 font-serif-display text-4xl text-foreground">
-          Pricing per community
-        </h1>
-        <p className="mx-auto mt-3 max-w-xl text-sm text-muted">
-          Unlimited users included. Scale across your portfolio with volume
-          pricing — talk to us for 5+ communities.
-        </p>
+      <section
+        id="cl-pricing"
+        data-product="communitylink"
+        className="mx-auto max-w-[1100px] px-7 pt-[72px]"
+      >
+        <SectionHeading
+          kicker="CommunityLink Pricing"
+          tone="amber"
+          title="Plans for Every Community"
+          body="Per facility pricing. No hidden fees. Cancel anytime."
+        />
+        <div className="grid grid-cols-1 gap-[18px] pt-2 md:grid-cols-3">
+          {COMMUNITYLINK_PLANS.map((plan) => (
+            <CommunityPlanCard key={plan.eyebrow} plan={plan} />
+          ))}
+        </div>
       </section>
-      <PricingGrid tiers={tiers} />
     </MarketingShell>
   );
 }

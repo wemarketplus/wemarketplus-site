@@ -1,12 +1,13 @@
 import { Card, CardContent } from '@/shared/ui/core';
 import { cn } from '@/shared/utils/cn';
 import type { Territory } from '@/shared/types';
+import { maxAdmissions } from '../utils/schedulingUtils';
 
 // Lightweight visual — each territory rendered as a tile with intensity
 // proportional to its admissions count. Replace with a real map when
 // Mapbox/Leaflet is wired.
 export function TerritoryHeatmap({ territories }: { territories: readonly Territory[] }) {
-  const max = Math.max(...territories.map((t) => t.admissionsCount), 1);
+  const max = maxAdmissions(territories);
   return (
     <Card>
       <CardContent className="px-6 py-6">

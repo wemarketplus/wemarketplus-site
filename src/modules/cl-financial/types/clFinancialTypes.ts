@@ -8,3 +8,10 @@ export interface FinancialMonth {
 export interface ClFinancialUiState {
   view: 'ledger' | 'leakage' | 'concessions';
 }
+
+// --- Component prop types ---
+
+export interface FinancialTableProps {
+  months: readonly FinancialMonth[];
+  highlight: 'revenue' | 'concessions' | 'leakage';
+}

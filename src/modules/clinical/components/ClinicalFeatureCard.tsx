@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/shared/ui/core';
 import type { ClinicalFeature } from '../types/clinicalTypes';
-import { STATUS_LABEL, STATUS_TONE } from '../utils/clinicalUtils';
+import { STATUS_LABEL, STATUS_TONE } from '../constants/clinicalConstants';
 
 export function ClinicalFeatureCard({ feature }: { feature: ClinicalFeature }) {
   const Icon = feature.icon;

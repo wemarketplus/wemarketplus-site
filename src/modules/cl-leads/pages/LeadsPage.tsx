@@ -1,25 +1,14 @@
 import { Plus } from 'lucide-react';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { LeadStatus } from '@/shared/types';
 import { Button } from '@/shared/ui/core';
 import { cn } from '@/shared/utils/cn';
-import { LEAD_STATUS_LABELS } from '../constants/leadsConstants';
+import { CHIPS } from '../constants/leadsConstants';
 import { LeadsTable } from '../components/LeadsTable';
 import { AddLeadModal } from '../components/AddLeadModal';
 import { useLeadsList } from '../hooks/useLeadsList';
-import { openAddLead, setLeadStatusFilter } from '../store/leadsSlice';
-
-const CHIPS: ReadonlyArray<{ value: LeadStatus | 'all'; label: string }> = [
-  { value: 'all', label: 'All' },
-  ...Object.values(LeadStatus).map((s) => ({
-    value: s,
-    label: LEAD_STATUS_LABELS[s],
-  })),
-];
+import { useLeadsPage } from '../hooks/useLeadsPage';
 
 export function LeadsPage() {
-  const dispatch = useAppDispatch();
-  const status = useAppSelector((s) => s.clLeads.statusFilter);
+  const { status, setFilter, openModal } = useLeadsPage();
   const { leads, total, isUsingFixture } = useLeadsList();
 
   return (
@@ -36,7 +25,7 @@ export function LeadsPage() {
             )}
           </p>
         </div>
-        <Button onClick={() => dispatch(openAddLead())}>
+        <Button onClick={openModal}>
           <Plus className="h-4 w-4" /> Add Lead
         </Button>
       </header>
@@ -46,7 +35,7 @@ export function LeadsPage() {
           <button
             key={c.value}
             type="button"
-            onClick={() => dispatch(setLeadStatusFilter(c.value))}
+            onClick={() => setFilter(c.value)}
             className={cn(
               'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
               status === c.value

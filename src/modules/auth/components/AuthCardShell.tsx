@@ -1,16 +1,6 @@
-import type { ReactNode } from 'react';
 import { Product } from '@/shared/types';
 import { Card, Logo, SecurityBadges } from '@/shared/ui/core';
-
-interface AuthCardShellProps {
-  title: ReactNode;
-  description?: ReactNode;
-  children: ReactNode;
-  product?: Product;
-  // When true, hides the security footer (used by transient success states).
-  hideFooter?: boolean;
-  maxWidth?: 420 | 440;
-}
+import type { AuthCardShellProps } from '../types/authTypes';
 
 // Mirrors the wemarketplus-site auth layout exactly: centered column
 // (max-width 420/440px), logo block with 28px bottom margin, a #0d1b31 card

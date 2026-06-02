@@ -1,7 +1,7 @@
 import { cn } from '@/shared/utils/cn';
-import type { AiMessage } from '../types/aiAssistantTypes';
+import type { AiMessageBubbleProps } from '../types/aiAssistantTypes';
 
-export function AiMessageBubble({ message }: { message: AiMessage }) {
+export function AiMessageBubble({ message }: AiMessageBubbleProps) {
   const isUser = message.role === 'user';
   return (
     <div className={cn('flex', isUser ? 'justify-end' : 'justify-start')}>

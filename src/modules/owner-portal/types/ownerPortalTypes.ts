@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 import type { ISODateString } from '@/shared/types';
 
 // Owner portal — the "founder dashboard" the site exposes at /owner portal.
@@ -116,4 +116,63 @@ export interface OwnerAuditEntry {
 export interface OwnerPortalUiState {
   // Reserved for future UI prefs (chart range, table density).
   _placeholder: true;
+}
+
+// --- Page-level data shapes (moved out of page files) ---
+
+export interface OwnerMarketingChannel {
+  id: string;
+  label: string;
+  spend: number;
+  leads: number;
+  conversion: number;
+}
+
+export interface OwnerAdminControl {
+  id: string;
+  icon: ComponentType<{ className?: string }>;
+  title: string;
+  description: string;
+  cta: string;
+}
+
+// --- Component prop types ---
+
+export interface OwnerKpiTileProps {
+  kpi: OwnerKPI;
+}
+
+export interface OwnerScreenHeaderProps {
+  eyebrow: string;
+  title: ReactNode;
+  description?: ReactNode;
+  actions?: ReactNode;
+}
+
+export interface OwnerRevenueChartProps {
+  months: readonly OwnerRevenueMonth[];
+}
+
+export interface OwnerRevenueTableProps {
+  months: readonly OwnerRevenueMonth[];
+}
+
+export interface OwnerCustomersTableProps {
+  customers: readonly OwnerCustomer[];
+}
+
+export interface OwnerVisitorsTableProps {
+  visitors: readonly OwnerVisitor[];
+}
+
+export interface OwnerUsageTableProps {
+  rows: readonly OwnerUsageRow[];
+}
+
+export interface OwnerAuditTableProps {
+  entries: readonly OwnerAuditEntry[];
+}
+
+export interface OwnerPipelineBoardProps {
+  deals: readonly OwnerPipelineDeal[];
 }

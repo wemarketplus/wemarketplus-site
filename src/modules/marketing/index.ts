@@ -8,4 +8,5 @@ export { TermsPage } from './pages/TermsPage';
 export { CompliancePublicPage } from './pages/CompliancePublicPage';
 export { SignBaaPage } from './pages/SignBaaPage';
 export { ThankYouPage } from './pages/ThankYouPage';
+export { DemoPage } from './pages/DemoPage';
 export { default as marketingReducer } from './store/marketingSlice';

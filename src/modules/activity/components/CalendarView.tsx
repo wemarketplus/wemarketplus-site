@@ -1,15 +1,11 @@
 import { Card, CardContent } from '@/shared/ui/core';
 import { formatDate } from '@/shared/utils/dateFormatter';
-import { PROSPECTS_FIXTURE } from '@/shared/fixtures';
 import { cn } from '@/shared/utils/cn';
+import { useCalendarEvents } from '../hooks/useCalendarEvents';
+import { isEventOverdue } from '../utils/activityUtils';
 
-// Simple 7-day strip of upcoming follow-ups, derived from the prospects
-// fixture. When `/calendar` ships, swap to a real API query.
 export function CalendarView() {
-  const events = [...PROSPECTS_FIXTURE].sort(
-    (a, b) =>
-      new Date(a.followUpDate).getTime() - new Date(b.followUpDate).getTime(),
-  );
+  const events = useCalendarEvents();
 
   return (
     <Card>
@@ -21,7 +17,7 @@ export function CalendarView() {
         </header>
         <ul className="divide-y divide-white/[0.06]">
           {events.map((e) => {
-            const overdue = new Date(e.followUpDate).getTime() < Date.now();
+            const overdue = isEventOverdue(e.followUpDate);
             return (
               <li key={e.id} className="flex items-start gap-3 px-6 py-3">
                 <span

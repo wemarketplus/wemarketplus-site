@@ -1,6 +1,6 @@
 import { DataTable, type Column } from '@/shared/ui/data-display';
 import { formatDateTime } from '@/shared/utils/dateFormatter';
-import type { AuditLogEntry } from '../types/complianceTypes';
+import type { AuditLogEntry, AuditLogTableProps } from '../types/complianceTypes';
 
 const columns: ReadonlyArray<Column<AuditLogEntry>> = [
   {
@@ -18,7 +18,7 @@ const columns: ReadonlyArray<Column<AuditLogEntry>> = [
   { key: 'when', header: 'When', cell: (e) => formatDateTime(e.occurredAt) },
 ];
 
-export function AuditLogTable({ entries }: { entries: readonly AuditLogEntry[] }) {
+export function AuditLogTable({ entries }: AuditLogTableProps) {
   return (
     <DataTable
       columns={columns}

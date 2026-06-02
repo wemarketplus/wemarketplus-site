@@ -22,3 +22,11 @@ export interface BillingPortalResponse {
 export interface BillingUiState {
   _placeholder: true;
 }
+
+// --- Component prop types ---
+
+export interface PlanCardProps {
+  product: Product;
+  plan: Tier;
+  organizationName: string;
+}

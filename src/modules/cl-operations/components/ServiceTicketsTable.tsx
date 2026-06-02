@@ -1,13 +1,6 @@
-import { DataTable, Pill, type Column, type PillProps } from '@/shared/ui/data-display';
-import { TicketPriority, type ServiceTicket } from '@/shared/types';
-import { TICKET_STATUS_LABEL } from '../constants/clOperationsConstants';
-
-const PRIORITY_PILL: Record<TicketPriority, PillProps['tone']> = {
-  [TicketPriority.Urgent]: 'r',
-  [TicketPriority.High]: 'y',
-  [TicketPriority.Medium]: 'b',
-  [TicketPriority.Low]: 'b',
-};
+import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
+import { type ServiceTicket } from '@/shared/types';
+import { TICKET_STATUS_LABEL, TICKET_PRIORITY_PILL } from '../constants/clOperationsConstants';
 
 const columns: ReadonlyArray<Column<ServiceTicket>> = [
   {
@@ -19,7 +12,7 @@ const columns: ReadonlyArray<Column<ServiceTicket>> = [
   {
     key: 'priority',
     header: 'Priority',
-    cell: (t) => <Pill tone={PRIORITY_PILL[t.priority]}>{t.priority}</Pill>,
+    cell: (t) => <Pill tone={TICKET_PRIORITY_PILL[t.priority]}>{t.priority}</Pill>,
   },
   { key: 'status', header: 'Status', cell: (t) => TICKET_STATUS_LABEL[t.status] },
   { key: 'assigned', header: 'Assigned', cell: (t) => t.assignedTo },

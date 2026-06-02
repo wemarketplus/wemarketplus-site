@@ -1,6 +1,7 @@
 import { AI_PRESETS } from '../constants/aiPresetsConstants';
+import type { AiPresetChipsProps } from '../types/aiAssistantTypes';
 
-export function AiPresetChips({ onPick }: { onPick: (prompt: string) => void }) {
+export function AiPresetChips({ onPick }: AiPresetChipsProps) {
   return (
     <div className="flex flex-wrap gap-1.5">
       {AI_PRESETS.map((p) => (

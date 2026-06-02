@@ -1,21 +1,13 @@
 import { useState } from 'react';
 import { AlertTriangle } from 'lucide-react';
-import { toast } from 'sonner';
 import { Button, Card, CardContent, Input, Label } from '@/shared/ui/core';
 import { cn } from '@/shared/utils/cn';
 import { PortalShell } from '../components/PortalShell';
-import { BREACH_TYPES } from '../constants/portalContent';
-
-const TYPE_LABELS: Record<string, string> = {
-  unauthorized_phi_access: 'Unauthorized PHI access',
-  ransomware: 'Ransomware',
-  employee_error: 'Employee error',
-  vendor_breach: 'Vendor breach',
-  lost_device: 'Lost device',
-  other: 'Other',
-};
+import { BREACH_TYPES, TYPE_LABELS } from '../constants/portalContent';
+import { useBreachWorkflow } from '../hooks/useBreachWorkflow';
 
 export function BreachWorkflowPage() {
+  const { onInitiate } = useBreachWorkflow();
   const [breachType, setBreachType] = useState<string>(BREACH_TYPES[0]);
   const [affected, setAffected] = useState('');
   const [description, setDescription] = useState('');
@@ -79,7 +71,7 @@ export function BreachWorkflowPage() {
 
           <Button
             variant="destructive"
-            onClick={() => toast.error('Breach workflow — confirm + backend pending')}
+            onClick={onInitiate}
           >
             <AlertTriangle className="h-4 w-4" /> 🚨 Initiate Breach Workflow
           </Button>

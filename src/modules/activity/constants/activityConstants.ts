@@ -1,4 +1,16 @@
-import type { DailyGoal } from '../types/activityTypes';
+import { Calendar, ScrollText, Pin, Goal } from 'lucide-react';
+import type { ActivityUiState, DailyGoal } from '../types/activityTypes';
+
+export const ACTIVITY_TABS: ReadonlyArray<{
+  value: ActivityUiState['activeTab'];
+  label: string;
+  icon: typeof Calendar;
+}> = [
+  { value: 'calendar', label: 'Calendar', icon: Calendar },
+  { value: 'notes', label: 'Notes', icon: ScrollText },
+  { value: 'reminders', label: 'Reminders', icon: Pin },
+  { value: 'goals', label: 'Daily goals', icon: Goal },
+];
 
 export const ACTIVITY_DAILY_GOALS: readonly DailyGoal[] = [
   { id: 'visits', label: 'Facility visits', current: 4, target: 6 },

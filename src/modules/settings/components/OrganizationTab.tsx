@@ -6,17 +6,9 @@ import {
   organizationSchema,
   type OrganizationFormValues,
 } from '../schema/organizationSchema';
+import { PLACEHOLDER_ORG } from '../constants/settingsConstants';
 import { US_STATES } from '@/modules/onboarding/constants/onboardingConstants';
 import { cn } from '@/shared/utils/cn';
-
-// TODO(backend): wire to /organizations when it ships. Today this form
-// validates locally and toasts on submit so the screen is interactive.
-const PLACEHOLDER_ORG: OrganizationFormValues = {
-  name: 'Bay Area Hospice Group',
-  city: 'San Francisco',
-  state: 'CA',
-  phone: '(415) 555-2200',
-};
 
 export function OrganizationTab() {
   const {

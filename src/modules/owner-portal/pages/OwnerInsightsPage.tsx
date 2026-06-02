@@ -2,13 +2,8 @@ import { Bot } from 'lucide-react';
 import { Card, CardContent } from '@/shared/ui/core';
 import { OwnerScreenHeader } from '../components/OwnerScreenHeader';
 import { OWNER_INSIGHTS } from '../constants/ownerFixtures';
+import { SEVERITY_TONE } from '../constants/ownerScreenConstants';
 import { cn } from '@/shared/utils/cn';
-
-const SEVERITY_TONE = {
-  info: 'border-azure/30 bg-azure/10 text-azure',
-  opportunity: 'border-primary/30 bg-primary/10 text-primary',
-  risk: 'border-destructive/30 bg-destructive/10 text-destructive',
-} as const;
 
 export function OwnerInsightsPage() {
   return (

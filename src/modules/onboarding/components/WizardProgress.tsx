@@ -1,6 +1,7 @@
 import { Check } from 'lucide-react';
 import { STEP_LABELS, STEP_ORDER } from '../constants/onboardingConstants';
 import { cn } from '@/shared/utils/cn';
+import { getStepIndex, getStepProgress } from '../utils/onboardingUtils';
 import type { OnboardingStep } from '../types/onboardingTypes';
 
 interface WizardProgressProps {
@@ -8,8 +9,8 @@ interface WizardProgressProps {
 }
 
 export function WizardProgress({ current }: WizardProgressProps) {
-  const currentIndex = STEP_ORDER.indexOf(current);
-  const progress = ((currentIndex + 1) / STEP_ORDER.length) * 100;
+  const currentIndex = getStepIndex(current);
+  const progress = getStepProgress(current);
 
   return (
     <div className="space-y-4">

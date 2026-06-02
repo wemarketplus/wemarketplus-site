@@ -12,11 +12,9 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { Card, CardContent } from '@/shared/ui/core';
-import {
-  HOSPICE_FEATURE_CARDS,
-  type FeatureCard,
-  type FeatureIcon,
-} from '../../constants/landingContent';
+import { SectionHeading } from '../SectionHeading';
+import { HOSPICE_FEATURE_CARDS } from '../../constants/landingContent';
+import type { FeatureCard, FeatureIcon } from '../../types/landingTypes';
 import { cn } from '@/shared/utils/cn';
 
 // Icon-tile + badge tone per feature tone — mirrors the live #features grid.
@@ -52,35 +50,30 @@ const ICON: Record<FeatureIcon, LucideIcon> = {
 // index.html #features — "Every Feature Your Team Needs", 3-col grid.
 export function FeatureCards() {
   return (
-    <section id="features" className="mx-auto max-w-7xl px-6 py-20">
-      <div className="mb-10 text-center">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sage">
-          Built for Hospice
-        </p>
-        <h2 className="mt-3 font-serif-display text-3xl font-black text-foreground sm:text-4xl">
-          Every Feature Your Team Needs
-        </h2>
-      </div>
+    <section id="features" className="mx-auto max-w-[1200px] px-7 py-20">
+      <SectionHeading kicker="Built for Hospice" tone="sage" title="Every Feature Your Team Needs" />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {HOSPICE_FEATURE_CARDS.map((f) => {
           const Icon = ICON[f.icon];
           return (
             <Card key={f.title}>
-              <CardContent className="space-y-3 px-5 py-6">
-                {/* icon tile */}
+              <CardContent className="space-y-0 p-6">
+                {/* icon tile — .feat-icon 38×38, r9 */}
                 <div
                   className={cn(
-                    'flex h-9 w-9 items-center justify-center rounded-[10px]',
+                    'mb-4 flex h-[38px] w-[38px] items-center justify-center rounded-[9px]',
                     TONE_TILE[f.tone],
                   )}
                 >
-                  <Icon className="h-[18px] w-[18px]" strokeWidth={1.9} />
+                  <Icon className="h-[19px] w-[19px]" strokeWidth={1.8} />
                 </div>
-                <h3 className="text-base font-bold text-foreground">{f.title}</h3>
-                <p className="text-sm leading-relaxed text-muted">{f.body}</p>
+                <h3 className="mb-2 text-[15px] font-bold tracking-[-0.01em] text-foreground">
+                  {f.title}
+                </h3>
+                <p className="text-[13px] leading-[1.66] text-muted">{f.body}</p>
                 <span
                   className={cn(
-                    'inline-block rounded-pill border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.06em]',
+                    'mt-3 inline-block rounded-pill px-2.5 py-[3px] text-[10px] font-bold uppercase tracking-[0.06em]',
                     BADGE_TONE[f.tone],
                   )}
                 >

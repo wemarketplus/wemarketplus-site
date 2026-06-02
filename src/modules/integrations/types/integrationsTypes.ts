@@ -12,3 +12,9 @@ export interface IntegrationTile {
 export interface IntegrationsUiState {
   category: IntegrationTile['category'] | 'all';
 }
+
+// --- Component prop types ---
+
+export interface IntegrationTileCardProps {
+  tile: IntegrationTile;
+}

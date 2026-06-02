@@ -27,11 +27,15 @@ export function useUsersList() {
     });
   }, [query.data, debouncedSearch, selectedRole]);
 
+  const total = query.data?.total ?? 0;
+  const lastPage = Math.max(1, Math.ceil(total / DEFAULT_PAGE_SIZE));
+
   return {
     users: filtered,
-    total: query.data?.total ?? 0,
+    total,
     page,
     pageSize: DEFAULT_PAGE_SIZE,
+    lastPage,
     setPage,
     isLoading: query.isLoading,
     isFetching: query.isFetching,

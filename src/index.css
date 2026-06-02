@@ -17,8 +17,10 @@
  */
 @layer base {
   :root {
-    /* Surfaces — from login.html / crm-*.html */
-    --color-bg: 8 20 38;               /* #081426 page */
+    /* Surfaces — from login.html / crm-*.html. The CRM/auth/demo app body is
+       #081426 (navy); the marketing landing overrides --color-bg to the darker
+       #06080e ink inside .marketing-root (see below). */
+    --color-bg: 8 20 38;               /* #081426 app/dashboard page */
     --color-ink: 6 8 14;               /* #06080e deepest */
     --color-surface: 13 27 49;         /* #0d1b31 card */
     --color-surface-raised: 10 22 40;  /* #0a1628 input bg */
@@ -81,6 +83,13 @@
   html {
     color-scheme: dark;
     background-color: rgb(var(--color-bg));
+    /* index.html uses smooth in-page anchor scrolling. */
+    scroll-behavior: smooth;
+  }
+
+  /* Offset anchored marketing sections below the 64px sticky nav. */
+  .marketing-root [id] {
+    scroll-margin-top: 80px;
   }
 
   body {
@@ -104,8 +113,27 @@
      headline. `font-serif-display` is scoped to marketing section titles. */
   .font-serif-display {
     font-family: 'Instrument Serif', Georgia, 'Times New Roman', serif;
-    font-weight: 400;
+    /* Instrument Serif ships a single 400 weight; any font-bold/black utility
+       would only trigger faux-bold (heavier than the real site). Pin to 400. */
+    font-weight: 400 !important;
     letter-spacing: 0;
+  }
+
+  /* The MARKETING site body copy is set in Outfit (Google Fonts), NOT the
+     system Segoe UI stack used by the CRM/auth/demo screens. `.marketing-root`
+     wraps every marketing page (see MarketingShell) and also re-points the
+     muted/faint text tokens to the landing palette:
+       --text-2 #8fa3b8 (body copy) and --text-3 #4d6070 (labels/captions). */
+  .marketing-root {
+    font-family: 'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --color-bg: 6 8 14; /* #06080e — index.html marketing page ink */
+    --color-muted: 143 163 184; /* #8fa3b8 — index.html --text-2 */
+    --color-muted-soft: 143 163 184;
+    --color-faint: 77 96 112; /* #4d6070 — index.html --text-3 */
+    /* Marketing cards use --surface-1 = rgba(255,255,255,.03) over the #06080e
+       page, NOT the solid #0d1b31 CRM card. Re-point the opaque `surface`
+       token to that flattened value so shared <Card>s match .feat-card. */
+    --color-surface: 13 15 21; /* white/.03 flattened over #06080e */
   }
 }
 
@@ -122,4 +150,47 @@
     from { opacity: 0; }
     to   { opacity: 1; }
   }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.3; transform: scale(0.75); }
+  }
+
+  @keyframes ticker-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  .ticker-wrap {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ticker-wrap::before,
+  .ticker-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 80px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .ticker-wrap::before {
+    left: 0;
+    background: linear-gradient(to right, #111 0%, transparent 100%);
+  }
+
+  .ticker-wrap::after {
+    right: 0;
+    background: linear-gradient(to left, #111 0%, transparent 100%);
+  }
+
+  .ticker-track {
+    display: flex;
+    width: max-content;
+    animation: ticker-scroll 38s linear infinite;
+  }
+
 }

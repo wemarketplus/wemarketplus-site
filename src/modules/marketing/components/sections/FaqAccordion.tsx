@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { SectionHeading } from '../SectionHeading';
 import { FAQS } from '../../constants/landingContent';
 
 // index.html #faq — expandable Q&A list with a + / − toggle marker.
@@ -6,15 +7,12 @@ export function FaqAccordion() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="mx-auto max-w-3xl px-6 py-20">
-      <div className="mb-10 text-center">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sage">
-          FAQ
-        </p>
-        <h2 className="mt-3 font-serif-display text-3xl font-black text-foreground sm:text-4xl">
-          Frequently Asked Questions
-        </h2>
-      </div>
+    <section id="faq" className="mx-auto max-w-3xl px-7 py-20">
+      <SectionHeading
+        kicker="FAQ"
+        tone="azure"
+        title="Frequently Asked Questions"
+      />
       <div className="space-y-2">
         {FAQS.map((f, i) => {
           const isOpen = open === i;

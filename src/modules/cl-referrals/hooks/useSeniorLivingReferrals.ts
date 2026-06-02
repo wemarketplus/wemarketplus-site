@@ -1,8 +1,8 @@
-import { SENIOR_LIVING_REFERRALS_FIXTURE } from '../constants/clReferralsConstants';
+import { getSeniorLivingReferrals } from '../api/clReferralsApi';
 
 export function useSeniorLivingReferrals() {
   return {
-    referrals: SENIOR_LIVING_REFERRALS_FIXTURE,
+    referrals: getSeniorLivingReferrals(),
     isUsingFixture: true,
   };
 }

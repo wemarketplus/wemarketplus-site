@@ -1,6 +1,7 @@
 import type {
   ClFinancialUiState,
   FinancialMonth,
+  FinancialTableProps,
 } from '../types/clFinancialTypes';
 
 export const FINANCIAL_VIEWS: ReadonlyArray<{
@@ -19,3 +20,9 @@ export const FINANCIAL_HISTORY: readonly FinancialMonth[] = [
   { month: 'Apr', revenue: 361000, concessions: 11200, leakage: 4400 },
   { month: 'May', revenue: 378000, concessions: 10800, leakage: 3950 },
 ];
+
+export const HIGHLIGHT: Record<ClFinancialUiState['view'], FinancialTableProps['highlight']> = {
+  ledger: 'revenue',
+  leakage: 'leakage',
+  concessions: 'concessions',
+};

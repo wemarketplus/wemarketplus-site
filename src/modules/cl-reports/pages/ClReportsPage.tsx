@@ -1,14 +1,6 @@
-import { CATEGORY_LABEL } from '../constants/clReportsConstants';
+import { CATEGORY_LABEL, CATEGORY_ORDER } from '../constants/clReportsConstants';
 import { ReportCard } from '../components/ReportCard';
 import { useReportCatalog } from '../hooks/useReportCatalog';
-import type { ReportDefinition } from '../types/clReportsTypes';
-
-const CATEGORY_ORDER: ReadonlyArray<ReportDefinition['category']> = [
-  'occupancy',
-  'revenue',
-  'operations',
-  'compliance',
-];
 
 export function ClReportsPage() {
   const { reports, grouped, isUsingFixture } = useReportCatalog();
