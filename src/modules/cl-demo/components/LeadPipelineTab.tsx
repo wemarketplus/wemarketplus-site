@@ -1,11 +1,8 @@
 import { useState } from 'react';
-import { Card } from './Card';
-import { Badge } from './Badge';
-import { DemoButton } from './DemoButton';
+import { Badge, Card, DemoButton, FI, TBL, TD, TH } from '@/shared/cl-demo';
 import { LEAD_STATUSES_FULL, URGENCIES } from '../constants/clDemoData';
-import { FI, TBL, TD, TH } from '../constants/clDemoStyles';
 import { useClDemo } from '../hooks/useClDemo';
-import { statusBadgeTone, urgencyBadgeTone } from '../utils/clDemoFormat';
+import { filterLeads, statusBadgeTone, urgencyBadgeTone } from '../utils/clDemoFormat';
 
 // Lead Pipeline tab — reproduces rLeads(): search + stage + urgency filters,
 // a leads table, View (modal) per row, and admin-only delete.
@@ -15,12 +12,7 @@ export function LeadPipelineTab() {
   const [status, setStatus] = useState('');
   const [urg, setUrg] = useState('');
 
-  const filtered = leads.filter(
-    (l) =>
-      (!q || (l.name + l.care + l.status + l.source).toLowerCase().includes(q.toLowerCase())) &&
-      (!status || l.status === status) &&
-      (!urg || l.urgency === urg),
-  );
+  const filtered = filterLeads(leads, q, status, urg);
 
   return (
     <Card

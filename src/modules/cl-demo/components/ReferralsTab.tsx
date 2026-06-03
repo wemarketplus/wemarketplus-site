@@ -1,7 +1,7 @@
-import { Card } from './Card';
-import { Badge } from './Badge';
-import { DemoButton } from './DemoButton';
-import { TBL, TD, TH } from '../constants/clDemoStyles';
+import { Card } from '@/shared/cl-demo';
+import { Badge } from '@/shared/cl-demo';
+import { DemoButton } from '@/shared/cl-demo';
+import { TBL, TD, TH } from '@/shared/cl-demo';
 import { useClDemo } from '../hooks/useClDemo';
 
 // Referral Sources tab — reproduces rRefs(): partner table, Log Visit (bumps

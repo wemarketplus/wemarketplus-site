@@ -1,6 +1,11 @@
 import { Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { COMMUNITYLINK_DEMO_URLS } from '@/shared/config/demoUrls';
 import { BrandLogo } from './BrandLogo';
+
+// A dropdown target is internal (react-router) unless it points at an
+// absolute URL, in which case it must render as a plain anchor.
+const isExternal = (to: string) => /^https?:\/\//.test(to);
 
 // Top nav — mirrors the live wemarketplus.com nav exactly: 64px bar, 13px
 // text-2 links with a hover surface, "▾" hover dropdowns under HospiceLink /
@@ -15,9 +20,9 @@ const HOSPICE_MENU: DropItem[] = [
   { label: 'Platform', to: '/#preview' },
   { label: 'Features', to: '/#features' },
   { label: 'Pricing', to: '/#pricing' },
-  { label: 'Pro Demo', to: '/demo/hospicelink/pro' },
-  { label: 'Max Demo', to: '/demo/hospicelink/max' },
-  { label: 'Gold Demo', to: '/demo/hospicelink/gold' },
+  { label: 'Pro Demo', to: COMMUNITYLINK_DEMO_URLS.pro },
+  { label: 'Max Demo', to: COMMUNITYLINK_DEMO_URLS.max },
+  { label: 'Gold Demo', to: COMMUNITYLINK_DEMO_URLS.gold },
 ];
 
 const COMMUNITY_MENU: DropItem[] = [
@@ -46,15 +51,19 @@ function NavDropdown({
         {label} ▾
       </Link>
       <div className="invisible absolute left-1/2 top-[calc(100%+8px)] z-[9999] min-w-[170px] -translate-x-1/2 rounded-[12px] border border-white/10 bg-[#0d1b2e] p-2 opacity-0 shadow-[0_16px_40px_rgba(0,0,0,0.5)] transition-[opacity,visibility] duration-150 group-hover:visible group-hover:opacity-100">
-        {items.map((item) => (
-          <Link
-            key={item.label + item.to}
-            to={item.to}
-            className="block whitespace-nowrap rounded-[8px] px-3.5 py-[7px] text-[13px] text-[#c8d6e8] transition-colors hover:bg-white/[0.07] hover:text-white"
-          >
-            {item.label}
-          </Link>
-        ))}
+        {items.map((item) => {
+          const itemCls =
+            'block whitespace-nowrap rounded-[8px] px-3.5 py-[7px] text-[13px] text-[#c8d6e8] transition-colors hover:bg-white/[0.07] hover:text-white';
+          return isExternal(item.to) ? (
+            <a key={item.label + item.to} href={item.to} className={itemCls}>
+              {item.label}
+            </a>
+          ) : (
+            <Link key={item.label + item.to} to={item.to} className={itemCls}>
+              {item.label}
+            </Link>
+          );
+        })}
         {accent ? (
           <Link
             to={accent.to}

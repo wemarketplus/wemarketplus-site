@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Card } from './Card';
-import { DemoButton } from './DemoButton';
-import { Field } from './Field';
+import { Card } from '@/shared/cl-demo';
+import { DemoButton } from '@/shared/cl-demo';
+import { Field } from '@/shared/cl-demo';
 import { COMMUNITY_DEFAULTS } from '../constants/clDemoData';
 import { PRICING_HREF } from '../constants/clDemoNav';
-import { FG, FI } from '../constants/clDemoStyles';
+import { FG, FI } from '@/shared/cl-demo';
 import { useClDemo } from '../hooks/useClDemo';
 
 // Settings tab — reproduces rSettings(): community form, subscription card, and

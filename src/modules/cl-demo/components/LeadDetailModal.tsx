@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 import { ClDemoModal } from './ClDemoModal';
-import { DemoButton } from './DemoButton';
-import { FI, FLB } from '../constants/clDemoStyles';
+import { DemoButton, FI, FLB } from '@/shared/cl-demo';
+import { LEAD_STATUSES_FULL } from '../constants/clDemoData';
 import { useClDemo } from '../hooks/useClDemo';
 import type { LeadStatus, Urgency } from '../types/clDemoTypes';
-
-const STATUSES: LeadStatus[] = ['Inquiry', 'Follow-up', 'Tour Scheduled', 'Proposal Sent', 'Decision Pending', 'Move-In', 'Lost'];
 
 // Lead detail/edit modal — reproduces openLead()/updateLead(). Reads the open
 // lead from the slice (leadModalId) and edits status/urgency/follow-up/source/notes.
@@ -47,7 +45,7 @@ export function LeadDetailModal() {
             <div>
               <div className={`mb-1 ${FLB}`}>Status</div>
               <select className={FI} value={status} onChange={(e) => setStatus(e.target.value as LeadStatus)}>
-                {STATUSES.map((s) => <option key={s}>{s}</option>)}
+                {LEAD_STATUSES_FULL.map((s) => <option key={s}>{s}</option>)}
               </select>
             </div>
             <div>

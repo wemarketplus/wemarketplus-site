@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Sparkles } from 'lucide-react';
 import { Button } from '@/shared/ui/core';
+import { COMMUNITYLINK_DEMO_URLS } from '@/shared/config/demoUrls';
 import { MarketingShell } from '../components/MarketingShell';
 
 export function ThankYouPage() {
@@ -21,7 +22,7 @@ export function ThankYouPage() {
           <Link to="/">
             <Button variant="secondary">Back to homepage</Button>
           </Link>
-          <Link to="/demo/hospicelink/pro">
+          <Link to={COMMUNITYLINK_DEMO_URLS.max}>
             <Button>Explore the demo</Button>
           </Link>
         </div>

@@ -2,7 +2,6 @@ import { AddLeadTab } from '../components/AddLeadTab';
 import { AddReferralTab } from '../components/AddReferralTab';
 import { AiAssistantTab } from '../components/AiAssistantTab';
 import { ClDemoSidebar } from '../components/ClDemoSidebar';
-import { ClDemoToast } from '../components/ClDemoToast';
 import { ClDemoTopbar } from '../components/ClDemoTopbar';
 import { DashboardTab } from '../components/DashboardTab';
 import { GpsTab } from '../components/GpsTab';
@@ -17,6 +16,7 @@ import { SettingsTab } from '../components/SettingsTab';
 import { TasksTab } from '../components/TasksTab';
 import { ToursTab } from '../components/ToursTab';
 import { useClDemo } from '../hooks/useClDemo';
+import { DemoToast } from '@/shared/cl-demo';
 import type { ComponentType } from 'react';
 import type { TabKey } from '../types/clDemoTypes';
 
@@ -41,7 +41,7 @@ const TABS: Record<TabKey, ComponentType> = {
 };
 
 export function ClDemoPage() {
-  const { activeTab } = useClDemo();
+  const { activeTab, toast, actions } = useClDemo();
   const ActiveTab = TABS[activeTab];
 
   return (
@@ -54,7 +54,7 @@ export function ClDemoPage() {
         </main>
       </div>
       <LeadDetailModal />
-      <ClDemoToast />
+      <DemoToast toast={toast} onHide={actions.hideToast} />
     </div>
   );
 }

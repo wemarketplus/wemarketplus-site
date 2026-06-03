@@ -1,5 +1,5 @@
-import { Card } from './Card';
-import { DemoButton } from './DemoButton';
+import { Card } from '@/shared/cl-demo';
+import { DemoButton } from '@/shared/cl-demo';
 import { useClDemo } from '../hooks/useClDemo';
 import { hotLeads } from '../utils/clDemoFormat';
 

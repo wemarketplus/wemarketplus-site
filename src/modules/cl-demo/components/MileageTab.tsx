@@ -1,14 +1,20 @@
 import { useState } from 'react';
-import { Card } from './Card';
-import { DemoButton } from './DemoButton';
-import { Field } from './Field';
-import { StatGrid } from './StatGrid';
-import { StatTile } from './StatTile';
+import {
+  Card,
+  DemoButton,
+  Field,
+  StatGrid,
+  StatTile,
+  FG,
+  FI,
+  TBL,
+  TD,
+  TH,
+  useCsvDownload,
+} from '@/shared/cl-demo';
 import { IRS_RATE } from '../constants/clDemoNav';
-import { FG, FI, TBL, TD, TH } from '../constants/clDemoStyles';
 import { useClDemo } from '../hooks/useClDemo';
-import { useCsvDownload } from '../hooks/useCsvDownload';
-import { reimbursable } from '../utils/clDemoFormat';
+import { reimbursable, totalMiles } from '../utils/clDemoFormat';
 import { buildMileageCsv } from '../utils/clDemoCsv';
 
 // Mileage Tracker tab — reproduces rMileage(): totals, a log-trip form, the
@@ -22,7 +28,7 @@ export function MileageTab() {
   const [to, setTo] = useState('');
   const [purpose, setPurpose] = useState('');
 
-  const total = mileage.reduce((s, m) => s + m.miles, 0);
+  const total = totalMiles(mileage);
 
   const save = () => {
     const m = parseFloat(miles);

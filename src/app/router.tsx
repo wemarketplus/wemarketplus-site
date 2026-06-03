@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { DashboardLayout } from '@/shared/ui/layout';
 import { PublicRoute } from '@/routes/PublicRoute';
 import { RootRoute } from '@/routes/RootRoute';
+import { LEGACY_DEMO_REDIRECTS } from '@/shared/config/demoUrls';
 // NOTE: auth gates are intentionally commented out below so dev can browse
 // every screen without logging in. When ready, re-import ProtectedRoute and
 // the role groups from @/routes/ProtectedRoute and @/shared/rbac.
@@ -169,6 +170,17 @@ const ClReportsPage = lazy(() =>
 const ClDemoPage = lazy(() =>
   import('@/modules/cl-demo').then((m) => ({ default: m.ClDemoPage })),
 );
+// Self-contained CommunityLink Gold CRM demo (pixel replica of
+// communitylinkgold-demo.html — own sidebar/topbar/role-aware tabs, amber theme).
+const GoldDemoPage = lazy(() =>
+  import('@/modules/cl-demo-gold').then((m) => ({ default: m.GoldDemoPage })),
+);
+// Self-contained CommunityLink Max CRM demo (pixel replica of
+// communitylinkmax-demo.html — 7 roles, premium financial/activity modules,
+// modals, mobile nav).
+const MaxDemoPage = lazy(() =>
+  import('@/modules/cl-demo-max').then((m) => ({ default: m.MaxDemoPage })),
+);
 
 // --- Owner portal ---------------------------------------------------------
 
@@ -239,6 +251,14 @@ export function AppRouter() {
             communitylinkpro-demo.html. Static path outranks the generic
             /demo/:product/:tier below, so only this exact URL gets the replica. */}
         <Route path="/demo/communitylink/pro" element={<ClDemoPage />} />
+        <Route path="/demo/communitylink/gold" element={<GoldDemoPage />} />
+        <Route path="/demo/communitylink/max" element={<MaxDemoPage />} />
+
+        {/* Retired HospiceLink demos — redirect to the matching CommunityLink
+            demo route. Fully static paths, so they outrank /demo/:product/:tier. */}
+        {LEGACY_DEMO_REDIRECTS.map(({ from, to }) => (
+          <Route key={from} path={from} element={<Navigate to={to} replace />} />
+        ))}
 
         {/* Demo — public route reusing dashboard chrome under a banner */}
         <Route path="/demo/:product/:tier" element={<DemoPage />}>

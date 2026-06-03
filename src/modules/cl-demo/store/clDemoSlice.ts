@@ -3,7 +3,9 @@
 // role, lead modal target, inline form toggles, toast). All mutations route
 // through these reducers so every tab reads a single source of truth.
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { todayIso } from '@/shared/cl-demo';
 import {
+  COMMUNITY_DEFAULTS,
   SEED_LEADS,
   SEED_MILEAGE,
   SEED_NEXT_ID,
@@ -70,10 +72,6 @@ const initialState: ClDemoState = {
   taskFormOpen: false,
   toast: null,
 };
-
-function todayIso(): string {
-  return new Date().toISOString().split('T')[0];
-}
 
 const clDemoSlice = createSlice({
   name: 'clDemo',
@@ -177,7 +175,7 @@ const clDemoSlice = createSlice({
         state.mileage.unshift({
           id: state.nextId,
           date: action.payload.date,
-          from: 'Sunrise Senior Living',
+          from: COMMUNITY_DEFAULTS.name,
           to: action.payload.location,
           miles: action.payload.miles,
           purpose: action.payload.type,

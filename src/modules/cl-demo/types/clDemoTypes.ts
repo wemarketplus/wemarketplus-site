@@ -115,21 +115,35 @@ export interface NavSection {
   items: NavItem[];
 }
 
-export interface ToastState {
-  message: string;
-  error: boolean;
-  // Bumped on every toast so the autohide effect re-runs even for an
-  // identical message (mirrors the reference's re-triggerable T()).
-  nonce: number;
-}
-
 export interface AiMessage {
   role: 'user' | 'assistant';
   content: string;
 }
 
-// Badge tone keys — mirror the reference's .bg/.ba/.bb/.br/.bx classes.
-export type BadgeTone = 'green' | 'amber' | 'blue' | 'red' | 'neutral';
+// A chat bubble rendered in the AI Assistant tab — an AiMessage plus transient
+// UI flags for the "Thinking…" placeholder and the keyless "AI unavailable" reply.
+export interface ChatBubble extends AiMessage {
+  thinking?: boolean;
+  unavailable?: boolean;
+}
+
+// Reports tab — leads-by-source bar chart rows (normalized so the largest = 100%).
+export interface SourceChartRow {
+  source: string;
+  count: number;
+  pct: number;
+}
+
+// Reports tab — pipeline snapshot table rows (% of all leads in each stage).
+export interface PipelineSnapshotRow {
+  stage: LeadStatus;
+  count: number;
+  pct: number;
+}
+
+// BadgeTone + ToastState now live in the shared demo design system; re-exported
+// here so existing module imports (`from '../types/clDemoTypes'`) keep working.
+export type { BadgeTone, ToastState } from '@/shared/cl-demo';
 
 // Input shapes for the create reducers (id is assigned by the slice).
 export type NewLeadInput = Omit<Lead, 'id'>;

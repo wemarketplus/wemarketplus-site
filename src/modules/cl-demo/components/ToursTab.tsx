@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Card } from './Card';
-import { Badge } from './Badge';
-import { DemoButton } from './DemoButton';
-import { Field } from './Field';
+import { Card } from '@/shared/cl-demo';
+import { Badge } from '@/shared/cl-demo';
+import { DemoButton } from '@/shared/cl-demo';
+import { Field } from '@/shared/cl-demo';
 import { TOUR_CARE_LEVELS, TOUR_TYPES } from '../constants/clDemoData';
-import { FG, FI, TBL, TD, TH } from '../constants/clDemoStyles';
+import { FG, FI, TBL, TD, TH } from '@/shared/cl-demo';
 import { useClDemo } from '../hooks/useClDemo';
 
 // Tour Scheduler tab — reproduces rTours(): upcoming tours table, an inline

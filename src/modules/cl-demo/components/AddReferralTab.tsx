@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Card } from './Card';
-import { DemoButton } from './DemoButton';
-import { Field } from './Field';
+import { Card } from '@/shared/cl-demo';
+import { DemoButton } from '@/shared/cl-demo';
+import { Field } from '@/shared/cl-demo';
 import { REFERRAL_TYPES } from '../constants/clDemoData';
-import { FG, FI } from '../constants/clDemoStyles';
+import { FG, FI } from '@/shared/cl-demo';
 import { useClDemo } from '../hooks/useClDemo';
 
 // Add Referral Source tab — reproduces rAddRef() + saveRef().

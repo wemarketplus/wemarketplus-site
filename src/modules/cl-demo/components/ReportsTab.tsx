@@ -1,11 +1,6 @@
-import { Card } from './Card';
-import { DemoButton } from './DemoButton';
-import { StatGrid } from './StatGrid';
-import { StatTile } from './StatTile';
+import { Card, DemoButton, StatGrid, StatTile, TBL, TD, TH, useCsvDownload } from '@/shared/cl-demo';
 import { SOURCE_CHART_COLORS } from '../constants/clDemoNav';
-import { TBL, TD, TH } from '../constants/clDemoStyles';
 import { useClDemo } from '../hooks/useClDemo';
-import { useCsvDownload } from '../hooks/useCsvDownload';
 import { activeLeadCount, bySourceChart, moveInCount, pipelineSnapshot } from '../utils/clDemoFormat';
 import { buildLeadsReportCsv } from '../utils/clDemoCsv';
 

@@ -1,17 +1,9 @@
 import { useState } from 'react';
-import { Card } from './Card';
-import { Badge } from './Badge';
-import { DemoButton } from './DemoButton';
-import { Field } from './Field';
-import { FG, FI } from '../constants/clDemoStyles';
+import { Badge, Card, DemoButton, Field, FG, FI } from '@/shared/cl-demo';
+import { PRIORITY_COLOR } from '../constants/clDemoNav';
 import { useClDemo } from '../hooks/useClDemo';
+import { openTasks } from '../utils/clDemoFormat';
 import type { TaskPriority } from '../types/clDemoTypes';
-
-const PRIORITY_COLOR: Record<TaskPriority, string> = {
-  High: 'text-[#f87171]',
-  Med: 'text-[#f59e0b]',
-  Low: 'text-[#4fc87a]',
-};
 
 // Task Manager tab — reproduces rTasks(): open/complete counts, inline add
 // form, toggle + admin delete.
@@ -22,7 +14,7 @@ export function TasksTab() {
   const [priority, setPriority] = useState<TaskPriority>('Med');
   const [assignee, setAssignee] = useState('');
 
-  const open = tasks.filter((t) => !t.done).length;
+  const open = openTasks(tasks).length;
   const done = tasks.filter((t) => t.done).length;
 
   const save = () => {

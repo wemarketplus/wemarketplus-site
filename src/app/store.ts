@@ -18,6 +18,8 @@ import { authApi, authReducer } from '@/modules/auth';
 import { billingApi, billingReducer } from '@/modules/billing';
 import { clFinancialReducer } from '@/modules/cl-financial';
 import { clDemoReducer } from '@/modules/cl-demo';
+import { goldDemoReducer } from '@/modules/cl-demo-gold';
+import { maxDemoReducer } from '@/modules/cl-demo-max';
 import { clLeadsReducer } from '@/modules/cl-leads';
 import { clOperationsReducer } from '@/modules/cl-operations';
 import { clOutreachReducer } from '@/modules/cl-outreach';
@@ -59,6 +61,8 @@ const rootReducer = combineReducers({
   clinical: clinicalReducer,
   compliance: complianceReducer,
   dashboard: dashboardReducer,
+  goldDemo: goldDemoReducer,
+  maxDemo: maxDemoReducer,
   integrations: integrationsReducer,
   intelligence: intelligenceReducer,
   marketing: marketingReducer,

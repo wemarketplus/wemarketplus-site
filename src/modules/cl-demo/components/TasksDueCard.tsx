@@ -1,11 +1,11 @@
-import { Card } from './Card';
-import { DemoButton } from './DemoButton';
+import { Card, DemoButton } from '@/shared/cl-demo';
 import { useClDemo } from '../hooks/useClDemo';
+import { openTasks } from '../utils/clDemoFormat';
 
 // Dashboard "✅ Tasks Due Today" card — first 4 open tasks with toggle checkboxes.
 export function TasksDueCard() {
   const { tasks, actions } = useClDemo();
-  const open = tasks.filter((t) => !t.done).slice(0, 4);
+  const open = openTasks(tasks).slice(0, 4);
 
   return (
     <Card

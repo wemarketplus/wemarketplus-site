@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/shared/ui/core';
+import { COMMUNITYLINK_DEMO_URLS } from '@/shared/config/demoUrls';
 import { HERO } from '../../constants/landingContent';
 
 // index.html hero (#hospicelink) — sage radial glow, breathing eyebrow,
@@ -49,7 +50,7 @@ export function LandingHero() {
               View Plans &amp; Pricing
             </Button>
           </Link>
-          <Link to="/demo/hospicelink/pro">
+          <Link to={COMMUNITYLINK_DEMO_URLS.max}>
             <Button
               size="lg"
               variant="outline"

@@ -1,4 +1,6 @@
 // index.html #pricing — HospiceLink plan cards, verbatim from the live site.
+import { COMMUNITYLINK_DEMO_URLS } from '@/shared/config/demoUrls';
+
 export type PlanTone = 'azure' | 'sage' | 'amber';
 
 export interface PlanTierRow {
@@ -46,7 +48,7 @@ export const HOSPICELINK_PLANS: readonly PricingPlan[] = [
       { users: 'Unlimited Users', price: '$449' },
     ],
     demoLabel: 'View Pro Demo',
-    demoHref: '/demo/hospicelink/pro',
+    demoHref: COMMUNITYLINK_DEMO_URLS.pro,
   },
   {
     badge: 'Professional',
@@ -72,7 +74,7 @@ export const HOSPICELINK_PLANS: readonly PricingPlan[] = [
       { users: 'Unlimited Users', price: '$849' },
     ],
     demoLabel: 'View Max Demo',
-    demoHref: '/demo/hospicelink/max',
+    demoHref: COMMUNITYLINK_DEMO_URLS.max,
   },
   {
     badge: 'Enterprise',
@@ -99,6 +101,6 @@ export const HOSPICELINK_PLANS: readonly PricingPlan[] = [
       { users: 'Unlimited Users', price: '$1,299' },
     ],
     demoLabel: 'View Gold Demo',
-    demoHref: '/demo/hospicelink/gold',
+    demoHref: COMMUNITYLINK_DEMO_URLS.gold,
   },
 ];

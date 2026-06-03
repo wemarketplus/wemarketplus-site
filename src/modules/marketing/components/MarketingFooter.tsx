@@ -1,5 +1,6 @@
 import { Layers } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { COMMUNITYLINK_DEMO_URLS } from '@/shared/config/demoUrls';
 
 // index.html <footer> — #030508 band, 2fr/1fr/1fr/1fr columns (brand +
 // HospiceLink / CommunityLink / Legal / Contact), and a split bottom bar.
@@ -12,9 +13,9 @@ const COLUMNS: { heading: string; links: FooterLink[] }[] = [
       { label: 'Platform', to: '/#preview' },
       { label: 'Features', to: '/#features' },
       { label: 'Pricing', to: '/#pricing' },
-      { label: 'Pro Demo', to: '/demo/hospicelink/pro' },
-      { label: 'Max Demo', to: '/demo/hospicelink/max' },
-      { label: 'Gold Demo', to: '/demo/hospicelink/gold' },
+      { label: 'Pro Demo', to: COMMUNITYLINK_DEMO_URLS.pro },
+      { label: 'Max Demo', to: COMMUNITYLINK_DEMO_URLS.max },
+      { label: 'Gold Demo', to: COMMUNITYLINK_DEMO_URLS.gold },
       { label: 'Log In', to: '/login' },
     ],
   },
@@ -52,7 +53,11 @@ const COLUMNS: { heading: string; links: FooterLink[] }[] = [
 function FooterAnchor({ link }: { link: FooterLink }) {
   const cls =
     'block text-[13px] text-faint transition-colors hover:text-foreground';
-  if (link.to.startsWith('mailto:') || link.to.startsWith('tel:')) {
+  if (
+    link.to.startsWith('mailto:') ||
+    link.to.startsWith('tel:') ||
+    /^https?:\/\//.test(link.to)
+  ) {
     return (
       <a href={link.to} className={cls}>
         {link.label}

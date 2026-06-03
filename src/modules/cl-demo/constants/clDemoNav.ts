@@ -1,7 +1,7 @@
 // Navigation config, tab titles, and visual maps for the CommunityLink Pro
 // CRM demo. Static values only — mirrors the reference's NAV / titles /
 // stageColors objects.
-import type { DemoRole, LeadStatus, NavSection, TabKey } from '../types/clDemoTypes';
+import type { DemoRole, LeadStatus, NavSection, TabKey, TaskPriority } from '../types/clDemoTypes';
 
 export const NAV: Record<DemoRole, NavSection[]> = {
   admin: [
@@ -51,6 +51,16 @@ export const STAGE_COLORS: Record<string, string> = {
 
 // Leads-by-source bar chart palette (reports tab).
 export const SOURCE_CHART_COLORS = ['#f59e0b', '#3d9ee8', '#4fc87a', '#a78bfa', '#f87171'];
+
+// Stages shown in the Reports tab pipeline-snapshot table (reference order).
+export const SNAPSHOT_STAGES: LeadStatus[] = ['Inquiry', 'Follow-up', 'Tour Scheduled', 'Proposal Sent', 'Move-In'];
+
+// Task priority → text-color class (Task Manager tab badges).
+export const PRIORITY_COLOR: Record<TaskPriority, string> = {
+  High: 'text-[#f87171]',
+  Med: 'text-[#f59e0b]',
+  Low: 'text-[#4fc87a]',
+};
 
 // IRS mileage reimbursement rate (2026), used across mileage + dashboard.
 export const IRS_RATE = 0.67;

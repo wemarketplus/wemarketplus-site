@@ -5,6 +5,7 @@ import { MarketingFooter } from './MarketingFooter';
 import { AlertBar } from './AlertBar';
 import { ActivityTicker } from './ActivityTicker';
 import { ProductCards } from './ProductCards';
+import { CookieConsentBanner } from './CookieConsentBanner';
 
 // Scroll to the `#section` in the URL after client-side navigation — the live
 // site is a single page with in-page anchors, so /#pricing etc. must scroll.
@@ -32,6 +33,7 @@ export function MarketingShell({ children }: { children: ReactNode }) {
       <ProductCards />
       <main className="flex-1">{children}</main>
       <MarketingFooter />
+      <CookieConsentBanner />
     </div>
   );
 }

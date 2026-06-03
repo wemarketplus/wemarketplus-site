@@ -1,12 +1,15 @@
 // Pure formatting / derivation helpers for the CommunityLink demo. No side
 // effects, no API calls (per the enforced modular architecture).
-import { IRS_RATE, STAGES } from '../constants/clDemoNav';
-import type { BadgeTone, Lead, LeadStatus, Urgency } from '../types/clDemoTypes';
-
-export function cap(s: string): string {
-  if (!s) return '';
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
+import { IRS_RATE, SNAPSHOT_STAGES, STAGES } from '../constants/clDemoNav';
+import type {
+  BadgeTone,
+  Lead,
+  MileageEntry,
+  PipelineSnapshotRow,
+  SourceChartRow,
+  Task,
+  Urgency,
+} from '../types/clDemoTypes';
 
 // Dollar reimbursement for a mileage figure (matches `$' + (miles*0.67)`).
 export function reimbursable(miles: number, digits = 2): string {
@@ -51,12 +54,6 @@ export function stageCounts(leads: readonly Lead[]): Record<string, number> {
   return counts;
 }
 
-export interface SourceChartRow {
-  source: string;
-  count: number;
-  pct: number;
-}
-
 // Top-5 leads-by-source rows (reference buildSourceChart()), normalized so the
 // largest bar is 100%.
 export function bySourceChart(leads: readonly Lead[]): SourceChartRow[] {
@@ -73,14 +70,6 @@ export function bySourceChart(leads: readonly Lead[]): SourceChartRow[] {
   }));
 }
 
-export interface PipelineSnapshotRow {
-  stage: LeadStatus;
-  count: number;
-  pct: number;
-}
-
-const SNAPSHOT_STAGES: LeadStatus[] = ['Inquiry', 'Follow-up', 'Tour Scheduled', 'Proposal Sent', 'Move-In'];
-
 // Reports tab pipeline snapshot table (% of all leads in each stage).
 export function pipelineSnapshot(leads: readonly Lead[]): PipelineSnapshotRow[] {
   return SNAPSHOT_STAGES.map((stage) => {
@@ -91,4 +80,30 @@ export function pipelineSnapshot(leads: readonly Lead[]): PipelineSnapshotRow[] 
       pct: leads.length ? Math.round((count / leads.length) * 100) : 0,
     };
   });
+}
+
+// Open (incomplete) tasks — shared by the dashboard count, task manager count,
+// and the "Tasks Due Today" card.
+export function openTasks(tasks: readonly Task[]): Task[] {
+  return tasks.filter((t) => !t.done);
+}
+
+// Sum of logged miles (dashboard + mileage tracker totals).
+export function totalMiles(mileage: readonly MileageEntry[]): number {
+  return mileage.reduce((s, m) => s + m.miles, 0);
+}
+
+// Lead pipeline search/stage/urgency filter (reference rLeads() filtering).
+export function filterLeads(
+  leads: readonly Lead[],
+  q: string,
+  status: string,
+  urg: string,
+): Lead[] {
+  return leads.filter(
+    (l) =>
+      (!q || (l.name + l.care + l.status + l.source).toLowerCase().includes(q.toLowerCase())) &&
+      (!status || l.status === status) &&
+      (!urg || l.urgency === urg),
+  );
 }

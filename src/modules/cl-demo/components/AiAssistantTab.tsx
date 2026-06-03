@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { Card } from './Card';
-import { DemoButton } from './DemoButton';
+import { Card } from '@/shared/cl-demo';
+import { DemoButton } from '@/shared/cl-demo';
 import { cn } from '@/shared/utils/cn';
 import { AI_QUICK_PROMPTS } from '../constants/clDemoData';
-import { FI } from '../constants/clDemoStyles';
+import { FI } from '@/shared/cl-demo';
 import { useAiAssistant } from '../hooks/useAiAssistant';
 
 // AI Sales Assistant tab — reproduces rAI(): chat panel + quick prompts. The

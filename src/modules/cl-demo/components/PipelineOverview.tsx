@@ -1,4 +1,4 @@
-import { Card } from './Card';
+import { Card } from '@/shared/cl-demo';
 import { STAGE_COLORS, STAGES } from '../constants/clDemoNav';
 import { useClDemo } from '../hooks/useClDemo';
 import { stageCounts } from '../utils/clDemoFormat';

@@ -1,14 +1,7 @@
 import { useState } from 'react';
-import { Card } from './Card';
-import { DemoButton } from './DemoButton';
-import { Field } from './Field';
+import { Card, DemoButton, Field, FI, todayIso } from '@/shared/cl-demo';
 import { NOTE_CONTACT_TYPES } from '../constants/clDemoData';
-import { FI } from '../constants/clDemoStyles';
 import { useClDemo } from '../hooks/useClDemo';
-
-function todayIso(): string {
-  return new Date().toISOString().split('T')[0];
-}
 
 // Activity Notes tab — reproduces rNotes(): a log-note form beside an activity
 // feed of saved notes.

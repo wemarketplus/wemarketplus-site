@@ -1,16 +1,8 @@
 import { useState } from 'react';
-import { Card } from './Card';
-import { Badge } from './Badge';
-import { DemoButton } from './DemoButton';
-import { Field } from './Field';
+import { Badge, Card, DemoButton, Field, FG, FI, todayIso } from '@/shared/cl-demo';
 import { GPS_VISIT_TYPES } from '../constants/clDemoData';
-import { FG, FI } from '../constants/clDemoStyles';
 import { useClDemo } from '../hooks/useClDemo';
 import { useGpsCapture } from '../hooks/useGpsCapture';
-
-function todayIso(): string {
-  return new Date().toISOString().split('T')[0];
-}
 
 // GPS Check-In tab — reproduces rGPS(): a capture form with a live "map"
 // placeholder plus a Recent Check-Ins list.
