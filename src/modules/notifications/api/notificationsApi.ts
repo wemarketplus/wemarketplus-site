@@ -1,27 +1,52 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQuery';
-import type { ApiEnvelope, AppNotification } from '@/shared/types';
+import type { ApiEnvelope, PaginatedPayload } from '@/shared/types';
 import { NOTIFICATIONS_TAGS } from '../constants/notificationsConstants';
+import type {
+  ListNotificationsQuery,
+  NotificationRecord,
+  RespondNotificationRequest,
+  UnreadCountResponse,
+} from '../types/notificationsTypes';
 
-// TODO(backend): ship GET /notifications, POST /notifications/:id/read,
-// POST /notifications/mark-all-read. Hook is wired with a fixture fallback in
-// useNotifications.
+// Verified against wemarketplus-backend/src/notifications/notifications.controller.ts:
+//   GET   /notifications?page&limit&unreadOnly -> PaginatedResult<NotificationResponseDto>
+//   GET   /notifications/unread-count          -> { count }
+//   PATCH /notifications/:id/read              -> NotificationResponseDto
+//   POST  /notifications/mark-all-read         -> { updated }
+//   POST  /notifications/:id/respond           -> NotificationResponseDto, body { action }
 export const notificationsApi = createApi({
   reducerPath: 'notificationsApi',
   baseQuery: baseQueryWithReauth,
   tagTypes: [NOTIFICATIONS_TAGS.List],
   endpoints: (build) => ({
-    listNotifications: build.query<readonly AppNotification[], void>({
-      query: () => ({ url: '/notifications' }),
-      transformResponse: (res: ApiEnvelope<readonly AppNotification[]>) => res.data,
+    listNotifications: build.query<PaginatedPayload<NotificationRecord>, ListNotificationsQuery | void>({
+      query: (params) => ({ url: '/notifications', params: params ?? undefined }),
+      transformResponse: (res: ApiEnvelope<PaginatedPayload<NotificationRecord>>) => res.data,
       providesTags: [NOTIFICATIONS_TAGS.List],
     }),
-    markRead: build.mutation<void, string>({
-      query: (id) => ({ url: `/notifications/${id}/read`, method: 'POST' }),
+    unreadCount: build.query<number, void>({
+      query: () => ({ url: '/notifications/unread-count' }),
+      transformResponse: (res: ApiEnvelope<UnreadCountResponse>) => res.data.count,
+      providesTags: [NOTIFICATIONS_TAGS.List],
+    }),
+    markRead: build.mutation<NotificationRecord, string>({
+      query: (id) => ({ url: `/notifications/${id}/read`, method: 'PATCH' }),
+      transformResponse: (res: ApiEnvelope<NotificationRecord>) => res.data,
       invalidatesTags: [NOTIFICATIONS_TAGS.List],
     }),
-    markAllRead: build.mutation<void, void>({
+    markAllRead: build.mutation<{ updated: number }, void>({
       query: () => ({ url: '/notifications/mark-all-read', method: 'POST' }),
+      transformResponse: (res: ApiEnvelope<{ updated: number }>) => res.data,
+      invalidatesTags: [NOTIFICATIONS_TAGS.List],
+    }),
+    respond: build.mutation<NotificationRecord, RespondNotificationRequest>({
+      query: ({ id, action }) => ({
+        url: `/notifications/${id}/respond`,
+        method: 'POST',
+        body: { action },
+      }),
+      transformResponse: (res: ApiEnvelope<NotificationRecord>) => res.data,
       invalidatesTags: [NOTIFICATIONS_TAGS.List],
     }),
   }),
@@ -29,6 +54,8 @@ export const notificationsApi = createApi({
 
 export const {
   useListNotificationsQuery,
+  useUnreadCountQuery,
   useMarkReadMutation,
   useMarkAllReadMutation,
+  useRespondMutation,
 } = notificationsApi;

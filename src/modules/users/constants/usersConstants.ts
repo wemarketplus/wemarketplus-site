@@ -17,8 +17,13 @@ export const USERS_TAGS = {
 
 // Pastel pill tone per role (matching crm-*.html .pill-*).
 export const ROLE_PILL: Record<Role, PillProps['tone']> = {
+  [Role.SuperAdmin]: 'r',
   [Role.Admin]: 'p',
+  [Role.Owner]: 'gd',
   [Role.Manager]: 'b',
+  [Role.Marketer]: 'g',
+  [Role.Nurse]: 'y',
+  [Role.Caregiver]: 'b',
   [Role.Rep]: 'b',
 };
 

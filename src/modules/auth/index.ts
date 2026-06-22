@@ -8,12 +8,15 @@ export { default as authReducer, setCredentials, logout } from './store/authSlic
 export {
   authApi,
   useLoginMutation,
+  useRegisterMutation,
+  useRefreshMutation,
+  useLogoutMutation,
   useMeQuery,
   useLazyMeQuery,
   useForgotPasswordMutation,
   useResetPasswordMutation,
-  useAcceptInviteMutation,
   useChangePasswordMutation,
+  useAcceptInviteMutation,
 } from './api/authApi';
 export type {
   AuthenticatedUser,

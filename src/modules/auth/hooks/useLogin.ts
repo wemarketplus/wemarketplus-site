@@ -16,7 +16,13 @@ export function useLogin() {
     async (values: LoginRequest) => {
       try {
         const result = await login(values).unwrap();
-        dispatch(setCredentials({ token: result.accessToken, user: result.user }));
+        dispatch(
+          setCredentials({
+            token: result.accessToken,
+            refreshToken: result.refreshToken ?? null,
+            user: result.user,
+          }),
+        );
         toast.success(`Welcome back, ${result.user.firstName}`);
         navigate('/', { replace: true });
       } catch (err) {

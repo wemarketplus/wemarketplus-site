@@ -13,3 +13,14 @@ export { OwnerCommunicationPage } from './pages/OwnerCommunicationPage';
 export { OwnerSecurityPage } from './pages/OwnerSecurityPage';
 export { OwnerAdminControlsPage } from './pages/OwnerAdminControlsPage';
 export { default as ownerPortalReducer } from './store/ownerPortalSlice';
+export {
+  ownerPortalApi,
+  useGetOwnerMetricsQuery,
+  useListOwnerCustomersQuery,
+  useSuspendCustomerMutation,
+  useListPipelineQuery,
+  useGetPipelineRecordQuery,
+  useCreatePipelineRecordMutation,
+  useUpdatePipelineRecordMutation,
+  useDeletePipelineRecordMutation,
+} from './api/ownerPortalApi';

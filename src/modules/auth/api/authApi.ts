@@ -4,23 +4,30 @@ import type { ApiEnvelope } from '@/shared/types';
 import { AUTH_TAGS } from '../constants/authConstants';
 import type {
   AcceptInviteRequest,
+  AcceptInviteResponse,
   AuthenticatedUser,
   ChangePasswordRequest,
   ForgotPasswordRequest,
   LoginRequest,
   LoginResponse,
+  RefreshTokenRequest,
   RegisterRequest,
   ResetPasswordRequest,
 } from '../types/authTypes';
 
-// Auth endpoints. login/register/me are live against the NestJS backend.
-// The password-flow endpoints (forgot/reset/accept-invite/change-password)
-// are declared with the URLs the site already uses; the backend has not
-// shipped them yet. They will compile and the UI will call them — they'll
-// just 404 until the backend route exists.
-// TODO(backend): ship /auth/forgot-password, /auth/reset-password,
-// /auth/accept-invite, /auth/change-password mirroring the request DTOs in
-// `@/modules/auth/types/authTypes`.
+// Auth endpoints — all under the backend's /api global prefix. Verified
+// against wemarketplus-backend/src/auth/auth.controller.ts:
+//   POST /auth/login            -> AuthResponseDto { accessToken, refreshToken?, user }
+//   POST /auth/register         -> AuthResponseDto (body requires organizationName)
+//   POST /auth/refresh          -> AuthResponseDto
+//   POST /auth/logout           -> 204, auth-required
+//   POST /auth/forgot-password  -> 202, no body
+//   POST /auth/reset-password   -> 200, body { token, newPassword }
+//   POST /auth/change-password  -> 200, auth-required, body { currentPassword, newPassword }
+//   GET  /auth/me               -> UserResponseDto
+// Invite acceptance is served by POST /invites/accept (token only) — there is
+// no /auth/accept-invite. It marks the invite consumed and returns the invite
+// record; it does NOT set a password or return auth tokens.
 
 export const authApi = createApi({
   reducerPath: 'authApi',
@@ -35,28 +42,32 @@ export const authApi = createApi({
     register: build.mutation<LoginResponse, RegisterRequest>({
       query: (body) => ({ url: '/auth/register', method: 'POST', body }),
       transformResponse: (res: ApiEnvelope<LoginResponse>) => res.data,
+      invalidatesTags: [AUTH_TAGS.Me],
+    }),
+    refresh: build.mutation<LoginResponse, RefreshTokenRequest>({
+      query: (body) => ({ url: '/auth/refresh', method: 'POST', body }),
+      transformResponse: (res: ApiEnvelope<LoginResponse>) => res.data,
+    }),
+    logout: build.mutation<void, void>({
+      query: () => ({ url: '/auth/logout', method: 'POST' }),
     }),
     me: build.query<AuthenticatedUser, void>({
       query: () => ({ url: '/auth/me' }),
       transformResponse: (res: ApiEnvelope<AuthenticatedUser>) => res.data,
       providesTags: [AUTH_TAGS.Me],
     }),
-    forgotPassword: build.mutation<{ requested: boolean }, ForgotPasswordRequest>({
+    forgotPassword: build.mutation<void, ForgotPasswordRequest>({
       query: (body) => ({ url: '/auth/forgot-password', method: 'POST', body }),
-      transformResponse: (res: ApiEnvelope<{ requested: boolean }>) => res.data,
     }),
-    resetPassword: build.mutation<{ reset: boolean }, ResetPasswordRequest>({
+    resetPassword: build.mutation<void, ResetPasswordRequest>({
       query: (body) => ({ url: '/auth/reset-password', method: 'POST', body }),
-      transformResponse: (res: ApiEnvelope<{ reset: boolean }>) => res.data,
     }),
-    acceptInvite: build.mutation<LoginResponse, AcceptInviteRequest>({
-      query: (body) => ({ url: '/auth/accept-invite', method: 'POST', body }),
-      transformResponse: (res: ApiEnvelope<LoginResponse>) => res.data,
-      invalidatesTags: [AUTH_TAGS.Me],
-    }),
-    changePassword: build.mutation<{ changed: boolean }, ChangePasswordRequest>({
+    changePassword: build.mutation<void, ChangePasswordRequest>({
       query: (body) => ({ url: '/auth/change-password', method: 'POST', body }),
-      transformResponse: (res: ApiEnvelope<{ changed: boolean }>) => res.data,
+    }),
+    acceptInvite: build.mutation<AcceptInviteResponse, AcceptInviteRequest>({
+      query: (body) => ({ url: '/invites/accept', method: 'POST', body }),
+      transformResponse: (res: ApiEnvelope<AcceptInviteResponse>) => res.data,
     }),
   }),
 });
@@ -64,10 +75,12 @@ export const authApi = createApi({
 export const {
   useLoginMutation,
   useRegisterMutation,
+  useRefreshMutation,
+  useLogoutMutation,
   useMeQuery,
   useLazyMeQuery,
   useForgotPasswordMutation,
   useResetPasswordMutation,
-  useAcceptInviteMutation,
   useChangePasswordMutation,
+  useAcceptInviteMutation,
 } = authApi;

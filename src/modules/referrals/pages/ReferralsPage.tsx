@@ -1,12 +1,14 @@
 import { Plus } from 'lucide-react';
-import { toast } from 'sonner';
 import { Button } from '@/shared/ui/core';
 import { ReferralsFilters } from '../components/ReferralsFilters';
 import { ReferralsTable } from '../components/ReferralsTable';
+import { AddReferralModal } from '../components/AddReferralModal';
 import { useReferralsList } from '../hooks/useReferralsList';
+import { useAddReferral } from '../hooks/useAddReferral';
 
 export function ReferralsPage() {
   const { referrals, total, isUsingFixture } = useReferralsList();
+  const { open, isSaving, openModal, close, submit } = useAddReferral();
 
   return (
     <div className="space-y-6">
@@ -22,13 +24,15 @@ export function ReferralsPage() {
             )}
           </p>
         </div>
-        <Button onClick={() => toast.message('Add referral — form pending backend')}>
+        <Button onClick={openModal}>
           <Plus className="h-4 w-4" /> Add source
         </Button>
       </header>
 
       <ReferralsFilters />
       <ReferralsTable items={referrals} />
+
+      <AddReferralModal open={open} isSaving={isSaving} onClose={close} onSubmit={submit} />
     </div>
   );
 }

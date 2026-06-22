@@ -1,30 +1,18 @@
-import { useEffect } from 'react';
 import { CheckCheck, X } from 'lucide-react';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { Button } from '@/shared/ui/core';
-import { closeDrawer, setFilter } from '../store/notificationsSlice';
-import { useMarkAllReadMutation } from '../api/notificationsApi';
 import { useNotifications } from '../hooks/useNotifications';
+import { useNotificationActivate } from '../hooks/useNotificationActivate';
+import { useNotificationsControls } from '../hooks/useNotificationsControls';
+import { useNotificationsDrawer } from '../hooks/useNotificationsDrawer';
 import { NotificationsList } from './NotificationsList';
 import { NOTIFICATIONS_DRAWER_FILTERS } from '../constants/notificationsConstants';
 import { cn } from '@/shared/utils/cn';
 
 export function NotificationsDrawer() {
-  const dispatch = useAppDispatch();
-  const open = useAppSelector((s) => s.notifications.drawerOpen);
-  const filter = useAppSelector((s) => s.notifications.filter);
+  const { open, close } = useNotificationsDrawer();
   const { filtered, unreadCount } = useNotifications();
-  const [markAllRead, markAllState] = useMarkAllReadMutation();
-
-  // Close on Escape.
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') dispatch(closeDrawer());
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [dispatch, open]);
+  const { filter, changeFilter, markAllRead, isMarkingAll } = useNotificationsControls();
+  const activate = useNotificationActivate();
 
   return (
     <div
@@ -37,7 +25,7 @@ export function NotificationsDrawer() {
       <button
         type="button"
         aria-label="Close notifications"
-        onClick={() => dispatch(closeDrawer())}
+        onClick={close}
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
       />
       <aside
@@ -59,8 +47,8 @@ export function NotificationsDrawer() {
             <Button
               variant="ghost"
               size="sm"
-              disabled={markAllState.isLoading || unreadCount === 0}
-              onClick={() => markAllRead()}
+              disabled={isMarkingAll || unreadCount === 0}
+              onClick={markAllRead}
               aria-label="Mark all read"
             >
               <CheckCheck className="h-4 w-4" />
@@ -70,7 +58,7 @@ export function NotificationsDrawer() {
               variant="ghost"
               size="icon"
               aria-label="Close"
-              onClick={() => dispatch(closeDrawer())}
+              onClick={close}
             >
               <X className="h-4 w-4" />
             </Button>
@@ -82,7 +70,7 @@ export function NotificationsDrawer() {
             <button
               key={f.value}
               type="button"
-              onClick={() => dispatch(setFilter(f.value))}
+              onClick={() => changeFilter(f.value)}
               className={cn(
                 'rounded-pill border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
                 filter === f.value
@@ -96,7 +84,7 @@ export function NotificationsDrawer() {
         </nav>
 
         <div className="flex-1 overflow-y-auto">
-          <NotificationsList items={filtered} />
+          <NotificationsList items={filtered} onActivate={activate} />
         </div>
       </aside>
     </div>

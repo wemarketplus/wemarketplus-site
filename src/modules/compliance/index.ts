@@ -9,3 +9,21 @@ export { EvidenceExportPage } from './pages/EvidenceExportPage';
 export { BaaRecordsPage } from './pages/BaaRecordsPage';
 export { ThreatMonitorPage } from './pages/ThreatMonitorPage';
 export { default as complianceReducer } from './store/complianceSlice';
+export {
+  complianceApi,
+  useListComplianceQuery,
+  useCheckAlertsQuery,
+  useUpdateComplianceMutation,
+  useGetBaaQuery,
+  useSignBaaMutation,
+  useListAuditLogQuery,
+} from './api/complianceApi';
+export { auditExportUrl } from './utils/auditExportUrl';
+export type {
+  ComplianceRecord,
+  ComplianceAlert,
+  UpdateComplianceRequest,
+  BaaRecord,
+  SignBaaRequest,
+  AuditLogItem,
+} from './types/complianceApiTypes';

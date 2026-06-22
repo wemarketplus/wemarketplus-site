@@ -1,18 +1,16 @@
 import { CheckCheck } from 'lucide-react';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { Button, Card, CardContent } from '@/shared/ui/core';
-import { useMarkAllReadMutation } from '../api/notificationsApi';
 import { useNotifications } from '../hooks/useNotifications';
-import { setFilter } from '../store/notificationsSlice';
+import { useNotificationActivate } from '../hooks/useNotificationActivate';
+import { useNotificationsControls } from '../hooks/useNotificationsControls';
 import { NotificationsList } from '../components/NotificationsList';
 import { NOTIFICATIONS_PAGE_TABS } from '../constants/notificationsConstants';
 import { cn } from '@/shared/utils/cn';
 
 export function NotificationsPage() {
-  const dispatch = useAppDispatch();
-  const filter = useAppSelector((s) => s.notifications.filter);
   const { filtered, unreadCount } = useNotifications();
-  const [markAllRead, state] = useMarkAllReadMutation();
+  const { filter, changeFilter, markAllRead, isMarkingAll } = useNotificationsControls();
+  const activate = useNotificationActivate();
 
   return (
     <div className="space-y-6">
@@ -25,8 +23,8 @@ export function NotificationsPage() {
         </div>
         <Button
           variant="secondary"
-          disabled={state.isLoading || unreadCount === 0}
-          onClick={() => markAllRead()}
+          disabled={isMarkingAll || unreadCount === 0}
+          onClick={markAllRead}
         >
           <CheckCheck className="h-4 w-4" /> Mark all as read
         </Button>
@@ -39,7 +37,7 @@ export function NotificationsPage() {
               <button
                 key={t.value}
                 type="button"
-                onClick={() => dispatch(setFilter(t.value))}
+                onClick={() => changeFilter(t.value)}
                 className={cn(
                   'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
                   filter === t.value
@@ -52,7 +50,7 @@ export function NotificationsPage() {
             ))}
           </nav>
           <div className="border-t border-white/[0.06]">
-            <NotificationsList items={filtered} />
+            <NotificationsList items={filtered} onActivate={activate} />
           </div>
         </CardContent>
       </Card>

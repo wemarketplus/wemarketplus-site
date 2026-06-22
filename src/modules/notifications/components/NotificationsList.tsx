@@ -1,21 +1,10 @@
 import { Link } from 'react-router-dom';
-import { useAppDispatch } from '@/app/hooks';
-import { closeDrawer } from '../store/notificationsSlice';
-import { useMarkReadMutation } from '../api/notificationsApi';
 import { formatRelative } from '@/shared/utils/dateFormatter';
-import { categoryIcon, categoryToneClass } from '../utils/notificationsUtils';
+import { CATEGORY_ICON, CATEGORY_TONE_CLASS } from '../constants/notificationsConstants';
 import { cn } from '@/shared/utils/cn';
-import type { AppNotification } from '@/shared/types';
+import type { NotificationsListProps } from '../types/notificationsTypes';
 
-interface NotificationsListProps {
-  items: readonly AppNotification[];
-  emptyState?: React.ReactNode;
-}
-
-export function NotificationsList({ items, emptyState }: NotificationsListProps) {
-  const dispatch = useAppDispatch();
-  const [markRead] = useMarkReadMutation();
-
+export function NotificationsList({ items, emptyState, onActivate }: NotificationsListProps) {
   if (items.length === 0) {
     return (
       <div className="rounded-md border border-white/[0.06] bg-white/[0.02] p-8 text-center text-sm text-muted">
@@ -27,7 +16,7 @@ export function NotificationsList({ items, emptyState }: NotificationsListProps)
   return (
     <ul className="divide-y divide-white/[0.06]">
       {items.map((n) => {
-        const Icon = categoryIcon(n.category);
+        const Icon = CATEGORY_ICON[n.category];
         const Body = (
           <div
             className={cn(
@@ -35,7 +24,7 @@ export function NotificationsList({ items, emptyState }: NotificationsListProps)
               !n.read && 'bg-white/[0.02]',
             )}
           >
-            <div className={cn('mt-0.5 shrink-0', categoryToneClass(n.category))}>
+            <div className={cn('mt-0.5 shrink-0', CATEGORY_TONE_CLASS[n.category])}>
               <Icon className="h-4 w-4" />
             </div>
             <div className="min-w-0 flex-1">
@@ -61,14 +50,7 @@ export function NotificationsList({ items, emptyState }: NotificationsListProps)
         if (n.href) {
           return (
             <li key={n.id}>
-              <Link
-                to={n.href}
-                onClick={() => {
-                  if (!n.read) markRead(n.id);
-                  dispatch(closeDrawer());
-                }}
-                className="block"
-              >
+              <Link to={n.href} onClick={() => onActivate?.(n)} className="block">
                 {Body}
               </Link>
             </li>
@@ -79,7 +61,7 @@ export function NotificationsList({ items, emptyState }: NotificationsListProps)
           <li key={n.id}>
             <button
               type="button"
-              onClick={() => !n.read && markRead(n.id)}
+              onClick={() => onActivate?.(n)}
               className="block w-full text-left"
             >
               {Body}

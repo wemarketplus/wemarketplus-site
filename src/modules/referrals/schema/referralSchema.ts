@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ReferralSourceStatus } from '@/shared/types';
+import { ReferralSourceType } from '../types/referralsTypes';
 
 export const referralSchema = z.object({
   fullName: z.string().min(2).max(200),
@@ -21,3 +22,18 @@ export const referralSchema = z.object({
 });
 
 export type ReferralFormValues = z.infer<typeof referralSchema>;
+
+// Create-referral-source form — mirrors POST /referral-sources
+// (CreateReferralSourceRequest). name is the only required field.
+export const newReferralSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(200),
+  type: z.nativeEnum(ReferralSourceType),
+  contactName: z.string().max(200).optional(),
+  phone: z.string().max(40).optional(),
+  email: z.union([z.literal(''), z.string().email('Enter a valid email')]).optional(),
+  city: z.string().max(120).optional(),
+  state: z.string().max(120).optional(),
+  notes: z.string().max(1000).optional(),
+});
+
+export type NewReferralFormValues = z.infer<typeof newReferralSchema>;

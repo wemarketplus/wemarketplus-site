@@ -38,9 +38,10 @@ const TIER_RANK: Record<Tier, number> = {
 export const tierIncludes = (current: Tier, required: Tier): boolean =>
   TIER_RANK[current] >= TIER_RANK[required];
 
-// Subscription status mirrors wemarketplus-site/subscription-status.html.
+// Subscription status mirrors wemarketplus-backend/src/billing/billing.constants.ts.
 export const SubscriptionStatus = {
   Active: 'active',
+  Trialing: 'trialing',
   PastDue: 'past_due',
   Suspended: 'suspended',
   Canceled: 'canceled',

@@ -5,3 +5,8 @@
 // permission records belongs here.
 export { PermissionsPage } from './pages/PermissionsPage';
 export { default as permissionsReducer } from './store/permissionsSlice';
+export {
+  permissionsApi,
+  useGetPermissionsQuery,
+  useUpdatePermissionMutation,
+} from './api/permissionsApi';

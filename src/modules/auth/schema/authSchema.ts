@@ -14,9 +14,12 @@ export const loginSchema = z.object({
 export type LoginFormValues = z.infer<typeof loginSchema>;
 
 // --- Register ---
+// Self-registration provisions a new tenant, so organizationName is required
+// to match the backend RegisterDto.
 export const registerSchema = loginSchema.extend({
   firstName: z.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH),
   lastName: z.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH),
+  organizationName: z.string().min(2).max(120),
 });
 export type RegisterFormValues = z.infer<typeof registerSchema>;
 

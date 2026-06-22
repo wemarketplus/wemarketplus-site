@@ -1,12 +1,14 @@
 import { Plus } from 'lucide-react';
-import { toast } from 'sonner';
 import { Button } from '@/shared/ui/core';
 import { ProspectsFilters } from '../components/ProspectsFilters';
 import { ProspectsTable } from '../components/ProspectsTable';
+import { AddProspectModal } from '../components/AddProspectModal';
 import { useProspectsList } from '../hooks/useProspectsList';
+import { useAddProspect } from '../hooks/useAddProspect';
 
 export function ProspectsPage() {
   const { prospects, total, isUsingFixture } = useProspectsList();
+  const { open, isSaving, openModal, close, submit } = useAddProspect();
 
   return (
     <div className="space-y-6">
@@ -22,13 +24,15 @@ export function ProspectsPage() {
             )}
           </p>
         </div>
-        <Button onClick={() => toast.message('Add prospect — form pending backend')}>
+        <Button onClick={openModal}>
           <Plus className="h-4 w-4" /> Add prospect
         </Button>
       </header>
 
       <ProspectsFilters />
       <ProspectsTable prospects={prospects} />
+
+      <AddProspectModal open={open} isSaving={isSaving} onClose={close} onSubmit={submit} />
     </div>
   );
 }

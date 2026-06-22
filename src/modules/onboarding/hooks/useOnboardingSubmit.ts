@@ -40,7 +40,13 @@ export function useOnboardingSubmit() {
     };
     try {
       const result = await onboard(payload).unwrap();
-      dispatch(setCredentials({ token: result.accessToken, user: result.user }));
+      dispatch(
+        setCredentials({
+          token: result.accessToken,
+          refreshToken: result.refreshToken ?? null,
+          user: result.user,
+        }),
+      );
       markCompleted();
       next();
     } catch (err) {

@@ -7,10 +7,14 @@ import type { ISODateString, ID, Product, Tier } from '@/shared/types';
 // here so the UI can fall back to defaults via the auth slice.
 export interface AuthenticatedUser {
   id: ID;
+  tenantId: ID;
   email: string;
   firstName: string;
   lastName: string;
   role: Role;
+  phone: string | null;
+  avatarUrl: string | null;
+  isActive: boolean;
   createdAt: ISODateString;
   updatedAt: ISODateString;
   // TODO(backend): expose these on /auth/me when product/tier ship.
@@ -18,9 +22,11 @@ export interface AuthenticatedUser {
   tier?: Tier;
 }
 
-// Mirrors wemarketplus-backend/src/auth/dto/auth-response.dto.ts.
+// Mirrors wemarketplus-backend/src/auth/dto/auth-response.dto.ts:
+// { accessToken, refreshToken?, user }.
 export interface LoginResponse {
   accessToken: string;
+  refreshToken?: string;
   user: AuthenticatedUser;
 }
 
@@ -29,30 +35,55 @@ export interface LoginRequest {
   password: string;
 }
 
+// Self-registration provisions a new tenant, so the backend RegisterDto
+// requires organizationName.
 export interface RegisterRequest {
   email: string;
   password: string;
   firstName: string;
   lastName: string;
+  organizationName: string;
 }
 
-// --- Password flows (backend endpoints pending) ---
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
+
+// --- Password flows ---
 
 export interface ForgotPasswordRequest {
   email: string;
 }
 
+// Backend ResetPasswordDto uses `newPassword` (not `password`).
 export interface ResetPasswordRequest {
   token: string;
-  password: string;
+  newPassword: string;
 }
 
+// Backend POST /invites/accept consumes a token only — it marks the invite
+// accepted and returns the invite record. It does NOT set a password or log
+// the user in (no /auth/accept-invite exists today).
 export interface AcceptInviteRequest {
   token: string;
-  password: string;
 }
 
+export interface AcceptInviteResponse {
+  id: ID;
+  email: string;
+  role: Role;
+  acceptedAt: ISODateString | null;
+}
+
+// Backend ChangePasswordDto uses `newPassword` (not `password`).
 export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
+// The change-password form collects `password`; the hook maps it to the
+// backend's `newPassword` before calling the API.
+export interface ChangePasswordFormInput {
   currentPassword: string;
   password: string;
 }
@@ -61,6 +92,7 @@ export interface ChangePasswordRequest {
 
 export interface AuthState {
   token: string | null;
+  refreshToken: string | null;
   user: AuthenticatedUser | null;
   isAuthenticated: boolean;
 }

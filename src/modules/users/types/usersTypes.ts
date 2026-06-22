@@ -4,10 +4,14 @@ import type { ID, ISODateString, PaginationParams } from '@/shared/types';
 // Mirrors wemarketplus-backend/src/users/dto/user-response.dto.ts.
 export interface UserRecord {
   id: ID;
+  tenantId: ID;
   email: string;
   firstName: string;
   lastName: string;
   role: Role;
+  phone: string | null;
+  avatarUrl: string | null;
+  isActive: boolean;
   createdAt: ISODateString;
   updatedAt: ISODateString;
 }
@@ -36,7 +40,13 @@ export interface UpdateOwnProfileRequest {
   lastName?: string;
 }
 
-export interface ListUsersQuery extends PaginationParams {}
+// POST /users/:id/reset-password — admin resets another user's password.
+// Backend generates a temporary password (no request body) and returns it.
+export interface AdminResetPasswordResponse {
+  temporaryPassword: string;
+}
+
+export type ListUsersQuery = PaginationParams;
 
 export interface UsersUiState {
   search: string;

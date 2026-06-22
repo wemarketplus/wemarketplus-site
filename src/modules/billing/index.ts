@@ -2,4 +2,4 @@
 export { SubscriptionStatusPage } from './pages/SubscriptionStatusPage';
 export { default as billingReducer } from './store/billingSlice';
 export { billingApi } from './api/billingApi';
-export type { SubscriptionRecord } from './types/billingTypes';
+export type { SubscriptionRecord, SubscriptionView } from './types/billingTypes';

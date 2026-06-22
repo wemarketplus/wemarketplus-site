@@ -1,12 +1,15 @@
 import { useMemo } from 'react';
 import { PROSPECTS_FIXTURE } from '@/shared/fixtures';
-import { useListProspectsQuery } from '@/modules/prospects';
+import { useListProspectsQuery, mapProspectRecord } from '@/modules/prospects';
 import { PIPELINE_COLUMNS } from '../constants/pipelineConstants';
 import { groupProspectsByStatus } from '../utils/pipelineUtils';
 
 export function usePipelineColumns() {
-  const { data } = useListProspectsQuery({});
-  const prospects = data?.data ?? PROSPECTS_FIXTURE;
+  const { data } = useListProspectsQuery();
+  const prospects = useMemo(
+    () => (data ? data.data.map(mapProspectRecord) : PROSPECTS_FIXTURE),
+    [data],
+  );
   const groups = useMemo(() => groupProspectsByStatus(prospects), [prospects]);
 
   return {
