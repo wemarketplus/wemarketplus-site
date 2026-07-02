@@ -30,6 +30,13 @@ export interface CreateCheckoutRequest {
   planKey?: string;
 }
 
+// Body for POST /billing/checkout/confirm — server-side verification of the
+// Stripe Checkout session on the success redirect (the query param alone is
+// never trusted).
+export interface ConfirmCheckoutRequest {
+  sessionId: string;
+}
+
 // Mirrors wemarketplus-backend/src/billing/dto/subscription-response.dto.ts.
 export interface SubscriptionRecord {
   id: ID;

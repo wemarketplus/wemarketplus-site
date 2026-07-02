@@ -33,6 +33,22 @@ function forceLogout(api: Parameters<typeof rawBaseQuery>[1]): void {
   }
 }
 
+// Both spellings of the billing screen (see router.tsx).
+const BILLING_PATHS = ['/billing', '/subscription-status'];
+
+// 402 SUBSCRIPTION_REQUIRED: the tenant has no live subscription, so every
+// feature endpoint is gated until they pick a plan. Hard redirect to the
+// plan picker, mirroring forceLogout's style; the pathname guard prevents a
+// redirect loop while the billing screen itself loads.
+function redirectToBilling(): void {
+  if (
+    typeof window !== 'undefined' &&
+    !BILLING_PATHS.includes(window.location.pathname)
+  ) {
+    window.location.assign('/billing');
+  }
+}
+
 export const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
   unknown,
@@ -40,6 +56,11 @@ export const baseQueryWithReauth: BaseQueryFn<
 > = async (args, api, extraOptions) => {
   await mutex.waitForUnlock();
   let result = await rawBaseQuery(args, api, extraOptions);
+
+  if (result.error?.status === 402) {
+    redirectToBilling();
+    return result;
+  }
 
   if (result.error?.status !== 401) {
     return result;

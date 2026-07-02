@@ -64,6 +64,7 @@ const initialState: OnboardingState = {
   draft,
   draftExpiresAt: expiresAt,
   completed: false,
+  pendingVerificationEmail: null,
 };
 
 const onboardingSlice = createSlice({
@@ -93,6 +94,16 @@ const onboardingSlice = createSlice({
     },
     markCompleted(state) {
       state.completed = true;
+      state.pendingVerificationEmail = null;
+      state.draft = EMPTY_DRAFT;
+      state.draftExpiresAt = null;
+      clearDraft();
+    },
+    // Register succeeded but the backend withheld tokens pending email
+    // verification. The account exists, so the draft is done either way —
+    // clear it and remember the address for the check-your-email screen.
+    markPendingVerification(state, action: PayloadAction<string>) {
+      state.pendingVerificationEmail = action.payload;
       state.draft = EMPTY_DRAFT;
       state.draftExpiresAt = null;
       clearDraft();
@@ -104,6 +115,7 @@ const onboardingSlice = createSlice({
         draft: EMPTY_DRAFT,
         draftExpiresAt: null,
         completed: false,
+        pendingVerificationEmail: null,
       };
     },
   },
@@ -115,6 +127,7 @@ export const {
   saveAgency,
   saveBAA,
   markCompleted,
+  markPendingVerification,
   resetOnboarding,
 } = onboardingSlice.actions;
 export default onboardingSlice.reducer;

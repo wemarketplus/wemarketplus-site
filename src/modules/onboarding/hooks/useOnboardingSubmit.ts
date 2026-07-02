@@ -13,10 +13,13 @@ import type {
 
 // Orchestrates the final onboarding submission: persists the BAA signature,
 // guards that earlier steps are complete, posts the onboard payload, stores
-// credentials, and advances on success. Kept out of the component so BAAStep
-// stays presentation-only.
+// credentials, and advances on success. When email verification is enforced
+// the register response carries no tokens — we advance to the launch step in
+// its "check your email" state instead of storing credentials. Kept out of
+// the component so BAAStep stays presentation-only.
 export function useOnboardingSubmit() {
-  const { draft, next, saveBAA, markCompleted } = useOnboarding();
+  const { draft, next, saveBAA, markCompleted, markPendingVerification } =
+    useOnboarding();
   const dispatch = useAppDispatch();
   const [onboard, state] = useOnboardMutation();
 
@@ -40,9 +43,16 @@ export function useOnboardingSubmit() {
     };
     try {
       const result = await onboard(payload).unwrap();
+      if (result.requiresEmailVerification && !result.accessToken) {
+        // Production path: account created, tokens withheld until the user
+        // clicks the emailed verification link. Don't sign them in.
+        markPendingVerification(result.user.email);
+        next();
+        return;
+      }
       dispatch(
         setCredentials({
-          token: result.accessToken,
+          token: result.accessToken ?? null,
           refreshToken: result.refreshToken ?? null,
           user: result.user,
         }),

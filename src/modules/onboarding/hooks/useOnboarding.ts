@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
   goToStep,
   markCompleted,
+  markPendingVerification,
   resetOnboarding,
   saveAccount,
   saveAgency,
@@ -45,6 +46,8 @@ export function useOnboarding() {
     saveAgency: (v: Parameters<typeof saveAgency>[0]) => dispatch(saveAgency(v)),
     saveBAA: (v: Parameters<typeof saveBAA>[0]) => dispatch(saveBAA(v)),
     markCompleted: () => dispatch(markCompleted()),
+    markPendingVerification: (email: string) =>
+      dispatch(markPendingVerification(email)),
     reset: () => dispatch(resetOnboarding()),
   };
 }

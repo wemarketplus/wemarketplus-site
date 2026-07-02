@@ -5,6 +5,7 @@ import { BILLING_TAGS } from '../constants/billingConstants';
 import type {
   AiUsageToday,
   BillingPortalResponse,
+  ConfirmCheckoutRequest,
   CreateCheckoutRequest,
   PlanOption,
   SubscriptionRecord,
@@ -15,6 +16,8 @@ import type {
 //   GET  /billing/ai-usage/today   -> { count }
 //   GET  /billing/plans            -> ResolvedPlan[]  (configured catalog)
 //   POST /billing/checkout {planKey?} -> { url }  (Stripe Checkout, subscription mode)
+//   POST /billing/checkout/confirm {sessionId} -> SubscriptionResponseDto
+//     (verifies the session with Stripe on the success redirect)
 //   POST /billing/portal           -> { url }  (Stripe customer portal)
 export const billingApi = createApi({
   reducerPath: 'billingApi',
@@ -38,6 +41,11 @@ export const billingApi = createApi({
       query: (body) => ({ url: '/billing/checkout', method: 'POST', body: body ?? {} }),
       transformResponse: (res: ApiEnvelope<BillingPortalResponse>) => res.data,
     }),
+    confirmCheckout: build.mutation<SubscriptionRecord, ConfirmCheckoutRequest>({
+      query: (body) => ({ url: '/billing/checkout/confirm', method: 'POST', body }),
+      transformResponse: (res: ApiEnvelope<SubscriptionRecord>) => res.data,
+      invalidatesTags: [BILLING_TAGS.Subscription],
+    }),
     openPortalSession: build.mutation<BillingPortalResponse, void>({
       query: () => ({ url: '/billing/portal', method: 'POST' }),
       transformResponse: (res: ApiEnvelope<BillingPortalResponse>) => res.data,
@@ -50,5 +58,6 @@ export const {
   useGetAiUsageTodayQuery,
   useGetPlansQuery,
   useCreateCheckoutSessionMutation,
+  useConfirmCheckoutMutation,
   useOpenPortalSessionMutation,
 } = billingApi;

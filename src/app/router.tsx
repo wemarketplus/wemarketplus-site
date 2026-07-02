@@ -1,12 +1,11 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { DashboardLayout } from '@/shared/ui/layout';
+import { ProtectedRoute } from '@/routes/ProtectedRoute';
 import { PublicRoute } from '@/routes/PublicRoute';
 import { RootRoute } from '@/routes/RootRoute';
 import { LEGACY_DEMO_REDIRECTS } from '@/shared/config/demoUrls';
-// NOTE: auth gates are intentionally commented out below so dev can browse
-// every screen without logging in. When ready, re-import ProtectedRoute and
-// the role groups from @/routes/ProtectedRoute and @/shared/rbac.
+import { SUPER_ADMIN_ONLY } from '@/shared/rbac';
 
 // --- Public auth funnel ---------------------------------------------------
 
@@ -21,6 +20,9 @@ const ResetPasswordPage = lazy(() =>
 );
 const AcceptInvitePage = lazy(() =>
   import('@/modules/auth').then((m) => ({ default: m.AcceptInvitePage })),
+);
+const VerifyEmailPage = lazy(() =>
+  import('@/modules/auth').then((m) => ({ default: m.VerifyEmailPage })),
 );
 const OnboardingPage = lazy(() =>
   import('@/modules/onboarding').then((m) => ({ default: m.OnboardingPage })),
@@ -312,6 +314,10 @@ export function AppRouter() {
             </PublicRoute>
           }
         />
+        {/* Deliberately NOT wrapped in <PublicRoute> — verifying logs the
+            user in mid-render, and PublicRoute would bounce them to "/"
+            before the page can forward them to /billing. */}
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route
           path="/onboarding"
           element={
@@ -326,9 +332,9 @@ export function AppRouter() {
             is handled by RootRoute above, so this block has no index. */}
         <Route
           element={
-            // <ProtectedRoute>
+            <ProtectedRoute>
               <DashboardLayout />
-            // </ProtectedRoute>
+            </ProtectedRoute>
           }
         >
           {/* HospiceLink */}
@@ -391,8 +397,17 @@ export function AppRouter() {
           <Route path="account/password" element={<ChangePasswordPage />} />
         </Route>
 
-        {/* Owner portal — its own chrome */}
-        <Route path="/owner" element={<OwnerLayout />}>
+        {/* Owner portal — its own chrome. Platform-level: the backend now
+            requires SuperAdmin on /owner/* (tenant Admin/Owner get 403), so
+            mirror that gate here. */}
+        <Route
+          path="/owner"
+          element={
+            <ProtectedRoute allow={SUPER_ADMIN_ONLY}>
+              <OwnerLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<OwnerDashboardPage />} />
           <Route path="revenue" element={<OwnerRevenuePage />} />
           <Route path="customers" element={<OwnerCustomersPage />} />

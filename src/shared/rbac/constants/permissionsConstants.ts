@@ -22,3 +22,6 @@ export const STAFF_ROLES: readonly Role[] = [
   Role.Manager,
 ];
 export const ADMIN_ONLY: readonly Role[] = [Role.SuperAdmin, Role.Admin, Role.Owner];
+// Platform-level surfaces (owner portal). The backend enforces the same
+// gate — /owner/* returns 403 for tenant Admin/Owner.
+export const SUPER_ADMIN_ONLY: readonly Role[] = [Role.SuperAdmin];

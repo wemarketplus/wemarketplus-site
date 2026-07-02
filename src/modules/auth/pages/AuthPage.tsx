@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { Button, Input, PasswordInput } from '@/shared/ui/core';
 import { AuthCardShell } from '../components/AuthCardShell';
+import { AuthError } from '../components/AuthError';
 import { AuthField } from '../components/AuthField';
 import { useLogin } from '../hooks/useLogin';
 import { loginSchema, type LoginFormValues } from '../schema/authSchema';
@@ -11,7 +12,7 @@ import { loginSchema, type LoginFormValues } from '../schema/authSchema';
 // sub "Sign in to your CRM account", email + password fields, right-aligned
 // forgot link, full-width azure "Sign In" pill, "View Plans" message.
 export function AuthPage() {
-  const { submit, isLoading } = useLogin();
+  const { submit, isLoading, unverifiedEmail, resendVerification, isResending } = useLogin();
   const {
     register,
     handleSubmit,
@@ -24,6 +25,19 @@ export function AuthPage() {
   return (
     <AuthCardShell title="Welcome back" description="Sign in to your CRM account">
       <form onSubmit={handleSubmit(submit)} noValidate>
+        {unverifiedEmail && (
+          <AuthError>
+            Please verify your email address first.{' '}
+            <button
+              type="button"
+              onClick={resendVerification}
+              disabled={isResending}
+              className="font-bold text-azure underline underline-offset-2 disabled:opacity-50"
+            >
+              {isResending ? 'Sending…' : 'Resend verification email'}
+            </button>
+          </AuthError>
+        )}
         <AuthField label="Email Address" htmlFor="email" error={errors.email?.message}>
           <Input
             id="email"

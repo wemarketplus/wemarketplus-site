@@ -29,6 +29,11 @@ export const forgotPasswordSchema = z.object({
 });
 export type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 
+// --- Resend verification ---
+// Same single-email shape as forgot-password.
+export const resendVerificationSchema = forgotPasswordSchema;
+export type ResendVerificationFormValues = z.infer<typeof resendVerificationSchema>;
+
 // --- Reset / Change / Accept-invite ---
 // Single shape — all three are "pick a new password and confirm" forms. The
 // page-level forms add a token (reset/accept-invite) or current password

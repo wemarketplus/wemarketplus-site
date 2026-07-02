@@ -15,6 +15,9 @@ export interface AuthenticatedUser {
   phone: string | null;
   avatarUrl: string | null;
   isActive: boolean;
+  // False until the user clicks the verification link (production enforces
+  // this before login; dev environments may skip it).
+  emailVerified?: boolean;
   createdAt: ISODateString;
   updatedAt: ISODateString;
   // TODO(backend): expose these on /auth/me when product/tier ship.
@@ -23,12 +26,19 @@ export interface AuthenticatedUser {
 }
 
 // Mirrors wemarketplus-backend/src/auth/dto/auth-response.dto.ts:
-// { accessToken, refreshToken?, user }.
+// { accessToken?, refreshToken?, user, requiresEmailVerification? }.
+// Tokens are absent on register when email verification is enforced
+// (production) — the user must verify via /auth/verify-email first.
 export interface LoginResponse {
-  accessToken: string;
+  accessToken?: string;
   refreshToken?: string;
   user: AuthenticatedUser;
+  requiresEmailVerification?: boolean;
 }
+
+// Register shares the login response shape (including the verification-pending
+// variant without tokens).
+export type RegisterResponse = LoginResponse;
 
 export interface LoginRequest {
   email: string;
@@ -61,18 +71,25 @@ export interface ResetPasswordRequest {
   newPassword: string;
 }
 
-// Backend POST /invites/accept consumes a token only — it marks the invite
-// accepted and returns the invite record. It does NOT set a password or log
-// the user in (no /auth/accept-invite exists today).
+// Backend POST /invites/accept consumes the token AND sets the invitee's
+// password, then returns a full auth session ({ accessToken, refreshToken,
+// user }) so the new teammate lands signed in.
 export interface AcceptInviteRequest {
+  token: string;
+  password: string;
+}
+
+// --- Email verification ---
+
+// POST /auth/verify-email — consumes the emailed token and returns a full
+// auth session (LoginResponse). 401 on invalid/expired/reused tokens.
+export interface VerifyEmailRequest {
   token: string;
 }
 
-export interface AcceptInviteResponse {
-  id: ID;
+// POST /auth/resend-verification — 202 always (enumeration-safe).
+export interface ResendVerificationRequest {
   email: string;
-  role: Role;
-  acceptedAt: ISODateString | null;
 }
 
 // Backend ChangePasswordDto uses `newPassword` (not `password`).

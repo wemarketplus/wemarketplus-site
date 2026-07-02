@@ -4,7 +4,6 @@ import type { ApiEnvelope } from '@/shared/types';
 import { AUTH_TAGS } from '../constants/authConstants';
 import type {
   AcceptInviteRequest,
-  AcceptInviteResponse,
   AuthenticatedUser,
   ChangePasswordRequest,
   ForgotPasswordRequest,
@@ -12,22 +11,32 @@ import type {
   LoginResponse,
   RefreshTokenRequest,
   RegisterRequest,
+  RegisterResponse,
+  ResendVerificationRequest,
   ResetPasswordRequest,
+  VerifyEmailRequest,
 } from '../types/authTypes';
 
 // Auth endpoints — all under the backend's /api global prefix. Verified
 // against wemarketplus-backend/src/auth/auth.controller.ts:
-//   POST /auth/login            -> AuthResponseDto { accessToken, refreshToken?, user }
-//   POST /auth/register         -> AuthResponseDto (body requires organizationName)
-//   POST /auth/refresh          -> AuthResponseDto
-//   POST /auth/logout           -> 204, auth-required
-//   POST /auth/forgot-password  -> 202, no body
-//   POST /auth/reset-password   -> 200, body { token, newPassword }
-//   POST /auth/change-password  -> 200, auth-required, body { currentPassword, newPassword }
-//   GET  /auth/me               -> UserResponseDto
-// Invite acceptance is served by POST /invites/accept (token only) — there is
-// no /auth/accept-invite. It marks the invite consumed and returns the invite
-// record; it does NOT set a password or return auth tokens.
+//   POST /auth/login                -> AuthResponseDto { accessToken, refreshToken?, user };
+//                                      403 "EMAIL_NOT_VERIFIED" when the password is right
+//                                      but the email is still unverified
+//   POST /auth/register             -> AuthResponseDto (body requires organizationName).
+//                                      When email verification is enforced (production)
+//                                      it returns { user, requiresEmailVerification: true }
+//                                      with NO tokens; dev still returns tokens.
+//   POST /auth/verify-email         -> AuthResponseDto (logs the user in); 401 on
+//                                      invalid/expired/reused tokens
+//   POST /auth/resend-verification  -> 202 always (enumeration-safe)
+//   POST /auth/refresh              -> AuthResponseDto
+//   POST /auth/logout               -> 204, auth-required
+//   POST /auth/forgot-password      -> 202, no body
+//   POST /auth/reset-password       -> 200, body { token, newPassword }
+//   POST /auth/change-password      -> 200, auth-required, body { currentPassword, newPassword }
+//   GET  /auth/me                   -> UserResponseDto
+// Invite acceptance is served by POST /invites/accept { token, password } —
+// it sets the invitee's password and returns a full auth session.
 
 export const authApi = createApi({
   reducerPath: 'authApi',
@@ -39,10 +48,18 @@ export const authApi = createApi({
       transformResponse: (res: ApiEnvelope<LoginResponse>) => res.data,
       invalidatesTags: [AUTH_TAGS.Me],
     }),
-    register: build.mutation<LoginResponse, RegisterRequest>({
+    register: build.mutation<RegisterResponse, RegisterRequest>({
       query: (body) => ({ url: '/auth/register', method: 'POST', body }),
+      transformResponse: (res: ApiEnvelope<RegisterResponse>) => res.data,
+      invalidatesTags: [AUTH_TAGS.Me],
+    }),
+    verifyEmail: build.mutation<LoginResponse, VerifyEmailRequest>({
+      query: (body) => ({ url: '/auth/verify-email', method: 'POST', body }),
       transformResponse: (res: ApiEnvelope<LoginResponse>) => res.data,
       invalidatesTags: [AUTH_TAGS.Me],
+    }),
+    resendVerification: build.mutation<void, ResendVerificationRequest>({
+      query: (body) => ({ url: '/auth/resend-verification', method: 'POST', body }),
     }),
     refresh: build.mutation<LoginResponse, RefreshTokenRequest>({
       query: (body) => ({ url: '/auth/refresh', method: 'POST', body }),
@@ -65,9 +82,10 @@ export const authApi = createApi({
     changePassword: build.mutation<void, ChangePasswordRequest>({
       query: (body) => ({ url: '/auth/change-password', method: 'POST', body }),
     }),
-    acceptInvite: build.mutation<AcceptInviteResponse, AcceptInviteRequest>({
+    acceptInvite: build.mutation<LoginResponse, AcceptInviteRequest>({
       query: (body) => ({ url: '/invites/accept', method: 'POST', body }),
-      transformResponse: (res: ApiEnvelope<AcceptInviteResponse>) => res.data,
+      transformResponse: (res: ApiEnvelope<LoginResponse>) => res.data,
+      invalidatesTags: [AUTH_TAGS.Me],
     }),
   }),
 });
@@ -75,6 +93,8 @@ export const authApi = createApi({
 export const {
   useLoginMutation,
   useRegisterMutation,
+  useVerifyEmailMutation,
+  useResendVerificationMutation,
   useRefreshMutation,
   useLogoutMutation,
   useMeQuery,
