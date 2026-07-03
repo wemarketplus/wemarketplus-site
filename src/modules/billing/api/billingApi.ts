@@ -5,8 +5,11 @@ import { BILLING_TAGS } from '../constants/billingConstants';
 import type {
   AiUsageToday,
   BillingPortalResponse,
+  ChangePlanRequest,
   ConfirmCheckoutRequest,
   CreateCheckoutRequest,
+  PlanChangePreview,
+  PreviewPlanChangeRequest,
   PlanOption,
   SubscriptionRecord,
 } from '../types/billingTypes';
@@ -18,6 +21,10 @@ import type {
 //   POST /billing/checkout {planKey?} -> { url }  (Stripe Checkout, subscription mode)
 //   POST /billing/checkout/confirm {sessionId} -> SubscriptionResponseDto
 //     (verifies the session with Stripe on the success redirect)
+//   POST /billing/change-plan/preview {planKey} -> PlanChangePreview
+//     (Stripe upcoming-invoice proration preview; returns a pinned prorationDate)
+//   POST /billing/change-plan {planKey, prorationDate} -> SubscriptionResponseDto
+//     (applies the swap, replaying prorationDate; re-syncs tenant tier/status)
 //   POST /billing/portal           -> { url }  (Stripe customer portal)
 export const billingApi = createApi({
   reducerPath: 'billingApi',
@@ -46,6 +53,15 @@ export const billingApi = createApi({
       transformResponse: (res: ApiEnvelope<SubscriptionRecord>) => res.data,
       invalidatesTags: [BILLING_TAGS.Subscription],
     }),
+    previewPlanChange: build.mutation<PlanChangePreview, PreviewPlanChangeRequest>({
+      query: (body) => ({ url: '/billing/change-plan/preview', method: 'POST', body }),
+      transformResponse: (res: ApiEnvelope<PlanChangePreview>) => res.data,
+    }),
+    changePlan: build.mutation<SubscriptionRecord, ChangePlanRequest>({
+      query: (body) => ({ url: '/billing/change-plan', method: 'POST', body }),
+      transformResponse: (res: ApiEnvelope<SubscriptionRecord>) => res.data,
+      invalidatesTags: [BILLING_TAGS.Subscription],
+    }),
     openPortalSession: build.mutation<BillingPortalResponse, void>({
       query: () => ({ url: '/billing/portal', method: 'POST' }),
       transformResponse: (res: ApiEnvelope<BillingPortalResponse>) => res.data,
@@ -59,5 +75,7 @@ export const {
   useGetPlansQuery,
   useCreateCheckoutSessionMutation,
   useConfirmCheckoutMutation,
+  usePreviewPlanChangeMutation,
+  useChangePlanMutation,
   useOpenPortalSessionMutation,
 } = billingApi;

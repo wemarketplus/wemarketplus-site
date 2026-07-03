@@ -4,6 +4,7 @@ import type { ApiEnvelope, PaginatedPayload, PaginationParams } from '@/shared/t
 import type { AgreementStatus } from '../constants/agreementsConstants';
 import type {
   AgreementRecord,
+  AgreementStats,
   ContractRecord,
   CreateAgreementRequest,
   CreateContractRequest,
@@ -23,9 +24,10 @@ export const agreementsApi = createApi({
       transformResponse: list<AgreementRecord>,
       providesTags: ['Agreement'],
     }),
-    getAgreementStats: build.query<Record<string, number>, void>({
+    getAgreementStats: build.query<AgreementStats, void>({
       query: () => ({ url: '/agreements/stats' }),
-      transformResponse: env<Record<string, number>>,
+      transformResponse: env<AgreementStats>,
+      providesTags: ['Agreement'],
     }),
     createAgreement: build.mutation<AgreementRecord, CreateAgreementRequest>({
       query: (body) => ({ url: '/agreements', method: 'POST', body }),

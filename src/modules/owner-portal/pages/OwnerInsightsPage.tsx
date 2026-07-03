@@ -1,6 +1,7 @@
 import { Bot } from 'lucide-react';
 import { Card, CardContent } from '@/shared/ui/core';
 import { OwnerScreenHeader } from '../components/OwnerScreenHeader';
+import { OwnerPreviewNotice } from '../components/OwnerPreviewNotice';
 import { OWNER_INSIGHTS } from '../constants/ownerFixtures';
 import { SEVERITY_TONE } from '../constants/ownerScreenConstants';
 import { cn } from '@/shared/utils/cn';
@@ -12,6 +13,7 @@ export function OwnerInsightsPage() {
         eyebrow="Owner portal"
         title="AI business insights"
         description="Patterns and recommendations from your operating data."
+        actions={<OwnerPreviewNotice />}
       />
 
       <div className="space-y-3">

@@ -79,3 +79,16 @@ export interface AuditLogItem {
   meta: Record<string, unknown>;
   createdAt: ISODateString;
 }
+
+// Query params for GET /audit — mirrors QueryAuditDto on the backend. All
+// filters are optional; dateFrom/dateTo are ISO 8601 (date or datetime).
+export interface AuditLogQuery {
+  page?: number;
+  limit?: number;
+  action?: string;
+  resource?: string;
+  userId?: string;
+  resourceId?: string;
+  dateFrom?: string;
+  dateTo?: string;
+}

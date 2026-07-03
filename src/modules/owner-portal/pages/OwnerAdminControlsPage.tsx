@@ -1,5 +1,6 @@
 import { Button, Card, CardContent } from '@/shared/ui/core';
 import { OwnerScreenHeader } from '../components/OwnerScreenHeader';
+import { OwnerPreviewNotice } from '../components/OwnerPreviewNotice';
 import { useOwnerAdminControls } from '../hooks/useOwnerAdminControls';
 
 export function OwnerAdminControlsPage() {
@@ -11,6 +12,7 @@ export function OwnerAdminControlsPage() {
         eyebrow="Owner portal"
         title="Admin controls"
         description="High-leverage levers for running the platform."
+        actions={<OwnerPreviewNotice />}
       />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">

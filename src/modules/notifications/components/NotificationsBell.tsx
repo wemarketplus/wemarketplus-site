@@ -2,13 +2,14 @@ import { Bell } from 'lucide-react';
 import { useAppDispatch } from '@/app/hooks';
 import { Button } from '@/shared/ui/core';
 import { toggleDrawer } from '../store/notificationsSlice';
-import { useNotifications } from '../hooks/useNotifications';
+import { useUnreadCountQuery } from '../api/notificationsApi';
 
-// Topbar bell. Counts unread notifications and animates the dot when there
-// are any unseen items.
+// Topbar bell. Uses the authoritative /notifications/unread-count for the badge
+// (kept fresh by the realtime stream, which invalidates the List tag). Falls
+// back to 0 while loading or if the tenant has no notifications yet.
 export function NotificationsBell() {
   const dispatch = useAppDispatch();
-  const { unreadCount } = useNotifications();
+  const { data: unreadCount = 0 } = useUnreadCountQuery();
   return (
     <Button
       variant="ghost"

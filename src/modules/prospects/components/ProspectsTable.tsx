@@ -1,4 +1,6 @@
+import { UserPlus } from 'lucide-react';
 import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
+import { EmptyState } from '@/shared/ui/feedback';
 import { formatDate } from '@/shared/utils/dateFormatter';
 import type { Prospect } from '@/shared/types';
 import {
@@ -35,13 +37,34 @@ const columns: ReadonlyArray<Column<Prospect>> = [
   { key: 'due', header: 'Due', cell: (p) => formatDate(p.followUpDate) },
 ];
 
-export function ProspectsTable({ prospects }: { prospects: readonly Prospect[] }) {
+interface ProspectsTableProps {
+  prospects: readonly Prospect[];
+  // Add handler for the first-run empty state.
+  onAdd?: () => void;
+  // True when a search/status/urgency filter is active — swaps the empty copy
+  // from "get started" to "no matches" so the CTA is not misleading.
+  hasFilters?: boolean;
+}
+
+export function ProspectsTable({ prospects, onAdd, hasFilters }: ProspectsTableProps) {
   return (
     <DataTable
       columns={columns}
       rows={prospects}
       rowKey={(p) => p.id}
-      empty="No prospects match the current filters."
+      empty={
+        hasFilters ? (
+          'No prospects match the current filters.'
+        ) : (
+          <EmptyState
+            icon={UserPlus}
+            title="No prospects yet"
+            description="Add a lead to start tracking it through your pipeline from first touch to close."
+            actionLabel={onAdd ? 'Add prospect' : undefined}
+            onAction={onAdd}
+          />
+        )
+      }
     />
   );
 }

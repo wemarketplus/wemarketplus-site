@@ -1,4 +1,5 @@
-// Grant-CRM agreements + contracts — API-only module (no page UI yet).
+// Grant-CRM agreements + contracts — agreements CRUD UI on the shared entity kit.
+export { AgreementsPage } from './pages/AgreementsPage';
 export {
   agreementsApi,
   useListAgreementsQuery,
@@ -13,6 +14,7 @@ export {
 } from './api/agreementsApi';
 export type {
   AgreementRecord,
+  AgreementStats,
   CreateAgreementRequest,
   ContractRecord,
   CreateContractRequest,

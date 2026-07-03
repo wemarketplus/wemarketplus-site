@@ -3,6 +3,7 @@ import { baseQueryWithReauth } from '@/app/baseQuery';
 import type { ApiEnvelope } from '@/shared/types';
 import type {
   AuditLogItem,
+  AuditLogQuery,
   BaaRecord,
   ComplianceAlert,
   ComplianceRecord,
@@ -16,6 +17,21 @@ import type {
 // NOTE: backend compliance is grant application-compliance (training reports),
 // a different model from the HIPAA compliance portal pages. Wired for future
 // use; the portal pages stay as-is for now.
+// Drops undefined/empty values so a cleared filter never lands in the query
+// string (backend @IsUUID/@IsISO8601 would 400 on an empty string).
+function stripEmpty(
+  params: AuditLogQuery | void,
+): Record<string, string | number> | undefined {
+  if (!params) return undefined;
+  const out: Record<string, string | number> = {};
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== null && value !== '') {
+      out[key] = value as string | number;
+    }
+  }
+  return out;
+}
+
 export const complianceApi = createApi({
   reducerPath: 'complianceApi',
   baseQuery: baseQueryWithReauth,
@@ -47,8 +63,11 @@ export const complianceApi = createApi({
       invalidatesTags: ['Baa'],
     }),
     // Audit log (admin/owner) — powers the compliance portal's Audit Log screen.
-    listAuditLog: build.query<{ data: AuditLogItem[]; total: number }, { page?: number; limit?: number; action?: string; resource?: string } | void>({
-      query: (params) => ({ url: '/audit', params: params ?? undefined }),
+    // Server-side pagination + filtering (action, resource, actor userId,
+    // affected resourceId, ISO date range). Empty-string params are stripped so
+    // a cleared filter drops out of the query string rather than matching "".
+    listAuditLog: build.query<{ data: AuditLogItem[]; total: number }, AuditLogQuery | void>({
+      query: (params) => ({ url: '/audit', params: stripEmpty(params) }),
       transformResponse: (res: ApiEnvelope<{ data: AuditLogItem[]; total: number }>) => res.data,
       providesTags: ['Audit'],
     }),

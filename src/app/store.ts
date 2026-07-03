@@ -39,21 +39,24 @@ import { clinicalApi, clinicalReducer } from '@/modules/clinical';
 import { companiesApi } from '@/modules/companies';
 import { complianceApi, complianceReducer } from '@/modules/compliance';
 import { contactsApi } from '@/modules/contacts';
+import { invoicesApi } from '@/modules/invoices';
+import { contractsApi } from '@/modules/contracts';
 import { locationsApi } from '@/modules/locations';
 import { territoriesApi } from '@/modules/territories';
-import { dashboardReducer, reportsApi } from '@/modules/dashboard';
+import { dashboardApi, dashboardReducer, reportsApi } from '@/modules/dashboard';
+import { featureFlagsApi, featureFlagsReducer } from '@/modules/feature-flags';
 import { integrationsApi, integrationsReducer } from '@/modules/integrations';
 import { intelligenceReducer } from '@/modules/intelligence';
 import { marketingReducer } from '@/modules/marketing';
 import { notificationsApi, notificationsReducer } from '@/modules/notifications';
 import { onboardingApi, onboardingReducer } from '@/modules/onboarding';
-import { ownerPortalApi, ownerPortalReducer } from '@/modules/owner-portal';
+import { impersonationApi, ownerPortalApi, ownerPortalReducer } from '@/modules/owner-portal';
 import { permissionsApi, permissionsReducer } from '@/modules/permissions';
 import { pipelineReducer } from '@/modules/pipeline';
 import { prospectsApi, prospectsReducer } from '@/modules/prospects';
 import { referralsApi, referralsReducer } from '@/modules/referrals';
 import { schedulingReducer } from '@/modules/scheduling';
-import { settingsReducer } from '@/modules/settings';
+import { settingsApi, settingsReducer } from '@/modules/settings';
 import { usersApi, usersReducer } from '@/modules/users';
 
 const rootReducer = combineReducers({
@@ -74,6 +77,7 @@ const rootReducer = combineReducers({
   clinical: clinicalReducer,
   compliance: complianceReducer,
   dashboard: dashboardReducer,
+  featureFlags: featureFlagsReducer,
   goldDemo: goldDemoReducer,
   maxDemo: maxDemoReducer,
   integrations: integrationsReducer,
@@ -106,7 +110,12 @@ const rootReducer = combineReducers({
   [companiesApi.reducerPath]: companiesApi.reducer,
   [complianceApi.reducerPath]: complianceApi.reducer,
   [contactsApi.reducerPath]: contactsApi.reducer,
+  [invoicesApi.reducerPath]: invoicesApi.reducer,
+  [contractsApi.reducerPath]: contractsApi.reducer,
+  [dashboardApi.reducerPath]: dashboardApi.reducer,
   [documentsApi.reducerPath]: documentsApi.reducer,
+  [featureFlagsApi.reducerPath]: featureFlagsApi.reducer,
+  [impersonationApi.reducerPath]: impersonationApi.reducer,
   [financeApi.reducerPath]: financeApi.reducer,
   [fundingApi.reducerPath]: fundingApi.reducer,
   [locationsApi.reducerPath]: locationsApi.reducer,
@@ -121,6 +130,7 @@ const rootReducer = combineReducers({
   [prospectsApi.reducerPath]: prospectsApi.reducer,
   [referralsApi.reducerPath]: referralsApi.reducer,
   [reportsApi.reducerPath]: reportsApi.reducer,
+  [settingsApi.reducerPath]: settingsApi.reducer,
   [usersApi.reducerPath]: usersApi.reducer,
 });
 
@@ -169,7 +179,12 @@ export const store = configureStore({
       companiesApi.middleware,
       complianceApi.middleware,
       contactsApi.middleware,
+      invoicesApi.middleware,
+      contractsApi.middleware,
+      dashboardApi.middleware,
       documentsApi.middleware,
+      featureFlagsApi.middleware,
+      impersonationApi.middleware,
       financeApi.middleware,
       fundingApi.middleware,
       locationsApi.middleware,
@@ -184,6 +199,7 @@ export const store = configureStore({
       prospectsApi.middleware,
       referralsApi.middleware,
       reportsApi.middleware,
+      settingsApi.middleware,
       usersApi.middleware,
     ),
 });

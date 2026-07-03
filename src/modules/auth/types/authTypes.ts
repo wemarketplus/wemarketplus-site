@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
 import type { Role } from '@/shared/rbac';
-import type { ISODateString, ID, Product, Tier } from '@/shared/types';
+import type { ISODateString, ID, Product } from '@/shared/types';
 
-// Mirrors wemarketplus-backend/src/users/dto/user-response.dto.ts. The
-// product/tier fields aren't shipped by the backend yet — they're optional
-// here so the UI can fall back to defaults via the auth slice.
+// Mirrors wemarketplus-backend/src/users/dto/user-response.dto.ts. The tenant
+// plan fields (product/tier/organizationName) ship on /auth/me and login
+// responses; they stay optional so plain user listings still fit this shape.
 export interface AuthenticatedUser {
   id: ID;
   tenantId: ID;
@@ -18,22 +18,36 @@ export interface AuthenticatedUser {
   // False until the user clicks the verification link (production enforces
   // this before login; dev environments may skip it).
   emailVerified?: boolean;
+  // Whether TOTP two-factor auth is enabled. Ships on /auth/me; the Security
+  // tab reads it to show status and toggle the enable/disable flow.
+  mfaEnabled?: boolean;
   createdAt: ISODateString;
   updatedAt: ISODateString;
-  // TODO(backend): expose these on /auth/me when product/tier ship.
+  // `tier` is the raw backend CrmTier (may be cl_-prefixed for CommunityLink);
+  // normalize via normalizeTier() before comparing against the UI Tier enum.
   product?: Product;
-  tier?: Tier;
+  tier?: string;
+  organizationName?: string;
 }
 
 // Mirrors wemarketplus-backend/src/auth/dto/auth-response.dto.ts:
-// { accessToken?, refreshToken?, user, requiresEmailVerification? }.
+// { accessToken?, refreshToken?, user?, requiresEmailVerification?,
+//   mfaRequired?, mfaToken? }.
 // Tokens are absent on register when email verification is enforced
-// (production) — the user must verify via /auth/verify-email first.
+// (production) — the user must verify via /auth/verify-email first. They are
+// also absent when the user has MFA enabled: login returns mfaRequired +
+// mfaToken and the client must complete POST /auth/mfa/verify.
 export interface LoginResponse {
   accessToken?: string;
   refreshToken?: string;
-  user: AuthenticatedUser;
+  // Absent on the MFA-required response; present otherwise.
+  user?: AuthenticatedUser;
   requiresEmailVerification?: boolean;
+  // Set when MFA is enabled: no tokens yet — complete the second step with the
+  // 6-digit code and `mfaToken`.
+  mfaRequired?: boolean;
+  // Short-lived signed token identifying the user for POST /auth/mfa/verify.
+  mfaToken?: string;
 }
 
 // Register shares the login response shape (including the verification-pending
@@ -96,6 +110,35 @@ export interface ResendVerificationRequest {
 export interface ChangePasswordRequest {
   currentPassword: string;
   newPassword: string;
+}
+
+// --- MFA (TOTP two-factor) ---
+
+// POST /auth/mfa/setup -> generates a pending secret and returns the enrolment
+// payload for the authenticator app (auth-required, no body).
+export interface MfaSetupResponse {
+  otpauthUrl: string;
+  // data: URL PNG of the QR code, ready for an <img src>.
+  qrDataUrl: string;
+  secret: string;
+}
+
+// POST /auth/mfa/enable — confirms the pending secret with a live code (204).
+export interface MfaEnableRequest {
+  code: string;
+}
+
+// POST /auth/mfa/disable — verifies a code OR the account password (204).
+export interface MfaDisableRequest {
+  code?: string;
+  password?: string;
+}
+
+// POST /auth/mfa/verify — second login step: exchanges the mfaToken + code for
+// real tokens (returns a full LoginResponse).
+export interface MfaVerifyRequest {
+  mfaToken: string;
+  code: string;
 }
 
 // The change-password form collects `password`; the hook maps it to the

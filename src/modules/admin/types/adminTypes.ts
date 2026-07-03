@@ -37,3 +37,33 @@ export interface ImportDataRequest {
   batch?: number;
   totalBatches?: number;
 }
+
+// Result of a bulk import run — data-transfer.service ImportResult.
+export interface ImportResult {
+  created: number;
+  errors: string[];
+  batch: number;
+  totalBatches: number;
+}
+
+// The data-transfer hub's dataset registry (wemarketplus-backend
+// src/data-transfer/dataset-registry.ts). `canImport` mirrors which datasets
+// declare templateHeaders + importRow; `elevated` marks the export-only
+// datasets that require an Admin/Owner/SuperAdmin role.
+export interface DatasetOption {
+  type: string;
+  label: string;
+  canImport: boolean;
+  elevated: boolean;
+}
+
+export const DATASET_OPTIONS: readonly DatasetOption[] = [
+  { type: 'wibs', label: 'WIBs', canImport: true, elevated: false },
+  { type: 'companies', label: 'Companies', canImport: true, elevated: false },
+  { type: 'locations', label: 'Locations', canImport: true, elevated: false },
+  { type: 'funding', label: 'Funding opportunities', canImport: true, elevated: false },
+  { type: 'applications', label: 'Applications', canImport: true, elevated: false },
+  { type: 'revenue', label: 'Revenue', canImport: false, elevated: false },
+  { type: 'users', label: 'Users', canImport: false, elevated: true },
+  { type: 'audit', label: 'Audit log', canImport: false, elevated: true },
+];

@@ -1,8 +1,44 @@
-import { toast } from 'sonner';
-import { Button, Card, CardContent } from '@/shared/ui/core';
-import { INTEGRATIONS } from '../constants/settingsConstants';
+import { Card, CardContent } from '@/shared/ui/core';
+import { useGetDriveStatusQuery } from '@/modules/integrations/api/integrationsApi';
+import type { SettingsIntegration } from '../types/settingsTypes';
+import { DRIVE_INTEGRATION_ID, INTEGRATIONS } from '../constants/settingsConstants';
+
+type BadgeTone = 'success' | 'muted' | 'pending';
+
+interface TileStatus {
+  label: string;
+  tone: BadgeTone;
+}
+
+const BADGE_CLASSES: Record<BadgeTone, string> = {
+  success:
+    'rounded-pill bg-success/15 px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] text-success',
+  muted:
+    'rounded-pill bg-white/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] text-muted-soft',
+  pending:
+    'rounded-pill bg-white/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] text-muted animate-pulse',
+};
 
 export function IntegrationsTab() {
+  // The one live, per-tenant status the backend exposes today.
+  const {
+    data: driveStatus,
+    isLoading: driveLoading,
+    isError: driveError,
+  } = useGetDriveStatusQuery();
+
+  const resolveStatus = (integration: SettingsIntegration): TileStatus => {
+    if (integration.id === DRIVE_INTEGRATION_ID) {
+      if (driveLoading) return { label: 'Checking…', tone: 'pending' };
+      if (driveError) return { label: 'Status unavailable', tone: 'muted' };
+      return driveStatus?.connected
+        ? { label: 'Connected', tone: 'success' }
+        : { label: 'Not connected', tone: 'muted' };
+    }
+    // Managed integrations have no per-tenant status endpoint — label honestly.
+    return { label: 'Configured by administrator', tone: 'muted' };
+  };
+
   return (
     <Card>
       <CardContent className="px-6 py-6">
@@ -16,7 +52,7 @@ export function IntegrationsTab() {
         <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {INTEGRATIONS.map((i) => {
             const Icon = i.icon;
-            const connected = i.status === 'connected';
+            const status = resolveStatus(i);
             return (
               <li
                 key={i.id}
@@ -28,37 +64,19 @@ export function IntegrationsTab() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
                     <p className="text-sm font-semibold text-foreground">{i.name}</p>
-                    <span
-                      className={
-                        connected
-                          ? 'rounded-pill bg-success/15 px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] text-success'
-                          : 'rounded-pill bg-white/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] text-muted-soft'
-                      }
-                    >
-                      {connected ? 'Connected' : 'Available'}
-                    </span>
+                    <span className={BADGE_CLASSES[status.tone]}>{status.label}</span>
                   </div>
                   <p className="mt-1 text-xs text-muted">{i.description}</p>
-                  <div className="mt-3">
-                    <Button
-                      size="sm"
-                      variant={connected ? 'secondary' : 'primary'}
-                      onClick={() =>
-                        toast.message(
-                          connected
-                            ? `${i.name} — manage flow not wired yet`
-                            : `${i.name} — connect flow pending backend OAuth`,
-                        )
-                      }
-                    >
-                      {connected ? 'Manage' : 'Connect'}
-                    </Button>
-                  </div>
                 </div>
               </li>
             );
           })}
         </ul>
+
+        <p className="mt-5 text-xs text-muted-soft">
+          Google Drive status is live. Other integrations are provisioned by your
+          administrator and managed outside this screen.
+        </p>
       </CardContent>
     </Card>
   );

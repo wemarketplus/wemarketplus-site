@@ -2,8 +2,10 @@ import { toast } from 'sonner';
 import { useAppDispatch } from '@/app/hooks';
 import { setCredentials } from '@/modules/auth';
 import { extractApiErrorMessage } from '@/modules/auth/utils/errorUtils';
+import { useStartCheckout } from '@/modules/billing/hooks/useStartCheckout';
 import { useOnboardMutation } from '../api/onboardingApi';
 import { useOnboarding } from './useOnboarding';
+import { clearPendingPlan, getPendingPlan } from '../utils/pendingPlan';
 import type { BAAFormValues } from '../schema/onboardingSchema';
 import type {
   AccountInfo,
@@ -22,6 +24,7 @@ export function useOnboardingSubmit() {
     useOnboarding();
   const dispatch = useAppDispatch();
   const [onboard, state] = useOnboardMutation();
+  const { startCheckout } = useStartCheckout();
 
   const submitBAA = async (values: BAAFormValues) => {
     saveBAA(values);
@@ -43,7 +46,7 @@ export function useOnboardingSubmit() {
     };
     try {
       const result = await onboard(payload).unwrap();
-      if (result.requiresEmailVerification && !result.accessToken) {
+      if (result.requiresEmailVerification && !result.accessToken && result.user) {
         // Production path: account created, tokens withheld until the user
         // clicks the emailed verification link. Don't sign them in.
         markPendingVerification(result.user.email);
@@ -58,6 +61,15 @@ export function useOnboardingSubmit() {
         }),
       );
       markCompleted();
+      // Dev path: register returned tokens directly (no email gate). If a plan
+      // was chosen in the pricing funnel, go straight to Stripe Checkout for it
+      // instead of the launch checklist. startCheckout redirects the browser.
+      const pendingPlan = getPendingPlan();
+      if (pendingPlan) {
+        clearPendingPlan();
+        void startCheckout(pendingPlan);
+        return;
+      }
       next();
     } catch (err) {
       toast.error(

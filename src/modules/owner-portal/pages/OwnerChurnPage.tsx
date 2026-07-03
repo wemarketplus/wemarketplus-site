@@ -1,6 +1,7 @@
 import { AlertTriangle } from 'lucide-react';
 import { Card, CardContent } from '@/shared/ui/core';
 import { OwnerScreenHeader } from '../components/OwnerScreenHeader';
+import { OwnerPreviewNotice } from '../components/OwnerPreviewNotice';
 import { OWNER_CHURN } from '../constants/ownerFixtures';
 import { RECOVERY_LABEL, RECOVERY_TONE } from '../constants/ownerScreenConstants';
 
@@ -11,6 +12,7 @@ export function OwnerChurnPage() {
         eyebrow="Owner portal"
         title="Churn & risk"
         description="Accounts in danger of leaving and recovery progress."
+        actions={<OwnerPreviewNotice />}
       />
 
       <Card>

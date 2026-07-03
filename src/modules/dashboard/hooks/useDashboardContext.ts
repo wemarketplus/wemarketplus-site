@@ -1,6 +1,6 @@
 import { useAppSelector } from '@/app/hooks';
 import { SUBSCRIPTION_FIXTURE } from '@/shared/fixtures';
-import { Product, type Tier } from '@/shared/types';
+import { Product, normalizeTier, type Tier } from '@/shared/types';
 
 // Bundles the tenant context the dashboard header needs: organization name,
 // current product, and tier badge. Falls back to the subscription fixture
@@ -9,7 +9,7 @@ import { Product, type Tier } from '@/shared/types';
 export function useDashboardContext() {
   const user = useAppSelector((s) => s.auth.user);
   const product: Product = user?.product ?? Product.HospiceLink;
-  const tier: Tier = user?.tier ?? SUBSCRIPTION_FIXTURE.plan;
+  const tier: Tier = normalizeTier(user?.tier) ?? SUBSCRIPTION_FIXTURE.plan;
   const organizationName = SUBSCRIPTION_FIXTURE.organizationName;
 
   const period = new Date().toLocaleDateString('en-US', {

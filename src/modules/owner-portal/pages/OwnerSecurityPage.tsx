@@ -1,4 +1,5 @@
 import { OwnerScreenHeader } from '../components/OwnerScreenHeader';
+import { OwnerPreviewNotice } from '../components/OwnerPreviewNotice';
 import { OwnerAuditTable } from '../components/OwnerAuditTable';
 import { OWNER_AUDIT } from '../constants/ownerFixtures';
 
@@ -9,6 +10,7 @@ export function OwnerSecurityPage() {
         eyebrow="Owner portal"
         title="Security & audit"
         description="Every privileged action across the platform."
+        actions={<OwnerPreviewNotice />}
       />
       <OwnerAuditTable entries={OWNER_AUDIT} />
     </div>

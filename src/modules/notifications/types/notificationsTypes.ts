@@ -33,6 +33,21 @@ export interface UnreadCountResponse {
   count: number;
 }
 
+// GET/PUT /notifications/preferences. Mirrors the backend
+// NotificationPreferencesResponseDto / UpdateNotificationPreferencesDto.
+export interface NotificationPreferenceItem {
+  type: string;
+  inApp: boolean;
+}
+
+export interface NotificationPreferencesResponse {
+  items: NotificationPreferenceItem[];
+}
+
+export interface UpdateNotificationPreferencesRequest {
+  items: NotificationPreferenceItem[];
+}
+
 export type NotificationFilter = 'all' | 'unread' | AppNotification['category'];
 
 export interface NotificationsUiState {

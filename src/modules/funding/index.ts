@@ -1,4 +1,5 @@
-// Grant-CRM funding opportunities — API-only module (no page UI yet).
+// Grant-CRM funding opportunities — full CRUD UI on the shared entity kit.
+export { FundingPage } from './pages/FundingPage';
 export {
   fundingApi,
   useListFundingQuery,

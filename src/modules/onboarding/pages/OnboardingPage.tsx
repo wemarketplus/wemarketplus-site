@@ -1,6 +1,9 @@
+import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent, Logo } from '@/shared/ui/core';
 import { useOnboarding } from '../hooks/useOnboarding';
 import { STEP_LABELS } from '../constants/onboardingConstants';
+import { setPendingPlan } from '../utils/pendingPlan';
 import { WizardProgress } from '../components/WizardProgress';
 import { AccountStep } from '../components/AccountStep';
 import { AgencyStep } from '../components/AgencyStep';
@@ -9,6 +12,16 @@ import { LaunchStep } from '../components/LaunchStep';
 
 export function OnboardingPage() {
   const { currentStep } = useOnboarding();
+  const [searchParams] = useSearchParams();
+
+  // Persist the plan chosen on the pricing page (?plan=<catalogKey>) the moment
+  // the wizard mounts, so it survives the email verification round-trip even
+  // when the verify link is opened in a fresh tab. Post-verify (and the dev
+  // register-with-tokens path) reads this back to jump straight to checkout.
+  useEffect(() => {
+    const plan = searchParams.get('plan');
+    if (plan) setPendingPlan(plan);
+  }, [searchParams]);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-bg px-4 py-10">

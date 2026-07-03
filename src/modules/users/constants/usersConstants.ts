@@ -27,6 +27,23 @@ export const ROLE_PILL: Record<Role, PillProps['tone']> = {
   [Role.Rep]: 'b',
 };
 
+// Roles a tenant admin may assign when creating a user — mirrors the backend
+// CreateUserDto whitelist. SuperAdmin is platform-only and must NEVER be
+// offered here.
+export const ASSIGNABLE_ROLES = [
+  Role.Admin,
+  Role.Owner,
+  Role.Manager,
+  Role.Marketer,
+  Role.Nurse,
+  Role.Caregiver,
+  Role.Rep,
+] as const;
+
+// Friendly-labelled options for the role <Select> in the Add User form.
+export const ASSIGNABLE_ROLE_OPTIONS: ReadonlyArray<{ value: Role; label: string }> =
+  ASSIGNABLE_ROLES.map((r) => ({ value: r, label: ROLE_LABELS[r] }));
+
 // Role filter chips for the users list — "All" plus one chip per role.
 export const ROLE_FILTER_CHIPS: ReadonlyArray<{ value: Role | 'all'; label: string }> = [
   { value: 'all', label: 'All roles' },

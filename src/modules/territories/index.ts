@@ -1,5 +1,5 @@
-// Grant-CRM territories — API-only module (no page UI yet; scheduling page may
-// consume this later).
+// Grant-CRM territories — full CRUD UI on the shared entity kit.
+export { TerritoriesPage } from './pages/TerritoriesPage';
 export {
   territoriesApi,
   useListTerritoriesQuery,
@@ -15,4 +15,8 @@ export type {
   CreateTerritoryRequest,
   UpdateTerritoryRequest,
 } from './types/territoriesTypes';
-export { TERRITORY_PRIORITY, type TerritoryPriority } from './constants/territoriesConstants';
+export {
+  TERRITORY_PRIORITY,
+  TERRITORY_PRIORITY_LABELS,
+  type TerritoryPriority,
+} from './constants/territoriesConstants';

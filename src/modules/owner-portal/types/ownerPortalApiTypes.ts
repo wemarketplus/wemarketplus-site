@@ -6,10 +6,19 @@ export interface OwnerMetrics {
   totalPipeline: number;
 }
 
+// Backend TenantResponseDto (owner-portal listCustomers / suspendCustomer).
 export interface OwnerCustomer {
   id: ID;
   name: string;
-  status: string;
+  city: string | null;
+  state: string | null;
+  phone: string | null;
+  product: string;
+  crmTier: string;
+  package: string;
+  subscriptionStatus: string;
+  isActive: boolean;
+  baaSigned: boolean;
   createdAt: ISODateString;
   updatedAt: ISODateString;
 }

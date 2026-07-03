@@ -9,6 +9,10 @@ import type {
   ForgotPasswordRequest,
   LoginRequest,
   LoginResponse,
+  MfaDisableRequest,
+  MfaEnableRequest,
+  MfaSetupResponse,
+  MfaVerifyRequest,
   RefreshTokenRequest,
   RegisterRequest,
   RegisterResponse,
@@ -34,6 +38,12 @@ import type {
 //   POST /auth/forgot-password      -> 202, no body
 //   POST /auth/reset-password       -> 200, body { token, newPassword }
 //   POST /auth/change-password      -> 200, auth-required, body { currentPassword, newPassword }
+//   POST /auth/mfa/setup            -> 200, auth-required, { otpauthUrl, qrDataUrl, secret }
+//   POST /auth/mfa/enable           -> 204, auth-required, body { code }
+//   POST /auth/mfa/disable          -> 204, auth-required, body { code } OR { password }
+//   POST /auth/mfa/verify           -> 200, PUBLIC, body { mfaToken, code } -> full session;
+//                                      the second step after a login that returned
+//                                      { mfaRequired: true, mfaToken }
 //   GET  /auth/me                   -> UserResponseDto
 // Invite acceptance is served by POST /invites/accept { token, password } —
 // it sets the invitee's password and returns a full auth session.
@@ -82,6 +92,24 @@ export const authApi = createApi({
     changePassword: build.mutation<void, ChangePasswordRequest>({
       query: (body) => ({ url: '/auth/change-password', method: 'POST', body }),
     }),
+    mfaSetup: build.mutation<MfaSetupResponse, void>({
+      query: () => ({ url: '/auth/mfa/setup', method: 'POST' }),
+      transformResponse: (res: ApiEnvelope<MfaSetupResponse>) => res.data,
+    }),
+    mfaEnable: build.mutation<void, MfaEnableRequest>({
+      query: (body) => ({ url: '/auth/mfa/enable', method: 'POST', body }),
+      // Enabling MFA changes the account's security state shown by /auth/me.
+      invalidatesTags: [AUTH_TAGS.Me],
+    }),
+    mfaDisable: build.mutation<void, MfaDisableRequest>({
+      query: (body) => ({ url: '/auth/mfa/disable', method: 'POST', body }),
+      invalidatesTags: [AUTH_TAGS.Me],
+    }),
+    mfaVerify: build.mutation<LoginResponse, MfaVerifyRequest>({
+      query: (body) => ({ url: '/auth/mfa/verify', method: 'POST', body }),
+      transformResponse: (res: ApiEnvelope<LoginResponse>) => res.data,
+      invalidatesTags: [AUTH_TAGS.Me],
+    }),
     acceptInvite: build.mutation<LoginResponse, AcceptInviteRequest>({
       query: (body) => ({ url: '/invites/accept', method: 'POST', body }),
       transformResponse: (res: ApiEnvelope<LoginResponse>) => res.data,
@@ -102,5 +130,9 @@ export const {
   useForgotPasswordMutation,
   useResetPasswordMutation,
   useChangePasswordMutation,
+  useMfaSetupMutation,
+  useMfaEnableMutation,
+  useMfaDisableMutation,
+  useMfaVerifyMutation,
   useAcceptInviteMutation,
 } = authApi;

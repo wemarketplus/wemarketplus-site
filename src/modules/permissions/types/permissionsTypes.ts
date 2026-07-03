@@ -1,15 +1,6 @@
-import type { Role } from '@/shared/rbac';
-
 // `shared/rbac` is the enforcement layer; `modules/permissions` is the admin
-// CRUD shell. Today the backend is role-based with no Permission entity, so
-// this module renders a read-only matrix of role capabilities. When the
-// backend ships a permission table, swap this for the real DTO.
-export interface RoleCapability {
-  role: Role;
-  description: string;
-  capabilities: readonly string[];
-}
-
+// management surface for the RBAC matrix. Server-facing matrix shapes live in
+// ./permissionsApiTypes; this file holds only local UI state.
 export interface PermissionsUiState {
   _placeholder: true;
 }

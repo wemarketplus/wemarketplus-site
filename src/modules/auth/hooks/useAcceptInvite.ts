@@ -32,7 +32,7 @@ export function useAcceptInvite(token: string | null) {
             user: result.user,
           }),
         );
-        toast.success(`Welcome aboard, ${result.user.firstName}`);
+        toast.success(`Welcome aboard, ${result.user?.firstName ?? ''}`.trim());
         navigate('/', { replace: true });
       } catch (err) {
         toast.error(extractApiErrorMessage(err, "Couldn't activate your account"));

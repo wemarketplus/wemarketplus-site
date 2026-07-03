@@ -1,6 +1,7 @@
 import { Card, CardContent } from '@/shared/ui/core';
 import { formatRelative } from '@/shared/utils/dateFormatter';
 import { OwnerScreenHeader } from '../components/OwnerScreenHeader';
+import { OwnerPreviewNotice } from '../components/OwnerPreviewNotice';
 import { OWNER_COMMUNICATIONS } from '../constants/ownerFixtures';
 import { CHANNEL_ICON } from '../constants/ownerScreenConstants';
 
@@ -11,6 +12,7 @@ export function OwnerCommunicationPage() {
         eyebrow="Owner portal"
         title="Communication log"
         description="Every touch with customers, in one place."
+        actions={<OwnerPreviewNotice />}
       />
 
       <Card>

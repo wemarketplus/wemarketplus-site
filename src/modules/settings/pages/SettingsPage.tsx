@@ -4,6 +4,7 @@ import { ProfileTab } from '../components/ProfileTab';
 import { OrganizationTab } from '../components/OrganizationTab';
 import { IntegrationsTab } from '../components/IntegrationsTab';
 import { SecurityTab } from '../components/SecurityTab';
+import { DataExportTab } from '../components/DataExportTab';
 
 export function SettingsPage() {
   const tab = useAppSelector((s) => s.settings.activeTab);
@@ -24,6 +25,7 @@ export function SettingsPage() {
         {tab === 'organization' && <OrganizationTab />}
         {tab === 'integrations' && <IntegrationsTab />}
         {tab === 'security' && <SecurityTab />}
+        {tab === 'data-export' && <DataExportTab />}
       </div>
     </div>
   );

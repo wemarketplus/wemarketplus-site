@@ -24,3 +24,12 @@ export {
   useUpdatePipelineRecordMutation,
   useDeletePipelineRecordMutation,
 } from './api/ownerPortalApi';
+
+// SuperAdmin tenant impersonation (support login into a customer workspace).
+export { ImpersonationBanner } from './components/ImpersonationBanner';
+export { useImpersonation } from './hooks/useImpersonation';
+export {
+  impersonationApi,
+  useStartImpersonationMutation,
+  useStopImpersonationMutation,
+} from './api/impersonationApi';

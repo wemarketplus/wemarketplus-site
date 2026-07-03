@@ -1,5 +1,6 @@
 // Grant-CRM finance (invoices, mileage, expenses, revenue, payments,
-// financial settings) — API-only module (no page UI yet).
+// financial settings). API + a read-only overview page.
+export { FinanceOverviewPage } from './pages/FinanceOverviewPage';
 export {
   financeApi,
   useListInvoicesQuery,

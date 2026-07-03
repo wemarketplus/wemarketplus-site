@@ -1,4 +1,6 @@
-// Grant-CRM training providers + rosters — API-only module (no page UI yet).
+// Grant-CRM training providers — full CRUD UI on the shared entity kit (rosters
+// remain API-only for now).
+export { TrainingProvidersPage } from './pages/TrainingProvidersPage';
 export {
   trainingApi,
   useListTrainingProvidersQuery,
@@ -18,6 +20,7 @@ export {
   trainingProvidersCsvUrl,
   trainingProvidersXlsxUrl,
   rosterExportUrl,
+  downloadTrainingExport,
 } from './utils/trainingExportUrls';
 export type {
   TrainingProviderRecord,
@@ -28,6 +31,7 @@ export type {
 } from './types/trainingTypes';
 export {
   TRAINING_PROVIDER_STATUS,
+  TRAINING_PROVIDER_STATUS_LABELS,
   COMPLETION_STATUS,
   type TrainingProviderStatus,
   type CompletionStatus,

@@ -1,4 +1,5 @@
-// Grant-CRM Workforce Investment Boards — API-only module (no page UI yet).
+// Grant-CRM Workforce Investment Boards — CRUD UI on the shared entity kit.
+export { WibsPage } from './pages/WibsPage';
 export {
   wibsApi,
   useListWibsQuery,

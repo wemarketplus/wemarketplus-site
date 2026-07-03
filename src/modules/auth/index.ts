@@ -6,6 +6,7 @@ export { AcceptInvitePage } from './pages/AcceptInvitePage';
 export { VerifyEmailPage } from './pages/VerifyEmailPage';
 export { ChangePasswordPage } from './pages/ChangePasswordPage';
 export { useResendVerification } from './hooks/useResendVerification';
+export { useMfaManagement } from './hooks/useMfaManagement';
 export { default as authReducer, setCredentials, logout } from './store/authSlice';
 export {
   authApi,
@@ -20,6 +21,10 @@ export {
   useForgotPasswordMutation,
   useResetPasswordMutation,
   useChangePasswordMutation,
+  useMfaSetupMutation,
+  useMfaEnableMutation,
+  useMfaDisableMutation,
+  useMfaVerifyMutation,
   useAcceptInviteMutation,
 } from './api/authApi';
 export type {

@@ -2,6 +2,11 @@
 export { OnboardingPage } from './pages/OnboardingPage';
 export { default as onboardingReducer } from './store/onboardingSlice';
 export { onboardingApi } from './api/onboardingApi';
+export {
+  setPendingPlan,
+  getPendingPlan,
+  clearPendingPlan,
+} from './utils/pendingPlan';
 export type {
   OnboardingStep,
   AccountInfo,

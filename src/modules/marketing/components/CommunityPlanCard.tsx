@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Activity, MousePointer2, Star, type LucideIcon } from 'lucide-react';
+import { setPendingPlan } from '@/modules/onboarding';
 import { cn } from '@/shared/utils/cn';
 import type { PlanTone } from '../constants/hospicePricingPlans';
 import type {
@@ -76,7 +77,8 @@ export function CommunityPlanCard({ plan }: { plan: CommunityPlan }) {
         ))}
       </ul>
       <Link
-        to="/onboarding"
+        to={`/onboarding?plan=${plan.planKey}`}
+        onClick={() => setPendingPlan(plan.planKey)}
         className={cn(
           'mt-auto block rounded-pill py-3 text-center text-[14px] font-extrabold text-[#06080e] transition-opacity hover:opacity-[0.88]',
           a.btn,

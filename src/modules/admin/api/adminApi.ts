@@ -1,7 +1,12 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQuery';
 import type { ApiEnvelope, PaginatedPayload, PaginationParams } from '@/shared/types';
-import type { CreateTenantRequest, InviteRecord, TenantRecord } from '../types/adminTypes';
+import type {
+  CreateTenantRequest,
+  ImportResult,
+  InviteRecord,
+  TenantRecord,
+} from '../types/adminTypes';
 
 // Platform admin — wemarketplus-backend tenants, invites (admin/owner only),
 // plus bulk data-transfer import. Export/template downloads live in
@@ -50,13 +55,13 @@ export const adminApi = createApi({
     }),
     // Bulk data transfer (data-transfer.controller). Import is JSON rows;
     // exports/templates are binary downloads handled by the URL helpers below.
-    importData: build.mutation<Record<string, unknown>, { type: string; rows: Record<string, unknown>[]; batch?: number; totalBatches?: number }>({
+    importData: build.mutation<ImportResult, { type: string; rows: Record<string, unknown>[]; batch?: number; totalBatches?: number }>({
       query: ({ type, ...body }) => ({ url: `/import/${type}`, method: 'POST', body }),
-      transformResponse: env<Record<string, unknown>>,
+      transformResponse: env<ImportResult>,
     }),
-    importWibsCsv: build.mutation<Record<string, unknown>, { rows: Record<string, unknown>[]; batch?: number; totalBatches?: number }>({
+    importWibsCsv: build.mutation<ImportResult, { rows: Record<string, unknown>[]; batch?: number; totalBatches?: number }>({
       query: (body) => ({ url: '/import/wibs/csv', method: 'POST', body }),
-      transformResponse: env<Record<string, unknown>>,
+      transformResponse: env<ImportResult>,
     }),
   }),
 });

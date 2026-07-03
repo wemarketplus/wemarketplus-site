@@ -18,11 +18,11 @@ export function UpgradePanel({
           </div>
           <div>
             <h2 className="text-base font-semibold text-foreground">
-              Need more horsepower?
+              Manage your billing
             </h2>
             <p className="mt-1 text-sm text-muted">
-              Compare tiers and upgrade in the billing portal — change takes
-              effect immediately.
+              Change plans above, or open the billing portal to update your
+              payment method, view invoices, or cancel.
             </p>
           </div>
         </div>

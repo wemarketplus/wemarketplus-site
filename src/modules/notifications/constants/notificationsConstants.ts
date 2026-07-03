@@ -5,7 +5,24 @@ import type { NotificationFilter } from '../types/notificationsTypes';
 
 export const NOTIFICATIONS_TAGS = {
   List: 'Notifications.List',
+  Preferences: 'Notifications.Preferences',
 } as const;
+
+// Human-readable labels for the configurable notification types surfaced in the
+// preference center. Mirrors CONFIGURABLE_NOTIFICATION_TYPES on the backend.
+export const NOTIFICATION_TYPE_LABELS: Record<
+  string,
+  { label: string; description: string }
+> = {
+  'prospect.assigned': {
+    label: 'Prospect assigned to me',
+    description: 'When a prospect is assigned to you.',
+  },
+  'task.assigned': {
+    label: 'Task assigned to me',
+    description: 'When a task is created for or reassigned to you.',
+  },
+};
 
 type NotificationCategory = AppNotification['category'];
 

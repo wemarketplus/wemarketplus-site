@@ -1,4 +1,5 @@
-// Grant-CRM applications — API-only module (no page UI yet).
+// Grant-CRM applications — full CRUD UI on the shared entity kit.
+export { ApplicationsPage } from './pages/ApplicationsPage';
 export {
   applicationsApi,
   useListApplicationsQuery,

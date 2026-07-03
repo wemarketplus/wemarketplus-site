@@ -1,9 +1,19 @@
-import { ShieldCheck } from 'lucide-react';
-import { useRoleCapabilities } from '../hooks/useRoleCapabilities';
-import { RoleCapabilityCard } from '../components/RoleCapabilityCard';
+import { Info, Loader2, ShieldCheck, TriangleAlert } from 'lucide-react';
+import { Button } from '@/shared/ui/core';
+import { PermissionMatrixGrid } from '../components/PermissionMatrixGrid';
+import { usePermissionMatrix } from '../hooks/usePermissionMatrix';
 
 export function PermissionsPage() {
-  const capabilities = useRoleCapabilities();
+  const {
+    view,
+    isLoading,
+    isError,
+    errorMessage,
+    refetch,
+    canEdit,
+    pendingCell,
+    toggle,
+  } = usePermissionMatrix();
 
   return (
     <div className="space-y-8">
@@ -16,18 +26,49 @@ export function PermissionsPage() {
             Roles &amp; permissions
           </h1>
           <p className="mt-1 max-w-2xl text-sm text-muted">
-            The backend is role-based: every user has one of three roles, enforced in
-            NestJS via <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-xs text-foreground">@Roles()</code> guards.
-            This matrix mirrors the route-level checks so you can audit who can do what.
+            This matrix is the live, enforced RBAC policy. The backend checks every
+            request against it via{' '}
+            <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-xs text-foreground">
+              @RequirePermission()
+            </code>{' '}
+            guards. Toggle a cell to grant or revoke a capability for a role.
           </p>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        {capabilities.map((cap) => (
-          <RoleCapabilityCard key={cap.role} cap={cap} />
-        ))}
-      </div>
+      {!canEdit && (
+        <div className="flex items-start gap-3 rounded-lg border border-white/[0.08] bg-white/[0.02] px-4 py-3 text-sm text-muted">
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-muted-soft" />
+          <p>Only a Super Admin can edit permissions. This matrix is read-only for you.</p>
+        </div>
+      )}
+
+      {isLoading && (
+        <div className="flex items-center justify-center gap-2 rounded-lg border border-white/[0.08] py-16 text-sm text-muted">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          Loading permissions…
+        </div>
+      )}
+
+      {isError && !isLoading && (
+        <div className="flex flex-col items-center gap-3 rounded-lg border border-destructive/30 bg-destructive/[0.06] py-12 text-center">
+          <TriangleAlert className="h-6 w-6 text-destructive" />
+          <p className="text-sm text-foreground">{errorMessage}</p>
+          <Button variant="ghost" onClick={() => refetch()}>
+            Retry
+          </Button>
+        </div>
+      )}
+
+      {!isLoading && !isError && view && (
+        <PermissionMatrixGrid
+          permissions={view.permissions}
+          locked={view.locked}
+          canEdit={canEdit}
+          pendingCell={pendingCell}
+          onToggle={toggle}
+        />
+      )}
     </div>
   );
 }

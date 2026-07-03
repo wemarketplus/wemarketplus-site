@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
 import { useCreateProspectMutation } from '../api/prospectsApi';
 import type { NewProspectFormValues } from '../schema/prospectSchema';
 import type { CreateProspectRequest } from '../types/prospectsTypes';
@@ -31,8 +32,8 @@ export function useAddProspect() {
       toast.success('Prospect added');
       setOpen(false);
       return true;
-    } catch {
-      toast.error('Could not add prospect. Please try again.');
+    } catch (err) {
+      toast.error(extractApiErrorMessage(err, 'Could not add prospect. Please try again.'));
       return false;
     }
   };

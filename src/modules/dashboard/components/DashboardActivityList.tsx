@@ -15,6 +15,9 @@ export function DashboardActivityList({ items }: DashboardActivityListProps) {
             Recent activity
           </p>
         </header>
+        {items.length === 0 && (
+          <p className="px-6 pb-4 text-xs text-muted">No recent activity yet.</p>
+        )}
         <ul className="divide-y divide-white/[0.06]">
           {items.map((a) => (
             <li key={a.id} className="flex items-start gap-3 px-6 py-3">

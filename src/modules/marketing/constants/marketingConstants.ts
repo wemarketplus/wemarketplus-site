@@ -36,9 +36,9 @@ export const TICKER_ITEMS: readonly TickerItem[] = [
   { label: 'GPS note saved — Bedside visit', color: TICKER_COLORS.muted },
 ];
 
-// HospiceLink tiers — prices + features verbatim from index.html #pricing.
-// Pricing is per-month at the entry user band; the page lists higher bands
-// (5–10 / 10–20 / Unlimited) which we surface as the `bands` note.
+// HospiceLink tiers — prices mirror the real billing catalog
+// (wemarketplus-backend GET /billing/plans): one flat monthly price per tier
+// with a fixed seat allowance, surfaced as the `bands` note.
 export const HOSPICELINK_TIERS: readonly MarketingTierCard[] = [
   {
     tier: Tier.Pro,
@@ -47,7 +47,7 @@ export const HOSPICELINK_TIERS: readonly MarketingTierCard[] = [
     tagline: 'Get organized — stop losing referrals to spreadsheets.',
     monthlyPrice: 149,
     perSeat: false,
-    bands: '0–5 users · scales to $449/mo unlimited',
+    bands: 'Up to 5 users included',
     highlights: [
       'Complete prospect pipeline — Inquiry to Admitted',
       'Referral source management with status tracking',
@@ -65,7 +65,7 @@ export const HOSPICELINK_TIERS: readonly MarketingTierCard[] = [
     tagline: 'Grow your referrals — full team, full visibility.',
     monthlyPrice: 449,
     perSeat: false,
-    bands: '0–10 users · scales to $849/mo unlimited',
+    bands: 'Up to 10 users included',
     featured: true,
     highlights: [
       'Everything in Pro',
@@ -84,7 +84,7 @@ export const HOSPICELINK_TIERS: readonly MarketingTierCard[] = [
     tagline: 'Dominate your territory — the complete command center.',
     monthlyPrice: 749,
     perSeat: false,
-    bands: '0–10 users · scales to $1,299/mo unlimited',
+    bands: 'Up to 10 users included',
     highlights: [
       'Everything in Max',
       'Windshield Voice Mode',

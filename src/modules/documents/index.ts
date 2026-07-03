@@ -1,4 +1,6 @@
-// Grant-CRM documents (employer + WIB) — API-only module (no page UI yet).
+// Grant-CRM documents (employer + WIB) — parent-scoped list + record-metadata
+// create + delete UI (no binary upload in this phase).
+export { DocumentsPage } from './pages/DocumentsPage';
 export {
   documentsApi,
   useListEmployerDocumentsQuery,
@@ -13,3 +15,8 @@ export type {
   CreateDocumentRequest,
   ListDocumentsQuery,
 } from './types/documentsTypes';
+export {
+  DOCUMENT_SCOPE,
+  DOCUMENT_SCOPE_LABELS,
+  type DocumentScope,
+} from './constants/documentsConstants';

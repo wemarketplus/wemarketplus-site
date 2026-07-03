@@ -1,26 +1,31 @@
 import { formatDate } from '@/shared/utils/dateFormatter';
-import { Tier, SubscriptionStatus } from '@/shared/types';
+import { Tier, SubscriptionStatus, normalizeTier } from '@/shared/types';
 import type { Product, Tier as TierType } from '@/shared/types';
 import type { SubscriptionRecord, SubscriptionView } from '../types/billingTypes';
 
-// Backend `plan` is a free-form string; coerce it to a known Tier for the UI.
-export function toTier(plan: string): TierType {
+// Coerces the backend plan info to a known Tier for the UI. Prefers the
+// catalog-resolved `tier` the backend now ships; the substring heuristic on
+// `plan` is only a fallback for rows the catalog cannot resolve (legacy or
+// unconfigured price ids, where `plan` is a raw Stripe price id).
+export function toTier(plan: string, tier?: string): TierType {
+  const resolved = normalizeTier(tier);
+  if (resolved) return resolved;
   const p = plan.toLowerCase();
   if (p.includes('max')) return Tier.Max;
   if (p.includes('gold')) return Tier.Gold;
   return Tier.Pro;
 }
 
-// The backend subscription record has no product/org-name fields, so the caller
-// supplies those (derived from auth). Pure mapper — kept in utils/.
+// Product/org name come from auth context as the fallback for records the
+// backend could not resolve against the catalog. Pure mapper — kept in utils/.
 export function toSubscriptionView(
   record: SubscriptionRecord,
   product: Product,
   organizationName: string,
 ): SubscriptionView {
   return {
-    product,
-    plan: toTier(record.plan),
+    product: record.product ?? product,
+    plan: toTier(record.plan, record.tier),
     status: record.status,
     // The page always renders a renewal date; fall back to created date.
     currentPeriodEnd: record.currentPeriodEnd ?? record.createdAt,
@@ -57,3 +62,19 @@ export const statusToneClass = (status: SubscriptionStatus): string => {
 };
 
 export const formatPeriodEnd = (iso: string): string => formatDate(iso, 'PPP');
+
+// Formats a Stripe minor-unit amount (cents) as a localized currency string,
+// e.g. (30000, 'usd') -> "$300.00". Used by the plan-change proration dialog.
+export const formatMinorAmount = (
+  minorAmount: number,
+  currency: string,
+): string =>
+  new Intl.NumberFormat(undefined, {
+    style: 'currency',
+    currency: currency.toUpperCase(),
+  }).format(minorAmount / 100);
+
+// Formats a Unix timestamp (seconds) as a friendly date — the "effective on"
+// line in the proration dialog.
+export const formatUnixDate = (unixSeconds: number): string =>
+  formatDate(new Date(unixSeconds * 1000).toISOString(), 'PPP');

@@ -5,6 +5,9 @@ import type { PlanTone } from './hospicePricingPlans';
 export type CommunityPlanIcon = 'activity' | 'star' | 'pointer';
 
 export interface CommunityPlan {
+  // Backend billing catalog key (POST /billing/checkout { planKey }). See
+  // wemarketplus-backend/src/billing/plan-catalog.ts.
+  planKey: string;
   eyebrow: string;
   subtitle: string;
   tone: PlanTone;
@@ -19,6 +22,7 @@ export interface CommunityPlan {
 
 export const COMMUNITYLINK_PLANS: readonly CommunityPlan[] = [
   {
+    planKey: 'cl_pro',
     eyebrow: 'CommunityLink Pro',
     subtitle: 'Sales & Outreach',
     tone: 'azure',
@@ -39,6 +43,7 @@ export const COMMUNITYLINK_PLANS: readonly CommunityPlan[] = [
     ],
   },
   {
+    planKey: 'cl_gold',
     eyebrow: 'CommunityLink Gold',
     subtitle: 'Sales + Operations',
     tone: 'amber',
@@ -60,6 +65,7 @@ export const COMMUNITYLINK_PLANS: readonly CommunityPlan[] = [
     ],
   },
   {
+    planKey: 'cl_max',
     eyebrow: 'CommunityLink Max',
     subtitle: 'Sales + Operations + Financial',
     tone: 'sage',

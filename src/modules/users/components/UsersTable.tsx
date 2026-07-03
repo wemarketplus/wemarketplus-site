@@ -1,21 +1,42 @@
-import { Trash2 } from 'lucide-react';
-import { ROLE_LABELS, useRole } from '@/shared/rbac';
-import { Button } from '@/shared/ui/core';
+import { Role, ROLE_LABELS, STAFF_ROLES, useRole } from '@/shared/rbac';
 import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
 import { formatDate } from '@/shared/utils/dateFormatter';
 import { ROLE_PILL } from '../constants/usersConstants';
-import { useDeleteUser } from '../hooks/useDeleteUser';
 import type { UserRecord } from '../types/usersTypes';
 import { fullName, initials } from '../utils/userDisplay';
+import { UserRowActions } from './UserRowActions';
 
 interface UsersTableProps {
   users: readonly UserRecord[];
   isLoading: boolean;
+  // Row-action handlers are owned by the page (which holds the mutation hooks)
+  // and passed down so the table stays presentational.
+  onEdit: (user: UserRecord) => void;
+  onResetPassword: (user: UserRecord) => void;
+  onResendInvite: (user: UserRecord) => void;
+  onToggleActive: (user: UserRecord, next: boolean) => void;
+  onDelete: (user: UserRecord) => void;
+  actionsDisabled: boolean;
 }
 
-export function UsersTable({ users, isLoading }: UsersTableProps) {
-  const { is } = useRole();
-  const { deleteUser, isDeleting } = useDeleteUser();
+export function UsersTable({
+  users,
+  isLoading,
+  onEdit,
+  onResetPassword,
+  onResendInvite,
+  onToggleActive,
+  onDelete,
+  actionsDisabled,
+}: UsersTableProps) {
+  const { role, isAny } = useRole();
+  // Management roles may run the row actions (matches the page's Add-user gate
+  // and the backend's manage_users permission on the mutations).
+  const canManage = isAny(STAFF_ROLES);
+  // Hard delete is SuperAdmin-only on the backend (DELETE /users/:id). The
+  // earlier table gated the whole delete button on is('admin'), which never
+  // matched a super admin and let a plain admin see it; align to the backend.
+  const canDelete = role === Role.SuperAdmin;
 
   if (isLoading) {
     return (
@@ -46,6 +67,13 @@ export function UsersTable({ users, isLoading }: UsersTableProps) {
       header: 'Role',
       cell: (u) => <Pill tone={ROLE_PILL[u.role]}>{ROLE_LABELS[u.role]}</Pill>,
     },
+    {
+      key: 'status',
+      header: 'Status',
+      cell: (u) => (
+        <Pill tone={u.isActive ? 'g' : 'r'}>{u.isActive ? 'Active' : 'Inactive'}</Pill>
+      ),
+    },
     { key: 'joined', header: 'Joined', cell: (u) => formatDate(u.createdAt) },
     {
       key: 'actions',
@@ -53,16 +81,17 @@ export function UsersTable({ users, isLoading }: UsersTableProps) {
       headerClassName: 'w-12',
       className: 'text-right',
       cell: (u) =>
-        is('admin') ? (
-          <Button
-            variant="ghost"
-            size="square"
-            onClick={() => deleteUser(u)}
-            disabled={isDeleting}
-            aria-label={`Delete ${fullName(u)}`}
-          >
-            <Trash2 className="h-4 w-4 text-destructive" />
-          </Button>
+        canManage ? (
+          <UserRowActions
+            user={u}
+            disabled={actionsDisabled}
+            canDelete={canDelete}
+            onEdit={onEdit}
+            onResetPassword={onResetPassword}
+            onResendInvite={onResendInvite}
+            onToggleActive={onToggleActive}
+            onDelete={onDelete}
+          />
         ) : null,
     },
   ];

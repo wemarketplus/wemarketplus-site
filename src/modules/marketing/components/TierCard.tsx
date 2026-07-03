@@ -1,11 +1,14 @@
 import { Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { setPendingPlan } from '@/modules/onboarding';
 import { Button, Card, CardContent } from '@/shared/ui/core';
 import { cn } from '@/shared/utils/cn';
 import type { MarketingTierCard } from '../types/marketingTypes';
 import { formatTierPrice } from '../utils/formatPrice';
+import { onboardingHrefForPlan, planKeyFor } from '../utils/planKey';
 
 export function TierCard({ card }: { card: MarketingTierCard }) {
+  const planKey = planKeyFor(card.product, card.tier);
   return (
     <Card
       className={cn(
@@ -41,7 +44,10 @@ export function TierCard({ card }: { card: MarketingTierCard }) {
             </li>
           ))}
         </ul>
-        <Link to="/onboarding">
+        <Link
+          to={onboardingHrefForPlan(card.product, card.tier)}
+          onClick={() => setPendingPlan(planKey)}
+        >
           <Button className="w-full" variant={card.featured ? 'primary' : 'secondary'}>
             Start with {card.name.split(' ')[1] ?? 'this plan'}
           </Button>

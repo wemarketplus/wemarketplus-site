@@ -1,4 +1,6 @@
-// Platform admin (tenants + invites) — API-only module (no page UI yet).
+// Platform admin (tenants + invites) + data import/export UI.
+export { DataImportExportPage } from './pages/DataImportExportPage';
+export { useDataImport } from './hooks/useDataImport';
 export {
   adminApi,
   useListTenantsQuery,
@@ -17,6 +19,11 @@ export {
   importTemplateCsvUrl,
   importTemplateXlsxUrl,
 } from './utils/dataTransferUrls';
+export {
+  DATASET_OPTIONS,
+  type DatasetOption,
+  type ImportResult,
+} from './types/adminTypes';
 export type {
   TenantRecord,
   CreateTenantRequest,

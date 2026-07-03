@@ -18,6 +18,23 @@ export interface AgreementRecord {
   updatedAt: ISODateString;
 }
 
+// Mirrors wemarketplus-backend/src/agreements/dto/agreement-stats.dto.ts
+// (GET /agreements/stats). Nested byStatus counts plus rollups.
+export interface AgreementStats {
+  byStatus: {
+    draft: number;
+    pendingSignature: number;
+    signed: number;
+    active: number;
+    expired: number;
+    terminated: number;
+  };
+  active: number;
+  pendingSignature: number;
+  totalValue: number;
+  total: number;
+}
+
 export interface CreateAgreementRequest {
   agreementName?: string;
   title?: string;

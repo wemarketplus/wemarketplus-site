@@ -49,3 +49,11 @@ export const SUBSCRIPTION_ALERT_DESCRIPTIONS: Partial<
 
 // Seat count that represents an unlimited plan in the catalog.
 export const UNLIMITED_SEATS = 999;
+
+// Friendly labels for the gated feature keys GET /billing/plans returns on
+// each plan. Keys without a label are not rendered.
+export const PLAN_FEATURE_LABELS: Record<string, string> = {
+  ai_assistant: 'AI assistant',
+  drive_integration: 'Google Drive integration',
+  reports_export: 'PDF report exports',
+};
