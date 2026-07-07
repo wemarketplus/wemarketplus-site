@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { FINANCIAL_HISTORY } from '../constants/clFinancialConstants';
 import { useListClConcessionsQuery, useListClRevenueQuery } from '../api/clFinancialApi';
 import type { FinancialMonth } from '../types/clFinancialTypes';
 
@@ -12,14 +11,7 @@ export function useFinancialHistory() {
   const revenue = useListClRevenueQuery();
   const concessions = useListClConcessionsQuery();
 
-  const live = Boolean(
-    (revenue.data && revenue.data.data.length > 0) ||
-      (concessions.data && concessions.data.data.length > 0),
-  );
-
   const months = useMemo<readonly FinancialMonth[]>(() => {
-    if (!live) return FINANCIAL_HISTORY;
-
     const byMonth = new Map<string, FinancialMonth>();
     const bucket = (key: string): FinancialMonth => {
       let m = byMonth.get(key);
@@ -44,7 +36,7 @@ export function useFinancialHistory() {
     }
 
     return Array.from(byMonth.values());
-  }, [live, revenue.data, concessions.data]);
+  }, [revenue.data, concessions.data]);
 
-  return { months, isUsingFixture: !live };
+  return { months, isUsingFixture: false };
 }

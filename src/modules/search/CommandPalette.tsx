@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { Search, X } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
@@ -74,8 +75,15 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-[60] flex items-start justify-center p-4 pt-[12vh] sm:p-8 sm:pt-[14vh]">
+  // Rendered via a portal to document.body: the palette is mounted inside the
+  // dashboard header, which uses backdrop-blur and therefore creates a stacking
+  // context AND a containing block for fixed-position children — without the
+  // portal, this "fixed inset-0" overlay is positioned relative to the 64px
+  // header instead of the viewport, so the backdrop fails to cover the page
+  // (content bleeds through) and clicks land on the wrong layer (page appears
+  // frozen). Portaling to the body escapes that context entirely.
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-[12vh] sm:p-8 sm:pt-[14vh]">
       <button
         type="button"
         aria-label="Close search"
@@ -175,7 +183,8 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
           </span>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

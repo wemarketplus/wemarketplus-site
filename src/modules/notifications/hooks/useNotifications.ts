@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { useAppSelector } from '@/app/hooks';
-import { NOTIFICATIONS_FIXTURE } from '@/shared/fixtures';
 import type { AppNotification } from '@/shared/types';
 import { useListNotificationsQuery } from '../api/notificationsApi';
 import { mapNotification } from '../utils/notificationsUtils';
@@ -9,11 +8,10 @@ export function useNotifications() {
   const { data, isLoading } = useListNotificationsQuery();
   const filter = useAppSelector((s) => s.notifications.filter);
 
-  // Fixture fallback until the tenant has live notifications. Once the backend
-  // returns a page (even an empty one), we trust it.
+  // Show the tenant's real notifications, or an empty list when there are none.
   const list: readonly AppNotification[] = data
     ? data.data.map(mapNotification)
-    : NOTIFICATIONS_FIXTURE;
+    : [];
 
   const filtered = useMemo(() => {
     if (filter === 'all') return list;
@@ -28,6 +26,6 @@ export function useNotifications() {
     filtered,
     unreadCount,
     isLoading,
-    isUsingFixture: !data,
+    isUsingFixture: false,
   };
 }

@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { useAppSelector } from '@/app/hooks';
 import { useDebounce } from '@/shared/hooks';
-import { PROSPECTS_FIXTURE } from '@/shared/fixtures';
 import { useListProspectsQuery } from '../api/prospectsApi';
 import { filterProspects, mapProspectRecord } from '../utils/prospectsUtils';
 
@@ -13,7 +12,7 @@ export function useProspectsList() {
   const debouncedSearch = useDebounce(search, 200);
 
   const prospects = useMemo(
-    () => (data ? data.data.map(mapProspectRecord) : PROSPECTS_FIXTURE),
+    () => (data ? data.data.map(mapProspectRecord) : []),
     [data],
   );
 
@@ -24,8 +23,8 @@ export function useProspectsList() {
 
   return {
     prospects: filtered,
-    total: data?.total ?? prospects.length,
+    total: data?.total ?? 0,
     isLoading,
-    isUsingFixture: !data,
+    isUsingFixture: false,
   };
 }

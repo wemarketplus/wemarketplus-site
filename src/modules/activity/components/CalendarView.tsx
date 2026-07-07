@@ -5,7 +5,7 @@ import { useCalendarEvents } from '../hooks/useCalendarEvents';
 import { isEventOverdue } from '../utils/activityUtils';
 
 export function CalendarView() {
-  const events = useCalendarEvents();
+  const { events, isEmpty } = useCalendarEvents();
 
   return (
     <Card>
@@ -15,8 +15,13 @@ export function CalendarView() {
             Upcoming follow-ups
           </p>
         </header>
-        <ul className="divide-y divide-white/[0.06]">
-          {events.map((e) => {
+        {isEmpty ? (
+          <p className="px-6 py-6 text-xs text-muted-soft">
+            No upcoming follow-ups.
+          </p>
+        ) : (
+          <ul className="divide-y divide-white/[0.06]">
+            {events.map((e) => {
             const overdue = isEventOverdue(e.followUpDate);
             return (
               <li key={e.id} className="flex items-start gap-3 px-6 py-3">
@@ -35,8 +40,9 @@ export function CalendarView() {
                 </span>
               </li>
             );
-          })}
-        </ul>
+            })}
+          </ul>
+        )}
       </CardContent>
     </Card>
   );

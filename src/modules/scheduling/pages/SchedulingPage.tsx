@@ -9,7 +9,7 @@ import { SCHEDULING_VIEWS } from '../constants/schedulingConstants';
 export function SchedulingPage() {
   const dispatch = useAppDispatch();
   const view = useAppSelector((s) => s.scheduling.view);
-  const { territories } = useTerritories();
+  const { territories, isEmpty } = useTerritories();
 
   return (
     <div className="space-y-6">
@@ -39,8 +39,23 @@ export function SchedulingPage() {
         </div>
       </header>
 
-      {view === 'territories' && <TerritoryTable territories={territories} />}
-      {view === 'heatmap' && <TerritoryHeatmap territories={territories} />}
+      {isEmpty ? (
+        <div className="rounded-[16px] border border-white/[0.06] bg-surface p-10 text-center">
+          <p className="text-sm font-semibold text-foreground">
+            Territory performance analytics are coming soon
+          </p>
+          <p className="mt-1 text-sm text-muted">
+            Visit, admission, and conversion metrics per territory require a
+            reporting endpoint that is not yet available. Manage your territories
+            under Territories in the meantime.
+          </p>
+        </div>
+      ) : (
+        <>
+          {view === 'territories' && <TerritoryTable territories={territories} />}
+          {view === 'heatmap' && <TerritoryHeatmap territories={territories} />}
+        </>
+      )}
     </div>
   );
 }

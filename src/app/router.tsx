@@ -389,7 +389,7 @@ export function AppRouter() {
           <Route path="prospects" element={<ProspectsPage />} />
           <Route path="referrals" element={<ReferralsPage />} />
           <Route path="pipeline" element={<PipelinePage />} />
-          <Route path="territories" element={<SchedulingPage />} />
+          <Route path="territories" element={<TerritoriesEntityPage />} />
           <Route path="scheduling" element={<SchedulingPage />} />
           <Route path="activity/calendar" element={<ActivityPage />} />
           <Route path="activity/notes" element={<ActivityPage />} />
@@ -428,6 +428,7 @@ export function AppRouter() {
           <Route path="operations/housekeeping" element={<ClOperationsPage />} />
           <Route path="financial/ledger" element={<ClFinancialPage />} />
           <Route path="financial/leakage" element={<ClFinancialPage />} />
+          <Route path="financial/concessions" element={<ClFinancialPage />} />
           <Route path="reports" element={<ClReportsPage />} />
 
           {/* Grant CRM — contacts & employer companies */}

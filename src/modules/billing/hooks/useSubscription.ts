@@ -1,6 +1,5 @@
 import { useAppSelector } from '@/app/hooks';
-import { SUBSCRIPTION_FIXTURE } from '@/shared/fixtures';
-import { Product } from '@/shared/types';
+import { Product, SubscriptionStatus, Tier } from '@/shared/types';
 import { useGetSubscriptionQuery } from '../api/billingApi';
 import type { SubscriptionView } from '../types/billingTypes';
 import { toSubscriptionView } from '../utils/billingUtils';
@@ -9,9 +8,9 @@ import { toSubscriptionView } from '../utils/billingUtils';
 // a tenant actually subscribes via Stripe, so we distinguish three states:
 //   - loading:          query in flight
 //   - hasSubscription:  real backend data — render the live plan/status
-//   - no subscription:  honest empty state (NOT the fixture as if it were real)
-// `data` still falls back to the fixture so the populated layout has shape to
-// render, but callers should gate on `hasSubscription` before trusting status.
+//   - no subscription:  a neutral empty view (status "canceled", no fabricated
+//                       plan) so callers gating on `hasSubscription` render an
+//                       honest "no active plan" state.
 // `refetch` re-reads after Stripe Checkout so the new subscription shows up.
 export function useSubscription(): {
   data: SubscriptionView;
@@ -21,10 +20,10 @@ export function useSubscription(): {
 } {
   const { data, isLoading, refetch } = useGetSubscriptionQuery();
   const user = useAppSelector((s) => s.auth.user);
+  const product = user?.product ?? Product.HospiceLink;
+  const organizationName = user?.organizationName ?? 'Your organization';
 
   if (data) {
-    const product = user?.product ?? Product.HospiceLink;
-    const organizationName = SUBSCRIPTION_FIXTURE.organizationName;
     return {
       data: toSubscriptionView(data, product, organizationName),
       isLoading: false,
@@ -33,8 +32,15 @@ export function useSubscription(): {
     };
   }
 
+  // No subscription on file — neutral shape, never a fabricated active plan.
   return {
-    data: SUBSCRIPTION_FIXTURE as SubscriptionView,
+    data: {
+      product,
+      plan: Tier.Pro,
+      status: SubscriptionStatus.Canceled,
+      currentPeriodEnd: '',
+      organizationName,
+    },
     isLoading,
     hasSubscription: false,
     refetch,

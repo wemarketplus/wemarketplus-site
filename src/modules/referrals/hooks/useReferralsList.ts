@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { useAppSelector } from '@/app/hooks';
 import { useDebounce } from '@/shared/hooks';
-import { REFERRAL_SOURCES_FIXTURE } from '@/shared/fixtures';
 import { useListReferralsQuery } from '../api/referralsApi';
 import { filterReferrals, mapReferralSource } from '../utils/referralsUtils';
 
@@ -12,7 +11,7 @@ export function useReferralsList() {
   const debouncedSearch = useDebounce(search, 200);
 
   const referrals = useMemo(
-    () => (data ? data.data.map(mapReferralSource) : REFERRAL_SOURCES_FIXTURE),
+    () => (data ? data.data.map(mapReferralSource) : []),
     [data],
   );
 
@@ -25,6 +24,6 @@ export function useReferralsList() {
     referrals: filtered,
     total: data?.total ?? referrals.length,
     isLoading,
-    isUsingFixture: !data,
+    isUsingFixture: false,
   };
 }

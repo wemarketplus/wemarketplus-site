@@ -8,7 +8,7 @@ import { ServiceTicketsTable } from '../components/ServiceTicketsTable';
 
 export function ClOperationsPage() {
   const { view, changeView } = useOperationsView();
-  const { apartments, makeReady, maintenance, housekeeping, isUsingFixture } = useOperations();
+  const { apartments, makeReady, maintenance, housekeeping } = useOperations();
 
   return (
     <div className="space-y-6">
@@ -16,11 +16,6 @@ export function ClOperationsPage() {
         <h1 className="font-display text-3xl text-foreground">Operations</h1>
         <p className="text-sm text-muted">
           Apartment inventory, make-ready board, maintenance, and housekeeping.
-          {isUsingFixture && (
-            <span className="ml-2 rounded-pill bg-white/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-[0.1em] text-muted-soft">
-              Preview data
-            </span>
-          )}
         </p>
       </header>
 

@@ -1,14 +1,14 @@
 import { Card, CardContent } from '@/shared/ui/core';
+import { EmptyState } from '@/shared/ui/feedback';
+import { Sparkles } from 'lucide-react';
 import { useFeatureFlag } from '@/modules/feature-flags';
 import { OwnerScreenHeader } from '../components/OwnerScreenHeader';
 import { OwnerPreviewNotice } from '../components/OwnerPreviewNotice';
 import { OwnerKpiTile } from '../components/OwnerKpiTile';
 import { useOwnerKpis } from '../hooks/useOwnerKpis';
-import { OWNER_INSIGHTS } from '../constants/ownerFixtures';
 
 export function OwnerDashboardPage() {
   const { kpis } = useOwnerKpis();
-  const highlightInsight = OWNER_INSIGHTS[0];
   // Example flag-gated UI: this beta strip only renders when a SuperAdmin has
   // turned on `ai_insights_beta` (globally or for this tenant) via the feature
   // flags screen — demonstrating the useFeatureFlag hook end to end.
@@ -36,23 +36,15 @@ export function OwnerDashboardPage() {
         ))}
       </div>
 
-      {highlightInsight && (
-        <Card>
-          <CardContent className="space-y-2 px-6 py-5">
-            <p className="text-[10px] uppercase tracking-[0.14em] text-muted-soft">
-              AI highlight
-            </p>
-            <h2 className="text-base font-semibold text-foreground">
-              {highlightInsight.title}
-            </h2>
-            <p className="text-sm text-muted">{highlightInsight.summary}</p>
-            <p className="text-sm text-foreground">
-              <span className="font-semibold text-primary">Recommend: </span>
-              {highlightInsight.recommendation}
-            </p>
-          </CardContent>
-        </Card>
-      )}
+      <Card>
+        <CardContent className="px-6 py-5">
+          <EmptyState
+            icon={Sparkles}
+            title="AI insights coming soon"
+            description="The analytics endpoint that powers AI business highlights is not yet available."
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -5,22 +5,31 @@ import { useOutreachView } from '../hooks/useOutreachView';
 import { CheckInList } from '../components/CheckInList';
 import { MileageList } from '../components/MileageList';
 
+const HEADER_BY_VIEW = {
+  checkin: {
+    title: 'GPS check-in',
+    subtitle: 'Field visits logged with GPS location and timestamp.',
+  },
+  mileage: {
+    title: 'Mileage',
+    subtitle: 'Reimbursable miles captured from field visits.',
+  },
+  log: {
+    title: 'Outreach log',
+    subtitle: 'Full history of referral-source visits and touchpoints.',
+  },
+} as const;
+
 export function ClOutreachPage() {
   const { view, setView } = useOutreachView();
-  const { checkIns, mileage, log, isUsingFixture } = useOutreach();
+  const { checkIns, mileage, log } = useOutreach();
+  const header = HEADER_BY_VIEW[view];
 
   return (
     <div className="space-y-6">
       <header className="space-y-1">
-        <h1 className="font-display text-3xl text-foreground">Field outreach</h1>
-        <p className="text-sm text-muted">
-          GPS check-ins, mileage, and historical visit log.
-          {isUsingFixture && (
-            <span className="ml-2 rounded-pill bg-white/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-[0.1em] text-muted-soft">
-              Preview data
-            </span>
-          )}
-        </p>
+        <h1 className="font-display text-3xl text-foreground">{header.title}</h1>
+        <p className="text-sm text-muted">{header.subtitle}</p>
       </header>
 
       <nav className="flex flex-wrap gap-1.5">
