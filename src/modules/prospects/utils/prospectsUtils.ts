@@ -1,4 +1,44 @@
+import { ProspectStatus as ProspectStatusEnum } from '@/shared/types';
 import type { Prospect, ProspectStatus, Urgency } from '@/shared/types';
+import { ProspectStage, type ProspectRecord } from '../types/prospectsTypes';
+
+// The backend ProspectResponseDto (patientName/stage/aiAdmitScore/...) maps
+// onto the UI's Prospect view-model (name/status/conversionRisk/...). Shared
+// by the prospects list and the pipeline board so both render the same shape.
+function stageToStatus(stage: ProspectStage): ProspectStatus {
+  switch (stage) {
+    case ProspectStage.Admitted:
+      return ProspectStatusEnum.Admitted;
+    case ProspectStage.Lost:
+    case ProspectStage.Inactive:
+      return ProspectStatusEnum.Lost;
+    case ProspectStage.Pending:
+    case ProspectStage.Evaluation:
+    case ProspectStage.Contacted:
+      return ProspectStatusEnum.PendingAdmission;
+    case ProspectStage.Inquiry:
+    default:
+      return ProspectStatusEnum.Inquiry;
+  }
+}
+
+export function mapProspectRecord(r: ProspectRecord): Prospect {
+  return {
+    id: r.id,
+    name: r.patientName,
+    status: stageToStatus(r.stage),
+    phone: r.phone ?? '',
+    email: '',
+    referralSource: r.referralSourceId ?? '',
+    assignedMarketer: r.assignedTo ?? '',
+    nextStep: '',
+    followUpDate: r.updatedAt,
+    urgency: r.urgency as Urgency,
+    conversionRisk: r.aiAdmitScore ?? undefined,
+    notes: r.notes ?? undefined,
+    lastContactDate: r.updatedAt,
+  };
+}
 
 interface FilterArgs {
   search: string;

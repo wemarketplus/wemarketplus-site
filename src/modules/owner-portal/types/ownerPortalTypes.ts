@@ -17,7 +17,8 @@ export type OwnerScreen =
   | 'insights'
   | 'communication'
   | 'security'
-  | 'admin-controls';
+  | 'admin-controls'
+  | 'feature-flags';
 
 export interface OwnerNavItem {
   to: string;

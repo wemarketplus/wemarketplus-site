@@ -5,7 +5,13 @@ import {
   isNavItemVisible,
 } from '@/shared/config/navigationConfig';
 import { useRole, ROLE_LABELS } from '@/shared/rbac';
-import { Product, Tier, TIER_LABELS, PRODUCT_LABELS } from '@/shared/types';
+import {
+  Product,
+  Tier,
+  TIER_LABELS,
+  PRODUCT_LABELS,
+  normalizeTier,
+} from '@/shared/types';
 import { cn } from '@/shared/utils/cn';
 
 // Mirrors wemarketplus-site `.sb` exactly: 220px column, #071120 bg (HL) /
@@ -15,7 +21,8 @@ import { cn } from '@/shared/utils/cn';
 export function Sidebar() {
   const { role } = useRole();
   const product = useAppSelector((s) => s.auth.user?.product) ?? Product.HospiceLink;
-  const tier = useAppSelector((s) => s.auth.user?.tier) ?? Tier.Pro;
+  const tier =
+    normalizeTier(useAppSelector((s) => s.auth.user?.tier)) ?? Tier.Pro;
 
   const sections = SECTIONS_BY_PRODUCT[product];
   const isCommunity = product === Product.CommunityLink;

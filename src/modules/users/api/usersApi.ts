@@ -3,6 +3,7 @@ import { baseQueryWithReauth } from '@/app/baseQuery';
 import type { ApiEnvelope, PaginatedPayload } from '@/shared/types';
 import { USERS_TAGS } from '../constants/usersConstants';
 import type {
+  AdminResetPasswordResponse,
   CreateUserRequest,
   ListUsersQuery,
   UpdateOwnProfileRequest,
@@ -56,6 +57,12 @@ export const usersApi = createApi({
         { type: USERS_TAGS.List, id: 'PARTIAL-LIST' },
       ],
     }),
+    // Admin resets another user's password; backend returns a one-time
+    // temporary password to relay to the user (no request body).
+    adminResetPassword: build.mutation<AdminResetPasswordResponse, string>({
+      query: (id) => ({ url: `/users/${id}/reset-password`, method: 'POST' }),
+      transformResponse: (res: ApiEnvelope<AdminResetPasswordResponse>) => res.data,
+    }),
   }),
 });
 
@@ -66,4 +73,5 @@ export const {
   useUpdateUserMutation,
   useUpdateOwnProfileMutation,
   useDeleteUserMutation,
+  useAdminResetPasswordMutation,
 } = usersApi;

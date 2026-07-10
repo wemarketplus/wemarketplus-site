@@ -2,6 +2,7 @@ import { LogOut } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { logout } from '@/modules/auth';
 import { NotificationsBell } from '@/modules/notifications';
+import { GlobalSearch } from '@/modules/search';
 import { ROLE_LABELS } from '@/shared/rbac';
 import { Button } from '@/shared/ui/core/Button';
 
@@ -22,6 +23,7 @@ export function DashboardHeader() {
       </div>
 
       <div className="flex items-center gap-2">
+        <GlobalSearch />
         <NotificationsBell />
         {user && (
           <div className="flex items-center gap-3 rounded-pill border border-white/[0.08] bg-surface/60 py-1 pr-3 pl-1">

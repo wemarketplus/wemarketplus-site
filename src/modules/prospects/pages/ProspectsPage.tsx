@@ -1,12 +1,24 @@
 import { Plus } from 'lucide-react';
-import { toast } from 'sonner';
+import { useAppSelector } from '@/app/hooks';
 import { Button } from '@/shared/ui/core';
 import { ProspectsFilters } from '../components/ProspectsFilters';
 import { ProspectsTable } from '../components/ProspectsTable';
+import { AddProspectModal } from '../components/AddProspectModal';
 import { useProspectsList } from '../hooks/useProspectsList';
+import { useAddProspect } from '../hooks/useAddProspect';
 
 export function ProspectsPage() {
   const { prospects, total, isUsingFixture } = useProspectsList();
+  const { open, isSaving, openModal, close, submit } = useAddProspect();
+
+  // Distinguish a genuinely empty pipeline from a filtered-empty view so the
+  // empty state shows the right message (get-started vs no-matches).
+  const hasFilters = useAppSelector(
+    (s) =>
+      Boolean(s.prospects.search) ||
+      s.prospects.statusFilter !== 'all' ||
+      s.prospects.urgencyFilter !== 'all',
+  );
 
   return (
     <div className="space-y-6">
@@ -22,13 +34,15 @@ export function ProspectsPage() {
             )}
           </p>
         </div>
-        <Button onClick={() => toast.message('Add prospect — form pending backend')}>
+        <Button onClick={openModal}>
           <Plus className="h-4 w-4" /> Add prospect
         </Button>
       </header>
 
       <ProspectsFilters />
-      <ProspectsTable prospects={prospects} />
+      <ProspectsTable prospects={prospects} onAdd={openModal} hasFilters={hasFilters} />
+
+      <AddProspectModal open={open} isSaving={isSaving} onClose={close} onSubmit={submit} />
     </div>
   );
 }

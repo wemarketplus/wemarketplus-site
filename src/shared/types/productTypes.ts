@@ -38,9 +38,21 @@ const TIER_RANK: Record<Tier, number> = {
 export const tierIncludes = (current: Tier, required: Tier): boolean =>
   TIER_RANK[current] >= TIER_RANK[required];
 
-// Subscription status mirrors wemarketplus-site/subscription-status.html.
+// The backend CrmTier enum prefixes CommunityLink tiers ('cl_gold'); the UI
+// tracks the product separately, so strip the prefix and validate. Returns
+// undefined for unknown/absent values so callers can apply their own default.
+export const normalizeTier = (raw?: string): Tier | undefined => {
+  if (!raw) return undefined;
+  const t = raw.startsWith('cl_') ? raw.slice(3) : raw;
+  return t === Tier.Pro || t === Tier.Gold || t === Tier.Max
+    ? (t as Tier)
+    : undefined;
+};
+
+// Subscription status mirrors wemarketplus-backend/src/billing/billing.constants.ts.
 export const SubscriptionStatus = {
   Active: 'active',
+  Trialing: 'trialing',
   PastDue: 'past_due',
   Suspended: 'suspended',
   Canceled: 'canceled',

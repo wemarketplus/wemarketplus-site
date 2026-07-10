@@ -2,8 +2,10 @@ import { toast } from 'sonner';
 import { useAppDispatch } from '@/app/hooks';
 import { setCredentials } from '@/modules/auth';
 import { extractApiErrorMessage } from '@/modules/auth/utils/errorUtils';
+import { useStartCheckout } from '@/modules/billing/hooks/useStartCheckout';
 import { useOnboardMutation } from '../api/onboardingApi';
 import { useOnboarding } from './useOnboarding';
+import { clearPendingPlan, getPendingPlan } from '../utils/pendingPlan';
 import type { BAAFormValues } from '../schema/onboardingSchema';
 import type {
   AccountInfo,
@@ -13,12 +15,16 @@ import type {
 
 // Orchestrates the final onboarding submission: persists the BAA signature,
 // guards that earlier steps are complete, posts the onboard payload, stores
-// credentials, and advances on success. Kept out of the component so BAAStep
-// stays presentation-only.
+// credentials, and advances on success. When email verification is enforced
+// the register response carries no tokens — we advance to the launch step in
+// its "check your email" state instead of storing credentials. Kept out of
+// the component so BAAStep stays presentation-only.
 export function useOnboardingSubmit() {
-  const { draft, next, saveBAA, markCompleted } = useOnboarding();
+  const { draft, next, saveBAA, markCompleted, markPendingVerification } =
+    useOnboarding();
   const dispatch = useAppDispatch();
   const [onboard, state] = useOnboardMutation();
+  const { startCheckout } = useStartCheckout();
 
   const submitBAA = async (values: BAAFormValues) => {
     saveBAA(values);
@@ -40,8 +46,30 @@ export function useOnboardingSubmit() {
     };
     try {
       const result = await onboard(payload).unwrap();
-      dispatch(setCredentials({ token: result.accessToken, user: result.user }));
+      if (result.requiresEmailVerification && !result.accessToken && result.user) {
+        // Production path: account created, tokens withheld until the user
+        // clicks the emailed verification link. Don't sign them in.
+        markPendingVerification(result.user.email);
+        next();
+        return;
+      }
+      dispatch(
+        setCredentials({
+          token: result.accessToken ?? null,
+          refreshToken: result.refreshToken ?? null,
+          user: result.user,
+        }),
+      );
       markCompleted();
+      // Dev path: register returned tokens directly (no email gate). If a plan
+      // was chosen in the pricing funnel, go straight to Stripe Checkout for it
+      // instead of the launch checklist. startCheckout redirects the browser.
+      const pendingPlan = getPendingPlan();
+      if (pendingPlan) {
+        clearPendingPlan();
+        void startCheckout(pendingPlan);
+        return;
+      }
       next();
     } catch (err) {
       toast.error(

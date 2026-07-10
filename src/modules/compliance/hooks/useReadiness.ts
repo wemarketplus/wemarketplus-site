@@ -1,7 +1,15 @@
-import { READINESS_FIXTURE } from '../constants/portalContent';
+import type { ReadinessScore } from '../types/complianceTypes';
 
-// Readiness score is fixture-backed (the source runs in demo mode with this
-// exact payload). Swap for a GET /compliance/readiness query when it ships.
+// No readiness endpoint exists yet. Return a zeroed structure and an isEmpty
+// flag so the page renders an empty/coming-soon state instead of fixture data.
+// Swap for a GET /compliance/readiness query when it ships.
+const EMPTY_READINESS: ReadinessScore = {
+  score: 0,
+  rating: '—',
+  status: 'needs-remediation',
+  controls: [],
+};
+
 export function useReadiness() {
-  return { readiness: READINESS_FIXTURE, isUsingFixture: true };
+  return { readiness: EMPTY_READINESS, isEmpty: true };
 }

@@ -1,0 +1,48 @@
+// Grant-CRM finance (invoices, mileage, expenses, revenue, payments,
+// financial settings). API + a read-only overview page.
+export { FinanceOverviewPage } from './pages/FinanceOverviewPage';
+export {
+  financeApi,
+  useListInvoicesQuery,
+  useGetInvoiceQuery,
+  useCreateInvoiceMutation,
+  useUpdateInvoiceMutation,
+  useListMileageLogsQuery,
+  useCreateMileageLogMutation,
+  useUpdateMileageLogMutation,
+  useDeleteMileageLogMutation,
+  useListExpenseReceiptsQuery,
+  useCreateExpenseReceiptMutation,
+  useReviewExpenseReceiptMutation,
+  useDeleteExpenseReceiptMutation,
+  useGetRevenueDashboardQuery,
+  useListRevenueQuery,
+  useUpdateRevenueMutation,
+  useGetGrantAwardsSummaryQuery,
+  useListGrantAwardsQuery,
+  useGetPaymentSummaryQuery,
+  useListPaymentTrackingQuery,
+  useMarkPaidMutation,
+  useSendInvoiceMutation,
+  useGetFinancialSettingsQuery,
+  useUpsertFinancialSettingMutation,
+} from './api/financeApi';
+export type {
+  InvoiceRecord,
+  CreateInvoiceRequest,
+  MileageLogRecord,
+  CreateMileageLogRequest,
+  ExpenseReceiptRecord,
+  CreateExpenseReceiptRequest,
+  RevenueRecord,
+  UpdateRevenueRequest,
+  FinancialSetting,
+} from './types/financeTypes';
+export {
+  INVOICE_STATUS,
+  EXPENSE_TYPE,
+  APPROVAL_STATUS,
+  type InvoiceStatus,
+  type ExpenseType,
+  type ApprovalStatus,
+} from './constants/financeConstants';

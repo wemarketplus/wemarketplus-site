@@ -1,37 +1,72 @@
-// TODO(backend): /senior-living/referrals.
-import type { SeniorLivingReferral } from '../types/clReferralsTypes';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { baseQueryWithReauth } from '@/app/baseQuery';
+import type { ApiEnvelope, PaginatedPayload, PaginationParams } from '@/shared/types';
+import type {
+  ClPaidReferralRecord,
+  ClReferralSourceRecord,
+  CreateClPaidReferralRequest,
+  CreateClReferralSourceRequest,
+} from '../types/clReferralsApiTypes';
 
-const SENIOR_LIVING_REFERRALS_FIXTURE: readonly SeniorLivingReferral[] = [
-  {
-    id: 'slr-001',
-    name: 'Dr. Beatrice Lin',
-    organization: 'St. Joseph General Practice',
-    email: 'b.lin@stjosephgp.com',
-    phone: '(415) 555-7700',
-    source: 'physician',
-    rating: 5,
-    notes: 'Steady stream of memory-care referrals.',
-  },
-  {
-    id: 'slr-002',
-    name: 'Hank Russo',
-    organization: 'Westside Adult Day Center',
-    email: 'hank@westsideadc.org',
-    phone: '(415) 555-7711',
-    source: 'community',
-    rating: 4,
-  },
-  {
-    id: 'slr-003',
-    name: 'Vera Khalid',
-    organization: 'Family inquiry',
-    email: 'vera@khalidfamily.us',
-    phone: '(415) 555-7722',
-    source: 'family',
-    rating: 3,
-  },
-];
+// CommunityLink referrals — wemarketplus-backend cl/referral-sources, cl/paid-referrals.
+//   GET/POST/GET:id/PATCH/DELETE  /cl/referral-sources
+//   GET/POST/GET:id/PATCH/DELETE  /cl/paid-referrals
+const env = <T>(res: ApiEnvelope<T>) => res.data;
+const list = <T>(res: ApiEnvelope<PaginatedPayload<T>>) => res.data;
 
-export function getSeniorLivingReferrals(): readonly SeniorLivingReferral[] {
-  return SENIOR_LIVING_REFERRALS_FIXTURE;
-}
+export const clReferralsApi = createApi({
+  reducerPath: 'clReferralsApi',
+  baseQuery: baseQueryWithReauth,
+  tagTypes: ['ClRefSource', 'ClPaidReferral'],
+  endpoints: (build) => ({
+    listClReferralSources: build.query<PaginatedPayload<ClReferralSourceRecord>, PaginationParams | void>({
+      query: (p) => ({ url: '/cl/referral-sources', params: p ?? undefined }),
+      transformResponse: list<ClReferralSourceRecord>,
+      providesTags: ['ClRefSource'],
+    }),
+    createClReferralSource: build.mutation<ClReferralSourceRecord, CreateClReferralSourceRequest>({
+      query: (body) => ({ url: '/cl/referral-sources', method: 'POST', body }),
+      transformResponse: env<ClReferralSourceRecord>,
+      invalidatesTags: ['ClRefSource'],
+    }),
+    updateClReferralSource: build.mutation<ClReferralSourceRecord, { id: string; patch: Partial<CreateClReferralSourceRequest> }>({
+      query: ({ id, patch }) => ({ url: `/cl/referral-sources/${id}`, method: 'PATCH', body: patch }),
+      transformResponse: env<ClReferralSourceRecord>,
+      invalidatesTags: ['ClRefSource'],
+    }),
+    deleteClReferralSource: build.mutation<void, string>({
+      query: (id) => ({ url: `/cl/referral-sources/${id}`, method: 'DELETE' }),
+      invalidatesTags: ['ClRefSource'],
+    }),
+    listClPaidReferrals: build.query<PaginatedPayload<ClPaidReferralRecord>, PaginationParams | void>({
+      query: (p) => ({ url: '/cl/paid-referrals', params: p ?? undefined }),
+      transformResponse: list<ClPaidReferralRecord>,
+      providesTags: ['ClPaidReferral'],
+    }),
+    createClPaidReferral: build.mutation<ClPaidReferralRecord, CreateClPaidReferralRequest>({
+      query: (body) => ({ url: '/cl/paid-referrals', method: 'POST', body }),
+      transformResponse: env<ClPaidReferralRecord>,
+      invalidatesTags: ['ClPaidReferral'],
+    }),
+    updateClPaidReferral: build.mutation<ClPaidReferralRecord, { id: string; patch: Partial<CreateClPaidReferralRequest> }>({
+      query: ({ id, patch }) => ({ url: `/cl/paid-referrals/${id}`, method: 'PATCH', body: patch }),
+      transformResponse: env<ClPaidReferralRecord>,
+      invalidatesTags: ['ClPaidReferral'],
+    }),
+    deleteClPaidReferral: build.mutation<void, string>({
+      query: (id) => ({ url: `/cl/paid-referrals/${id}`, method: 'DELETE' }),
+      invalidatesTags: ['ClPaidReferral'],
+    }),
+  }),
+});
+
+export const {
+  useListClReferralSourcesQuery,
+  useCreateClReferralSourceMutation,
+  useUpdateClReferralSourceMutation,
+  useDeleteClReferralSourceMutation,
+  useListClPaidReferralsQuery,
+  useCreateClPaidReferralMutation,
+  useUpdateClPaidReferralMutation,
+  useDeleteClPaidReferralMutation,
+} = clReferralsApi;

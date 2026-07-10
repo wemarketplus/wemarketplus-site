@@ -4,13 +4,29 @@ export interface AuditLogEntry {
   id: string;
   actor: string;
   action: string;
+  resource: string;
   target: string;
+  meta: string;
   occurredAt: string;
   ipAddress: string;
 }
 
+// Structured, server-driven audit filters (mirrors the backend QueryAuditDto).
+// Empty strings mean "no filter" and are stripped before the request.
+export interface AuditLogFilters {
+  action: string;
+  resource: string;
+  userId: string;
+  dateFrom: string;
+  dateTo: string;
+}
+
 export interface ComplianceUiState {
+  // Free-text search retained for the toolbar; applied client-side over the
+  // current page. Structured filters + pagination drive the server query.
   query: string;
+  filters: AuditLogFilters;
+  page: number;
 }
 
 // --- Compliance Portal (ported from wemarketplus-site/compliance) ---------
@@ -77,6 +93,8 @@ export interface PortalNavItem {
 
 export interface AuditLogTableProps {
   entries: readonly AuditLogEntry[];
+  loading?: boolean;
+  empty?: string;
 }
 
 export interface PortalShellProps {

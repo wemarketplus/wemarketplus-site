@@ -1,11 +1,14 @@
 import { Plus } from 'lucide-react';
-import { toast } from 'sonner';
 import { Button } from '@/shared/ui/core';
 import { ToursList } from '../components/ToursList';
+import { BookTourModal } from '../components/BookTourModal';
 import { useTours } from '../hooks/useTours';
+import { useBookTour } from '../hooks/useBookTour';
 
 export function ClToursPage() {
   const { tours, isUsingFixture } = useTours();
+  const { open, isSaving, openModal, close, submit } = useBookTour();
+
   return (
     <div className="space-y-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -20,11 +23,13 @@ export function ClToursPage() {
             )}
           </p>
         </div>
-        <Button onClick={() => toast.message('Book tour — form pending backend')}>
+        <Button onClick={openModal}>
           <Plus className="h-4 w-4" /> Book tour
         </Button>
       </header>
       <ToursList tours={tours} />
+
+      <BookTourModal open={open} isSaving={isSaving} onClose={close} onSubmit={submit} />
     </div>
   );
 }

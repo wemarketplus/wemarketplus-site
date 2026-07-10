@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
+import { setPendingPlan } from '@/modules/onboarding';
 import { cn } from '@/shared/utils/cn';
 import type { PlanTone, PricingPlan } from '../constants/hospicePricingPlans';
 
-// index.html .plan-card — gradient plan card with a tier-badge, Instrument
-// Serif name, feature list, and per-user-band tier rows, each with a tinted
-// Subscribe button. Featured = sage gradient, premium = amber gradient.
+// .plan-card — gradient plan card with a tier-badge, Instrument Serif name,
+// feature list, and a single price row (flat monthly price + seat allowance)
+// with a tinted Subscribe button. Featured = sage gradient, premium = amber
+// gradient.
 const CARD_VARIANT: Record<PricingPlan['variant'], string> = {
   default:
     'border-white/[0.08] bg-[linear-gradient(160deg,rgba(255,255,255,0.035),rgba(255,255,255,0.01))]',
@@ -55,11 +57,6 @@ export function PlanCard({ plan }: { plan: PricingPlan }) {
       >
         {plan.name}
       </div>
-      {plan.startingAt ? (
-        <div className="mb-1 text-[11px] font-bold uppercase tracking-[0.06em] text-amber">
-          {plan.startingAt}
-        </div>
-      ) : null}
       <div className="mb-4 text-[12px] text-faint">{plan.tagline}</div>
       <div className="mb-[18px] rounded-[12px] bg-white/[0.025] p-3.5 text-[13px] leading-[1.66] text-muted">
         {plan.blurb}
@@ -96,7 +93,8 @@ export function PlanCard({ plan }: { plan: PricingPlan }) {
               </span>
             </div>
             <Link
-              to="/onboarding"
+              to={`/onboarding?plan=${plan.planKey}`}
+              onClick={() => setPendingPlan(plan.planKey)}
               className={cn(
                 'whitespace-nowrap rounded-pill px-5 py-2 text-[12px] font-extrabold text-[#06080e] transition-opacity hover:opacity-85',
                 BTN_TONE[plan.tone],

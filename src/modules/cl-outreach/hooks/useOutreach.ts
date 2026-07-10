@@ -1,10 +1,18 @@
-import { GPS_CHECKINS_FIXTURE, MILEAGE_FIXTURE } from '@/shared/fixtures';
+import { useMemo } from 'react';
+import { useListClVisitsQuery } from '../api/clOutreachApi';
+import { toCheckIn, toMileage } from '../utils/clOutreachMappers';
 
 export function useOutreach() {
-  return {
-    checkIns: GPS_CHECKINS_FIXTURE,
-    mileage: MILEAGE_FIXTURE,
-    log: GPS_CHECKINS_FIXTURE,
-    isUsingFixture: true,
-  };
+  const { data } = useListClVisitsQuery();
+
+  const checkIns = useMemo(
+    () => (data ? data.data.map(toCheckIn) : []),
+    [data],
+  );
+  const mileage = useMemo(
+    () => (data ? data.data.filter((v) => v.miles != null).map(toMileage) : []),
+    [data],
+  );
+
+  return { checkIns, mileage, log: checkIns, isUsingFixture: false };
 }

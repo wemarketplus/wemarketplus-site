@@ -1,22 +1,49 @@
+import { Plus } from 'lucide-react';
 import { extractApiErrorMessage } from '@/modules/auth/utils/errorUtils';
-import { Card, CardContent } from '@/shared/ui/core';
+import { RoleGate, STAFF_ROLES } from '@/shared/rbac';
+import { Button, Card, CardContent } from '@/shared/ui/core';
 import { useUsersList } from '../hooks/useUsersList';
+import { useAddUser } from '../hooks/useAddUser';
+import { useEditUser } from '../hooks/useEditUser';
+import { useDeleteUser } from '../hooks/useDeleteUser';
+import { useUserRowActions } from '../hooks/useUserRowActions';
 import { UsersFilters } from '../components/UsersFilters';
 import { UsersTable } from '../components/UsersTable';
+import { AddUserModal } from '../components/AddUserModal';
+import { EditUserModal } from '../components/EditUserModal';
+import { TempPasswordDialog } from '../components/TempPasswordDialog';
 
 export function UsersPage() {
   const { users, total, page, lastPage, setPage, isLoading, isFetching, error } =
     useUsersList();
+  const { open, isSaving, submitError, openModal, close, submit } = useAddUser();
+  const edit = useEditUser();
+  const { deleteUser, isDeleting } = useDeleteUser();
+  const {
+    reveal,
+    dismissReveal,
+    resetUserPassword,
+    resendInvite,
+    setUserActive,
+    isBusy,
+  } = useUserRowActions();
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-1">
-        <h1 className="font-display text-3xl text-foreground">Team members</h1>
-        <p className="text-sm text-muted">
-          {total} {total === 1 ? 'user' : 'users'} across your CRM. Filter or search to
-          narrow the list.
-        </p>
-      </div>
+      <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex flex-col gap-1">
+          <h1 className="font-display text-3xl text-foreground">Team members</h1>
+          <p className="text-sm text-muted">
+            {total} {total === 1 ? 'user' : 'users'} across your CRM. Filter or search to
+            narrow the list.
+          </p>
+        </div>
+        <RoleGate allow={STAFF_ROLES}>
+          <Button onClick={openModal}>
+            <Plus className="h-4 w-4" /> Add user
+          </Button>
+        </RoleGate>
+      </header>
 
       <Card>
         <CardContent className="space-y-5 pt-6">
@@ -28,7 +55,16 @@ export function UsersPage() {
             </p>
           )}
 
-          <UsersTable users={users} isLoading={isLoading} />
+          <UsersTable
+            users={users}
+            isLoading={isLoading}
+            onEdit={edit.openEdit}
+            onResetPassword={resetUserPassword}
+            onResendInvite={resendInvite}
+            onToggleActive={(u, next) => setUserActive(u, next)}
+            onDelete={deleteUser}
+            actionsDisabled={isBusy || isDeleting}
+          />
 
           <div className="flex items-center justify-between text-xs text-muted-soft">
             <span className="uppercase tracking-[0.1em]">
@@ -57,6 +93,24 @@ export function UsersPage() {
         </CardContent>
       </Card>
 
+      <AddUserModal
+        open={open}
+        isSaving={isSaving}
+        submitError={submitError}
+        onClose={close}
+        onSubmit={submit}
+      />
+
+      <EditUserModal
+        user={edit.editingUser}
+        open={edit.open}
+        isSaving={edit.isSaving}
+        submitError={edit.submitError}
+        onClose={edit.close}
+        onSubmit={edit.submit}
+      />
+
+      <TempPasswordDialog reveal={reveal} onClose={dismissReveal} />
     </div>
   );
 }

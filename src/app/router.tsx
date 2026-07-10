@@ -1,12 +1,11 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { DashboardLayout } from '@/shared/ui/layout';
+import { ProtectedRoute } from '@/routes/ProtectedRoute';
 import { PublicRoute } from '@/routes/PublicRoute';
 import { RootRoute } from '@/routes/RootRoute';
 import { LEGACY_DEMO_REDIRECTS } from '@/shared/config/demoUrls';
-// NOTE: auth gates are intentionally commented out below so dev can browse
-// every screen without logging in. When ready, re-import ProtectedRoute and
-// the role groups from @/routes/ProtectedRoute and @/shared/rbac.
+import { SUPER_ADMIN_ONLY } from '@/shared/rbac';
 
 // --- Public auth funnel ---------------------------------------------------
 
@@ -21,6 +20,9 @@ const ResetPasswordPage = lazy(() =>
 );
 const AcceptInvitePage = lazy(() =>
   import('@/modules/auth').then((m) => ({ default: m.AcceptInvitePage })),
+);
+const VerifyEmailPage = lazy(() =>
+  import('@/modules/auth').then((m) => ({ default: m.VerifyEmailPage })),
 );
 const OnboardingPage = lazy(() =>
   import('@/modules/onboarding').then((m) => ({ default: m.OnboardingPage })),
@@ -86,6 +88,51 @@ const SubscriptionStatusPage = lazy(() =>
 );
 const SettingsPage = lazy(() =>
   import('@/modules/settings').then((m) => ({ default: m.SettingsPage })),
+);
+const ContactsPage = lazy(() =>
+  import('@/modules/contacts').then((m) => ({ default: m.ContactsPage })),
+);
+const CompaniesPage = lazy(() =>
+  import('@/modules/companies').then((m) => ({ default: m.CompaniesPage })),
+);
+// Phase 4 domain modules (backend-only until now) — entity-kit CRUD pages.
+const InvoicesPage = lazy(() =>
+  import('@/modules/invoices').then((m) => ({ default: m.InvoicesPage })),
+);
+const ContractsPage = lazy(() =>
+  import('@/modules/contracts').then((m) => ({ default: m.ContractsPage })),
+);
+const FinanceOverviewPage = lazy(() =>
+  import('@/modules/finance').then((m) => ({ default: m.FinanceOverviewPage })),
+);
+const FundingPage = lazy(() =>
+  import('@/modules/funding').then((m) => ({ default: m.FundingPage })),
+);
+const ApplicationsPage = lazy(() =>
+  import('@/modules/applications').then((m) => ({ default: m.ApplicationsPage })),
+);
+const AgreementsPage = lazy(() =>
+  import('@/modules/agreements').then((m) => ({ default: m.AgreementsPage })),
+);
+const WibsPage = lazy(() =>
+  import('@/modules/wibs').then((m) => ({ default: m.WibsPage })),
+);
+const LocationsPage = lazy(() =>
+  import('@/modules/locations').then((m) => ({ default: m.LocationsPage })),
+);
+const TerritoriesEntityPage = lazy(() =>
+  import('@/modules/territories').then((m) => ({ default: m.TerritoriesPage })),
+);
+const TrainingProvidersPage = lazy(() =>
+  import('@/modules/training-providers').then((m) => ({
+    default: m.TrainingProvidersPage,
+  })),
+);
+const DocumentsPage = lazy(() =>
+  import('@/modules/documents').then((m) => ({ default: m.DocumentsPage })),
+);
+const DataImportExportPage = lazy(() =>
+  import('@/modules/admin').then((m) => ({ default: m.DataImportExportPage })),
 );
 
 // --- HospiceLink screens --------------------------------------------------
@@ -223,6 +270,9 @@ const OwnerSecurityPage = lazy(() =>
 const OwnerAdminControlsPage = lazy(() =>
   import('@/modules/owner-portal').then((m) => ({ default: m.OwnerAdminControlsPage })),
 );
+const FeatureFlagsPage = lazy(() =>
+  import('@/modules/feature-flags').then((m) => ({ default: m.FeatureFlagsPage })),
+);
 
 const RouteFallback = () => (
   <div className="flex h-full w-full items-center justify-center text-sm text-muted">
@@ -312,6 +362,10 @@ export function AppRouter() {
             </PublicRoute>
           }
         />
+        {/* Deliberately NOT wrapped in <PublicRoute> — verifying logs the
+            user in mid-render, and PublicRoute would bounce them to "/"
+            before the page can forward them to /billing. */}
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route
           path="/onboarding"
           element={
@@ -326,16 +380,16 @@ export function AppRouter() {
             is handled by RootRoute above, so this block has no index. */}
         <Route
           element={
-            // <ProtectedRoute>
+            <ProtectedRoute>
               <DashboardLayout />
-            // </ProtectedRoute>
+            </ProtectedRoute>
           }
         >
           {/* HospiceLink */}
           <Route path="prospects" element={<ProspectsPage />} />
           <Route path="referrals" element={<ReferralsPage />} />
           <Route path="pipeline" element={<PipelinePage />} />
-          <Route path="territories" element={<SchedulingPage />} />
+          <Route path="territories" element={<TerritoriesEntityPage />} />
           <Route path="scheduling" element={<SchedulingPage />} />
           <Route path="activity/calendar" element={<ActivityPage />} />
           <Route path="activity/notes" element={<ActivityPage />} />
@@ -348,7 +402,7 @@ export function AppRouter() {
           <Route path="intelligence/revenue" element={<IntelligencePage />} />
           <Route path="intelligence/marketing-roi" element={<IntelligencePage />} />
           <Route path="intelligence/leaderboard" element={<IntelligencePage />} />
-          <Route path="integrations/import" element={<IntegrationsPage />} />
+          <Route path="integrations/import" element={<DataImportExportPage />} />
           <Route path="integrations/aircall" element={<IntegrationsPage />} />
           <Route path="integrations/playbooks" element={<IntegrationsPage />} />
           <Route path="compliance" element={<ReadinessPage />} />
@@ -374,7 +428,25 @@ export function AppRouter() {
           <Route path="operations/housekeeping" element={<ClOperationsPage />} />
           <Route path="financial/ledger" element={<ClFinancialPage />} />
           <Route path="financial/leakage" element={<ClFinancialPage />} />
+          <Route path="financial/concessions" element={<ClFinancialPage />} />
           <Route path="reports" element={<ClReportsPage />} />
+
+          {/* Grant CRM — contacts & employer companies */}
+          <Route path="contacts" element={<ContactsPage />} />
+          <Route path="companies" element={<CompaniesPage />} />
+
+          {/* Phase 4 domain modules */}
+          <Route path="invoices" element={<InvoicesPage />} />
+          <Route path="contracts" element={<ContractsPage />} />
+          <Route path="finance" element={<FinanceOverviewPage />} />
+          <Route path="funding" element={<FundingPage />} />
+          <Route path="applications" element={<ApplicationsPage />} />
+          <Route path="agreements" element={<AgreementsPage />} />
+          <Route path="wibs" element={<WibsPage />} />
+          <Route path="locations" element={<LocationsPage />} />
+          <Route path="territories-list" element={<TerritoriesEntityPage />} />
+          <Route path="training-providers" element={<TrainingProvidersPage />} />
+          <Route path="documents" element={<DocumentsPage />} />
 
           {/* Cross-product admin */}
           <Route path="users" element={<UsersPage />} />
@@ -391,8 +463,17 @@ export function AppRouter() {
           <Route path="account/password" element={<ChangePasswordPage />} />
         </Route>
 
-        {/* Owner portal — its own chrome */}
-        <Route path="/owner" element={<OwnerLayout />}>
+        {/* Owner portal — its own chrome. Platform-level: the backend now
+            requires SuperAdmin on /owner/* (tenant Admin/Owner get 403), so
+            mirror that gate here. */}
+        <Route
+          path="/owner"
+          element={
+            <ProtectedRoute allow={SUPER_ADMIN_ONLY}>
+              <OwnerLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<OwnerDashboardPage />} />
           <Route path="revenue" element={<OwnerRevenuePage />} />
           <Route path="customers" element={<OwnerCustomersPage />} />
@@ -405,6 +486,9 @@ export function AppRouter() {
           <Route path="communication" element={<OwnerCommunicationPage />} />
           <Route path="security" element={<OwnerSecurityPage />} />
           <Route path="admin-controls" element={<OwnerAdminControlsPage />} />
+          {/* Runtime feature flags — SuperAdmin management surface, gated by the
+              same SUPER_ADMIN_ONLY chrome as the rest of /owner/*. */}
+          <Route path="feature-flags" element={<FeatureFlagsPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

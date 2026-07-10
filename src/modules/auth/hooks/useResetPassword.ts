@@ -18,7 +18,7 @@ export function useResetPassword(token: string | null) {
         return;
       }
       try {
-        await resetPassword({ token, password } satisfies ResetPasswordRequest).unwrap();
+        await resetPassword({ token, newPassword: password } satisfies ResetPasswordRequest).unwrap();
         setDone(true);
         toast.success('Password updated. You can sign in now.');
         setTimeout(() => navigate('/login', { replace: true }), AUTH_REDIRECT_DELAY_MS);

@@ -42,6 +42,10 @@ export interface OnboardingState {
   // Epoch milliseconds at which the draft expires from localStorage.
   draftExpiresAt: number | null;
   completed: boolean;
+  // Set when register returned requiresEmailVerification (production) — the
+  // launch step shows "check your email" for this address instead of the
+  // logged-in checklist.
+  pendingVerificationEmail: string | null;
 }
 
 // POST /auth/onboard payload — sent on step 3 (BAA) per the site's flow.

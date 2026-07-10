@@ -1,8 +1,50 @@
+import { AlertTriangle, Bell, CheckCheck, MessageSquare } from 'lucide-react';
+import type { ComponentType } from 'react';
+import type { AppNotification } from '@/shared/types';
 import type { NotificationFilter } from '../types/notificationsTypes';
 
 export const NOTIFICATIONS_TAGS = {
   List: 'Notifications.List',
+  Preferences: 'Notifications.Preferences',
 } as const;
+
+// Human-readable labels for the configurable notification types surfaced in the
+// preference center. Mirrors CONFIGURABLE_NOTIFICATION_TYPES on the backend.
+export const NOTIFICATION_TYPE_LABELS: Record<
+  string,
+  { label: string; description: string }
+> = {
+  'prospect.assigned': {
+    label: 'Prospect assigned to me',
+    description: 'When a prospect is assigned to you.',
+  },
+  'task.assigned': {
+    label: 'Task assigned to me',
+    description: 'When a task is created for or reassigned to you.',
+  },
+};
+
+type NotificationCategory = AppNotification['category'];
+
+// Icon shown per notification category (config — references UI components, so
+// it lives in constants, not the framework-agnostic utils).
+export const CATEGORY_ICON: Record<
+  NotificationCategory,
+  ComponentType<{ className?: string }>
+> = {
+  alert: AlertTriangle,
+  task: CheckCheck,
+  mention: MessageSquare,
+  system: Bell,
+};
+
+// Text-color class per notification category.
+export const CATEGORY_TONE_CLASS: Record<NotificationCategory, string> = {
+  alert: 'text-warning',
+  task: 'text-primary',
+  mention: 'text-azure',
+  system: 'text-muted',
+};
 
 // Filter chips shown in the slide-over drawer.
 export const NOTIFICATIONS_DRAWER_FILTERS: ReadonlyArray<{

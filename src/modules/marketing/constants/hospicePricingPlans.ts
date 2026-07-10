@@ -1,4 +1,6 @@
-// index.html #pricing — HospiceLink plan cards, verbatim from the live site.
+// #pricing — HospiceLink plan cards. Prices mirror the real billing catalog
+// (wemarketplus-backend GET /billing/plans): one flat monthly price per tier
+// with a fixed seat allowance.
 import { COMMUNITYLINK_DEMO_URLS } from '@/shared/config/demoUrls';
 
 export type PlanTone = 'azure' | 'sage' | 'amber';
@@ -9,11 +11,13 @@ export interface PlanTierRow {
 }
 
 export interface PricingPlan {
+  // Backend billing catalog key (POST /billing/checkout { planKey }). See
+  // wemarketplus-backend/src/billing/plan-catalog.ts.
+  planKey: string;
   badge: string;
   tone: PlanTone;
   variant: 'default' | 'featured' | 'premium';
   name: string;
-  startingAt?: string;
   tagline: string;
   blurb: string;
   features: readonly string[];
@@ -24,11 +28,11 @@ export interface PricingPlan {
 
 export const HOSPICELINK_PLANS: readonly PricingPlan[] = [
   {
+    planKey: 'hl_pro',
     badge: 'Starter',
     tone: 'azure',
     variant: 'default',
     name: 'HospiceLink Pro',
-    startingAt: 'Starting at $149/mo',
     tagline: 'Get organized — stop losing referrals to spreadsheets',
     blurb:
       'Complete prospect profiles, referral source management, follow-up reminders, AI assistant, and weekly reports. Most users see improvement within 48 hours.',
@@ -41,21 +45,16 @@ export const HOSPICELINK_PLANS: readonly PricingPlan[] = [
       'One-click CSV importer',
       'Referral Portal & BAA included',
     ],
-    rows: [
-      { users: '0–5 Users', price: '$149' },
-      { users: '5–10 Users', price: '$249' },
-      { users: '10–20 Users', price: '$349' },
-      { users: 'Unlimited Users', price: '$449' },
-    ],
+    rows: [{ users: 'Up to 5 users included', price: '$149' }],
     demoLabel: 'View Pro Demo',
     demoHref: COMMUNITYLINK_DEMO_URLS.pro,
   },
   {
+    planKey: 'hl_max',
     badge: 'Professional',
     tone: 'sage',
     variant: 'featured',
     name: 'HospiceLink Max',
-    startingAt: 'Starting at $449/mo',
     tagline: 'Grow your referrals — full team, full visibility',
     blurb:
       'Everything in Pro, plus EVV mileage, 14-day cold alerts, territory heat map, smart scheduling, and AI playbook generation.',
@@ -68,15 +67,12 @@ export const HOSPICELINK_PLANS: readonly PricingPlan[] = [
       'Family Communication Log',
       'Admin & Marketer roles',
     ],
-    rows: [
-      { users: '0–10 Users', price: '$449' },
-      { users: '10–20 Users', price: '$649' },
-      { users: 'Unlimited Users', price: '$849' },
-    ],
+    rows: [{ users: 'Up to 10 users included', price: '$449' }],
     demoLabel: 'View Max Demo',
     demoHref: COMMUNITYLINK_DEMO_URLS.max,
   },
   {
+    planKey: 'hl_gold',
     badge: 'Enterprise',
     tone: 'amber',
     variant: 'premium',
@@ -95,11 +91,7 @@ export const HOSPICELINK_PLANS: readonly PricingPlan[] = [
       'Aircall — Call, Text & Email from CRM',
       '4-role access: Admin, Marketer, Nurse, Caregiver',
     ],
-    rows: [
-      { users: '0–10 Users', price: '$749' },
-      { users: '10–20 Users', price: '$999' },
-      { users: 'Unlimited Users', price: '$1,299' },
-    ],
+    rows: [{ users: 'Up to 10 users included', price: '$749' }],
     demoLabel: 'View Gold Demo',
     demoHref: COMMUNITYLINK_DEMO_URLS.gold,
   },

@@ -1,22 +1,27 @@
 import { useMemo } from 'react';
 import { useAppSelector } from '@/app/hooks';
-import { LEADS_FIXTURE } from '@/shared/fixtures';
-import { resolveLeads } from '../utils/leadsUtils';
+import { useListClLeadsQuery } from '../api/leadsApi';
+import { mapClLead, resolveLeads } from '../utils/leadsUtils';
 
-// Exposes the live (fixture + session-added, status-overridden) lead list.
+// Live (mapped from /cl/leads) for the logged-in tenant, or an empty state
+// when the tenant has no leads. Session-added leads + status overrides still
+// layer on top so the Add Lead modal and inline status changes keep working.
 export function useLeadsList() {
   const status = useAppSelector((s) => s.clLeads.statusFilter);
   const added = useAppSelector((s) => s.clLeads.added);
   const overrides = useAppSelector((s) => s.clLeads.statusOverrides);
+  const { data } = useListClLeadsQuery();
+
+  const base = useMemo(() => data?.data.map(mapClLead) ?? [], [data]);
 
   const leads = useMemo(
-    () => resolveLeads(LEADS_FIXTURE, added, overrides, status),
-    [added, overrides, status],
+    () => resolveLeads(base, added, overrides, status),
+    [base, added, overrides, status],
   );
 
   return {
     leads,
-    total: LEADS_FIXTURE.length + added.length,
-    isUsingFixture: added.length === 0,
+    total: (data?.total ?? 0) + added.length,
+    isUsingFixture: false,
   };
 }

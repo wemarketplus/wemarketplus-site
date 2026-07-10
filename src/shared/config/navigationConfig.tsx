@@ -5,6 +5,7 @@ import {
   Building2,
   Calendar,
   ClipboardList,
+  Contact,
   CreditCard,
   Goal,
   Heart,
@@ -58,6 +59,55 @@ const MAIN_SECTION: NavSection = {
   items: [
     { to: '/', label: 'Dashboard', icon: LayoutDashboard },
     { to: '/notifications', label: 'Notifications', icon: Bell },
+  ],
+};
+
+// --- Records (cross-product grant CRM — contacts & employer companies) --
+
+const RECORDS_SECTION: NavSection = {
+  id: 'records',
+  label: 'Records',
+  items: [
+    { to: '/contacts', label: 'Contacts', icon: Contact },
+    { to: '/companies', label: 'Companies', icon: Building2 },
+    { to: '/documents', label: 'Documents', icon: ScrollText },
+  ],
+};
+
+// --- Financial (cross-product) ----------------------------------------------
+
+const FINANCIAL_SECTION: NavSection = {
+  id: 'financial',
+  label: 'Financial',
+  items: [
+    { to: '/finance', label: 'Finance overview', icon: CreditCard },
+    { to: '/invoices', label: 'Invoices', icon: ClipboardList },
+    { to: '/contracts', label: 'Contracts', icon: ScrollText },
+  ],
+};
+
+// --- Grants domain (cross-product) ------------------------------------------
+
+const GRANTS_SECTION: NavSection = {
+  id: 'grants',
+  label: 'Grants',
+  items: [
+    { to: '/funding', label: 'Funding', icon: Target },
+    { to: '/applications', label: 'Applications', icon: ClipboardList },
+    { to: '/agreements', label: 'Agreements', icon: ScrollText },
+    { to: '/wibs', label: 'WIBs', icon: Users },
+  ],
+};
+
+// --- Operations records (cross-product) -------------------------------------
+
+const OPERATIONS_RECORDS_SECTION: NavSection = {
+  id: 'ops-records',
+  label: 'Operations',
+  items: [
+    { to: '/locations', label: 'Locations', icon: Pin },
+    { to: '/territories-list', label: 'Territories', icon: Map },
+    { to: '/training-providers', label: 'Training providers', icon: Wrench },
   ],
 };
 
@@ -171,7 +221,7 @@ const ADMIN_SECTION: NavSection = {
   items: [
     { to: '/users', label: 'Team', icon: Users, allow: STAFF_ROLES },
     { to: '/permissions', label: 'Roles & permissions', icon: ShieldCheck, allow: ADMIN_ONLY },
-    { to: '/billing', label: 'Billing', icon: CreditCard },
+    { to: '/billing', label: 'Billing', icon: CreditCard, allow: ADMIN_ONLY },
     { to: '/settings', label: 'Settings', icon: Plug },
   ],
 };
@@ -181,19 +231,27 @@ const ADMIN_SECTION: NavSection = {
 export const SECTIONS_BY_PRODUCT: Record<Product, readonly NavSection[]> = {
   [Product.HospiceLink]: [
     MAIN_SECTION,
+    RECORDS_SECTION,
     HOSPICELINK_MARKETING,
     HOSPICELINK_ACTIVITY,
     HOSPICELINK_CLINICAL,
     HOSPICELINK_INTELLIGENCE,
+    GRANTS_SECTION,
+    FINANCIAL_SECTION,
+    OPERATIONS_RECORDS_SECTION,
     HOSPICELINK_INTEGRATIONS,
     HOSPICELINK_COMPLIANCE,
     ADMIN_SECTION,
   ],
   [Product.CommunityLink]: [
     MAIN_SECTION,
+    RECORDS_SECTION,
     COMMUNITYLINK_SALES,
     COMMUNITYLINK_OPERATIONS,
     COMMUNITYLINK_FINANCIAL,
+    GRANTS_SECTION,
+    FINANCIAL_SECTION,
+    OPERATIONS_RECORDS_SECTION,
     ADMIN_SECTION,
   ],
 };

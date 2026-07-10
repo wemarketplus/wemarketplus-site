@@ -13,3 +13,23 @@ export { OwnerCommunicationPage } from './pages/OwnerCommunicationPage';
 export { OwnerSecurityPage } from './pages/OwnerSecurityPage';
 export { OwnerAdminControlsPage } from './pages/OwnerAdminControlsPage';
 export { default as ownerPortalReducer } from './store/ownerPortalSlice';
+export {
+  ownerPortalApi,
+  useGetOwnerMetricsQuery,
+  useListOwnerCustomersQuery,
+  useSuspendCustomerMutation,
+  useListPipelineQuery,
+  useGetPipelineRecordQuery,
+  useCreatePipelineRecordMutation,
+  useUpdatePipelineRecordMutation,
+  useDeletePipelineRecordMutation,
+} from './api/ownerPortalApi';
+
+// SuperAdmin tenant impersonation (support login into a customer workspace).
+export { ImpersonationBanner } from './components/ImpersonationBanner';
+export { useImpersonation } from './hooks/useImpersonation';
+export {
+  impersonationApi,
+  useStartImpersonationMutation,
+  useStopImpersonationMutation,
+} from './api/impersonationApi';

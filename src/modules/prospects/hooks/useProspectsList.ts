@@ -1,18 +1,20 @@
 import { useMemo } from 'react';
 import { useAppSelector } from '@/app/hooks';
 import { useDebounce } from '@/shared/hooks';
-import { PROSPECTS_FIXTURE } from '@/shared/fixtures';
 import { useListProspectsQuery } from '../api/prospectsApi';
-import { filterProspects } from '../utils/prospectsUtils';
+import { filterProspects, mapProspectRecord } from '../utils/prospectsUtils';
 
 export function useProspectsList() {
-  const { data, isLoading } = useListProspectsQuery({});
+  const { data, isLoading } = useListProspectsQuery();
   const search = useAppSelector((s) => s.prospects.search);
   const status = useAppSelector((s) => s.prospects.statusFilter);
   const urgency = useAppSelector((s) => s.prospects.urgencyFilter);
   const debouncedSearch = useDebounce(search, 200);
 
-  const prospects = data?.data ?? PROSPECTS_FIXTURE;
+  const prospects = useMemo(
+    () => (data ? data.data.map(mapProspectRecord) : []),
+    [data],
+  );
 
   const filtered = useMemo(
     () => filterProspects(prospects, { search: debouncedSearch, status, urgency }),
@@ -21,8 +23,8 @@ export function useProspectsList() {
 
   return {
     prospects: filtered,
-    total: data?.total ?? prospects.length,
+    total: data?.total ?? 0,
     isLoading,
-    isUsingFixture: !data,
+    isUsingFixture: false,
   };
 }

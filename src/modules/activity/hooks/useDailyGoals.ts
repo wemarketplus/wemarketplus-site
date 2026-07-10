@@ -1,5 +1,8 @@
-import { ACTIVITY_DAILY_GOALS } from '../constants/activityConstants';
+import { useListGoalsQuery } from '../api/activityApi';
+import { toDailyGoal } from '../utils/activityMappers';
 
 export function useDailyGoals() {
-  return { goals: ACTIVITY_DAILY_GOALS, isUsingFixture: true };
+  const { data } = useListGoalsQuery();
+  const goals = data?.data ? data.data.map(toDailyGoal) : [];
+  return { goals, isUsingFixture: false };
 }

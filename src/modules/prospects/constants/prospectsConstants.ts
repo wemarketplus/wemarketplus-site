@@ -4,6 +4,7 @@ import {
   URGENCY_LABELS,
   URGENCY_TONE,
 } from '@/shared/constants/urgencyConstants';
+import { ProspectStage, ProspectUrgency } from '../types/prospectsTypes';
 
 export { URGENCY_LABELS, URGENCY_TONE };
 
@@ -53,4 +54,20 @@ export const URGENCY_CHIPS: ReadonlyArray<{ value: Urgency | 'all'; label: strin
   { value: Urgency.Hot, label: URGENCY_LABELS.hot },
   { value: Urgency.Warm, label: URGENCY_LABELS.warm },
   { value: Urgency.Cold, label: URGENCY_LABELS.cold },
+];
+
+// Select options for the Add-prospect form (backend stage/urgency enums).
+export const PROSPECT_STAGE_OPTIONS: ReadonlyArray<{ value: ProspectStage; label: string }> = [
+  { value: ProspectStage.Inquiry, label: 'Inquiry' },
+  { value: ProspectStage.Contacted, label: 'Contacted' },
+  { value: ProspectStage.Pending, label: 'Pending admission' },
+  { value: ProspectStage.Evaluation, label: 'Evaluation' },
+  { value: ProspectStage.Admitted, label: 'Admitted' },
+  { value: ProspectStage.Lost, label: 'Lost' },
+];
+
+export const PROSPECT_URGENCY_OPTIONS: ReadonlyArray<{ value: ProspectUrgency; label: string }> = [
+  { value: ProspectUrgency.Hot, label: 'Hot' },
+  { value: ProspectUrgency.Warm, label: 'Warm' },
+  { value: ProspectUrgency.Cold, label: 'Cold' },
 ];

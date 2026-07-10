@@ -1,29 +1,24 @@
-import { AlertTriangle, Bell, CheckCheck, MessageSquare } from 'lucide-react';
-import type { ComponentType } from 'react';
 import type { AppNotification } from '@/shared/types';
+import type { NotificationRecord } from '../types/notificationsTypes';
 
-export const categoryIcon = (category: AppNotification['category']): ComponentType<{ className?: string }> => {
-  switch (category) {
-    case 'alert':
-      return AlertTriangle;
-    case 'task':
-      return CheckCheck;
-    case 'mention':
-      return MessageSquare;
-    case 'system':
-      return Bell;
-  }
-};
+// The backend NotificationResponseDto and the UI's AppNotification differ: map
+// the persisted shape (type/readAt/...) onto the display shape the drawer + bell
+// expect (category/read/...).
+function mapCategory(type: string): AppNotification['category'] {
+  const t = type.toLowerCase();
+  if (t.includes('task')) return 'task';
+  if (t.includes('mention') || t.includes('message') || t.includes('chat')) return 'mention';
+  if (t.includes('alert') || t.includes('warning') || t.includes('overdue')) return 'alert';
+  return 'system';
+}
 
-export const categoryToneClass = (category: AppNotification['category']): string => {
-  switch (category) {
-    case 'alert':
-      return 'text-warning';
-    case 'task':
-      return 'text-primary';
-    case 'mention':
-      return 'text-azure';
-    case 'system':
-      return 'text-muted';
-  }
-};
+export function mapNotification(n: NotificationRecord): AppNotification {
+  return {
+    id: n.id,
+    category: mapCategory(n.type),
+    title: n.title,
+    body: n.body ?? '',
+    createdAt: n.createdAt,
+    read: n.readAt !== null,
+  };
+}

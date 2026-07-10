@@ -7,9 +7,12 @@ import { setCredentials } from '../store/authSlice';
 import { extractApiErrorMessage } from '../utils/errorUtils';
 import type { AcceptInviteRequest } from '../types/authTypes';
 
+// POST /invites/accept consumes the invite token AND sets the chosen
+// password, returning a full auth session — so a successful accept is
+// treated exactly like a login: store credentials and go home.
 export function useAcceptInvite(token: string | null) {
-  const [acceptInvite, state] = useAcceptInviteMutation();
   const dispatch = useAppDispatch();
+  const [acceptInvite, state] = useAcceptInviteMutation();
   const navigate = useNavigate();
 
   const submit = useCallback(
@@ -19,12 +22,17 @@ export function useAcceptInvite(token: string | null) {
         return;
       }
       try {
-        const result = await acceptInvite({
-          token,
-          password,
-        } satisfies AcceptInviteRequest).unwrap();
-        dispatch(setCredentials({ token: result.accessToken, user: result.user }));
-        toast.success(`Welcome aboard, ${result.user.firstName}`);
+        const result = await acceptInvite(
+          { token, password } satisfies AcceptInviteRequest,
+        ).unwrap();
+        dispatch(
+          setCredentials({
+            token: result.accessToken ?? null,
+            refreshToken: result.refreshToken ?? null,
+            user: result.user,
+          }),
+        );
+        toast.success(`Welcome aboard, ${result.user?.firstName ?? ''}`.trim());
         navigate('/', { replace: true });
       } catch (err) {
         toast.error(extractApiErrorMessage(err, "Couldn't activate your account"));

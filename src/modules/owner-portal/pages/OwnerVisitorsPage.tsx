@@ -1,6 +1,8 @@
+import { BarChart3 } from 'lucide-react';
+import { Card } from '@/shared/ui/core';
+import { EmptyState } from '@/shared/ui/feedback';
 import { OwnerScreenHeader } from '../components/OwnerScreenHeader';
-import { OwnerVisitorsTable } from '../components/OwnerVisitorsTable';
-import { OWNER_VISITORS } from '../constants/ownerFixtures';
+import { OwnerPreviewNotice } from '../components/OwnerPreviewNotice';
 
 export function OwnerVisitorsPage() {
   return (
@@ -9,8 +11,15 @@ export function OwnerVisitorsPage() {
         eyebrow="Owner portal"
         title="Website visitors"
         description="The marketing-site funnel in real time."
+        actions={<OwnerPreviewNotice />}
       />
-      <OwnerVisitorsTable visitors={OWNER_VISITORS} />
+      <Card>
+        <EmptyState
+          icon={BarChart3}
+          title="Visitor analytics are not available yet"
+          description="The marketing-site funnel endpoint has not shipped. Once the analytics API is live, real visitor sessions will appear here."
+        />
+      </Card>
     </div>
   );
 }

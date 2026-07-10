@@ -1,14 +1,28 @@
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { setOperationsView } from '../store/clOperationsSlice';
+import { useLocation, useNavigate } from 'react-router-dom';
 import type { ClOperationsUiState } from '../types/clOperationsTypes';
 
-export function useOperationsView() {
-  const dispatch = useAppDispatch();
-  const view = useAppSelector((s) => s.clOperations.view);
+type View = ClOperationsUiState['view'];
 
-  function changeView(next: ClOperationsUiState['view']) {
-    dispatch(setOperationsView(next));
-  }
+const PATH_BY_VIEW: Record<View, string> = {
+  inventory: '/operations/inventory',
+  'make-ready': '/operations/make-ready',
+  maintenance: '/operations/maintenance',
+  housekeeping: '/operations/housekeeping',
+};
+
+const VIEWS: readonly View[] = ['inventory', 'make-ready', 'maintenance', 'housekeeping'];
+
+// Each operations sub-page is its own route, so the active view comes from the
+// URL and changing it navigates — every sidebar link lands on its own view
+// instead of all four showing the same one.
+export function useOperationsView() {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const segment = pathname.split('/').pop() as View | undefined;
+  const view: View = segment && VIEWS.includes(segment) ? segment : 'inventory';
+
+  const changeView = (next: View) => navigate(PATH_BY_VIEW[next]);
 
   return { view, changeView };
 }

@@ -1,20 +1,48 @@
+import { useAppSelector } from '@/app/hooks';
+import { Product, SubscriptionStatus, Tier } from '@/shared/types';
 import { useGetSubscriptionQuery } from '../api/billingApi';
-import { SUBSCRIPTION_FIXTURE } from '@/shared/fixtures';
-import type { SubscriptionRecord } from '../types/billingTypes';
+import type { SubscriptionView } from '../types/billingTypes';
+import { toSubscriptionView } from '../utils/billingUtils';
 
-// Wraps the RTK Query subscription read with a fixture fallback so screens
-// render with realistic data before the backend ships /subscription-status.
-// When the backend lands, the fixture branch becomes dead — delete it.
+// Wraps the RTK Query subscription read. The backend returns 404 (no row) until
+// a tenant actually subscribes via Stripe, so we distinguish three states:
+//   - loading:          query in flight
+//   - hasSubscription:  real backend data — render the live plan/status
+//   - no subscription:  a neutral empty view (status "canceled", no fabricated
+//                       plan) so callers gating on `hasSubscription` render an
+//                       honest "no active plan" state.
+// `refetch` re-reads after Stripe Checkout so the new subscription shows up.
 export function useSubscription(): {
-  data: SubscriptionRecord;
+  data: SubscriptionView;
   isLoading: boolean;
-  isUsingFixture: boolean;
+  hasSubscription: boolean;
+  refetch: () => void;
 } {
-  const { data, isLoading } = useGetSubscriptionQuery();
-  if (data) return { data, isLoading: false, isUsingFixture: false };
+  const { data, isLoading, refetch } = useGetSubscriptionQuery();
+  const user = useAppSelector((s) => s.auth.user);
+  const product = user?.product ?? Product.HospiceLink;
+  const organizationName = user?.organizationName ?? 'Your organization';
+
+  if (data) {
+    return {
+      data: toSubscriptionView(data, product, organizationName),
+      isLoading: false,
+      hasSubscription: true,
+      refetch,
+    };
+  }
+
+  // No subscription on file — neutral shape, never a fabricated active plan.
   return {
-    data: SUBSCRIPTION_FIXTURE as SubscriptionRecord,
+    data: {
+      product,
+      plan: Tier.Pro,
+      status: SubscriptionStatus.Canceled,
+      currentPeriodEnd: '',
+      organizationName,
+    },
     isLoading,
-    isUsingFixture: true,
+    hasSubscription: false,
+    refetch,
   };
 }

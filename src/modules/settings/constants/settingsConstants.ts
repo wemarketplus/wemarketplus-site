@@ -5,18 +5,19 @@ import {
   ShieldCheck,
   Phone,
   Sparkles,
-  Database,
+  HardDrive,
   MessageCircle,
+  DownloadCloud,
 } from 'lucide-react';
 import type { ComponentType } from 'react';
 import type { SettingsIntegration, SettingsTab } from '../types/settingsTypes';
-import type { OrganizationFormValues } from '../schema/organizationSchema';
 
 export const SETTINGS_TABS: readonly SettingsTab[] = [
   'profile',
   'organization',
   'integrations',
   'security',
+  'data-export',
 ];
 
 export const SETTINGS_TAB_LABELS: Record<SettingsTab, string> = {
@@ -24,6 +25,7 @@ export const SETTINGS_TAB_LABELS: Record<SettingsTab, string> = {
   organization: 'Organization',
   integrations: 'Integrations',
   security: 'Security',
+  'data-export': 'Data export',
 };
 
 export const SETTINGS_TAB_ICONS: Record<
@@ -34,46 +36,43 @@ export const SETTINGS_TAB_ICONS: Record<
   organization: Building2,
   integrations: Plug,
   security: ShieldCheck,
+  'data-export': DownloadCloud,
 };
 
-// Static integration tiles — mirrors the site's settings page. Each "Connect"
-// button is wired with a TODO toast until the backend exposes OAuth flows.
+// Integration tiles. Only Google Drive has a per-tenant status endpoint
+// (GET /drive/status), so it is the sole 'live' tile — its connected state is
+// resolved at render time in IntegrationsTab. The rest are 'managed':
+// configured server side by an administrator with no per-tenant status route,
+// so they are labeled honestly instead of faking a "Connected" badge.
+export const DRIVE_INTEGRATION_ID = 'google-drive';
+
 export const INTEGRATIONS: readonly SettingsIntegration[] = [
+  {
+    id: DRIVE_INTEGRATION_ID,
+    name: 'Google Drive',
+    description: 'Store and attach referral documents from Google Drive.',
+    icon: HardDrive,
+    kind: 'live',
+  },
   {
     id: 'aircall',
     name: 'Aircall',
     description: 'Phone, text, and email from inside the CRM (Gold tier).',
     icon: Phone,
-    status: 'available',
+    kind: 'managed',
   },
   {
-    id: 'openai',
+    id: 'ai-assistant',
     name: 'AI assistant',
     description: 'Drafts, summaries, and conversion scoring.',
     icon: Sparkles,
-    status: 'connected',
-  },
-  {
-    id: 'csv-import',
-    name: 'Data import',
-    description: 'Bulk upload referrals and prospects from CSV/Excel.',
-    icon: Database,
-    status: 'available',
+    kind: 'managed',
   },
   {
     id: 'secure-messaging',
     name: 'Secure messaging',
     description: 'HIPAA-compliant chat (Gold tier).',
     icon: MessageCircle,
-    status: 'available',
+    kind: 'managed',
   },
 ];
-
-// TODO(backend): wire to /organizations when it ships. Today the Organization
-// tab validates locally and toasts on submit so the screen is interactive.
-export const PLACEHOLDER_ORG: OrganizationFormValues = {
-  name: 'Bay Area Hospice Group',
-  city: 'San Francisco',
-  state: 'CA',
-  phone: '(415) 555-2200',
-};

@@ -4,6 +4,7 @@ import {
   BarChart3,
   Bot,
   ClipboardList,
+  Flag,
   Globe,
   LayoutDashboard,
   LineChart,
@@ -35,4 +36,5 @@ export const OWNER_NAV: readonly OwnerNavItem[] = [
   { to: '/owner/communication', screen: 'communication', label: 'Communication log', icon: MessageSquare },
   { to: '/owner/security', screen: 'security', label: 'Security & audit', icon: ShieldCheck },
   { to: '/owner/admin-controls', screen: 'admin-controls', label: 'Admin controls', icon: Sliders },
+  { to: '/owner/feature-flags', screen: 'feature-flags', label: 'Feature flags', icon: Flag },
 ];
