@@ -1,6 +1,7 @@
 node_modules
 dist
 dist-ssr
+.vite
 *.local
 
 .env
@@ -21,3 +22,4 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+docs/
