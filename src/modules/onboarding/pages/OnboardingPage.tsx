@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Card, CardContent, Logo } from '@/shared/ui/core';
 import { useOnboarding } from '../hooks/useOnboarding';
 import { STEP_LABELS } from '../constants/onboardingConstants';
@@ -54,6 +54,20 @@ export function OnboardingPage() {
             {currentStep === 'launch' && <LaunchStep />}
           </CardContent>
         </Card>
+
+        {/* Symmetric entry point back to sign-in, shown only on the first step
+            (once the user is mid-wizard a stray link away would lose progress). */}
+        {currentStep === 'account' && (
+          <p className="text-center text-[13px] text-muted">
+            Already have an account?{' '}
+            <Link
+              to="/login"
+              className="font-bold text-azure no-underline hover:underline"
+            >
+              Sign in
+            </Link>
+          </p>
+        )}
       </div>
     </div>
   );

@@ -1,24 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '@/app/hooks';
-import { useStartCheckout } from '@/modules/billing/hooks/useStartCheckout';
-import { clearPendingPlan, getPendingPlan } from '@/modules/onboarding';
 import { useVerifyEmailMutation } from '../api/authApi';
-import { setCredentials } from '../store/authSlice';
+import { AUTH_REDIRECT_DELAY_MS } from '../constants/authConstants';
 
-export type VerifyEmailStatus = 'verifying' | 'failed';
+export type VerifyEmailStatus = 'verifying' | 'verified' | 'failed';
 
-// Consumes the ?token= from the verification email on mount. On success the
-// backend returns a full auth session and stores credentials. If the visitor
-// picked a plan on the pricing page (persisted through the funnel), we send
-// them straight to Stripe Checkout for that plan; otherwise we drop the new
-// owner on /billing (the plan picker) to choose a subscription.
+// Consumes the ?token= from the verification email on mount. This only marks
+// the address verified — it does NOT log the user in (the backend issues no
+// tokens). Per OWASP, the user then signs in through the normal login flow, so
+// on success we forward to /login. Any plan chosen in the pricing funnel stays
+// in localStorage and is honoured by the login flow after they sign in.
 export function useVerifyEmail(token: string | null) {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [verifyEmail] = useVerifyEmailMutation();
-  const { startCheckout } = useStartCheckout();
   const [status, setStatus] = useState<VerifyEmailStatus>('verifying');
   // Tokens are single-use — guard against StrictMode's double effect run so
   // the second call doesn't 401 a token the first call just consumed.
@@ -29,30 +24,15 @@ export function useVerifyEmail(token: string | null) {
     firedRef.current = true;
     void (async () => {
       try {
-        const result = await verifyEmail({ token }).unwrap();
-        dispatch(
-          setCredentials({
-            token: result.accessToken ?? null,
-            refreshToken: result.refreshToken ?? null,
-            user: result.user,
-          }),
-        );
-        toast.success('Email verified — welcome aboard!');
-        // If a plan was chosen in the pricing funnel, go straight to Stripe
-        // Checkout for it (startCheckout redirects the browser). Clear the
-        // stored choice first so a later plan-less signup can't inherit it.
-        const pendingPlan = getPendingPlan();
-        if (pendingPlan) {
-          clearPendingPlan();
-          void startCheckout(pendingPlan);
-          return;
-        }
-        navigate('/billing', { replace: true });
+        await verifyEmail({ token }).unwrap();
+        setStatus('verified');
+        toast.success('Email verified. Please sign in to continue.');
+        setTimeout(() => navigate('/login', { replace: true }), AUTH_REDIRECT_DELAY_MS);
       } catch {
         setStatus('failed');
       }
     })();
-  }, [dispatch, navigate, startCheckout, token, verifyEmail]);
+  }, [navigate, token, verifyEmail]);
 
   return { status };
 }

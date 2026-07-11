@@ -25,6 +25,11 @@ export const ROLE_PILL: Record<Role, PillProps['tone']> = {
   [Role.Nurse]: 'y',
   [Role.Caregiver]: 'b',
   [Role.Rep]: 'b',
+  [Role.Director]: 'p',
+  [Role.SalesAdmissions]: 'g',
+  [Role.OwnerInvestor]: 'gd',
+  [Role.Maintenance]: 'b',
+  [Role.Housekeeping]: 'b',
 };
 
 // Roles a tenant admin may assign when creating a user — mirrors the backend
@@ -38,6 +43,11 @@ export const ASSIGNABLE_ROLES = [
   Role.Nurse,
   Role.Caregiver,
   Role.Rep,
+  Role.Director,
+  Role.SalesAdmissions,
+  Role.OwnerInvestor,
+  Role.Maintenance,
+  Role.Housekeeping,
 ] as const;
 
 // Friendly-labelled options for the role <Select> in the Add User form.

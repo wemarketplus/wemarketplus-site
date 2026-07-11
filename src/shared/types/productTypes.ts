@@ -28,15 +28,34 @@ export const TIER_LABELS: Record<Tier, string> = {
   [Tier.Max]: 'Max',
 };
 
-// Tier rank — higher numbers unlock more features.
-const TIER_RANK: Record<Tier, number> = {
-  [Tier.Pro]: 1,
-  [Tier.Max]: 2,
-  [Tier.Gold]: 3,
+// Tier rank — higher numbers unlock more features. The two products order
+// their tiers DIFFERENTLY (mirror wemarketplus-backend/src/billing/plan-catalog
+// TIER_RANK): HospiceLink is Pro < Max < Gold (Gold top, $749), CommunityLink
+// is Pro < Gold < Max (Max top, $1,999). Ranking must therefore be product-aware
+// — a single shared order would invert one product's tiers.
+const TIER_RANK_BY_PRODUCT: Record<Product, Record<Tier, number>> = {
+  [Product.HospiceLink]: {
+    [Tier.Pro]: 1,
+    [Tier.Max]: 2,
+    [Tier.Gold]: 3,
+  },
+  [Product.CommunityLink]: {
+    [Tier.Pro]: 1,
+    [Tier.Gold]: 2,
+    [Tier.Max]: 3,
+  },
 };
 
-export const tierIncludes = (current: Tier, required: Tier): boolean =>
-  TIER_RANK[current] >= TIER_RANK[required];
+// Whether a tenant on `current` tier (of `product`) has access to a feature
+// that requires `required` tier. Product-aware so CommunityLink Gold/Max are
+// ranked correctly.
+export const tierIncludes = (
+  product: Product,
+  current: Tier,
+  required: Tier,
+): boolean =>
+  TIER_RANK_BY_PRODUCT[product][current] >=
+  TIER_RANK_BY_PRODUCT[product][required];
 
 // The backend CrmTier enum prefixes CommunityLink tiers ('cl_gold'); the UI
 // tracks the product separately, so strip the prefix and validate. Returns

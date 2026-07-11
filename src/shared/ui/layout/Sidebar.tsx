@@ -23,6 +23,15 @@ export function Sidebar() {
   const product = useAppSelector((s) => s.auth.user?.product) ?? Product.HospiceLink;
   const tier =
     normalizeTier(useAppSelector((s) => s.auth.user?.tier)) ?? Tier.Pro;
+  // Live plan? Used only to decide whether to print the tier in the header
+  // label — an unpaid ('incomplete') tenant shouldn't read as "· Pro". The tier
+  // itself still drives nav colors/visibility below.
+  const subscriptionStatus = useAppSelector(
+    (s) => s.auth.user?.subscriptionStatus,
+  );
+  const hasActivePlan = ['active', 'trialing', 'past_due'].includes(
+    subscriptionStatus ?? '',
+  );
 
   const sections = SECTIONS_BY_PRODUCT[product];
   const isCommunity = product === Product.CommunityLink;
@@ -52,7 +61,8 @@ export function Sidebar() {
           <span className={isCommunity ? 'text-amber' : 'text-gold'}>Link</span>
         </div>
         <div className="mt-0.5 text-[11px] text-[#8b949e]">
-          {PRODUCT_LABELS[product]} · {TIER_LABELS[tier]}
+          {PRODUCT_LABELS[product]}
+          {hasActivePlan && ` · ${TIER_LABELS[tier]}`}
         </div>
       </div>
 
@@ -60,7 +70,7 @@ export function Sidebar() {
       <nav className="flex-1 overflow-y-auto px-2 pb-2" aria-label="Primary navigation">
         {sections.map((section) => {
           const visibleItems = section.items.filter((i) =>
-            isNavItemVisible(i, role, tier),
+            isNavItemVisible(i, product, role, tier),
           );
           if (visibleItems.length === 0) return null;
           const isAdmin = section.id.endsWith('intelligence') || section.id === 'admin' || section.id.endsWith('compliance');

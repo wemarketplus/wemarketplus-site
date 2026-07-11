@@ -138,10 +138,20 @@ export function AuthPage() {
           {isLoading ? 'Signing in…' : 'Sign In'}
         </Button>
 
-        <div className="mt-5 text-center text-[13px] text-muted">
-          Don't have an account?{' '}
-          <Link to="/pricing" className="font-bold text-azure no-underline hover:underline">
-            View Plans
+        {/* Direct signup entry point. The onboarding wizard is where a new
+            tenant is actually created (Account -> Agency -> BAA -> Launch), so
+            we send new users straight there rather than via the pricing page. */}
+        <div className="mt-6 flex items-center gap-3 text-[12px] text-muted-soft">
+          <span className="h-px flex-1 bg-border/60" />
+          New to WeMarketPlus?
+          <span className="h-px flex-1 bg-border/60" />
+        </div>
+        <div className="mt-3 text-center text-[13px] text-muted">
+          <Link
+            to="/onboarding"
+            className="font-bold text-azure no-underline hover:underline"
+          >
+            Create your account →
           </Link>
         </div>
       </form>

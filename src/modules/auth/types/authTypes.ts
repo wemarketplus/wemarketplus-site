@@ -28,6 +28,11 @@ export interface AuthenticatedUser {
   product?: Product;
   tier?: string;
   organizationName?: string;
+  // The tenant's live billing state ('active' | 'trialing' | 'incomplete' |
+  // 'past_due' | 'canceled' | 'suspended'). Ships on /auth/me and login. Used
+  // to tell a paid plan from an unpaid signup — e.g. don't show a plan pill
+  // until the subscription is active/trialing.
+  subscriptionStatus?: string;
 }
 
 // Mirrors wemarketplus-backend/src/auth/dto/auth-response.dto.ts:
@@ -86,8 +91,9 @@ export interface ResetPasswordRequest {
 }
 
 // Backend POST /invites/accept consumes the token AND sets the invitee's
-// password, then returns a full auth session ({ accessToken, refreshToken,
-// user }) so the new teammate lands signed in.
+// password (and marks the email verified), returning the user but NO session
+// tokens. The client then redirects to /login so the teammate signs in through
+// the normal flow (OWASP: don't auto-login off an emailed link).
 export interface AcceptInviteRequest {
   token: string;
   password: string;
@@ -95,8 +101,9 @@ export interface AcceptInviteRequest {
 
 // --- Email verification ---
 
-// POST /auth/verify-email — consumes the emailed token and returns a full
-// auth session (LoginResponse). 401 on invalid/expired/reused tokens.
+// POST /auth/verify-email — consumes the emailed token and marks the address
+// verified, returning the user but NO session tokens (the client redirects to
+// /login). 401 on invalid/expired/reused tokens.
 export interface VerifyEmailRequest {
   token: string;
 }

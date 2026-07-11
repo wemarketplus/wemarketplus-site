@@ -2,6 +2,8 @@ import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/app/hooks';
+import { useStartCheckout } from '@/modules/billing/hooks/useStartCheckout';
+import { clearPendingPlan, getPendingPlan } from '@/modules/onboarding';
 import { extractApiErrorMessage } from '../utils/errorUtils';
 import { useLoginMutation, useMfaVerifyMutation } from '../api/authApi';
 import { setCredentials } from '../store/authSlice';
@@ -13,6 +15,7 @@ export function useLogin() {
   const navigate = useNavigate();
   const [login, state] = useLoginMutation();
   const [mfaVerify, mfaState] = useMfaVerifyMutation();
+  const { startCheckout } = useStartCheckout();
   const { resend, isLoading: isResending } = useResendVerification();
   // Set when the backend rejects a correct password with 403
   // EMAIL_NOT_VERIFIED — the page swaps the generic error toast for a
@@ -22,8 +25,10 @@ export function useLogin() {
   // password form for a 6-digit code step. Cleared on cancel or success.
   const [mfaToken, setMfaToken] = useState<string | null>(null);
 
-  // Completes a login by storing the session and navigating home. Shared by the
-  // plain path and the MFA second step.
+  // Completes a login by storing the session and navigating on. Shared by the
+  // plain path and the MFA second step. If the visitor picked a plan in the
+  // pricing funnel (persisted through the verify-email round-trip), send them
+  // straight to Stripe Checkout for it; otherwise go home.
   const finish = useCallback(
     (result: LoginResponse) => {
       const user = result.user as AuthenticatedUser;
@@ -35,9 +40,17 @@ export function useLogin() {
         }),
       );
       toast.success(`Welcome back, ${user.firstName}`);
+      // Clear the stored choice first so a later, plan-less login can't inherit
+      // a stale plan. startCheckout redirects the browser to Stripe.
+      const pendingPlan = getPendingPlan();
+      if (pendingPlan) {
+        clearPendingPlan();
+        void startCheckout(pendingPlan);
+        return;
+      }
       navigate('/', { replace: true });
     },
-    [dispatch, navigate],
+    [dispatch, navigate, startCheckout],
   );
 
   const submit = useCallback(

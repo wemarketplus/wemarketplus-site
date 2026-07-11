@@ -19,6 +19,12 @@ export const Role = {
   Caregiver: 'caregiver',
   // Generic representative — scaffold default.
   Rep: 'rep',
+  // CommunityLink operational roles (see backend roles.enum.ts).
+  Director: 'director',
+  SalesAdmissions: 'sales_admissions',
+  OwnerInvestor: 'owner_investor',
+  Maintenance: 'maintenance',
+  Housekeeping: 'housekeeping',
 } as const;
 
 export type Role = (typeof Role)[keyof typeof Role];
@@ -32,4 +38,9 @@ export const ALL_ROLES: readonly Role[] = [
   Role.Nurse,
   Role.Caregiver,
   Role.Rep,
+  Role.Director,
+  Role.SalesAdmissions,
+  Role.OwnerInvestor,
+  Role.Maintenance,
+  Role.Housekeeping,
 ];

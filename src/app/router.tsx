@@ -3,9 +3,11 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { DashboardLayout } from '@/shared/ui/layout';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
 import { PublicRoute } from '@/routes/PublicRoute';
+import { RequireEntitlement } from '@/routes/RequireEntitlement';
+import { Tier } from '@/shared/types';
 import { RootRoute } from '@/routes/RootRoute';
 import { LEGACY_DEMO_REDIRECTS } from '@/shared/config/demoUrls';
-import { SUPER_ADMIN_ONLY } from '@/shared/rbac';
+import { SUPER_ADMIN_ONLY, ADMIN_ONLY, STAFF_ROLES, CL_MANAGEMENT_ROLES } from '@/shared/rbac';
 
 // --- Public auth funnel ---------------------------------------------------
 
@@ -422,14 +424,16 @@ export function AppRouter() {
           <Route path="outreach/checkin" element={<ClOutreachPage />} />
           <Route path="outreach/mileage" element={<ClOutreachPage />} />
           <Route path="outreach/log" element={<ClOutreachPage />} />
-          <Route path="operations/inventory" element={<ClOperationsPage />} />
-          <Route path="operations/make-ready" element={<ClOperationsPage />} />
-          <Route path="operations/maintenance" element={<ClOperationsPage />} />
-          <Route path="operations/housekeeping" element={<ClOperationsPage />} />
-          <Route path="financial/ledger" element={<ClFinancialPage />} />
-          <Route path="financial/leakage" element={<ClFinancialPage />} />
-          <Route path="financial/concessions" element={<ClFinancialPage />} />
-          <Route path="reports" element={<ClReportsPage />} />
+          {/* CommunityLink Operations — Gold tier and up (product-aware). */}
+          <Route path="operations/inventory" element={<RequireEntitlement minTier={Tier.Gold}><ClOperationsPage /></RequireEntitlement>} />
+          <Route path="operations/make-ready" element={<RequireEntitlement minTier={Tier.Gold}><ClOperationsPage /></RequireEntitlement>} />
+          <Route path="operations/maintenance" element={<RequireEntitlement minTier={Tier.Gold}><ClOperationsPage /></RequireEntitlement>} />
+          <Route path="operations/housekeeping" element={<RequireEntitlement minTier={Tier.Gold}><ClOperationsPage /></RequireEntitlement>} />
+          {/* CommunityLink Financial — Max tier only (top tier). */}
+          <Route path="financial/ledger" element={<RequireEntitlement minTier={Tier.Max}><ClFinancialPage /></RequireEntitlement>} />
+          <Route path="financial/leakage" element={<RequireEntitlement minTier={Tier.Max}><ClFinancialPage /></RequireEntitlement>} />
+          <Route path="financial/concessions" element={<RequireEntitlement minTier={Tier.Max}><ClFinancialPage /></RequireEntitlement>} />
+          <Route path="reports" element={<ProtectedRoute allow={CL_MANAGEMENT_ROLES}><ClReportsPage /></ProtectedRoute>} />
 
           {/* Grant CRM — contacts & employer companies */}
           <Route path="contacts" element={<ContactsPage />} />
@@ -448,15 +452,17 @@ export function AppRouter() {
           <Route path="training-providers" element={<TrainingProvidersPage />} />
           <Route path="documents" element={<DocumentsPage />} />
 
-          {/* Cross-product admin */}
-          <Route path="users" element={<UsersPage />} />
-          <Route path="permissions" element={<PermissionsPage />} />
+          {/* Cross-product admin. Role-guarded at the route level (not just
+              nav-hidden) so a lower role that types the URL is turned away to
+              "/" — which always renders the Dashboard, so there is no loop. */}
+          <Route path="users" element={<ProtectedRoute allow={STAFF_ROLES}><UsersPage /></ProtectedRoute>} />
+          <Route path="permissions" element={<ProtectedRoute allow={ADMIN_ONLY}><PermissionsPage /></ProtectedRoute>} />
           <Route path="notifications" element={<NotificationsPage />} />
           {/* Billing has two URL spellings — the site uses /subscription-status,
               the new app's chrome links to /billing. Both resolve. */}
           <Route path="billing" element={<SubscriptionStatusPage />} />
           <Route path="subscription-status" element={<SubscriptionStatusPage />} />
-          <Route path="settings" element={<SettingsPage />} />
+          <Route path="settings" element={<ProtectedRoute allow={ADMIN_ONLY}><SettingsPage /></ProtectedRoute>} />
           {/* Change-password is available both as the legacy site URL and the
               nested /account/password we already linked from settings. */}
           <Route path="change-password" element={<ChangePasswordPage />} />

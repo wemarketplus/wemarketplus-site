@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Loader2, MailX } from 'lucide-react';
+import { CheckCircle2, Loader2, MailX } from 'lucide-react';
 import { Button, Input } from '@/shared/ui/core';
 import { AuthCardShell } from '../components/AuthCardShell';
 import { AuthField } from '../components/AuthField';
@@ -60,6 +60,25 @@ export function VerifyEmailPage() {
         <div className="flex items-center justify-center gap-2.5 py-8 text-[13px] text-muted">
           <Loader2 className="h-4 w-4 animate-spin text-azure" />
           Verifying your email…
+        </div>
+      </AuthCardShell>
+    );
+  }
+
+  if (status === 'verified') {
+    return (
+      <AuthCardShell title="Email Verified" maxWidth={440} hideFooter>
+        <div className="py-5 text-center">
+          <CheckCircle2 className="mx-auto mb-3 h-10 w-10 text-azure" />
+          <h3 className="mb-2 font-extrabold">You're all set</h3>
+          <p className="text-[13px] leading-relaxed text-muted">
+            Your email is verified. Please sign in to continue.
+          </p>
+          <p className="mt-4">
+            <Link to="/login" className="font-bold text-azure no-underline hover:underline">
+              Continue to sign in →
+            </Link>
+          </p>
         </div>
       </AuthCardShell>
     );
