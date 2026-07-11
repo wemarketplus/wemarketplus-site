@@ -1,13 +1,6 @@
-import type { ComponentType } from 'react';
-
-export interface ClinicalFeature {
-  id: string;
-  title: string;
-  description: string;
-  icon: ComponentType<{ className?: string }>;
-  status: 'available' | 'beta' | 'coming_soon';
-}
-
+// UI-state placeholder for the clinical slice. The clinical screens are driven
+// by RTK Query (clinicalApi) + the shared entity kit, so no local slice state is
+// needed yet.
 export interface ClinicalUiState {
   _placeholder: true;
 }

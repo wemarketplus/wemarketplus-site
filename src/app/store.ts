@@ -25,16 +25,16 @@ import { fundingApi } from '@/modules/funding';
 import { trainingApi } from '@/modules/training-providers';
 import { wibsApi } from '@/modules/wibs';
 import { billingApi, billingReducer } from '@/modules/billing';
-import { clFinancialApi, clFinancialReducer } from '@/modules/cl-financial';
+import { clFinancialApi } from '@/modules/cl-financial';
 import { clDemoReducer } from '@/modules/cl-demo';
 import { goldDemoReducer } from '@/modules/cl-demo-gold';
 import { maxDemoReducer } from '@/modules/cl-demo-max';
-import { leadsApi as clLeadsApi, clLeadsReducer } from '@/modules/cl-leads';
+import { leadsApi as clLeadsApi } from '@/modules/cl-leads';
 import { clOperationsApi, clOperationsReducer } from '@/modules/cl-operations';
 import { clOutreachApi, clOutreachReducer } from '@/modules/cl-outreach';
-import { clReferralsApi, clReferralsReducer } from '@/modules/cl-referrals';
+import { clReferralsApi } from '@/modules/cl-referrals';
 import { clReportsReducer } from '@/modules/cl-reports';
-import { clToursApi, clToursReducer } from '@/modules/cl-tours';
+import { clToursApi } from '@/modules/cl-tours';
 import { clinicalApi, clinicalReducer } from '@/modules/clinical';
 import { companiesApi } from '@/modules/companies';
 import { complianceApi, complianceReducer } from '@/modules/compliance';
@@ -67,13 +67,9 @@ const rootReducer = combineReducers({
   auth: authReducer,
   billing: billingReducer,
   clDemo: clDemoReducer,
-  clFinancial: clFinancialReducer,
-  clLeads: clLeadsReducer,
   clOperations: clOperationsReducer,
   clOutreach: clOutreachReducer,
-  clReferrals: clReferralsReducer,
   clReports: clReportsReducer,
-  clTours: clToursReducer,
   clinical: clinicalReducer,
   compliance: complianceReducer,
   dashboard: dashboardReducer,

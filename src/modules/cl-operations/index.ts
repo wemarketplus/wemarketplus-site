@@ -18,5 +18,6 @@ export {
   useDeleteClMaintenanceMutation,
   useListClHousekeepingQuery,
   useCreateClHousekeepingMutation,
+  useUpdateClHousekeepingMutation,
   useDeleteClHousekeepingMutation,
 } from './api/clOperationsApi';

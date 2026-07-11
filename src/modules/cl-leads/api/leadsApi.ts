@@ -8,6 +8,24 @@ import type {
   UpdateClLeadRequest,
 } from '../types/clLeadApiTypes';
 
+// Server-side list params: pagination + optional free-text search + stage/urgency
+// equality filters (backend ClListQueryDto). Blank values are stripped before the
+// request so the DTO never sees empty strings.
+export interface ClLeadListParams extends PaginationParams {
+  search?: string;
+  stage?: string;
+  urgency?: string;
+}
+
+function cleanParams(params?: ClLeadListParams): Record<string, string | number> | undefined {
+  if (!params) return undefined;
+  const out: Record<string, string | number> = {};
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== '') out[key] = value;
+  }
+  return Object.keys(out).length ? out : undefined;
+}
+
 // CommunityLink leads — wemarketplus-backend/src/communitylink (cl/leads, cl/lead-notes).
 //   GET/POST/GET:id/PATCH/DELETE /cl/leads; GET /cl/lead-notes.
 export const leadsApi = createApi({
@@ -15,8 +33,8 @@ export const leadsApi = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ['ClLead', 'ClLeadNote'],
   endpoints: (build) => ({
-    listClLeads: build.query<PaginatedPayload<ClLeadRecord>, PaginationParams | void>({
-      query: (params) => ({ url: '/cl/leads', params: params ?? undefined }),
+    listClLeads: build.query<PaginatedPayload<ClLeadRecord>, ClLeadListParams | void>({
+      query: (params) => ({ url: '/cl/leads', params: cleanParams(params ?? undefined) }),
       transformResponse: (res: ApiEnvelope<PaginatedPayload<ClLeadRecord>>) => res.data,
       providesTags: ['ClLead'],
     }),

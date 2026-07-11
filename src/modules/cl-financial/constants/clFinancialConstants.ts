@@ -1,8 +1,15 @@
+import type { PillProps } from '@/shared/ui/data-display';
+import type { EntityField, EntitySelectOption } from '@/shared/ui/entity';
+import { CONCESSION_STATUS, type ConcessionStatus } from './clFinancialApiConstants';
+import type { ClFinancialUiState } from '../types/clFinancialTypes';
 import type {
-  ClFinancialUiState,
-  FinancialMonth,
-  FinancialTableProps,
-} from '../types/clFinancialTypes';
+  RevenueFormValues,
+  ConcessionFormValues,
+  CompetitorFormValues,
+  LocFormValues,
+} from '../schema/clFinancialSchema';
+
+export const CL_FINANCIAL_PAGE_SIZE = 20;
 
 export const FINANCIAL_VIEWS: ReadonlyArray<{
   value: ClFinancialUiState['view'];
@@ -11,18 +18,66 @@ export const FINANCIAL_VIEWS: ReadonlyArray<{
   { value: 'ledger', label: 'Ledger' },
   { value: 'leakage', label: 'Leakage' },
   { value: 'concessions', label: 'Concessions' },
+  { value: 'competitors', label: 'Competitors' },
+  { value: 'loc', label: 'LOC calculator' },
 ];
 
-export const FINANCIAL_HISTORY: readonly FinancialMonth[] = [
-  { month: 'Jan', revenue: 318000, concessions: 12000, leakage: 4200 },
-  { month: 'Feb', revenue: 331000, concessions: 14500, leakage: 3800 },
-  { month: 'Mar', revenue: 345000, concessions: 9800, leakage: 5100 },
-  { month: 'Apr', revenue: 361000, concessions: 11200, leakage: 4400 },
-  { month: 'May', revenue: 378000, concessions: 10800, leakage: 3950 },
-];
-
-export const HIGHLIGHT: Record<ClFinancialUiState['view'], FinancialTableProps['highlight']> = {
-  ledger: 'revenue',
-  leakage: 'leakage',
-  concessions: 'concessions',
+export const CONCESSION_STATUS_LABELS: Record<ConcessionStatus, string> = {
+  [CONCESSION_STATUS.Pending]: 'Pending',
+  [CONCESSION_STATUS.Approved]: 'Approved',
+  [CONCESSION_STATUS.Rejected]: 'Rejected',
 };
+
+export const CONCESSION_STATUS_PILL: Record<ConcessionStatus, PillProps['tone']> = {
+  [CONCESSION_STATUS.Pending]: 'y',
+  [CONCESSION_STATUS.Approved]: 'g',
+  [CONCESSION_STATUS.Rejected]: 'r',
+};
+
+export const CONCESSION_STATUS_OPTIONS: readonly EntitySelectOption[] = Object.entries(
+  CONCESSION_STATUS_LABELS,
+).map(([value, label]) => ({ value, label }));
+
+// Revenue category buckets (free-form varchar on the backend).
+export const REVENUE_CATEGORY_OPTIONS: readonly EntitySelectOption[] = [
+  { value: 'rent', label: 'Rent' },
+  { value: 'care_fees', label: 'Care fees' },
+  { value: 'community_fee', label: 'Community fee' },
+  { value: 'ancillary', label: 'Ancillary' },
+  { value: 'other', label: 'Other' },
+];
+
+// --- form field descriptors ---------------------------------------------
+
+export const REVENUE_FIELDS: ReadonlyArray<EntityField<RevenueFormValues>> = [
+  { name: 'entryDate', label: 'Entry date', type: 'date' },
+  { name: 'category', label: 'Category', type: 'select', options: REVENUE_CATEGORY_OPTIONS },
+  { name: 'amount', label: 'Amount', type: 'text', placeholder: '10800' },
+  { name: 'budgetAmount', label: 'Budgeted', type: 'text', placeholder: '11000' },
+  { name: 'description', label: 'Description', type: 'textarea', full: true, placeholder: 'Occupied units rent roll…' },
+];
+
+export const CONCESSION_FIELDS: ReadonlyArray<EntityField<ConcessionFormValues>> = [
+  { name: 'type', label: 'Concession type', full: true, placeholder: 'First month free' },
+  { name: 'valueAmount', label: 'Value', type: 'text', placeholder: '2000' },
+  { name: 'status', label: 'Status', type: 'select', options: CONCESSION_STATUS_OPTIONS },
+  { name: 'reason', label: 'Reason', type: 'textarea', full: true, placeholder: 'Competitive match, long-term lead…' },
+];
+
+export const COMPETITOR_FIELDS: ReadonlyArray<EntityField<CompetitorFormValues>> = [
+  { name: 'name', label: 'Community name', full: true, placeholder: 'Sunrise of Dallas' },
+  { name: 'city', label: 'City', placeholder: 'Dallas' },
+  { name: 'distanceMiles', label: 'Distance (mi)', type: 'text', placeholder: '3.5' },
+  { name: 'rateIl', label: 'IL rate', type: 'text', placeholder: '3800' },
+  { name: 'rateAl', label: 'AL rate', type: 'text', placeholder: '4800' },
+  { name: 'rateMc', label: 'MC rate', type: 'text', placeholder: '6200' },
+  { name: 'occupancyPct', label: 'Occupancy %', type: 'text', placeholder: '92' },
+  { name: 'notes', label: 'Notes', type: 'textarea', full: true, placeholder: 'Positioning, incentives…' },
+];
+
+export const LOC_FIELDS: ReadonlyArray<EntityField<LocFormValues>> = [
+  { name: 'level', label: 'Level', type: 'text', placeholder: '1' },
+  { name: 'label', label: 'Label', placeholder: 'Level 2 — Moderate assist' },
+  { name: 'addOnRate', label: 'Add-on rate', type: 'text', placeholder: '500' },
+  { name: 'description', label: 'Description', type: 'textarea', full: true, placeholder: 'What this level covers…' },
+];

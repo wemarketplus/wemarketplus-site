@@ -1,2 +1,72 @@
-// Reserved for apartment-status and ticket-creation form schemas.
-export {};
+import { z } from 'zod';
+import {
+  APARTMENT_STATUS,
+  HOUSEKEEPING_STATUS,
+  MAINTENANCE_STATUS,
+  MAKE_READY_STATUS,
+  TICKET_PRIORITY,
+} from '../constants/clOperationsApiConstants';
+
+const enumValues = (obj: Record<string, string>) =>
+  Object.values(obj) as [string, ...string[]];
+
+// Maintenance ticket form — mirrors POST /cl/maintenance-tickets. issue required.
+export const maintenanceSchema = z.object({
+  issue: z.string().min(1, 'Required').max(2000),
+  ticketNumber: z.string().max(200).optional().or(z.literal('')),
+  priority: z.enum(enumValues(TICKET_PRIORITY)),
+  status: z.enum(enumValues(MAINTENANCE_STATUS)),
+  reporterName: z.string().max(200).optional().or(z.literal('')),
+  resolution: z.string().max(2000).optional().or(z.literal('')),
+});
+export type MaintenanceFormValues = z.infer<typeof maintenanceSchema>;
+
+// Housekeeping task form — mirrors POST /cl/housekeeping-tasks. taskType required.
+export const housekeepingSchema = z.object({
+  taskType: z.string().min(1, 'Required').max(200),
+  area: z.string().max(200).optional().or(z.literal('')),
+  status: z.enum(enumValues(HOUSEKEEPING_STATUS)),
+  dueDate: z.string().optional().or(z.literal('')),
+});
+export type HousekeepingFormValues = z.infer<typeof housekeepingSchema>;
+
+// Apartment form — mirrors POST /cl/apartments. communityId + unitNumber required.
+export const apartmentSchema = z.object({
+  communityId: z.string().min(1, 'Pick a community'),
+  unitNumber: z.string().min(1, 'Required').max(200),
+  unitType: z.string().max(200).optional().or(z.literal('')),
+  status: z.enum(enumValues(APARTMENT_STATUS)),
+  residentName: z.string().max(200).optional().or(z.literal('')),
+  monthlyRate: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .refine((v) => !v || /^\d+(\.\d{1,2})?$/.test(v), 'Enter an amount like 4200'),
+  notes: z.string().max(2000).optional().or(z.literal('')),
+});
+export type ApartmentFormValues = z.infer<typeof apartmentSchema>;
+
+// Community form — mirrors POST /cl/communities. name required.
+export const communitySchema = z.object({
+  name: z.string().min(1, 'Required').max(200),
+  city: z.string().max(200).optional().or(z.literal('')),
+  state: z.string().max(200).optional().or(z.literal('')),
+  phone: z.string().max(200).optional().or(z.literal('')),
+  address: z.string().max(200).optional().or(z.literal('')),
+  totalUnits: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .refine((v) => !v || /^\d+$/.test(v), 'Whole number'),
+});
+export type CommunityFormValues = z.infer<typeof communitySchema>;
+
+// Make-ready task form — mirrors POST /cl/make-ready-tasks. apartmentId + taskName required.
+export const makeReadySchema = z.object({
+  apartmentId: z.string().min(1, 'Pick a unit'),
+  taskName: z.string().min(1, 'Required').max(200),
+  status: z.enum(enumValues(MAKE_READY_STATUS)),
+  dueDate: z.string().optional().or(z.literal('')),
+  notes: z.string().max(2000).optional().or(z.literal('')),
+});
+export type MakeReadyFormValues = z.infer<typeof makeReadySchema>;

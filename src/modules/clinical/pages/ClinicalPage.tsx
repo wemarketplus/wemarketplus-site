@@ -1,23 +1,34 @@
-import { ClinicalFeatureCard } from '../components/ClinicalFeatureCard';
-import { useClinicalFeatures } from '../hooks/useClinicalFeatures';
+import { useLocation } from 'react-router-dom';
+import { AdmissionsPage } from './AdmissionsPage';
+import { TelehealthPage } from './TelehealthPage';
 
+// The three /clinical/* routes all mount this component (see app/router.tsx), so
+// the active sub-view is derived from the pathname:
+//   /clinical/admissions -> bed-units CRUD
+//   /clinical/family     -> telehealth sessions (family visits framing)
+//   /clinical/messaging  -> telehealth sessions (care-team framing)
+// Each is a real list + create/edit/delete against the clinicalApi.
 export function ClinicalPage() {
-  const { features } = useClinicalFeatures();
+  const { pathname } = useLocation();
 
+  if (pathname.includes('/clinical/admissions')) {
+    return <AdmissionsPage />;
+  }
+
+  if (pathname.includes('/clinical/messaging')) {
+    return (
+      <TelehealthPage
+        title="Care-team telehealth"
+        subtitle={(total) => `${total} video visits coordinated with the care team`}
+      />
+    );
+  }
+
+  // Default (/clinical/family) — family-facing video visits.
   return (
-    <div className="space-y-6">
-      <header className="space-y-1">
-        <h1 className="font-display text-3xl text-foreground">Clinical workflows</h1>
-        <p className="text-sm text-muted">
-          Gold-tier features that connect marketing to the care team.
-        </p>
-      </header>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {features.map((f) => (
-          <ClinicalFeatureCard key={f.id} feature={f} />
-        ))}
-      </div>
-    </div>
+    <TelehealthPage
+      title="Family telehealth visits"
+      subtitle={(total) => `${total} scheduled video visits with families`}
+    />
   );
 }

@@ -14,13 +14,38 @@ import type {
 const env = <T>(res: ApiEnvelope<T>) => res.data;
 const list = <T>(res: ApiEnvelope<PaginatedPayload<T>>) => res.data;
 
+// Server-side list params: pagination + optional free-text search + type filter
+// (backend ClListQueryDto). Blank values are stripped before the request.
+export interface ClReferralListParams extends PaginationParams {
+  search?: string;
+  type?: string;
+}
+
+// Paid-referral list params: pagination + search + feeStatus (status) + urgency.
+export interface ClPaidReferralListParams extends PaginationParams {
+  search?: string;
+  status?: string;
+  urgency?: string;
+}
+
+function cleanParams(
+  params?: ClReferralListParams,
+): Record<string, string | number> | undefined {
+  if (!params) return undefined;
+  const out: Record<string, string | number> = {};
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== '') out[key] = value;
+  }
+  return Object.keys(out).length ? out : undefined;
+}
+
 export const clReferralsApi = createApi({
   reducerPath: 'clReferralsApi',
   baseQuery: baseQueryWithReauth,
   tagTypes: ['ClRefSource', 'ClPaidReferral'],
   endpoints: (build) => ({
-    listClReferralSources: build.query<PaginatedPayload<ClReferralSourceRecord>, PaginationParams | void>({
-      query: (p) => ({ url: '/cl/referral-sources', params: p ?? undefined }),
+    listClReferralSources: build.query<PaginatedPayload<ClReferralSourceRecord>, ClReferralListParams | void>({
+      query: (p) => ({ url: '/cl/referral-sources', params: cleanParams(p ?? undefined) }),
       transformResponse: list<ClReferralSourceRecord>,
       providesTags: ['ClRefSource'],
     }),
@@ -38,8 +63,8 @@ export const clReferralsApi = createApi({
       query: (id) => ({ url: `/cl/referral-sources/${id}`, method: 'DELETE' }),
       invalidatesTags: ['ClRefSource'],
     }),
-    listClPaidReferrals: build.query<PaginatedPayload<ClPaidReferralRecord>, PaginationParams | void>({
-      query: (p) => ({ url: '/cl/paid-referrals', params: p ?? undefined }),
+    listClPaidReferrals: build.query<PaginatedPayload<ClPaidReferralRecord>, ClPaidReferralListParams | void>({
+      query: (p) => ({ url: '/cl/paid-referrals', params: cleanParams(p ?? undefined) }),
       transformResponse: list<ClPaidReferralRecord>,
       providesTags: ['ClPaidReferral'],
     }),

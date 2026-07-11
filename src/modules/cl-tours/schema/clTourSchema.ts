@@ -1,9 +1,10 @@
 import { z } from 'zod';
 import { CL_TOUR_STATUS } from '../constants/clToursApiConstants';
 
-// Book-tour form — mirrors POST /cl/tours (CreateClTourRequest). scheduledAt is
-// the only field the backend requires; it comes from a datetime-local input.
-export const newTourSchema = z.object({
+// Book/edit-tour form — mirrors POST /cl/tours (CreateClTourRequest). scheduledAt
+// is the only field the backend requires; it comes from a datetime-local input.
+export const tourSchema = z.object({
+  leadId: z.string().optional().or(z.literal('')),
   scheduledAt: z.string().min(1, 'Pick a date and time'),
   status: z.enum([
     CL_TOUR_STATUS.Scheduled,
@@ -11,13 +12,9 @@ export const newTourSchema = z.object({
     CL_TOUR_STATUS.Cancelled,
     CL_TOUR_STATUS.NoShow,
   ]),
-  // Kept as a string to match the <input type="number"> register value; the
-  // hook parses it to a number before sending. Empty string means "unset".
-  durationMin: z
-    .string()
-    .optional()
-    .refine((v) => !v || (/^\d+$/.test(v) && Number(v) <= 600), 'Enter 0–600 minutes'),
-  notes: z.string().max(1000).optional(),
+  durationMin: z.string().min(1, 'Pick a duration'),
+  outcome: z.string().max(200).optional().or(z.literal('')),
+  notes: z.string().max(2000).optional().or(z.literal('')),
 });
 
-export type NewTourFormValues = z.infer<typeof newTourSchema>;
+export type TourFormValues = z.infer<typeof tourSchema>;

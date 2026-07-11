@@ -11,7 +11,14 @@ import type {
 // wires the input to react-hook-form; `type` picks the primitive. This keeps a
 // new module's create/edit form down to a schema plus a field array.
 
-export type EntityFieldType = 'text' | 'email' | 'tel' | 'number' | 'textarea' | 'select';
+export type EntityFieldType =
+  | 'text'
+  | 'email'
+  | 'tel'
+  | 'number'
+  | 'date'
+  | 'textarea'
+  | 'select';
 
 export interface EntitySelectOption {
   value: string;

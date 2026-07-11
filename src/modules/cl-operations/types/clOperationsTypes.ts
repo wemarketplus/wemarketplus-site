@@ -1,3 +1,3 @@
 export interface ClOperationsUiState {
-  view: 'inventory' | 'make-ready' | 'maintenance' | 'housekeeping';
+  view: 'communities' | 'inventory' | 'make-ready' | 'maintenance' | 'housekeeping';
 }

@@ -1,6 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQuery';
 import type { ApiEnvelope, PaginatedPayload, PaginationParams } from '@/shared/types';
+import { cleanListParams } from '@/shared/utils/queryParams';
 import type {
   ClApartmentRecord,
   ClCommunityRecord,
@@ -21,6 +22,12 @@ import type {
 const env = <T>(res: ApiEnvelope<T>) => res.data;
 const list = <T>(res: ApiEnvelope<PaginatedPayload<T>>) => res.data;
 
+// Server-side list params: pagination + search + status filter (ClListQueryDto).
+export interface OpsListParams extends PaginationParams {
+  search?: string;
+  status?: string;
+}
+
 export const clOperationsApi = createApi({
   reducerPath: 'clOperationsApi',
   baseQuery: baseQueryWithReauth,
@@ -37,9 +44,18 @@ export const clOperationsApi = createApi({
       transformResponse: env<ClCommunityRecord>,
       invalidatesTags: ['ClCommunity'],
     }),
+    updateClCommunity: build.mutation<ClCommunityRecord, { id: string; patch: Partial<CreateClCommunityRequest> }>({
+      query: ({ id, patch }) => ({ url: `/cl/communities/${id}`, method: 'PATCH', body: patch }),
+      transformResponse: env<ClCommunityRecord>,
+      invalidatesTags: ['ClCommunity'],
+    }),
+    deleteClCommunity: build.mutation<void, string>({
+      query: (id) => ({ url: `/cl/communities/${id}`, method: 'DELETE' }),
+      invalidatesTags: ['ClCommunity'],
+    }),
     // apartments
-    listClApartments: build.query<PaginatedPayload<ClApartmentRecord>, PaginationParams | void>({
-      query: (p) => ({ url: '/cl/apartments', params: p ?? undefined }),
+    listClApartments: build.query<PaginatedPayload<ClApartmentRecord>, OpsListParams | void>({
+      query: (p) => ({ url: '/cl/apartments', params: cleanListParams(p ?? undefined) }),
       transformResponse: list<ClApartmentRecord>,
       providesTags: ['ClApartment'],
     }),
@@ -58,8 +74,8 @@ export const clOperationsApi = createApi({
       invalidatesTags: ['ClApartment'],
     }),
     // make-ready tasks
-    listClMakeReady: build.query<PaginatedPayload<ClMakeReadyTaskRecord>, PaginationParams | void>({
-      query: (p) => ({ url: '/cl/make-ready-tasks', params: p ?? undefined }),
+    listClMakeReady: build.query<PaginatedPayload<ClMakeReadyTaskRecord>, OpsListParams | void>({
+      query: (p) => ({ url: '/cl/make-ready-tasks', params: cleanListParams(p ?? undefined) }),
       transformResponse: list<ClMakeReadyTaskRecord>,
       providesTags: ['ClMakeReady'],
     }),
@@ -78,8 +94,8 @@ export const clOperationsApi = createApi({
       invalidatesTags: ['ClMakeReady'],
     }),
     // maintenance tickets
-    listClMaintenance: build.query<PaginatedPayload<ClMaintenanceTicketRecord>, PaginationParams | void>({
-      query: (p) => ({ url: '/cl/maintenance-tickets', params: p ?? undefined }),
+    listClMaintenance: build.query<PaginatedPayload<ClMaintenanceTicketRecord>, OpsListParams | void>({
+      query: (p) => ({ url: '/cl/maintenance-tickets', params: cleanListParams(p ?? undefined) }),
       transformResponse: list<ClMaintenanceTicketRecord>,
       providesTags: ['ClMaintenance'],
     }),
@@ -98,13 +114,18 @@ export const clOperationsApi = createApi({
       invalidatesTags: ['ClMaintenance'],
     }),
     // housekeeping tasks
-    listClHousekeeping: build.query<PaginatedPayload<ClHousekeepingTaskRecord>, PaginationParams | void>({
-      query: (p) => ({ url: '/cl/housekeeping-tasks', params: p ?? undefined }),
+    listClHousekeeping: build.query<PaginatedPayload<ClHousekeepingTaskRecord>, OpsListParams | void>({
+      query: (p) => ({ url: '/cl/housekeeping-tasks', params: cleanListParams(p ?? undefined) }),
       transformResponse: list<ClHousekeepingTaskRecord>,
       providesTags: ['ClHousekeeping'],
     }),
     createClHousekeeping: build.mutation<ClHousekeepingTaskRecord, CreateClHousekeepingTaskRequest>({
       query: (body) => ({ url: '/cl/housekeeping-tasks', method: 'POST', body }),
+      transformResponse: env<ClHousekeepingTaskRecord>,
+      invalidatesTags: ['ClHousekeeping'],
+    }),
+    updateClHousekeeping: build.mutation<ClHousekeepingTaskRecord, { id: string; patch: Partial<CreateClHousekeepingTaskRequest> }>({
+      query: ({ id, patch }) => ({ url: `/cl/housekeeping-tasks/${id}`, method: 'PATCH', body: patch }),
       transformResponse: env<ClHousekeepingTaskRecord>,
       invalidatesTags: ['ClHousekeeping'],
     }),
@@ -118,6 +139,8 @@ export const clOperationsApi = createApi({
 export const {
   useListClCommunitiesQuery,
   useCreateClCommunityMutation,
+  useUpdateClCommunityMutation,
+  useDeleteClCommunityMutation,
   useListClApartmentsQuery,
   useCreateClApartmentMutation,
   useUpdateClApartmentMutation,
@@ -132,5 +155,6 @@ export const {
   useDeleteClMaintenanceMutation,
   useListClHousekeepingQuery,
   useCreateClHousekeepingMutation,
+  useUpdateClHousekeepingMutation,
   useDeleteClHousekeepingMutation,
 } = clOperationsApi;

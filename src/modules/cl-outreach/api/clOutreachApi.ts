@@ -1,12 +1,19 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQuery';
 import type { ApiEnvelope, PaginatedPayload, PaginationParams } from '@/shared/types';
+import { cleanListParams } from '@/shared/utils/queryParams';
 import type {
   ClOutreachVisitRecord,
   ClTaskRecord,
   CreateClOutreachVisitRequest,
   CreateClTaskRequest,
 } from '../types/clOutreachApiTypes';
+
+// Server-side list params: pagination + search + type filter (ClListQueryDto).
+export interface ClVisitListParams extends PaginationParams {
+  search?: string;
+  type?: string;
+}
 
 // CommunityLink outreach — wemarketplus-backend cl/outreach-visits, cl/tasks.
 //   GET/POST/GET:id/PATCH/DELETE  /cl/outreach-visits
@@ -19,8 +26,8 @@ export const clOutreachApi = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ['ClVisit', 'ClTask'],
   endpoints: (build) => ({
-    listClVisits: build.query<PaginatedPayload<ClOutreachVisitRecord>, PaginationParams | void>({
-      query: (p) => ({ url: '/cl/outreach-visits', params: p ?? undefined }),
+    listClVisits: build.query<PaginatedPayload<ClOutreachVisitRecord>, ClVisitListParams | void>({
+      query: (p) => ({ url: '/cl/outreach-visits', params: cleanListParams(p ?? undefined) }),
       transformResponse: list<ClOutreachVisitRecord>,
       providesTags: ['ClVisit'],
     }),

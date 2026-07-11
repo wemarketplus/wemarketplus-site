@@ -1,35 +1,83 @@
-import { Plus } from 'lucide-react';
-import { Button } from '@/shared/ui/core';
-import { ToursList } from '../components/ToursList';
-import { BookTourModal } from '../components/BookTourModal';
-import { useTours } from '../hooks/useTours';
-import { useBookTour } from '../hooks/useBookTour';
+import { useRole, STAFF_ROLES } from '@/shared/rbac';
+import { EntityListPage, EntityPagination } from '@/shared/ui/entity';
+import { ToursFilters } from '../components/ToursFilters';
+import { ToursTable } from '../components/ToursTable';
+import { TourFormModal } from '../components/TourFormModal';
+import { useToursPage } from '../hooks/useToursPage';
 
 export function ClToursPage() {
-  const { tours, isUsingFixture } = useTours();
-  const { open, isSaving, openModal, close, submit } = useBookTour();
+  const {
+    rows,
+    total,
+    page,
+    lastPage,
+    isLoading,
+    isFetching,
+    error,
+    prevPage,
+    nextPage,
+    search,
+    setSearch,
+    status,
+    setStatus,
+    hasFilters,
+    leadName,
+    leadOptions,
+    isMutating,
+    crud,
+    submit,
+    changeStatus,
+  } = useToursPage();
+
+  const { isAny } = useRole();
+  const canEdit = isAny(STAFF_ROLES);
 
   return (
-    <div className="space-y-6">
-      <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="font-display text-3xl text-foreground">Tour scheduler</h1>
-          <p className="text-sm text-muted">
-            {tours.length} upcoming tours
-            {isUsingFixture && (
-              <span className="ml-2 rounded-pill bg-white/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-[0.1em] text-muted-soft">
-                Preview data
-              </span>
-            )}
-          </p>
-        </div>
-        <Button onClick={openModal}>
-          <Plus className="h-4 w-4" /> Book tour
-        </Button>
-      </header>
-      <ToursList tours={tours} />
+    <EntityListPage
+      title="Tour scheduler"
+      subtitle={`${total} community tours`}
+      addLabel="Book Tour"
+      onAdd={canEdit ? crud.openCreate : undefined}
+      isLoading={isLoading}
+      error={error}
+      errorFallback="Failed to load tours"
+      filters={
+        <ToursFilters
+          search={search}
+          status={status}
+          onSearch={setSearch}
+          onStatus={setStatus}
+        />
+      }
+      pagination={
+        <EntityPagination
+          page={page}
+          lastPage={lastPage}
+          isFetching={isFetching}
+          onPrev={prevPage}
+          onNext={nextPage}
+        />
+      }
+    >
+      <ToursTable
+        tours={rows}
+        isMutating={isMutating}
+        hasFilters={hasFilters}
+        leadName={leadName}
+        onEdit={crud.openEdit}
+        onDelete={crud.confirmDelete}
+        onStatusChange={changeStatus}
+        onAdd={canEdit ? crud.openCreate : undefined}
+      />
 
-      <BookTourModal open={open} isSaving={isSaving} onClose={close} onSubmit={submit} />
-    </div>
+      <TourFormModal
+        open={crud.createOpen || crud.editing !== null}
+        isSaving={crud.isSaving}
+        editing={crud.editing}
+        leadOptions={leadOptions}
+        onClose={crud.editing ? crud.closeEdit : crud.closeCreate}
+        onSubmit={submit}
+      />
+    </EntityListPage>
   );
 }

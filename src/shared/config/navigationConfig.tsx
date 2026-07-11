@@ -203,7 +203,9 @@ const COMMUNITYLINK_SALES: NavSection = {
   label: 'Sales & outreach',
   items: [
     { to: '/leads', label: 'Lead pipeline', icon: LineChart, product: Product.CommunityLink, allow: CL_SALES_ROLES },
+    { to: '/tasks', label: 'Tasks', icon: ClipboardList, product: Product.CommunityLink, allow: CL_SALES_ROLES },
     { to: '/cl-referrals', label: 'Referral sources', icon: Heart, product: Product.CommunityLink, allow: CL_SALES_ROLES },
+    { to: '/paid-referrals', label: 'Paid referral portal', icon: Heart, product: Product.CommunityLink, allow: CL_SALES_ROLES },
     { to: '/tours', label: 'Tour scheduler', icon: Calendar, product: Product.CommunityLink, allow: CL_SALES_ROLES },
     // GPS / Mileage / Outreach log are the Pro-tier field-outreach tools. Gold
     // and Max streamline the sidebar and drop them (maxTier: Pro).
@@ -222,6 +224,7 @@ const COMMUNITYLINK_OPERATIONS: NavSection = {
     // Per-role visibility mirrors the demo: management + Sales/Admissions see
     // all of Operations; each field role sees only its own module plus the
     // shared make-ready board.
+    { to: '/operations/communities', label: 'Communities', icon: Building2, product: Product.CommunityLink, minTier: Tier.Gold, allow: CL_INVENTORY_ROLES },
     { to: '/operations/inventory', label: 'Apartment inventory', icon: Building2, product: Product.CommunityLink, minTier: Tier.Gold, allow: CL_INVENTORY_ROLES },
     { to: '/operations/make-ready', label: 'Make-ready board', icon: ClipboardList, product: Product.CommunityLink, minTier: Tier.Gold, allow: CL_MAKE_READY_ROLES },
     { to: '/operations/maintenance', label: 'Maintenance', icon: Wrench, product: Product.CommunityLink, minTier: Tier.Gold, allow: CL_MAINTENANCE_ROLES },
@@ -239,6 +242,9 @@ const COMMUNITYLINK_FINANCIAL: NavSection = {
     // (per the Max demo). Reports is available from Pro upward to management.
     { to: '/financial/ledger', label: 'Financial ledger', icon: TrendingUp, product: Product.CommunityLink, allow: CL_FINANCIAL_ROLES, minTier: Tier.Max },
     { to: '/financial/leakage', label: 'Revenue leakage', icon: Activity, product: Product.CommunityLink, allow: CL_FINANCIAL_ROLES, minTier: Tier.Max },
+    { to: '/financial/concessions', label: 'Concession approvals', icon: TrendingUp, product: Product.CommunityLink, allow: CL_FINANCIAL_ROLES, minTier: Tier.Max },
+    { to: '/financial/competitors', label: 'Competitor intel', icon: Activity, product: Product.CommunityLink, allow: CL_FINANCIAL_ROLES, minTier: Tier.Max },
+    { to: '/financial/loc', label: 'LOC calculator', icon: TrendingUp, product: Product.CommunityLink, allow: CL_FINANCIAL_ROLES, minTier: Tier.Max },
     { to: '/reports', label: 'Reports', icon: ScrollText, product: Product.CommunityLink, allow: CL_MANAGEMENT_ROLES },
   ],
 };

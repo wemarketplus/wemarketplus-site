@@ -1,6 +1,5 @@
 import type { ID, ISODateString } from '@/shared/types';
 import type { ClTourStatus } from '../constants/clToursApiConstants';
-import type { NewTourFormValues } from '../schema/clTourSchema';
 
 // Backend record shapes for CommunityLink tours (wemarketplus-backend cl/tours).
 export interface ClTourRecord {
@@ -28,13 +27,3 @@ export interface CreateClTourRequest {
 }
 
 export type UpdateClTourRequest = Partial<CreateClTourRequest>;
-
-// --- Component prop types ---
-
-export interface BookTourModalProps {
-  open: boolean;
-  isSaving: boolean;
-  onClose: () => void;
-  // Returns true when the create succeeded, so the form can reset.
-  onSubmit: (values: NewTourFormValues) => Promise<boolean>;
-}

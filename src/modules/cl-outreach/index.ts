@@ -11,3 +11,10 @@ export {
   useUpdateClTaskMutation,
   useDeleteClTaskMutation,
 } from './api/clOutreachApi';
+export {
+  CL_TASK_STATUS,
+  TICKET_PRIORITY,
+  type ClTaskStatus,
+  type TicketPriority,
+} from './constants/clOutreachApiConstants';
+export type { ClTaskRecord, CreateClTaskRequest } from './types/clOutreachApiTypes';

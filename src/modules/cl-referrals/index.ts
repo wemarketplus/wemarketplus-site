@@ -1,5 +1,5 @@
 export { ClReferralsPage } from './pages/ClReferralsPage';
-export { default as clReferralsReducer } from './store/clReferralsSlice';
+export { PaidReferralsPage } from './pages/PaidReferralsPage';
 export {
   clReferralsApi,
   useListClReferralSourcesQuery,

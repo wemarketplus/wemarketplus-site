@@ -1,27 +1,40 @@
-import type { ClReferralSourceRecord } from '../types/clReferralsApiTypes';
-import type { SeniorLivingReferral } from '../types/clReferralsTypes';
+import { opt } from '@/shared/ui/entity';
+import type {
+  ClReferralSourceRecord,
+  CreateClReferralSourceRequest,
+} from '../types/clReferralsApiTypes';
+import type { ReferralFormValues } from '../schema/clReferralSchema';
 
-// Map a backend referral source onto the UI's SeniorLivingReferral. The backend
-// `type` is free-form; bucket it into the UI's source categories. Pure mappers —
-// kept in utils/ so the hook stays orchestration-only.
-function mapSource(type: string | null): SeniorLivingReferral['source'] {
-  const t = (type ?? '').toLowerCase();
-  if (t.includes('physician') || t.includes('doctor')) return 'physician';
-  if (t.includes('hospital')) return 'hospital';
-  if (t.includes('family')) return 'family';
-  if (t.includes('web') || t.includes('online')) return 'web';
-  return 'community';
+// Form values -> POST /cl/referral-sources body. Drops blank optionals so the
+// DTO's IsEmail rule never sees an empty string.
+export function toCreateReferral(values: ReferralFormValues): CreateClReferralSourceRequest {
+  return {
+    name: values.name.trim(),
+    ...opt('organization', values.organization),
+    ...opt('type', values.type),
+    ...opt('phone', values.phone),
+    ...opt('email', values.email),
+    ...opt('address', values.address),
+    ...opt('notes', values.notes),
+  };
 }
 
-export function toSeniorLivingReferral(r: ClReferralSourceRecord): SeniorLivingReferral {
+// PATCH body is the same partial shape; the backend accepts any subset.
+export function toUpdateReferral(
+  values: ReferralFormValues,
+): Partial<CreateClReferralSourceRequest> {
+  return toCreateReferral(values);
+}
+
+// Seeds the edit form from an existing record (nulls -> '').
+export function toReferralFormValues(r: ClReferralSourceRecord): ReferralFormValues {
   return {
-    id: r.id,
     name: r.name,
     organization: r.organization ?? '',
-    email: r.email ?? '',
+    type: (r.type ?? 'physician') as ReferralFormValues['type'],
     phone: r.phone ?? '',
-    source: mapSource(r.type),
-    rating: 3,
-    notes: r.notes ?? undefined,
+    email: r.email ?? '',
+    address: r.address ?? '',
+    notes: r.notes ?? '',
   };
 }

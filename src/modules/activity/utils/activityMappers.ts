@@ -1,4 +1,22 @@
-import type { DailyGoal, GoalRecord, NoteRecord, TaskRecord } from '../types/activityTypes';
+import { opt } from '@/shared/ui/entity';
+import type {
+  CreateGoalRequest,
+  CreateNoteRequest,
+  CreateTaskRequest,
+  DailyGoal,
+  GoalPeriod,
+  GoalRecord,
+  NoteRecord,
+  TaskPriority,
+  TaskRecord,
+  TaskStatus,
+  UpdateGoalRequest,
+  UpdateNoteRequest,
+  UpdateTaskRequest,
+} from '../types/activityTypes';
+import type { GoalFormValues } from '../schema/goalSchema';
+import type { NoteFormValues } from '../schema/noteSchema';
+import type { TaskFormValues } from '../schema/taskSchema';
 import type { ProspectNote, Reminder, Urgency } from '@/shared/types';
 
 // Pure mappers from backend records onto the activity-page view-models.
@@ -8,8 +26,10 @@ export function toDailyGoal(g: GoalRecord): DailyGoal {
   return {
     id: g.id,
     label: g.title,
-    current: g.currentValue,
-    target: g.targetValue,
+    // Postgres numeric columns arrive as strings via TypeORM; coerce so the
+    // progress math (computeGoalProgress) operates on real numbers.
+    current: Number(g.currentValue),
+    target: Number(g.targetValue),
   };
 }
 
@@ -56,5 +76,93 @@ export function toReminder(t: TaskRecord): Reminder {
     dueStatus: dueStatus(t.dueDate as string),
     dueDate: t.dueDate as string,
     marketerId: t.assignedTo ?? '',
+  };
+}
+
+// --- Form <-> DTO mappers (create/edit) ------------------------------------
+// `opt`/`optNum` drop blank optionals so the backend's whitelist + Matches(ISO)
+// rules never receive an empty string.
+
+// Notes -----------------------------------------------------------------
+export function toCreateNote(v: NoteFormValues): CreateNoteRequest {
+  return {
+    prospectId: v.prospectId.trim(),
+    summary: v.summary.trim(),
+    urgency: v.urgency,
+    ...opt('contactType', v.contactType),
+    ...opt('patientStatus', v.patientStatus),
+    ...opt('barriers', v.barriers),
+    ...opt('nextStep', v.nextStep),
+    ...opt('followUpDate', v.followUpDate),
+  };
+}
+
+// Backend UpdateNoteDto excludes prospectId (a note can't be reparented).
+export function toUpdateNote(v: NoteFormValues): UpdateNoteRequest {
+  const { prospectId: _prospectId, ...rest } = toCreateNote(v);
+  return rest;
+}
+
+export function toNoteFormValues(n: NoteRecord): NoteFormValues {
+  return {
+    prospectId: n.prospectId,
+    summary: n.summary,
+    contactType: n.contactType ?? '',
+    urgency: n.urgency,
+    patientStatus: n.patientStatus ?? '',
+    barriers: n.barriers ?? '',
+    nextStep: n.nextStep ?? '',
+    followUpDate: n.followUpDate ?? '',
+  };
+}
+
+// Tasks -----------------------------------------------------------------
+export function toCreateTask(v: TaskFormValues): CreateTaskRequest {
+  return {
+    title: v.title.trim(),
+    priority: v.priority as TaskPriority,
+    status: v.status as TaskStatus,
+    ...opt('description', v.description),
+    ...opt('dueDate', v.dueDate),
+  };
+}
+
+export function toUpdateTask(v: TaskFormValues): UpdateTaskRequest {
+  return toCreateTask(v);
+}
+
+export function toTaskFormValues(t: TaskRecord): TaskFormValues {
+  return {
+    title: t.title,
+    description: t.description ?? '',
+    dueDate: t.dueDate ?? '',
+    priority: t.priority,
+    status: t.status,
+  };
+}
+
+// Goals -----------------------------------------------------------------
+export function toCreateGoal(v: GoalFormValues): CreateGoalRequest {
+  return {
+    title: v.title.trim(),
+    targetValue: v.targetValue,
+    currentValue: v.currentValue,
+    period: v.period as GoalPeriod,
+    ...opt('unit', v.unit),
+  };
+}
+
+export function toUpdateGoal(v: GoalFormValues): UpdateGoalRequest {
+  return toCreateGoal(v);
+}
+
+export function toGoalFormValues(g: GoalRecord): GoalFormValues {
+  return {
+    title: g.title,
+    // Coerce the Postgres-string numerics back to numbers for the form.
+    targetValue: Number(g.targetValue),
+    currentValue: Number(g.currentValue),
+    unit: g.unit ?? '',
+    period: g.period,
   };
 }

@@ -1,11 +1,18 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQuery';
 import type { ApiEnvelope, PaginatedPayload, PaginationParams } from '@/shared/types';
+import { cleanListParams } from '@/shared/utils/queryParams';
 import type {
   ClTourRecord,
   CreateClTourRequest,
   UpdateClTourRequest,
 } from '../types/clToursApiTypes';
+
+// Server-side list params: pagination + search + status filter (ClListQueryDto).
+export interface ClTourListParams extends PaginationParams {
+  search?: string;
+  status?: string;
+}
 
 // CommunityLink tours — wemarketplus-backend cl/tours (uniform CRUD).
 //   GET/POST/GET:id/PATCH/DELETE /cl/tours
@@ -14,8 +21,8 @@ export const clToursApi = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ['ClTour'],
   endpoints: (build) => ({
-    listClTours: build.query<PaginatedPayload<ClTourRecord>, PaginationParams | void>({
-      query: (params) => ({ url: '/cl/tours', params: params ?? undefined }),
+    listClTours: build.query<PaginatedPayload<ClTourRecord>, ClTourListParams | void>({
+      query: (params) => ({ url: '/cl/tours', params: cleanListParams(params ?? undefined) }),
       transformResponse: (res: ApiEnvelope<PaginatedPayload<ClTourRecord>>) => res.data,
       providesTags: ['ClTour'],
     }),

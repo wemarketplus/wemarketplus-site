@@ -6,7 +6,7 @@ export interface FinancialMonth {
 }
 
 export interface ClFinancialUiState {
-  view: 'ledger' | 'leakage' | 'concessions';
+  view: 'ledger' | 'leakage' | 'concessions' | 'competitors' | 'loc';
 }
 
 // --- Component prop types ---

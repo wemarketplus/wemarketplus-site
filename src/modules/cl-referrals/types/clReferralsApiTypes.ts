@@ -12,6 +12,7 @@ export interface ClReferralSourceRecord {
   phone: string | null;
   email: string | null;
   address: string | null;
+  referralCount: number;
   lastReferralDate: string | null;
   notes: string | null;
   createdAt: ISODateString;

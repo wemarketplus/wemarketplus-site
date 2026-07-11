@@ -4,13 +4,20 @@ import type { ClOperationsUiState } from '../types/clOperationsTypes';
 type View = ClOperationsUiState['view'];
 
 const PATH_BY_VIEW: Record<View, string> = {
+  communities: '/operations/communities',
   inventory: '/operations/inventory',
   'make-ready': '/operations/make-ready',
   maintenance: '/operations/maintenance',
   housekeeping: '/operations/housekeeping',
 };
 
-const VIEWS: readonly View[] = ['inventory', 'make-ready', 'maintenance', 'housekeeping'];
+const VIEWS: readonly View[] = [
+  'communities',
+  'inventory',
+  'make-ready',
+  'maintenance',
+  'housekeeping',
+];
 
 // Each operations sub-page is its own route, so the active view comes from the
 // URL and changing it navigates — every sidebar link lands on its own view

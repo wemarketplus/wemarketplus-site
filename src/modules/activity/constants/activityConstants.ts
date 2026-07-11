@@ -1,5 +1,11 @@
 import { Calendar, ScrollText, Pin, Goal } from 'lucide-react';
+import type { EntityField, EntitySelectOption } from '@/shared/ui/entity';
+import { Urgency } from '@/shared/types';
+import { TaskPriority, TaskStatus } from '../types/activityTypes';
 import type { ActivityUiState, DailyGoal } from '../types/activityTypes';
+import type { NoteFormValues } from '../schema/noteSchema';
+import type { TaskFormValues } from '../schema/taskSchema';
+import type { GoalFormValues } from '../schema/goalSchema';
 
 export const ACTIVITY_TABS: ReadonlyArray<{
   value: ActivityUiState['activeTab'];
@@ -37,3 +43,62 @@ export const REMINDER_BUCKET_TONE: Record<
   today: 'border-warning/30 bg-warning/10 text-warning',
   this_week: 'border-azure/30 bg-azure/10 text-azure',
 };
+
+// --- Create/edit form option lists + field descriptors ---------------------
+
+const URGENCY_OPTIONS: readonly EntitySelectOption[] = [
+  { value: Urgency.Hot, label: 'Hot' },
+  { value: Urgency.Warm, label: 'Warm' },
+  { value: Urgency.Cold, label: 'Cold' },
+];
+
+const TASK_PRIORITY_OPTIONS: readonly EntitySelectOption[] = [
+  { value: TaskPriority.Urgent, label: 'Urgent' },
+  { value: TaskPriority.High, label: 'High' },
+  { value: TaskPriority.Medium, label: 'Medium' },
+  { value: TaskPriority.Low, label: 'Low' },
+];
+
+const TASK_STATUS_OPTIONS: readonly EntitySelectOption[] = [
+  { value: TaskStatus.Pending, label: 'Pending' },
+  { value: TaskStatus.InProgress, label: 'In progress' },
+  { value: TaskStatus.Completed, label: 'Completed' },
+  { value: TaskStatus.Cancelled, label: 'Cancelled' },
+];
+
+const GOAL_PERIOD_OPTIONS: readonly EntitySelectOption[] = [
+  { value: 'daily', label: 'Daily' },
+  { value: 'weekly', label: 'Weekly' },
+  { value: 'monthly', label: 'Monthly' },
+  { value: 'quarterly', label: 'Quarterly' },
+  { value: 'yearly', label: 'Yearly' },
+];
+
+// Notes: prospectId is a raw UUID field (the reminders/notes tabs do not yet
+// have a prospect picker, so it is entered directly).
+export const NOTE_FIELDS: ReadonlyArray<EntityField<NoteFormValues>> = [
+  { name: 'prospectId', label: 'Prospect id', full: true, placeholder: 'Prospect UUID' },
+  { name: 'summary', label: 'Summary', type: 'textarea', full: true, placeholder: 'What happened on this interaction…' },
+  { name: 'contactType', label: 'Contact type', placeholder: 'Call, Visit, Email…' },
+  { name: 'urgency', label: 'Urgency', type: 'select', options: URGENCY_OPTIONS },
+  { name: 'patientStatus', label: 'Status', placeholder: 'Current status' },
+  { name: 'followUpDate', label: 'Follow-up date', type: 'date' },
+  { name: 'barriers', label: 'Barriers', type: 'textarea', full: true, placeholder: 'Obstacles to conversion…' },
+  { name: 'nextStep', label: 'Next step', type: 'textarea', full: true, placeholder: 'What to do next…' },
+];
+
+export const TASK_FIELDS: ReadonlyArray<EntityField<TaskFormValues>> = [
+  { name: 'title', label: 'Title', full: true, placeholder: 'Follow up with prospect' },
+  { name: 'description', label: 'Description', type: 'textarea', full: true, placeholder: 'Details…' },
+  { name: 'dueDate', label: 'Due date', type: 'date' },
+  { name: 'priority', label: 'Priority', type: 'select', options: TASK_PRIORITY_OPTIONS },
+  { name: 'status', label: 'Status', type: 'select', options: TASK_STATUS_OPTIONS },
+];
+
+export const GOAL_FIELDS: ReadonlyArray<EntityField<GoalFormValues>> = [
+  { name: 'title', label: 'Title', full: true, placeholder: 'Facility visits' },
+  { name: 'targetValue', label: 'Target', type: 'number', placeholder: '6' },
+  { name: 'currentValue', label: 'Current', type: 'number', placeholder: '0' },
+  { name: 'unit', label: 'Unit', placeholder: 'count, visits, calls…' },
+  { name: 'period', label: 'Period', type: 'select', options: GOAL_PERIOD_OPTIONS },
+];

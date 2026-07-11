@@ -14,5 +14,5 @@ export function useOutreach() {
     [data],
   );
 
-  return { checkIns, mileage, log: checkIns, isUsingFixture: false };
+  return { checkIns, mileage };
 }

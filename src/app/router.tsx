@@ -199,8 +199,14 @@ const LeadsPage = lazy(() =>
 const ClReferralsPage = lazy(() =>
   import('@/modules/cl-referrals').then((m) => ({ default: m.ClReferralsPage })),
 );
+const PaidReferralsPage = lazy(() =>
+  import('@/modules/cl-referrals').then((m) => ({ default: m.PaidReferralsPage })),
+);
 const ClToursPage = lazy(() =>
   import('@/modules/cl-tours').then((m) => ({ default: m.ClToursPage })),
+);
+const TasksPage = lazy(() =>
+  import('@/modules/cl-tasks').then((m) => ({ default: m.TasksPage })),
 );
 const ClOutreachPage = lazy(() =>
   import('@/modules/cl-outreach').then((m) => ({ default: m.ClOutreachPage })),
@@ -420,11 +426,14 @@ export function AppRouter() {
           {/* CommunityLink */}
           <Route path="leads" element={<LeadsPage />} />
           <Route path="cl-referrals" element={<ClReferralsPage />} />
+          <Route path="paid-referrals" element={<PaidReferralsPage />} />
           <Route path="tours" element={<ClToursPage />} />
+          <Route path="tasks" element={<TasksPage />} />
           <Route path="outreach/checkin" element={<ClOutreachPage />} />
           <Route path="outreach/mileage" element={<ClOutreachPage />} />
           <Route path="outreach/log" element={<ClOutreachPage />} />
           {/* CommunityLink Operations — Gold tier and up (product-aware). */}
+          <Route path="operations/communities" element={<RequireEntitlement minTier={Tier.Gold}><ClOperationsPage /></RequireEntitlement>} />
           <Route path="operations/inventory" element={<RequireEntitlement minTier={Tier.Gold}><ClOperationsPage /></RequireEntitlement>} />
           <Route path="operations/make-ready" element={<RequireEntitlement minTier={Tier.Gold}><ClOperationsPage /></RequireEntitlement>} />
           <Route path="operations/maintenance" element={<RequireEntitlement minTier={Tier.Gold}><ClOperationsPage /></RequireEntitlement>} />
@@ -433,6 +442,8 @@ export function AppRouter() {
           <Route path="financial/ledger" element={<RequireEntitlement minTier={Tier.Max}><ClFinancialPage /></RequireEntitlement>} />
           <Route path="financial/leakage" element={<RequireEntitlement minTier={Tier.Max}><ClFinancialPage /></RequireEntitlement>} />
           <Route path="financial/concessions" element={<RequireEntitlement minTier={Tier.Max}><ClFinancialPage /></RequireEntitlement>} />
+          <Route path="financial/competitors" element={<RequireEntitlement minTier={Tier.Max}><ClFinancialPage /></RequireEntitlement>} />
+          <Route path="financial/loc" element={<RequireEntitlement minTier={Tier.Max}><ClFinancialPage /></RequireEntitlement>} />
           <Route path="reports" element={<ProtectedRoute allow={CL_MANAGEMENT_ROLES}><ClReportsPage /></ProtectedRoute>} />
 
           {/* Grant CRM — contacts & employer companies */}

@@ -1,55 +1,84 @@
-import { Plus } from 'lucide-react';
-import { Button } from '@/shared/ui/core';
-import { cn } from '@/shared/utils/cn';
-import { CHIPS } from '../constants/leadsConstants';
+import { useRole, STAFF_ROLES } from '@/shared/rbac';
+import { EntityListPage, EntityPagination } from '@/shared/ui/entity';
+import { LeadsFilters } from '../components/LeadsFilters';
 import { LeadsTable } from '../components/LeadsTable';
-import { AddLeadModal } from '../components/AddLeadModal';
-import { useLeadsList } from '../hooks/useLeadsList';
+import { LeadFormModal } from '../components/LeadFormModal';
 import { useLeadsPage } from '../hooks/useLeadsPage';
 
 export function LeadsPage() {
-  const { status, setFilter, openModal } = useLeadsPage();
-  const { leads, total, isUsingFixture } = useLeadsList();
+  const {
+    rows,
+    total,
+    page,
+    lastPage,
+    isLoading,
+    isFetching,
+    error,
+    prevPage,
+    nextPage,
+    search,
+    setSearch,
+    stage,
+    setStage,
+    urgency,
+    setUrgency,
+    hasFilters,
+    isMutating,
+    crud,
+    submit,
+    changeStage,
+  } = useLeadsPage();
+
+  // Add/edit is a staff action; read-only roles see the list without the CTA.
+  const { isAny } = useRole();
+  const canEdit = isAny(STAFF_ROLES);
 
   return (
-    <div className="space-y-6">
-      <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="font-display text-3xl text-foreground">Lead pipeline</h1>
-          <p className="text-sm text-muted">
-            {total} leads across the senior-living pipeline
-            {isUsingFixture && (
-              <span className="ml-2 rounded-pill bg-white/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-[0.1em] text-muted-soft">
-                Preview data
-              </span>
-            )}
-          </p>
-        </div>
-        <Button onClick={openModal}>
-          <Plus className="h-4 w-4" /> Add Lead
-        </Button>
-      </header>
+    <EntityListPage
+      title="Lead pipeline"
+      subtitle={`${total} leads across the senior-living pipeline`}
+      addLabel="Add Lead"
+      onAdd={canEdit ? crud.openCreate : undefined}
+      isLoading={isLoading}
+      error={error}
+      errorFallback="Failed to load leads"
+      filters={
+        <LeadsFilters
+          search={search}
+          stage={stage}
+          urgency={urgency}
+          onSearch={setSearch}
+          onStage={setStage}
+          onUrgency={setUrgency}
+        />
+      }
+      pagination={
+        <EntityPagination
+          page={page}
+          lastPage={lastPage}
+          isFetching={isFetching}
+          onPrev={prevPage}
+          onNext={nextPage}
+        />
+      }
+    >
+      <LeadsTable
+        leads={rows}
+        isMutating={isMutating}
+        hasFilters={hasFilters}
+        onEdit={crud.openEdit}
+        onDelete={crud.confirmDelete}
+        onStageChange={changeStage}
+        onAdd={canEdit ? crud.openCreate : undefined}
+      />
 
-      <div className="flex flex-wrap gap-1.5">
-        {CHIPS.map((c) => (
-          <button
-            key={c.value}
-            type="button"
-            onClick={() => setFilter(c.value)}
-            className={cn(
-              'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
-              status === c.value
-                ? 'border-primary/40 bg-primary/15 text-primary'
-                : 'border-white/[0.08] text-muted hover:border-white/20 hover:text-foreground',
-            )}
-          >
-            {c.label}
-          </button>
-        ))}
-      </div>
-
-      <LeadsTable leads={leads} />
-      <AddLeadModal />
-    </div>
+      <LeadFormModal
+        open={crud.createOpen || crud.editing !== null}
+        isSaving={crud.isSaving}
+        editing={crud.editing}
+        onClose={crud.editing ? crud.closeEdit : crud.closeCreate}
+        onSubmit={submit}
+      />
+    </EntityListPage>
   );
 }

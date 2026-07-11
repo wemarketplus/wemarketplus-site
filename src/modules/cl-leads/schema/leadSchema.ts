@@ -1,24 +1,24 @@
 import { z } from 'zod';
-import { CareLevel, LeadStatus, Urgency } from '@/shared/types';
+import { CL_CARE_LEVEL, CL_LEAD_STAGE, CL_URGENCY } from '../constants/clLeadApiConstants';
 
-// Add Lead form — mirrors the modal in communitylinkmax-demo.html.
-export const newLeadSchema = z.object({
-  name: z.string().min(2, 'Required').max(120),
-  careType: z.enum([CareLevel.IL, CareLevel.AL, CareLevel.MC]),
-  status: z.enum([
-    LeadStatus.Inquiry,
-    LeadStatus.TourScheduled,
-    LeadStatus.Proposal,
-    LeadStatus.FollowUp,
-    LeadStatus.MoveIn,
-    LeadStatus.Lost,
-  ]),
-  urgency: z.enum([Urgency.Hot, Urgency.Warm, Urgency.Cold]),
-  source: z.string().min(1, 'Required').max(120),
-  followUpDate: z.string().min(1, 'Pick a date'),
-  phone: z.string().min(7, 'Enter a phone').max(40),
-  email: z.string().email('Enter a valid email'),
-  notes: z.string().max(1000).optional(),
+// Create/edit form for a CommunityLink lead. Mirrors the backend
+// CreateClLeadDto (wemarketplus-backend/src/communitylink/dto/cl-lead.dto.ts):
+// only firstName is required; everything else is optional. The UI collects a
+// single "Full name" and splits it into firstName/lastName on submit.
+const stageValues = Object.values(CL_LEAD_STAGE) as [string, ...string[]];
+const careValues = Object.values(CL_CARE_LEVEL) as [string, ...string[]];
+const urgencyValues = Object.values(CL_URGENCY) as [string, ...string[]];
+
+export const leadSchema = z.object({
+  fullName: z.string().min(1, 'Required').max(400),
+  phone: z.string().max(200).optional().or(z.literal('')),
+  email: z.string().email('Enter a valid email').optional().or(z.literal('')),
+  careLevel: z.enum(careValues),
+  stage: z.enum(stageValues),
+  urgency: z.enum(urgencyValues),
+  source: z.string().max(200).optional().or(z.literal('')),
+  followUpDate: z.string().optional().or(z.literal('')),
+  notes: z.string().max(2000).optional().or(z.literal('')),
 });
 
-export type NewLeadFormValues = z.infer<typeof newLeadSchema>;
+export type LeadFormValues = z.infer<typeof leadSchema>;

@@ -1,63 +1,64 @@
-import { LeadStatus as LeadStatusEnum, CareLevel } from '@/shared/types';
-import type { Lead, LeadStatus } from '@/shared/types';
-import type { ClLeadRecord } from '../types/clLeadApiTypes';
-import type { ClLeadStage } from '../constants/clLeadApiConstants';
+import { opt } from '@/shared/ui/entity';
+import type {
+  ClCareLevel,
+  ClLeadStage,
+  ClUrgency,
+} from '../constants/clLeadApiConstants';
+import type {
+  ClLeadRecord,
+  CreateClLeadRequest,
+  UpdateClLeadRequest,
+} from '../types/clLeadApiTypes';
+import type { LeadFormValues } from '../schema/leadSchema';
 
-// Backend LeadStage has more stages than the UI's LeadStatus; collapse them.
-function stageToStatus(stage: ClLeadStage): LeadStatus {
-  switch (stage) {
-    case 'tour_scheduled':
-    case 'toured':
-      return LeadStatusEnum.TourScheduled;
-    case 'proposal_sent':
-      return LeadStatusEnum.Proposal;
-    case 'deposit_paid':
-      return LeadStatusEnum.FollowUp;
-    case 'moved_in':
-      return LeadStatusEnum.MoveIn;
-    case 'lost':
-    case 'inactive':
-      return LeadStatusEnum.Lost;
-    case 'contacted':
-    case 'inquiry':
-    default:
-      return LeadStatusEnum.Inquiry;
-  }
+/** Full display name from the record's first/last name parts. */
+export function leadName(lead: ClLeadRecord): string {
+  return [lead.firstName, lead.lastName].filter(Boolean).join(' ').trim() || '—';
 }
 
-export function mapClLead(r: ClLeadRecord): Lead {
+// Splits a single "Full name" field into firstName / lastName. Everything up to
+// the first space is the first name; the remainder (if any) is the last name.
+function splitName(fullName: string): { firstName: string; lastName?: string } {
+  const trimmed = fullName.trim().replace(/\s+/g, ' ');
+  const idx = trimmed.indexOf(' ');
+  if (idx === -1) return { firstName: trimmed };
+  return { firstName: trimmed.slice(0, idx), lastName: trimmed.slice(idx + 1) };
+}
+
+// Form values -> POST /cl/leads body. Drops blank optionals so the DTO's
+// IsEmail / Matches(ISO_DATE) rules never see an empty string.
+export function toCreateLead(values: LeadFormValues): CreateClLeadRequest {
+  const { firstName, lastName } = splitName(values.fullName);
   return {
-    id: r.id,
-    name: [r.firstName, r.lastName].filter(Boolean).join(' '),
-    careType: (r.careLevel ?? CareLevel.IL) as Lead['careType'],
-    status: stageToStatus(r.stage),
-    urgency: r.urgency as Lead['urgency'],
-    source: r.source ?? '',
-    followUpDate: r.followUpDate ?? r.updatedAt,
-    phone: r.phone ?? '',
-    email: r.email ?? '',
-    notes: r.notes ?? undefined,
+    firstName,
+    ...(lastName ? { lastName } : {}),
+    ...opt('phone', values.phone),
+    ...opt('email', values.email),
+    careLevel: values.careLevel as ClCareLevel,
+    stage: values.stage as ClLeadStage,
+    urgency: values.urgency as ClUrgency,
+    ...opt('source', values.source),
+    ...opt('followUpDate', values.followUpDate),
+    ...opt('notes', values.notes),
   };
 }
 
-export function filterLeads(
-  leads: readonly Lead[],
-  status: LeadStatus | 'all',
-): readonly Lead[] {
-  if (status === 'all') return leads;
-  return leads.filter((l) => l.status === status);
+// PATCH body is the same partial shape; the backend accepts any subset.
+export function toUpdateLead(values: LeadFormValues): UpdateClLeadRequest {
+  return toCreateLead(values);
 }
 
-// Merges added leads (prepended) with the fixture, applies per-id status
-// overrides, then filters. Pure — keeps the hook orchestration-only.
-export function resolveLeads(
-  fixture: readonly Lead[],
-  added: readonly Lead[],
-  overrides: Record<string, LeadStatus>,
-  filter: LeadStatus | 'all',
-): readonly Lead[] {
-  const all = [...added, ...fixture].map((l) =>
-    overrides[l.id] ? { ...l, status: overrides[l.id] } : l,
-  );
-  return filterLeads(all, filter);
+// Seeds the edit form from an existing record (nulls -> '').
+export function toLeadFormValues(lead: ClLeadRecord): LeadFormValues {
+  return {
+    fullName: [lead.firstName, lead.lastName].filter(Boolean).join(' '),
+    phone: lead.phone ?? '',
+    email: lead.email ?? '',
+    careLevel: (lead.careLevel ?? 'IL') as LeadFormValues['careLevel'],
+    stage: lead.stage,
+    urgency: lead.urgency,
+    source: lead.source ?? '',
+    followUpDate: lead.followUpDate ?? '',
+    notes: lead.notes ?? '',
+  };
 }
