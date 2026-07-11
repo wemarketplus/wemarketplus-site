@@ -10,7 +10,8 @@ import { useProductDashboard } from '../hooks/useProductDashboard';
 export function DashboardPage() {
   const { greeting, name, role } = useDashboardGreeting();
   const { stats, activity, isLoading, isError } = useProductDashboard();
-  const { product, tier, organizationName, period } = useDashboardContext();
+  const { product, tier, organizationName, period, hasActivePlan } =
+    useDashboardContext();
 
   return (
     <div className="space-y-8">
@@ -22,6 +23,7 @@ export function DashboardPage() {
         tier={tier}
         organizationName={organizationName}
         period={period}
+        hasActivePlan={hasActivePlan}
       />
 
       <OnboardingChecklistCard />

@@ -30,8 +30,9 @@ import type {
 //                                      When email verification is enforced (production)
 //                                      it returns { user, requiresEmailVerification: true }
 //                                      with NO tokens; dev still returns tokens.
-//   POST /auth/verify-email         -> AuthResponseDto (logs the user in); 401 on
-//                                      invalid/expired/reused tokens
+//   POST /auth/verify-email         -> AuthResponseDto { user } — marks the email
+//                                      verified but does NOT log the user in (no
+//                                      tokens); 401 on invalid/expired/reused tokens
 //   POST /auth/resend-verification  -> 202 always (enumeration-safe)
 //   POST /auth/refresh              -> AuthResponseDto
 //   POST /auth/logout               -> 204, auth-required
@@ -46,7 +47,9 @@ import type {
 //                                      { mfaRequired: true, mfaToken }
 //   GET  /auth/me                   -> UserResponseDto
 // Invite acceptance is served by POST /invites/accept { token, password } —
-// it sets the invitee's password and returns a full auth session.
+// it sets the invitee's password and marks the email verified, returning the
+// user but NO session tokens. The client then redirects to /login (OWASP: don't
+// auto-login off an emailed link).
 
 export const authApi = createApi({
   reducerPath: 'authApi',

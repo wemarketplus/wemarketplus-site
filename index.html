@@ -2,6 +2,14 @@
 <html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
+    <!--
+      no-referrer app-wide: activation, email-verification and password-reset
+      links carry a one-time token in the URL query string (?token=). Suppressing
+      the Referer header stops that token leaking to any third party if a page
+      ever links or loads a subresource off-origin (OWASP Forgot Password / URL
+      query-string exposure guidance). A private CRM has no need to send referrers.
+    -->
+    <meta name="referrer" content="no-referrer" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#081426" />

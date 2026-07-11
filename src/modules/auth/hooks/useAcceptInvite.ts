@@ -1,17 +1,17 @@
 import { useCallback } from 'react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '@/app/hooks';
 import { useAcceptInviteMutation } from '../api/authApi';
-import { setCredentials } from '../store/authSlice';
+import { AUTH_REDIRECT_DELAY_MS } from '../constants/authConstants';
 import { extractApiErrorMessage } from '../utils/errorUtils';
 import type { AcceptInviteRequest } from '../types/authTypes';
 
-// POST /invites/accept consumes the invite token AND sets the chosen
-// password, returning a full auth session — so a successful accept is
-// treated exactly like a login: store credentials and go home.
+// POST /invites/accept consumes the invite token and sets the chosen password.
+// It does NOT return a session and we deliberately do NOT auto-login: per OWASP
+// guidance, after setting a password from an emailed link the user should sign
+// in through the normal login flow (auto-login adds session-handling complexity
+// and a login-CSRF surface). On success we send them to /login to sign in.
 export function useAcceptInvite(token: string | null) {
-  const dispatch = useAppDispatch();
   const [acceptInvite, state] = useAcceptInviteMutation();
   const navigate = useNavigate();
 
@@ -22,23 +22,16 @@ export function useAcceptInvite(token: string | null) {
         return;
       }
       try {
-        const result = await acceptInvite(
+        await acceptInvite(
           { token, password } satisfies AcceptInviteRequest,
         ).unwrap();
-        dispatch(
-          setCredentials({
-            token: result.accessToken ?? null,
-            refreshToken: result.refreshToken ?? null,
-            user: result.user,
-          }),
-        );
-        toast.success(`Welcome aboard, ${result.user?.firstName ?? ''}`.trim());
-        navigate('/', { replace: true });
+        toast.success('Account activated. Please sign in with your new password.');
+        setTimeout(() => navigate('/login', { replace: true }), AUTH_REDIRECT_DELAY_MS);
       } catch (err) {
         toast.error(extractApiErrorMessage(err, "Couldn't activate your account"));
       }
     },
-    [acceptInvite, dispatch, navigate, token],
+    [acceptInvite, navigate, token],
   );
 
   return { submit, isLoading: state.isLoading };

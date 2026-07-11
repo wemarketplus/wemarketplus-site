@@ -11,6 +11,9 @@ interface DashboardPageHeaderProps {
   tier: Tier;
   organizationName: string;
   period: string;
+  // When false (unpaid / incomplete tenant) the tier pill is hidden — a signup
+  // that hasn't checked out shouldn't advertise a "PRO" plan it isn't on.
+  hasActivePlan: boolean;
 }
 
 // Mirrors wemarketplus-site dashboards: page title, tenant + period
@@ -24,6 +27,7 @@ export function DashboardPageHeader({
   tier,
   organizationName,
   period,
+  hasActivePlan,
 }: DashboardPageHeaderProps) {
   return (
     <header className="space-y-2">
@@ -31,9 +35,13 @@ export function DashboardPageHeader({
         <p className="text-[11px] uppercase tracking-[0.16em] text-muted-soft">
           {greeting} · {PRODUCT_LABELS[product]}
         </p>
-        <span className="rounded-pill border border-primary/40 bg-primary/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.1em] text-primary">
-          {TIER_LABELS[tier]}
-        </span>
+        {/* Only show the plan tier when billing is live; an unpaid signup
+            (subscriptionStatus 'incomplete') shows no plan pill. */}
+        {hasActivePlan && (
+          <span className="rounded-pill border border-primary/40 bg-primary/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.1em] text-primary">
+            {TIER_LABELS[tier]}
+          </span>
+        )}
       </div>
       <h1 className="font-display text-4xl leading-none text-foreground">
         {name}
