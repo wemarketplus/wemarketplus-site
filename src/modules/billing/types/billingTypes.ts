@@ -89,6 +89,9 @@ export interface SubscriptionRecord {
   currentPeriodEnd: ISODateString | null;
   createdAt: ISODateString;
   updatedAt: ISODateString;
+  // Set by an upgrade that raised a proration invoice to pay: Stripe's hosted
+  // invoice page. The client redirects here to collect payment.
+  paymentUrl?: string;
 }
 
 // View-model the SubscriptionStatusPage renders. Derived from SubscriptionRecord

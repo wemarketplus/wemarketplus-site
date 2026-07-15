@@ -40,12 +40,19 @@ export function usePlanChange(onApplied: () => void) {
     if (!preview) return;
     setApplying(true);
     try {
-      await runChange({
+      const result = await runChange({
         planKey: preview.newPlanKey,
         prorationDate: preview.prorationDate,
       }).unwrap();
-      toast.success('Your plan has been updated');
       setPreview(null);
+      // An upgrade with an amount due returns Stripe's hosted invoice page —
+      // send the customer there to complete the proration payment. The webhook
+      // converges local state once the invoice is paid.
+      if (result.paymentUrl) {
+        window.location.href = result.paymentUrl;
+        return;
+      }
+      toast.success('Your plan has been updated');
       onApplied();
     } catch (err) {
       toast.error(extractApiErrorMessage(err, "Couldn't change your plan"));

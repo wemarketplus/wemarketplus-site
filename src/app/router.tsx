@@ -116,20 +116,26 @@ const ApplicationsPage = lazy(() =>
 const AgreementsPage = lazy(() =>
   import('@/modules/agreements').then((m) => ({ default: m.AgreementsPage })),
 );
-const WibsPage = lazy(() =>
-  import('@/modules/wibs').then((m) => ({ default: m.WibsPage })),
-);
+// HIDDEN (intentionally): WIBs module hidden from the frontend by request.
+// Route + lazy import commented out so the page is not reachable even by direct
+// URL. Do NOT re-enable without confirming with the product owner.
+// const WibsPage = lazy(() =>
+//   import('@/modules/wibs').then((m) => ({ default: m.WibsPage })),
+// );
 const LocationsPage = lazy(() =>
   import('@/modules/locations').then((m) => ({ default: m.LocationsPage })),
 );
 const TerritoriesEntityPage = lazy(() =>
   import('@/modules/territories').then((m) => ({ default: m.TerritoriesPage })),
 );
-const TrainingProvidersPage = lazy(() =>
-  import('@/modules/training-providers').then((m) => ({
-    default: m.TrainingProvidersPage,
-  })),
-);
+// HIDDEN (intentionally): Training providers module hidden from the frontend by
+// request. Route + lazy import commented out so the page is not reachable even
+// by direct URL. Do NOT re-enable without confirming with the product owner.
+// const TrainingProvidersPage = lazy(() =>
+//   import('@/modules/training-providers').then((m) => ({
+//     default: m.TrainingProvidersPage,
+//   })),
+// );
 const DocumentsPage = lazy(() =>
   import('@/modules/documents').then((m) => ({ default: m.DocumentsPage })),
 );
@@ -457,10 +463,12 @@ export function AppRouter() {
           <Route path="funding" element={<FundingPage />} />
           <Route path="applications" element={<ApplicationsPage />} />
           <Route path="agreements" element={<AgreementsPage />} />
-          <Route path="wibs" element={<WibsPage />} />
+          {/* HIDDEN (intentionally): WIBs route disabled by request. Do NOT re-enable without product-owner sign-off. */}
+          {/* <Route path="wibs" element={<WibsPage />} /> */}
           <Route path="locations" element={<LocationsPage />} />
           <Route path="territories-list" element={<TerritoriesEntityPage />} />
-          <Route path="training-providers" element={<TrainingProvidersPage />} />
+          {/* HIDDEN (intentionally): Training providers route disabled by request. Do NOT re-enable without product-owner sign-off. */}
+          {/* <Route path="training-providers" element={<TrainingProvidersPage />} /> */}
           <Route path="documents" element={<DocumentsPage />} />
 
           {/* Cross-product admin. Role-guarded at the route level (not just

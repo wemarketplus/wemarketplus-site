@@ -112,7 +112,10 @@ const GRANTS_SECTION: NavSection = {
     { to: '/funding', label: 'Funding', icon: Target, allow: STAFF_ROLES },
     { to: '/applications', label: 'Applications', icon: ClipboardList, allow: STAFF_ROLES },
     { to: '/agreements', label: 'Agreements', icon: ScrollText, allow: STAFF_ROLES },
-    { to: '/wibs', label: 'WIBs', icon: Users, allow: STAFF_ROLES },
+    // HIDDEN (intentionally): WIBs module hidden from the frontend by request.
+    // Do NOT re-enable without confirming with the product owner. The module
+    // code, route, and store wiring still exist; only the nav entry is removed.
+    // { to: '/wibs', label: 'WIBs', icon: Users, allow: STAFF_ROLES },
   ],
 };
 
@@ -124,7 +127,11 @@ const OPERATIONS_RECORDS_SECTION: NavSection = {
   items: [
     { to: '/locations', label: 'Locations', icon: Pin, allow: STAFF_ROLES },
     { to: '/territories-list', label: 'Territories', icon: Map, allow: STAFF_ROLES },
-    { to: '/training-providers', label: 'Training providers', icon: Wrench, allow: STAFF_ROLES },
+    // HIDDEN (intentionally): Training providers module hidden from the frontend
+    // by request. Do NOT re-enable without confirming with the product owner.
+    // The module code, route, and store wiring still exist; only the nav entry
+    // is removed.
+    // { to: '/training-providers', label: 'Training providers', icon: Wrench, allow: STAFF_ROLES },
   ],
 };
 
