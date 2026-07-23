@@ -3,12 +3,11 @@ import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/app/hooks';
 import { useStartCheckout } from '@/modules/billing/hooks/useStartCheckout';
-import { clearPendingPlan, getPendingPlan } from '@/modules/onboarding';
 import { extractApiErrorMessage } from '../utils/errorUtils';
 import { useLoginMutation, useMfaVerifyMutation } from '../api/authApi';
-import { setCredentials } from '../store/authSlice';
 import { useResendVerification } from './useResendVerification';
-import type { AuthenticatedUser, LoginResponse, LoginRequest } from '../types/authTypes';
+import { commitAuthSession } from '../utils/authSession';
+import type { LoginResponse, LoginRequest } from '../types/authTypes';
 
 export function useLogin() {
   const dispatch = useAppDispatch();
@@ -31,24 +30,13 @@ export function useLogin() {
   // straight to Stripe Checkout for it; otherwise go home.
   const finish = useCallback(
     (result: LoginResponse) => {
-      const user = result.user as AuthenticatedUser;
-      dispatch(
-        setCredentials({
-          token: result.accessToken ?? null,
-          refreshToken: result.refreshToken ?? null,
-          user,
-        }),
-      );
-      toast.success(`Welcome back, ${user.firstName}`);
-      // Clear the stored choice first so a later, plan-less login can't inherit
-      // a stale plan. startCheckout redirects the browser to Stripe.
-      const pendingPlan = getPendingPlan();
-      if (pendingPlan) {
-        clearPendingPlan();
-        void startCheckout(pendingPlan);
-        return;
-      }
-      navigate('/', { replace: true });
+      commitAuthSession({
+        dispatch,
+        navigate,
+        result,
+        startCheckout,
+        welcomeLabel: 'Welcome back',
+      });
     },
     [dispatch, navigate, startCheckout],
   );

@@ -15,7 +15,8 @@ export const CL_TASKS_PAGE_SIZE = 20;
 export const PRIORITY_LABELS: Record<TicketPriority, string> = {
   [TICKET_PRIORITY.Urgent]: 'Urgent',
   [TICKET_PRIORITY.High]: 'High',
-  [TICKET_PRIORITY.Medium]: 'Medium',
+  // "Med" to match the reference demo and the app's own MaintenanceTable.
+  [TICKET_PRIORITY.Medium]: 'Med',
   [TICKET_PRIORITY.Low]: 'Low',
 };
 

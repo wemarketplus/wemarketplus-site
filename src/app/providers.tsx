@@ -10,10 +10,18 @@ interface ProvidersProps {
   children: ReactNode;
 }
 
+function PersistLoadingFallback() {
+  return (
+    <div className="flex h-screen w-full items-center justify-center bg-bg">
+      <div className="text-sm text-muted">Loading…</div>
+    </div>
+  );
+}
+
 export function Providers({ children }: ProvidersProps) {
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+      <PersistGate loading={<PersistLoadingFallback />} persistor={persistor}>
         <ThemeProvider>
           <BrowserRouter>{children}</BrowserRouter>
           <Toaster position="top-right" richColors closeButton />

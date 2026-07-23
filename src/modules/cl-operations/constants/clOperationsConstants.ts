@@ -1,6 +1,15 @@
 import type { PillProps } from '@/shared/ui/data-display';
 import type { EntityField, EntitySelectOption } from '@/shared/ui/entity';
 import {
+  type Role,
+  CL_INVENTORY_ROLES,
+  CL_MAKE_READY_ROLES,
+  CL_MAINTENANCE_ROLES,
+  CL_HOUSEKEEPING_ROLES,
+  CL_UNIT_STATUS_ROLES,
+  CL_MAINTENANCE_VIEW_ROLES,
+} from '@/shared/rbac';
+import {
   APARTMENT_STATUS,
   HOUSEKEEPING_STATUS,
   MAINTENANCE_STATUS,
@@ -23,15 +32,21 @@ import type {
 
 export const CL_OPS_PAGE_SIZE = 20;
 
+// `allow` mirrors this view's route-level role guard in router.tsx — the
+// in-page tab nav (OperationsViewNav) filters against it so a role never sees
+// a tab for a sub-view it can't actually navigate into.
 export const OPERATIONS_VIEWS: ReadonlyArray<{
   value: ClOperationsUiState['view'];
   label: string;
+  allow: readonly Role[];
 }> = [
-  { value: 'communities', label: 'Communities' },
-  { value: 'inventory', label: 'Apartments' },
-  { value: 'make-ready', label: 'Make-ready' },
-  { value: 'maintenance', label: 'Maintenance' },
-  { value: 'housekeeping', label: 'Housekeeping' },
+  { value: 'communities', label: 'Communities', allow: CL_INVENTORY_ROLES },
+  { value: 'inventory', label: 'Apartments', allow: CL_INVENTORY_ROLES },
+  { value: 'make-ready', label: 'Make-ready', allow: CL_MAKE_READY_ROLES },
+  { value: 'maintenance', label: 'Maintenance', allow: CL_MAINTENANCE_ROLES },
+  { value: 'housekeeping', label: 'Housekeeping', allow: CL_HOUSEKEEPING_ROLES },
+  { value: 'unit-status', label: 'Unit Status', allow: CL_UNIT_STATUS_ROLES },
+  { value: 'maintenance-view', label: 'Maintenance View', allow: CL_MAINTENANCE_VIEW_ROLES },
 ];
 
 export const COMMUNITY_FIELDS: ReadonlyArray<EntityField<CommunityFormValues>> = [

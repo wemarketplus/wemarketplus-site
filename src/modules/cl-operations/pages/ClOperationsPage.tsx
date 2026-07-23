@@ -1,6 +1,12 @@
 import { useMemo } from 'react';
 import { Search } from 'lucide-react';
-import { useRole, STAFF_ROLES } from '@/shared/rbac';
+import {
+  useRole,
+  CL_INVENTORY_ROLES,
+  CL_MAKE_READY_ROLES,
+  CL_MAINTENANCE_ROLES,
+  CL_HOUSEKEEPING_ROLES,
+} from '@/shared/rbac';
 import { Input } from '@/shared/ui/core';
 import { EntityListPage, EntityPagination } from '@/shared/ui/entity';
 import { useOperationsView } from '../hooks/useOperationsView';
@@ -58,12 +64,26 @@ const HEADER = {
   'make-ready': 'Make-ready board',
   maintenance: 'Maintenance tickets',
   housekeeping: 'Housekeeping tasks',
+  'unit-status': 'Unit Status',
+  'maintenance-view': 'Maintenance View',
 } as const;
 
 export function ClOperationsPage() {
   const { view, changeView } = useOperationsView();
   const { isAny } = useRole();
-  const canEdit = isAny(STAFF_ROLES);
+  // Per-view edit permission, mirroring the resource's role group (communities
+  // share apartment inventory's group). "Unit Status" / "Maintenance View" are
+  // always read-only, regardless of role.
+  const canEdit =
+    view === 'communities' || view === 'inventory'
+      ? isAny(CL_INVENTORY_ROLES)
+      : view === 'make-ready'
+        ? isAny(CL_MAKE_READY_ROLES)
+        : view === 'maintenance'
+          ? isAny(CL_MAINTENANCE_ROLES)
+          : view === 'housekeeping'
+            ? isAny(CL_HOUSEKEEPING_ROLES)
+            : false;
 
   // Pickers: communities (for apartments) + apartments (for make-ready).
   const { data: communitiesData } = useListClCommunitiesQuery({ page: 1, limit: 100 });
@@ -163,20 +183,20 @@ export function ClOperationsPage() {
   const communities = useCommunities();
 
   const active =
-    view === 'inventory'
+    view === 'inventory' || view === 'unit-status'
       ? apartments
       : view === 'make-ready'
         ? makeReady
-        : view === 'maintenance'
+        : view === 'maintenance' || view === 'maintenance-view'
           ? maintenance
           : housekeeping;
 
   const statusOptions =
-    view === 'inventory'
+    view === 'inventory' || view === 'unit-status'
       ? APARTMENT_STATUS_OPTIONS
       : view === 'make-ready'
         ? MAKE_READY_STATUS_OPTIONS
-        : view === 'maintenance'
+        : view === 'maintenance' || view === 'maintenance-view'
           ? MAINTENANCE_STATUS_OPTIONS
           : HOUSEKEEPING_STATUS_OPTIONS;
 
@@ -187,11 +207,14 @@ export function ClOperationsPage() {
         ? 'Add Task'
         : view === 'maintenance'
           ? 'New Ticket'
-          : 'Assign Task';
+          : view === 'housekeeping'
+            ? 'Assign Task'
+            : '';
 
-  // Occupancy summary above the inventory table only.
+  // Occupancy summary above the inventory / unit-status tables.
   const occupancyApartments = useMemo(
-    () => (view === 'inventory' ? apartments.rows.map(toApartment) : []),
+    () =>
+      view === 'inventory' || view === 'unit-status' ? apartments.rows.map(toApartment) : [],
     [view, apartments.rows],
   );
 
@@ -261,7 +284,9 @@ export function ClOperationsPage() {
       filters={
         <div className="space-y-4">
           <OperationsViewNav view={view} onViewChange={changeView} />
-          {view === 'inventory' && <OccupancyHero apartments={occupancyApartments} />}
+          {(view === 'inventory' || view === 'unit-status') && (
+            <OccupancyHero apartments={occupancyApartments} />
+          )}
           <OpsFilters
             search={active.search}
             status={active.status}
@@ -366,6 +391,26 @@ export function ClOperationsPage() {
             onSubmit={housekeeping.submit}
           />
         </>
+      )}
+
+      {/* Max-tier-only read-only surfaces for the field roles — no form
+          modals, no mutations, just the data. */}
+      {view === 'unit-status' && (
+        <ApartmentsTable
+          apartments={apartments.rows}
+          isMutating={apartments.isMutating}
+          hasFilters={apartments.hasFilters}
+          readOnly
+        />
+      )}
+
+      {view === 'maintenance-view' && (
+        <MaintenanceTable
+          tickets={maintenance.rows}
+          isMutating={maintenance.isMutating}
+          hasFilters={maintenance.hasFilters}
+          readOnly
+        />
       )}
     </EntityListPage>
   );

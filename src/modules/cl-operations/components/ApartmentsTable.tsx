@@ -1,5 +1,5 @@
 import { Building2 } from 'lucide-react';
-import { ADMIN_ONLY, useRole } from '@/shared/rbac';
+import { CL_MANAGEMENT_ROLES, useRole } from '@/shared/rbac';
 import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
 import { EmptyState } from '@/shared/ui/feedback';
 import { EntityRowActions } from '@/shared/ui/entity';
@@ -14,10 +14,13 @@ interface ApartmentsTableProps {
   apartments: readonly ClApartmentRecord[];
   isMutating: boolean;
   hasFilters: boolean;
-  onEdit: (a: ClApartmentRecord) => void;
-  onDelete: (a: ClApartmentRecord) => void;
-  onStatusChange: (a: ClApartmentRecord, status: string) => void;
+  onEdit?: (a: ClApartmentRecord) => void;
+  onDelete?: (a: ClApartmentRecord) => void;
+  onStatusChange?: (a: ClApartmentRecord, status: string) => void;
   onAdd?: () => void;
+  // Unit Status (Maintenance/Housekeeping, Max tier): a plain read-only render
+  // of the same data — no status editing, no row actions, no add.
+  readOnly?: boolean;
 }
 
 export function ApartmentsTable({
@@ -28,9 +31,10 @@ export function ApartmentsTable({
   onDelete,
   onStatusChange,
   onAdd,
+  readOnly = false,
 }: ApartmentsTableProps) {
   const { isAny } = useRole();
-  const canDelete = isAny(ADMIN_ONLY);
+  const canDelete = isAny(CL_MANAGEMENT_ROLES);
 
   const columns: ReadonlyArray<Column<ClApartmentRecord>> = [
     {
@@ -46,24 +50,27 @@ export function ApartmentsTable({
     {
       key: 'status',
       header: 'Status',
-      cell: (a) => (
-        <span className="inline-flex items-center gap-2">
+      cell: (a) =>
+        readOnly || !onStatusChange ? (
           <Pill tone={APARTMENT_STATUS_PILL[a.status]}>{APARTMENT_STATUS_LABELS[a.status]}</Pill>
-          <select
-            aria-label="Change status"
-            value={a.status}
-            disabled={isMutating}
-            onChange={(e) => onStatusChange(a, e.target.value)}
-            className="rounded-md border border-[#d0dce8] bg-white px-1.5 py-1 text-[11px] text-[#111]"
-          >
-            {APARTMENT_STATUS_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-        </span>
-      ),
+        ) : (
+          <span className="inline-flex items-center gap-2">
+            <Pill tone={APARTMENT_STATUS_PILL[a.status]}>{APARTMENT_STATUS_LABELS[a.status]}</Pill>
+            <select
+              aria-label="Change status"
+              value={a.status}
+              disabled={isMutating}
+              onChange={(e) => onStatusChange(a, e.target.value)}
+              className="rounded-md border border-[#d0dce8] bg-white px-1.5 py-1 text-[11px] text-[#111]"
+            >
+              {APARTMENT_STATUS_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          </span>
+        ),
     },
     { key: 'resident', header: 'Resident', cell: (a) => a.residentName ?? '—' },
     {
@@ -71,21 +78,25 @@ export function ApartmentsTable({
       header: 'Rate',
       cell: (a) => (a.monthlyRate != null ? `$${Number(a.monthlyRate).toLocaleString()}/mo` : '—'),
     },
-    {
-      key: 'actions',
-      header: '',
-      headerClassName: 'w-20',
-      className: 'text-right',
-      cell: (a) => (
-        <EntityRowActions
-          onEdit={() => onEdit(a)}
-          onDelete={canDelete ? () => onDelete(a) : undefined}
-          disabled={isMutating}
-          editLabel="Edit unit"
-          deleteLabel="Delete unit"
-        />
-      ),
-    },
+    ...(readOnly
+      ? []
+      : [
+          {
+            key: 'actions',
+            header: '',
+            headerClassName: 'w-20',
+            className: 'text-right',
+            cell: (a: ClApartmentRecord) => (
+              <EntityRowActions
+                onEdit={onEdit ? () => onEdit(a) : undefined}
+                onDelete={canDelete && onDelete ? () => onDelete(a) : undefined}
+                disabled={isMutating}
+                editLabel="Edit unit"
+                deleteLabel="Delete unit"
+              />
+            ),
+          },
+        ]),
   ];
 
   return (

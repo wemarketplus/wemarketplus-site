@@ -5,30 +5,33 @@ import { cleanListParams } from '@/shared/utils/queryParams';
 import type {
   ClCompetitorRecord,
   ClConcessionRecord,
+  ClLeakageItemRecord,
   ClLocPricingRecord,
   ClRevenueEntryRecord,
   CreateClCompetitorRequest,
   CreateClConcessionRequest,
+  CreateClLeakageItemRequest,
   CreateClLocPricingRequest,
   CreateClRevenueEntryRequest,
 } from '../types/clFinancialApiTypes';
 
 // CommunityLink financial command centre — wemarketplus-backend cl/* resources.
-//   /cl/revenue-entries  /cl/concessions  /cl/competitors  /cl/loc-pricing
+//   /cl/revenue-entries  /cl/concessions  /cl/competitors  /cl/loc-pricing  /cl/leakage-items
 // All uniform CRUD under /api.
 
 const env = <T>(res: ApiEnvelope<T>) => res.data;
 const list = <T>(res: ApiEnvelope<PaginatedPayload<T>>) => res.data;
 
-// Server-side list params: pagination + search (+ status for concessions).
+// Server-side list params: pagination + search (+ status for concessions/leakage).
 export interface FinRevenueListParams extends PaginationParams { search?: string; }
 export interface FinConcessionListParams extends PaginationParams { search?: string; status?: string; }
 export interface FinCompetitorListParams extends PaginationParams { search?: string; }
+export interface FinLeakageListParams extends PaginationParams { search?: string; status?: string; }
 
 export const clFinancialApi = createApi({
   reducerPath: 'clFinancialApi',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['ClRevenue', 'ClConcession', 'ClCompetitor', 'ClLocPricing'],
+  tagTypes: ['ClRevenue', 'ClConcession', 'ClCompetitor', 'ClLocPricing', 'ClLeakageItem'],
   endpoints: (build) => ({
     // revenue entries
     listClRevenue: build.query<PaginatedPayload<ClRevenueEntryRecord>, FinRevenueListParams | void>({
@@ -110,6 +113,26 @@ export const clFinancialApi = createApi({
       query: (id) => ({ url: `/cl/loc-pricing/${id}`, method: 'DELETE' }),
       invalidatesTags: ['ClLocPricing'],
     }),
+    // revenue leakage items
+    listClLeakageItems: build.query<PaginatedPayload<ClLeakageItemRecord>, FinLeakageListParams | void>({
+      query: (p) => ({ url: '/cl/leakage-items', params: cleanListParams(p ?? undefined) }),
+      transformResponse: list<ClLeakageItemRecord>,
+      providesTags: ['ClLeakageItem'],
+    }),
+    createClLeakageItem: build.mutation<ClLeakageItemRecord, CreateClLeakageItemRequest>({
+      query: (body) => ({ url: '/cl/leakage-items', method: 'POST', body }),
+      transformResponse: env<ClLeakageItemRecord>,
+      invalidatesTags: ['ClLeakageItem'],
+    }),
+    updateClLeakageItem: build.mutation<ClLeakageItemRecord, { id: string; patch: Partial<CreateClLeakageItemRequest> }>({
+      query: ({ id, patch }) => ({ url: `/cl/leakage-items/${id}`, method: 'PATCH', body: patch }),
+      transformResponse: env<ClLeakageItemRecord>,
+      invalidatesTags: ['ClLeakageItem'],
+    }),
+    deleteClLeakageItem: build.mutation<void, string>({
+      query: (id) => ({ url: `/cl/leakage-items/${id}`, method: 'DELETE' }),
+      invalidatesTags: ['ClLeakageItem'],
+    }),
   }),
 });
 
@@ -130,4 +153,8 @@ export const {
   useCreateClLocPricingMutation,
   useUpdateClLocPricingMutation,
   useDeleteClLocPricingMutation,
+  useListClLeakageItemsQuery,
+  useCreateClLeakageItemMutation,
+  useUpdateClLeakageItemMutation,
+  useDeleteClLeakageItemMutation,
 } = clFinancialApi;

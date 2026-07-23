@@ -25,6 +25,8 @@ import { fundingApi } from '@/modules/funding';
 import { trainingApi } from '@/modules/training-providers';
 import { wibsApi } from '@/modules/wibs';
 import { billingApi, billingReducer } from '@/modules/billing';
+import { adminSettingsApi as clAdminSettingsApi } from '@/modules/cl-admin-settings';
+import { giftGratuityApi } from '@/modules/cl-gift-gratuity';
 import { clFinancialApi } from '@/modules/cl-financial';
 import { clDemoReducer } from '@/modules/cl-demo';
 import { goldDemoReducer } from '@/modules/cl-demo-gold';
@@ -33,7 +35,7 @@ import { leadsApi as clLeadsApi } from '@/modules/cl-leads';
 import { clOperationsApi, clOperationsReducer } from '@/modules/cl-operations';
 import { clOutreachApi, clOutreachReducer } from '@/modules/cl-outreach';
 import { clReferralsApi } from '@/modules/cl-referrals';
-import { clReportsReducer } from '@/modules/cl-reports';
+import { clReportsReducer, clReportsApi } from '@/modules/cl-reports';
 import { clToursApi } from '@/modules/cl-tours';
 import { clinicalApi, clinicalReducer } from '@/modules/clinical';
 import { companiesApi } from '@/modules/companies';
@@ -95,6 +97,9 @@ const rootReducer = combineReducers({
   [applicationsApi.reducerPath]: applicationsApi.reducer,
   [authApi.reducerPath]: authApi.reducer,
   [billingApi.reducerPath]: billingApi.reducer,
+  [clAdminSettingsApi.reducerPath]: clAdminSettingsApi.reducer,
+  [giftGratuityApi.reducerPath]: giftGratuityApi.reducer,
+  [clReportsApi.reducerPath]: clReportsApi.reducer,
   [clFinancialApi.reducerPath]: clFinancialApi.reducer,
   [clLeadsApi.reducerPath]: clLeadsApi.reducer,
   [clOperationsApi.reducerPath]: clOperationsApi.reducer,
@@ -164,6 +169,9 @@ export const store = configureStore({
       applicationsApi.middleware,
       authApi.middleware,
       billingApi.middleware,
+      clAdminSettingsApi.middleware,
+      giftGratuityApi.middleware,
+      clReportsApi.middleware,
       clFinancialApi.middleware,
       clLeadsApi.middleware,
       clOperationsApi.middleware,

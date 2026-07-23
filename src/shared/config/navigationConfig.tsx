@@ -1,22 +1,29 @@
 import {
   Activity,
   Bell,
+  BellRing,
   Bot,
   Building2,
   Calendar,
   ClipboardList,
   Contact,
   CreditCard,
+  Gift,
+  GitBranch,
   Goal,
   Heart,
   LayoutDashboard,
   LineChart,
   Map,
   MessagesSquare,
+  NotebookPen,
   Phone,
+  PieChart,
   Pin,
   Plug,
+  Receipt,
   ScrollText,
+  Settings2,
   ShieldCheck,
   Sparkles,
   Stethoscope,
@@ -40,6 +47,11 @@ import {
   CL_MAINTENANCE_ROLES,
   CL_HOUSEKEEPING_ROLES,
   CL_MAKE_READY_ROLES,
+  CL_ALL_ROLES,
+  CL_UNIT_STATUS_ROLES,
+  CL_MAINTENANCE_VIEW_ROLES,
+  CL_COMPETITOR_INTEL_ROLES,
+  CL_FIELD_ACTIVITY_ROLES,
 } from '@/shared/rbac';
 import { Product, Tier, tierIncludes } from '@/shared/types';
 
@@ -112,7 +124,7 @@ const GRANTS_SECTION: NavSection = {
     { to: '/funding', label: 'Funding', icon: Target, allow: STAFF_ROLES },
     { to: '/applications', label: 'Applications', icon: ClipboardList, allow: STAFF_ROLES },
     { to: '/agreements', label: 'Agreements', icon: ScrollText, allow: STAFF_ROLES },
-    { to: '/wibs', label: 'WIBs', icon: Users, allow: STAFF_ROLES },
+    /*{ to: '/wibs', label: 'WIBs', icon: Users, allow: STAFF_ROLES },*/
   ],
 };
 
@@ -124,7 +136,7 @@ const OPERATIONS_RECORDS_SECTION: NavSection = {
   items: [
     { to: '/locations', label: 'Locations', icon: Pin, allow: STAFF_ROLES },
     { to: '/territories-list', label: 'Territories', icon: Map, allow: STAFF_ROLES },
-    { to: '/training-providers', label: 'Training providers', icon: Wrench, allow: STAFF_ROLES },
+   /* { to: '/training-providers', label: 'Training providers', icon: Wrench, allow: STAFF_ROLES },*/
   ],
 };
 
@@ -203,15 +215,66 @@ const COMMUNITYLINK_SALES: NavSection = {
   label: 'Sales & outreach',
   items: [
     { to: '/leads', label: 'Lead pipeline', icon: LineChart, product: Product.CommunityLink, allow: CL_SALES_ROLES },
-    { to: '/tasks', label: 'Tasks', icon: ClipboardList, product: Product.CommunityLink, allow: CL_SALES_ROLES },
+    // Referral Pipeline is a Max-tier addition alongside Lead Pipeline — a
+    // stage-grouped view over the same paid-referral data as Paid Referral
+    // Portal below (cl/paid-referrals already carries a `stage` field).
+    { to: '/referral-pipeline', label: 'Referral pipeline', icon: GitBranch, product: Product.CommunityLink, allow: CL_SALES_ROLES, minTier: Tier.Max },
+    // Tasks is visible to every CommunityLink role, including the field roles
+    // (Maintenance/Housekeeping) — every role's sidebar in the demo has it.
+    { to: '/tasks', label: 'Tasks', icon: ClipboardList, product: Product.CommunityLink, allow: CL_ALL_ROLES },
     { to: '/cl-referrals', label: 'Referral sources', icon: Heart, product: Product.CommunityLink, allow: CL_SALES_ROLES },
     { to: '/paid-referrals', label: 'Paid referral portal', icon: Heart, product: Product.CommunityLink, allow: CL_SALES_ROLES },
     { to: '/tours', label: 'Tour scheduler', icon: Calendar, product: Product.CommunityLink, allow: CL_SALES_ROLES },
-    // GPS / Mileage / Outreach log are the Pro-tier field-outreach tools. Gold
+    // AI Sales Assistant is CommunityLink-baseline (Pro+, no tier cap) — the
+    // Pro demo shows it and Gold/Max's mockups simply don't re-show it
+    // (those demos focus on that tier's new capabilities), not a deliberate
+    // removal on upgrade. Reuses the same generic, product-agnostic AI
+    // assistant page/route already used by HospiceLink.
+    { to: '/ai-assistant', label: 'AI sales assistant', icon: Sparkles, product: Product.CommunityLink, allow: CL_SALES_ROLES },
+    // GPS check-in / Outreach log are the Pro-tier field-outreach tools. Gold
     // and Max streamline the sidebar and drop them (maxTier: Pro).
     { to: '/outreach/checkin', label: 'GPS check-in', icon: Target, product: Product.CommunityLink, allow: CL_SALES_ROLES, maxTier: Tier.Pro },
     { to: '/outreach/mileage', label: 'Mileage', icon: Map, product: Product.CommunityLink, allow: CL_SALES_ROLES, maxTier: Tier.Pro },
     { to: '/outreach/log', label: 'Outreach log', icon: ScrollText, product: Product.CommunityLink, allow: CL_SALES_ROLES, maxTier: Tier.Pro },
+  ],
+};
+
+// Occupancy Overview's visible-role-set changes by tier band, which a single
+// NavItem's `allow` can't express — so it's two windowed entries, exactly
+// like the Mileage / Mileage & Expenses split below. At Gold it's
+// Director-only (the Gold demo's Administrator does NOT have it); at Max it
+// broadens to the full management + Sales/Admissions group.
+const COMMUNITYLINK_MAIN_EXTRA: NavSection = {
+  id: 'cl-main-extra',
+  label: 'Main',
+  items: [
+    { to: '/occupancy-overview', label: 'Occupancy overview', icon: PieChart, product: Product.CommunityLink, allow: [Role.SuperAdmin, Role.Director], minTier: Tier.Gold, maxTier: Tier.Gold },
+    { to: '/occupancy-overview', label: 'Occupancy overview', icon: PieChart, product: Product.CommunityLink, allow: CL_FINANCIAL_ROLES, minTier: Tier.Max },
+  ],
+};
+
+// Activity is a CommunityLink MAX-tier bundle: cross-lead activity notes, a
+// combined mileage/expense view, gift & gratuity compliance logging, and the
+// Aircall phone integration. Owner/Investor gets only Notes/Tasks/Aircall
+// (not Mileage & Expenses or Gift & Gratuity) — see CL_FIELD_ACTIVITY_ROLES.
+const COMMUNITYLINK_ACTIVITY: NavSection = {
+  id: 'cl-activity',
+  label: 'Activity',
+  items: [
+    { to: '/activity-notes', label: 'Activity notes', icon: NotebookPen, product: Product.CommunityLink, allow: CL_SALES_ROLES, minTier: Tier.Max },
+    { to: '/outreach/mileage', label: 'Mileage & expenses', icon: Receipt, product: Product.CommunityLink, allow: CL_FIELD_ACTIVITY_ROLES, minTier: Tier.Max },
+    { to: '/gift-gratuity', label: 'Gift & gratuity', icon: Gift, product: Product.CommunityLink, allow: CL_FIELD_ACTIVITY_ROLES, minTier: Tier.Max },
+    { to: '/aircall', label: 'Aircall — call · text · email', icon: Phone, product: Product.CommunityLink, allow: CL_SALES_ROLES, minTier: Tier.Max },
+  ],
+};
+
+// Admin-only settings, Max tier (mirrors the Max Administrator "ADMIN" group).
+const COMMUNITYLINK_ADMIN_SETTINGS: NavSection = {
+  id: 'cl-admin-settings',
+  label: 'Admin',
+  items: [
+    { to: '/alert-settings', label: 'Alert settings', icon: BellRing, product: Product.CommunityLink, allow: ADMIN_ONLY, minTier: Tier.Max },
+    { to: '/financial-settings', label: 'Financial settings', icon: Settings2, product: Product.CommunityLink, allow: ADMIN_ONLY, minTier: Tier.Max },
   ],
 };
 
@@ -229,6 +292,12 @@ const COMMUNITYLINK_OPERATIONS: NavSection = {
     { to: '/operations/make-ready', label: 'Make-ready board', icon: ClipboardList, product: Product.CommunityLink, minTier: Tier.Gold, allow: CL_MAKE_READY_ROLES },
     { to: '/operations/maintenance', label: 'Maintenance', icon: Wrench, product: Product.CommunityLink, minTier: Tier.Gold, allow: CL_MAINTENANCE_ROLES },
     { to: '/operations/housekeeping', label: 'Housekeeping', icon: Wrench, product: Product.CommunityLink, minTier: Tier.Gold, allow: CL_HOUSEKEEPING_ROLES },
+    // Max-tier-only read-only surfaces for the field roles (per the Max demo):
+    // Unit Status gives Maintenance/Housekeeping apartment-status visibility
+    // without inventory write access; Maintenance View gives Housekeeping
+    // read-only visibility into maintenance tickets.
+    { to: '/operations/unit-status', label: 'Unit Status', icon: Building2, product: Product.CommunityLink, minTier: Tier.Max, allow: CL_UNIT_STATUS_ROLES },
+    { to: '/operations/maintenance-view', label: 'Maintenance View', icon: Wrench, product: Product.CommunityLink, minTier: Tier.Max, allow: CL_MAINTENANCE_VIEW_ROLES },
   ],
 };
 
@@ -243,7 +312,7 @@ const COMMUNITYLINK_FINANCIAL: NavSection = {
     { to: '/financial/ledger', label: 'Financial ledger', icon: TrendingUp, product: Product.CommunityLink, allow: CL_FINANCIAL_ROLES, minTier: Tier.Max },
     { to: '/financial/leakage', label: 'Revenue leakage', icon: Activity, product: Product.CommunityLink, allow: CL_FINANCIAL_ROLES, minTier: Tier.Max },
     { to: '/financial/concessions', label: 'Concession approvals', icon: TrendingUp, product: Product.CommunityLink, allow: CL_FINANCIAL_ROLES, minTier: Tier.Max },
-    { to: '/financial/competitors', label: 'Competitor intel', icon: Activity, product: Product.CommunityLink, allow: CL_FINANCIAL_ROLES, minTier: Tier.Max },
+    { to: '/financial/competitors', label: 'Competitor intel', icon: Activity, product: Product.CommunityLink, allow: CL_COMPETITOR_INTEL_ROLES, minTier: Tier.Max },
     { to: '/financial/loc', label: 'LOC calculator', icon: TrendingUp, product: Product.CommunityLink, allow: CL_FINANCIAL_ROLES, minTier: Tier.Max },
     { to: '/reports', label: 'Reports', icon: ScrollText, product: Product.CommunityLink, allow: CL_MANAGEMENT_ROLES },
   ],
@@ -258,10 +327,10 @@ const ADMIN_SECTION: NavSection = {
     { to: '/users', label: 'Team', icon: Users, allow: STAFF_ROLES },
     { to: '/permissions', label: 'Roles & permissions', icon: ShieldCheck, allow: ADMIN_ONLY },
     { to: '/billing', label: 'Billing', icon: CreditCard, allow: ADMIN_ONLY },
-    // Settings is admin/owner-only. The demo shows it under Administrator and
-    // Owner but NOT the Executive Director (who gets Reports but not Settings),
-    // so this is ADMIN_ONLY, not the broader management group.
-    { to: '/settings', label: 'Settings', icon: Plug, allow: ADMIN_ONLY },
+    // Settings is admin/owner-only, PLUS CommunityLink's Owner/Investor (the
+    // Max demo shows Settings under Administrator, Owner, AND Owner/Investor
+    // — but NOT the Executive Director, who gets Reports but not Settings).
+    { to: '/settings', label: 'Settings', icon: Plug, allow: [...ADMIN_ONLY, Role.OwnerInvestor] },
   ],
 };
 
@@ -289,10 +358,16 @@ export const SECTIONS_BY_PRODUCT: Record<Product, readonly NavSection[]> = {
   // adds Financial ledger/leakage (see minTier on those sections' items).
   [Product.CommunityLink]: [
     MAIN_SECTION,
-    RECORDS_SECTION,
+    COMMUNITYLINK_MAIN_EXTRA,
+    // No RECORDS_SECTION (Contacts/Companies/Documents) — not present in any
+    // of the 3 reference demos; explicitly removed per user request even
+    // though HospiceLink keeps it (still shared code, just not composed in
+    // here). Leads/Referral Sources are CommunityLink's own contact model.
     COMMUNITYLINK_SALES,
     COMMUNITYLINK_OPERATIONS,
     COMMUNITYLINK_FINANCIAL,
+    COMMUNITYLINK_ACTIVITY,
+    COMMUNITYLINK_ADMIN_SETTINGS,
     ADMIN_SECTION,
   ],
 };

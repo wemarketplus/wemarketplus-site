@@ -1,4 +1,4 @@
-import { useRole, STAFF_ROLES } from '@/shared/rbac';
+import { useRole, CL_ALL_ROLES } from '@/shared/rbac';
 import { EntityListPage, EntityPagination } from '@/shared/ui/entity';
 import { TasksFilters } from '../components/TasksFilters';
 import { TasksTable } from '../components/TasksTable';
@@ -29,7 +29,7 @@ export function TasksPage() {
 
   // Add/edit is a staff action; read-only roles see the list without the CTA.
   const { isAny } = useRole();
-  const canEdit = isAny(STAFF_ROLES);
+  const canEdit = isAny(CL_ALL_ROLES);
 
   return (
     <EntityListPage

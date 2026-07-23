@@ -90,10 +90,9 @@ export interface ResetPasswordRequest {
   newPassword: string;
 }
 
-// Backend POST /invites/accept consumes the token AND sets the invitee's
-// password (and marks the email verified), returning the user but NO session
-// tokens. The client then redirects to /login so the teammate signs in through
-// the normal flow (OWASP: don't auto-login off an emailed link).
+// Backend POST /invites/accept consumes the token, sets the invitee's
+// password, marks the email verified, and returns the same auth payload used
+// by login so the client can immediately establish a session.
 export interface AcceptInviteRequest {
   token: string;
   password: string;

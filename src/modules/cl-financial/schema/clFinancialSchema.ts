@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CONCESSION_STATUS } from '../constants/clFinancialApiConstants';
+import { CONCESSION_STATUS, LEAKAGE_STATUS } from '../constants/clFinancialApiConstants';
 
 const money = (msg: string) =>
   z
@@ -53,3 +53,19 @@ export const locSchema = z.object({
   addOnRate: z.string().min(1, 'Required').regex(/^\d+(\.\d{1,2})?$/, 'Enter an amount like 500'),
 });
 export type LocFormValues = z.infer<typeof locSchema>;
+
+// Revenue leakage item — mirrors POST /cl/leakage-items. issue + type required.
+export const leakageSchema = z.object({
+  issue: z.string().min(1, 'Required').max(200),
+  type: z.string().min(1, 'Required').max(200),
+  monthlyImpact: money('Enter an amount like 380'),
+  status: z.enum([
+    LEAKAGE_STATUS.Active,
+    LEAKAGE_STATUS.Ongoing,
+    LEAKAGE_STATUS.Review,
+    LEAKAGE_STATUS.FixNeeded,
+    LEAKAGE_STATUS.Resolved,
+  ]),
+  notes: z.string().max(2000).optional().or(z.literal('')),
+});
+export type LeakageFormValues = z.infer<typeof leakageSchema>;

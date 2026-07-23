@@ -1,5 +1,6 @@
 export { ClReferralsPage } from './pages/ClReferralsPage';
 export { PaidReferralsPage } from './pages/PaidReferralsPage';
+export { ReferralPipelinePage } from './pages/ReferralPipelinePage';
 export {
   clReferralsApi,
   useListClReferralSourcesQuery,

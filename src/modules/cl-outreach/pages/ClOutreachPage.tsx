@@ -1,5 +1,5 @@
 import { Search } from 'lucide-react';
-import { useRole, STAFF_ROLES } from '@/shared/rbac';
+import { useRole, CL_SALES_ROLES } from '@/shared/rbac';
 import { Input, Select } from '@/shared/ui/core';
 import { EntityListPage, EntityPagination } from '@/shared/ui/entity';
 import { cn } from '@/shared/utils/cn';
@@ -68,7 +68,7 @@ export function ClOutreachPage() {
   // The log view owns full CRUD + server-side search/type filters.
   const log = useOutreachLog();
   const { isAny } = useRole();
-  const canEdit = isAny(STAFF_ROLES);
+  const canEdit = isAny(CL_SALES_ROLES);
 
   if (view !== 'log') {
     return (

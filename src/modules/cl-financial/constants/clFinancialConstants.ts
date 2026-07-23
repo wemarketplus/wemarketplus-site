@@ -1,11 +1,12 @@
 import type { PillProps } from '@/shared/ui/data-display';
 import type { EntityField, EntitySelectOption } from '@/shared/ui/entity';
-import { CONCESSION_STATUS, type ConcessionStatus } from './clFinancialApiConstants';
+import { CONCESSION_STATUS, LEAKAGE_STATUS, type ConcessionStatus, type LeakageStatus } from './clFinancialApiConstants';
 import type { ClFinancialUiState } from '../types/clFinancialTypes';
 import type {
   RevenueFormValues,
   ConcessionFormValues,
   CompetitorFormValues,
+  LeakageFormValues,
   LocFormValues,
 } from '../schema/clFinancialSchema';
 
@@ -37,6 +38,36 @@ export const CONCESSION_STATUS_PILL: Record<ConcessionStatus, PillProps['tone']>
 export const CONCESSION_STATUS_OPTIONS: readonly EntitySelectOption[] = Object.entries(
   CONCESSION_STATUS_LABELS,
 ).map(([value, label]) => ({ value, label }));
+
+export const LEAKAGE_STATUS_LABELS: Record<LeakageStatus, string> = {
+  [LEAKAGE_STATUS.Active]: 'Active',
+  [LEAKAGE_STATUS.Ongoing]: 'Ongoing',
+  [LEAKAGE_STATUS.Review]: 'Review',
+  [LEAKAGE_STATUS.FixNeeded]: 'Fix needed',
+  [LEAKAGE_STATUS.Resolved]: 'Resolved',
+};
+
+export const LEAKAGE_STATUS_PILL: Record<LeakageStatus, PillProps['tone']> = {
+  [LEAKAGE_STATUS.Active]: 'r',
+  [LEAKAGE_STATUS.Ongoing]: 'y',
+  [LEAKAGE_STATUS.Review]: 'b',
+  [LEAKAGE_STATUS.FixNeeded]: 'r',
+  [LEAKAGE_STATUS.Resolved]: 'g',
+};
+
+export const LEAKAGE_STATUS_OPTIONS: readonly EntitySelectOption[] = Object.entries(
+  LEAKAGE_STATUS_LABELS,
+).map(([value, label]) => ({ value, label }));
+
+// Common leakage issue types (free-form varchar on the backend).
+export const LEAKAGE_TYPE_OPTIONS: readonly EntitySelectOption[] = [
+  { value: 'underpriced_unit', label: 'Underpriced unit' },
+  { value: 'concession', label: 'Concession overrun' },
+  { value: 'unbilled_fee', label: 'Unbilled fee' },
+  { value: 'unauthorized_waiver', label: 'Unauthorized waiver' },
+  { value: 'extended_vacancy', label: 'Extended vacancy' },
+  { value: 'other', label: 'Other' },
+];
 
 // Revenue category buckets (free-form varchar on the backend).
 export const REVENUE_CATEGORY_OPTIONS: readonly EntitySelectOption[] = [
@@ -80,4 +111,12 @@ export const LOC_FIELDS: ReadonlyArray<EntityField<LocFormValues>> = [
   { name: 'label', label: 'Label', placeholder: 'Level 2 — Moderate assist' },
   { name: 'addOnRate', label: 'Add-on rate', type: 'text', placeholder: '500' },
   { name: 'description', label: 'Description', type: 'textarea', full: true, placeholder: 'What this level covers…' },
+];
+
+export const LEAKAGE_FIELDS: ReadonlyArray<EntityField<LeakageFormValues>> = [
+  { name: 'issue', label: 'Issue', full: true, placeholder: 'Unit 106 leased below market rate' },
+  { name: 'type', label: 'Type', type: 'select', options: LEAKAGE_TYPE_OPTIONS },
+  { name: 'monthlyImpact', label: 'Monthly impact', type: 'text', placeholder: '380' },
+  { name: 'status', label: 'Status', type: 'select', options: LEAKAGE_STATUS_OPTIONS },
+  { name: 'notes', label: 'Notes', type: 'textarea', full: true, placeholder: 'Root cause, remediation plan…' },
 ];

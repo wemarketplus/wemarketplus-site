@@ -1,4 +1,4 @@
-import { useRole, STAFF_ROLES } from '@/shared/rbac';
+import { useRole, CL_SALES_ROLES } from '@/shared/rbac';
 import { EntityListPage, EntityPagination } from '@/shared/ui/entity';
 import { LeadsFilters } from '../components/LeadsFilters';
 import { LeadsTable } from '../components/LeadsTable';
@@ -31,7 +31,7 @@ export function LeadsPage() {
 
   // Add/edit is a staff action; read-only roles see the list without the CTA.
   const { isAny } = useRole();
-  const canEdit = isAny(STAFF_ROLES);
+  const canEdit = isAny(CL_SALES_ROLES);
 
   return (
     <EntityListPage

@@ -1,5 +1,5 @@
 import { Heart, MapPin } from 'lucide-react';
-import { ADMIN_ONLY, useRole } from '@/shared/rbac';
+import { CL_MANAGEMENT_ROLES, useRole } from '@/shared/rbac';
 import { Button } from '@/shared/ui/core';
 import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
 import { EmptyState } from '@/shared/ui/feedback';
@@ -29,7 +29,7 @@ export function ClReferralsTable({
 }: ClReferralsTableProps) {
   // Delete is Admin/Owner-only on the backend for most CRUD; mirror that gate.
   const { isAny } = useRole();
-  const canDelete = isAny(ADMIN_ONLY);
+  const canDelete = isAny(CL_MANAGEMENT_ROLES);
 
   const columns: ReadonlyArray<Column<ClReferralSourceRecord>> = [
     {

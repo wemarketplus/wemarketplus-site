@@ -1,19 +1,22 @@
 import { useCallback } from 'react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '@/app/hooks';
+import { useStartCheckout } from '@/modules/billing/hooks/useStartCheckout';
 import { useAcceptInviteMutation } from '../api/authApi';
-import { AUTH_REDIRECT_DELAY_MS } from '../constants/authConstants';
 import { extractApiErrorMessage } from '../utils/errorUtils';
+import { commitAuthSession } from '../utils/authSession';
 import type { AcceptInviteRequest } from '../types/authTypes';
 
-// POST /invites/accept consumes the invite token and sets the chosen password.
-// It does NOT return a session and we deliberately do NOT auto-login: per OWASP
-// guidance, after setting a password from an emailed link the user should sign
-// in through the normal login flow (auto-login adds session-handling complexity
-// and a login-CSRF surface). On success we send them to /login to sign in.
+// POST /invites/accept consumes the invite token, sets the chosen password,
+// and returns an authenticated session (access/refresh tokens + user data).
+// The invitation proves ownership of the email, so we authenticate the user
+// immediately and redirect them into the dashboard.
 export function useAcceptInvite(token: string | null) {
   const [acceptInvite, state] = useAcceptInviteMutation();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { startCheckout } = useStartCheckout();
 
   const submit = useCallback(
     async (password: string) => {
@@ -22,16 +25,21 @@ export function useAcceptInvite(token: string | null) {
         return;
       }
       try {
-        await acceptInvite(
+        const result = await acceptInvite(
           { token, password } satisfies AcceptInviteRequest,
         ).unwrap();
-        toast.success('Account activated. Please sign in with your new password.');
-        setTimeout(() => navigate('/login', { replace: true }), AUTH_REDIRECT_DELAY_MS);
+        commitAuthSession({
+          dispatch,
+          navigate,
+          result,
+          startCheckout,
+          welcomeLabel: 'Welcome',
+        });
       } catch (err) {
         toast.error(extractApiErrorMessage(err, "Couldn't activate your account"));
       }
     },
-    [acceptInvite, navigate, token],
+    [acceptInvite, dispatch, navigate, startCheckout, token],
   );
 
   return { submit, isLoading: state.isLoading };

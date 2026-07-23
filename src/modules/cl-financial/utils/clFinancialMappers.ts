@@ -3,19 +3,22 @@ import type {
   ClRevenueEntryRecord,
   ClConcessionRecord,
   ClCompetitorRecord,
+  ClLeakageItemRecord,
   ClLocPricingRecord,
   CreateClRevenueEntryRequest,
   CreateClConcessionRequest,
   CreateClCompetitorRequest,
+  CreateClLeakageItemRequest,
   CreateClLocPricingRequest,
 } from '../types/clFinancialApiTypes';
 import type {
   RevenueFormValues,
   ConcessionFormValues,
   CompetitorFormValues,
+  LeakageFormValues,
   LocFormValues,
 } from '../schema/clFinancialSchema';
-import type { ConcessionStatus } from '../constants/clFinancialApiConstants';
+import type { ConcessionStatus, LeakageStatus } from '../constants/clFinancialApiConstants';
 
 const optNum = (v: string | undefined): number | undefined =>
   v?.trim() ? Number(v) : undefined;
@@ -119,5 +122,29 @@ export function toLocFormValues(l: ClLocPricingRecord): LocFormValues {
     label: l.label,
     description: l.description ?? '',
     addOnRate: l.addOnRate != null ? String(num(l.addOnRate)) : '',
+  };
+}
+
+// --- revenue leakage -------------------------------------------------------
+
+export function toCreateLeakage(v: LeakageFormValues): CreateClLeakageItemRequest {
+  return {
+    issue: v.issue.trim(),
+    type: v.type.trim(),
+    status: v.status as LeakageStatus,
+    ...(v.monthlyImpact?.trim() ? { monthlyImpact: Number(v.monthlyImpact) } : {}),
+    ...opt('notes', v.notes),
+  };
+}
+export function toUpdateLeakage(v: LeakageFormValues): Partial<CreateClLeakageItemRequest> {
+  return toCreateLeakage(v);
+}
+export function toLeakageFormValues(l: ClLeakageItemRecord): LeakageFormValues {
+  return {
+    issue: l.issue,
+    type: l.type,
+    monthlyImpact: l.monthlyImpact != null ? String(num(l.monthlyImpact)) : '',
+    status: l.status,
+    notes: l.notes ?? '',
   };
 }
