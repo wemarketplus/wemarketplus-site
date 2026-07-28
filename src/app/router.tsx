@@ -1,13 +1,32 @@
 import { lazy, Suspense } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { DashboardLayout } from '@/shared/ui/layout';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
 import { PublicRoute } from '@/routes/PublicRoute';
 import { RequireEntitlement } from '@/routes/RequireEntitlement';
-import { Tier } from '@/shared/types';
+import { RequireProduct } from '@/routes/RequireProduct';
+import { RequireRoleAtTier } from '@/routes/RequireRoleAtTier';
+import { Product, Tier } from '@/shared/types';
 import { RootRoute } from '@/routes/RootRoute';
 import { LEGACY_DEMO_REDIRECTS } from '@/shared/config/demoUrls';
-import { SUPER_ADMIN_ONLY, ADMIN_ONLY, STAFF_ROLES, CL_MANAGEMENT_ROLES } from '@/shared/rbac';
+import {
+  Role,
+  SUPER_ADMIN_ONLY,
+  ADMIN_ONLY,
+  STAFF_ROLES,
+  CL_MANAGEMENT_ROLES,
+  CL_SALES_ROLES,
+  CL_ALL_ROLES,
+  CL_INVENTORY_ROLES,
+  CL_MAKE_READY_ROLES,
+  CL_MAINTENANCE_ROLES,
+  CL_HOUSEKEEPING_ROLES,
+  CL_FINANCIAL_ROLES,
+  CL_UNIT_STATUS_ROLES,
+  CL_MAINTENANCE_VIEW_ROLES,
+  CL_COMPETITOR_INTEL_ROLES,
+  CL_FIELD_ACTIVITY_ROLES,
+} from '@/shared/rbac';
 
 // --- Public auth funnel ---------------------------------------------------
 
@@ -220,8 +239,29 @@ const ClOutreachPage = lazy(() =>
 const ClOperationsPage = lazy(() =>
   import('@/modules/cl-operations').then((m) => ({ default: m.ClOperationsPage })),
 );
+const OccupancyOverviewPage = lazy(() =>
+  import('@/modules/cl-operations').then((m) => ({ default: m.OccupancyOverviewPage })),
+);
 const ClFinancialPage = lazy(() =>
   import('@/modules/cl-financial').then((m) => ({ default: m.ClFinancialPage })),
+);
+const ReferralPipelinePage = lazy(() =>
+  import('@/modules/cl-referrals').then((m) => ({ default: m.ReferralPipelinePage })),
+);
+const ActivityNotesPage = lazy(() =>
+  import('@/modules/cl-leads').then((m) => ({ default: m.ActivityNotesPage })),
+);
+const GiftGratuityPage = lazy(() =>
+  import('@/modules/cl-gift-gratuity').then((m) => ({ default: m.GiftGratuityPage })),
+);
+const AircallPage = lazy(() =>
+  import('@/modules/cl-aircall').then((m) => ({ default: m.AircallPage })),
+);
+const AlertSettingsPage = lazy(() =>
+  import('@/modules/cl-admin-settings').then((m) => ({ default: m.AlertSettingsPage })),
+);
+const FinancialSettingsPage = lazy(() =>
+  import('@/modules/cl-admin-settings').then((m) => ({ default: m.FinancialSettingsPage })),
 );
 const ClReportsPage = lazy(() =>
   import('@/modules/cl-reports').then((m) => ({ default: m.ClReportsPage })),
@@ -371,7 +411,7 @@ export function AppRouter() {
         <Route
           path="/accept-invite"
           element={
-            <PublicRoute>
+            <PublicRoute allowAuthenticated>
               <AcceptInvitePage />
             </PublicRoute>
           }
@@ -399,7 +439,17 @@ export function AppRouter() {
             </ProtectedRoute>
           }
         >
-          {/* HospiceLink */}
+          {/* HospiceLink — product-gated as a group. A tenant without a
+              HospiceLink entitlement is redirected home; the backend also 403s
+              the clinical endpoints (defense in depth). Deep-linking here aligns
+              the active dashboard to HospiceLink. */}
+          <Route
+            element={
+              <RequireProduct product={Product.HospiceLink}>
+                <Outlet />
+              </RequireProduct>
+            }
+          >
           <Route path="prospects" element={<ProspectsPage />} />
           <Route path="referrals" element={<ReferralsPage />} />
           <Route path="pipeline" element={<PipelinePage />} />
@@ -428,31 +478,70 @@ export function AppRouter() {
           <Route path="compliance/evidence" element={<EvidenceExportPage />} />
           <Route path="compliance/baa-records" element={<BaaRecordsPage />} />
           <Route path="compliance/threat-monitor" element={<ThreatMonitorPage />} />
+          </Route>
 
-          {/* CommunityLink */}
-          <Route path="leads" element={<LeadsPage />} />
-          <Route path="cl-referrals" element={<ClReferralsPage />} />
-          <Route path="paid-referrals" element={<PaidReferralsPage />} />
-          <Route path="tours" element={<ClToursPage />} />
-          <Route path="tasks" element={<TasksPage />} />
-          <Route path="outreach/checkin" element={<ClOutreachPage />} />
-          <Route path="outreach/mileage" element={<ClOutreachPage />} />
-          <Route path="outreach/log" element={<ClOutreachPage />} />
+          {/* CommunityLink — product-gated as a group (same isolation as the
+              HospiceLink block: redirect home if not entitled, backend 403s the
+              cl/* endpoints, deep-link aligns the active dashboard). */}
+          <Route
+            element={
+              <RequireProduct product={Product.CommunityLink}>
+                <Outlet />
+              </RequireProduct>
+            }
+          >
+          <Route
+            path="occupancy-overview"
+            element={
+              <RequireRoleAtTier
+                windows={[
+                  { minTier: Tier.Gold, maxTier: Tier.Gold, allow: [Role.SuperAdmin, Role.Director] },
+                  { minTier: Tier.Max, allow: CL_FINANCIAL_ROLES },
+                ]}
+              >
+                <OccupancyOverviewPage />
+              </RequireRoleAtTier>
+            }
+          />
+          <Route path="leads" element={<ProtectedRoute allow={CL_SALES_ROLES}><LeadsPage /></ProtectedRoute>} />
+          <Route path="referral-pipeline" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_SALES_ROLES}><ReferralPipelinePage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="cl-referrals" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClReferralsPage /></ProtectedRoute>} />
+          <Route path="paid-referrals" element={<ProtectedRoute allow={CL_SALES_ROLES}><PaidReferralsPage /></ProtectedRoute>} />
+          <Route path="tours" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClToursPage /></ProtectedRoute>} />
+          <Route path="ai-assistant" element={<ProtectedRoute allow={CL_SALES_ROLES}><AiAssistantPage /></ProtectedRoute>} />
+          <Route path="activity-notes" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_SALES_ROLES}><ActivityNotesPage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="gift-gratuity" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_FIELD_ACTIVITY_ROLES}><GiftGratuityPage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="aircall" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_SALES_ROLES}><AircallPage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="alert-settings" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={ADMIN_ONLY}><AlertSettingsPage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="financial-settings" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={ADMIN_ONLY}><FinancialSettingsPage /></ProtectedRoute></RequireEntitlement>} />
+          {/* Tasks is visible/usable by every CommunityLink role, including
+              the field roles — matches every role's sidebar in the demo. */}
+          <Route path="tasks" element={<ProtectedRoute allow={CL_ALL_ROLES}><TasksPage /></ProtectedRoute>} />
+          <Route path="outreach/checkin" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClOutreachPage /></ProtectedRoute>} />
+          <Route path="outreach/mileage" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClOutreachPage /></ProtectedRoute>} />
+          <Route path="outreach/log" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClOutreachPage /></ProtectedRoute>} />
           {/* CommunityLink Operations — Gold tier and up (product-aware). */}
-          <Route path="operations/communities" element={<RequireEntitlement minTier={Tier.Gold}><ClOperationsPage /></RequireEntitlement>} />
-          <Route path="operations/inventory" element={<RequireEntitlement minTier={Tier.Gold}><ClOperationsPage /></RequireEntitlement>} />
-          <Route path="operations/make-ready" element={<RequireEntitlement minTier={Tier.Gold}><ClOperationsPage /></RequireEntitlement>} />
-          <Route path="operations/maintenance" element={<RequireEntitlement minTier={Tier.Gold}><ClOperationsPage /></RequireEntitlement>} />
-          <Route path="operations/housekeeping" element={<RequireEntitlement minTier={Tier.Gold}><ClOperationsPage /></RequireEntitlement>} />
+          <Route path="operations/communities" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={CL_INVENTORY_ROLES}><ClOperationsPage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="operations/inventory" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={CL_INVENTORY_ROLES}><ClOperationsPage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="operations/make-ready" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={CL_MAKE_READY_ROLES}><ClOperationsPage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="operations/maintenance" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={CL_MAINTENANCE_ROLES}><ClOperationsPage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="operations/housekeeping" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={CL_HOUSEKEEPING_ROLES}><ClOperationsPage /></ProtectedRoute></RequireEntitlement>} />
+          {/* Max-tier-only read-only surfaces for the field roles. */}
+          <Route path="operations/unit-status" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_UNIT_STATUS_ROLES}><ClOperationsPage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="operations/maintenance-view" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_MAINTENANCE_VIEW_ROLES}><ClOperationsPage /></ProtectedRoute></RequireEntitlement>} />
           {/* CommunityLink Financial — Max tier only (top tier). */}
-          <Route path="financial/ledger" element={<RequireEntitlement minTier={Tier.Max}><ClFinancialPage /></RequireEntitlement>} />
-          <Route path="financial/leakage" element={<RequireEntitlement minTier={Tier.Max}><ClFinancialPage /></RequireEntitlement>} />
-          <Route path="financial/concessions" element={<RequireEntitlement minTier={Tier.Max}><ClFinancialPage /></RequireEntitlement>} />
-          <Route path="financial/competitors" element={<RequireEntitlement minTier={Tier.Max}><ClFinancialPage /></RequireEntitlement>} />
-          <Route path="financial/loc" element={<RequireEntitlement minTier={Tier.Max}><ClFinancialPage /></RequireEntitlement>} />
+          <Route path="financial/ledger" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_FINANCIAL_ROLES}><ClFinancialPage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="financial/leakage" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_FINANCIAL_ROLES}><ClFinancialPage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="financial/concessions" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_FINANCIAL_ROLES}><ClFinancialPage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="financial/competitors" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_COMPETITOR_INTEL_ROLES}><ClFinancialPage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="financial/loc" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_FINANCIAL_ROLES}><ClFinancialPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="reports" element={<ProtectedRoute allow={CL_MANAGEMENT_ROLES}><ClReportsPage /></ProtectedRoute>} />
+          </Route>
 
-          {/* Grant CRM — contacts & employer companies */}
+          {/* Grant CRM — contacts & employer companies. Shared/back-office
+              routes below are NOT product-gated (cross-product); they appear
+              only in the HospiceLink nav today but remain reachable to keep the
+              back-office shared, matching the ungated backend endpoints. */}
           <Route path="contacts" element={<ContactsPage />} />
           <Route path="companies" element={<CompaniesPage />} />
 
@@ -469,6 +558,7 @@ export function AppRouter() {
           <Route path="territories-list" element={<TerritoriesEntityPage />} />
           {/* HIDDEN (intentionally): Training providers route disabled by request. Do NOT re-enable without product-owner sign-off. */}
           {/* <Route path="training-providers" element={<TrainingProvidersPage />} /> */}
+          {/* /<Route path="training-providers" element={<TrainingProvidersPage />} /> */}
           <Route path="documents" element={<DocumentsPage />} />
 
           {/* Cross-product admin. Role-guarded at the route level (not just

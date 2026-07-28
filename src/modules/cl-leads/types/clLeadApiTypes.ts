@@ -47,7 +47,19 @@ export interface ClLeadNoteRecord {
   id: ID;
   tenantId: ID;
   leadId: ID;
-  body: string;
+  summary: string;
+  contactType: string | null;
+  nextStep: string | null;
+  followUpDate: string | null;
+  gpsLocation: string | null;
   createdAt: ISODateString;
   updatedAt: ISODateString;
+}
+
+export interface CreateClLeadNoteRequest {
+  leadId: string;
+  summary: string;
+  contactType?: string;
+  nextStep?: string;
+  followUpDate?: string;
 }

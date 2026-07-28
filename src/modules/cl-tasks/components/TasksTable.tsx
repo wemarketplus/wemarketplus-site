@@ -1,5 +1,5 @@
 import { ClipboardList } from 'lucide-react';
-import { ADMIN_ONLY, useRole } from '@/shared/rbac';
+import { CL_MANAGEMENT_ROLES, useRole } from '@/shared/rbac';
 import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
 import { EmptyState } from '@/shared/ui/feedback';
 import { EntityRowActions } from '@/shared/ui/entity';
@@ -34,7 +34,7 @@ export function TasksTable({
 }: TasksTableProps) {
   // Delete is Admin/Owner-only on the backend for most CRUD; mirror that gate.
   const { isAny } = useRole();
-  const canDelete = isAny(ADMIN_ONLY);
+  const canDelete = isAny(CL_MANAGEMENT_ROLES);
 
   const columns: ReadonlyArray<Column<ClTaskRecord>> = [
     {

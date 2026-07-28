@@ -1,4 +1,5 @@
 export { ClOperationsPage } from './pages/ClOperationsPage';
+export { OccupancyOverviewPage } from './pages/OccupancyOverviewPage';
 export { default as clOperationsReducer } from './store/clOperationsSlice';
 export {
   clOperationsApi,

@@ -4,6 +4,7 @@ import type { ApiEnvelope, PaginatedPayload, PaginationParams } from '@/shared/t
 import type {
   ClLeadNoteRecord,
   ClLeadRecord,
+  CreateClLeadNoteRequest,
   CreateClLeadRequest,
   UpdateClLeadRequest,
 } from '../types/clLeadApiTypes';
@@ -62,6 +63,11 @@ export const leadsApi = createApi({
       transformResponse: (res: ApiEnvelope<PaginatedPayload<ClLeadNoteRecord>>) => res.data,
       providesTags: ['ClLeadNote'],
     }),
+    createClLeadNote: build.mutation<ClLeadNoteRecord, CreateClLeadNoteRequest>({
+      query: (body) => ({ url: '/cl/lead-notes', method: 'POST', body }),
+      transformResponse: (res: ApiEnvelope<ClLeadNoteRecord>) => res.data,
+      invalidatesTags: ['ClLeadNote'],
+    }),
   }),
 });
 
@@ -72,4 +78,5 @@ export const {
   useUpdateClLeadMutation,
   useDeleteClLeadMutation,
   useListClLeadNotesQuery,
+  useCreateClLeadNoteMutation,
 } = leadsApi;

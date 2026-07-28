@@ -1,5 +1,5 @@
 import { Wrench } from 'lucide-react';
-import { ADMIN_ONLY, useRole } from '@/shared/rbac';
+import { CL_MANAGEMENT_ROLES, useRole } from '@/shared/rbac';
 import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
 import { EmptyState } from '@/shared/ui/feedback';
 import { EntityRowActions } from '@/shared/ui/entity';
@@ -16,10 +16,13 @@ interface MaintenanceTableProps {
   tickets: readonly ClMaintenanceTicketRecord[];
   isMutating: boolean;
   hasFilters: boolean;
-  onEdit: (t: ClMaintenanceTicketRecord) => void;
-  onDelete: (t: ClMaintenanceTicketRecord) => void;
-  onStatusChange: (t: ClMaintenanceTicketRecord, status: string) => void;
+  onEdit?: (t: ClMaintenanceTicketRecord) => void;
+  onDelete?: (t: ClMaintenanceTicketRecord) => void;
+  onStatusChange?: (t: ClMaintenanceTicketRecord, status: string) => void;
   onAdd?: () => void;
+  // Maintenance View (Housekeeping, Max tier): a plain read-only render of the
+  // same data — no status editing, no row actions, no add.
+  readOnly?: boolean;
 }
 
 export function MaintenanceTable({
@@ -30,9 +33,10 @@ export function MaintenanceTable({
   onDelete,
   onStatusChange,
   onAdd,
+  readOnly = false,
 }: MaintenanceTableProps) {
   const { isAny } = useRole();
-  const canDelete = isAny(ADMIN_ONLY);
+  const canDelete = isAny(CL_MANAGEMENT_ROLES);
 
   const columns: ReadonlyArray<Column<ClMaintenanceTicketRecord>> = [
     {
@@ -60,42 +64,51 @@ export function MaintenanceTable({
     {
       key: 'status',
       header: 'Status',
-      cell: (t) => (
-        <span className="inline-flex items-center gap-2">
+      cell: (t) =>
+        readOnly || !onStatusChange ? (
           <Pill tone={MAINTENANCE_STATUS_PILL[t.status]}>
             {MAINTENANCE_STATUS_LABELS[t.status]}
           </Pill>
-          <select
-            aria-label="Change status"
-            value={t.status}
-            disabled={isMutating}
-            onChange={(e) => onStatusChange(t, e.target.value)}
-            className="rounded-md border border-[#d0dce8] bg-white px-1.5 py-1 text-[11px] text-[#111]"
-          >
-            {MAINTENANCE_STATUS_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-        </span>
-      ),
+        ) : (
+          <span className="inline-flex items-center gap-2">
+            <Pill tone={MAINTENANCE_STATUS_PILL[t.status]}>
+              {MAINTENANCE_STATUS_LABELS[t.status]}
+            </Pill>
+            <select
+              aria-label="Change status"
+              value={t.status}
+              disabled={isMutating}
+              onChange={(e) => onStatusChange(t, e.target.value)}
+              className="rounded-md border border-[#d0dce8] bg-white px-1.5 py-1 text-[11px] text-[#111]"
+            >
+              {MAINTENANCE_STATUS_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          </span>
+        ),
     },
-    {
-      key: 'actions',
-      header: '',
-      headerClassName: 'w-20',
-      className: 'text-right',
-      cell: (t) => (
-        <EntityRowActions
-          onEdit={() => onEdit(t)}
-          onDelete={canDelete ? () => onDelete(t) : undefined}
-          disabled={isMutating}
-          editLabel="Edit ticket"
-          deleteLabel="Delete ticket"
-        />
-      ),
-    },
+    ...(readOnly
+      ? []
+      : [
+          {
+            key: 'actions',
+            header: '',
+            headerClassName: 'w-20',
+            className: 'text-right',
+            cell: (t: ClMaintenanceTicketRecord) => (
+              <EntityRowActions
+                onEdit={onEdit ? () => onEdit(t) : undefined}
+                onDelete={canDelete && onDelete ? () => onDelete(t) : undefined}
+                disabled={isMutating}
+                editLabel="Edit ticket"
+                deleteLabel="Delete ticket"
+              />
+            ),
+          },
+        ]),
   ];
 
   return (

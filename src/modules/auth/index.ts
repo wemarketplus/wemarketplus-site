@@ -5,6 +5,7 @@ export { ResetPasswordPage } from './pages/ResetPasswordPage';
 export { AcceptInvitePage } from './pages/AcceptInvitePage';
 export { VerifyEmailPage } from './pages/VerifyEmailPage';
 export { ChangePasswordPage } from './pages/ChangePasswordPage';
+export { ProfileSync } from './components/ProfileSync';
 export { useResendVerification } from './hooks/useResendVerification';
 export { useMfaManagement } from './hooks/useMfaManagement';
 export { default as authReducer, setCredentials, logout } from './store/authSlice';

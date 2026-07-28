@@ -9,6 +9,8 @@ const PATH_BY_VIEW: Record<View, string> = {
   'make-ready': '/operations/make-ready',
   maintenance: '/operations/maintenance',
   housekeeping: '/operations/housekeeping',
+  'unit-status': '/operations/unit-status',
+  'maintenance-view': '/operations/maintenance-view',
 };
 
 const VIEWS: readonly View[] = [
@@ -17,6 +19,8 @@ const VIEWS: readonly View[] = [
   'make-ready',
   'maintenance',
   'housekeeping',
+  'unit-status',
+  'maintenance-view',
 ];
 
 // Each operations sub-page is its own route, so the active view comes from the

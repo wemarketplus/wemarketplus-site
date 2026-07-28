@@ -1,5 +1,5 @@
 import type { ID, ISODateString } from '@/shared/types';
-import type { ConcessionStatus } from '../constants/clFinancialApiConstants';
+import type { ConcessionStatus, LeakageStatus } from '../constants/clFinancialApiConstants';
 
 // Backend record shapes for the CommunityLink financial command centre —
 // wemarketplus-backend cl/revenue-entries, cl/concessions, cl/competitors,
@@ -92,4 +92,26 @@ export interface CreateClLocPricingRequest {
   label: string;
   description?: string;
   addOnRate?: number;
+}
+
+export interface ClLeakageItemRecord {
+  id: ID;
+  tenantId: ID;
+  issue: string;
+  type: string;
+  monthlyImpact: number;
+  status: LeakageStatus;
+  resolvedBy: ID | null;
+  resolvedAt: ISODateString | null;
+  notes: string | null;
+  createdAt: ISODateString;
+  updatedAt: ISODateString;
+}
+
+export interface CreateClLeakageItemRequest {
+  issue: string;
+  type: string;
+  monthlyImpact?: number;
+  status?: LeakageStatus;
+  notes?: string;
 }

@@ -1,4 +1,4 @@
-import { useRole, STAFF_ROLES } from '@/shared/rbac';
+import { useRole, CL_SALES_ROLES } from '@/shared/rbac';
 import { EntityListPage, EntityPagination } from '@/shared/ui/entity';
 import { ToursFilters } from '../components/ToursFilters';
 import { ToursTable } from '../components/ToursTable';
@@ -30,7 +30,7 @@ export function ClToursPage() {
   } = useToursPage();
 
   const { isAny } = useRole();
-  const canEdit = isAny(STAFF_ROLES);
+  const canEdit = isAny(CL_SALES_ROLES);
 
   return (
     <EntityListPage

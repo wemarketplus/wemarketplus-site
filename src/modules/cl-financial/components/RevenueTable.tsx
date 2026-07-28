@@ -1,5 +1,5 @@
 import { Landmark } from 'lucide-react';
-import { ADMIN_ONLY, useRole } from '@/shared/rbac';
+import { CL_MANAGEMENT_ROLES, useRole } from '@/shared/rbac';
 import { DataTable, type Column } from '@/shared/ui/data-display';
 import { EmptyState } from '@/shared/ui/feedback';
 import { EntityRowActions } from '@/shared/ui/entity';
@@ -30,7 +30,7 @@ export function RevenueTable({
   onAdd,
 }: RevenueTableProps) {
   const { isAny } = useRole();
-  const canDelete = isAny(ADMIN_ONLY);
+  const canDelete = isAny(CL_MANAGEMENT_ROLES);
 
   const columns: Array<Column<ClRevenueEntryRecord>> = [
     { key: 'date', header: 'Date', cell: (r) => formatDate(r.entryDate) },

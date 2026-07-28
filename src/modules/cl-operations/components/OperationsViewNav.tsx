@@ -1,3 +1,4 @@
+import { useRole } from '@/shared/rbac';
 import { cn } from '@/shared/utils/cn';
 import { OPERATIONS_VIEWS } from '../constants/clOperationsConstants';
 import type { ClOperationsUiState } from '../types/clOperationsTypes';
@@ -8,9 +9,12 @@ interface OperationsViewNavProps {
 }
 
 export function OperationsViewNav({ view, onViewChange }: OperationsViewNavProps) {
+  const { isAny } = useRole();
+  const visibleViews = OPERATIONS_VIEWS.filter((v) => isAny(v.allow));
+
   return (
     <nav className="flex flex-wrap gap-1.5">
-      {OPERATIONS_VIEWS.map((v) => (
+      {visibleViews.map((v) => (
         <button
           key={v.value}
           type="button"

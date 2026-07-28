@@ -96,3 +96,54 @@ export const CL_MAKE_READY_ROLES: readonly Role[] = [
   Role.Maintenance,
   Role.Housekeeping,
 ];
+
+// Every CommunityLink role. Tasks is a cross-role surface — every role in the
+// demo screenshots (including both field roles) has a "Tasks" sidebar item.
+export const CL_ALL_ROLES: readonly Role[] = [
+  ...CL_SALES_ROLES,
+  Role.Maintenance,
+  Role.Housekeeping,
+];
+
+// Read-only "Unit Status" surface (Max tier): apartment status visibility for
+// the two field roles, who are NOT in CL_INVENTORY_ROLES (no inventory write
+// access). Mirrors the backend's method-level @Roles() override on
+// ClApartmentController's GET handlers.
+export const CL_UNIT_STATUS_ROLES: readonly Role[] = [
+  Role.Maintenance,
+  Role.Housekeeping,
+];
+
+// Competitor intel (Max tier): Admin/Owner/Owner-Investor only — narrower than
+// the rest of the Financial section. The Max demo does NOT give this to
+// Executive Director or Sales/Admissions (unlike ledger/leakage/concessions/
+// LOC, which both of those personas do get).
+export const CL_COMPETITOR_INTEL_ROLES: readonly Role[] = [
+  Role.SuperAdmin,
+  Role.Admin,
+  Role.Owner,
+  Role.OwnerInvestor,
+];
+
+// Max-tier "field activity" surfaces (Mileage & Expenses, Gift & Gratuity):
+// everyone with a sales/ops persona except Owner/Investor, who the Max demo
+// does not give these to (Owner/Investor's Activity section is just Activity
+// Notes, Tasks, and Aircall).
+export const CL_FIELD_ACTIVITY_ROLES: readonly Role[] = [
+  Role.SuperAdmin,
+  Role.Admin,
+  Role.Owner,
+  Role.Director,
+  Role.Manager,
+  Role.Marketer,
+  Role.SalesAdmissions,
+];
+
+// Read-only "Maintenance View" surface (Max tier): a nav/route item scoped to
+// Housekeeping only — management/Sales-Admissions already have the full
+// "Maintenance" item (CL_MAINTENANCE_ROLES) and don't need a duplicate
+// read-only one. The underlying GET endpoint itself is opened more broadly
+// (CL_MAKE_READY_ROLES, backend-side) since it's the same data as the
+// Maintenance module — this constant is deliberately narrower and only for
+// gating this distinct nav item/route.
+export const CL_MAINTENANCE_VIEW_ROLES: readonly Role[] = [Role.Housekeeping];

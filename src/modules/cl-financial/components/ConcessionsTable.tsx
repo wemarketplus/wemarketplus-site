@@ -1,5 +1,5 @@
 import { BadgePercent, Check, X } from 'lucide-react';
-import { ADMIN_ONLY, useRole } from '@/shared/rbac';
+import { CL_FINANCIAL_ROLES, CL_MANAGEMENT_ROLES, useRole } from '@/shared/rbac';
 import { Button } from '@/shared/ui/core';
 import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
 import { EmptyState } from '@/shared/ui/feedback';
@@ -33,7 +33,10 @@ export function ConcessionsTable({
   onAdd,
 }: ConcessionsTableProps) {
   const { isAny } = useRole();
-  const canDelete = isAny(ADMIN_ONLY);
+  const canDelete = isAny(CL_MANAGEMENT_ROLES);
+  // Approve/reject was previously ungated entirely — restrict to the same
+  // role group that can reach this page (CL_FINANCIAL_ROLES).
+  const canDecide = isAny(CL_FINANCIAL_ROLES);
 
   const columns: ReadonlyArray<Column<ClConcessionRecord>> = [
     {
@@ -62,7 +65,7 @@ export function ConcessionsTable({
       key: 'decision',
       header: 'Decision',
       cell: (c) =>
-        c.status === CONCESSION_STATUS.Pending ? (
+        c.status === CONCESSION_STATUS.Pending && canDecide ? (
           <div className="flex gap-1.5">
             <Button
               variant="secondary"
@@ -83,6 +86,8 @@ export function ConcessionsTable({
               <X className="h-3.5 w-3.5 text-destructive" /> Reject
             </Button>
           </div>
+        ) : c.status === CONCESSION_STATUS.Pending ? (
+          <span className="text-[11px] text-muted-soft">Pending</span>
         ) : (
           <span className="text-[11px] text-muted-soft">Decided</span>
         ),

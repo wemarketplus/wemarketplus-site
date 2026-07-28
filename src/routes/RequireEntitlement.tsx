@@ -1,12 +1,7 @@
 import type { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAppSelector } from '@/app/hooks';
-import {
-  Product,
-  Tier,
-  normalizeTier,
-  tierIncludes,
-} from '@/shared/types';
+import { useActiveEntitlement } from '@/modules/access';
+import { Tier, tierIncludes } from '@/shared/types';
 
 interface RequireEntitlementProps {
   children: ReactNode;
@@ -16,15 +11,13 @@ interface RequireEntitlementProps {
 }
 
 // Route-level plan gate: nav hiding alone is not access control, so a user who
-// types a gated URL directly must still be turned away. When the tenant's tier
-// doesn't include `minTier` we send them to /billing to upgrade (the backend
-// also answers 402 UPGRADE_REQUIRED on the underlying API, so this is defense in
-// depth, not the only line). Mirrors navigationConfig's isNavItemVisible.
+// types a gated URL directly must still be turned away. Tier is read for the
+// ACTIVE product (a dual-product user is gated by whichever dashboard they're
+// viewing). When the tier doesn't include `minTier` we send them to /billing to
+// upgrade (the backend also answers 402 UPGRADE_REQUIRED on the underlying API,
+// so this is defense in depth). Mirrors navigationConfig's isNavItemVisible.
 export function RequireEntitlement({ children, minTier }: RequireEntitlementProps) {
-  const product: Product = useAppSelector(
-    (s) => s.auth.user?.product ?? Product.HospiceLink,
-  );
-  const tier: Tier = normalizeTier(useAppSelector((s) => s.auth.user?.tier)) ?? Tier.Pro;
+  const { product, tier } = useActiveEntitlement();
 
   if (!tierIncludes(product, tier, minTier)) {
     // Carry the required tier so the billing page can highlight the upgrade.

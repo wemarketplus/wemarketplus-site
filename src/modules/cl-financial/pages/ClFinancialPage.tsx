@@ -1,14 +1,19 @@
 import { Search } from 'lucide-react';
-import { useRole, STAFF_ROLES } from '@/shared/rbac';
+import { useRole, CL_FINANCIAL_ROLES } from '@/shared/rbac';
 import { Input, Select } from '@/shared/ui/core';
 import { EntityListPage, EntityPagination } from '@/shared/ui/entity';
 import { cn } from '@/shared/utils/cn';
-import { FINANCIAL_VIEWS, CONCESSION_STATUS_OPTIONS } from '../constants/clFinancialConstants';
+import {
+  FINANCIAL_VIEWS,
+  CONCESSION_STATUS_OPTIONS,
+  LEAKAGE_STATUS_OPTIONS,
+} from '../constants/clFinancialConstants';
 import { useFinancialView } from '../hooks/useFinancialView';
 import { useRevenueLedger } from '../hooks/useRevenueLedger';
 import { useConcessions } from '../hooks/useConcessions';
 import { useCompetitors } from '../hooks/useCompetitors';
 import { useLocPricing } from '../hooks/useLocPricing';
+import { useLeakage } from '../hooks/useLeakage';
 import { RevenueTable } from '../components/RevenueTable';
 import { RevenueFormModal } from '../components/RevenueFormModal';
 import { ConcessionsTable } from '../components/ConcessionsTable';
@@ -17,10 +22,13 @@ import { CompetitorsTable } from '../components/CompetitorsTable';
 import { CompetitorFormModal } from '../components/CompetitorFormModal';
 import { LocTable } from '../components/LocTable';
 import { LocFormModal } from '../components/LocFormModal';
+import { LocQuickCalculator } from '../components/LocQuickCalculator';
+import { LeakageTable } from '../components/LeakageTable';
+import { LeakageFormModal } from '../components/LeakageFormModal';
 
 const HEADER = {
   ledger: { title: 'Financial ledger', subtitle: 'Revenue entries against budget.', noun: 'entries', add: 'Add Entry' },
-  leakage: { title: 'Revenue leakage', subtitle: 'Where actual revenue fell short of budget.', noun: 'entries', add: 'Add Entry' },
+  leakage: { title: 'Revenue leakage', subtitle: 'Missed billables, concessions, and downgrades.', noun: 'items', add: 'Add Leakage Item' },
   concessions: { title: 'Concession approvals', subtitle: 'Review and approve rent concessions.', noun: 'concessions', add: 'Add Concession' },
   competitors: { title: 'Competitor intel', subtitle: 'Nearby community rates and occupancy.', noun: 'competitors', add: 'Add Competitor' },
   loc: { title: 'LOC calculator', subtitle: 'Level-of-care add-on pricing.', noun: 'levels', add: 'Add Level' },
@@ -57,12 +65,13 @@ function ViewTabs({
 export function ClFinancialPage() {
   const { view, setView } = useFinancialView();
   const { isAny } = useRole();
-  const canEdit = isAny(STAFF_ROLES);
+  const canEdit = isAny(CL_FINANCIAL_ROLES);
 
   const revenue = useRevenueLedger();
   const concessions = useConcessions();
   const competitors = useCompetitors();
   const loc = useLocPricing();
+  const leakage = useLeakage();
 
   // The active resource controller for the current view (all share the same
   // list/crud/pagination surface via useEntityCrud + usePaginatedList).
@@ -73,7 +82,9 @@ export function ClFinancialPage() {
         ? competitors
         : view === 'loc'
           ? loc
-          : revenue;
+          : view === 'leakage'
+            ? leakage
+            : revenue;
   const header = HEADER[view];
 
   return (
@@ -114,6 +125,21 @@ export function ClFinancialPage() {
                 ))}
               </Select>
             )}
+            {view === 'leakage' && (
+              <Select
+                value={leakage.status}
+                onChange={(e) => leakage.setStatus(e.target.value)}
+                aria-label="Filter by status"
+                className="sm:w-48"
+              >
+                <option value="">All statuses</option>
+                {LEAKAGE_STATUS_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </Select>
+            )}
           </div>
         </div>
       }
@@ -127,11 +153,11 @@ export function ClFinancialPage() {
         />
       }
     >
-      {(view === 'ledger' || view === 'leakage') && (
+      {view === 'ledger' && (
         <>
           <RevenueTable
             entries={revenue.rows}
-            leakage={view === 'leakage'}
+            leakage={false}
             isMutating={revenue.isMutating}
             hasFilters={revenue.hasFilters}
             onEdit={revenue.crud.openEdit}
@@ -144,6 +170,27 @@ export function ClFinancialPage() {
             editing={revenue.crud.editing}
             onClose={revenue.crud.editing ? revenue.crud.closeEdit : revenue.crud.closeCreate}
             onSubmit={revenue.submit}
+          />
+        </>
+      )}
+
+      {view === 'leakage' && (
+        <>
+          <LeakageTable
+            items={leakage.rows}
+            isMutating={leakage.isMutating}
+            hasFilters={leakage.hasFilters}
+            onEdit={leakage.crud.openEdit}
+            onDelete={leakage.crud.confirmDelete}
+            onResolve={leakage.resolve}
+            onAdd={canEdit ? leakage.crud.openCreate : undefined}
+          />
+          <LeakageFormModal
+            open={leakage.crud.createOpen || leakage.crud.editing !== null}
+            isSaving={leakage.crud.isSaving}
+            editing={leakage.crud.editing}
+            onClose={leakage.crud.editing ? leakage.crud.closeEdit : leakage.crud.closeCreate}
+            onSubmit={leakage.submit}
           />
         </>
       )}
@@ -191,6 +238,7 @@ export function ClFinancialPage() {
 
       {view === 'loc' && (
         <>
+          <LocQuickCalculator levels={loc.rows} />
           <LocTable
             levels={loc.rows}
             isMutating={loc.isMutating}
