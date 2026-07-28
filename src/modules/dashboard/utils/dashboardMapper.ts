@@ -106,9 +106,18 @@ export function mapSummaryToStats(
     : hospicelinkStats(summary);
 }
 
-// Turns an audit action + resource ("create" / "prospect") into a readable title.
+/**
+ * Turns an audit action or resource into a readable label.
+ *
+ * Audit actions are stored SHOUTING ("MOVE_PIPELINE_STAGE"), so lowercase first —
+ * otherwise the per-word capitalisation is a no-op and the feed shouts. Product
+ * table prefixes (`hl_` HospiceLink, `cl_` CommunityLink) are stripped so
+ * "hl_leads" reads as "Leads" rather than "Hl Leads".
+ */
 function titleize(value: string): string {
   return value
+    .toLowerCase()
+    .replace(/^(hl|cl)_/, '')
     .replace(/[_-]+/g, ' ')
     .replace(/\b\w/g, (c) => c.toUpperCase())
     .trim();
@@ -122,7 +131,10 @@ export function mapSummaryToActivity(
     return {
       id: entry.id,
       title: `${titleize(entry.action)} — ${resource}`,
-      detail: entry.resourceId ? `Ref ${entry.resourceId}` : resource,
+      // The raw resource uuid was noise; the actor is the useful second line.
+      detail: entry.actorName,
+      actorName: entry.actorName,
+      actorEmail: entry.actorEmail,
       occurredAt: entry.createdAt,
     };
   });

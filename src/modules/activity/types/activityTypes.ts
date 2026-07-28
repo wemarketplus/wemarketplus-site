@@ -18,6 +18,9 @@ export interface ActivityFeedItem {
   resource: string | null;
   resourceId: ID | null;
   meta: Record<string, unknown>;
+  /** Resolved display name of the actor; "System" for system-written rows. */
+  actorName: string;
+  actorEmail: string | null;
   createdAt: ISODateString;
 }
 

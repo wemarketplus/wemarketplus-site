@@ -15,7 +15,10 @@ export interface DashboardActivityItem {
   id: string;
   title: string;
   detail: string;
-  // ISO date — formatted at render time via formatRelative.
+  /** Display name of the user who did it; "System" for system-written rows. */
+  actorName: string;
+  actorEmail: string | null;
+  // ISO date — rendered as both an absolute date/time and a relative age.
   occurredAt: string;
 }
 
@@ -46,6 +49,8 @@ export interface DashboardSummaryActivity {
   action: string;
   resource: string | null;
   resourceId: string | null;
+  actorName: string;
+  actorEmail: string | null;
   // ISO date.
   createdAt: string;
 }
