@@ -123,6 +123,7 @@ export function SubscriptionStatusPage() {
             preview={preview}
             targetPlan={targetPlan}
             applying={applying}
+            renewsOn={data?.currentPeriodEnd}
             onConfirm={confirm}
             onCancel={cancel}
           />

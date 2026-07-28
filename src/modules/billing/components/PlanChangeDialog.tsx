@@ -7,6 +7,9 @@ interface PlanChangeDialogProps {
   preview: PlanChangePreview | null;
   targetPlan?: PlanOption;
   applying: boolean;
+  // End of the current paid period, so an upgrade can show when the plan's
+  // regular monthly price takes over from the one-off prorated charge.
+  renewsOn?: string;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -20,6 +23,7 @@ export function PlanChangeDialog({
   preview,
   targetPlan,
   applying,
+  renewsOn,
   onConfirm,
   onCancel,
 }: PlanChangeDialogProps) {
@@ -30,6 +34,10 @@ export function PlanChangeDialog({
   const effectiveDate = preview?.effectiveAt
     ? formatPeriodEnd(preview.effectiveAt)
     : 'your renewal date';
+  // "Due today" is a one-off prorated figure and never equals the plan's
+  // sticker price, which reads as a pricing error unless the recurring price is
+  // spelled out right next to it.
+  const recurringFrom = renewsOn ? formatPeriodEnd(renewsOn) : null;
 
   return (
     <Modal
@@ -56,9 +64,22 @@ export function PlanChangeDialog({
             <span className="text-muted">Due today</span>
             <span className="text-xl font-bold text-foreground">{amount}</span>
           </div>
+          {preview.effectiveImmediately && targetPlan && (
+            <div className="flex items-baseline justify-between gap-4 border-t border-border pt-3">
+              <span className="text-muted">Then</span>
+              <span className="font-semibold text-foreground">
+                {targetPlan.price}
+                {recurringFrom && (
+                  <span className="ml-1 font-normal text-muted">
+                    from {recurringFrom}
+                  </span>
+                )}
+              </span>
+            </div>
+          )}
           <p className="text-muted">
             {preview.effectiveImmediately
-              ? 'This upgrade takes effect immediately. The amount above is the prorated difference for the rest of your billing period, after crediting the unused time on your current plan. It is charged to your card now.'
+              ? 'This upgrade takes effect immediately. Today you pay only the difference for the days left in your current billing period, after crediting the unused time on your old plan — which is why it is less than the plan price. The regular price starts at your next renewal.'
               : `Your current plan stays active until ${effectiveDate} — you keep everything you already paid for. The new plan starts then at its regular price. Nothing is charged or refunded today.`}
           </p>
         </div>

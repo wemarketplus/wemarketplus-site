@@ -50,6 +50,16 @@ export function ChangePlanPanel({
                   </p>
                   <h3 className="text-lg font-semibold text-foreground">{plan.name}</h3>
                   <p className="text-2xl font-bold text-foreground">{plan.price}</p>
+                  {/* The price above is the recurring rate. Switching mid-cycle
+                      charges only the prorated difference, so the confirm
+                      dialog shows a smaller figure — say so here, or that gap
+                      reads as a pricing bug. */}
+                  {!isCurrent && (
+                    <p className="text-xs text-muted-soft">
+                      Switch today and you pay only the difference for the rest of
+                      this billing period.
+                    </p>
+                  )}
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted">
                   <Check className="h-4 w-4 text-success" />
