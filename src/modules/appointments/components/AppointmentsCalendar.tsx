@@ -47,7 +47,7 @@ export function AppointmentsCalendar({
                 {formatDate(day.date)}
               </p>
             </header>
-            <ul className="divide-y divide-white/[0.06]">
+            <ul className="divide-y divide-border">
               {day.items.map((appointment) => (
                 <li
                   key={appointment.id}

@@ -62,7 +62,7 @@ export function PipelineColumn({
         </header>
         <div className="flex-1 space-y-2">
           {cards.length === 0 ? (
-            <p className="rounded-md border border-dashed border-white/[0.06] px-3 py-2 text-xs text-muted-soft">
+            <p className="rounded-md border border-dashed border-border px-3 py-2 text-xs text-muted-soft">
               Drop a card here
             </p>
           ) : (

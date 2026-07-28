@@ -34,8 +34,8 @@ export function PipelineCard({
       }}
       onDragEnd={onDragEnd}
       className={cn(
-        'group cursor-grab space-y-1.5 rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-2.5 transition',
-        'hover:border-white/[0.12] active:cursor-grabbing',
+        'group cursor-grab space-y-1.5 rounded-md border border-border bg-surface-raised px-3 py-2.5 transition',
+        'hover:border-border-strong active:cursor-grabbing',
         isDragging && 'opacity-40',
       )}
     >

@@ -23,13 +23,13 @@ export const STAGE_TONE: Record<ProspectStage, string> = {
   [ProspectStage.Active]: 'border-success/30 bg-success/10 text-success',
   [ProspectStage.Champion]: 'border-success/30 bg-success/10 text-success',
   // terminal / legacy
-  [ProspectStage.Lost]: 'border-white/[0.08] bg-white/[0.03] text-muted',
+  [ProspectStage.Lost]: 'border-border bg-surface-raised text-muted',
   [ProspectStage.Inquiry]: 'border-azure/30 bg-azure/10 text-azure',
   [ProspectStage.Contacted]: 'border-azure/30 bg-azure/10 text-azure',
   [ProspectStage.Pending]: 'border-warning/30 bg-warning/10 text-warning',
   [ProspectStage.Evaluation]: 'border-warning/30 bg-warning/10 text-warning',
-  [ProspectStage.Inactive]: 'border-white/[0.08] bg-white/[0.03] text-muted',
+  [ProspectStage.Inactive]: 'border-border bg-surface-raised text-muted',
 };
 
 /** Fallback tone for a stage the tone map somehow does not cover. */
-export const DEFAULT_STAGE_TONE = 'border-white/[0.08] bg-white/[0.03] text-muted';
+export const DEFAULT_STAGE_TONE = 'border-border bg-surface-raised text-muted';

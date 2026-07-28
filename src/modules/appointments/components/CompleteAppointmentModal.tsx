@@ -96,7 +96,7 @@ export function CompleteAppointmentModal({
           />
         </div>
 
-        <fieldset className="space-y-3 rounded-md border border-white/[0.06] px-4 py-3">
+        <fieldset className="space-y-3 rounded-md border border-border px-4 py-3">
           <legend className="px-1 text-[10px] uppercase tracking-[0.14em] text-muted-soft">
             Follow-up job {willChain ? '(will be created)' : '(optional)'}
           </legend>

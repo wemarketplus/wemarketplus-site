@@ -29,7 +29,7 @@ export function PipelinePage() {
           <p className="text-sm text-muted">
             {total} open across {columns.length} stages · drag a card to change stage
             {isMoving && (
-              <span className="ml-2 rounded-pill bg-white/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+              <span className="ml-2 rounded-pill bg-surface-raised px-2 py-0.5 text-[10px] uppercase tracking-[0.1em] text-muted-soft">
                 Saving
               </span>
             )}
@@ -89,7 +89,7 @@ export function PipelinePage() {
             <p className="text-xs text-muted">
               These records use a pre-pipeline stage. Open one to set its stage.
             </p>
-            <ul className="divide-y divide-white/[0.06]">
+            <ul className="divide-y divide-border">
               {unstaged.map((card) => (
                 <li
                   key={card.id}

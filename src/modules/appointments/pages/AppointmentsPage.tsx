@@ -1,5 +1,9 @@
+import { Plus } from 'lucide-react';
+import { useListJobsQuery } from '@/modules/jobs';
+import { Button } from '@/shared/ui/core';
 import { AppointmentsCalendar } from '../components/AppointmentsCalendar';
 import { CompleteAppointmentModal } from '../components/CompleteAppointmentModal';
+import { ScheduleAppointmentModal } from '../components/ScheduleAppointmentModal';
 import { useAppointmentActions } from '../hooks/useAppointmentActions';
 import { useAppointmentsCalendar } from '../hooks/useAppointmentsCalendar';
 
@@ -13,15 +17,27 @@ export function AppointmentsPage() {
     closeComplete,
     isCompleting,
     submitComplete,
+    scheduleOpen,
+    openSchedule,
+    closeSchedule,
+    isScheduling,
+    submitSchedule,
   } = useAppointmentActions();
+  // An appointment always hangs off a job, so the picker needs the job list.
+  const { data: jobsPage } = useListJobsQuery({ limit: 100 });
 
   return (
     <div className="space-y-6">
-      <header>
-        <h1 className="font-display text-3xl text-foreground">Appointments</h1>
-        <p className="text-sm text-muted">
-          {appointments.length} scheduled in the next 60 days
-        </p>
+      <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="font-display text-3xl text-foreground">Appointments</h1>
+          <p className="text-sm text-muted">
+            {appointments.length} scheduled in the next 60 days
+          </p>
+        </div>
+        <Button onClick={openSchedule}>
+          <Plus className="h-4 w-4" /> Schedule appointment
+        </Button>
       </header>
 
       {isError && (
@@ -41,6 +57,13 @@ export function AppointmentsPage() {
         />
       )}
 
+      <ScheduleAppointmentModal
+        open={scheduleOpen}
+        isSaving={isScheduling}
+        jobs={jobsPage?.data ?? []}
+        onClose={closeSchedule}
+        onSubmit={submitSchedule}
+      />
       <CompleteAppointmentModal
         appointment={pending}
         isSaving={isCompleting}

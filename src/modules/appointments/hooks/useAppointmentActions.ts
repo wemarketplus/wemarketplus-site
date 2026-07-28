@@ -2,7 +2,12 @@ import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import { useAppDispatch } from '@/app/hooks';
 import { jobsApi } from '@/modules/jobs/api/jobsApi';
-import { useCompleteAppointmentMutation } from '../api/appointmentsApi';
+import {
+  useCompleteAppointmentMutation,
+  useCreateAppointmentMutation,
+} from '../api/appointmentsApi';
+import type { NewAppointmentFormValues } from '../schema/appointmentSchema';
+import type { AppointmentType } from '../types/appointmentsTypes';
 import type {
   AppointmentRecord,
   CompleteAppointmentRequest,
@@ -16,8 +21,34 @@ import type {
 export function useAppointmentActions() {
   const dispatch = useAppDispatch();
   const [pending, setPending] = useState<AppointmentRecord | null>(null);
+  const [scheduleOpen, setScheduleOpen] = useState(false);
   const [complete, { isLoading: isCompleting }] =
     useCompleteAppointmentMutation();
+  const [create, { isLoading: isScheduling }] = useCreateAppointmentMutation();
+
+  const submitSchedule = useCallback(
+    async (values: NewAppointmentFormValues) => {
+      try {
+        await create({
+          jobId: values.jobId,
+          title: values.title,
+          // datetime-local yields a local wall-clock string with no zone; new Date()
+          // interprets it as local, and toISOString sends the correct instant.
+          startAt: new Date(values.startAt).toISOString(),
+          endAt: new Date(values.endAt).toISOString(),
+          appointmentType: values.appointmentType as AppointmentType,
+          location: values.location?.trim() || undefined,
+        }).unwrap();
+        toast.success('Appointment scheduled.');
+        setScheduleOpen(false);
+        return true;
+      } catch {
+        toast.error('Could not schedule that appointment.');
+        return false;
+      }
+    },
+    [create],
+  );
 
   const submitComplete = useCallback(
     async (id: string, body: CompleteAppointmentRequest) => {
@@ -49,5 +80,10 @@ export function useAppointmentActions() {
     closeComplete: () => setPending(null),
     isCompleting,
     submitComplete,
+    scheduleOpen,
+    openSchedule: () => setScheduleOpen(true),
+    closeSchedule: () => setScheduleOpen(false),
+    isScheduling,
+    submitSchedule,
   };
 }
