@@ -25,7 +25,7 @@ export function OwnerPipelineBoard({ deals }: OwnerPipelineBoardProps) {
                 {stageDeals.map((d) => (
                   <li
                     key={d.id}
-                    className="rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-2 text-xs"
+                    className="rounded-md border border-border/[0.06] bg-foreground/[0.02] px-3 py-2 text-xs"
                   >
                     <p className="font-semibold text-foreground">{d.prospect}</p>
                     <p className="mt-0.5 text-muted-soft">
@@ -35,7 +35,7 @@ export function OwnerPipelineBoard({ deals }: OwnerPipelineBoardProps) {
                   </li>
                 ))}
                 {stageDeals.length === 0 && (
-                  <li className="rounded-md border border-dashed border-white/[0.06] px-3 py-2 text-xs text-muted-soft">
+                  <li className="rounded-md border border-dashed border-border/[0.06] px-3 py-2 text-xs text-muted-soft">
                     No deals
                   </li>
                 )}

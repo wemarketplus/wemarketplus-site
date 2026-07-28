@@ -40,7 +40,7 @@ export function TempPasswordDialog({ reveal, onClose }: TempPasswordDialogProps)
         securely. It will not be shown again, and they must change it on next login.
       </p>
       <div className="flex items-center gap-2">
-        <code className="flex-1 select-all break-all rounded-md border border-white/[0.1] bg-surface-raised px-3 py-2.5 font-mono text-sm text-foreground">
+        <code className="flex-1 select-all break-all rounded-md border border-border/[0.1] bg-surface-raised px-3 py-2.5 font-mono text-sm text-foreground">
           {reveal.temporaryPassword}
         </code>
         <Button variant="secondary" size="square" onClick={copy} aria-label="Copy temporary password">

@@ -18,7 +18,7 @@ export function TerritoryHeatmap({ territories }: { territories: readonly Territ
               <div
                 key={t.id}
                 className={cn(
-                  'flex h-32 flex-col justify-between rounded-md border border-white/[0.08] p-3 transition-colors',
+                  'flex h-32 flex-col justify-between rounded-md border border-border/[0.08] p-3 transition-colors',
                 )}
                 style={{
                   background: `rgba(var(--color-primary) / ${0.08 + intensity * 0.25})`,

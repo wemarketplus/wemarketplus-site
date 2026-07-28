@@ -55,7 +55,7 @@ export function UserRowActions({
   };
 
   const itemClass =
-    'flex w-full items-center gap-2.5 px-3.5 py-2 text-left text-[13px] text-foreground transition-colors hover:bg-white/[0.06] disabled:opacity-40';
+    'flex w-full items-center gap-2.5 px-3.5 py-2 text-left text-[13px] text-foreground transition-colors hover:bg-foreground/[0.06] disabled:opacity-40';
 
   return (
     <div ref={ref} className="relative inline-block text-left">
@@ -66,7 +66,7 @@ export function UserRowActions({
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={`Actions for ${fullName(user)}`}
-        className="flex h-9 w-9 items-center justify-center rounded-md text-muted transition-colors hover:bg-white/[0.06] hover:text-foreground disabled:opacity-40"
+        className="flex h-9 w-9 items-center justify-center rounded-md text-muted transition-colors hover:bg-foreground/[0.06] hover:text-foreground disabled:opacity-40"
       >
         <MoreVertical className="h-4 w-4" />
       </button>
@@ -75,7 +75,7 @@ export function UserRowActions({
         <div
           role="menu"
           className={cn(
-            'absolute right-0 z-20 mt-1 w-52 overflow-hidden rounded-lg border border-white/[0.1] bg-surface py-1 shadow-2xl',
+            'absolute right-0 z-20 mt-1 w-52 overflow-hidden rounded-lg border border-border/[0.1] bg-surface py-1 shadow-2xl',
           )}
         >
           <button type="button" role="menuitem" className={itemClass} onClick={run(() => onEdit(user))}>
@@ -108,7 +108,7 @@ export function UserRowActions({
           </button>
           {canDelete && (
             <>
-              <div className="my-1 border-t border-white/[0.07]" />
+              <div className="my-1 border-t border-border/[0.07]" />
               <button
                 type="button"
                 role="menuitem"

@@ -32,13 +32,13 @@ export function BulkActionBar({
   const label = count === 1 ? noun : (nounPlural ?? `${noun}s`);
 
   return (
-    <div className="flex items-center justify-between gap-3 rounded-[12px] border border-primary/25 bg-primary/[0.08] px-4 py-2.5">
+    <div className="flex items-center justify-between gap-3 rounded-[14px] border border-primary/25 bg-primary/[0.08] px-4 py-2.5">
       <div className="flex items-center gap-2 text-[13px] text-foreground">
         <button
           type="button"
           onClick={onClear}
           aria-label="Clear selection"
-          className="flex h-6 w-6 items-center justify-center rounded-full text-muted hover:bg-white/[0.06] hover:text-foreground"
+          className="flex h-6 w-6 items-center justify-center rounded-full text-muted hover:bg-foreground/[0.06] hover:text-foreground"
         >
           <X className="h-4 w-4" />
         </button>

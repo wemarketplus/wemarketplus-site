@@ -16,11 +16,11 @@ export function GlobalSearch() {
         type="button"
         onClick={openPalette}
         aria-label="Search"
-        className="flex items-center gap-2 rounded-pill border border-white/[0.08] bg-surface/60 py-1.5 pl-3 pr-2 text-[12px] text-muted transition-colors hover:border-white/[0.16] hover:text-foreground"
+        className="flex items-center gap-2 rounded-pill border border-border/[0.08] bg-surface/60 py-1.5 pl-3 pr-2 text-[12px] text-muted transition-colors hover:border-border/[0.16] hover:text-foreground"
       >
         <Search className="h-3.5 w-3.5" />
         <span className="hidden sm:inline">Search…</span>
-        <kbd className="hidden items-center rounded bg-white/[0.06] px-1.5 py-0.5 text-[10px] text-muted-soft sm:inline-flex">
+        <kbd className="hidden items-center rounded bg-foreground/[0.06] px-1.5 py-0.5 text-[10px] text-muted-soft sm:inline-flex">
           {isMac ? '⌘' : 'Ctrl'} K
         </kbd>
       </button>

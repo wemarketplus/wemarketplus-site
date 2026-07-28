@@ -39,7 +39,7 @@ export function ToursTable({
     {
       key: 'lead',
       header: 'Lead',
-      cell: (t) => <span className="font-bold text-[#111]">{leadName(t.leadId)}</span>,
+      cell: (t) => <span className="font-bold text-foreground">{leadName(t.leadId)}</span>,
     },
     { key: 'when', header: 'Scheduled', cell: (t) => tourWhen(t.scheduledAt) },
     {
@@ -58,7 +58,7 @@ export function ToursTable({
             value={t.status}
             disabled={isMutating}
             onChange={(e) => onStatusChange(t, e.target.value)}
-            className="rounded-md border border-[#d0dce8] bg-white px-1.5 py-1 text-[11px] text-[#111]"
+            className="rounded-md border border-border/[0.15] bg-white px-1.5 py-1 text-[11px] text-foreground"
           >
             {TOUR_STATUS_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>

@@ -28,7 +28,7 @@ export function PermissionsPage() {
           <p className="mt-1 max-w-2xl text-sm text-muted">
             This matrix is the live, enforced RBAC policy. The backend checks every
             request against it via{' '}
-            <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-xs text-foreground">
+            <code className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-xs text-foreground">
               @RequirePermission()
             </code>{' '}
             guards. Toggle a cell to grant or revoke a capability for a role.
@@ -37,14 +37,14 @@ export function PermissionsPage() {
       </header>
 
       {!canEdit && (
-        <div className="flex items-start gap-3 rounded-lg border border-white/[0.08] bg-white/[0.02] px-4 py-3 text-sm text-muted">
+        <div className="flex items-start gap-3 rounded-lg border border-border/[0.08] bg-foreground/[0.02] px-4 py-3 text-sm text-muted">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-muted-soft" />
           <p>Only a Super Admin can edit permissions. This matrix is read-only for you.</p>
         </div>
       )}
 
       {isLoading && (
-        <div className="flex items-center justify-center gap-2 rounded-lg border border-white/[0.08] py-16 text-sm text-muted">
+        <div className="flex items-center justify-center gap-2 rounded-lg border border-border/[0.08] py-16 text-sm text-muted">
           <Loader2 className="h-4 w-4 animate-spin" />
           Loading permissions…
         </div>

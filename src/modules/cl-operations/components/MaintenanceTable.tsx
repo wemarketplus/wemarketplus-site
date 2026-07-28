@@ -42,15 +42,15 @@ export function MaintenanceTable({
     {
       key: 'ticket',
       header: 'Ticket',
-      cell: (t) => <span className="font-bold text-[#111]">{t.ticketNumber ?? '—'}</span>,
+      cell: (t) => <span className="font-bold text-foreground">{t.ticketNumber ?? '—'}</span>,
     },
     {
       key: 'issue',
       header: 'Issue',
       cell: (t) => (
         <div>
-          <p className="text-[#111]">{t.issue}</p>
-          {t.reporterName && <p className="text-[11px] text-[#667]">{t.reporterName}</p>}
+          <p className="text-foreground">{t.issue}</p>
+          {t.reporterName && <p className="text-[11px] text-muted">{t.reporterName}</p>}
         </div>
       ),
     },
@@ -79,7 +79,7 @@ export function MaintenanceTable({
               value={t.status}
               disabled={isMutating}
               onChange={(e) => onStatusChange(t, e.target.value)}
-              className="rounded-md border border-[#d0dce8] bg-white px-1.5 py-1 text-[11px] text-[#111]"
+              className="rounded-md border border-border/[0.15] bg-white px-1.5 py-1 text-[11px] text-foreground"
             >
               {MAINTENANCE_STATUS_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>

@@ -44,8 +44,8 @@ export function ConcessionsTable({
       header: 'Concession',
       cell: (c) => (
         <div>
-          <p className="font-bold text-[#111]">{c.type}</p>
-          {c.reason && <p className="text-[11px] text-[#667]">{c.reason}</p>}
+          <p className="font-bold text-foreground">{c.type}</p>
+          {c.reason && <p className="text-[11px] text-muted">{c.reason}</p>}
         </div>
       ),
     },

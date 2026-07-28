@@ -128,7 +128,7 @@ export function AddUserModal({
         <label className="flex items-start gap-3 text-sm text-foreground sm:col-span-2">
           <input
             type="checkbox"
-            className="mt-0.5 h-4 w-4 rounded border border-white/15 bg-surface-raised text-primary focus:ring-primary/50"
+            className="mt-0.5 h-4 w-4 rounded border border-border/15 bg-surface-raised text-primary focus:ring-primary/50"
             {...register('sendInvite')}
           />
           <span>Email an invite so they can set their own password</span>

@@ -42,8 +42,8 @@ export function ApartmentsTable({
       header: 'Unit',
       cell: (a) => (
         <div>
-          <p className="font-bold text-[#111]">{a.unitNumber}</p>
-          {a.unitType && <p className="text-[11px] text-[#667]">{a.unitType}</p>}
+          <p className="font-bold text-foreground">{a.unitNumber}</p>
+          {a.unitType && <p className="text-[11px] text-muted">{a.unitType}</p>}
         </div>
       ),
     },
@@ -61,7 +61,7 @@ export function ApartmentsTable({
               value={a.status}
               disabled={isMutating}
               onChange={(e) => onStatusChange(a, e.target.value)}
-              className="rounded-md border border-[#d0dce8] bg-white px-1.5 py-1 text-[11px] text-[#111]"
+              className="rounded-md border border-border/[0.15] bg-white px-1.5 py-1 text-[11px] text-foreground"
             >
               {APARTMENT_STATUS_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>

@@ -14,8 +14,8 @@ const columns: ReadonlyArray<Column<Row>> = [
     key: 'territory',
     header: 'Territory',
     cell: (r) =>
-      isTotal(r) ? <span className="font-bold text-[#111]">Total</span> : (
-        <span className="font-bold text-[#111]">{r.areaName}</span>
+      isTotal(r) ? <span className="font-bold text-foreground">Total</span> : (
+        <span className="font-bold text-foreground">{r.areaName}</span>
       ),
   },
   { key: 'marketer', header: 'Marketer', cell: (r) => (isTotal(r) ? '' : r.assignedMarketer) },
@@ -26,7 +26,7 @@ const columns: ReadonlyArray<Column<Row>> = [
     header: 'Admissions',
     cell: (r) =>
       isTotal(r) ? (
-        <span className="font-bold text-[#111]">{r.admissionsCount}</span>
+        <span className="font-bold text-foreground">{r.admissionsCount}</span>
       ) : (
         r.admissionsCount
       ),

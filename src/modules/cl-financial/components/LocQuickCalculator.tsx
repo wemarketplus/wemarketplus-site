@@ -57,7 +57,7 @@ export function LocQuickCalculator({ levels }: LocQuickCalculatorProps) {
               step="0.01"
               value={parking}
               onChange={(e) => setParking(e.target.value)}
-              className="w-full rounded-md border border-white/10 bg-surface px-3 py-2 text-sm text-foreground outline-none focus:border-primary/50"
+              className="w-full rounded-md border border-border/10 bg-surface px-3 py-2 text-sm text-foreground outline-none focus:border-primary/50"
               aria-label="Parking fee"
             />
           </div>

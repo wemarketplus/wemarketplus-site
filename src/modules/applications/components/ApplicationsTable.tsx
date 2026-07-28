@@ -24,7 +24,7 @@ export function ApplicationsTable({ rows, isMutating, onEdit, onDelete }: Applic
       key: 'application',
       header: 'Application',
       cell: (a) => (
-        <p className="font-bold text-[#111]">{a.applicationNumber ?? a.id.slice(0, 8)}</p>
+        <p className="font-bold text-foreground">{a.applicationNumber ?? a.id.slice(0, 8)}</p>
       ),
     },
     { key: 'status', header: 'Status', cell: (a) => APPLICATION_STATUS_LABELS[a.status] ?? a.status },

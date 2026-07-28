@@ -7,7 +7,7 @@ const columns: ReadonlyArray<Column<OwnerVisitor>> = [
   {
     key: 'landing',
     header: 'Landing page',
-    cell: (v) => <span className="font-mono text-[11px] text-[#667]">{v.landingPage}</span>,
+    cell: (v) => <span className="font-mono text-[11px] text-muted">{v.landingPage}</span>,
   },
   {
     key: 'session',

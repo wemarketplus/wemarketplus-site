@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 export function SecurityBadges() {
   return (
     <div className="text-center">
-      <div className="inline-flex items-center gap-1.5 rounded-pill border border-azure/20 bg-[#091c30] px-3 py-1 text-[11px] text-[#6b9edd]">
+      <div className="inline-flex items-center gap-1.5 rounded-pill border border-primary/20 bg-primary/[0.06] px-3 py-1 text-[11px] text-primary">
         🔒 HIPAA-Compliant &amp; SOC 2 Ready
       </div>
       <div className="mt-3 text-[11px] text-faint">

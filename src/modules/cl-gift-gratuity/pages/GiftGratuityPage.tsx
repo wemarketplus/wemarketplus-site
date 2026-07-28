@@ -103,7 +103,7 @@ export function GiftGratuityPage() {
               Failed to load gift/gratuity logs.
             </p>
           ) : isLoading ? (
-            <div className="rounded-[12px] border border-white/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
+            <div className="rounded-[14px] border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
               Loading…
             </div>
           ) : logs.length === 0 ? (
@@ -122,7 +122,7 @@ export function GiftGratuityPage() {
                 </thead>
                 <tbody>
                   {logs.map((l) => (
-                    <tr key={l.id} className="border-t border-white/[0.06]">
+                    <tr key={l.id} className="border-t border-border/[0.06]">
                       <td className="py-2 pr-3 text-[12px] text-muted">{l.visitDate}</td>
                       <td className="py-2 pr-3">
                         <p className="font-semibold text-foreground">{l.recipientName}</p>

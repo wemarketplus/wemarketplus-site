@@ -61,7 +61,7 @@ export function RemindersView() {
                   </span>
                   <span className="text-[10px] text-muted-soft">{items.length}</span>
                 </header>
-                <ul className="divide-y divide-white/[0.06] border-t border-white/[0.06]">
+                <ul className="divide-y divide-white/[0.06] border-t border-border/[0.06]">
                   {items.map((r) => (
                     <li key={r.id} className="flex items-start justify-between gap-3 px-6 py-3">
                       <div className="min-w-0 flex-1">

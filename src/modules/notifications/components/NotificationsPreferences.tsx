@@ -29,7 +29,7 @@ function InAppToggle({
         'relative inline-flex h-6 w-11 shrink-0 items-center rounded-full border transition-colors disabled:opacity-50',
         item.inApp
           ? 'border-primary/40 bg-primary/70'
-          : 'border-white/[0.12] bg-white/[0.06]',
+          : 'border-border/[0.12] bg-foreground/[0.06]',
       )}
     >
       <span

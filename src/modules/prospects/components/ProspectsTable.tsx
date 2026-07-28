@@ -16,8 +16,8 @@ const columns: ReadonlyArray<Column<Prospect>> = [
     header: 'Prospect',
     cell: (p) => (
       <div>
-        <p className="font-bold text-[#111]">{p.name}</p>
-        <p className="text-[11px] text-[#667]">{p.email}</p>
+        <p className="font-bold text-foreground">{p.name}</p>
+        <p className="text-[11px] text-muted">{p.email}</p>
       </div>
     ),
   },

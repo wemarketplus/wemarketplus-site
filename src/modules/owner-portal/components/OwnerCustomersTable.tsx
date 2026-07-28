@@ -9,7 +9,7 @@ const columns: ReadonlyArray<Column<OwnerCustomer>> = [
   {
     key: 'organization',
     header: 'Organization',
-    cell: (c) => <span className="font-bold text-[#111]">{c.organization}</span>,
+    cell: (c) => <span className="font-bold text-foreground">{c.organization}</span>,
   },
   { key: 'plan', header: 'Plan', cell: (c) => c.plan },
   { key: 'mrr', header: 'MRR', cell: (c) => formatMoney(c.mrr) },

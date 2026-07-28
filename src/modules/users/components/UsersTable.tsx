@@ -40,7 +40,7 @@ export function UsersTable({
 
   if (isLoading) {
     return (
-      <div className="rounded-lg border border-white/[0.06] bg-surface p-10 text-center text-sm text-muted">
+      <div className="rounded-lg border border-border/[0.06] bg-surface p-10 text-center text-sm text-muted">
         Loading users…
       </div>
     );
@@ -56,8 +56,8 @@ export function UsersTable({
             {initials(u)}
           </div>
           <div>
-            <p className="font-bold text-[#111]">{fullName(u)}</p>
-            <p className="text-[11px] text-[#667]">{u.email}</p>
+            <p className="font-bold text-foreground">{fullName(u)}</p>
+            <p className="text-[11px] text-muted">{u.email}</p>
           </div>
         </div>
       ),

@@ -26,8 +26,8 @@ export function InvoicesTable({ invoices, isMutating, onEdit }: InvoicesTablePro
       header: 'Invoice',
       cell: (i) => (
         <div>
-          <p className="font-bold text-[#111]">{i.companyName}</p>
-          <p className="text-[11px] text-[#667]">{i.invoiceNumber}</p>
+          <p className="font-bold text-foreground">{i.companyName}</p>
+          <p className="text-[11px] text-muted">{i.invoiceNumber}</p>
         </div>
       ),
     },

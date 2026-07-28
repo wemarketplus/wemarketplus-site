@@ -37,8 +37,8 @@ export function BedUnitsTable({
       header: 'Facility',
       cell: (u) => (
         <div>
-          <p className="font-bold text-[#111]">{u.facilityName}</p>
-          <p className="text-[11px] text-[#667]">{u.bedType ?? '—'}</p>
+          <p className="font-bold text-foreground">{u.facilityName}</p>
+          <p className="text-[11px] text-muted">{u.bedType ?? '—'}</p>
         </div>
       ),
     },
@@ -53,7 +53,7 @@ export function BedUnitsTable({
     {
       key: 'notes',
       header: 'Notes',
-      cell: (u) => <span className="text-[#667]">{u.notes ?? '—'}</span>,
+      cell: (u) => <span className="text-muted">{u.notes ?? '—'}</span>,
     },
     {
       key: 'actions',

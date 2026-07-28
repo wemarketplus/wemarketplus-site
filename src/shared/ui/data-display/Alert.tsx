@@ -2,16 +2,18 @@ import type { HTMLAttributes } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/shared/utils/cn';
 
-// Mirrors wemarketplus-site `.alert` family: rgba .07 fill, .2 border, tinted
-// text. tone names match the source suffixes (b/y/g/r/gd).
-const alertVariants = cva('rounded-[9px] px-3.5 py-2.5 text-[13px]', {
+// `.alert` family: soft tinted fill, hairline border, accent-coloured text.
+// Driven by tokens rather than literal hex so the tones track the palette —
+// the previous values (#79c0ff on a .07 fill) were tuned for a navy page and
+// were unreadable once the app moved to the light editorial theme.
+const alertVariants = cva('rounded-[10px] px-3.5 py-2.5 text-[13px]', {
   variants: {
     tone: {
-      b: 'border border-[#49b6ff]/20 bg-[#49b6ff]/[0.07] text-[#79c0ff]',
-      y: 'border border-[#fbbf24]/20 bg-[#fbbf24]/[0.07] text-[#fbbf24]',
-      g: 'border border-[#8cff66]/20 bg-[#8cff66]/[0.07] text-[#8cff66]',
-      r: 'border border-[#e05555]/20 bg-[#e05555]/[0.07] text-[#f87171]',
-      gd: 'border border-[#ffd700]/20 bg-[#ffd700]/[0.07] text-[#ffd700]',
+      b: 'border border-azure/25 bg-azure/[0.06] text-azure',
+      y: 'border border-warning/25 bg-warning/[0.08] text-warning',
+      g: 'border border-success/25 bg-success/[0.07] text-success',
+      r: 'border border-destructive/25 bg-destructive/[0.07] text-destructive',
+      gd: 'border border-gold/25 bg-gold/[0.08] text-gold',
     },
   },
   defaultVariants: { tone: 'b' },

@@ -38,8 +38,8 @@ export function TelehealthTable({
       header: 'Patient',
       cell: (s) => (
         <div>
-          <p className="font-bold text-[#111]">{s.patientName}</p>
-          <p className="text-[11px] text-[#667]">{s.providerName ?? '—'}</p>
+          <p className="font-bold text-foreground">{s.patientName}</p>
+          <p className="text-[11px] text-muted">{s.providerName ?? '—'}</p>
         </div>
       ),
     },

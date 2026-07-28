@@ -65,7 +65,7 @@ export function DataExportTab() {
             </div>
           </div>
 
-          <div className="rounded-[9px] border border-white/[0.08] bg-surface p-4">
+          <div className="rounded-[9px] border border-border/[0.08] bg-surface p-4">
             <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-soft">
               What's included
             </p>

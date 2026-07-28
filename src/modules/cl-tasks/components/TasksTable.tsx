@@ -42,9 +42,9 @@ export function TasksTable({
       header: 'Title',
       cell: (t) => (
         <div>
-          <p className="font-bold text-[#111]">{t.title}</p>
+          <p className="font-bold text-foreground">{t.title}</p>
           {t.description ? (
-            <p className="text-[11px] text-[#667]">{t.description}</p>
+            <p className="text-[11px] text-muted">{t.description}</p>
           ) : null}
         </div>
       ),
@@ -65,7 +65,7 @@ export function TasksTable({
             value={t.status}
             disabled={isMutating}
             onChange={(e) => onStatusChange(t, e.target.value)}
-            className="rounded-md border border-[#d0dce8] bg-white px-1.5 py-1 text-[11px] text-[#111]"
+            className="rounded-md border border-border/[0.15] bg-white px-1.5 py-1 text-[11px] text-foreground"
           >
             {STATUS_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>

@@ -26,9 +26,9 @@ export function ForgotPasswordPage() {
   if (submitted) {
     return (
       <AuthCardShell title="Forgot your password?" hideFooter>
-        <div className="rounded-[12px] border border-[#8cff66]/30 bg-[#8cff66]/[0.08] p-6 text-center">
+        <div className="rounded-[14px] border border-success/30 bg-success/[0.07] p-6 text-center">
           <div className="mb-2.5 text-[36px]">📧</div>
-          <h3 className="mb-2 text-[17px] font-extrabold text-[#8cff66]">
+          <h3 className="mb-2 text-[17px] font-extrabold text-success">
             Check Your Email
           </h3>
           <p className="mb-4 text-[13px] leading-relaxed text-muted-soft">
@@ -38,7 +38,7 @@ export function ForgotPasswordPage() {
           </p>
           <Link
             to="/login"
-            className="inline-block rounded-pill bg-azure px-6 py-2.5 text-[14px] font-extrabold text-[#081426] no-underline"
+            className="inline-block rounded-pill bg-primary px-6 py-2.5 text-[14px] font-extrabold text-primary-foreground no-underline"
           >
             Back to Login
           </Link>

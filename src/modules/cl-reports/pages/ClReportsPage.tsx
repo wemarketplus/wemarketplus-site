@@ -15,7 +15,7 @@ export function ClReportsPage() {
             <span className="ml-2 text-[11px] text-muted-soft">· loading live data…</span>
           )}
           {isUsingFixture && (
-            <span className="ml-2 rounded-pill bg-white/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+            <span className="ml-2 rounded-pill bg-foreground/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-[0.1em] text-muted-soft">
               Preview data
             </span>
           )}

@@ -6,10 +6,10 @@ import { cn } from '@/shared/utils/cn';
 // source (Assessment / Operations / Evidence / Security).
 export function PortalNav() {
   return (
-    <nav className="flex flex-wrap gap-x-6 gap-y-3 border-b border-white/[0.06] pb-4">
+    <nav className="flex flex-wrap gap-x-6 gap-y-3 border-b border-border/[0.06] pb-4">
       {GROUPS.map((group) => (
         <div key={group} className="space-y-1.5">
-          <p className="text-[9px] font-black uppercase tracking-[0.12em] text-[#334d6e]">
+          <p className="text-[9px] font-black uppercase tracking-[0.12em] text-muted-soft">
             {group}
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -22,7 +22,7 @@ export function PortalNav() {
                     'rounded-pill border px-3 py-1.5 text-[11px] font-semibold transition-colors',
                     isActive
                       ? 'border-azure/40 bg-azure/15 text-azure'
-                      : 'border-white/[0.08] text-muted hover:border-white/20 hover:text-foreground',
+                      : 'border-border/[0.08] text-muted hover:border-border/20 hover:text-foreground',
                   )
                 }
               >

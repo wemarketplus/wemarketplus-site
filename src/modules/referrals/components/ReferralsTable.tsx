@@ -13,8 +13,8 @@ const columns: ReadonlyArray<Column<ReferralSource>> = [
     header: 'Contact',
     cell: (r) => (
       <div>
-        <p className="font-bold text-[#111]">{r.fullName}</p>
-        <p className="text-[11px] text-[#667]">{r.title}</p>
+        <p className="font-bold text-foreground">{r.fullName}</p>
+        <p className="text-[11px] text-muted">{r.title}</p>
       </div>
     ),
   },

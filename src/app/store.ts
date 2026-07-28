@@ -18,6 +18,7 @@ import { adminApi } from '@/modules/admin';
 import { agreementsApi } from '@/modules/agreements';
 import { aiAssistantReducer } from '@/modules/ai-assistant';
 import { applicationsApi } from '@/modules/applications';
+import { appointmentsApi, appointmentsReducer } from '@/modules/appointments';
 import { authApi, authReducer } from '@/modules/auth';
 import { chatApi } from '@/modules/chat';
 import { documentsApi } from '@/modules/documents';
@@ -43,6 +44,8 @@ import { companiesApi } from '@/modules/companies';
 import { complianceApi, complianceReducer } from '@/modules/compliance';
 import { contactsApi } from '@/modules/contacts';
 import { invoicesApi } from '@/modules/invoices';
+import { jobsApi, jobsReducer } from '@/modules/jobs';
+import { leadsApi, leadsReducer } from '@/modules/leads';
 import { contractsApi } from '@/modules/contracts';
 import { locationsApi } from '@/modules/locations';
 import { territoriesApi } from '@/modules/territories';
@@ -55,7 +58,7 @@ import { notificationsApi, notificationsReducer } from '@/modules/notifications'
 import { onboardingApi, onboardingReducer } from '@/modules/onboarding';
 import { impersonationApi, ownerPortalApi, ownerPortalReducer } from '@/modules/owner-portal';
 import { permissionsApi, permissionsReducer } from '@/modules/permissions';
-import { pipelineReducer } from '@/modules/pipeline';
+import { pipelineApi, pipelineReducer } from '@/modules/pipeline';
 import { prospectsApi, prospectsReducer } from '@/modules/prospects';
 import { referralsApi, referralsReducer } from '@/modules/referrals';
 import { schedulingReducer } from '@/modules/scheduling';
@@ -68,6 +71,7 @@ const rootReducer = combineReducers({
   access: accessReducer,
   activity: activityReducer,
   aiAssistant: aiAssistantReducer,
+  appointments: appointmentsReducer,
   auth: authReducer,
   billing: billingReducer,
   clDemo: clDemoReducer,
@@ -82,6 +86,8 @@ const rootReducer = combineReducers({
   maxDemo: maxDemoReducer,
   integrations: integrationsReducer,
   intelligence: intelligenceReducer,
+  jobs: jobsReducer,
+  leads: leadsReducer,
   marketing: marketingReducer,
   notifications: notificationsReducer,
   onboarding: onboardingReducer,
@@ -97,6 +103,7 @@ const rootReducer = combineReducers({
   [adminApi.reducerPath]: adminApi.reducer,
   [agreementsApi.reducerPath]: agreementsApi.reducer,
   [applicationsApi.reducerPath]: applicationsApi.reducer,
+  [appointmentsApi.reducerPath]: appointmentsApi.reducer,
   [authApi.reducerPath]: authApi.reducer,
   [billingApi.reducerPath]: billingApi.reducer,
   [clAdminSettingsApi.reducerPath]: clAdminSettingsApi.reducer,
@@ -114,6 +121,8 @@ const rootReducer = combineReducers({
   [complianceApi.reducerPath]: complianceApi.reducer,
   [contactsApi.reducerPath]: contactsApi.reducer,
   [invoicesApi.reducerPath]: invoicesApi.reducer,
+  [jobsApi.reducerPath]: jobsApi.reducer,
+  [leadsApi.reducerPath]: leadsApi.reducer,
   [contractsApi.reducerPath]: contractsApi.reducer,
   [dashboardApi.reducerPath]: dashboardApi.reducer,
   [documentsApi.reducerPath]: documentsApi.reducer,
@@ -130,6 +139,7 @@ const rootReducer = combineReducers({
   [onboardingApi.reducerPath]: onboardingApi.reducer,
   [ownerPortalApi.reducerPath]: ownerPortalApi.reducer,
   [permissionsApi.reducerPath]: permissionsApi.reducer,
+  [pipelineApi.reducerPath]: pipelineApi.reducer,
   [prospectsApi.reducerPath]: prospectsApi.reducer,
   [referralsApi.reducerPath]: referralsApi.reducer,
   [reportsApi.reducerPath]: reportsApi.reducer,
@@ -170,6 +180,7 @@ export const store = configureStore({
       adminApi.middleware,
       agreementsApi.middleware,
       applicationsApi.middleware,
+      appointmentsApi.middleware,
       authApi.middleware,
       billingApi.middleware,
       clAdminSettingsApi.middleware,
@@ -187,6 +198,8 @@ export const store = configureStore({
       complianceApi.middleware,
       contactsApi.middleware,
       invoicesApi.middleware,
+      jobsApi.middleware,
+      leadsApi.middleware,
       contractsApi.middleware,
       dashboardApi.middleware,
       documentsApi.middleware,
@@ -203,6 +216,7 @@ export const store = configureStore({
       onboardingApi.middleware,
       ownerPortalApi.middleware,
       permissionsApi.middleware,
+      pipelineApi.middleware,
       prospectsApi.middleware,
       referralsApi.middleware,
       reportsApi.middleware,

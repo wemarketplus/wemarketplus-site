@@ -37,8 +37,8 @@ export function ClReferralsTable({
       header: 'Name',
       cell: (r) => (
         <div>
-          <p className="font-bold text-[#111]">{r.name}</p>
-          <p className="text-[11px] text-[#667]">{r.email ?? r.phone ?? '—'}</p>
+          <p className="font-bold text-foreground">{r.name}</p>
+          <p className="text-[11px] text-muted">{r.email ?? r.phone ?? '—'}</p>
         </div>
       ),
     },
@@ -56,7 +56,7 @@ export function ClReferralsTable({
     {
       key: 'leadsSent',
       header: 'Leads sent',
-      cell: (r) => <span className="font-semibold text-[#111]">{r.referralCount}</span>,
+      cell: (r) => <span className="font-semibold text-foreground">{r.referralCount}</span>,
     },
     {
       key: 'lastContact',

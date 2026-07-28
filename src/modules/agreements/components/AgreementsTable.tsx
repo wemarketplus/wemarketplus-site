@@ -23,8 +23,8 @@ export function AgreementsTable({ rows, isMutating, onEdit, onDelete }: Agreemen
       header: 'Agreement',
       cell: (a) => (
         <div>
-          <p className="font-bold text-[#111]">{a.agreementName}</p>
-          {a.companyName && <p className="text-[11px] text-[#667]">{a.companyName}</p>}
+          <p className="font-bold text-foreground">{a.agreementName}</p>
+          {a.companyName && <p className="text-[11px] text-muted">{a.companyName}</p>}
         </div>
       ),
     },

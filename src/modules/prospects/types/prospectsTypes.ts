@@ -6,16 +6,72 @@ export type { Prospect };
 export type ProspectField = keyof Prospect;
 
 // Backend stage/urgency enums — wemarketplus-backend/src/prospects/prospects.constants.ts.
+// `prospects` IS the Pipeline entity: pipelineType switches which stage set applies.
+// Legacy stages are retained so pre-pipeline rows stay renderable.
 export const ProspectStage = {
+  // legacy (pre-pipeline)
   Inquiry: 'inquiry',
   Contacted: 'contacted',
   Pending: 'pending',
   Evaluation: 'evaluation',
-  Admitted: 'admitted',
-  Lost: 'lost',
   Inactive: 'inactive',
+  // referral-to-admit
+  NewReferral: 'new_referral',
+  Eligibility: 'eligibility',
+  FaceToFace: 'face_to_face',
+  ConsentOrder: 'consent_order',
+  Admitted: 'admitted',
+  // outreach
+  Identified: 'identified',
+  FirstVisit: 'first_visit',
+  InService: 'in_service',
+  Active: 'active',
+  Champion: 'champion',
+  // shared terminal
+  Lost: 'lost',
 } as const;
 export type ProspectStage = (typeof ProspectStage)[keyof typeof ProspectStage];
+
+export const ProspectPipelineType = {
+  ReferralToAdmit: 'referral_to_admit',
+  Outreach: 'outreach',
+} as const;
+export type ProspectPipelineType =
+  (typeof ProspectPipelineType)[keyof typeof ProspectPipelineType];
+
+export const PipelineStatus = {
+  Open: 'open',
+  WonAdmitted: 'won_admitted',
+  Lost: 'lost',
+} as const;
+export type PipelineStatus = (typeof PipelineStatus)[keyof typeof PipelineStatus];
+
+export const ProspectLostReason = {
+  NotEligible: 'not_eligible',
+  ChoseCompetitor: 'chose_competitor',
+  Declined: 'declined',
+  Deceased: 'deceased',
+  Other: 'other',
+} as const;
+export type ProspectLostReason =
+  (typeof ProspectLostReason)[keyof typeof ProspectLostReason];
+
+export const ProspectLevelOfCare = {
+  Routine: 'routine',
+  Continuous: 'continuous',
+  Inpatient: 'inpatient',
+  Respite: 'respite',
+} as const;
+export type ProspectLevelOfCare =
+  (typeof ProspectLevelOfCare)[keyof typeof ProspectLevelOfCare];
+
+export const ProspectPayer = {
+  Medicare: 'medicare',
+  Medicaid: 'medicaid',
+  Private: 'private',
+  Other: 'other',
+} as const;
+export type ProspectPayer = (typeof ProspectPayer)[keyof typeof ProspectPayer];
 
 export const ProspectUrgency = {
   Hot: 'hot',
@@ -29,6 +85,17 @@ export interface ProspectRecord {
   id: ID;
   tenantId: ID;
   patientName: string;
+  patientDob: string | null;
+  pipelineName: string | null;
+  pipelineType: ProspectPipelineType;
+  stageEnteredAt: ISODateString | null;
+  status: PipelineStatus;
+  lostReason: ProspectLostReason | null;
+  closedAt: ISODateString | null;
+  levelOfCare: ProspectLevelOfCare | null;
+  payer: ProspectPayer | null;
+  expectedAdmitDate: string | null;
+  primaryContactId: ID | null;
   facilityName: string | null;
   stage: ProspectStage;
   urgency: ProspectUrgency;
@@ -52,6 +119,15 @@ export interface ProspectRecord {
 // POST /prospects body — wemarketplus-backend/src/prospects/dto/create-prospect.dto.ts.
 export interface CreateProspectRequest {
   patientName: string;
+  patientDob?: string;
+  pipelineName?: string;
+  pipelineType?: ProspectPipelineType;
+  status?: PipelineStatus;
+  lostReason?: ProspectLostReason;
+  levelOfCare?: ProspectLevelOfCare;
+  payer?: ProspectPayer;
+  expectedAdmitDate?: string;
+  primaryContactId?: string;
   facilityName?: string;
   stage?: ProspectStage;
   urgency?: ProspectUrgency;
@@ -75,7 +151,10 @@ export type UpdateProspectRequest = Partial<CreateProspectRequest>;
 // GET /prospects query.
 export interface ListProspectsQuery extends PaginationParams {
   stage?: ProspectStage;
+  pipelineType?: ProspectPipelineType;
+  status?: PipelineStatus;
   assignedTo?: string;
+  referralSourceId?: string;
 }
 
 export interface ProspectsUiState {

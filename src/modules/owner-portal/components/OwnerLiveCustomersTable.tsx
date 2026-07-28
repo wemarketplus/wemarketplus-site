@@ -39,7 +39,7 @@ export function OwnerLiveCustomersTable({
     {
       key: 'name',
       header: 'Organization',
-      cell: (c) => <span className="font-bold text-[#111]">{c.name}</span>,
+      cell: (c) => <span className="font-bold text-foreground">{c.name}</span>,
     },
     {
       key: 'location',

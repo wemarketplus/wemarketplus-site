@@ -23,8 +23,8 @@ export function FundingTable({ rows, isMutating, onEdit, onDelete }: FundingTabl
       header: 'Opportunity',
       cell: (f) => (
         <div>
-          <p className="font-bold text-[#111]">{f.opportunityName}</p>
-          {f.programType && <p className="text-[11px] text-[#667]">{f.programType}</p>}
+          <p className="font-bold text-foreground">{f.opportunityName}</p>
+          {f.programType && <p className="text-[11px] text-muted">{f.programType}</p>}
         </div>
       ),
     },

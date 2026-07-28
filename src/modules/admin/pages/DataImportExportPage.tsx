@@ -251,7 +251,7 @@ export function DataImportExportPage() {
                     : '.'}
                 </Alert>
                 {result.errors.length > 0 && (
-                  <div className="rounded-[9px] border border-white/[0.08] bg-surface p-3">
+                  <div className="rounded-[9px] border border-border/[0.08] bg-surface p-3">
                     <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-soft">
                       Skipped rows
                     </p>

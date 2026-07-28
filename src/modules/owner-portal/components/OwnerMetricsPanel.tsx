@@ -14,7 +14,7 @@ const columns: ReadonlyArray<Column<StageRow>> = [
   {
     key: 'stage',
     header: 'Stage',
-    cell: (r) => <span className="font-bold text-[#111] capitalize">{r.stage}</span>,
+    cell: (r) => <span className="font-bold text-foreground capitalize">{r.stage}</span>,
   },
   { key: 'count', header: 'Records', cell: (r) => r.count },
 ];

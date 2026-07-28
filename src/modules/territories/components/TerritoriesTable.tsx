@@ -29,7 +29,7 @@ export function TerritoriesTable({
     {
       key: 'name',
       header: 'Territory',
-      cell: (t) => <p className="font-bold text-[#111]">{t.name}</p>,
+      cell: (t) => <p className="font-bold text-foreground">{t.name}</p>,
     },
     {
       key: 'place',

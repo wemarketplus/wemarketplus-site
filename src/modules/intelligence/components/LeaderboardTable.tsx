@@ -6,12 +6,12 @@ const columns: ReadonlyArray<Column<LeaderboardRow>> = [
   {
     key: 'rank',
     header: 'Rank',
-    cell: (_row, i) => <span className="font-bold text-[#111]">{i + 1}</span>,
+    cell: (_row, i) => <span className="font-bold text-foreground">{i + 1}</span>,
   },
   {
     key: 'marketer',
     header: 'Marketer',
-    cell: (row) => <span className="font-bold text-[#111]">{row.marketer}</span>,
+    cell: (row) => <span className="font-bold text-foreground">{row.marketer}</span>,
   },
   { key: 'admissions', header: 'Admissions', cell: (row) => row.admissions },
   {

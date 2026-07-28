@@ -10,7 +10,7 @@ const columns: ReadonlyArray<Column<MileageEntry>> = [
   {
     key: 'distance',
     header: 'Distance',
-    cell: (e) => <span className="font-bold text-[#111]">{e.distanceMiles.toFixed(1)} mi</span>,
+    cell: (e) => <span className="font-bold text-foreground">{e.distanceMiles.toFixed(1)} mi</span>,
   },
   { key: 'purpose', header: 'Purpose', cell: (e) => e.purpose },
 ];

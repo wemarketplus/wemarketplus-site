@@ -32,15 +32,15 @@ interface DataTableProps<T> {
   selection?: DataTableSelection;
 }
 
-// Shared checkbox styling for the selection column — a compact box tuned for
-// the light table (matches the #111 / #e4ecf5 palette of DataTable).
+// Shared checkbox styling for the selection column. Token-driven so the
+// selection accent tracks the palette instead of a literal blue.
 const CHECKBOX_CLASS =
-  'h-3.5 w-3.5 cursor-pointer rounded border-[#c4d0e0] text-[#2563eb] accent-[#2563eb] focus:ring-1 focus:ring-[#2563eb]';
+  'h-3.5 w-3.5 cursor-pointer rounded border-border/25 text-primary accent-[rgb(var(--color-primary))] focus:ring-1 focus:ring-primary';
 
-// Mirrors wemarketplus-site `.tbl`: a LIGHT (#fff / #111) table sitting inside
-// the dark theme, 12px text, #f2f6fc header, hairline #edf2f9 row borders,
-// 8-9px/11px cell padding, 12px radius, overflow hidden. This is a signature
-// detail of the CRM — the data tables are white cards on the navy canvas.
+// `.tbl`: 12px text, tinted header row, hairline row borders, 8-9px/11px cell
+// padding, 12px radius, overflow hidden. Originally a light table islanded on
+// the navy canvas with a blue-grey tint (#f2f6fc / #2563eb); now token-driven
+// so it shares the neutral hairlines and green accent of the editorial theme.
 export function DataTable<T>({ columns, rows, rowKey, empty, selection }: DataTableProps<T>) {
   // Native checkboxes have no `indeterminate` attribute — it's a DOM property.
   const headerCheckbox = useRef<HTMLInputElement>(null);
@@ -52,19 +52,19 @@ export function DataTable<T>({ columns, rows, rowKey, empty, selection }: DataTa
 
   if (rows.length === 0) {
     return (
-      <div className="rounded-[12px] border border-white/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
+      <div className="rounded-[14px] border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
         {empty ?? 'Nothing to show yet.'}
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-[12px]">
-      <table className="w-full border-collapse bg-white text-[12px] text-[#111]">
+    <div className="overflow-hidden rounded-[14px]">
+      <table className="w-full border-collapse bg-surface text-[12px] text-foreground">
         <thead>
           <tr>
             {selection && (
-              <th className="w-9 border-b border-[#e4ecf5] bg-[#f2f6fc] px-[11px] py-2 text-left">
+              <th className="w-9 border-b border-border/[0.09] bg-surface-elevated px-[11px] py-2 text-left">
                 <input
                   ref={headerCheckbox}
                   type="checkbox"
@@ -79,7 +79,7 @@ export function DataTable<T>({ columns, rows, rowKey, empty, selection }: DataTa
               <th
                 key={c.key}
                 className={cn(
-                  'border-b border-[#e4ecf5] bg-[#f2f6fc] px-[11px] py-2 text-left text-[10px] font-extrabold uppercase text-[#445]',
+                  'border-b border-border/[0.09] bg-surface-elevated px-[11px] py-2 text-left text-[10px] font-extrabold uppercase text-muted',
                   c.headerClassName,
                 )}
               >
@@ -95,10 +95,10 @@ export function DataTable<T>({ columns, rows, rowKey, empty, selection }: DataTa
             return (
               <tr
                 key={id}
-                className={cn('hover:bg-[#f8fbff]', isSelected && 'bg-[#eef5ff]')}
+                className={cn('hover:bg-primary/[0.03]', isSelected && 'bg-primary/[0.06]')}
               >
                 {selection && (
-                  <td className="border-b border-[#edf2f9] px-[11px] py-[9px]">
+                  <td className="border-b border-border/[0.07] px-[11px] py-[9px]">
                     <input
                       type="checkbox"
                       className={CHECKBOX_CLASS}
@@ -111,7 +111,7 @@ export function DataTable<T>({ columns, rows, rowKey, empty, selection }: DataTa
                 {columns.map((c) => (
                   <td
                     key={c.key}
-                    className={cn('border-b border-[#edf2f9] px-[11px] py-[9px]', c.className)}
+                    className={cn('border-b border-border/[0.07] px-[11px] py-[9px]', c.className)}
                   >
                     {c.cell(row, i)}
                   </td>

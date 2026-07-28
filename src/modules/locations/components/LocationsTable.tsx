@@ -23,8 +23,8 @@ export function LocationsTable({ locations, isMutating, onEdit, onDelete }: Loca
       header: 'Location',
       cell: (l) => (
         <div>
-          <p className="font-bold text-[#111]">{l.locationName}</p>
-          {l.address && <p className="text-[11px] text-[#667]">{l.address}</p>}
+          <p className="font-bold text-foreground">{l.locationName}</p>
+          {l.address && <p className="text-[11px] text-muted">{l.address}</p>}
         </div>
       ),
     },

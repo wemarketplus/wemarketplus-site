@@ -11,8 +11,8 @@ export const Card = forwardRef<
   <div
     ref={ref}
     className={cn(
-      'border border-white/[0.09] bg-surface text-foreground',
-      dense ? 'rounded-[14px]' : 'rounded-[18px]',
+      'border border-border/[0.09] bg-surface text-foreground',
+      dense ? 'rounded-[14px]' : 'rounded-[14px]',
       className,
     )}
     {...props}
@@ -44,7 +44,7 @@ export const CardContent = ({ className, ...props }: HTMLAttributes<HTMLDivEleme
 
 export const CardFooter = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn('flex items-center gap-3 border-t border-white/[0.07] px-6 py-4', className)}
+    className={cn('flex items-center gap-3 border-t border-border/[0.07] px-6 py-4', className)}
     {...props}
   />
 );

@@ -13,18 +13,19 @@ const buttonVariants = cva(
         // .btn-login / .btn-main — solid accent pill, dark text
         primary:
           'rounded-pill bg-primary text-primary-foreground hover:opacity-[0.88]',
-        // reset-password.html gradient azure→lime
+        // reset-password.html gradient. Retuned for the light theme: the old
+        // #49b6ff→#8cff66 ramp was a dark-canvas accent and washed out on white.
         gradient:
-          'rounded-pill text-[#081426] hover:opacity-[0.88] bg-[linear-gradient(90deg,#49b6ff,#8cff66)]',
+          'rounded-pill text-primary-foreground hover:opacity-[0.88] bg-[linear-gradient(90deg,#0f5c44,#16805c)]',
         // subtle filled secondary used across the site
         secondary:
-          'rounded-pill border border-white/[0.12] bg-surface-raised text-foreground hover:border-white/25',
+          'rounded-pill border border-border/[0.12] bg-surface-raised text-foreground hover:border-border/25',
         outline:
-          'rounded-pill border border-white/[0.14] bg-transparent text-foreground hover:bg-white/[0.05]',
+          'rounded-pill border border-border/[0.14] bg-transparent text-foreground hover:bg-foreground/[0.05]',
         ghost:
-          'rounded-pill bg-transparent text-muted hover:text-foreground hover:bg-white/[0.05]',
+          'rounded-pill bg-transparent text-muted hover:text-foreground hover:bg-foreground/[0.05]',
         destructive:
-          'rounded-pill bg-destructive text-[#081426] hover:opacity-[0.88]',
+          'rounded-pill bg-destructive text-destructive-foreground hover:opacity-[0.88]',
         link: 'bg-transparent text-primary hover:underline underline-offset-4',
       },
       size: {

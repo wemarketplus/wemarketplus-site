@@ -77,7 +77,7 @@ export function TwoFactorCard() {
                   className={
                     enabled
                       ? 'rounded-pill border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.08em] text-emerald-300'
-                      : 'rounded-pill border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 text-[10px] uppercase tracking-[0.08em] text-muted-soft'
+                      : 'rounded-pill border border-border/[0.08] bg-foreground/[0.03] px-2.5 py-1 text-[10px] uppercase tracking-[0.08em] text-muted-soft'
                   }
                 >
                   {enabled ? 'Enabled' : 'Disabled'}

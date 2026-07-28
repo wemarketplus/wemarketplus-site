@@ -5,7 +5,7 @@ import type { AuthErrorProps } from '../types/authTypes';
 export function AuthError({ children }: AuthErrorProps) {
   if (!children) return null;
   return (
-    <div className="mb-4 rounded-[10px] border border-[#e05555]/40 bg-[#e05555]/[0.12] px-3.5 py-2.5 text-[13px] text-destructive">
+    <div className="mb-4 rounded-[10px] border border-destructive/30 bg-destructive/[0.07] px-3.5 py-2.5 text-[13px] text-destructive">
       {children}
     </div>
   );

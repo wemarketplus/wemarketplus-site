@@ -17,7 +17,7 @@ export function DashboardHeader() {
     : '';
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-white/[0.06] bg-bg/80 px-6 backdrop-blur-sm">
+    <header className="flex h-16 items-center justify-between border-b border-border/[0.06] bg-bg/80 px-6 backdrop-blur-sm">
       <div className="text-[11px] uppercase tracking-[0.16em] text-muted-soft">
         WeMarketPlus CRM
       </div>
@@ -26,7 +26,7 @@ export function DashboardHeader() {
         <GlobalSearch />
         <NotificationsBell />
         {user && (
-          <div className="flex items-center gap-3 rounded-pill border border-white/[0.08] bg-surface/60 py-1 pr-3 pl-1">
+          <div className="flex items-center gap-3 rounded-pill border border-border/[0.08] bg-surface/60 py-1 pr-3 pl-1">
             <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/20 text-[11px] font-semibold text-primary">
               {initials}
             </div>

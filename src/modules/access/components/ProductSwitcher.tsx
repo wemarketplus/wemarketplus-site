@@ -30,7 +30,7 @@ export function ProductSwitcher() {
     <div
       role="group"
       aria-label="Switch dashboard"
-      className="mt-2.5 flex gap-1 rounded-[8px] bg-white/[0.05] p-0.5"
+      className="mt-2.5 flex gap-1 rounded-[8px] bg-foreground/[0.05] p-0.5"
     >
       {products.map((product) => {
         const isActive = product === activeProduct;
@@ -43,13 +43,12 @@ export function ProductSwitcher() {
             aria-pressed={isActive}
             title={PRODUCT_LABELS[product]}
             className={cn(
-              'flex-1 truncate rounded-[6px] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.06em] transition-colors',
+              'flex-1 truncate rounded-[8px] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.06em] transition-colors',
               isActive
-                ? cn(
-                    isCommunity ? 'bg-amber' : 'bg-gold',
-                    'text-[#081426]',
-                  )
-                : 'text-[#8b949e] hover:text-white',
+                  // One accent for both products — the switcher marks which
+                  // dashboard is active, it does not rebrand the console.
+                ? 'bg-primary text-primary-foreground'
+                : 'text-muted hover:text-foreground',
             )}
           >
             {isCommunity ? 'Community' : 'Hospice'}

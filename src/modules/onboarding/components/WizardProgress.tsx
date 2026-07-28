@@ -22,7 +22,7 @@ export function WizardProgress({ current }: WizardProgressProps) {
           {Math.round(progress)}% complete
         </p>
       </div>
-      <div className="h-1 w-full overflow-hidden rounded-pill bg-white/[0.06]">
+      <div className="h-1 w-full overflow-hidden rounded-pill bg-foreground/[0.06]">
         <div
           className="h-full rounded-pill bg-gradient-to-r from-primary to-azure transition-all duration-500"
           style={{ width: `${progress}%` }}
@@ -47,7 +47,7 @@ export function WizardProgress({ current }: WizardProgressProps) {
                   'flex h-7 w-7 items-center justify-center rounded-full border text-[11px] font-semibold transition-colors',
                   active && 'border-primary bg-primary/15 text-primary',
                   done && 'border-primary bg-primary text-primary-foreground',
-                  !active && !done && 'border-white/[0.08] bg-white/[0.02]',
+                  !active && !done && 'border-border/[0.08] bg-foreground/[0.02]',
                 )}
               >
                 {done ? <Check className="h-3.5 w-3.5" /> : i + 1}

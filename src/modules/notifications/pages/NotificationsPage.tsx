@@ -54,7 +54,7 @@ export function NotificationsPage() {
               'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
               section === s.value
                 ? 'border-primary/40 bg-primary/15 text-primary'
-                : 'border-white/[0.08] text-muted hover:border-white/20 hover:text-foreground',
+                : 'border-border/[0.08] text-muted hover:border-border/20 hover:text-foreground',
             )}
           >
             {s.label}
@@ -75,14 +75,14 @@ export function NotificationsPage() {
                     'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
                     filter === t.value
                       ? 'border-primary/40 bg-primary/15 text-primary'
-                      : 'border-white/[0.08] text-muted hover:border-white/20 hover:text-foreground',
+                      : 'border-border/[0.08] text-muted hover:border-border/20 hover:text-foreground',
                   )}
                 >
                   {t.label}
                 </button>
               ))}
             </nav>
-            <div className="border-t border-white/[0.06]">
+            <div className="border-t border-border/[0.06]">
               <NotificationsList items={filtered} onActivate={activate} />
             </div>
           </CardContent>

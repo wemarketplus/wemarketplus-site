@@ -38,7 +38,7 @@ export function RevenueTable({
     {
       key: 'amount',
       header: 'Amount',
-      cell: (r) => <span className="font-bold text-[#111]">{formatUsd(num(r.amount))}</span>,
+      cell: (r) => <span className="font-bold text-foreground">{formatUsd(num(r.amount))}</span>,
     },
   ];
 

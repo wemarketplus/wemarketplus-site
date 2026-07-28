@@ -50,8 +50,8 @@ export function LeakageTable({
       header: 'Issue',
       cell: (l) => (
         <div>
-          <p className="font-bold text-[#111]">{l.issue}</p>
-          {l.notes && <p className="text-[11px] text-[#667]">{l.notes}</p>}
+          <p className="font-bold text-foreground">{l.issue}</p>
+          {l.notes && <p className="text-[11px] text-muted">{l.notes}</p>}
         </div>
       ),
     },

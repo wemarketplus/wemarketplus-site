@@ -52,7 +52,7 @@ export function OrganizationTab() {
         </header>
 
         {isError ? (
-          <div className="flex flex-col items-start gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] px-4 py-4">
+          <div className="flex flex-col items-start gap-3 rounded-lg border border-border/[0.06] bg-foreground/[0.02] px-4 py-4">
             <p className="text-sm text-muted">
               Couldn&apos;t load your organization profile.
             </p>
@@ -94,7 +94,7 @@ export function OrganizationTab() {
                   disabled={busy}
                   {...register('state')}
                   className={cn(
-                    'flex h-11 w-full rounded-md border border-white/10 bg-surface-raised px-3 text-sm text-foreground',
+                    'flex h-11 w-full rounded-md border border-border/10 bg-surface-raised px-3 text-sm text-foreground',
                     'transition-colors focus-visible:outline-none focus-visible:border-azure/70 focus-visible:bg-surface',
                     'disabled:cursor-not-allowed disabled:opacity-60',
                   )}

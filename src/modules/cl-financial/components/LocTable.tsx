@@ -31,14 +31,14 @@ export function LocTable({
     {
       key: 'level',
       header: 'Level',
-      cell: (l) => <span className="font-bold text-[#111]">{l.level}</span>,
+      cell: (l) => <span className="font-bold text-foreground">{l.level}</span>,
     },
     { key: 'label', header: 'Label', cell: (l) => l.label },
     {
       key: 'rate',
       header: 'Add-on rate',
       cell: (l) => (
-        <span className="font-semibold text-[#111]">
+        <span className="font-semibold text-foreground">
           {l.addOnRate != null ? `${formatUsd(num(l.addOnRate))}/mo` : '—'}
         </span>
       ),

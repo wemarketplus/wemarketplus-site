@@ -6,17 +6,17 @@ const columns: ReadonlyArray<Column<OwnerUsageRow>> = [
   {
     key: 'org',
     header: 'Organization',
-    cell: (u) => <span className="font-bold text-[#111]">{u.organization}</span>,
+    cell: (u) => <span className="font-bold text-foreground">{u.organization}</span>,
   },
   {
     key: 'seats',
     header: 'Seats',
     cell: (u) => (
       <>
-        <span className="text-[#111]">
+        <span className="text-foreground">
           {u.seatsUsed} / {u.seatsBilled}
         </span>
-        <span className="ml-2 text-[10px] uppercase tracking-[0.08em] text-[#667]">
+        <span className="ml-2 text-[10px] uppercase tracking-[0.08em] text-muted">
           {((u.seatsUsed / u.seatsBilled) * 100).toFixed(0)}%
         </span>
       </>

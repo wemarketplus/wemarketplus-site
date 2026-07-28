@@ -5,11 +5,11 @@ import { cn } from '@/shared/utils/cn';
 
 export function OwnerSidebar() {
   return (
-    <aside className="hidden h-full w-[240px] shrink-0 flex-col border-r border-white/[0.06] bg-ink/95 md:flex">
-      <div className="flex h-16 items-center px-5 border-b border-white/[0.06]">
+    <aside className="hidden h-full w-[240px] shrink-0 flex-col border-r border-border/[0.06] bg-ink/95 md:flex">
+      <div className="flex h-16 items-center px-5 border-b border-border/[0.06]">
         <Logo size="sm" />
       </div>
-      <div className="px-5 py-3 border-b border-white/[0.06]">
+      <div className="px-5 py-3 border-b border-border/[0.06]">
         <p className="text-[10px] uppercase tracking-[0.16em] text-muted-soft">
           Owner portal
         </p>
@@ -31,7 +31,7 @@ export function OwnerSidebar() {
                   'group flex items-center gap-2.5 rounded-md px-3 py-2 text-[13px] font-medium transition-colors',
                   isActive
                     ? 'bg-primary/15 text-primary'
-                    : 'text-muted hover:bg-white/[0.04] hover:text-foreground',
+                    : 'text-muted hover:bg-foreground/[0.04] hover:text-foreground',
                 )
               }
             >

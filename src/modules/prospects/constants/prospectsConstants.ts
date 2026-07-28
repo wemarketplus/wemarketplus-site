@@ -4,7 +4,11 @@ import {
   URGENCY_LABELS,
   URGENCY_TONE,
 } from '@/shared/constants/urgencyConstants';
-import { ProspectStage, ProspectUrgency } from '../types/prospectsTypes';
+import {
+  ProspectPipelineType,
+  ProspectStage,
+  ProspectUrgency,
+} from '../types/prospectsTypes';
 
 export { URGENCY_LABELS, URGENCY_TONE };
 
@@ -56,14 +60,65 @@ export const URGENCY_CHIPS: ReadonlyArray<{ value: Urgency | 'all'; label: strin
   { value: Urgency.Cold, label: URGENCY_LABELS.cold },
 ];
 
-// Select options for the Add-prospect form (backend stage/urgency enums).
-export const PROSPECT_STAGE_OPTIONS: ReadonlyArray<{ value: ProspectStage; label: string }> = [
-  { value: ProspectStage.Inquiry, label: 'Inquiry' },
-  { value: ProspectStage.Contacted, label: 'Contacted' },
-  { value: ProspectStage.Pending, label: 'Pending admission' },
-  { value: ProspectStage.Evaluation, label: 'Evaluation' },
-  { value: ProspectStage.Admitted, label: 'Admitted' },
-  { value: ProspectStage.Lost, label: 'Lost' },
+/**
+ * Stage labels for every backend stage value, including the legacy ones — so a
+ * pre-pipeline row never renders a raw enum string.
+ * Mirrors wemarketplus-backend/src/pipeline/pipeline.constants.ts STAGE_LABELS.
+ */
+export const STAGE_LABELS: Record<ProspectStage, string> = {
+  [ProspectStage.NewReferral]: 'New referral',
+  [ProspectStage.Eligibility]: 'Eligibility',
+  [ProspectStage.FaceToFace]: 'Face-to-face',
+  [ProspectStage.ConsentOrder]: 'Consent / order',
+  [ProspectStage.Admitted]: 'Admitted',
+  [ProspectStage.Identified]: 'Identified',
+  [ProspectStage.FirstVisit]: 'First visit',
+  [ProspectStage.InService]: 'In-service',
+  [ProspectStage.Active]: 'Active',
+  [ProspectStage.Champion]: 'Champion',
+  [ProspectStage.Lost]: 'Lost',
+  [ProspectStage.Inquiry]: 'Inquiry',
+  [ProspectStage.Contacted]: 'Contacted',
+  [ProspectStage.Pending]: 'Pending admission',
+  [ProspectStage.Evaluation]: 'Evaluation',
+  [ProspectStage.Inactive]: 'Inactive',
+};
+
+/** Ordered, moveable stages per pipeline type (mirrors the backend stage sets). */
+export const ADMIT_STAGES: ReadonlyArray<ProspectStage> = [
+  ProspectStage.NewReferral,
+  ProspectStage.Eligibility,
+  ProspectStage.FaceToFace,
+  ProspectStage.ConsentOrder,
+  ProspectStage.Admitted,
+  ProspectStage.Lost,
+];
+
+export const OUTREACH_STAGES: ReadonlyArray<ProspectStage> = [
+  ProspectStage.Identified,
+  ProspectStage.FirstVisit,
+  ProspectStage.InService,
+  ProspectStage.Active,
+  ProspectStage.Champion,
+  ProspectStage.Lost,
+];
+
+export const stagesForPipelineType = (
+  pipelineType: ProspectPipelineType,
+): ReadonlyArray<ProspectStage> =>
+  pipelineType === ProspectPipelineType.Outreach ? OUTREACH_STAGES : ADMIT_STAGES;
+
+// Select options for the Add-prospect form. Defaults to the admit stage set —
+// a new prospect enters the referral-to-admit funnel.
+export const PROSPECT_STAGE_OPTIONS: ReadonlyArray<{ value: ProspectStage; label: string }> =
+  ADMIT_STAGES.map((value) => ({ value, label: STAGE_LABELS[value] }));
+
+export const PIPELINE_TYPE_OPTIONS: ReadonlyArray<{
+  value: ProspectPipelineType;
+  label: string;
+}> = [
+  { value: ProspectPipelineType.ReferralToAdmit, label: 'Referral to admit' },
+  { value: ProspectPipelineType.Outreach, label: 'Outreach' },
 ];
 
 export const PROSPECT_URGENCY_OPTIONS: ReadonlyArray<{ value: ProspectUrgency; label: string }> = [

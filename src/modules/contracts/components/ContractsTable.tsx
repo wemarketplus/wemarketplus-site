@@ -32,8 +32,8 @@ export function ContractsTable({ contracts, isMutating, onEdit, onDelete }: Cont
       header: 'Contract',
       cell: (c) => (
         <div>
-          <p className="font-bold text-[#111]">{c.companyName}</p>
-          <p className="text-[11px] text-[#667]">{c.contractNumber}</p>
+          <p className="font-bold text-foreground">{c.companyName}</p>
+          <p className="text-[11px] text-muted">{c.contractNumber}</p>
         </div>
       ),
     },

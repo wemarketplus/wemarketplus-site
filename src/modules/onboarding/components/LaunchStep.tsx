@@ -66,7 +66,7 @@ export function LaunchStep() {
         {CHECKLIST.map((entry) => (
           <li
             key={entry}
-            className="flex items-center gap-2.5 rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-2 text-sm text-foreground"
+            className="flex items-center gap-2.5 rounded-md border border-border/[0.06] bg-foreground/[0.02] px-3 py-2 text-sm text-foreground"
           >
             <Check className="h-4 w-4 text-primary" />
             {entry}

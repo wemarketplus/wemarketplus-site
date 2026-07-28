@@ -62,7 +62,7 @@ export function AlertSettingsPage() {
       )}
 
       {isLoading ? (
-        <div className="rounded-[12px] border border-white/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
+        <div className="rounded-[14px] border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
           Loading…
         </div>
       ) : (

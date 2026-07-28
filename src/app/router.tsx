@@ -164,6 +164,17 @@ const DataImportExportPage = lazy(() =>
 
 // --- HospiceLink screens --------------------------------------------------
 
+// Aliased: @/modules/cl-leads also exports a LeadsPage (CommunityLink resident
+// leads). These are different products' intake screens and must not be conflated.
+const HlLeadsPage = lazy(() =>
+  import('@/modules/leads').then((m) => ({ default: m.LeadsPage })),
+);
+const JobsPage = lazy(() =>
+  import('@/modules/jobs').then((m) => ({ default: m.JobsPage })),
+);
+const AppointmentsPage = lazy(() =>
+  import('@/modules/appointments').then((m) => ({ default: m.AppointmentsPage })),
+);
 const ProspectsPage = lazy(() =>
   import('@/modules/prospects').then((m) => ({ default: m.ProspectsPage })),
 );
@@ -450,9 +461,12 @@ export function AppRouter() {
               </RequireProduct>
             }
           >
+          <Route path="hl-leads" element={<HlLeadsPage />} />
           <Route path="prospects" element={<ProspectsPage />} />
           <Route path="referrals" element={<ReferralsPage />} />
           <Route path="pipeline" element={<PipelinePage />} />
+          <Route path="jobs" element={<JobsPage />} />
+          <Route path="appointments" element={<AppointmentsPage />} />
           <Route path="territories" element={<TerritoriesEntityPage />} />
           <Route path="scheduling" element={<SchedulingPage />} />
           <Route path="activity/calendar" element={<ActivityPage />} />

@@ -35,8 +35,8 @@ export function CompetitorsTable({
       header: 'Community',
       cell: (c) => (
         <div>
-          <p className="font-bold text-[#111]">{c.name}</p>
-          {c.city && <p className="text-[11px] text-[#667]">{c.city}</p>}
+          <p className="font-bold text-foreground">{c.name}</p>
+          {c.city && <p className="text-[11px] text-muted">{c.city}</p>}
         </div>
       ),
     },

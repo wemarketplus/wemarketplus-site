@@ -1,3 +1,13 @@
+// Lucide is the icon system the reference design uses (24px grid, 2px stroke).
+import {
+  CalendarCheck,
+  ClipboardList,
+  Inbox,
+  MoveRight,
+  Receipt,
+  UserCheck,
+  Users,
+} from 'lucide-react';
 import { Product } from '@/shared/types';
 import type {
   DashboardActivityItem,
@@ -18,6 +28,7 @@ function hospicelinkStats(summary: DashboardSummary): DashboardStatCard[] {
     {
       id: 'inquiries',
       label: 'New inquiries',
+      icon: Inbox,
       value: String(stage(summary, 'inquiry')),
       hint: 'Inquiry stage',
       tone: 'primary',
@@ -25,6 +36,7 @@ function hospicelinkStats(summary: DashboardSummary): DashboardStatCard[] {
     {
       id: 'pending',
       label: 'Pending admission',
+      icon: ClipboardList,
       value: String(stage(summary, 'pending') + stage(summary, 'evaluation')),
       hint: `${summary.tasks.open} open task${summary.tasks.open === 1 ? '' : 's'}`,
       tone: 'warning',
@@ -32,6 +44,7 @@ function hospicelinkStats(summary: DashboardSummary): DashboardStatCard[] {
     {
       id: 'admitted',
       label: 'Admitted',
+      icon: UserCheck,
       value: String(stage(summary, 'admitted')),
       hint: `${summary.prospects.total} total`,
       tone: 'success',
@@ -39,6 +52,7 @@ function hospicelinkStats(summary: DashboardSummary): DashboardStatCard[] {
     {
       id: 'overdue-invoices',
       label: 'Overdue invoices',
+      icon: Receipt,
       value: String(summary.invoices.overdue),
       hint: summary.invoices.overdue > 0 ? 'Action needed' : 'All current',
       tone: summary.invoices.overdue > 0 ? 'destructive' : 'success',
@@ -51,6 +65,7 @@ function communitylinkStats(summary: DashboardSummary): DashboardStatCard[] {
     {
       id: 'leads',
       label: 'Active leads',
+      icon: Users,
       value: String(summary.prospects.total),
       hint: `${stage(summary, 'inquiry')} new`,
       tone: 'primary',
@@ -58,6 +73,7 @@ function communitylinkStats(summary: DashboardSummary): DashboardStatCard[] {
     {
       id: 'tours',
       label: 'In evaluation',
+      icon: CalendarCheck,
       value: String(stage(summary, 'evaluation') + stage(summary, 'pending')),
       hint: `${summary.tasks.open} open task${summary.tasks.open === 1 ? '' : 's'}`,
       tone: 'warning',
@@ -65,6 +81,7 @@ function communitylinkStats(summary: DashboardSummary): DashboardStatCard[] {
     {
       id: 'move-ins',
       label: 'Move-ins',
+      icon: MoveRight,
       value: String(stage(summary, 'admitted')),
       hint: 'Admitted stage',
       tone: 'success',
@@ -72,6 +89,7 @@ function communitylinkStats(summary: DashboardSummary): DashboardStatCard[] {
     {
       id: 'overdue-invoices',
       label: 'Overdue invoices',
+      icon: Receipt,
       value: String(summary.invoices.overdue),
       hint: summary.invoices.overdue > 0 ? 'Action needed' : 'All current',
       tone: summary.invoices.overdue > 0 ? 'destructive' : 'success',

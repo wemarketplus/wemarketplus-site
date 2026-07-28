@@ -47,7 +47,7 @@ export function FeatureFlagsPage() {
       </header>
 
       {isLoading && (
-        <div className="flex items-center justify-center gap-2 rounded-lg border border-white/[0.08] py-16 text-sm text-muted">
+        <div className="flex items-center justify-center gap-2 rounded-lg border border-border/[0.08] py-16 text-sm text-muted">
           <Loader2 className="h-4 w-4 animate-spin" />
           Loading feature flags…
         </div>
@@ -62,7 +62,7 @@ export function FeatureFlagsPage() {
           <button
             type="button"
             onClick={() => refetch()}
-            className="rounded-pill border border-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-foreground"
+            className="rounded-pill border border-border/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-foreground"
           >
             Retry
           </button>
@@ -76,7 +76,7 @@ export function FeatureFlagsPage() {
             return (
               <li
                 key={flag.key}
-                className="flex items-center justify-between gap-4 rounded-lg border border-white/[0.08] bg-white/[0.02] px-4 py-4"
+                className="flex items-center justify-between gap-4 rounded-lg border border-border/[0.08] bg-foreground/[0.02] px-4 py-4"
               >
                 <div className="min-w-0">
                   <p className="font-mono text-sm text-foreground">{flag.key}</p>
@@ -95,7 +95,7 @@ export function FeatureFlagsPage() {
                   disabled={isSaving}
                   onClick={() => onToggleGlobal(flag)}
                   className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors disabled:opacity-50 ${
-                    flag.enabledGlobally ? 'bg-primary' : 'bg-white/[0.14]'
+                    flag.enabledGlobally ? 'bg-primary' : 'bg-foreground/[0.14]'
                   }`}
                 >
                   <span
@@ -108,7 +108,7 @@ export function FeatureFlagsPage() {
             );
           })}
           {flags.length === 0 && (
-            <li className="rounded-lg border border-white/[0.08] py-12 text-center text-sm text-muted">
+            <li className="rounded-lg border border-border/[0.08] py-12 text-center text-sm text-muted">
               No feature flags defined yet.
             </li>
           )}

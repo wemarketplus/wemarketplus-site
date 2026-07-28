@@ -6,7 +6,7 @@ const columns: ReadonlyArray<Column<OwnerRevenueMonth>> = [
   {
     key: 'month',
     header: 'Month',
-    cell: (m) => <span className="font-bold text-[#111]">{m.month}</span>,
+    cell: (m) => <span className="font-bold text-foreground">{m.month}</span>,
   },
   { key: 'mrr', header: 'MRR', cell: (m) => formatCompactMoney(m.mrr) },
   { key: 'arr', header: 'ARR', cell: (m) => formatCompactMoney(m.arr) },

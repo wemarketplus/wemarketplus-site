@@ -14,9 +14,9 @@ const BADGE_CLASSES: Record<BadgeTone, string> = {
   success:
     'rounded-pill bg-success/15 px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] text-success',
   muted:
-    'rounded-pill bg-white/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] text-muted-soft',
+    'rounded-pill bg-foreground/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] text-muted-soft',
   pending:
-    'rounded-pill bg-white/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] text-muted animate-pulse',
+    'rounded-pill bg-foreground/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] text-muted animate-pulse',
 };
 
 export function IntegrationsTab() {
@@ -56,7 +56,7 @@ export function IntegrationsTab() {
             return (
               <li
                 key={i.id}
-                className="flex items-start gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] px-4 py-4"
+                className="flex items-start gap-3 rounded-lg border border-border/[0.06] bg-foreground/[0.02] px-4 py-4"
               >
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/15 text-primary ring-1 ring-primary/20">
                   <Icon className="h-4 w-4" />

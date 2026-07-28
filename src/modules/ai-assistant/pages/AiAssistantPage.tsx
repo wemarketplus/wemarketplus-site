@@ -26,7 +26,7 @@ export function AiAssistantPage() {
       <Card>
         <CardContent className="space-y-4 px-6 py-6">
           {conversation.length === 0 ? (
-            <p className="rounded-md border border-dashed border-white/[0.06] px-4 py-8 text-center text-sm text-muted-soft">
+            <p className="rounded-md border border-dashed border-border/[0.06] px-4 py-8 text-center text-sm text-muted-soft">
               Pick a preset above or type a question below to get started.
             </p>
           ) : (
@@ -51,7 +51,7 @@ export function AiAssistantPage() {
               value={draftPrompt}
               onChange={(e) => setDraft(e.target.value)}
               placeholder="Ask anything…"
-              className="flex h-11 w-full rounded-md border border-white/10 bg-surface-raised px-3.5 text-sm text-foreground placeholder:text-faint focus-visible:border-azure/70 focus-visible:bg-surface focus-visible:outline-none"
+              className="flex h-11 w-full rounded-md border border-border/10 bg-surface-raised px-3.5 text-sm text-foreground placeholder:text-faint focus-visible:border-azure/70 focus-visible:bg-surface focus-visible:outline-none"
             />
             <Button type="submit" disabled={isSending || !draftPrompt.trim()}>
               <Send className="h-4 w-4" />

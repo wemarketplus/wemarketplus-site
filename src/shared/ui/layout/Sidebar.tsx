@@ -1,17 +1,21 @@
 import { NavLink } from 'react-router-dom';
+// Lucide is the icon system the reference design draws from (24px grid, 2px
+// stroke, rounded caps) and is already the app's icon dependency — every
+// NavItem in navigationConfig already carries one.
+import { HeartPulse as BrandMark } from 'lucide-react';
 import { ProductSwitcher, useActiveEntitlement } from '@/modules/access';
 import {
   SECTIONS_BY_PRODUCT,
   isNavItemVisible,
 } from '@/shared/config/navigationConfig';
 import { useRole, ROLE_LABELS } from '@/shared/rbac';
-import { Product, Tier, TIER_LABELS, PRODUCT_LABELS } from '@/shared/types';
+import { Product, TIER_LABELS, PRODUCT_LABELS } from '@/shared/types';
 import { cn } from '@/shared/utils/cn';
 
-// Mirrors wemarketplus-site `.sb` exactly: 220px column, #071120 bg (HL) /
-// #060f1c (CL), .sb-top brand block, .nav-sec section eyebrows (#334d6e, 9px,
-// .12em caps), .nav-btn (#d0d8e8, 12px, 8/10px pad, 8px radius), active =
-// solid tier color with #081426 text, admin items purple. .sb-foot at bottom.
+// 220px rail on the light surface wash: .sb-top brand block (mark + wordmark),
+// .nav-sec section eyebrows, icon+label nav rows at an 8px radius, and .sb-foot
+// at the bottom. Colour is token-driven and uniform — one accent for every
+// product and tier, per the reference design.
 export function Sidebar() {
   const { role } = useRole();
   // Product/tier follow the ACTIVE dashboard (which the switcher can change),
@@ -32,33 +36,35 @@ export function Sidebar() {
   const sections = SECTIONS_BY_PRODUCT[product];
   const isCommunity = product === Product.CommunityLink;
 
-  // Active nav background per tier (matches .active-b / .active-g; Max uses
-  // the lime btn color). CommunityLink uses amber.
-  const activeBg = isCommunity
-    ? 'bg-amber'
-    : tier === Tier.Gold
-    ? 'bg-gold'
-    : tier === Tier.Max
-    ? 'bg-lime'
-    : 'bg-azure';
+  // ONE active accent for every product and tier — a tinted pill with
+  // accent-coloured text. The rail previously shifted hue per tier/product
+  // (gold / lime / azure / amber), which made the same screen look like four
+  // different products; the design specifies a single quiet accent.
 
   return (
     <aside
       data-product={product}
-      className={cn(
-        'hidden h-full w-[220px] min-w-[220px] shrink-0 flex-col border-r border-white/[0.08] md:flex',
-        isCommunity ? 'bg-[#060f1c]' : 'bg-[#071120]',
-      )}
+      className="hidden h-full w-[220px] min-w-[220px] shrink-0 flex-col border-r border-border/[0.08] bg-surface-raised md:flex"
     >
-      {/* .sb-top */}
+      {/* .sb-top — brand block: a filled mark in a rounded square beside the
+          wordmark, per the reference design. */}
       <div className="flex-shrink-0 px-3 pb-2 pt-3.5">
-        <div className="text-[16px] font-black leading-tight text-azure">
-          {isCommunity ? 'Community' : 'Hospice'}
-          <span className={isCommunity ? 'text-amber' : 'text-gold'}>Link</span>
-        </div>
-        <div className="mt-0.5 text-[11px] text-[#8b949e]">
-          {PRODUCT_LABELS[product]}
-          {hasActivePlan && ` · ${TIER_LABELS[tier]}`}
+        <div className="flex items-center gap-2.5">
+          <div
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-primary"
+          >
+            <BrandMark className="h-[18px] w-[18px] text-primary-foreground" />
+          </div>
+          <div className="min-w-0">
+            <div className="truncate text-[15px] font-black leading-tight tracking-[-0.01em] text-foreground">
+              {isCommunity ? 'Community' : 'Hospice'}
+              <span className="text-primary">Link</span>
+            </div>
+            <div className="mt-0.5 truncate text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-soft">
+              {PRODUCT_LABELS[product]}
+              {hasActivePlan && ` · ${TIER_LABELS[tier]}`}
+            </div>
+          </div>
         </div>
         {/* Only renders for users entitled to more than one product. */}
         <ProductSwitcher />
@@ -75,35 +81,48 @@ export function Sidebar() {
           return (
             <div key={section.id}>
               {/* .nav-sec */}
-              <span className="block px-1.5 pb-[3px] pt-2.5 text-[9px] font-black uppercase tracking-[0.12em] text-[#334d6e]">
+              <span className="block px-1.5 pb-[3px] pt-2.5 text-[9px] font-black uppercase tracking-[0.12em] text-muted-soft">
                 {section.label}
               </span>
-              {visibleItems.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={item.to === '/'}
-                  className={({ isActive }) =>
-                    cn(
-                      'mb-px block truncate rounded-[8px] px-2.5 py-2 text-[12px] font-semibold transition-colors',
-                      isActive
-                        ? cn(activeBg, 'text-[#081426]')
-                        : isAdmin
-                        ? 'text-[#c9aeff] hover:bg-[#6d28d9]/15'
-                        : 'text-[#d0d8e8] hover:bg-white/[0.07] hover:text-white',
-                    )
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              ))}
+              {visibleItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    end={item.to === '/'}
+                    className={({ isActive }) =>
+                      cn(
+                        'mb-px flex items-center gap-2.5 rounded-[8px] px-2.5 py-2 text-[12px] font-semibold transition-colors',
+                        isActive
+                          ? 'bg-primary/[0.09] text-primary'
+                          : isAdmin
+                          ? 'text-muted hover:bg-primary/[0.05] hover:text-primary'
+                          : 'text-muted hover:bg-primary/[0.05] hover:text-foreground',
+                      )
+                    }
+                  >
+                    {({ isActive }) => (
+                      <>
+                        <Icon
+                          className={cn(
+                            'h-4 w-4 shrink-0 transition-colors',
+                            isActive ? '' : 'text-muted-soft',
+                          )}
+                        />
+                        <span className="truncate">{item.label}</span>
+                      </>
+                    )}
+                  </NavLink>
+                );
+              })}
             </div>
           );
         })}
       </nav>
 
       {/* .sb-foot */}
-      <div className="flex-shrink-0 border-t border-white/[0.07] px-3 py-2.5 text-[10px] uppercase tracking-[0.1em] text-[#8b949e]">
+      <div className="flex-shrink-0 border-t border-border/[0.07] px-3 py-2.5 text-[10px] uppercase tracking-[0.1em] text-muted-soft">
         {role ? (
           <>Signed in as <span className="font-bold text-foreground">{ROLE_LABELS[role]}</span></>
         ) : (

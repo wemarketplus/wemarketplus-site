@@ -17,42 +17,48 @@
  */
 @layer base {
   :root {
-    /* Surfaces — from login.html / crm-*.html. The CRM/auth/demo app body is
-       #081426 (navy); the marketing landing overrides --color-bg to the darker
-       #06080e ink inside .marketing-root (see below). */
-    --color-bg: 8 20 38;               /* #081426 app/dashboard page */
-    --color-ink: 6 8 14;               /* #06080e deepest */
-    --color-surface: 13 27 49;         /* #0d1b31 card */
-    --color-surface-raised: 10 22 40;  /* #0a1628 input bg */
-    --color-surface-elevated: 8 31 56; /* #081f38 hint boxes */
+    color-scheme: light;
+
+    /* Surfaces — "1a Light · Editorial calm": airy white theme, hairline
+       cards, quiet accents. White cards sit on a near-white page; the sidebar
+       carries a faint wash so the rail reads as a distinct plane. */
+    --color-bg: 255 255 255;               /* #ffffff app/dashboard page */
+    --color-ink: 22 28 25;                 /* #161c19 deepest text */
+    --color-surface: 255 255 255;          /* #ffffff card */
+    --color-surface-raised: 250 251 250;   /* #fafbfa sidebar / input wash */
+    --color-surface-elevated: 244 247 245; /* #f4f7f5 tinted chips */
 
     /* Text */
-    --color-foreground: 244 248 255;   /* #f4f8ff */
-    --color-muted: 107 127 163;        /* #6b7fa3 */
-    --color-muted-soft: 139 159 196;   /* #8b9fc4 labels */
-    --color-faint: 58 77 107;          /* #3a4d6b placeholder */
+    --color-foreground: 22 28 25;      /* #161c19 headings */
+    --color-muted: 106 114 110;        /* #6a726e body copy */
+    --color-muted-soft: 138 146 142;   /* #8a928e uppercase labels */
+    --color-faint: 168 176 172;        /* #a8b0ac placeholder */
 
-    /* Lines — consumed at /.09 (card) and /.12 (input) */
-    --color-border: 255 255 255;
-    --color-border-strong: 255 255 255;
+    /* Lines — consumed at /.09 (card) and /.12 (input). Near-black so the
+       hairlines stay visible on white; the triplet, not the alpha, flipped. */
+    --color-border: 17 32 26;
+    --color-border-strong: 17 32 26;
 
-    /* Brand accent — defaults to HospiceLink azure, overridable per product. */
-    --color-primary: 73 182 255;          /* #49b6ff */
-    --color-primary-hover: 73 182 255;    /* site darkens via opacity, not hue */
-    --color-primary-foreground: 8 20 38;  /* #081426 dark text on azure */
+    /* Brand accent — the deep green of the design's logo mark and active nav
+       pill. Text on the accent is white (the old navy-on-azure is inverted). */
+    --color-primary: 15 92 68;         /* #0f5c44 */
+    --color-primary-hover: 11 74 54;   /* #0b4a36 */
+    --color-primary-foreground: 255 255 255;
 
-    /* Fixed brand accents (independent of product scope) */
-    --color-azure: 73 182 255;   /* #49b6ff */
-    --color-gold: 255 215 0;     /* #ffd700 */
-    --color-amber: 245 158 11;   /* #f59e0b — CommunityLink */
-    --color-sage: 79 200 122;    /* #4fc87a — landing */
-    --color-lime: 140 255 102;   /* #8cff66 */
+    /* Fixed brand accents. The previous values (#49b6ff azure, #ffd700 gold,
+       #8cff66 lime) were tuned for a navy backdrop and fail contrast on white,
+       so each is darkened to its light-theme counterpart. */
+    --color-azure: 37 99 235;    /* #2563eb */
+    --color-gold: 194 145 42;    /* #c2912a */
+    --color-amber: 176 118 20;   /* #b07614 — CommunityLink */
+    --color-sage: 20 97 74;      /* #14614a — HospiceLink */
+    --color-lime: 22 128 92;     /* #16805c */
 
     /* Status */
-    --color-success: 140 255 102;          /* #8cff66 */
-    --color-warning: 251 191 36;           /* #fbbf24 */
-    --color-destructive: 248 113 113;      /* #f87171 */
-    --color-destructive-foreground: 244 248 255;
+    --color-success: 22 128 92;        /* #16805c */
+    --color-warning: 199 128 18;       /* #c78012 */
+    --color-destructive: 209 63 63;    /* #d13f3f */
+    --color-destructive-foreground: 255 255 255;
 
     /* Radii — from the site CSS */
     --radius-sm: 8px;
@@ -62,16 +68,16 @@
     --radius-pill: 999px; /* buttons + badges */
   }
 
-  /* Per-product accent scopes — wrap a subtree to recolor `primary`. */
-  [data-product='communitylink'] {
-    --color-primary: 245 158 11;          /* #f59e0b */
-    --color-primary-hover: 245 158 11;
-    --color-primary-foreground: 6 8 14;   /* #06080e */
-  }
+  /* Per-product scopes no longer recolor `primary`. The design system uses ONE
+     accent (the deep green) for all chrome — nav pills, marks, buttons, links —
+     so the interface reads as a single product rather than shifting hue per
+     tenant. Product identity lives in the wordmark and in DATA colour only
+     (the "By product" bars keep HospiceLink sage vs CommunityLink amber, which
+     the reference design also shows as two distinct series colours).
+     The scopes are retained as hooks for product-specific data accents. */
+  [data-product='communitylink'],
   [data-product='hospicelink'] {
-    --color-primary: 73 182 255;
-    --color-primary-hover: 73 182 255;
-    --color-primary-foreground: 8 20 38;
+    /* intentionally no --color-primary override */
   }
 
   html,
@@ -81,7 +87,7 @@
   }
 
   html {
-    color-scheme: dark;
+    color-scheme: light;
     background-color: rgb(var(--color-bg));
     /* index.html uses smooth in-page anchor scrolling. */
     scroll-behavior: smooth;
@@ -126,10 +132,37 @@
        --text-2 #8fa3b8 (body copy) and --text-3 #4d6070 (labels/captions). */
   .marketing-root {
     font-family: 'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    /* The PUBLIC marketing site stays dark even though the signed-in app is
+       now light, so this scope re-declares the full dark palette rather than
+       inheriting :root. Without the foreground/border/primary lines below it
+       would render dark text on the dark ink page. */
+    color-scheme: dark;
+    /* `body` sets `color: rgb(var(--color-foreground))`, which resolves at BODY
+       scope — now the light ink. Descendants here that carry no text utility
+       would inherit that already-computed dark value, so re-declare `color`
+       against this scope's own token rather than relying on the variable alone. */
+    color: rgb(var(--color-foreground));
     --color-bg: 6 8 14; /* #06080e — index.html marketing page ink */
+    --color-ink: 6 8 14;
+    --color-surface-raised: 10 22 40;
+    --color-surface-elevated: 8 31 56;
+    --color-foreground: 244 248 255; /* #f4f8ff */
     --color-muted: 143 163 184; /* #8fa3b8 — index.html --text-2 */
     --color-muted-soft: 143 163 184;
     --color-faint: 77 96 112; /* #4d6070 — index.html --text-3 */
+    /* Hairlines go back to white-on-dark. */
+    --color-border: 255 255 255;
+    --color-border-strong: 255 255 255;
+    --color-primary: 73 182 255; /* #49b6ff */
+    --color-primary-hover: 73 182 255;
+    --color-primary-foreground: 8 20 38;
+    --color-gold: 255 215 0; /* #ffd700 */
+    --color-sage: 79 200 122; /* #4fc87a */
+    --color-lime: 140 255 102; /* #8cff66 */
+    --color-success: 140 255 102;
+    --color-warning: 251 191 36;
+    --color-destructive: 248 113 113;
+    --color-destructive-foreground: 244 248 255;
     /* The live wemarketplus.com marketing palette uses softer azure/amber than
        the brighter CRM accents — match them so every landing azure/amber
        element (kickers, origin card, CommunityLink) reads identically. */

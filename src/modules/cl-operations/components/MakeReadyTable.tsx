@@ -39,7 +39,7 @@ export function MakeReadyTable({
     {
       key: 'task',
       header: 'Task',
-      cell: (t) => <span className="font-bold text-[#111]">{t.taskName}</span>,
+      cell: (t) => <span className="font-bold text-foreground">{t.taskName}</span>,
     },
     { key: 'unit', header: 'Unit', cell: (t) => unitLabel(t.apartmentId) },
     {
@@ -53,7 +53,7 @@ export function MakeReadyTable({
             value={t.status}
             disabled={isMutating}
             onChange={(e) => onStatusChange(t, e.target.value)}
-            className="rounded-md border border-[#d0dce8] bg-white px-1.5 py-1 text-[11px] text-[#111]"
+            className="rounded-md border border-border/[0.15] bg-white px-1.5 py-1 text-[11px] text-foreground"
           >
             {MAKE_READY_STATUS_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>

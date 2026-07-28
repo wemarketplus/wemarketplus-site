@@ -39,7 +39,7 @@ export function ReadinessPage() {
         <Card dense className="lg:col-span-2">
           <CardContent className="px-0 pt-0 pb-0">
             <table className="w-full text-[13px]">
-              <thead className="bg-white/[0.02] text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+              <thead className="bg-foreground/[0.02] text-[10px] uppercase tracking-[0.1em] text-muted-soft">
                 <tr>
                   <th className="px-4 py-3 text-left">Control</th>
                   <th className="px-4 py-3 text-left">Score</th>

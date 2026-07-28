@@ -14,7 +14,7 @@ export function OwnerRevenueChart({ months }: OwnerRevenueChartProps) {
             const heightPct = (m.mrr / maxMrr) * 100;
             return (
               <div key={m.month} className="flex flex-col items-center gap-2">
-                <div className="flex h-44 w-full items-end overflow-hidden rounded-md bg-white/[0.04]">
+                <div className="flex h-44 w-full items-end overflow-hidden rounded-md bg-foreground/[0.04]">
                   <div
                     className="w-full rounded-md bg-gradient-to-t from-primary to-azure transition-all"
                     style={{ height: `${heightPct}%` }}

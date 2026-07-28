@@ -79,7 +79,7 @@ export function ActivityNotesPage() {
             ))}
           </Select>
           <textarea
-            className="w-full rounded-md border border-white/10 bg-surface px-3 py-2.5 text-sm text-foreground outline-none focus:border-primary/50"
+            className="w-full rounded-md border border-border/10 bg-surface px-3 py-2.5 text-sm text-foreground outline-none focus:border-primary/50"
             rows={3}
             placeholder="What happened? What was discussed?"
             value={summary}
@@ -111,7 +111,7 @@ export function ActivityNotesPage() {
               Failed to load activity notes.
             </p>
           ) : isLoading ? (
-            <div className="rounded-[12px] border border-white/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
+            <div className="rounded-[14px] border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
               Loading…
             </div>
           ) : notes.length === 0 ? (
@@ -122,7 +122,7 @@ export function ActivityNotesPage() {
             />
           ) : (
             notes.map((n) => (
-              <div key={n.id} className="rounded-[12px] border border-white/[0.08] bg-surface px-4 py-3.5">
+              <div key={n.id} className="rounded-[14px] border border-border/[0.08] bg-surface px-4 py-3.5">
                 <div className="mb-1.5 flex flex-wrap items-center justify-between gap-1.5">
                   <span className="text-[12px] font-bold text-foreground">{leadLabel(n.leadId)}</span>
                   <span className="text-[11px] text-muted-soft">

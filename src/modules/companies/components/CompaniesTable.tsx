@@ -39,8 +39,8 @@ export function CompaniesTable({
       header: 'Company',
       cell: (c) => (
         <div>
-          <p className="font-bold text-[#111]">{c.companyName}</p>
-          {c.industry && <p className="text-[11px] text-[#667]">{c.industry}</p>}
+          <p className="font-bold text-foreground">{c.companyName}</p>
+          {c.industry && <p className="text-[11px] text-muted">{c.industry}</p>}
         </div>
       ),
     },
@@ -57,9 +57,9 @@ export function CompaniesTable({
       cell: (c) =>
         c.primaryContactName ? (
           <div>
-            <p className="text-[#111]">{c.primaryContactName}</p>
+            <p className="text-foreground">{c.primaryContactName}</p>
             {c.primaryContactEmail && (
-              <p className="text-[11px] text-[#667]">{c.primaryContactEmail}</p>
+              <p className="text-[11px] text-muted">{c.primaryContactEmail}</p>
             )}
           </div>
         ) : (

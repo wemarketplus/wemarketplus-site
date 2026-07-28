@@ -29,7 +29,7 @@ export function EntityRowActions({
           disabled={disabled}
           aria-label={editLabel}
         >
-          <Pencil className="h-4 w-4 text-[#667]" />
+          <Pencil className="h-4 w-4 text-muted" />
         </Button>
       )}
       {onDelete && (

@@ -22,8 +22,8 @@ export function WibsTable({ rows, isMutating, onEdit, onDelete }: WibsTableProps
       header: 'WIB',
       cell: (w) => (
         <div>
-          <p className="font-bold text-[#111]">{w.wibName}</p>
-          {w.shortName && <p className="text-[11px] text-[#667]">{w.shortName}</p>}
+          <p className="font-bold text-foreground">{w.wibName}</p>
+          {w.shortName && <p className="text-[11px] text-muted">{w.shortName}</p>}
         </div>
       ),
     },

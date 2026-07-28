@@ -28,7 +28,7 @@ export function BAAStep() {
       className="space-y-5"
       noValidate
     >
-      <div className="max-h-72 overflow-y-auto rounded-md border border-white/[0.06] bg-white/[0.02] p-4 text-sm leading-relaxed text-muted">
+      <div className="max-h-72 overflow-y-auto rounded-md border border-border/[0.06] bg-foreground/[0.02] p-4 text-sm leading-relaxed text-muted">
         <h3 className="mb-2 font-semibold text-foreground">
           Business Associate Agreement (excerpt)
         </h3>
@@ -71,7 +71,7 @@ export function BAAStep() {
       <label className="flex items-start gap-3 text-sm text-foreground">
         <input
           type="checkbox"
-          className="mt-0.5 h-4 w-4 rounded border border-white/15 bg-surface-raised text-primary focus:ring-primary/50"
+          className="mt-0.5 h-4 w-4 rounded border border-border/15 bg-surface-raised text-primary focus:ring-primary/50"
           {...register('acknowledged')}
         />
         <span>

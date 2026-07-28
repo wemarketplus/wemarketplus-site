@@ -31,7 +31,7 @@ export function UsersFilters() {
               'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
               chip.value === selectedRole
                 ? 'border-primary/40 bg-primary/15 text-primary'
-                : 'border-white/[0.08] text-muted hover:border-white/20 hover:text-foreground',
+                : 'border-border/[0.08] text-muted hover:border-border/20 hover:text-foreground',
             )}
           >
             {chip.label}

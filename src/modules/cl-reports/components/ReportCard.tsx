@@ -21,7 +21,7 @@ export function ReportCard({ report, live }: Props) {
         </div>
 
         {live && !live.unavailable && live.metrics.length > 0 && (
-          <dl className="space-y-1.5 border-t border-white/[0.06] pt-3">
+          <dl className="space-y-1.5 border-t border-border/[0.06] pt-3">
             {live.metrics.map((m) => (
               <div key={m.metric} className="flex items-center justify-between gap-2">
                 <dt className="text-[12px] text-muted">{m.metric}</dt>
@@ -42,7 +42,7 @@ export function ReportCard({ report, live }: Props) {
         )}
 
         {live?.unavailable && (
-          <p className="border-t border-white/[0.06] pt-3 text-[12px] text-muted-soft">
+          <p className="border-t border-border/[0.06] pt-3 text-[12px] text-muted-soft">
             {live.note ?? 'No data source available yet.'}
           </p>
         )}

@@ -29,7 +29,7 @@ export function CommunitiesTable({
     {
       key: 'name',
       header: 'Community',
-      cell: (c) => <span className="font-bold text-[#111]">{c.name}</span>,
+      cell: (c) => <span className="font-bold text-foreground">{c.name}</span>,
     },
     {
       key: 'location',

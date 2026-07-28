@@ -12,11 +12,22 @@ function stageToStatus(stage: ProspectStage): ProspectStatus {
     case ProspectStage.Lost:
     case ProspectStage.Inactive:
       return ProspectStatusEnum.Lost;
+    // Mid-funnel stages (both pipeline types) read as "pending admission" in the
+    // coarse 4-value list view; the Kanban board uses the real stage instead.
     case ProspectStage.Pending:
     case ProspectStage.Evaluation:
     case ProspectStage.Contacted:
+    case ProspectStage.Eligibility:
+    case ProspectStage.FaceToFace:
+    case ProspectStage.ConsentOrder:
+    case ProspectStage.FirstVisit:
+    case ProspectStage.InService:
+    case ProspectStage.Active:
+    case ProspectStage.Champion:
       return ProspectStatusEnum.PendingAdmission;
     case ProspectStage.Inquiry:
+    case ProspectStage.NewReferral:
+    case ProspectStage.Identified:
     default:
       return ProspectStatusEnum.Inquiry;
   }
@@ -25,14 +36,15 @@ function stageToStatus(stage: ProspectStage): ProspectStatus {
 export function mapProspectRecord(r: ProspectRecord): Prospect {
   return {
     id: r.id,
-    name: r.patientName,
+    name: r.pipelineName ?? r.patientName,
     status: stageToStatus(r.stage),
     phone: r.phone ?? '',
     email: '',
     referralSource: r.referralSourceId ?? '',
     assignedMarketer: r.assignedTo ?? '',
     nextStep: '',
-    followUpDate: r.updatedAt,
+    // Real pipeline timing now exists: prefer the stage-entry stamp over updatedAt.
+    followUpDate: r.stageEnteredAt ?? r.updatedAt,
     urgency: r.urgency as Urgency,
     conversionRisk: r.aiAdmitScore ?? undefined,
     notes: r.notes ?? undefined,

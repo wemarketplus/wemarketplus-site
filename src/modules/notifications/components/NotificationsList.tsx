@@ -7,7 +7,7 @@ import type { NotificationsListProps } from '../types/notificationsTypes';
 export function NotificationsList({ items, emptyState, onActivate }: NotificationsListProps) {
   if (items.length === 0) {
     return (
-      <div className="rounded-md border border-white/[0.06] bg-white/[0.02] p-8 text-center text-sm text-muted">
+      <div className="rounded-md border border-border/[0.06] bg-foreground/[0.02] p-8 text-center text-sm text-muted">
         {emptyState ?? "You're all caught up."}
       </div>
     );
@@ -20,8 +20,8 @@ export function NotificationsList({ items, emptyState, onActivate }: Notificatio
         const Body = (
           <div
             className={cn(
-              'flex gap-3 px-4 py-3 transition-colors hover:bg-white/[0.03]',
-              !n.read && 'bg-white/[0.02]',
+              'flex gap-3 px-4 py-3 transition-colors hover:bg-foreground/[0.03]',
+              !n.read && 'bg-foreground/[0.02]',
             )}
           >
             <div className={cn('mt-0.5 shrink-0', CATEGORY_TONE_CLASS[n.category])}>

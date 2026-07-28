@@ -1,9 +1,14 @@
+import type { ComponentType } from 'react';
+
 export interface DashboardStatCard {
   id: string;
   label: string;
   value: string;
   hint?: string;
   tone?: 'primary' | 'azure' | 'amber' | 'success' | 'warning' | 'destructive';
+  // Lucide glyph shown in the tinted chip at the tile's top-right, per the
+  // reference design. Optional so a tile can render without one.
+  icon?: ComponentType<{ className?: string }>;
 }
 
 export interface DashboardActivityItem {

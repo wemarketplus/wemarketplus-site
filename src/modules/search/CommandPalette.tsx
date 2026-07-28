@@ -94,10 +94,10 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
         role="dialog"
         aria-modal="true"
         aria-label="Global search"
-        className="animate-slide-up relative z-10 w-full max-w-xl overflow-hidden rounded-[16px] border border-white/[0.1] bg-surface shadow-2xl"
+        className="animate-slide-up relative z-10 w-full max-w-xl overflow-hidden rounded-[14px] border border-border/[0.1] bg-surface shadow-2xl"
         onKeyDown={onKeyDown}
       >
-        <div className="flex items-center gap-3 border-b border-white/[0.07] px-4">
+        <div className="flex items-center gap-3 border-b border-border/[0.07] px-4">
           <Search className="h-4 w-4 shrink-0 text-muted" />
           <input
             ref={inputRef}
@@ -114,7 +114,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="flex h-6 w-6 items-center justify-center rounded-full text-muted hover:bg-white/[0.06] hover:text-foreground"
+            className="flex h-6 w-6 items-center justify-center rounded-full text-muted hover:bg-foreground/[0.06] hover:text-foreground"
           >
             <X className="h-4 w-4" />
           </button>
@@ -152,7 +152,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                           onMouseMove={() => idx >= 0 && setActiveIndex(idx)}
                           className={cn(
                             'flex w-full flex-col items-start gap-0.5 rounded-[10px] px-3 py-2 text-left',
-                            isActive ? 'bg-primary/15' : 'hover:bg-white/[0.04]',
+                            isActive ? 'bg-primary/15' : 'hover:bg-foreground/[0.04]',
                           )}
                         >
                           <span className="text-[13px] font-semibold text-foreground">
@@ -170,16 +170,16 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
           )}
         </div>
 
-        <div className="flex items-center gap-3 border-t border-white/[0.07] px-4 py-2 text-[10px] text-muted-soft">
+        <div className="flex items-center gap-3 border-t border-border/[0.07] px-4 py-2 text-[10px] text-muted-soft">
           <span>
-            <kbd className="rounded bg-white/[0.06] px-1">↑</kbd>{' '}
-            <kbd className="rounded bg-white/[0.06] px-1">↓</kbd> navigate
+            <kbd className="rounded bg-foreground/[0.06] px-1">↑</kbd>{' '}
+            <kbd className="rounded bg-foreground/[0.06] px-1">↓</kbd> navigate
           </span>
           <span>
-            <kbd className="rounded bg-white/[0.06] px-1">↵</kbd> open
+            <kbd className="rounded bg-foreground/[0.06] px-1">↵</kbd> open
           </span>
           <span>
-            <kbd className="rounded bg-white/[0.06] px-1">esc</kbd> close
+            <kbd className="rounded bg-foreground/[0.06] px-1">esc</kbd> close
           </span>
         </div>
       </div>

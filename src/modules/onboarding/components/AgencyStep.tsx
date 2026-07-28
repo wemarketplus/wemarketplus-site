@@ -56,7 +56,7 @@ export function AgencyStep() {
           <select
             id="state"
             className={cn(
-              'flex h-11 w-full rounded-md border border-white/10 bg-surface-raised px-3 text-sm text-foreground',
+              'flex h-11 w-full rounded-md border border-border/10 bg-surface-raised px-3 text-sm text-foreground',
               'transition-colors focus-visible:outline-none focus-visible:border-azure/70 focus-visible:bg-surface',
             )}
             {...register('state')}

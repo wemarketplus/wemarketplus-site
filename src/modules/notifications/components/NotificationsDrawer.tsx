@@ -30,13 +30,13 @@ export function NotificationsDrawer() {
       />
       <aside
         className={cn(
-          'absolute right-0 top-0 flex h-full w-full max-w-[420px] flex-col border-l border-white/[0.08] bg-bg shadow-2xl transition-transform duration-300',
+          'absolute right-0 top-0 flex h-full w-full max-w-[420px] flex-col border-l border-border/[0.08] bg-bg shadow-2xl transition-transform duration-300',
           open ? 'translate-x-0' : 'translate-x-full',
         )}
         role="dialog"
         aria-label="Notifications"
       >
-        <header className="flex items-center justify-between border-b border-white/[0.06] px-4 py-4">
+        <header className="flex items-center justify-between border-b border-border/[0.06] px-4 py-4">
           <div>
             <h2 className="text-base font-semibold text-foreground">Notifications</h2>
             <p className="text-[11px] uppercase tracking-[0.1em] text-muted-soft">
@@ -65,7 +65,7 @@ export function NotificationsDrawer() {
           </div>
         </header>
 
-        <nav className="flex gap-1.5 border-b border-white/[0.06] px-4 py-3">
+        <nav className="flex gap-1.5 border-b border-border/[0.06] px-4 py-3">
           {NOTIFICATIONS_DRAWER_FILTERS.map((f) => (
             <button
               key={f.value}
@@ -75,7 +75,7 @@ export function NotificationsDrawer() {
                 'rounded-pill border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
                 filter === f.value
                   ? 'border-primary/40 bg-primary/15 text-primary'
-                  : 'border-white/[0.08] text-muted hover:border-white/20 hover:text-foreground',
+                  : 'border-border/[0.08] text-muted hover:border-border/20 hover:text-foreground',
               )}
             >
               {f.label}

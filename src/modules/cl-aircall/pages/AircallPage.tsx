@@ -69,7 +69,7 @@ export function AircallPage() {
         'inline-flex items-center gap-1.5 rounded-pill border px-3.5 py-1.5 text-[12px] font-semibold transition-colors',
         channel === value
           ? 'border-primary/40 bg-primary/15 text-primary'
-          : 'border-white/[0.08] text-muted hover:border-white/20 hover:text-foreground',
+          : 'border-border/[0.08] text-muted hover:border-border/20 hover:text-foreground',
       )}
     >
       <Icon className="h-3.5 w-3.5" /> {label}
@@ -131,7 +131,7 @@ export function AircallPage() {
           )}
 
           <textarea
-            className="w-full rounded-md border border-white/10 bg-surface px-3 py-2.5 text-sm text-foreground outline-none focus:border-primary/50"
+            className="w-full rounded-md border border-border/10 bg-surface px-3 py-2.5 text-sm text-foreground outline-none focus:border-primary/50"
             rows={channel === 'email' ? 6 : 3}
             placeholder={channel === 'text' ? 'Type a text message…' : 'Type an email…'}
             value={body}

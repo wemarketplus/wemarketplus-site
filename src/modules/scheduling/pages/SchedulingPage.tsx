@@ -30,7 +30,7 @@ export function SchedulingPage() {
                 'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
                 view === v.value
                   ? 'border-primary/40 bg-primary/15 text-primary'
-                  : 'border-white/[0.08] text-muted hover:border-white/20 hover:text-foreground',
+                  : 'border-border/[0.08] text-muted hover:border-border/20 hover:text-foreground',
               )}
             >
               {v.label}
@@ -40,7 +40,7 @@ export function SchedulingPage() {
       </header>
 
       {isEmpty ? (
-        <div className="rounded-[16px] border border-white/[0.06] bg-surface p-10 text-center">
+        <div className="rounded-[14px] border border-border/[0.06] bg-surface p-10 text-center">
           <p className="text-sm font-semibold text-foreground">
             Territory performance analytics are coming soon
           </p>

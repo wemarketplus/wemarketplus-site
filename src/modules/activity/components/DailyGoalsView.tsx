@@ -62,7 +62,7 @@ export function DailyGoalsView() {
                     {g.current}
                     <span className="text-base text-muted-soft"> / {g.target}</span>
                   </p>
-                  <div className="h-1.5 w-full overflow-hidden rounded-pill bg-white/[0.06]">
+                  <div className="h-1.5 w-full overflow-hidden rounded-pill bg-foreground/[0.06]">
                     <div
                       className={cn(
                         'h-full rounded-pill transition-all',

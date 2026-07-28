@@ -1,24 +1,30 @@
 import { ReferralSourceStatus as Status } from '@/shared/types';
 import type { ReferralSource, ReferralSourceStatus } from '@/shared/types';
-import type { ReferralSourceRecord } from '../types/referralsTypes';
+import {
+  ReferralAccountStatus,
+  type ReferralSourceRecord,
+} from '../types/referralsTypes';
 
-// The backend ReferralSourceResponseDto (name/type/aiScore/...) is leaner than
-// the UI's ReferralSource view-model; derive display-only fields from the AI
-// score so the existing table/cards render without changes.
-function scoreToStatus(score: number): ReferralSourceStatus {
-  if (score >= 7) return Status.Green;
-  if (score >= 4) return Status.Building;
-  return Status.Red;
+// The backend referral_sources row is now the full account record, so the health
+// pill and priority come from REAL columns (`status`, `priorityTier`) instead of
+// being inferred from the AI score. aiScore still drives the 1–5 trust display,
+// which has no backend equivalent.
+function accountStatusToHealth(
+  status: ReferralAccountStatus,
+): ReferralSourceStatus {
+  switch (status) {
+    case ReferralAccountStatus.ActiveReferrer:
+      return Status.Green;
+    case ReferralAccountStatus.Prospect:
+      return Status.Building;
+    case ReferralAccountStatus.Dormant:
+    default:
+      return Status.Red;
+  }
 }
 
 function scoreToTrust(score: number): ReferralSource['trustLevel'] {
   return Math.min(5, Math.max(1, Math.round(score / 2))) as ReferralSource['trustLevel'];
-}
-
-function scoreToPriority(score: number): ReferralSource['priorityLevel'] {
-  if (score >= 7) return 'A';
-  if (score >= 4) return 'B';
-  return 'C';
 }
 
 export function mapReferralSource(r: ReferralSourceRecord): ReferralSource {
@@ -30,13 +36,14 @@ export function mapReferralSource(r: ReferralSourceRecord): ReferralSource {
     workPhone: r.phone ?? '',
     email: r.email ?? '',
     sourceType: r.type,
-    status: scoreToStatus(r.aiScore),
+    status: accountStatusToHealth(r.status),
     trustLevel: scoreToTrust(r.aiScore),
-    priorityLevel: scoreToPriority(r.aiScore),
+    priorityLevel: r.priorityTier,
     lastContactDate: r.updatedAt,
-    assignedMarketer: '',
+    assignedMarketer: r.accountOwnerId ?? '',
     territoryArea: [r.city, r.state].filter(Boolean).join(', ') || undefined,
-    referralCount: 0,
+    // Real rollup, maintained by the backend on lead conversion.
+    referralCount: r.referralVolume,
     acceptsGifts: false,
   };
 }

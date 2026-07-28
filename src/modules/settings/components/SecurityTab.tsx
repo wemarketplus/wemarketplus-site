@@ -30,7 +30,7 @@ export function SecurityTab() {
       <Card>
         <CardContent className="flex flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white/[0.06] text-muted ring-1 ring-white/[0.08]">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-foreground/[0.06] text-muted ring-1 ring-white/[0.08]">
               <History className="h-4 w-4" />
             </div>
             <div>
@@ -42,7 +42,7 @@ export function SecurityTab() {
               </p>
             </div>
           </div>
-          <span className="rounded-pill border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 text-[10px] uppercase tracking-[0.08em] text-muted-soft">
+          <span className="rounded-pill border border-border/[0.08] bg-foreground/[0.03] px-2.5 py-1 text-[10px] uppercase tracking-[0.08em] text-muted-soft">
             Backend pending
           </span>
         </CardContent>

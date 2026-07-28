@@ -27,11 +27,11 @@ export function DocumentsTable({ documents, isMutating, onDelete, empty }: Docum
             href={d.driveUrl}
             target="_blank"
             rel="noreferrer"
-            className="font-bold text-[#1155cc] underline"
+            className="font-bold text-azure underline"
           >
             {d.fileName}
           </a>
-          {d.mimeType && <p className="text-[11px] text-[#667]">{d.mimeType}</p>}
+          {d.mimeType && <p className="text-[11px] text-muted">{d.mimeType}</p>}
         </div>
       ),
     },

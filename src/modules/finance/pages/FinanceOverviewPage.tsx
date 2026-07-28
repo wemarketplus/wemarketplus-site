@@ -50,8 +50,8 @@ export function FinanceOverviewPage() {
       header: 'Invoice',
       cell: (i) => (
         <div>
-          <p className="font-bold text-[#111]">{i.companyName}</p>
-          <p className="text-[11px] text-[#667]">{i.invoiceNumber}</p>
+          <p className="font-bold text-foreground">{i.companyName}</p>
+          <p className="text-[11px] text-muted">{i.invoiceNumber}</p>
         </div>
       ),
     },
@@ -95,7 +95,7 @@ export function FinanceOverviewPage() {
             Recent invoices
           </h2>
           {isLoading ? (
-            <div className="rounded-[12px] border border-white/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
+            <div className="rounded-[14px] border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
               Loading…
             </div>
           ) : (

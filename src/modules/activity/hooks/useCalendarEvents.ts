@@ -1,5 +1,8 @@
 import { useMemo } from 'react';
-import { useListProspectsQuery } from '@/modules/prospects/api/prospectsApi';
+import { useAppointmentsCalendar } from '@/modules/appointments';
+import {
+  APPOINTMENT_TYPE_LABELS,
+} from '@/modules/appointments/constants/appointmentsConstants';
 
 export interface CalendarEvent {
   id: string;
@@ -16,24 +19,33 @@ export interface UseCalendarEventsResult {
   isFetching: boolean;
 }
 
+/**
+ * Upcoming follow-ups for the activity calendar.
+ *
+ * This now reads the REAL appointments feed (GET /hl/appointments/calendar). It
+ * previously derived pseudo-events from `prospects.updatedAt` because no
+ * appointments table existed — that fake is gone. The CalendarEvent shape is kept
+ * so CalendarView renders unchanged.
+ */
 export function useCalendarEvents(): UseCalendarEventsResult {
-  const { data, isLoading, isError, isFetching } = useListProspectsQuery();
+  const { appointments, isLoading, isFetching, isError } =
+    useAppointmentsCalendar();
 
-  const events = useMemo<readonly CalendarEvent[]>(() => {
-    const records = data?.data ?? [];
-    return records
-      .map((p) => ({
-        id: p.id,
-        name: p.patientName,
-        nextStep: p.stage,
-        followUpDate: p.updatedAt,
-      }))
-      .sort(
-        (a, b) =>
-          new Date(a.followUpDate).getTime() -
-          new Date(b.followUpDate).getTime(),
-      );
-  }, [data]);
+  const events = useMemo<readonly CalendarEvent[]>(
+    () =>
+      appointments.map((appointment) => ({
+        id: appointment.id,
+        name: appointment.title,
+        nextStep: [
+          APPOINTMENT_TYPE_LABELS[appointment.appointmentType],
+          appointment.location,
+        ]
+          .filter(Boolean)
+          .join(' · '),
+        followUpDate: appointment.startAt,
+      })),
+    [appointments],
+  );
 
   return {
     events,

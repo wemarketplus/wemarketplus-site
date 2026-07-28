@@ -31,7 +31,7 @@ export function BreachWorkflowPage() {
               value={breachType}
               onChange={(e) => setBreachType(e.target.value)}
               className={cn(
-                'w-full rounded-[10px] border border-white/[0.12] bg-surface-raised px-3.5 py-[11px] text-[14px] text-foreground outline-none focus:border-primary',
+                'w-full rounded-[10px] border border-border/[0.12] bg-surface-raised px-3.5 py-[11px] text-[14px] text-foreground outline-none focus:border-primary',
               )}
             >
               {BREACH_TYPES.map((t) => (
@@ -60,7 +60,7 @@ export function BreachWorkflowPage() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={4}
-              className="w-full resize-y rounded-[10px] border border-white/[0.12] bg-surface-raised px-3.5 py-2.5 text-[14px] text-foreground outline-none placeholder:text-faint focus:border-primary"
+              className="w-full resize-y rounded-[10px] border border-border/[0.12] bg-surface-raised px-3.5 py-2.5 text-[14px] text-foreground outline-none placeholder:text-faint focus:border-primary"
             />
           </div>
 

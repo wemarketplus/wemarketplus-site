@@ -41,10 +41,10 @@ export function PermissionMatrixGrid({
   onToggle,
 }: PermissionMatrixGridProps) {
   return (
-    <div className="overflow-x-auto rounded-lg border border-white/[0.08]">
+    <div className="overflow-x-auto rounded-lg border border-border/[0.08]">
       <table className="w-full border-collapse text-sm">
         <thead>
-          <tr className="border-b border-white/[0.08] bg-white/[0.02]">
+          <tr className="border-b border-border/[0.08] bg-foreground/[0.02]">
             <th className="sticky left-0 z-10 bg-surface px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.08em] text-muted">
               Permission
             </th>
@@ -62,7 +62,7 @@ export function PermissionMatrixGrid({
           {PERMISSION_KEYS.map((permission) => (
             <tr
               key={permission}
-              className="border-b border-white/[0.05] last:border-b-0 hover:bg-white/[0.02]"
+              className="border-b border-border/[0.05] last:border-b-0 hover:bg-foreground/[0.02]"
             >
               <th
                 scope="row"
@@ -117,7 +117,7 @@ function PermissionCell({ allowed, locked, pending, label, onToggle }: Permissio
           'inline-flex h-7 w-7 items-center justify-center rounded-md border',
           allowed
             ? 'border-primary/20 bg-primary/10 text-primary'
-            : 'border-white/[0.08] bg-white/[0.02] text-muted-soft',
+            : 'border-border/[0.08] bg-foreground/[0.02] text-muted-soft',
         )}
         aria-label={`${label}: ${allowed ? 'allowed' : 'denied'} (locked)`}
       >
@@ -140,7 +140,7 @@ function PermissionCell({ allowed, locked, pending, label, onToggle }: Permissio
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
         allowed
           ? 'border-primary/40 bg-primary/20 text-primary hover:bg-primary/30'
-          : 'border-white/[0.12] bg-white/[0.02] text-transparent hover:border-white/25',
+          : 'border-border/[0.12] bg-foreground/[0.02] text-transparent hover:border-border/25',
         pending && 'cursor-wait opacity-60',
       )}
     >

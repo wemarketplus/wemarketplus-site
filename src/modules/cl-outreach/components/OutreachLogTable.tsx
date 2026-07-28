@@ -32,7 +32,7 @@ export function OutreachLogTable({
     {
       key: 'contact',
       header: 'Contact',
-      cell: (v) => <span className="font-bold text-[#111]">{v.contactName ?? '—'}</span>,
+      cell: (v) => <span className="font-bold text-foreground">{v.contactName ?? '—'}</span>,
     },
     { key: 'location', header: 'Location', cell: (v) => v.locationName ?? '—' },
     {

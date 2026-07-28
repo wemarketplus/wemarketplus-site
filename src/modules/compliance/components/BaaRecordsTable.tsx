@@ -6,7 +6,7 @@ const columns: ReadonlyArray<Column<BaaRecord>> = [
   {
     key: 'org',
     header: 'Organization',
-    cell: (r) => <span className="font-bold text-[#111]">{r.organization}</span>,
+    cell: (r) => <span className="font-bold text-foreground">{r.organization}</span>,
   },
   { key: 'signer', header: 'Signer', cell: (r) => r.signer },
   { key: 'signed', header: 'Signed', cell: (r) => formatDate(r.signedAt) },

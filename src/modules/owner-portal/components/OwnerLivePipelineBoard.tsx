@@ -49,7 +49,7 @@ export function OwnerLivePipelineBoard({
                 {stageRecords.map((record) => (
                   <li
                     key={record.id}
-                    className="rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-2 text-xs"
+                    className="rounded-md border border-border/[0.06] bg-foreground/[0.02] px-3 py-2 text-xs"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
@@ -70,7 +70,7 @@ export function OwnerLivePipelineBoard({
                           type="button"
                           aria-label="Edit"
                           onClick={() => onEdit(record)}
-                          className="flex h-6 w-6 items-center justify-center rounded text-muted hover:bg-white/[0.06] hover:text-foreground"
+                          className="flex h-6 w-6 items-center justify-center rounded text-muted hover:bg-foreground/[0.06] hover:text-foreground"
                         >
                           <Pencil className="h-3.5 w-3.5" />
                         </button>
@@ -88,7 +88,7 @@ export function OwnerLivePipelineBoard({
                   </li>
                 ))}
                 {stageRecords.length === 0 && (
-                  <li className="rounded-md border border-dashed border-white/[0.06] px-3 py-2 text-xs text-muted-soft">
+                  <li className="rounded-md border border-dashed border-border/[0.06] px-3 py-2 text-xs text-muted-soft">
                     No records
                   </li>
                 )}

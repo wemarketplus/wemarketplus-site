@@ -1,33 +1,80 @@
-import type { Prospect, ProspectStatus } from '@/shared/types';
+import { useState } from 'react';
+import type { ProspectRecord } from '@/modules/prospects/types/prospectsTypes';
 import { Card, CardContent } from '@/shared/ui/core';
+import { cn } from '@/shared/utils/cn';
+import type { ProspectStage } from '../types/pipelineTypes';
+import { stageTone } from '../utils/pipelineUtils';
 import { PipelineCard } from './PipelineCard';
 
 interface PipelineColumnProps {
-  status: ProspectStatus;
+  stage: ProspectStage;
   label: string;
-  tone: string;
-  items: readonly Prospect[];
+  total: number;
+  cards: readonly ProspectRecord[];
+  draggingProspectId: string | null;
+  onDragStart: (id: string) => void;
+  onDragEnd: () => void;
+  onDropCard: (prospectId: string, toStage: ProspectStage) => void;
 }
 
-export function PipelineColumn({ label, tone, items }: PipelineColumnProps) {
+export function PipelineColumn({
+  stage,
+  label,
+  total,
+  cards,
+  draggingProspectId,
+  onDragStart,
+  onDragEnd,
+  onDropCard,
+}: PipelineColumnProps) {
+  const [isOver, setIsOver] = useState(false);
+
   return (
-    <Card className="flex flex-col">
+    <Card
+      className={cn('flex flex-col transition', isOver && 'ring-1 ring-primary/40')}
+      onDragOver={(event) => {
+        // Must preventDefault for the drop event to fire at all.
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+        setIsOver(true);
+      }}
+      onDragLeave={() => setIsOver(false)}
+      onDrop={(event) => {
+        event.preventDefault();
+        setIsOver(false);
+        const prospectId = event.dataTransfer.getData('text/plain');
+        // Dropping a card back on its own column is a no-op, not a wasted request.
+        if (prospectId && !cards.some((card) => card.id === prospectId)) {
+          onDropCard(prospectId, stage);
+        }
+      }}
+    >
       <CardContent className="flex h-full flex-col gap-3 px-4 py-4">
         <header className="flex items-center justify-between">
           <span
-            className={`rounded-pill border px-2.5 py-0.5 text-[10px] uppercase tracking-[0.08em] ${tone}`}
+            className={`rounded-pill border px-2.5 py-0.5 text-[10px] uppercase tracking-[0.08em] ${stageTone(
+              stage,
+            )}`}
           >
             {label}
           </span>
-          <span className="text-[10px] text-muted-soft">{items.length}</span>
+          <span className="text-[10px] text-muted-soft">{total}</span>
         </header>
         <div className="flex-1 space-y-2">
-          {items.length === 0 ? (
+          {cards.length === 0 ? (
             <p className="rounded-md border border-dashed border-white/[0.06] px-3 py-2 text-xs text-muted-soft">
-              No prospects
+              Drop a card here
             </p>
           ) : (
-            items.map((p) => <PipelineCard key={p.id} prospect={p} />)
+            cards.map((card) => (
+              <PipelineCard
+                key={card.id}
+                card={card}
+                isDragging={draggingProspectId === card.id}
+                onDragStart={() => onDragStart(card.id)}
+                onDragEnd={onDragEnd}
+              />
+            ))
           )}
         </div>
       </CardContent>

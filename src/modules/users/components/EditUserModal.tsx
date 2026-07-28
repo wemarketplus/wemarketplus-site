@@ -116,7 +116,7 @@ export function EditUserModal({
         <label className="flex items-start gap-3 self-end text-sm text-foreground">
           <input
             type="checkbox"
-            className="mt-0.5 h-4 w-4 rounded border border-white/15 bg-surface-raised text-primary focus:ring-primary/50"
+            className="mt-0.5 h-4 w-4 rounded border border-border/15 bg-surface-raised text-primary focus:ring-primary/50"
             {...register('isActive')}
           />
           <span>Account active (uncheck to deactivate)</span>

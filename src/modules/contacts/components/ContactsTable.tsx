@@ -39,8 +39,8 @@ export function ContactsTable({
       header: 'Contact',
       cell: (c) => (
         <div>
-          <p className="font-bold text-[#111]">{c.name}</p>
-          {c.title && <p className="text-[11px] text-[#667]">{c.title}</p>}
+          <p className="font-bold text-foreground">{c.name}</p>
+          {c.title && <p className="text-[11px] text-muted">{c.title}</p>}
         </div>
       ),
     },

@@ -1,6 +1,10 @@
 import { ReferralSourceStatus } from '@/shared/types';
 import type { PillProps } from '@/shared/ui/data-display';
-import { ReferralSourceType } from '../types/referralsTypes';
+import {
+  ReferralAccountStatus,
+  ReferralSourcePriorityTier,
+  ReferralSourceType,
+} from '../types/referralsTypes';
 import type { ReferralFilterChip } from '../types/referralsTypes';
 
 export const REFERRALS_TAGS = {
@@ -41,4 +45,31 @@ export const REFERRAL_TYPE_OPTIONS: ReadonlyArray<{
   { value: ReferralSourceType.MemoryCare, label: 'Memory care' },
   { value: ReferralSourceType.Facility, label: 'Facility' },
   { value: ReferralSourceType.Other, label: 'Other' },
+];
+
+/** Account lifecycle status — a real backend column on referral_sources. */
+export const REFERRAL_ACCOUNT_STATUS_LABELS: Record<
+  ReferralAccountStatus,
+  string
+> = {
+  [ReferralAccountStatus.Prospect]: 'Prospect',
+  [ReferralAccountStatus.ActiveReferrer]: 'Active referrer',
+  [ReferralAccountStatus.Dormant]: 'Dormant',
+};
+
+export const REFERRAL_ACCOUNT_STATUS_OPTIONS: ReadonlyArray<{
+  value: ReferralAccountStatus;
+  label: string;
+}> = Object.values(ReferralAccountStatus).map((value) => ({
+  value,
+  label: REFERRAL_ACCOUNT_STATUS_LABELS[value],
+}));
+
+export const REFERRAL_PRIORITY_TIER_OPTIONS: ReadonlyArray<{
+  value: ReferralSourcePriorityTier;
+  label: string;
+}> = [
+  { value: ReferralSourcePriorityTier.A, label: 'A — highest value' },
+  { value: ReferralSourcePriorityTier.B, label: 'B — developing' },
+  { value: ReferralSourcePriorityTier.C, label: 'C — low volume' },
 ];

@@ -1,3 +1,4 @@
+import type { ComponentType } from 'react';
 import { cn } from '@/shared/utils/cn';
 
 export type StatTone = 'b' | 'g' | 'gd' | 'r' | 'y';
@@ -7,37 +8,44 @@ interface StatTileProps {
   value: string;
   hint?: string;
   tone?: StatTone;
+  icon?: ComponentType<{ className?: string }>;
 }
 
-// Mirrors wemarketplus-site `.stat`: 12px radius, 14/16px padding, tinted
-// fill + border per tone (rgba of the accent). Big value, small uppercase
-// label, optional hint.
-const TONE: Record<StatTone, string> = {
-  b: 'border-[#49b6ff]/25 bg-[#49b6ff]/[0.1]',
-  g: 'border-[#8cff66]/25 bg-[#8cff66]/[0.1]',
-  gd: 'border-[#ffd700]/25 bg-[#ffd700]/[0.1]',
-  r: 'border-[#e05555]/25 bg-[#e05555]/[0.1]',
-  y: 'border-[#fbbf24]/25 bg-[#fbbf24]/[0.1]',
+// "Editorial calm" stat card: a white hairline card, not a tinted fill. The
+// numeral stays ink-dark and the tone shows only in the small icon chip —
+// that restraint is what keeps the accents quiet across a row of four.
+const TONE_CHIP: Record<StatTone, string> = {
+  b: 'bg-primary/[0.08] text-primary',
+  g: 'bg-success/[0.10] text-success',
+  gd: 'bg-gold/[0.12] text-gold',
+  r: 'bg-destructive/[0.10] text-destructive',
+  y: 'bg-warning/[0.12] text-warning',
 };
 
-const VALUE_TONE: Record<StatTone, string> = {
-  b: 'text-[#79c0ff]',
-  g: 'text-[#8cff66]',
-  gd: 'text-[#ffd700]',
-  r: 'text-[#f87171]',
-  y: 'text-[#fbbf24]',
-};
-
-export function StatTile({ label, value, hint, tone = 'b' }: StatTileProps) {
+export function StatTile({ label, value, hint, tone = 'b', icon: Icon }: StatTileProps) {
   return (
-    <div className={cn('rounded-[12px] border px-4 py-3.5', TONE[tone])}>
-      <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-muted-soft">
-        {label}
-      </p>
-      <p className={cn('mt-1.5 text-[26px] font-black leading-none', VALUE_TONE[tone])}>
+    <div className="rounded-[14px] border border-border/[0.09] bg-surface px-5 py-5">
+      <div className="flex items-start justify-between gap-3">
+        <p className="max-w-[8.5rem] text-[10.5px] font-semibold uppercase leading-[1.35] tracking-[0.12em] text-muted-soft">
+          {label}
+        </p>
+        {Icon && (
+          <div
+            className={cn(
+              'flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-[9px]',
+              TONE_CHIP[tone],
+            )}
+          >
+            <Icon className="h-4 w-4" />
+          </div>
+        )}
+      </div>
+
+      <p className="mt-5 text-[40px] font-bold leading-none tracking-[-0.02em] text-foreground">
         {value}
       </p>
-      {hint && <p className="mt-1.5 text-[11px] text-muted">{hint}</p>}
+
+      {hint && <p className="mt-4 text-[12.5px] text-muted">{hint}</p>}
     </div>
   );
 }

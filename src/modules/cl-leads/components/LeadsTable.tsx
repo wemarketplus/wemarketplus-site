@@ -44,8 +44,8 @@ export function LeadsTable({
       header: 'Name',
       cell: (l) => (
         <div>
-          <p className="font-bold text-[#111]">{leadName(l)}</p>
-          <p className="text-[11px] text-[#667]">{l.phone ?? '—'}</p>
+          <p className="font-bold text-foreground">{leadName(l)}</p>
+          <p className="text-[11px] text-muted">{l.phone ?? '—'}</p>
         </div>
       ),
     },
@@ -65,7 +65,7 @@ export function LeadsTable({
             value={l.stage}
             disabled={isMutating}
             onChange={(e) => onStageChange(l, e.target.value)}
-            className="rounded-md border border-[#d0dce8] bg-white px-1.5 py-1 text-[11px] text-[#111]"
+            className="rounded-md border border-border/[0.15] bg-white px-1.5 py-1 text-[11px] text-foreground"
           >
             {STAGE_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>

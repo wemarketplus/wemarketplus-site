@@ -53,7 +53,7 @@ export function OnboardingChecklistCard() {
             type="button"
             onClick={dismiss}
             aria-label="Dismiss getting started checklist"
-            className="rounded-md p-1.5 text-muted transition-colors hover:bg-white/[0.06] hover:text-foreground"
+            className="rounded-md p-1.5 text-muted transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
           >
             <X className="h-4 w-4" />
           </button>
@@ -66,7 +66,7 @@ export function OnboardingChecklistCard() {
             </span>
             <span>{progress}%</span>
           </div>
-          <div className="h-2 overflow-hidden rounded-pill bg-white/[0.08]">
+          <div className="h-2 overflow-hidden rounded-pill bg-foreground/[0.08]">
             <div
               className="h-full rounded-pill bg-primary transition-[width] duration-500"
               style={{ width: `${progress}%` }}
@@ -82,10 +82,10 @@ export function OnboardingChecklistCard() {
                 <Link
                   to={step.to}
                   className={cn(
-                    'group flex items-center gap-3 rounded-[12px] border border-white/[0.08] bg-surface px-3.5 py-3 transition-colors',
+                    'group flex items-center gap-3 rounded-[14px] border border-border/[0.08] bg-surface px-3.5 py-3 transition-colors',
                     step.done
                       ? 'opacity-70'
-                      : 'hover:border-primary/40 hover:bg-white/[0.03]',
+                      : 'hover:border-primary/40 hover:bg-foreground/[0.03]',
                   )}
                 >
                   <span
