@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from 'sonner';
+import { ProfileSync } from '@/modules/auth';
 import { ThemeProvider } from '@/shared/contexts';
 import { persistor, store } from './store';
 
@@ -23,6 +24,7 @@ export function Providers({ children }: ProvidersProps) {
     <Provider store={store}>
       <PersistGate loading={<PersistLoadingFallback />} persistor={persistor}>
         <ThemeProvider>
+          <ProfileSync />
           <BrowserRouter>{children}</BrowserRouter>
           <Toaster position="top-right" richColors closeButton />
         </ThemeProvider>

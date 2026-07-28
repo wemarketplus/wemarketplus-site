@@ -1,6 +1,11 @@
 import type { ReactNode } from 'react';
 import type { Role } from '@/shared/rbac';
-import type { ISODateString, ID, Product } from '@/shared/types';
+import type {
+  ISODateString,
+  ID,
+  Product,
+  ProductEntitlement,
+} from '@/shared/types';
 
 // Mirrors wemarketplus-backend/src/users/dto/user-response.dto.ts. The tenant
 // plan fields (product/tier/organizationName) ship on /auth/me and login
@@ -33,6 +38,11 @@ export interface AuthenticatedUser {
   // to tell a paid plan from an unpaid signup — e.g. don't show a plan pill
   // until the subscription is active/trialing.
   subscriptionStatus?: string;
+  // Every product this tenant can use, each with its own tier. Ships on
+  // /auth/me and login. `product`/`tier` above remain the primary product; this
+  // array drives the product/dashboard switcher (shown only when length > 1).
+  // Absent on older backends — callers fall back to the single `product`.
+  entitlements?: ProductEntitlement[];
 }
 
 // Mirrors wemarketplus-backend/src/auth/dto/auth-response.dto.ts:

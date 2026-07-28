@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { useAppSelector } from '@/app/hooks';
+import { useActiveProduct } from '@/modules/access';
 import { Product } from '@/shared/types';
 import { downloadAuthenticated } from '@/modules/admin/utils/authenticatedDownload';
 import type { ReportDefinition } from '../types/clReportsTypes';
@@ -9,7 +10,7 @@ const apiBase = (): string => import.meta.env.VITE_API_BASE_URL || '/api';
 
 export function useReportCard(report: ReportDefinition) {
   const token = useAppSelector((s) => s.auth.token);
-  const product = useAppSelector((s) => s.auth.user?.product ?? Product.HospiceLink);
+  const { activeProduct: product } = useActiveProduct();
   const [isRunning, setIsRunning] = useState(false);
 
   const onRun = async () => {

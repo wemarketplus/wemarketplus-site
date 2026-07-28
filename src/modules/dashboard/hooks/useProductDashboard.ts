@@ -1,4 +1,4 @@
-import { useAppSelector } from '@/app/hooks';
+import { useActiveProduct } from '@/modules/access';
 import { Product } from '@/shared/types';
 import { useGetDashboardSummaryQuery } from '../api/dashboardApi';
 import type { DashboardActivityItem, DashboardStatCard } from '../types/dashboardTypes';
@@ -13,11 +13,11 @@ interface ProductDashboard {
 }
 
 // Feeds the dashboard tiles + activity feed from the live tenant summary
-// (GET /dashboard/summary). Product still comes from the auth slice so the
-// tiles are labeled correctly; the numbers are the tenant's real aggregates.
-// Defaults to HospiceLink until the backend ships product on /auth/me.
+// (GET /dashboard/summary). Product follows the ACTIVE dashboard so a
+// dual-product user's home retitles when they switch; the numbers are the
+// tenant's real aggregates.
 export function useProductDashboard(): ProductDashboard {
-  const product = useAppSelector((s) => s.auth.user?.product) ?? Product.HospiceLink;
+  const { activeProduct: product } = useActiveProduct();
   const { data, isLoading, isError } = useGetDashboardSummaryQuery();
 
   const stats = data ? mapSummaryToStats(data, product) : [];

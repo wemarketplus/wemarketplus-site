@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useAppSelector } from '@/app/hooks';
+import { useActiveProduct } from '@/modules/access';
 import { Product } from '@/shared/types';
 import { REPORT_CATALOG } from '../constants/clReportsConstants';
 import { groupReportsByCategory } from '../utils/groupReports';
@@ -9,10 +9,12 @@ import type { ClReportResult } from '../types/clReportsTypes';
 // For CommunityLink tenants, report metrics come live from the backend
 // (cl/reports). The static REPORT_CATALOG still supplies card metadata
 // (title/description/category grouping); live metrics are overlaid by id.
-// Non-CommunityLink products keep the previous fixture-only behavior.
+// Non-CommunityLink products keep the previous fixture-only behavior. Keys off
+// the ACTIVE product so a dual-product user gets live CL reports on the CL
+// dashboard.
 export function useReportCatalog() {
-  const product = useAppSelector((s) => s.auth.user?.product ?? Product.HospiceLink);
-  const isCommunityLink = product === Product.CommunityLink;
+  const { activeProduct } = useActiveProduct();
+  const isCommunityLink = activeProduct === Product.CommunityLink;
 
   const { data, isLoading, isFetching } = useListClReportsQuery(undefined, {
     skip: !isCommunityLink,

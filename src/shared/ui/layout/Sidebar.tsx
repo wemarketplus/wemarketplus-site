@@ -1,17 +1,11 @@
 import { NavLink } from 'react-router-dom';
-import { useAppSelector } from '@/app/hooks';
+import { ProductSwitcher, useActiveEntitlement } from '@/modules/access';
 import {
   SECTIONS_BY_PRODUCT,
   isNavItemVisible,
 } from '@/shared/config/navigationConfig';
 import { useRole, ROLE_LABELS } from '@/shared/rbac';
-import {
-  Product,
-  Tier,
-  TIER_LABELS,
-  PRODUCT_LABELS,
-  normalizeTier,
-} from '@/shared/types';
+import { Product, Tier, TIER_LABELS, PRODUCT_LABELS } from '@/shared/types';
 import { cn } from '@/shared/utils/cn';
 
 // Mirrors wemarketplus-site `.sb` exactly: 220px column, #071120 bg (HL) /
@@ -20,15 +14,17 @@ import { cn } from '@/shared/utils/cn';
 // solid tier color with #081426 text, admin items purple. .sb-foot at bottom.
 export function Sidebar() {
   const { role } = useRole();
-  const product = useAppSelector((s) => s.auth.user?.product) ?? Product.HospiceLink;
-  const tier =
-    normalizeTier(useAppSelector((s) => s.auth.user?.tier)) ?? Tier.Pro;
+  // Product/tier follow the ACTIVE dashboard (which the switcher can change),
+  // not the tenant's primary product — so a dual-product user viewing
+  // CommunityLink sees the CommunityLink nav gated by their CommunityLink tier.
+  const {
+    product,
+    tier,
+    subscriptionStatus,
+  } = useActiveEntitlement();
   // Live plan? Used only to decide whether to print the tier in the header
   // label — an unpaid ('incomplete') tenant shouldn't read as "· Pro". The tier
   // itself still drives nav colors/visibility below.
-  const subscriptionStatus = useAppSelector(
-    (s) => s.auth.user?.subscriptionStatus,
-  );
   const hasActivePlan = ['active', 'trialing', 'past_due'].includes(
     subscriptionStatus ?? '',
   );
@@ -64,6 +60,8 @@ export function Sidebar() {
           {PRODUCT_LABELS[product]}
           {hasActivePlan && ` · ${TIER_LABELS[tier]}`}
         </div>
+        {/* Only renders for users entitled to more than one product. */}
+        <ProductSwitcher />
       </div>
 
       {/* .sb-nav */}

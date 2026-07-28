@@ -1,11 +1,12 @@
 import { lazy, Suspense } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { DashboardLayout } from '@/shared/ui/layout';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
 import { PublicRoute } from '@/routes/PublicRoute';
 import { RequireEntitlement } from '@/routes/RequireEntitlement';
+import { RequireProduct } from '@/routes/RequireProduct';
 import { RequireRoleAtTier } from '@/routes/RequireRoleAtTier';
-import { Tier } from '@/shared/types';
+import { Product, Tier } from '@/shared/types';
 import { RootRoute } from '@/routes/RootRoute';
 import { LEGACY_DEMO_REDIRECTS } from '@/shared/config/demoUrls';
 import {
@@ -432,7 +433,17 @@ export function AppRouter() {
             </ProtectedRoute>
           }
         >
-          {/* HospiceLink */}
+          {/* HospiceLink — product-gated as a group. A tenant without a
+              HospiceLink entitlement is redirected home; the backend also 403s
+              the clinical endpoints (defense in depth). Deep-linking here aligns
+              the active dashboard to HospiceLink. */}
+          <Route
+            element={
+              <RequireProduct product={Product.HospiceLink}>
+                <Outlet />
+              </RequireProduct>
+            }
+          >
           <Route path="prospects" element={<ProspectsPage />} />
           <Route path="referrals" element={<ReferralsPage />} />
           <Route path="pipeline" element={<PipelinePage />} />
@@ -461,8 +472,18 @@ export function AppRouter() {
           <Route path="compliance/evidence" element={<EvidenceExportPage />} />
           <Route path="compliance/baa-records" element={<BaaRecordsPage />} />
           <Route path="compliance/threat-monitor" element={<ThreatMonitorPage />} />
+          </Route>
 
-          {/* CommunityLink */}
+          {/* CommunityLink — product-gated as a group (same isolation as the
+              HospiceLink block: redirect home if not entitled, backend 403s the
+              cl/* endpoints, deep-link aligns the active dashboard). */}
+          <Route
+            element={
+              <RequireProduct product={Product.CommunityLink}>
+                <Outlet />
+              </RequireProduct>
+            }
+          >
           <Route
             path="occupancy-overview"
             element={
@@ -509,8 +530,12 @@ export function AppRouter() {
           <Route path="financial/competitors" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_COMPETITOR_INTEL_ROLES}><ClFinancialPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="financial/loc" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_FINANCIAL_ROLES}><ClFinancialPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="reports" element={<ProtectedRoute allow={CL_MANAGEMENT_ROLES}><ClReportsPage /></ProtectedRoute>} />
+          </Route>
 
-          {/* Grant CRM — contacts & employer companies */}
+          {/* Grant CRM — contacts & employer companies. Shared/back-office
+              routes below are NOT product-gated (cross-product); they appear
+              only in the HospiceLink nav today but remain reachable to keep the
+              back-office shared, matching the ungated backend endpoints. */}
           <Route path="contacts" element={<ContactsPage />} />
           <Route path="companies" element={<CompaniesPage />} />
 

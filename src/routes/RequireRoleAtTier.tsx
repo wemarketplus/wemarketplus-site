@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAppSelector } from '@/app/hooks';
+import { useActiveEntitlement } from '@/modules/access';
 import { RoleGate, type Role } from '@/shared/rbac';
-import { Product, Tier, normalizeTier, tierIncludes } from '@/shared/types';
+import { Tier, tierIncludes } from '@/shared/types';
 
 interface TierRoleWindow {
   minTier: Tier;
@@ -27,8 +28,7 @@ interface RequireRoleAtTierProps {
 // same fallbacks as RequireEntitlement/ProtectedRoute individually.
 export function RequireRoleAtTier({ children, windows }: RequireRoleAtTierProps) {
   const location = useLocation();
-  const product: Product = useAppSelector((s) => s.auth.user?.product ?? Product.HospiceLink);
-  const tier: Tier = normalizeTier(useAppSelector((s) => s.auth.user?.tier)) ?? Tier.Pro;
+  const { product, tier } = useActiveEntitlement();
   const isAuthenticated = useAppSelector((s) => s.auth.isAuthenticated);
 
   if (!isAuthenticated) {

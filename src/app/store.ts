@@ -12,6 +12,7 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
+import { accessReducer } from '@/modules/access';
 import { activityApi, activityReducer } from '@/modules/activity';
 import { adminApi } from '@/modules/admin';
 import { agreementsApi } from '@/modules/agreements';
@@ -64,6 +65,7 @@ import { usersApi, usersReducer } from '@/modules/users';
 const rootReducer = combineReducers({
   // Sorted alphabetically so it's easy to spot a missing slice when wiring
   // a new module.
+  access: accessReducer,
   activity: activityReducer,
   aiAssistant: aiAssistantReducer,
   auth: authReducer,
@@ -141,9 +143,10 @@ const persistConfig = {
   key: 'wemarketplus-root',
   version: 1,
   storage,
-  // Only auth survives reloads — server state is fetched fresh via RTK Query.
-  // Onboarding draft persists via its own slice's localStorage write (TTL).
-  whitelist: ['auth'],
+  // Only auth + the active-dashboard selection survive reloads — server state is
+  // fetched fresh via RTK Query. Onboarding draft persists via its own slice's
+  // localStorage write (TTL).
+  whitelist: ['auth', 'access'],
 };
 
 // persistReducer's generic widens the state type and confuses the

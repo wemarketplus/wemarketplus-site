@@ -1,8 +1,9 @@
-// Product/tier system mirrors the site, where one auth account routes to one
-// of two CRM products at different feature tiers. Today the backend does not
-// expose these on /auth/me; we default to HospiceLink Pro until it does. When
-// the backend ships the fields, wire them in `@/modules/auth/types/authTypes`
-// and the navigation filter in `@/shared/config/navigationConfig`.
+// Product/tier system mirrors the site: one auth account can be entitled to one
+// OR BOTH CRM products (CommunityLink / HospiceLink), each at its own feature
+// tier. The backend ships `product`/`tier` (the primary product) plus an
+// `entitlements[]` array on /auth/me and login. The active dashboard is tracked
+// in `@/modules/access`; the navigation filter in
+// `@/shared/config/navigationConfig` keys off the active product.
 
 export const Product = {
   HospiceLink: 'hospicelink',
@@ -14,6 +15,18 @@ export const PRODUCT_LABELS: Record<Product, string> = {
   [Product.HospiceLink]: 'HospiceLink',
   [Product.CommunityLink]: 'CommunityLink',
 };
+
+// One product a tenant is entitled to, with its own tier. Mirrors the backend
+// EntitlementSummaryDto (wemarketplus-backend/src/tenants/dto/entitlement.dto.ts).
+// `tier` is the raw CrmTier (may be cl_-prefixed for CommunityLink); normalize
+// via normalizeTier() before comparing against the UI Tier enum.
+export interface ProductEntitlement {
+  product: Product;
+  tier: string;
+  package?: string;
+  subscriptionStatus?: string;
+  isActive: boolean;
+}
 
 export const Tier = {
   Pro: 'pro',
