@@ -2,6 +2,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQuery';
 import type { ApiEnvelope } from '@/shared/types';
 import type {
+  ThreatMonitorSummary,
   AuditLogItem,
   AuditLogQuery,
   BaaRecord,
@@ -71,10 +72,18 @@ export const complianceApi = createApi({
       transformResponse: (res: ApiEnvelope<{ data: AuditLogItem[]; total: number }>) => res.data,
       providesTags: ['Audit'],
     }),
+    // GET /audit/threat-monitor — real security posture computed from audit rows.
+    // Replaces a hard-coded fixture set that was rendered as "Real-time security
+    // metrics"; see the backend AuditService.threatMonitor.
+    threatMonitor: build.query<ThreatMonitorSummary, void>({
+      query: () => ({ url: '/audit/threat-monitor' }),
+      transformResponse: (res: ApiEnvelope<ThreatMonitorSummary>) => res.data,
+    }),
   }),
 });
 
 export const {
+  useThreatMonitorQuery,
   useListComplianceQuery,
   useCheckAlertsQuery,
   useUpdateComplianceMutation,

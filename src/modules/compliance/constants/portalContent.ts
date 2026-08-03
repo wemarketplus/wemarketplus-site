@@ -4,8 +4,6 @@ import type {
   BaaRecord,
   PortalNavItem,
   ReadinessScore,
-  SecurityEvent,
-  ThreatMetric,
 } from '../types/complianceTypes';
 
 export const PORTAL_NAV: readonly PortalNavItem[] = [
@@ -42,18 +40,7 @@ export const BAA_RECORDS_FIXTURE: readonly BaaRecord[] = [
   { id: 'baa-3', organization: 'Pinecrest Care', signer: 'Bilal Zaman', signedAt: '2025-04-29T00:00:00Z', status: 'pending' },
 ];
 
-export const THREAT_METRICS: readonly ThreatMetric[] = [
-  { label: 'Failed Logins (24h)', value: '3', tone: 'y' },
-  { label: 'Critical Events (7d)', value: '0', tone: 'g' },
-  { label: 'Suspect Logins (7d)', value: '1', tone: 'y' },
-  { label: 'Threat Level', value: 'Low', tone: 'g' },
-];
 
-export const SECURITY_EVENTS: readonly SecurityEvent[] = [
-  { id: 'se-1', occurredAt: '2026-05-24T18:02:00Z', type: 'Failed login', detail: '3 attempts · lana@northstar.org', risk: 'medium' },
-  { id: 'se-2', occurredAt: '2026-05-24T11:40:00Z', type: 'New device sign-in', detail: 'avery@bahg.org · San Francisco', risk: 'low' },
-  { id: 'se-3', occurredAt: '2026-05-23T22:14:00Z', type: 'Admin password reset', detail: 'admin@wemarketplus.com → lana@northstar.org', risk: 'high' },
-];
 
 export const BREACH_TYPES = [
   'unauthorized_phi_access',
@@ -79,3 +66,9 @@ export const TYPE_LABELS: Record<string, string> = {
   lost_device: 'Lost device',
   other: 'Other',
 };
+
+// THREAT_METRICS and SECURITY_EVENTS were removed deliberately. They were invented
+// figures ("Failed Logins (24h): 3", "Threat Level: Low") and three fabricated
+// events with realistic email addresses, rendered as "Real-time security metrics".
+// ThreatMonitorPage now reads GET /audit/threat-monitor. Do not reintroduce
+// fixtures on a security screen.

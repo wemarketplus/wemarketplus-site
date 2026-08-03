@@ -91,3 +91,25 @@ export interface AuditLogQuery {
   dateFrom?: string;
   dateTo?: string;
 }
+
+/** A Threat Monitor tile. `value` is null when the input is not collected. */
+export interface ThreatMetric {
+  label: string;
+  value: string | null;
+  tone: 'g' | 'y' | 'r';
+  /** Present when the metric cannot be computed, so the UI can say why. */
+  unavailableReason?: string;
+}
+
+export interface ThreatSecurityEvent {
+  id: string;
+  type: string;
+  detail: string;
+  risk: 'low' | 'medium' | 'high';
+  occurredAt: string;
+}
+
+export interface ThreatMonitorSummary {
+  metrics: ThreatMetric[];
+  events: ThreatSecurityEvent[];
+}
