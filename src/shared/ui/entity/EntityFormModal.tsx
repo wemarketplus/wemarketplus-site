@@ -18,6 +18,7 @@ export function EntityFormModal<TValues extends FieldValues>({
   errors,
   onSubmit,
   onClose,
+  lookups,
   footerNote,
 }: EntityFormModalProps<TValues>) {
   return (
@@ -39,7 +40,13 @@ export function EntityFormModal<TValues extends FieldValues>({
     >
       <form onSubmit={onSubmit} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {fields.map((field) => (
-          <EntityFieldControl key={field.name} field={field} register={register} errors={errors} />
+          <EntityFieldControl
+            key={field.name}
+            field={field}
+            register={register}
+            errors={errors}
+            lookupOptions={lookups?.[String(field.name)]}
+          />
         ))}
         {footerNote && <div className="sm:col-span-2">{footerNote}</div>}
       </form>
@@ -51,10 +58,12 @@ function EntityFieldControl<TValues extends FieldValues>({
   field,
   register,
   errors,
+  lookupOptions,
 }: {
   field: EntityField<TValues>;
   register: EntityFormModalProps<TValues>['register'];
   errors: EntityFormModalProps<TValues>['errors'];
+  lookupOptions?: readonly { value: string; label: string }[];
 }) {
   const id = `ef-${String(field.name)}`;
   const type = field.type ?? 'text';
@@ -68,6 +77,21 @@ function EntityFieldControl<TValues extends FieldValues>({
       <Label htmlFor={id}>{field.label}</Label>
       {type === 'textarea' ? (
         <Textarea id={id} placeholder={field.placeholder} {...reg} />
+      ) : type === 'lookup' ? (
+        // A record reference. Options arrive from the caller's list query; until
+        // they do, the picker is disabled and says so rather than looking empty.
+        <Select id={id} {...reg} disabled={!lookupOptions}>
+          <option value="">
+            {lookupOptions
+              ? (field.placeholder ?? 'Select…')
+              : 'Loading…'}
+          </option>
+          {(lookupOptions ?? []).map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </Select>
       ) : type === 'select' ? (
         <Select id={id} {...reg}>
           {(field.options ?? []).map((o) => (

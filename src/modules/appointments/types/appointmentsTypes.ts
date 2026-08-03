@@ -1,3 +1,4 @@
+import type { ActivityType } from '@/shared/constants/activityTypeConstants';
 import type { ID, ISODateString, PaginationParams } from '@/shared/types';
 import type { JobType } from '@/modules/jobs/types/jobsTypes';
 
@@ -94,6 +95,21 @@ export interface CalendarQuery {
 export interface CompleteAppointmentRequest {
   outcome: AppointmentOutcome;
   visitNotes?: string;
+  /**
+   * WHAT happened (FIX-3) — the canonical enum shared with notes. Distinct from
+   * `appointmentType`, which is the channel: a brochure drop-off and a
+   * lunch-and-learn are both `in_person`.
+   */
+  activityType?: ActivityType;
+  /** Required when `activityType` is `other`, or the backend 400s. */
+  activityTypeOther?: string;
+  /**
+   * What was PROMISED at this visit (FIX-4). Setting `nextStepsDueDate` makes the
+   * backend auto-create a Reminder for the visit's rep — deliberately separate
+   * from `nextJob*`, which chains the next piece of field work.
+   */
+  nextSteps?: string;
+  nextStepsDueDate?: string;
   nextJobType?: JobType;
   nextJobObjective?: string;
   nextJobDueDate?: string;

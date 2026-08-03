@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useApplicationLookup } from '@/shared/hooks';
 import { EntityFormModal } from '@/shared/ui/entity';
 import { INVOICE_FIELDS } from '../constants/invoicesConstants';
 import { invoiceSchema, type InvoiceFormValues } from '../schema/invoiceSchema';
@@ -60,6 +61,7 @@ export function InvoiceFormModal({
     if (ok) reset(EMPTY);
   });
 
+  const lookups = { applicationId: useApplicationLookup(open) };
   return (
     <EntityFormModal<InvoiceFormValues>
       open={open}
@@ -70,6 +72,7 @@ export function InvoiceFormModal({
       register={register}
       errors={errors}
       onSubmit={submit}
+      lookups={lookups}
       onClose={close}
     />
   );

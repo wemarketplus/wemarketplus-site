@@ -1,5 +1,6 @@
 import { X } from 'lucide-react';
-import { Button, Input, Label } from '@/shared/ui/core';
+import { useUserLookup } from '@/shared/hooks';
+import { Button, Input, Label, Select } from '@/shared/ui/core';
 import type { AuditLogFilters } from '../types/complianceTypes';
 
 interface AuditFiltersProps {
@@ -14,6 +15,9 @@ interface AuditFiltersProps {
 // these fields fire on change since they map to exact/range backend filters.
 export function AuditFilters({ filters, onChange, onClear }: AuditFiltersProps) {
   const hasActive = Object.values(filters).some((v) => v !== '');
+  // "Who did this?" is a person, so offer the team by name. This was a box asking
+  // for a user UUID, which nobody auditing an access trail would have to hand.
+  const actors = useUserLookup(true);
 
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
@@ -36,13 +40,22 @@ export function AuditFilters({ filters, onChange, onClear }: AuditFiltersProps) 
         />
       </div>
       <div>
-        <Label htmlFor="audit-user">Actor (user id)</Label>
-        <Input
+        <Label htmlFor="audit-user">Actor</Label>
+        <Select
           id="audit-user"
           value={filters.userId}
           onChange={(e) => onChange('userId', e.target.value)}
-          placeholder="UUID"
-        />
+          disabled={actors === undefined}
+        >
+          <option value="">
+            {actors === undefined ? 'Loading…' : 'Anyone'}
+          </option>
+          {(actors ?? []).map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </Select>
       </div>
       <div>
         <Label htmlFor="audit-from">From</Label>

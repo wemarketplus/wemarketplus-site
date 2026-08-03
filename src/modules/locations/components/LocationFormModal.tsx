@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useCompanyLookup, useWibLookup } from '@/shared/hooks';
 import { EntityFormModal } from '@/shared/ui/entity';
 import { LOCATION_FIELDS } from '../constants/locationsConstants';
 import { locationSchema, type LocationFormValues } from '../schema/locationSchema';
@@ -63,6 +64,10 @@ export function LocationFormModal({
     if (ok) reset(EMPTY);
   });
 
+  const lookups = {
+    companyId: useCompanyLookup(open),
+    wibId: useWibLookup(open),
+  };
   return (
     <EntityFormModal<LocationFormValues>
       open={open}
@@ -73,6 +78,7 @@ export function LocationFormModal({
       register={register}
       errors={errors}
       onSubmit={submit}
+      lookups={lookups}
       onClose={close}
     />
   );

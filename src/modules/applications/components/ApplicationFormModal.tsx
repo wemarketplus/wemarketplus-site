@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useCompanyLookup, useFundingLookup, useWibLookup } from '@/shared/hooks';
 import { EntityFormModal } from '@/shared/ui/entity';
 import {
   APPLICATION_CREATE_FIELDS,
@@ -62,6 +63,12 @@ export function ApplicationFormModal({
     if (ok) reset(EMPTY);
   });
 
+  // Record pickers, fetched only while the form is open.
+  const lookups = {
+    companyId: useCompanyLookup(open),
+    wibId: useWibLookup(open),
+    fundingOpportunityId: useFundingLookup(open),
+  };
   return (
     <EntityFormModal<ApplicationFormValues>
       open={open}
@@ -72,6 +79,7 @@ export function ApplicationFormModal({
       register={register}
       errors={errors}
       onSubmit={submit}
+      lookups={lookups}
       onClose={close}
     />
   );

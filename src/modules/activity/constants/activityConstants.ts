@@ -1,3 +1,4 @@
+import { ACTIVITY_TYPE_OPTIONS } from '@/shared/constants/activityTypeConstants';
 import { Calendar, ScrollText, Pin, Goal } from 'lucide-react';
 import type { EntityField, EntitySelectOption } from '@/shared/ui/entity';
 import { Urgency } from '@/shared/types';
@@ -76,10 +77,25 @@ const GOAL_PERIOD_OPTIONS: readonly EntitySelectOption[] = [
 
 // Notes: prospectId is a raw UUID field (the reminders/notes tabs do not yet
 // have a prospect picker, so it is entered directly).
+// A note now targets a prospect, a referral source or a contact — at least one,
+// possibly several (FIX-1). `activityType` replaces the old free-text
+// "contact type": one canonical enum shared with appointments, so a brochure
+// drop-off and a lunch-and-learn are finally distinguishable in the log (FIX-3).
+/** Activity-type options with a leading blank, since the field is optional. */
+const ACTIVITY_TYPE_SELECT_OPTIONS = [
+  { value: '', label: 'Not recorded' },
+  ...ACTIVITY_TYPE_OPTIONS,
+];
+
 export const NOTE_FIELDS: ReadonlyArray<EntityField<NoteFormValues>> = [
-  { name: 'prospectId', label: 'Prospect id', full: true, placeholder: 'Prospect UUID' },
+  // Record references, chosen from a list — never typed. Options are supplied at
+  // render time by NoteFormModal via EntityFormModal's `lookups` prop.
+  { name: 'prospectId', label: 'Prospect', type: 'lookup', placeholder: 'No prospect' },
+  { name: 'referralSourceId', label: 'Referral source', type: 'lookup', placeholder: 'No referral source' },
+  { name: 'contactId', label: 'Contact', type: 'lookup', placeholder: 'No contact' },
   { name: 'summary', label: 'Summary', type: 'textarea', full: true, placeholder: 'What happened on this interaction…' },
-  { name: 'contactType', label: 'Contact type', placeholder: 'Call, Visit, Email…' },
+  { name: 'activityType', label: 'Activity type', type: 'select', options: ACTIVITY_TYPE_SELECT_OPTIONS },
+  { name: 'activityTypeOther', label: 'If “other”, describe it', placeholder: 'Required when the type is other' },
   { name: 'urgency', label: 'Urgency', type: 'select', options: URGENCY_OPTIONS },
   { name: 'patientStatus', label: 'Status', placeholder: 'Current status' },
   { name: 'followUpDate', label: 'Follow-up date', type: 'date' },

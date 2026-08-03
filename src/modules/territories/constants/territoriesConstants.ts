@@ -32,7 +32,7 @@ export const TERRITORY_PRIORITY_OPTIONS: ReadonlyArray<EntitySelectOption> = [
 export const TERRITORY_FIELDS: ReadonlyArray<EntityField<TerritoryFormValues>> = [
   { name: 'name', label: 'Territory name', full: true, placeholder: 'North Region' },
   { name: 'priority', label: 'Priority', type: 'select', options: TERRITORY_PRIORITY_OPTIONS },
-  { name: 'assignedTo', label: 'Assigned to (user UUID)', placeholder: 'optional' },
+  { name: 'assignedTo', label: 'Assigned to', type: 'lookup', placeholder: 'Unassigned' },
   { name: 'city', label: 'City', placeholder: 'Austin' },
   { name: 'state', label: 'State', placeholder: 'TX' },
   {

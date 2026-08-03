@@ -37,7 +37,7 @@ export function DocumentsPage() {
   const canCreate = isAny(STAFF_ROLES);
 
   const empty = showEmptyHint
-    ? 'Pick a scope and enter a valid parent id (UUID) to load documents.'
+    ? 'Choose a scope and a parent record above to load its documents.'
     : 'No documents recorded for this parent yet.';
 
   return (
@@ -57,7 +57,6 @@ export function DocumentsPage() {
             onScope={setScope}
             parentId={parentId}
             onParentId={setParentId}
-            validParent={validParent}
           />
         }
         isLoading={validParent && isLoading}

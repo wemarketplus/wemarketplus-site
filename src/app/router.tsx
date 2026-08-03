@@ -468,30 +468,63 @@ export function AppRouter() {
           <Route path="jobs" element={<JobsPage />} />
           <Route path="appointments" element={<AppointmentsPage />} />
           <Route path="territories" element={<TerritoriesEntityPage />} />
-          <Route path="scheduling" element={<SchedulingPage />} />
           <Route path="activity/calendar" element={<ActivityPage />} />
           <Route path="activity/notes" element={<ActivityPage />} />
           <Route path="activity/reminders" element={<ActivityPage />} />
           <Route path="activity/goals" element={<ActivityPage />} />
           <Route path="activity/ai" element={<AiAssistantPage />} />
-          <Route path="clinical/family" element={<ClinicalPage />} />
-          <Route path="clinical/messaging" element={<ClinicalPage />} />
-          <Route path="clinical/admissions" element={<ClinicalPage />} />
-          <Route path="intelligence/revenue" element={<IntelligencePage />} />
-          <Route path="intelligence/marketing-roi" element={<IntelligencePage />} />
-          <Route path="intelligence/leaderboard" element={<IntelligencePage />} />
+
+          {/* Premium HospiceLink modules. These were previously hidden by
+              navigationConfig alone, which is not access control — typing the URL
+              reached the page and the API served it (AUDIT-HOSPICELINK.md D-01).
+              Each now carries the same route-level tier/role gate the
+              CommunityLink block below has used all along, and the matching
+              backend @RequireFeature answers 402 UPGRADE_REQUIRED. The minTier /
+              allow values mirror navigationConfig exactly — change one side, change
+              both. */}
+
+          {/* Clinical — Gold. Deliberately no `allow`: the nav shows Clinical to
+              every role, Nurse and Caregiver included. */}
+          <Route path="clinical/family" element={<RequireEntitlement minTier={Tier.Gold}><ClinicalPage /></RequireEntitlement>} />
+          <Route path="clinical/messaging" element={<RequireEntitlement minTier={Tier.Gold}><ClinicalPage /></RequireEntitlement>} />
+          <Route path="clinical/admissions" element={<RequireEntitlement minTier={Tier.Gold}><ClinicalPage /></RequireEntitlement>} />
+
+          {/* Intelligence — Gold + staff. */}
+          <Route path="intelligence/revenue" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={STAFF_ROLES}><IntelligencePage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="intelligence/marketing-roi" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={STAFF_ROLES}><IntelligencePage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="intelligence/leaderboard" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={STAFF_ROLES}><IntelligencePage /></ProtectedRoute></RequireEntitlement>} />
+
+          {/* Smart scheduling — Gold. */}
+          <Route path="scheduling" element={<RequireEntitlement minTier={Tier.Gold}><SchedulingPage /></RequireEntitlement>} />
+
+          {/* Integrations. Data import is every tier; Aircall is Gold; the
+              Playbook generator is MAX, not Gold — do not "align" these three. */}
           <Route path="integrations/import" element={<DataImportExportPage />} />
-          <Route path="integrations/aircall" element={<IntegrationsPage />} />
-          <Route path="integrations/playbooks" element={<IntegrationsPage />} />
-          <Route path="compliance" element={<ReadinessPage />} />
-          <Route path="compliance/readiness" element={<ReadinessPage />} />
-          <Route path="compliance/audit" element={<CompliancePage />} />
-          <Route path="compliance/access-review" element={<AccessReviewPage />} />
-          <Route path="compliance/dr-test" element={<DrTestPage />} />
-          <Route path="compliance/breach" element={<BreachWorkflowPage />} />
-          <Route path="compliance/evidence" element={<EvidenceExportPage />} />
-          <Route path="compliance/baa-records" element={<BaaRecordsPage />} />
-          <Route path="compliance/threat-monitor" element={<ThreatMonitorPage />} />
+          <Route path="integrations/aircall" element={<RequireEntitlement minTier={Tier.Gold}><IntegrationsPage /></RequireEntitlement>} />
+          <Route path="integrations/playbooks" element={<RequireEntitlement minTier={Tier.Max}><IntegrationsPage /></RequireEntitlement>} />
+
+          {/* Compliance — Gold + admin. Covers the three nav entries plus the
+              sub-screens (access review, DR test, breach, evidence, BAA records)
+              that hang off the same group and were equally unguarded. */}
+          <Route
+            element={
+              <RequireEntitlement minTier={Tier.Gold}>
+                <ProtectedRoute allow={ADMIN_ONLY}>
+                  <Outlet />
+                </ProtectedRoute>
+              </RequireEntitlement>
+            }
+          >
+            <Route path="compliance" element={<ReadinessPage />} />
+            <Route path="compliance/readiness" element={<ReadinessPage />} />
+            <Route path="compliance/audit" element={<CompliancePage />} />
+            <Route path="compliance/access-review" element={<AccessReviewPage />} />
+            <Route path="compliance/dr-test" element={<DrTestPage />} />
+            <Route path="compliance/breach" element={<BreachWorkflowPage />} />
+            <Route path="compliance/evidence" element={<EvidenceExportPage />} />
+            <Route path="compliance/baa-records" element={<BaaRecordsPage />} />
+            <Route path="compliance/threat-monitor" element={<ThreatMonitorPage />} />
+          </Route>
           </Route>
 
           {/* CommunityLink — product-gated as a group (same isolation as the

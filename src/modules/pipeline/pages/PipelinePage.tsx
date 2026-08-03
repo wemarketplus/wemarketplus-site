@@ -1,6 +1,7 @@
 import { PIPELINE_TYPE_OPTIONS } from '@/modules/prospects/constants/prospectsConstants';
 import type { ProspectPipelineType } from '@/modules/prospects/types/prospectsTypes';
 import { Card, CardContent, Select } from '@/shared/ui/core';
+import { LostReasonModal } from '../components/LostReasonModal';
 import { PipelineColumn } from '../components/PipelineColumn';
 import { usePipelineBoard } from '../hooks/usePipelineBoard';
 import { cardTitle, stageLabel } from '../utils/pipelineUtils';
@@ -19,6 +20,9 @@ export function PipelinePage() {
     beginDrag,
     endDrag,
     moveToStage,
+    pendingLostMove,
+    confirmLostMove,
+    cancelLostMove,
   } = usePipelineBoard();
 
   return (
@@ -107,6 +111,16 @@ export function PipelinePage() {
           </CardContent>
         </Card>
       )}
+
+      {/* A drop onto Lost is intercepted so its reason can be captured — the
+          backend rejects the move without one. */}
+      <LostReasonModal
+        open={pendingLostMove !== null}
+        isSaving={isMoving}
+        cardTitle={pendingLostMove?.cardTitle ?? ''}
+        onCancel={cancelLostMove}
+        onConfirm={confirmLostMove}
+      />
     </div>
   );
 }

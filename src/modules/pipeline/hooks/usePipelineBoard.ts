@@ -1,15 +1,20 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { prospectsApi } from '@/modules/prospects/api/prospectsApi';
-import type { ProspectPipelineType } from '@/modules/prospects/types/prospectsTypes';
+import type {
+  ProspectLostReason,
+  ProspectPipelineType,
+} from '@/modules/prospects/types/prospectsTypes';
 import type { ID } from '@/shared/types';
 import {
   useGetPipelineBoardQuery,
   useMovePipelineStageMutation,
 } from '../api/pipelineApi';
 import { setDragging, setPipelineType } from '../store/pipelineSlice';
-import type { ProspectStage } from '../types/pipelineTypes';
+import { ProspectStage } from '@/modules/prospects/types/prospectsTypes';
+import type { PendingLostMove } from '../types/pipelineTypes';
+import { cardTitle } from '../utils/pipelineUtils';
 
 /**
  * The Kanban board. Reads the stage-grouped board from the backend and moves cards
@@ -28,6 +33,17 @@ export function usePipelineBoard() {
   });
   const [move, { isLoading: isMoving }] = useMovePipelineStageMutation();
 
+  // A drop onto Lost, held while its reason is collected (see moveToStage).
+  const [pendingLostMove, setPendingLostMove] = useState<PendingLostMove | null>(
+    null,
+  );
+
+  // Memoised because moveToStage closes over it to find the dropped card's title
+  // for the lost-reason prompt; a fresh array each render would re-create the
+  // callback on every render.
+  const columns = useMemo(() => data?.columns ?? [], [data]);
+  const total = columns.reduce((sum, column) => sum + column.total, 0);
+
   const changePipelineType = useCallback(
     (next: ProspectPipelineType) => dispatch(setPipelineType(next)),
     [dispatch],
@@ -40,10 +56,20 @@ export function usePipelineBoard() {
 
   const endDrag = useCallback(() => dispatch(setDragging(null)), [dispatch]);
 
-  const moveToStage = useCallback(
-    async (prospectId: ID, toStage: ProspectStage) => {
+  const submitMove = useCallback(
+    async (
+      prospectId: ID,
+      toStage: ProspectStage,
+      lostReason?: ProspectLostReason,
+      lostReasonDetail?: string,
+    ) => {
       try {
-        const result = await move({ prospectId, toStage }).unwrap();
+        const result = await move({
+          prospectId,
+          toStage,
+          lostReason,
+          lostReasonDetail,
+        }).unwrap();
         // The prospects list caches the pre-move stage; drop it so the list screen
         // and the board never disagree.
         dispatch(prospectsApi.util.invalidateTags([
@@ -68,8 +94,46 @@ export function usePipelineBoard() {
     [dispatch, move],
   );
 
-  const columns = data?.columns ?? [];
-  const total = columns.reduce((sum, column) => sum + column.total, 0);
+  /**
+   * A drop onto the Lost column cannot be sent immediately: the backend requires a
+   * reason and would 400. Hold the move, collect the reason, then submit. Every
+   * other stage goes straight through.
+   */
+  const moveToStage = useCallback(
+    async (prospectId: ID, toStage: ProspectStage) => {
+      if (toStage === ProspectStage.Lost) {
+        const card = columns
+          .flatMap((column) => column.cards)
+          .find((candidate) => candidate.id === prospectId);
+        setPendingLostMove({
+          prospectId,
+          cardTitle: card ? cardTitle(card) : 'this referral',
+        });
+        dispatch(setDragging(null));
+        return false;
+      }
+      return submitMove(prospectId, toStage);
+    },
+    [columns, dispatch, submitMove],
+  );
+
+  const confirmLostMove = useCallback(
+    async (lostReason: ProspectLostReason, lostReasonDetail?: string) => {
+      if (!pendingLostMove) return false;
+      const ok = await submitMove(
+        pendingLostMove.prospectId,
+        ProspectStage.Lost,
+        lostReason,
+        lostReasonDetail,
+      );
+      // Keep the dialog open on failure so the reason the user typed is not lost.
+      if (ok) setPendingLostMove(null);
+      return ok;
+    },
+    [pendingLostMove, submitMove],
+  );
+
+  const cancelLostMove = useCallback(() => setPendingLostMove(null), []);
 
   return {
     pipelineType,
@@ -85,5 +149,8 @@ export function usePipelineBoard() {
     beginDrag,
     endDrag,
     moveToStage,
+    pendingLostMove,
+    confirmLostMove,
+    cancelLostMove,
   };
 }

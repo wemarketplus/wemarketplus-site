@@ -1,0 +1,53 @@
+import { useMemo } from 'react';
+import type { EntitySelectOption } from '@/shared/ui/entity';
+
+/**
+ * Builds the option lists that `type: 'lookup'` form fields render.
+ *
+ * WHY THIS EXISTS: every foreign-key field in this app used to be a free-text box
+ * captioned "… id (UUID)". An end user has no way to obtain a UUID, so those
+ * fields were unusable — the only way to fill one was to read it out of the
+ * database. Each hook below turns a record list into {value: id, label: something
+ * a human recognises}, so a reference is chosen, never transcribed.
+ *
+ * Each hook returns `undefined` while its list is loading, which is what makes the
+ * picker show "Loading…" and stay disabled rather than looking like an empty list.
+ *
+ * Lists are capped at the backend's MAX_LIMIT (common/dto/pagination.dto.ts) —
+ * asking for more is a 400, not a bigger page. Past this many entries a <select>
+ * is the wrong control anyway: the right answer is a searchable typeahead, not a
+ * larger dropdown. If a tenant outgrows it, upgrade the control rather than the
+ * number — a silently truncated picker is worse than a slow one.
+ */
+export const LOOKUP_PAGE_SIZE = 100;
+
+/**
+ * Turns a fetched record list into sorted picker options.
+ *
+ * Takes the ALREADY-FETCHED rows rather than a query hook: RTK Query hooks must be
+ * called unconditionally at a fixed position, so each caller owns its own
+ * `useListXQuery({page:1, limit: LOOKUP_PAGE_SIZE, ...})` call and passes the
+ * result here. That also keeps the `skip` option in the caller's hands.
+ *
+ * Returns `undefined` while the list is still loading — that is the signal the
+ * lookup control uses to stay disabled and show "Loading…", so a slow list is
+ * never mistaken for an empty one.
+ */
+export function useLookupOptions<T extends { id: string }>(
+  rows: readonly T[] | undefined,
+  isLoading: boolean,
+  toLabel: (record: T) => string,
+): readonly EntitySelectOption[] | undefined {
+  return useMemo(() => {
+    // Only "loading" yields undefined. A settled query with no rows — including a
+    // failed one — yields an empty array, so the picker enables and reads as
+    // "nothing to choose" instead of hanging on "Loading…" forever.
+    if (isLoading) return undefined;
+    if (!rows) return [];
+    return [...rows]
+      .map((record) => ({ value: record.id, label: toLabel(record) }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+    // toLabel is a stable module-level function at every call site.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rows, isLoading]);
+}

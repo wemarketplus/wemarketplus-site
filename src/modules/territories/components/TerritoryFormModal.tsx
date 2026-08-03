@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useUserLookup } from '@/shared/hooks';
 import { EntityFormModal } from '@/shared/ui/entity';
 import { TERRITORY_FIELDS } from '../constants/territoriesConstants';
 import { territorySchema, type TerritoryFormValues } from '../schema/territorySchema';
@@ -60,6 +61,7 @@ export function TerritoryFormModal({
     if (ok) reset(EMPTY);
   });
 
+  const lookups = { assignedTo: useUserLookup(open) };
   return (
     <EntityFormModal<TerritoryFormValues>
       open={open}
@@ -70,6 +72,7 @@ export function TerritoryFormModal({
       register={register}
       errors={errors}
       onSubmit={submit}
+      lookups={lookups}
       onClose={close}
     />
   );

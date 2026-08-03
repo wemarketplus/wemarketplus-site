@@ -33,7 +33,20 @@ export interface PipelineBoard {
 export interface MovePipelineStageRequest {
   prospectId: ID;
   toStage: ProspectStage;
+  /**
+   * REQUIRED by the backend when `toStage` is `lost` (unless the row already
+   * carries one) — ProspectsService.assertLostReason 400s without it. The board
+   * collects it through LostReasonModal before the move is sent.
+   */
   lostReason?: ProspectLostReason;
+  /** Required when `lostReason` is `other`. */
+  lostReasonDetail?: string;
+}
+
+/** A drop onto the `lost` column, held while the reason is collected. */
+export interface PendingLostMove {
+  prospectId: ID;
+  cardTitle: string;
 }
 
 /** Job the transition spawned, when the stage has a blueprint. */

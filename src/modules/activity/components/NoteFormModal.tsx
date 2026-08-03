@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { EntityFormModal } from '@/shared/ui/entity';
+import { useNoteLookups } from '../hooks/useNoteLookups';
 import { Urgency } from '@/shared/types';
 import { NOTE_FIELDS } from '../constants/activityConstants';
 import { noteSchema, type NoteFormValues } from '../schema/noteSchema';
@@ -10,7 +11,11 @@ import type { NoteRecord } from '../types/activityTypes';
 
 const EMPTY: NoteFormValues = {
   prospectId: '',
+  referralSourceId: '',
+  contactId: '',
   summary: '',
+  activityType: '',
+  activityTypeOther: '',
   contactType: '',
   urgency: Urgency.Warm,
   patientStatus: '',
@@ -57,6 +62,10 @@ export function NoteFormModal({ open, isSaving, editing, onClose, onSubmit }: No
     if (ok) reset(EMPTY);
   });
 
+  // Prospect / referral-source / contact pickers. Only fetched while the modal is
+  // open, so opening the Notes tab doesn't pull three extra lists nobody asked for.
+  const lookups = useNoteLookups(open);
+
   return (
     <EntityFormModal<NoteFormValues>
       open={open}
@@ -66,6 +75,7 @@ export function NoteFormModal({ open, isSaving, editing, onClose, onSubmit }: No
       fields={NOTE_FIELDS}
       register={register}
       errors={errors}
+      lookups={lookups}
       onSubmit={submit}
       onClose={close}
     />

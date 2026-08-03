@@ -18,7 +18,16 @@ export type EntityFieldType =
   | 'number'
   | 'date'
   | 'textarea'
-  | 'select';
+  | 'select'
+  /**
+   * A reference to another record, rendered as a picker whose options are loaded
+   * at render time and passed via EntityFormModalProps.lookups (keyed by field
+   * name). Use this for every foreign-key field.
+   *
+   * NEVER use a plain text input for a record reference: an end user has no way
+   * to obtain a UUID, so a "paste the id" field is not a feature they can use.
+   */
+  | 'lookup';
 
 export interface EntitySelectOption {
   value: string;
@@ -29,7 +38,9 @@ export interface EntityField<TValues extends FieldValues> {
   name: Path<TValues>;
   label: string;
   type?: EntityFieldType;
-  // Options are required for `type: 'select'`.
+  // Options are required for `type: 'select'`. For `type: 'lookup'` they are
+  // supplied at render time through EntityFormModalProps.lookups instead, since
+  // they come from a server list the form cannot know about statically.
   options?: readonly EntitySelectOption[];
   placeholder?: string;
   // Span both columns of the 2-col grid (defaults to false = single column).
@@ -47,6 +58,12 @@ export interface EntityFormModalProps<TValues extends FieldValues> {
   errors: FieldErrors<TValues>;
   onSubmit: () => void;
   onClose: () => void;
+  /**
+   * Options for `type: 'lookup'` fields, keyed by field name. A key that is
+   * absent or still empty renders the picker disabled with a loading hint, so a
+   * slow list never looks like an empty one.
+   */
+  lookups?: Readonly<Record<string, readonly EntitySelectOption[] | undefined>>;
   // Optional slot rendered below the fields (e.g. a hint or extra control).
   footerNote?: ReactNode;
 }

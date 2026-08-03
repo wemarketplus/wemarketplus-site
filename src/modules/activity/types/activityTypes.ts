@@ -1,3 +1,4 @@
+import type { ActivityType } from '@/shared/constants/activityTypeConstants';
 import type { ID, ISODateString, PaginationParams, ProspectNote, Reminder } from '@/shared/types';
 
 export type { ProspectNote, Reminder };
@@ -81,8 +82,14 @@ export interface ListTasksQuery extends PaginationParams {
 export interface NoteRecord {
   id: ID;
   tenantId: ID;
-  prospectId: ID;
+  /** Nullable since FIX-1: a note may target an account or a person instead. */
+  prospectId: ID | null;
+  referralSourceId: ID | null;
+  contactId: ID | null;
   summary: string;
+  activityType: ActivityType | null;
+  activityTypeOther: string | null;
+  /** @deprecated Superseded by `activityType`; retained for older rows. */
   contactType: string | null;
   urgency: 'hot' | 'warm' | 'cold';
   patientStatus: string | null;
@@ -93,6 +100,8 @@ export interface NoteRecord {
   followUpTime: string | null;
   assignedTo: ID | null;
   gpsLocation: string | null;
+  /** Reminder auto-created from `followUpDate` (FIX-4). */
+  followUpReminderId: ID | null;
   isHotLead: boolean;
   createdBy: ID | null;
   createdAt: ISODateString;
@@ -100,8 +109,19 @@ export interface NoteRecord {
 }
 
 export interface CreateNoteRequest {
-  prospectId: string;
+  /**
+   * All three targets are individually optional but AT LEAST ONE is required —
+   * the backend 400s otherwise (NotesService.assertHasTarget), and
+   * CHK_notes_has_target enforces it in the database too.
+   */
+  prospectId?: string;
+  referralSourceId?: string;
+  contactId?: string;
   summary: string;
+  activityType?: ActivityType;
+  /** Required when `activityType` is `other`. */
+  activityTypeOther?: string;
+  /** @deprecated Superseded by `activityType`. */
   contactType?: string;
   urgency?: 'hot' | 'warm' | 'cold';
   patientStatus?: string;
@@ -115,11 +135,18 @@ export interface CreateNoteRequest {
   isHotLead?: boolean;
 }
 
-// Backend UpdateNoteDto excludes prospectId (a note can't be reparented).
-export type UpdateNoteRequest = Partial<Omit<CreateNoteRequest, 'prospectId'>>;
+// Backend UpdateNoteDto excludes all three target ids — a note cannot be
+// re-linked once written, which is what makes it a trustworthy activity record.
+export type UpdateNoteRequest = Partial<
+  Omit<CreateNoteRequest, 'prospectId' | 'referralSourceId' | 'contactId'>
+>;
 
 export interface ListNotesQuery extends PaginationParams {
   prospectId?: string;
+  /** Notes on a facility/account — powers the Referral Source notes panel. */
+  referralSourceId?: string;
+  /** Notes on a person. */
+  contactId?: string;
 }
 
 // wemarketplus-backend/src/goals/dto/goal-response.dto.ts

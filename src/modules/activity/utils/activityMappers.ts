@@ -38,7 +38,10 @@ export function toDailyGoal(g: GoalRecord): DailyGoal {
 export function toProspectNote(n: NoteRecord): ProspectNote {
   return {
     id: n.id,
-    prospectId: n.prospectId,
+    // Nullable since FIX-1 — a note may target an account or a person instead of
+    // a prospect. The legacy ProspectNote shape has no room for that, so an
+    // account-scoped note renders with an empty prospectId here.
+    prospectId: n.prospectId ?? '',
     author: n.createdBy ?? '',
     position: '',
     interactionType: n.contactType ?? '',
@@ -86,9 +89,14 @@ export function toReminder(t: TaskRecord): Reminder {
 // Notes -----------------------------------------------------------------
 export function toCreateNote(v: NoteFormValues): CreateNoteRequest {
   return {
-    prospectId: v.prospectId.trim(),
     summary: v.summary.trim(),
     urgency: v.urgency,
+    // At least one of these three is guaranteed by noteSchema's refinement.
+    ...opt('prospectId', v.prospectId),
+    ...opt('referralSourceId', v.referralSourceId),
+    ...opt('contactId', v.contactId),
+    ...opt('activityType', v.activityType),
+    ...opt('activityTypeOther', v.activityTypeOther),
     ...opt('contactType', v.contactType),
     ...opt('patientStatus', v.patientStatus),
     ...opt('barriers', v.barriers),
@@ -97,16 +105,26 @@ export function toCreateNote(v: NoteFormValues): CreateNoteRequest {
   };
 }
 
-// Backend UpdateNoteDto excludes prospectId (a note can't be reparented).
+// Backend UpdateNoteDto excludes all three target ids — a note cannot be
+// re-linked once written.
 export function toUpdateNote(v: NoteFormValues): UpdateNoteRequest {
-  const { prospectId: _prospectId, ...rest } = toCreateNote(v);
+  const {
+    prospectId: _prospectId,
+    referralSourceId: _referralSourceId,
+    contactId: _contactId,
+    ...rest
+  } = toCreateNote(v);
   return rest;
 }
 
 export function toNoteFormValues(n: NoteRecord): NoteFormValues {
   return {
-    prospectId: n.prospectId,
+    prospectId: n.prospectId ?? '',
+    referralSourceId: n.referralSourceId ?? '',
+    contactId: n.contactId ?? '',
     summary: n.summary,
+    activityType: n.activityType ?? '',
+    activityTypeOther: n.activityTypeOther ?? '',
     contactType: n.contactType ?? '',
     urgency: n.urgency,
     patientStatus: n.patientStatus ?? '',

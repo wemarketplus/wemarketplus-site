@@ -43,9 +43,10 @@ const STATUS_OPTIONS: ReadonlyArray<EntitySelectOption> = [
 // forms differ: create collects the references; edit collects the decision
 // fields (approved amount, decision date) instead.
 export const APPLICATION_CREATE_FIELDS: ReadonlyArray<EntityField<ApplicationFormValues>> = [
-  { name: 'companyId', label: 'Company id (UUID)', full: true, placeholder: 'required' },
-  { name: 'wibId', label: 'WIB id (UUID)', full: true, placeholder: 'required' },
-  { name: 'fundingOpportunityId', label: 'Funding opportunity id (UUID)', full: true, placeholder: 'optional' },
+  // Record references, chosen from a list. These were "paste the UUID" boxes.
+  { name: 'companyId', label: 'Company', type: 'lookup', full: true, placeholder: 'Select a company…' },
+  { name: 'wibId', label: 'WIB', type: 'lookup', full: true, placeholder: 'Select a WIB…' },
+  { name: 'fundingOpportunityId', label: 'Funding opportunity', type: 'lookup', full: true, placeholder: 'No funding opportunity' },
   { name: 'status', label: 'Status', type: 'select', options: STATUS_OPTIONS },
   { name: 'awardAmountRequested', label: 'Award requested', type: 'number', placeholder: '0' },
   { name: 'submissionDate', label: 'Submission date', placeholder: 'YYYY-MM-DD' },

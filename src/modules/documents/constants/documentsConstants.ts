@@ -17,10 +17,11 @@ export const DOCUMENT_SCOPE_LABELS: Record<DocumentScope, string> = {
   wib: 'WIB',
 };
 
-// Label for the parent-id input, per scope.
+// Label for the parent picker, per scope. Names the RECORD, not its id — the
+// control is a picker now, not a UUID box (DocumentsScopePicker).
 export const DOCUMENT_PARENT_LABELS: Record<DocumentScope, string> = {
-  employer: 'Company id (UUID)',
-  wib: 'WIB id (UUID)',
+  employer: 'Company',
+  wib: 'WIB',
 };
 
 export const DOCUMENT_SCOPE_OPTIONS: ReadonlyArray<EntitySelectOption> = [

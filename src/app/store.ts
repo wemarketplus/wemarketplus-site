@@ -61,6 +61,7 @@ import { permissionsApi, permissionsReducer } from '@/modules/permissions';
 import { pipelineApi, pipelineReducer } from '@/modules/pipeline';
 import { prospectsApi, prospectsReducer } from '@/modules/prospects';
 import { referralsApi, referralsReducer } from '@/modules/referrals';
+import { hospiceContactsApi } from '@/modules/hospice-contacts/api/hospiceContactsApi';
 import { schedulingReducer } from '@/modules/scheduling';
 import { settingsApi, settingsReducer } from '@/modules/settings';
 import { usersApi, usersReducer } from '@/modules/users';
@@ -142,6 +143,7 @@ const rootReducer = combineReducers({
   [pipelineApi.reducerPath]: pipelineApi.reducer,
   [prospectsApi.reducerPath]: prospectsApi.reducer,
   [referralsApi.reducerPath]: referralsApi.reducer,
+  [hospiceContactsApi.reducerPath]: hospiceContactsApi.reducer,
   [reportsApi.reducerPath]: reportsApi.reducer,
   [settingsApi.reducerPath]: settingsApi.reducer,
   [usersApi.reducerPath]: usersApi.reducer,
@@ -219,6 +221,7 @@ export const store = configureStore({
       pipelineApi.middleware,
       prospectsApi.middleware,
       referralsApi.middleware,
+      hospiceContactsApi.middleware,
       reportsApi.middleware,
       settingsApi.middleware,
       usersApi.middleware,

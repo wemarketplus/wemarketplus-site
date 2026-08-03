@@ -1,4 +1,7 @@
-import { ProspectStage } from '@/modules/prospects/types/prospectsTypes';
+import {
+  ProspectLostReason,
+  ProspectStage,
+} from '@/modules/prospects/types/prospectsTypes';
 
 export const PIPELINE_TAGS = {
   Board: 'Pipeline.Board',
@@ -33,3 +36,26 @@ export const STAGE_TONE: Record<ProspectStage, string> = {
 
 /** Fallback tone for a stage the tone map somehow does not cover. */
 export const DEFAULT_STAGE_TONE = 'border-border bg-surface-raised text-muted';
+
+/**
+ * Why an opportunity was lost. The backend requires one on entry to `lost` on
+ * EITHER pipeline (referral-to-admit and outreach), so this list is what the board
+ * offers before it will send the move. Values mirror
+ * wemarketplus-backend/src/prospects/prospects.constants.ts ProspectLostReason.
+ */
+export const LOST_REASON_LABELS: Record<ProspectLostReason, string> = {
+  [ProspectLostReason.NotEligible]: 'Not eligible',
+  [ProspectLostReason.ChoseCompetitor]: 'Chose a competitor hospice',
+  [ProspectLostReason.Declined]: 'Family declined',
+  [ProspectLostReason.Deceased]: 'Passed before enrollment',
+  [ProspectLostReason.Other]: 'Other (please describe)',
+};
+
+export const LOST_REASON_OPTIONS = (
+  Object.values(ProspectLostReason) as ProspectLostReason[]
+).map((value) => ({ value, label: LOST_REASON_LABELS[value] }));
+
+/** The one reason that also requires free text before the move is accepted. */
+export const LOST_REASON_REQUIRING_DETAIL = ProspectLostReason.Other;
+
+export const LOST_REASON_DETAIL_MAX_LENGTH = 500;
