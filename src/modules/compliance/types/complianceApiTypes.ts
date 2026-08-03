@@ -11,7 +11,6 @@ export interface ComplianceRecord {
   applicationId: ID;
   applicationNumber: string | null;
   companyName: string | null;
-  wibName: string | null;
   trainingEndDate: string | null;
   finalReportDue: string | null;
   finalReportSubmitted: boolean;

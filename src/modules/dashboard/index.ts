@@ -9,6 +9,5 @@ export type {
   ReportTotals,
   ReportRevenue,
   ReportRecentActivity,
-  ReportTopWib,
 } from './types/reportsTypes';
 export type { DashboardSummary, DashboardSummaryActivity } from './types/dashboardTypes';

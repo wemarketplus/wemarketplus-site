@@ -35,7 +35,6 @@ export interface RosterRecord {
   tenantId: ID;
   applicationId: ID;
   companyId: ID | null;
-  wibId: ID | null;
   participantName: string;
   participantEmail: string | null;
   participantPhone: string | null;
@@ -55,7 +54,6 @@ export interface CreateRosterRequest {
   applicationId: string;
   participantName: string;
   companyId?: string;
-  wibId?: string;
   participantEmail?: string;
   participantPhone?: string;
   trainingStartDate?: string;

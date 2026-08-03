@@ -25,7 +25,6 @@ import { documentsApi } from '@/modules/documents';
 import { financeApi } from '@/modules/finance';
 import { fundingApi } from '@/modules/funding';
 import { trainingApi } from '@/modules/training-providers';
-import { wibsApi } from '@/modules/wibs';
 import { billingApi, billingReducer } from '@/modules/billing';
 import { adminSettingsApi as clAdminSettingsApi } from '@/modules/cl-admin-settings';
 import { giftGratuityApi } from '@/modules/cl-gift-gratuity';
@@ -134,7 +133,6 @@ const rootReducer = combineReducers({
   [locationsApi.reducerPath]: locationsApi.reducer,
   [territoriesApi.reducerPath]: territoriesApi.reducer,
   [trainingApi.reducerPath]: trainingApi.reducer,
-  [wibsApi.reducerPath]: wibsApi.reducer,
   [integrationsApi.reducerPath]: integrationsApi.reducer,
   [notificationsApi.reducerPath]: notificationsApi.reducer,
   [onboardingApi.reducerPath]: onboardingApi.reducer,
@@ -212,7 +210,6 @@ export const store = configureStore({
       locationsApi.middleware,
       territoriesApi.middleware,
       trainingApi.middleware,
-      wibsApi.middleware,
       integrationsApi.middleware,
       notificationsApi.middleware,
       onboardingApi.middleware,

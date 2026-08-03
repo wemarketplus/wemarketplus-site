@@ -6,7 +6,6 @@ export interface FundingRecord {
   id: ID;
   tenantId: ID;
   opportunityName: string;
-  wibId: ID | null;
   status: FundingStatus;
   programType: string | null;
   maxAwardPerEin: number | null;
@@ -23,7 +22,6 @@ export interface FundingRecord {
 export interface CreateFundingRequest {
   opportunityName: string;
   sourceUrl: string;
-  wibId?: string;
   status?: FundingStatus;
   programType?: string;
   maxAwardPerEin?: number;
@@ -36,6 +34,5 @@ export type UpdateFundingRequest = Partial<CreateFundingRequest>;
 
 export interface ListFundingQuery extends PaginationParams {
   status?: FundingStatus;
-  wibId?: string;
   search?: string;
 }

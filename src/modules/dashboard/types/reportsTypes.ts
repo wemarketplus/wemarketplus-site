@@ -1,9 +1,8 @@
 import type { ISODateString } from '@/shared/types';
 
 // Backend reports summary shapes — wemarketplus-backend/src/reports
-// (ReportSummaryDto). Grant-CRM shaped (wibs/companies/applications/grant revenue).
+// (ReportSummaryDto). Grant-CRM shaped (companies/applications/grant revenue).
 export interface ReportTotals {
-  wibs: number;
   companies: number;
   applications: number;
   pendingCompliance: number;
@@ -22,17 +21,9 @@ export interface ReportRecentActivity {
   createdAt: ISODateString;
 }
 
-export interface ReportTopWib {
-  wibName: string;
-  state: string | null;
-  callPriorityScore: number;
-  status: string;
-}
-
 export interface ReportSummary {
   totals: ReportTotals;
   revenue: ReportRevenue;
   applicationsByStatus: Record<string, number>;
   recentActivity: ReportRecentActivity[];
-  topWibs: ReportTopWib[];
 }

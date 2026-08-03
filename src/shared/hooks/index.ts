@@ -5,7 +5,6 @@ export {
   useCompanyLookup,
   useFundingLookup,
   useUserLookup,
-  useWibLookup,
 } from './useSharedLookups';
 export { useScrollReveal } from './useScrollReveal';
 export { useThemeColors } from './useThemeColors';

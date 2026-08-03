@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useCompanyLookup, useFundingLookup, useWibLookup } from '@/shared/hooks';
+import { useCompanyLookup, useFundingLookup } from '@/shared/hooks';
 import { EntityFormModal } from '@/shared/ui/entity';
 import {
   APPLICATION_CREATE_FIELDS,
@@ -13,7 +13,6 @@ import type { ApplicationRecord } from '../types/applicationsTypes';
 
 const EMPTY: ApplicationFormValues = {
   companyId: '',
-  wibId: '',
   fundingOpportunityId: '',
   status: '',
   awardAmountRequested: undefined,
@@ -66,7 +65,6 @@ export function ApplicationFormModal({
   // Record pickers, fetched only while the form is open.
   const lookups = {
     companyId: useCompanyLookup(open),
-    wibId: useWibLookup(open),
     fundingOpportunityId: useFundingLookup(open),
   };
   return (

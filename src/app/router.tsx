@@ -135,12 +135,6 @@ const ApplicationsPage = lazy(() =>
 const AgreementsPage = lazy(() =>
   import('@/modules/agreements').then((m) => ({ default: m.AgreementsPage })),
 );
-// HIDDEN (intentionally): WIBs module hidden from the frontend by request.
-// Route + lazy import commented out so the page is not reachable even by direct
-// URL. Do NOT re-enable without confirming with the product owner.
-// const WibsPage = lazy(() =>
-//   import('@/modules/wibs').then((m) => ({ default: m.WibsPage })),
-// );
 const LocationsPage = lazy(() =>
   import('@/modules/locations').then((m) => ({ default: m.LocationsPage })),
 );
@@ -599,8 +593,6 @@ export function AppRouter() {
           <Route path="funding" element={<FundingPage />} />
           <Route path="applications" element={<ApplicationsPage />} />
           <Route path="agreements" element={<AgreementsPage />} />
-          {/* HIDDEN (intentionally): WIBs route disabled by request. Do NOT re-enable without product-owner sign-off. */}
-          {/* <Route path="wibs" element={<WibsPage />} /> */}
           <Route path="locations" element={<LocationsPage />} />
           <Route path="territories-list" element={<TerritoriesEntityPage />} />
           {/* HIDDEN (intentionally): Training providers route disabled by request. Do NOT re-enable without product-owner sign-off. */}

@@ -7,13 +7,12 @@ import type {
 } from '../types/fundingTypes';
 import type { FundingFormValues } from '../schema/fundingSchema';
 
-// Form values -> POST /funding body. Drops blank optionals so we never send
-// empty strings the DTO rejects (wibId/applicationLink are IsUUID/IsUrl gated).
+// Form values -> POST /funding body. Drops blank optionals so we never send an
+// empty string where the DTO expects an absent field.
 export function toCreateFunding(values: FundingFormValues): CreateFundingRequest {
   return {
     opportunityName: values.opportunityName.trim(),
     sourceUrl: values.sourceUrl.trim(),
-    ...opt('wibId', values.wibId),
     ...(values.status ? { status: values.status as FundingStatus } : {}),
     ...opt('programType', values.programType),
     ...optNum('maxAwardPerEin', values.maxAwardPerEin),
@@ -23,11 +22,11 @@ export function toCreateFunding(values: FundingFormValues): CreateFundingRequest
   };
 }
 
-// PATCH body — the backend update whitelist is NARROWER than create: it does not
-// accept `wibId` (set only at creation). Drop it here so an edit never 400s.
+// PATCH body. Create and update now accept the same fields — the only field the
+// update whitelist rejected was `wibId` (creation-only), and WIB has been removed
+// from this product entirely.
 export function toUpdateFunding(values: FundingFormValues): UpdateFundingRequest {
-  const { wibId: _wibId, ...rest } = toCreateFunding(values);
-  return rest;
+  return toCreateFunding(values);
 }
 
 // Seeds the edit form from an existing record (nulls -> '').
@@ -35,7 +34,6 @@ export function toFundingFormValues(record: FundingRecord): FundingFormValues {
   return {
     opportunityName: record.opportunityName,
     sourceUrl: record.sourceUrl ?? '',
-    wibId: record.wibId ?? '',
     status: record.status,
     programType: record.programType ?? '',
     maxAwardPerEin: record.maxAwardPerEin ?? undefined,

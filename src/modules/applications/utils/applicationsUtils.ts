@@ -7,12 +7,11 @@ import type {
 } from '../types/applicationsTypes';
 import type { ApplicationFormValues } from '../schema/applicationSchema';
 
-// Form values -> POST /applications. companyId + wibId are required UUIDs; the
+// Form values -> POST /applications. companyId is a required reference; the
 // rest are optional and stripped when blank.
 export function toCreateApplication(values: ApplicationFormValues): CreateApplicationRequest {
   return {
     companyId: values.companyId.trim(),
-    wibId: values.wibId.trim(),
     ...opt('fundingOpportunityId', values.fundingOpportunityId),
     ...(values.status ? { status: values.status as ApplicationStatus } : {}),
     ...optNum('awardAmountRequested', values.awardAmountRequested),
@@ -21,7 +20,7 @@ export function toCreateApplication(values: ApplicationFormValues): CreateApplic
   };
 }
 
-// PATCH body — the update whitelist excludes company/wib/funding references (not
+// PATCH body — the update whitelist excludes company/funding references (not
 // reassignable) and adds awardAmountApproved + decisionDate.
 export function toUpdateApplication(values: ApplicationFormValues): UpdateApplicationRequest {
   return {
@@ -38,7 +37,6 @@ export function toUpdateApplication(values: ApplicationFormValues): UpdateApplic
 export function toApplicationFormValues(record: ApplicationRecord): ApplicationFormValues {
   return {
     companyId: record.companyId,
-    wibId: record.wibId,
     fundingOpportunityId: record.fundingOpportunityId ?? '',
     status: record.status,
     awardAmountRequested: record.awardAmountRequested ?? undefined,

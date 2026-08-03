@@ -1,91 +1,53 @@
+import { useCompanyLookup } from '@/shared/hooks';
 import { Label, Select } from '@/shared/ui/core';
-import { useCompanyLookup, useWibLookup } from '@/shared/hooks';
-import {
-  DOCUMENT_PARENT_LABELS,
-  DOCUMENT_SCOPE,
-  DOCUMENT_SCOPE_OPTIONS,
-  type DocumentScope,
-} from '../constants/documentsConstants';
 
 interface DocumentsScopePickerProps {
-  scope: DocumentScope;
-  onScope: (value: DocumentScope) => void;
   parentId: string;
   onParentId: (value: string) => void;
 }
 
 /**
- * Documents are parent-scoped on the backend (employer=company / wib=WIB) and the
- * list/create calls require that parent's id, so this picker collects both before
- * the list loads.
+ * Documents are parent-scoped on the backend and the list/create calls require the
+ * parent company's id, so this picker collects it before the list loads.
  *
- * The parent used to be a free-text box with a `00000000-0000-…` placeholder and an
- * "enter a valid UUID" error, which made the entire Documents page unreachable for
- * anyone without database access. It is now a DEPENDENT picker: the scope chooses
- * which list to offer, and the parent is selected from it by name.
- *
- * Both lists load rather than only the active one, so switching scope doesn't stall
- * a control the user is already using. They are capped at LOOKUP_PAGE_SIZE and
- * cached by RTK Query.
+ * History worth keeping: this was a free-text box with a `00000000-0000-…`
+ * placeholder and an "enter a valid UUID" error, which made the whole Documents
+ * page unreachable for anyone without database access. It also offered a second
+ * "WIB" scope — a Grants-domain concept (Workforce Investment Board) with no
+ * meaning in a hospice CRM — which is why the control is now a single company
+ * picker rather than a scope switch.
  */
 export function DocumentsScopePicker({
-  scope,
-  onScope,
   parentId,
   onParentId,
 }: DocumentsScopePickerProps) {
   const companies = useCompanyLookup(true);
-  const wibs = useWibLookup(true);
-
-  const options = scope === DOCUMENT_SCOPE.Employer ? companies : wibs;
-  const isLoading = options === undefined;
-  const isEmpty = options?.length === 0;
-  const noun = DOCUMENT_PARENT_LABELS[scope].toLowerCase();
+  const isLoading = companies === undefined;
+  const isEmpty = companies?.length === 0;
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-      <div className="flex flex-col gap-1">
-        <Label htmlFor="doc-scope">Scope</Label>
-        <Select
-          id="doc-scope"
-          value={scope}
-          onChange={(e) => {
-            // Changing scope invalidates the chosen parent — a company is not a
-            // WIB, and silently keeping the old id would query the wrong parent.
-            onParentId('');
-            onScope(e.target.value as DocumentScope);
-          }}
-          className="max-w-[16rem]"
-        >
-          {DOCUMENT_SCOPE_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </Select>
-      </div>
-      <div className="flex flex-1 flex-col gap-1">
-        <Label htmlFor="doc-parent">{DOCUMENT_PARENT_LABELS[scope]}</Label>
-        <Select
-          id="doc-parent"
-          value={parentId}
-          onChange={(e) => onParentId(e.target.value)}
-          disabled={isLoading || isEmpty}
-        >
-          <option value="">
-            {isLoading
-              ? 'Loading…'
-              : isEmpty
-                ? `No ${noun} on file yet`
-                : `Select a ${noun}…`}
+    <div className="flex flex-col gap-1">
+      <Label htmlFor="doc-parent">Company</Label>
+      <Select
+        id="doc-parent"
+        value={parentId}
+        onChange={(e) => onParentId(e.target.value)}
+        disabled={isLoading || isEmpty}
+        className="max-w-[28rem]"
+      >
+        <option value="">
+          {isLoading
+            ? 'Loading…'
+            : isEmpty
+              ? 'No companies on file yet'
+              : 'Select a company…'}
+        </option>
+        {(companies ?? []).map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
           </option>
-          {(options ?? []).map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </Select>
-      </div>
+        ))}
+      </Select>
     </div>
   );
 }

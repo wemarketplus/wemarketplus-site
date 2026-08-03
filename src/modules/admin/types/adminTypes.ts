@@ -58,7 +58,6 @@ export interface DatasetOption {
 }
 
 export const DATASET_OPTIONS: readonly DatasetOption[] = [
-  { type: 'wibs', label: 'WIBs', canImport: true, elevated: false },
   { type: 'companies', label: 'Companies', canImport: true, elevated: false },
   { type: 'locations', label: 'Locations', canImport: true, elevated: false },
   { type: 'funding', label: 'Funding opportunities', canImport: true, elevated: false },

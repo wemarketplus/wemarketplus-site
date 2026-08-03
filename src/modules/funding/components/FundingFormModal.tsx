@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useWibLookup } from '@/shared/hooks';
 import { EntityFormModal } from '@/shared/ui/entity';
 import { FUNDING_FIELDS } from '../constants/fundingConstants';
 import { fundingSchema, type FundingFormValues } from '../schema/fundingSchema';
@@ -11,7 +10,6 @@ import type { FundingRecord } from '../types/fundingTypes';
 const EMPTY: FundingFormValues = {
   opportunityName: '',
   sourceUrl: '',
-  wibId: '',
   status: '',
   programType: '',
   maxAwardPerEin: undefined,
@@ -54,7 +52,6 @@ export function FundingFormModal({ open, isSaving, editing, onClose, onSubmit }:
     if (ok) reset(EMPTY);
   });
 
-  const lookups = { wibId: useWibLookup(open) };
   return (
     <EntityFormModal<FundingFormValues>
       open={open}
@@ -65,7 +62,6 @@ export function FundingFormModal({ open, isSaving, editing, onClose, onSubmit }:
       register={register}
       errors={errors}
       onSubmit={submit}
-      lookups={lookups}
       onClose={close}
     />
   );

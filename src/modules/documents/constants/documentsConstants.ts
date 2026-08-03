@@ -1,32 +1,13 @@
-import type { EntityField, EntitySelectOption } from '@/shared/ui/entity';
+import type { EntityField } from '@/shared/ui/entity';
 import type { DocumentFormValues } from '../schema/documentSchema';
 
 export const DOCUMENTS_PAGE_SIZE = 20;
 
-// The backend has two parallel document stores, each scoped to a different parent
-// and each REQUIRING that parent's id on the list/create call. There is no
-// "list all documents" endpoint, so the page picks a scope + parent id first.
-export const DOCUMENT_SCOPE = {
-  Employer: 'employer',
-  Wib: 'wib',
-} as const;
-export type DocumentScope = (typeof DOCUMENT_SCOPE)[keyof typeof DOCUMENT_SCOPE];
-
-export const DOCUMENT_SCOPE_LABELS: Record<DocumentScope, string> = {
-  employer: 'Employer (company)',
-  wib: 'WIB',
-};
-
-// Label for the parent picker, per scope. Names the RECORD, not its id — the
-// control is a picker now, not a UUID box (DocumentsScopePicker).
-export const DOCUMENT_PARENT_LABELS: Record<DocumentScope, string> = {
-  employer: 'Company',
-  wib: 'WIB',
-};
-
-export const DOCUMENT_SCOPE_OPTIONS: ReadonlyArray<EntitySelectOption> = [
-  ...Object.values(DOCUMENT_SCOPE).map((v) => ({ value: v, label: DOCUMENT_SCOPE_LABELS[v] })),
-];
+// Documents are scoped to a parent company. The backend also has a parallel
+// WIB-scoped document store (/wib-documents), which is a Grants-domain concept
+// deliberately NOT surfaced here — see the note in documentsApi.ts.
+//
+// There is no "list all documents" endpoint, so the page picks a company first.
 
 // Field descriptors driving the "record document" create modal (metadata only —
 // this phase does NOT upload a binary; driveUrl references an existing file).

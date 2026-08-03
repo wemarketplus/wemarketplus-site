@@ -59,10 +59,6 @@ export const adminApi = createApi({
       query: ({ type, ...body }) => ({ url: `/import/${type}`, method: 'POST', body }),
       transformResponse: env<ImportResult>,
     }),
-    importWibsCsv: build.mutation<ImportResult, { rows: Record<string, unknown>[]; batch?: number; totalBatches?: number }>({
-      query: (body) => ({ url: '/import/wibs/csv', method: 'POST', body }),
-      transformResponse: env<ImportResult>,
-    }),
   }),
 });
 
@@ -75,5 +71,4 @@ export const {
   useListInvitesQuery,
   useCreateInviteMutation,
   useImportDataMutation,
-  useImportWibsCsvMutation,
 } = adminApi;

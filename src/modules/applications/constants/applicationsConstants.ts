@@ -38,14 +38,13 @@ const STATUS_OPTIONS: ReadonlyArray<EntitySelectOption> = [
   ...Object.values(APPLICATION_STATUS).map((v) => ({ value: v, label: APPLICATION_STATUS_LABELS[v] })),
 ];
 
-// Reference identifiers (companyId, wibId) are required and only settable at
+// The company reference is required and only settable at
 // creation — the backend update whitelist rejects them. So the create and edit
 // forms differ: create collects the references; edit collects the decision
 // fields (approved amount, decision date) instead.
 export const APPLICATION_CREATE_FIELDS: ReadonlyArray<EntityField<ApplicationFormValues>> = [
   // Record references, chosen from a list. These were "paste the UUID" boxes.
   { name: 'companyId', label: 'Company', type: 'lookup', full: true, placeholder: 'Select a company…' },
-  { name: 'wibId', label: 'WIB', type: 'lookup', full: true, placeholder: 'Select a WIB…' },
   { name: 'fundingOpportunityId', label: 'Funding opportunity', type: 'lookup', full: true, placeholder: 'No funding opportunity' },
   { name: 'status', label: 'Status', type: 'select', options: STATUS_OPTIONS },
   { name: 'awardAmountRequested', label: 'Award requested', type: 'number', placeholder: '0' },

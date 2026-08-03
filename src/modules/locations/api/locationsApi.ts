@@ -9,7 +9,7 @@ import type {
 } from '../types/locationsTypes';
 
 // Grant-CRM employer locations — wemarketplus-backend/src/locations.
-//   GET/POST/GET:id/PATCH/DELETE  /locations?state&status&wibId&search
+//   GET/POST/GET:id/PATCH/DELETE  /locations?state&status&search
 const env = <T>(res: ApiEnvelope<T>) => res.data;
 const list = <T>(res: ApiEnvelope<PaginatedPayload<T>>) => res.data;
 

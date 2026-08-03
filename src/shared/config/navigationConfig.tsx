@@ -126,11 +126,10 @@ const GRANTS_SECTION: NavSection = {
     { to: '/funding', label: 'Funding', icon: Target, allow: STAFF_ROLES },
     { to: '/applications', label: 'Applications', icon: ClipboardList, allow: STAFF_ROLES },
     { to: '/agreements', label: 'Agreements', icon: ScrollText, allow: STAFF_ROLES },
-    // HIDDEN (intentionally): WIBs module hidden from the frontend by request.
-    // Do NOT re-enable without confirming with the product owner. The module
-    // code, route, and store wiring still exist; only the nav entry is removed.
-    // { to: '/wibs', label: 'WIBs', icon: Users, allow: STAFF_ROLES },
-    /*{ to: '/wibs', label: 'WIBs', icon: Users, allow: STAFF_ROLES },*/
+    // WIBs (Workforce Investment Boards) used to sit here, hidden. The module,
+    // its route and its store wiring have now been removed outright — a
+    // Grants-domain concept has no meaning in this CRM. The backend endpoints
+    // still exist for the Grants product; nothing in this app calls them.
   ],
 };
 

@@ -43,6 +43,5 @@ export const LOCATION_FIELDS: ReadonlyArray<EntityField<LocationFormValues>> = [
   { name: 'state', label: 'State', placeholder: 'TX' },
   { name: 'address', label: 'Address', full: true, placeholder: '123 Main St' },
   { name: 'companyId', label: 'Company', type: 'lookup', placeholder: 'No company (set at creation only)' },
-  { name: 'wibId', label: 'WIB', type: 'lookup', placeholder: 'No WIB (set at creation only)' },
   { name: 'notes', label: 'Notes', type: 'textarea', full: true },
 ];

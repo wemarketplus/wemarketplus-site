@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useCompanyLookup, useWibLookup } from '@/shared/hooks';
+import { useCompanyLookup } from '@/shared/hooks';
 import { EntityFormModal } from '@/shared/ui/entity';
 import { LOCATION_FIELDS } from '../constants/locationsConstants';
 import { locationSchema, type LocationFormValues } from '../schema/locationSchema';
@@ -17,7 +17,6 @@ const EMPTY: LocationFormValues = {
   state: '',
   address: '',
   companyId: '',
-  wibId: '',
   notes: '',
 };
 
@@ -66,7 +65,6 @@ export function LocationFormModal({
 
   const lookups = {
     companyId: useCompanyLookup(open),
-    wibId: useWibLookup(open),
   };
   return (
     <EntityFormModal<LocationFormValues>

@@ -11,7 +11,6 @@ export {
   useMarkDmReadMutation,
   useAskAiMutation,
   useGenerateNoteMutation,
-  useAiWibAssistMutation,
   useAiEmployerAssistMutation,
   useAiApplicationAssistMutation,
   useAiCommunicationsAssistMutation,

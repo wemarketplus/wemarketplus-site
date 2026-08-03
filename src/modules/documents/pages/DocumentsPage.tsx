@@ -7,8 +7,6 @@ import { useDocuments } from '../hooks/useDocuments';
 
 export function DocumentsPage() {
   const {
-    scope,
-    setScope,
     parentId,
     setParentId,
     validParent,
@@ -37,7 +35,7 @@ export function DocumentsPage() {
   const canCreate = isAny(STAFF_ROLES);
 
   const empty = showEmptyHint
-    ? 'Choose a scope and a parent record above to load its documents.'
+    ? 'Choose a company above to load its documents.'
     : 'No documents recorded for this parent yet.';
 
   return (
@@ -53,8 +51,6 @@ export function DocumentsPage() {
         onAdd={canCreate && validParent ? openCreate : undefined}
         filters={
           <DocumentsScopePicker
-            scope={scope}
-            onScope={setScope}
             parentId={parentId}
             onParentId={setParentId}
           />

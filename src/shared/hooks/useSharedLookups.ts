@@ -2,7 +2,6 @@ import { useListApplicationsQuery } from '@/modules/applications/api/application
 import { useListCompaniesQuery } from '@/modules/companies/api/companiesApi';
 import { useListFundingQuery } from '@/modules/funding/api/fundingApi';
 import { useListUsersQuery } from '@/modules/users/api/usersApi';
-import { useListWibsQuery } from '@/modules/wibs/api/wibsApi';
 import type { EntitySelectOption } from '@/shared/ui/entity';
 import { LOOKUP_PAGE_SIZE, useLookupOptions } from './useRecordLookups';
 
@@ -26,12 +25,6 @@ type Options = readonly EntitySelectOption[] | undefined;
 export function useCompanyLookup(enabled: boolean): Options {
   const { data, isLoading } = useListCompaniesQuery(PAGE, { skip: !enabled });
   return useLookupOptions(data?.data, isLoading, (c) => c.companyName);
-}
-
-/** Workforce investment boards. */
-export function useWibLookup(enabled: boolean): Options {
-  const { data, isLoading } = useListWibsQuery(PAGE, { skip: !enabled });
-  return useLookupOptions(data?.data, isLoading, (w) => w.wibName);
 }
 
 /** Funding opportunities. */

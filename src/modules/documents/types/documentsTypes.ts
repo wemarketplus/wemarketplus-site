@@ -1,7 +1,7 @@
 import type { ID, ISODateString } from '@/shared/types';
 
 // Mirrors wemarketplus-backend/src/documents/dto/document-response.dto.ts.
-// Used for both employer-documents and wib-documents (same shape).
+// Employer (company) scoped document metadata.
 export interface DocumentRecord {
   id: ID;
   tenantId: ID;

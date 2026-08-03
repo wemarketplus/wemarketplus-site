@@ -12,7 +12,6 @@ export interface LocationRecord {
   status: LocationStatus;
   employeeCount: number | null;
   companyId: ID | null;
-  wibId: ID | null;
   address: string | null;
   notes: string | null;
   createdAt: ISODateString;
@@ -27,7 +26,6 @@ export interface CreateLocationRequest {
   status?: LocationStatus;
   employeeCount?: number;
   companyId?: string;
-  wibId?: string;
   address?: string;
   notes?: string;
 }
@@ -37,6 +35,5 @@ export type UpdateLocationRequest = Partial<CreateLocationRequest>;
 export interface ListLocationsQuery extends PaginationParams {
   state?: string;
   status?: LocationStatus;
-  wibId?: string;
   search?: string;
 }

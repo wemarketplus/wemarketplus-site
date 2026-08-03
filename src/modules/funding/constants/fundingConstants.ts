@@ -36,6 +36,5 @@ export const FUNDING_FIELDS: ReadonlyArray<EntityField<FundingFormValues>> = [
   { name: 'maxAwardPerEin', label: 'Max award per EIN', type: 'number', placeholder: '0' },
   { name: 'applicationDeadline', label: 'Application deadline', type: 'text', placeholder: 'YYYY-MM-DD' },
   { name: 'applicationLink', label: 'Application link', full: true, placeholder: 'https://…' },
-  { name: 'wibId', label: 'WIB', type: 'lookup', full: true, placeholder: 'No WIB (set at creation only)' },
   { name: 'notes', label: 'Notes', type: 'textarea', full: true },
 ];

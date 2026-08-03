@@ -84,7 +84,6 @@ export interface RevenueRecord {
   tenantId: ID;
   applicationId: ID | null;
   companyId: ID | null;
-  wibId: ID | null;
   feeModel: string | null;
   calculatedSuccessFee: number | null;
   grantAwardAmount: number | null;

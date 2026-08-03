@@ -5,14 +5,16 @@ import type { CreateDocumentRequest, DocumentRecord } from '../types/documentsTy
 
 // Grant-CRM documents — wemarketplus-backend/src/documents.
 //   employer-documents: GET/POST require ?companyId=; DELETE /:id (admin/owner)
-//   wib-documents:      GET/POST require ?wibId=;     DELETE /:id (admin/owner)
+// The backend also exposes /wib-documents (Grants-domain Workforce Investment
+// Boards). Deliberately NOT wired here: WIB has no meaning in this CRM and is not
+// surfaced anywhere in the UI.
 const env = <T>(res: ApiEnvelope<T>) => res.data;
 const list = <T>(res: ApiEnvelope<PaginatedPayload<T>>) => res.data;
 
 export const documentsApi = createApi({
   reducerPath: 'documentsApi',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['EmployerDoc', 'WibDoc'],
+  tagTypes: ['EmployerDoc'],
   endpoints: (build) => ({
     listEmployerDocuments: build.query<PaginatedPayload<DocumentRecord>, { companyId: string; page?: number; limit?: number; documentType?: string }>({
       query: (params) => ({ url: '/employer-documents', params }),
@@ -28,20 +30,6 @@ export const documentsApi = createApi({
       query: (id) => ({ url: `/employer-documents/${id}`, method: 'DELETE' }),
       invalidatesTags: ['EmployerDoc'],
     }),
-    listWibDocuments: build.query<PaginatedPayload<DocumentRecord>, { wibId: string; page?: number; limit?: number; documentType?: string }>({
-      query: (params) => ({ url: '/wib-documents', params }),
-      transformResponse: list<DocumentRecord>,
-      providesTags: ['WibDoc'],
-    }),
-    createWibDocument: build.mutation<DocumentRecord, { wibId: string; body: CreateDocumentRequest }>({
-      query: ({ wibId, body }) => ({ url: '/wib-documents', method: 'POST', params: { wibId }, body }),
-      transformResponse: env<DocumentRecord>,
-      invalidatesTags: ['WibDoc'],
-    }),
-    deleteWibDocument: build.mutation<void, string>({
-      query: (id) => ({ url: `/wib-documents/${id}`, method: 'DELETE' }),
-      invalidatesTags: ['WibDoc'],
-    }),
   }),
 });
 
@@ -49,7 +37,4 @@ export const {
   useListEmployerDocumentsQuery,
   useCreateEmployerDocumentMutation,
   useDeleteEmployerDocumentMutation,
-  useListWibDocumentsQuery,
-  useCreateWibDocumentMutation,
-  useDeleteWibDocumentMutation,
 } = documentsApi;

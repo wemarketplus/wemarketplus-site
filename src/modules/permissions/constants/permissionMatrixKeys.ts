@@ -3,6 +3,11 @@
 // guide in permissionsConstants).
 export const PERMISSION_KEYS = [
   'view_records',
+  // NOTE: these two keys read "wibs" but their labels are "Create/Edit
+  // companies" — the user never sees the word. They are the BACKEND permission
+  // matrix keys (permissions.constants.ts) and are persisted in role_permissions,
+  // so renaming them is a backend change plus a data migration, not a relabel.
+  // Left as-is deliberately during the WIB removal.
   'create_wibs_companies',
   'edit_wibs_companies',
   'delete_records',

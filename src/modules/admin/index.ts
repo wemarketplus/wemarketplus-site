@@ -11,7 +11,6 @@ export {
   useListInvitesQuery,
   useCreateInviteMutation,
   useImportDataMutation,
-  useImportWibsCsvMutation,
 } from './api/adminApi';
 export {
   exportCsvUrl,

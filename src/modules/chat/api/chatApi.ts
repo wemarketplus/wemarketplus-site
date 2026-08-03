@@ -61,10 +61,6 @@ export const chatApi = createApi({
     }),
     // Domain-specific AI assists. Bodies are free-form (all-optional, snake_case
     // on the backend); callers pass the relevant record fields.
-    aiWibAssist: build.mutation<AiReply, Record<string, unknown>>({
-      query: (body) => ({ url: '/ai/wib', method: 'POST', body }),
-      transformResponse: env<AiReply>,
-    }),
     aiEmployerAssist: build.mutation<AiReply, Record<string, unknown>>({
       query: (body) => ({ url: '/ai/employer', method: 'POST', body }),
       transformResponse: env<AiReply>,
@@ -91,7 +87,6 @@ export const {
   useMarkDmReadMutation,
   useAskAiMutation,
   useGenerateNoteMutation,
-  useAiWibAssistMutation,
   useAiEmployerAssistMutation,
   useAiApplicationAssistMutation,
   useAiCommunicationsAssistMutation,

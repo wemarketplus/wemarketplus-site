@@ -8,7 +8,7 @@ import type {
 import type { LocationFormValues } from '../schema/locationSchema';
 
 // Form values -> POST /locations body. Drops blank optionals so we never send
-// empty strings the DTO rejects (companyId/wibId are IsUUID gated).
+// empty strings the DTO rejects (companyId is IsUUID gated).
 export function toCreateLocation(values: LocationFormValues): CreateLocationRequest {
   return {
     locationName: values.locationName.trim(),
@@ -19,16 +19,15 @@ export function toCreateLocation(values: LocationFormValues): CreateLocationRequ
     ...opt('state', values.state),
     ...opt('address', values.address),
     ...opt('companyId', values.companyId),
-    ...opt('wibId', values.wibId),
     ...opt('notes', values.notes),
   };
 }
 
 // PATCH body — the backend update whitelist is NARROWER than create: it does not
-// accept `companyId`/`wibId` (reparenting is not allowed via update). Drop them
-// here so an edit never 400s.
+// accept `companyId` (reparenting is not allowed via update). Drop it here so an
+// edit never 400s.
 export function toUpdateLocation(values: LocationFormValues): UpdateLocationRequest {
-  const { companyId: _companyId, wibId: _wibId, ...rest } = toCreateLocation(values);
+  const { companyId: _companyId, ...rest } = toCreateLocation(values);
   return rest;
 }
 
@@ -43,7 +42,6 @@ export function toLocationFormValues(record: LocationRecord): LocationFormValues
     state: record.state ?? '',
     address: record.address ?? '',
     companyId: record.companyId ?? '',
-    wibId: record.wibId ?? '',
     notes: record.notes ?? '',
   };
 }

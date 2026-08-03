@@ -3,7 +3,7 @@ import { LOCATION_STATUS } from '../constants/locationsConstants';
 
 // Create/edit location form — mirrors CreateLocationDto / UpdateLocationDto
 // (wemarketplus-backend/src/locations/dto). `locationName` is required; the rest
-// are optional and stripped when blank. companyId/wibId are IsUUID gated and set
+// are optional and stripped when blank. companyId is IsUUID gated and set
 // only at creation (the backend UPDATE whitelist excludes them — see the mapper).
 const statusValues = Object.values(LOCATION_STATUS) as [string, ...string[]];
 
@@ -23,7 +23,6 @@ export const locationSchema = z.object({
     .optional()
     .or(z.nan().transform(() => undefined)),
   companyId: z.string().uuid('Company id must be a valid UUID').optional().or(z.literal('')),
-  wibId: z.string().uuid('WIB id must be a valid UUID').optional().or(z.literal('')),
   address: z.string().optional(),
   notes: z.string().optional(),
 });

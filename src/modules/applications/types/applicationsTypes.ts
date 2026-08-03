@@ -7,7 +7,6 @@ export interface ApplicationRecord {
   tenantId: ID;
   applicationNumber: string | null;
   companyId: ID;
-  wibId: ID;
   fundingOpportunityId: ID | null;
   status: ApplicationStatus;
   awardAmountRequested: number | null;
@@ -22,7 +21,6 @@ export interface ApplicationRecord {
 
 export interface CreateApplicationRequest {
   companyId: string;
-  wibId: string;
   fundingOpportunityId?: string;
   status?: ApplicationStatus;
   awardAmountRequested?: number;
