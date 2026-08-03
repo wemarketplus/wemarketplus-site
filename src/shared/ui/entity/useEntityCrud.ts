@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
+import { confirm } from '@/shared/ui/feedback';
 
 // Minimal shape of an RTK Query mutation trigger — call it, then `.unwrap()`.
 type MutationTrigger<TArg, TResult> = (arg: TArg) => { unwrap: () => Promise<TResult> };
@@ -55,7 +56,12 @@ export function useEntityCrud<
 
   const confirmDelete = async (entity: TEntity): Promise<void> => {
     const label = labelOf(entity);
-    if (!window.confirm(`Delete ${label}? This cannot be undone.`)) return;
+    const ok = await confirm({
+      title: `Delete ${label}?`,
+      body: `${label} will be permanently removed.`,
+      confirmLabel: 'Delete',
+    });
+    if (!ok) return;
     try {
       await remove(entity.id).unwrap();
       toast.success(`Deleted ${label}`);

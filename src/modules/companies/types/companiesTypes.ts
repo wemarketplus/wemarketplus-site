@@ -50,3 +50,41 @@ export interface ListCompaniesQuery extends PaginationParams {
   status?: CompanyStatus;
   search?: string;
 }
+
+/** One set of records that normalise to the same name (GET /companies/dedup/preview). */
+export interface CompanyDedupGroup {
+  keeperName: string;
+  duplicateNames: string[];
+}
+
+/**
+ * What a dedup run would do, computed without mutating anything. Dedup HARD-DELETES
+ * the duplicates after re-pointing their locations and applications at the keeper,
+ * so the confirmation dialog shows this first.
+ */
+export interface CompanyDedupPreview {
+  totalGroups: number;
+  wouldDelete: number;
+  groups: CompanyDedupGroup[];
+}
+
+/**
+ * Outcome of POST /companies/dedup.
+ *
+ * `merged` and `deleted` are NOT the same number and neither is "how many
+ * duplicates were resolved":
+ *   - `deleted`  = duplicate rows permanently removed. This is what the user asked
+ *                  for and what the confirmation promised, so it is what we report.
+ *   - `merged`   = keeper rows that received a field patch, because the duplicate
+ *                  carried a value the keeper was missing. Often 0 even on a
+ *                  successful merge — the reason the toast used to read
+ *                  "Merged 0 duplicate companies" right after deleting one.
+ *   - `totalGroups` = duplicate sets processed.
+ */
+export interface CompanyDedupResult {
+  merged: number;
+  deleted: number;
+  errors: string[];
+  totalGroups: number;
+  complete: boolean;
+}

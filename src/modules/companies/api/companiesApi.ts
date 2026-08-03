@@ -2,6 +2,8 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQuery';
 import type { ApiEnvelope, PaginatedPayload } from '@/shared/types';
 import type {
+  CompanyDedupPreview,
+  CompanyDedupResult,
   CompanyRecord,
   CreateCompanyRequest,
   ListCompaniesQuery,
@@ -42,16 +44,24 @@ export const companiesApi = createApi({
       query: (id) => ({ url: `/companies/${id}`, method: 'DELETE' }),
       invalidatesTags: ['Company'],
     }),
+    // GET /companies/dedup/preview (admin/owner) — what a dedup run WOULD do.
+    // Read-only; used to fill the confirmation dialog before anything is destroyed.
+    dedupPreview: build.query<CompanyDedupPreview, void>({
+      query: () => ({ url: '/companies/dedup/preview' }),
+      transformResponse: env<CompanyDedupPreview>,
+      providesTags: ['Company'],
+    }),
     // POST /companies/dedup (admin/owner) — merge duplicate employer records.
-    dedupCompanies: build.mutation<{ merged: number } | Record<string, unknown>, void>({
+    dedupCompanies: build.mutation<CompanyDedupResult, void>({
       query: () => ({ url: '/companies/dedup', method: 'POST' }),
-      transformResponse: env<{ merged: number } | Record<string, unknown>>,
+      transformResponse: env<CompanyDedupResult>,
       invalidatesTags: ['Company'],
     }),
   }),
 });
 
 export const {
+  useLazyDedupPreviewQuery,
   useListCompaniesQuery,
   useGetCompanyQuery,
   useCreateCompanyMutation,

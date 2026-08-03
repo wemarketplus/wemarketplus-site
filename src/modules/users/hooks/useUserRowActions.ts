@@ -5,6 +5,7 @@ import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
 import { useAdminResetPasswordMutation, useUpdateUserMutation } from '../api/usersApi';
 import type { UserRecord } from '../types/usersTypes';
 import { fullName } from '../utils/userDisplay';
+import { confirm } from '@/shared/ui/feedback';
 
 // One-time reveal of an admin-generated temporary password. The backend only
 // returns it once (it is hashed on store), so the UI must surface it until the
@@ -26,13 +27,12 @@ export function useUserRowActions() {
   const [updateUser, { isLoading: isTogglingActive }] = useUpdateUserMutation();
 
   const resetUserPassword = async (user: UserRecord) => {
-    if (
-      !window.confirm(
-        `Reset ${fullName(user)}'s password? They will be forced to set a new one on next login.`,
-      )
-    ) {
-      return;
-    }
+    const ok = await confirm({
+      title: `Reset ${fullName(user)}'s password?`,
+      body: 'They will be shown a temporary password and forced to set a new one on next login.',
+      confirmLabel: 'Reset password',
+    });
+    if (!ok) return;
     try {
       const { temporaryPassword } = await resetPassword(user.id).unwrap();
       setReveal({ user, temporaryPassword });
@@ -52,7 +52,16 @@ export function useUserRowActions() {
 
   const setUserActive = async (user: UserRecord, isActive: boolean) => {
     const verb = isActive ? 'Reactivate' : 'Deactivate';
-    if (!window.confirm(`${verb} ${fullName(user)}?`)) return;
+    const ok = await confirm({
+      title: `${verb} ${fullName(user)}?`,
+      body: isActive
+        ? `${user.email} regains access immediately.`
+        : `${user.email} loses access immediately. Their records are kept.`,
+      confirmLabel: verb,
+      // Reversible either way — this is a state change, not a deletion.
+      destructive: !isActive,
+    });
+    if (!ok) return;
     try {
       await updateUser({ id: user.id, patch: { isActive } }).unwrap();
       toast.success(`${fullName(user)} ${isActive ? 'reactivated' : 'deactivated'}`);

@@ -7,6 +7,7 @@ import {
   useCreateEmployerDocumentMutation,
   useDeleteEmployerDocumentMutation,
 } from '../api/documentsApi';
+import { confirm } from '@/shared/ui/feedback';
 import { DOCUMENTS_PAGE_SIZE } from '../constants/documentsConstants';
 import { toCreateDocument } from '../utils/documentsUtils';
 import type { DocumentFormValues } from '../schema/documentSchema';
@@ -59,7 +60,12 @@ export function useDocuments() {
   };
 
   const confirmDelete = async (doc: DocumentRecord): Promise<void> => {
-    if (!window.confirm(`Delete ${doc.fileName}? This cannot be undone.`)) return;
+    const ok = await confirm({
+      title: `Delete ${doc.fileName}?`,
+      body: 'The document record is removed here. The file itself stays in Drive.',
+      confirmLabel: 'Delete record',
+    });
+    if (!ok) return;
     try {
       await deleteEmployerDoc(doc.id).unwrap();
       toast.success(`Deleted ${doc.fileName}`);

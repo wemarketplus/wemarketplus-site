@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { confirm } from '@/shared/ui/feedback';
 
 // Same minimal RTK Query mutation trigger shape used by useEntityCrud.
 type MutationTrigger<TArg, TResult> = (arg: TArg) => { unwrap: () => Promise<TResult> };
@@ -38,11 +39,12 @@ export function useBulkDelete({ noun, nounPlural, remove }: UseBulkDeleteArgs): 
   const run = async (ids: readonly string[]) => {
     if (ids.length === 0) return null;
     const label = ids.length === 1 ? noun : plural;
-    if (
-      !window.confirm(
-        `Delete ${ids.length} ${label}? This cannot be undone.`,
-      )
-    ) {
+    const ok = await confirm({
+      title: `Delete ${ids.length} ${label}?`,
+      body: `${ids.length} ${label} will be permanently removed.`,
+      confirmLabel: `Delete ${ids.length} ${label}`,
+    });
+    if (!ok) {
       return null;
     }
 
