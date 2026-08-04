@@ -3,7 +3,11 @@ import { NavLink } from 'react-router-dom';
 // stroke, rounded caps) and is already the app's icon dependency — every
 // NavItem in navigationConfig already carries one.
 import { HeartPulse as BrandMark } from 'lucide-react';
-import { ProductSwitcher, useActiveEntitlement } from '@/modules/access';
+import {
+  ProductSwitcher,
+  RoleSwitcher,
+  useActiveEntitlement,
+} from '@/modules/access';
 import {
   SECTIONS_BY_PRODUCT,
   isNavItemVisible,
@@ -68,6 +72,7 @@ export function Sidebar() {
         </div>
         {/* Only renders for users entitled to more than one product. */}
         <ProductSwitcher />
+        <RoleSwitcher />
       </div>
 
       {/* .sb-nav */}

@@ -5,8 +5,11 @@ export {
   default as accessReducer,
   setActiveProduct,
   clearActiveProduct,
+  setViewAsRole,
+  clearViewAsRole,
   type AccessState,
 } from './store/accessSlice';
+export { RoleSwitcher } from './components/RoleSwitcher';
 export { ProductSwitcher } from './components/ProductSwitcher';
 export { useEntitlements } from './hooks/useEntitlements';
 export { useActiveProduct } from './hooks/useActiveProduct';

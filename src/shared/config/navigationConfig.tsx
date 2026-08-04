@@ -5,6 +5,7 @@ import {
   Bot,
   Building2,
   Calendar,
+  Car,
   CalendarCheck,
   ClipboardList,
   Contact,
@@ -17,6 +18,7 @@ import {
   LayoutDashboard,
   LineChart,
   Map,
+  MapPin,
   MessagesSquare,
   NotebookPen,
   Phone,
@@ -42,6 +44,9 @@ import {
   Role,
   STAFF_ROLES,
   ADMIN_ONLY,
+  HL_MARKETING_ROLES,
+  HL_CLINICAL_ROLES,
+  HL_FIELD_ROLES,
   CL_MANAGEMENT_ROLES,
   CL_SALES_ROLES,
   CL_FINANCIAL_ROLES,
@@ -152,30 +157,40 @@ const OPERATIONS_RECORDS_SECTION: NavSection = {
 
 // --- HospiceLink sections (mirrors wemarketplus-site/crm-pro.html) -----
 
+// Gated to HL_MARKETING_ROLES: this section is where account strategy and
+// referral-source value live, so Nurse and Caregiver do not see it. Before these
+// `allow` lists existed every HospiceLink role saw every item here.
 const HOSPICELINK_MARKETING: NavSection = {
   id: 'hl-marketing',
   label: 'Marketing',
   items: [
-    { to: '/hl-leads', label: 'Inbound leads', icon: Inbox, product: Product.HospiceLink },
-    { to: '/prospects', label: 'Prospects', icon: UserPlus, product: Product.HospiceLink },
-    { to: '/referrals', label: 'Referral sources', icon: Heart, product: Product.HospiceLink },
-    { to: '/pipeline', label: 'Pipeline', icon: LineChart, product: Product.HospiceLink },
-    { to: '/jobs', label: 'Jobs', icon: ClipboardList, product: Product.HospiceLink },
-    { to: '/territories', label: 'Territories', icon: Map, product: Product.HospiceLink },
-    { to: '/scheduling', label: 'Smart scheduling', icon: Calendar, product: Product.HospiceLink, minTier: Tier.Gold },
+    { to: '/hl-leads', label: 'Inbound leads', icon: Inbox, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
+    { to: '/prospects', label: 'Prospects', icon: UserPlus, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
+    { to: '/referrals', label: 'Referral sources', icon: Heart, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
+    { to: '/pipeline', label: 'Pipeline', icon: LineChart, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
+    { to: '/jobs', label: 'Jobs', icon: ClipboardList, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
+    { to: '/territories', label: 'Territories', icon: Map, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
+    { to: '/scheduling', label: 'Smart scheduling', icon: Calendar, product: Product.HospiceLink, minTier: Tier.Gold, allow: HL_MARKETING_ROLES },
   ],
 };
 
+// HL_FIELD_ROLES: the surfaces every HospiceLink persona works in, including the
+// two clinical roles. EVV and mileage are gated at Max because that is the tier
+// the pricing page sells "EVV/GPS mileage & compliance log" at.
 const HOSPICELINK_ACTIVITY: NavSection = {
   id: 'hl-activity',
   label: 'Activity',
   items: [
-    { to: '/appointments', label: 'Appointments', icon: CalendarCheck, product: Product.HospiceLink },
-    { to: '/activity/calendar', label: 'Follow-up calendar', icon: Calendar, product: Product.HospiceLink },
-    { to: '/activity/notes', label: 'Notes', icon: ScrollText, product: Product.HospiceLink },
-    { to: '/activity/reminders', label: 'Reminders', icon: Pin, product: Product.HospiceLink },
-    { to: '/activity/goals', label: 'Daily goals', icon: Goal, product: Product.HospiceLink },
-    { to: '/activity/ai', label: 'AI assistant', icon: Sparkles, product: Product.HospiceLink },
+    { to: '/appointments', label: 'Appointments', icon: CalendarCheck, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
+    { to: '/activity/calendar', label: 'Follow-up calendar', icon: Calendar, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
+    { to: '/activity/notes', label: 'Notes', icon: ScrollText, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
+    { to: '/activity/reminders', label: 'Reminders', icon: Pin, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
+    { to: '/activity/goals', label: 'Daily goals', icon: Goal, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
+    { to: '/activity/ai', label: 'AI assistant', icon: Sparkles, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
+    // Previously unreachable: the tables, endpoints and RTK hooks all existed with
+    // no nav entry and no route, so EVV was "API only" despite being sold at Max.
+    { to: '/field/evv', label: 'Visit verification', icon: MapPin, product: Product.HospiceLink, minTier: Tier.Max, allow: HL_FIELD_ROLES },
+    { to: '/field/mileage', label: 'Mileage & expenses', icon: Car, product: Product.HospiceLink, minTier: Tier.Max, allow: HL_FIELD_ROLES },
   ],
 };
 
@@ -183,9 +198,9 @@ const HOSPICELINK_CLINICAL: NavSection = {
   id: 'hl-clinical',
   label: 'Clinical (Gold)',
   items: [
-    { to: '/clinical/family', label: 'Family communication', icon: MessagesSquare, product: Product.HospiceLink, minTier: Tier.Gold },
-    { to: '/clinical/messaging', label: 'Secure messaging', icon: MessagesSquare, product: Product.HospiceLink, minTier: Tier.Gold },
-    { to: '/clinical/admissions', label: 'Admission workflow', icon: Stethoscope, product: Product.HospiceLink, minTier: Tier.Gold },
+    { to: '/clinical/family', label: 'Family communication', icon: MessagesSquare, product: Product.HospiceLink, minTier: Tier.Gold, allow: HL_CLINICAL_ROLES },
+    { to: '/clinical/messaging', label: 'Secure messaging', icon: MessagesSquare, product: Product.HospiceLink, minTier: Tier.Gold, allow: HL_CLINICAL_ROLES },
+    { to: '/clinical/admissions', label: 'Admission workflow', icon: Stethoscope, product: Product.HospiceLink, minTier: Tier.Gold, allow: HL_CLINICAL_ROLES },
   ],
 };
 

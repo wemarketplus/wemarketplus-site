@@ -22,6 +22,7 @@ import { appointmentsApi, appointmentsReducer } from '@/modules/appointments';
 import { authApi, authReducer } from '@/modules/auth';
 import { chatApi } from '@/modules/chat';
 import { documentsApi } from '@/modules/documents';
+import { mileageApi } from '@/modules/field';
 import { financeApi } from '@/modules/finance';
 import { fundingApi } from '@/modules/funding';
 import { trainingApi } from '@/modules/training-providers';
@@ -129,6 +130,7 @@ const rootReducer = combineReducers({
   [featureFlagsApi.reducerPath]: featureFlagsApi.reducer,
   [impersonationApi.reducerPath]: impersonationApi.reducer,
   [financeApi.reducerPath]: financeApi.reducer,
+  [mileageApi.reducerPath]: mileageApi.reducer,
   [intelligenceApi.reducerPath]: intelligenceApi.reducer,
   [fundingApi.reducerPath]: fundingApi.reducer,
   [locationsApi.reducerPath]: locationsApi.reducer,
@@ -207,6 +209,7 @@ export const store = configureStore({
       featureFlagsApi.middleware,
       impersonationApi.middleware,
       financeApi.middleware,
+      mileageApi.middleware,
       intelligenceApi.middleware,
       fundingApi.middleware,
       locationsApi.middleware,

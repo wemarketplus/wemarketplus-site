@@ -26,6 +26,7 @@ import {
   CL_MAINTENANCE_VIEW_ROLES,
   CL_COMPETITOR_INTEL_ROLES,
   CL_FIELD_ACTIVITY_ROLES,
+  HL_FIELD_ROLES,
 } from '@/shared/rbac';
 
 // --- Public auth funnel ---------------------------------------------------
@@ -219,6 +220,13 @@ const BaaRecordsPage = lazy(() =>
 );
 const ThreatMonitorPage = lazy(() =>
   import('@/modules/compliance').then((m) => ({ default: m.ThreatMonitorPage })),
+);
+
+const EvvPage = lazy(() =>
+  import('@/modules/field').then((m) => ({ default: m.EvvPage })),
+);
+const MileagePage = lazy(() =>
+  import('@/modules/field').then((m) => ({ default: m.MileagePage })),
 );
 
 // --- CommunityLink screens ------------------------------------------------
@@ -487,6 +495,14 @@ export function AppRouter() {
           <Route path="intelligence/revenue" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={STAFF_ROLES}><IntelligencePage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="intelligence/marketing-roi" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={STAFF_ROLES}><IntelligencePage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="intelligence/leaderboard" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={STAFF_ROLES}><IntelligencePage /></ProtectedRoute></RequireEntitlement>} />
+
+          {/* Field execution — Max. EVV and mileage had endpoints (and, for EVV,
+              written RTK hooks) but no nav entry and no route, so both were
+              unreachable while being sold at Max. `allow` mirrors the nav's
+              HL_FIELD_ROLES so Nurse and Caregiver reach them — these two screens
+              plus Notes and Family communication ARE the caregiver's workspace. */}
+          <Route path="field/evv" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={HL_FIELD_ROLES}><EvvPage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="field/mileage" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={HL_FIELD_ROLES}><MileagePage /></ProtectedRoute></RequireEntitlement>} />
 
           {/* Smart scheduling — Gold. */}
           <Route path="scheduling" element={<RequireEntitlement minTier={Tier.Gold}><SchedulingPage /></RequireEntitlement>} />

@@ -31,6 +31,62 @@ export const ADMIN_ONLY: readonly Role[] = [Role.SuperAdmin, Role.Admin, Role.Ow
 // gate — /owner/* returns 403 for tenant Admin/Owner.
 export const SUPER_ADMIN_ONLY: readonly Role[] = [Role.SuperAdmin];
 
+// --- HospiceLink role groups --------------------------------------------------
+// HospiceLink had NO role groups: every module either used STAFF_ROLES or was
+// ungated, so Marketer, Nurse and Caregiver all resolved to the same 42-item
+// sidebar. Gold is sold as "4-role access: Admin, Marketer, Nurse, Caregiver", so
+// the four personas need distinct views. These groups say which roles may SEE a
+// class of module; the backend still enforces its own @Roles independently.
+
+// Management oversight — same set as STAFF_ROLES, named separately so the
+// HospiceLink policy can diverge from the generic one without a cascade.
+export const HL_MANAGEMENT_ROLES: readonly Role[] = [...STAFF_ROLES];
+
+// The marketing/sales surface: inbound leads, pipeline, referral sources, jobs,
+// territories, scheduling. Deliberately EXCLUDES Nurse and Caregiver — this is
+// where referral-source financials and account strategy live, and a caregiver has
+// no reason to see which hospital is worth the most.
+export const HL_MARKETING_ROLES: readonly Role[] = [
+  ...HL_MANAGEMENT_ROLES,
+  Role.Marketer,
+  Role.Rep,
+];
+
+// Clinical group (family communication, secure messaging, admissions). Management
+// plus the two clinical personas.
+export const HL_CLINICAL_ROLES: readonly Role[] = [
+  ...HL_MANAGEMENT_ROLES,
+  Role.Nurse,
+  Role.Caregiver,
+];
+
+// Field-work surfaces every persona uses: appointments, the follow-up calendar,
+// notes, reminders, daily goals, the AI assistant, EVV and mileage. This is the
+// widest HospiceLink group.
+export const HL_FIELD_ROLES: readonly Role[] = [
+  ...HL_MANAGEMENT_ROLES,
+  Role.Marketer,
+  Role.Rep,
+  Role.Nurse,
+  Role.Caregiver,
+];
+
+/**
+ * Roles a management user may PREVIEW via the "viewing as" switcher. Only the
+ * three field personas are listed: the switcher exists to check what a scoped user
+ * sees, so previewing another management role would be pointless, and previewing
+ * "up" must be impossible.
+ *
+ * The switcher only ever NARROWS the navigation. It never grants anything — every
+ * API call still carries the real role in the JWT, so a previewing Admin who
+ * reaches a hidden route still gets that route's real authorization answer.
+ */
+export const HL_VIEW_AS_ROLES: readonly Role[] = [
+  Role.Marketer,
+  Role.Nurse,
+  Role.Caregiver,
+];
+
 // --- CommunityLink role groups (mirror the /demo/communitylink/* sidebars) ---
 // Each group defines which roles may SEE a class of module. Field roles see the
 // least; management roles see everything.
