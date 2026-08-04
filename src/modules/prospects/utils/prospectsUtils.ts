@@ -46,6 +46,10 @@ export function mapProspectRecord(r: ProspectRecord): Prospect {
     // Real pipeline timing now exists: prefer the stage-entry stamp over updatedAt.
     followUpDate: r.stageEnteredAt ?? r.updatedAt,
     urgency: r.urgency as Urgency,
+    // Carried through explicitly so the Triage column can render it. `conversionRisk`
+    // below reuses the same number for the legacy risk display; keeping both means the
+    // table does not have to know which of the two names a caller populated.
+    aiAdmitScore: r.aiAdmitScore,
     conversionRisk: r.aiAdmitScore ?? undefined,
     notes: r.notes ?? undefined,
     lastContactDate: r.updatedAt,
