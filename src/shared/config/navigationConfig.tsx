@@ -5,6 +5,7 @@ import {
   Bot,
   Building2,
   Calendar,
+  CalendarClock,
   Car,
   CalendarCheck,
   ClipboardList,
@@ -173,7 +174,9 @@ const HOSPICELINK_MARKETING: NavSection = {
     { to: '/pipeline', label: 'Pipeline', icon: LineChart, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     { to: '/jobs', label: 'Jobs', icon: ClipboardList, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     { to: '/territories', label: 'Territories', icon: Map, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
-    { to: '/scheduling', label: 'Smart scheduling', icon: Calendar, product: Product.HospiceLink, minTier: Tier.Gold, allow: HL_MARKETING_ROLES },
+    // Renamed from "Smart scheduling": the module is nurse rostering now, and a label
+    // that does not say what the screen does is how the demo/build gap started.
+    { to: '/scheduling', label: 'Nurse scheduling', icon: CalendarClock, product: Product.HospiceLink, minTier: Tier.Gold, allow: HL_FIELD_ROLES },
   ],
 };
 

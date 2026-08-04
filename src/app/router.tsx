@@ -180,7 +180,7 @@ const PipelinePage = lazy(() =>
   import('@/modules/pipeline').then((m) => ({ default: m.PipelinePage })),
 );
 const SchedulingPage = lazy(() =>
-  import('@/modules/scheduling').then((m) => ({ default: m.SchedulingPage })),
+  import('@/modules/scheduling').then((m) => ({ default: m.NurseRosterPage })),
 );
 const ActivityPage = lazy(() =>
   import('@/modules/activity').then((m) => ({ default: m.ActivityPage })),
