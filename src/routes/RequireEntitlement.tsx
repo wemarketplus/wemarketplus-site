@@ -17,7 +17,13 @@ interface RequireEntitlementProps {
 // upgrade (the backend also answers 402 UPGRADE_REQUIRED on the underlying API,
 // so this is defense in depth). Mirrors navigationConfig's isNavItemVisible.
 export function RequireEntitlement({ children, minTier }: RequireEntitlementProps) {
-  const { product, tier } = useActiveEntitlement();
+  const { product, tier, isResolved } = useActiveEntitlement();
+
+  // Do not decide before the real plan is known. The store rehydrates from
+  // redux-persist first, so on a hard navigation an entitled tenant momentarily
+  // reads as the Pro fallback — deciding here would redirect them to /billing for a
+  // route they are entitled to, and the redirect is not undone once /auth/me lands.
+  if (!isResolved) return null;
 
   if (!tierIncludes(product, tier, minTier)) {
     // Carry the required tier so the billing page can highlight the upgrade.
