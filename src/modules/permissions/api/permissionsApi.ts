@@ -4,8 +4,10 @@ import type { ApiEnvelope } from '@/shared/types';
 import type { PermissionsView, UpdatePermissionRequest } from '../types/permissionsApiTypes';
 
 // Backend permission matrix — wemarketplus-backend/src/permissions.
-//   GET /permissions  -> { permissions, locked } (PermissionsView)
-//   PUT /permissions  -> PermissionsView (super_admin only)
+//   GET /permissions  -> { permissions, locked, canEdit, restricted }
+//   PUT /permissions  -> the same shape (tenant-admin tier: super admin/admin/owner)
+// Both responses are ACTOR-SCOPED: `canEdit` and `restricted` describe the caller,
+// so the UI renders what the API will accept rather than re-deriving the policy.
 // This is the grant-CRM permission-key matrix (e.g. create_wibs_companies).
 // The PermissionsPage renders it as a live, editable RBAC grid.
 export const permissionsApi = createApi({
@@ -38,6 +40,10 @@ export const permissionsApi = createApi({
             permissionsApi.util.updateQueryData('getPermissions', undefined, (draft) => {
               draft.permissions = data.permissions;
               draft.locked = data.locked;
+              // Carry the actor-scoped fields too, so the grid never drifts from
+              // what the server just said this actor may change.
+              draft.canEdit = data.canEdit;
+              draft.restricted = data.restricted;
             }),
           );
         } catch {

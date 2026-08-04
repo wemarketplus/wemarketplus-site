@@ -59,6 +59,7 @@ export function usePermissionMatrix() {
     errorMessage: isError ? extractApiErrorMessage(error, 'Could not load permissions') : null,
     refetch,
     canEdit,
+    isViewingAs,
     pendingCell,
     toggle,
   };

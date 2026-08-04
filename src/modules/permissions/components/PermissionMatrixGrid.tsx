@@ -11,24 +11,39 @@ import type { PermissionMatrix } from '../types/permissionsApiTypes';
 interface PermissionMatrixGridProps {
   permissions: PermissionMatrix;
   locked: PermissionMatrix;
+  /** Cells THIS actor may not change, though a super admin could. */
+  restricted: PermissionMatrix;
   canEdit: boolean;
   pendingCell: string | null;
   onToggle: (permission: PermissionKey, role: Role, value: boolean) => void;
 }
 
-// A cell is locked when the backend `locked` matrix marks it, or when it targets
-// super_admin (always-on, never editable). Non-super-admins get a fully
-// read-only grid, so every cell reads as locked for them.
-function isCellLocked(
+// Why a cell isn't editable — drives the tooltip, so "nobody can change this" and
+// "you can't change this" stop looking like the same thing.
+type LockReason = 'read-only' | 'locked' | 'restricted' | null;
+
+// Both matrices mark a cell by PRESENCE, not by value: a cell is closed when the
+// key exists at all, matching how the backend reads LOCKED_PERMISSIONS. `locked`
+// and `restricted` both come from the server, so the grid no longer guesses which
+// cells the API would reject — it is told.
+function lockReasonFor(
   locked: PermissionMatrix,
+  restricted: PermissionMatrix,
   permission: PermissionKey,
   role: Role,
   canEdit: boolean,
-): boolean {
-  if (!canEdit) return true;
-  if (role === Role.SuperAdmin) return true;
-  return locked[permission]?.[role] !== undefined;
+): LockReason {
+  if (!canEdit) return 'read-only';
+  if (locked[permission]?.[role] !== undefined) return 'locked';
+  if (restricted[permission]?.[role] !== undefined) return 'restricted';
+  return null;
 }
+
+const LOCK_TITLES: Record<Exclude<LockReason, null>, string> = {
+  'read-only': 'You do not have permission to edit this matrix',
+  locked: 'Locked — cannot be changed by anyone',
+  restricted: 'Only a super admin can change this',
+};
 
 // Presentational RBAC matrix: rows = permission keys, columns = roles, cells =
 // effective allow/deny. Editable cells are checkboxes; locked cells render a
@@ -36,6 +51,7 @@ function isCellLocked(
 export function PermissionMatrixGrid({
   permissions,
   locked,
+  restricted,
   canEdit,
   pendingCell,
   onToggle,
@@ -72,7 +88,13 @@ export function PermissionMatrixGrid({
               </th>
               {ALL_ROLES.map((role) => {
                 const allowed = permissions[permission]?.[role] === true;
-                const cellLocked = isCellLocked(locked, permission, role, canEdit);
+                const lockReason = lockReasonFor(
+                  locked,
+                  restricted,
+                  permission,
+                  role,
+                  canEdit,
+                );
                 const cellId = `${permission}:${role}`;
                 const isPending = pendingCell === cellId;
 
@@ -80,11 +102,11 @@ export function PermissionMatrixGrid({
                   <td key={role} className="px-3 py-3 text-center">
                     <PermissionCell
                       allowed={allowed}
-                      locked={cellLocked}
+                      lockReason={lockReason}
                       pending={isPending}
                       label={`${PERMISSION_LABELS[permission]} for ${ROLE_LABELS[role]}`}
                       onToggle={
-                        cellLocked
+                        lockReason
                           ? undefined
                           : () => onToggle(permission, role, !allowed)
                       }
@@ -102,17 +124,23 @@ export function PermissionMatrixGrid({
 
 interface PermissionCellProps {
   allowed: boolean;
-  locked: boolean;
+  lockReason: LockReason;
   pending: boolean;
   label: string;
   onToggle?: () => void;
 }
 
-function PermissionCell({ allowed, locked, pending, label, onToggle }: PermissionCellProps) {
-  if (locked) {
+function PermissionCell({
+  allowed,
+  lockReason,
+  pending,
+  label,
+  onToggle,
+}: PermissionCellProps) {
+  if (lockReason) {
     return (
       <span
-        title={allowed ? 'Locked — always allowed' : 'Locked — cannot be changed'}
+        title={LOCK_TITLES[lockReason]}
         className={cn(
           'inline-flex h-7 w-7 items-center justify-center rounded-md border',
           allowed

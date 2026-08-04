@@ -1,4 +1,5 @@
-import type { FieldValues } from 'react-hook-form';
+import { useEffect } from 'react';
+import type { FieldValues, Path, PathValue } from 'react-hook-form';
 import { get } from 'react-hook-form';
 import { Button, Input, Label, Select, Textarea } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
@@ -16,6 +17,8 @@ export function EntityFormModal<TValues extends FieldValues>({
   fields,
   register,
   errors,
+  watch,
+  setValue,
   onSubmit,
   onClose,
   lookups,
@@ -43,8 +46,17 @@ export function EntityFormModal<TValues extends FieldValues>({
           <EntityFieldControl
             key={field.name}
             field={field}
+            // The fields that name THIS one in `dependsOn`. Their current value
+            // was chosen against this field's old value, so it is stale the
+            // moment this one changes.
+            dependents={fields.filter((f) => f.dependsOn === field.name)}
+            // The label of the field THIS one depends on, so a picker that is
+            // not usable yet can name what to answer first.
+            dependsOnLabel={fields.find((f) => f.name === field.dependsOn)?.label}
             register={register}
             errors={errors}
+            watch={watch}
+            setValue={setValue}
             lookupOptions={lookups?.[String(field.name)]}
           />
         ))}
@@ -56,13 +68,21 @@ export function EntityFormModal<TValues extends FieldValues>({
 
 function EntityFieldControl<TValues extends FieldValues>({
   field,
+  dependents,
+  dependsOnLabel,
   register,
   errors,
+  watch,
+  setValue,
   lookupOptions,
 }: {
   field: EntityField<TValues>;
+  dependents: ReadonlyArray<EntityField<TValues>>;
+  dependsOnLabel?: string;
   register: EntityFormModalProps<TValues>['register'];
   errors: EntityFormModalProps<TValues>['errors'];
+  watch?: EntityFormModalProps<TValues>['watch'];
+  setValue?: EntityFormModalProps<TValues>['setValue'];
   lookupOptions?: readonly { value: string; label: string }[];
 }) {
   const id = `ef-${String(field.name)}`;
@@ -72,28 +92,64 @@ function EntityFieldControl<TValues extends FieldValues>({
   // number inputs need valueAsNumber so RHF gives zod a number, not a string.
   const reg = register(field.name, type === 'number' ? { valueAsNumber: true } : undefined);
 
+  // A dependent picker (`dependsOn`) has nothing to offer until its controlling
+  // field is answered — which list to read is exactly what that answer decides.
+  const isBlocked = Boolean(field.dependsOn) && !watch?.(field.dependsOn!);
+
+  // Restoring a SEEDED reference. `reset` writes the stored value into the DOM
+  // <select>, but a native select silently drops a value that has no matching
+  // <option> yet — and the options arrive from a request that, for a dependent
+  // picker, cannot even begin until `reset` has supplied the controlling value.
+  // Without re-applying it the edit form opens having quietly forgotten which
+  // record the row was attached to. Re-apply once the option actually exists.
+  const selected = type === 'lookup' ? watch?.(field.name) : undefined;
+  useEffect(() => {
+    if (!selected || !setValue) return;
+    if (!lookupOptions?.some((o) => o.value === selected)) return;
+    setValue(field.name, selected);
+  }, [selected, lookupOptions, field.name, setValue]);
+
+  // Changing a field that others depend on invalidates their values. Done on the
+  // change EVENT rather than in an effect on the value: seeding an edit form goes
+  // through `reset`, which fires no event, so a stored pair survives untouched.
+  const control = dependents.length
+    ? {
+        ...reg,
+        onChange: (event: Parameters<typeof reg.onChange>[0]) => {
+          const result = reg.onChange(event);
+          for (const dependent of dependents) {
+            // A dependent field is a picker, so blank is the empty option.
+            setValue?.(dependent.name, '' as PathValue<TValues, Path<TValues>>);
+          }
+          return result;
+        },
+      }
+    : reg;
+
   return (
     <div className={field.full ? 'sm:col-span-2' : undefined}>
       <Label htmlFor={id}>{field.label}</Label>
       {type === 'textarea' ? (
-        <Textarea id={id} placeholder={field.placeholder} {...reg} />
+        <Textarea id={id} placeholder={field.placeholder} {...control} />
       ) : type === 'lookup' ? (
         // A record reference. Options arrive from the caller's list query; until
         // they do, the picker is disabled and says so rather than looking empty.
-        <Select id={id} {...reg} disabled={!lookupOptions}>
+        <Select id={id} {...control} disabled={isBlocked || !lookupOptions}>
           <option value="">
-            {lookupOptions
-              ? (field.placeholder ?? 'Select…')
-              : 'Loading…'}
+            {isBlocked
+              ? `Select a ${(dependsOnLabel ?? 'type').toLowerCase()} first`
+              : lookupOptions
+                ? (field.placeholder ?? 'Select…')
+                : 'Loading…'}
           </option>
-          {(lookupOptions ?? []).map((o) => (
+          {(isBlocked ? [] : (lookupOptions ?? [])).map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
             </option>
           ))}
         </Select>
       ) : type === 'select' ? (
-        <Select id={id} {...reg}>
+        <Select id={id} {...control}>
           {(field.options ?? []).map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
@@ -101,7 +157,7 @@ function EntityFieldControl<TValues extends FieldValues>({
           ))}
         </Select>
       ) : (
-        <Input id={id} type={type} placeholder={field.placeholder} {...reg} />
+        <Input id={id} type={type} placeholder={field.placeholder} {...control} />
       )}
       {error?.message && (
         <p className="mt-1 text-[12px] text-destructive">{error.message}</p>

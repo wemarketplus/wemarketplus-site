@@ -11,6 +11,7 @@ export function PermissionsPage() {
     errorMessage,
     refetch,
     canEdit,
+    isViewingAs,
     pendingCell,
     toggle,
   } = usePermissionMatrix();
@@ -36,10 +37,14 @@ export function PermissionsPage() {
         </div>
       </header>
 
-      {!canEdit && (
+      {!isLoading && !isError && view && !canEdit && (
         <div className="flex items-start gap-3 rounded-lg border border-border/[0.08] bg-foreground/[0.02] px-4 py-3 text-sm text-muted">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-muted-soft" />
-          <p>Only a Super Admin can edit permissions. This matrix is read-only for you.</p>
+          <p>
+            {isViewingAs
+              ? 'You are previewing another role. Switch back to yourself to edit permissions.'
+              : 'This matrix is read-only for you. Editing requires an owner, administrator or super admin.'}
+          </p>
         </div>
       )}
 
@@ -64,6 +69,7 @@ export function PermissionsPage() {
         <PermissionMatrixGrid
           permissions={view.permissions}
           locked={view.locked}
+          restricted={view.restricted}
           canEdit={canEdit}
           pendingCell={pendingCell}
           onToggle={toggle}

@@ -4,6 +4,7 @@ import { DataTable, type Column, type DataTableSelection } from '@/shared/ui/dat
 import { EmptyState } from '@/shared/ui/feedback';
 import { EntityRowActions } from '@/shared/ui/entity';
 import { formatDate } from '@/shared/utils/dateFormatter';
+import { formatRecordType } from '../utils/contactsUtils';
 import type { ContactRecord } from '../types/contactsTypes';
 
 interface ContactsTableProps {
@@ -49,7 +50,7 @@ export function ContactsTable({
     {
       key: 'record',
       header: 'Attached to',
-      cell: (c) => (c.recordType ? c.recordType : '—'),
+      cell: (c) => formatRecordType(c.recordType),
     },
     { key: 'created', header: 'Added', cell: (c) => formatDate(c.createdAt) },
     {

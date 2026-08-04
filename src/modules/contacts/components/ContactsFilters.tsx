@@ -1,5 +1,6 @@
 import { Search } from 'lucide-react';
-import { Input } from '@/shared/ui/core';
+import { Input, Select } from '@/shared/ui/core';
+import { CONTACT_RECORD_TYPE_OPTIONS } from '../constants/contactsConstants';
 
 interface ContactsFiltersProps {
   // Client-side search across name/email/title.
@@ -27,12 +28,24 @@ export function ContactsFilters({
           className="pl-9"
         />
       </div>
-      <Input
+      {/*
+        A picker, not a text box: the filter is compared against the stored value,
+        which is a machine string (`funding_opportunity`). Typing the label a user
+        would actually think of matched nothing.
+      */}
+      <Select
         value={recordType}
         onChange={(e) => onRecordType(e.target.value)}
-        placeholder="Filter by record type"
+        aria-label="Filter by record type"
         className="max-w-xs"
-      />
+      >
+        <option value="">All record types</option>
+        {CONTACT_RECORD_TYPE_OPTIONS.filter((o) => o.value).map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
+        ))}
+      </Select>
     </div>
   );
 }

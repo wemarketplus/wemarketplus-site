@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { EntityFormModal } from '@/shared/ui/entity';
 import { CONTACT_FIELDS } from '../constants/contactsConstants';
+import { useAttachableRecordLookup } from '../hooks/useAttachableRecordLookup';
 import { contactSchema, type ContactFormValues } from '../schema/contactSchema';
 import { toContactFormValues } from '../utils/contactsUtils';
 import type { ContactRecord } from '../types/contactsTypes';
@@ -39,6 +40,8 @@ export function ContactFormModal({
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
@@ -60,6 +63,14 @@ export function ContactFormModal({
     if (ok) reset(EMPTY);
   });
 
+  // The `recordId` picker is dependent: the chosen record type decides which list
+  // it offers, so it is watched here and the matching list fetched (only while the
+  // form is open). EntityFormModal handles the rest of the pair's behaviour —
+  // disabling the picker until a type is chosen, and clearing a record that was
+  // picked under a different type.
+  const recordType = watch('recordType');
+  const lookups = { recordId: useAttachableRecordLookup(recordType, open) };
+
   return (
     <EntityFormModal<ContactFormValues>
       open={open}
@@ -69,7 +80,10 @@ export function ContactFormModal({
       fields={CONTACT_FIELDS}
       register={register}
       errors={errors}
+      watch={watch}
+      setValue={setValue}
       onSubmit={submit}
+      lookups={lookups}
       onClose={close}
     />
   );

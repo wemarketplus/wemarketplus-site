@@ -16,14 +16,16 @@ export interface ContactRecord {
   updatedAt: ISODateString;
 }
 
+// Every field but `name` maps to a nullable column and is sent as an explicit
+// `null` to clear it — an omitted key in a PATCH means "leave unchanged".
 export interface CreateContactRequest {
   name: string;
-  title?: string;
-  email?: string;
-  phone?: string;
-  recordType?: string;
-  recordId?: string;
-  notes?: string;
+  title?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  recordType?: string | null;
+  recordId?: string | null;
+  notes?: string | null;
 }
 
 export type UpdateContactRequest = Partial<CreateContactRequest>;
