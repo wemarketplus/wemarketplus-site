@@ -3,6 +3,8 @@ import type {
   FieldValues,
   Path,
   UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch,
   FieldErrors,
 } from 'react-hook-form';
 
@@ -17,6 +19,14 @@ export type EntityFieldType =
   | 'tel'
   | 'number'
   | 'date'
+  /**
+   * Date *and* time, for a column that stores a full timestamp. Use this rather
+   * than 'date' whenever the backend column is a timestamp: a date input can
+   * only express midnight, so it silently resets the time on every edit.
+   * The form value is a zoneless local wall-clock string — convert it with
+   * isoToLocalInput / localInputToIso from shared/utils/dateFormatter.
+   */
+  | 'datetime-local'
   | 'textarea'
   | 'select'
   /**
@@ -43,6 +53,23 @@ export interface EntityField<TValues extends FieldValues> {
   // they come from a server list the form cannot know about statically.
   options?: readonly EntitySelectOption[];
   placeholder?: string;
+  /**
+   * For `type: 'lookup'` only — a DEPENDENT picker. Names the field whose value
+   * decides which list this one offers, for a reference that is polymorphic:
+   * pick the kind of record, then pick the record.
+   *
+   * Two things follow from it, both handled by EntityFormModal:
+   *   - while the named field is blank this picker renders disabled and says
+   *     which field to answer first (there is no list to offer yet);
+   *   - changing the named field CLEARS this one, because a value chosen under
+   *     the previous one came from a different list and saving it against the
+   *     new one would point the record at nothing.
+   *
+   * The options themselves still arrive through `EntityFormModalProps.lookups`;
+   * the caller swaps that list as the controlling field changes. Requires
+   * `watch` + `setValue` on EntityFormModal.
+   */
+  dependsOn?: Path<TValues>;
   // Span both columns of the 2-col grid (defaults to false = single column).
   full?: boolean;
 }
@@ -56,6 +83,14 @@ export interface EntityFormModalProps<TValues extends FieldValues> {
   fields: ReadonlyArray<EntityField<TValues>>;
   register: UseFormRegister<TValues>;
   errors: FieldErrors<TValues>;
+  /**
+   * RHF's `watch` and `setValue`. Needed ONLY when some field declares
+   * `dependsOn`: `watch` tells a dependent picker whether its controlling field
+   * has been answered, and `setValue` clears the picker when that answer
+   * changes. Optional so every form without a dependent picker is unaffected.
+   */
+  watch?: UseFormWatch<TValues>;
+  setValue?: UseFormSetValue<TValues>;
   onSubmit: () => void;
   onClose: () => void;
   /**

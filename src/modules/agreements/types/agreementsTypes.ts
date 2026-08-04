@@ -35,17 +35,19 @@ export interface AgreementStats {
   total: number;
 }
 
+// `null` on an optional field means "clear this column"; an omitted key means
+// "leave unchanged" — see optOrNull in shared/ui/entity/formValues.
 export interface CreateAgreementRequest {
   agreementName?: string;
   title?: string;
-  companyName?: string;
-  counterparty?: string;
-  value?: number;
+  companyName?: string | null;
+  counterparty?: string | null;
+  value?: number | null;
   status?: AgreementStatus;
-  effectiveDate?: string;
-  expirationDate?: string;
-  agreementType?: string;
-  notes?: string;
+  effectiveDate?: string | null;
+  expirationDate?: string | null;
+  agreementType?: string | null;
+  notes?: string | null;
 }
 
 export interface ContractRecord {

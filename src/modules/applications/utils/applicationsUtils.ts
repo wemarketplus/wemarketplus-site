@@ -1,4 +1,4 @@
-import { opt, optNum } from '@/shared/ui/entity';
+import { optNumOrNull, optOrNull } from '@/shared/ui/entity';
 import type { ApplicationStatus } from '../constants/applicationsConstants';
 import type {
   ApplicationRecord,
@@ -7,16 +7,18 @@ import type {
 } from '../types/applicationsTypes';
 import type { ApplicationFormValues } from '../schema/applicationSchema';
 
-// Form values -> POST /applications. companyId is a required reference; the
-// rest are optional and stripped when blank.
+// Form values -> POST /applications. companyId is a required reference; the rest
+// are nullable, so a blank goes as an explicit null rather than an omitted key —
+// otherwise clearing one in the edit form silently kept the stored value.
+// `status` stays conditional: its column is NOT NULL with a DB default.
 export function toCreateApplication(values: ApplicationFormValues): CreateApplicationRequest {
   return {
     companyId: values.companyId.trim(),
-    ...opt('fundingOpportunityId', values.fundingOpportunityId),
+    ...optOrNull('fundingOpportunityId', values.fundingOpportunityId),
     ...(values.status ? { status: values.status as ApplicationStatus } : {}),
-    ...optNum('awardAmountRequested', values.awardAmountRequested),
-    ...opt('submissionDate', values.submissionDate),
-    ...opt('notes', values.notes),
+    ...optNumOrNull('awardAmountRequested', values.awardAmountRequested),
+    ...optOrNull('submissionDate', values.submissionDate),
+    ...optOrNull('notes', values.notes),
   };
 }
 
@@ -25,11 +27,11 @@ export function toCreateApplication(values: ApplicationFormValues): CreateApplic
 export function toUpdateApplication(values: ApplicationFormValues): UpdateApplicationRequest {
   return {
     ...(values.status ? { status: values.status as ApplicationStatus } : {}),
-    ...optNum('awardAmountRequested', values.awardAmountRequested),
-    ...optNum('awardAmountApproved', values.awardAmountApproved),
-    ...opt('submissionDate', values.submissionDate),
-    ...opt('decisionDate', values.decisionDate),
-    ...opt('notes', values.notes),
+    ...optNumOrNull('awardAmountRequested', values.awardAmountRequested),
+    ...optNumOrNull('awardAmountApproved', values.awardAmountApproved),
+    ...optOrNull('submissionDate', values.submissionDate),
+    ...optOrNull('decisionDate', values.decisionDate),
+    ...optOrNull('notes', values.notes),
   };
 }
 

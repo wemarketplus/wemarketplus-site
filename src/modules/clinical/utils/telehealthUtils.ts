@@ -1,4 +1,5 @@
 import { opt, optNum } from '@/shared/ui/entity';
+import { isoToLocalInput, localInputToIso } from '@/shared/utils/dateFormatter';
 import type { TelehealthStatus } from '../constants/clinicalStatus';
 import type {
   CreateTelehealthSessionRequest,
@@ -19,28 +20,19 @@ export function telehealthDuration(session: TelehealthSessionRecord): number | n
   return Number.isNaN(n) ? null : n;
 }
 
-// A bare `YYYY-MM-DD` from the date input is widened to an ISO datetime so the
-// backend's scheduledAt (a Date column) parses it. Already-ISO values pass
-// through untouched.
-function toIso(value: string): string {
-  const trimmed = value.trim();
-  if (!trimmed) return trimmed;
-  return /^\d{4}-\d{2}-\d{2}$/.test(trimmed)
-    ? new Date(`${trimmed}T00:00:00`).toISOString()
-    : trimmed;
-}
-
-// Form values -> POST /telehealth-sessions body. durationMin is parsed from the
-// form string and dropped when blank/NaN.
+// Form values -> POST /telehealth-sessions body. scheduledAt arrives from a
+// datetime-local input as a zoneless local wall clock, so it is interpreted in
+// the user's zone and sent as a full ISO instant — the column is a timestamptz
+// and carries a real time of day, not just a date. durationMin is already a
+// number (number input) and is dropped when blank/NaN.
 export function toCreateTelehealth(values: TelehealthFormValues): CreateTelehealthSessionRequest {
-  const duration = values.durationMin ? Number(values.durationMin) : undefined;
   return {
     patientName: values.patientName.trim(),
-    scheduledAt: toIso(values.scheduledAt),
+    scheduledAt: localInputToIso(values.scheduledAt),
     status: values.status as TelehealthStatus,
     ...opt('providerName', values.providerName),
     ...opt('sessionType', values.sessionType),
-    ...optNum('durationMin', duration),
+    ...optNum('durationMin', values.durationMin),
     ...opt('notes', values.notes),
   };
 }
@@ -51,16 +43,17 @@ export function toUpdateTelehealth(
   return toCreateTelehealth(values);
 }
 
-// Seeds the edit form from an existing record (nulls -> '', numeric -> string).
+// Seeds the edit form from an existing record (nulls -> '' / undefined). The
+// stored instant is rendered in the user's local zone; slicing the ISO string
+// would show UTC wall clock and drop the time of day entirely.
 export function toTelehealthFormValues(session: TelehealthSessionRecord): TelehealthFormValues {
   const duration = telehealthDuration(session);
-  const scheduled = session.scheduledAt ? session.scheduledAt.slice(0, 10) : '';
   return {
     patientName: session.patientName,
     providerName: session.providerName ?? '',
     sessionType: session.sessionType ?? '',
-    scheduledAt: scheduled,
-    durationMin: duration === null ? '' : String(duration),
+    scheduledAt: session.scheduledAt ? isoToLocalInput(session.scheduledAt) : '',
+    durationMin: duration ?? undefined,
     status: session.status,
     notes: session.notes ?? '',
   };

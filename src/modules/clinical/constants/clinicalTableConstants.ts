@@ -67,7 +67,7 @@ export const TELEHEALTH_FIELDS: ReadonlyArray<EntityField<TelehealthFormValues>>
   { name: 'patientName', label: 'Patient', full: true, placeholder: 'Dorothy Harrison' },
   { name: 'providerName', label: 'Provider', placeholder: 'Dr. Alan Grant' },
   { name: 'sessionType', label: 'Session type', placeholder: 'Follow-up, Intake…' },
-  { name: 'scheduledAt', label: 'Scheduled at', type: 'date' },
+  { name: 'scheduledAt', label: 'Scheduled at', type: 'datetime-local' },
   { name: 'durationMin', label: 'Duration (min)', type: 'number', placeholder: '30' },
   { name: 'status', label: 'Status', type: 'select', options: TELEHEALTH_STATUS_OPTIONS },
   { name: 'notes', label: 'Notes', type: 'textarea', full: true, placeholder: 'Visit notes…' },

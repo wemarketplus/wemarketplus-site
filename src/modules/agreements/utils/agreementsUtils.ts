@@ -1,21 +1,24 @@
-import { opt, optNum } from '@/shared/ui/entity';
+import { optNumOrNull, optOrNull } from '@/shared/ui/entity';
 import type { AgreementStatus } from '../constants/agreementsConstants';
 import type { AgreementRecord, CreateAgreementRequest } from '../types/agreementsTypes';
 import type { AgreementFormValues } from '../schema/agreementSchema';
 
 // Form values -> POST /agreements body. We always send the canonical
 // `agreementName` + `value` (the backend also accepts title/amount aliases).
+// Blank optionals go as explicit nulls, not omitted keys, so clearing one in the
+// edit form actually clears the column (all of these are nullable). `status` stays
+// conditional: its column is NOT NULL with a DB default.
 export function toCreateAgreement(values: AgreementFormValues): CreateAgreementRequest {
   return {
     agreementName: values.agreementName.trim(),
-    ...opt('companyName', values.companyName),
-    ...opt('counterparty', values.counterparty),
-    ...opt('agreementType', values.agreementType),
+    ...optOrNull('companyName', values.companyName),
+    ...optOrNull('counterparty', values.counterparty),
+    ...optOrNull('agreementType', values.agreementType),
     ...(values.status ? { status: values.status as AgreementStatus } : {}),
-    ...optNum('value', values.value),
-    ...opt('effectiveDate', values.effectiveDate),
-    ...opt('expirationDate', values.expirationDate),
-    ...opt('notes', values.notes),
+    ...optNumOrNull('value', values.value),
+    ...optOrNull('effectiveDate', values.effectiveDate),
+    ...optOrNull('expirationDate', values.expirationDate),
+    ...optOrNull('notes', values.notes),
   };
 }
 

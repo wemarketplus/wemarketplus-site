@@ -34,7 +34,7 @@ export const FUNDING_FIELDS: ReadonlyArray<EntityField<FundingFormValues>> = [
   { name: 'status', label: 'Status', type: 'select', options: FUNDING_STATUS_OPTIONS },
   { name: 'programType', label: 'Program type', placeholder: 'IWT, apprenticeship…' },
   { name: 'maxAwardPerEin', label: 'Max award per EIN', type: 'number', placeholder: '0' },
-  { name: 'applicationDeadline', label: 'Application deadline', type: 'text', placeholder: 'YYYY-MM-DD' },
+  { name: 'applicationDeadline', label: 'Application deadline', type: 'date' },
   { name: 'applicationLink', label: 'Application link', full: true, placeholder: 'https://…' },
   { name: 'notes', label: 'Notes', type: 'textarea', full: true },
 ];

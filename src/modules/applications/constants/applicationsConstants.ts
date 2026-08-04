@@ -48,7 +48,7 @@ export const APPLICATION_CREATE_FIELDS: ReadonlyArray<EntityField<ApplicationFor
   { name: 'fundingOpportunityId', label: 'Funding opportunity', type: 'lookup', full: true, placeholder: 'No funding opportunity' },
   { name: 'status', label: 'Status', type: 'select', options: STATUS_OPTIONS },
   { name: 'awardAmountRequested', label: 'Award requested', type: 'number', placeholder: '0' },
-  { name: 'submissionDate', label: 'Submission date', placeholder: 'YYYY-MM-DD' },
+  { name: 'submissionDate', label: 'Submission date', type: 'date' },
   { name: 'notes', label: 'Notes', type: 'textarea', full: true },
 ];
 
@@ -56,7 +56,7 @@ export const APPLICATION_EDIT_FIELDS: ReadonlyArray<EntityField<ApplicationFormV
   { name: 'status', label: 'Status', type: 'select', options: STATUS_OPTIONS },
   { name: 'awardAmountRequested', label: 'Award requested', type: 'number', placeholder: '0' },
   { name: 'awardAmountApproved', label: 'Award approved', type: 'number', placeholder: '0' },
-  { name: 'submissionDate', label: 'Submission date', placeholder: 'YYYY-MM-DD' },
-  { name: 'decisionDate', label: 'Decision date', placeholder: 'YYYY-MM-DD' },
+  { name: 'submissionDate', label: 'Submission date', type: 'date' },
+  { name: 'decisionDate', label: 'Decision date', type: 'date' },
   { name: 'notes', label: 'Notes', type: 'textarea', full: true },
 ];

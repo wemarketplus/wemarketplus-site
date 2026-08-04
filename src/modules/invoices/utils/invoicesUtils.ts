@@ -1,21 +1,26 @@
-import { opt } from '@/shared/ui/entity';
+import { opt, optOrNull } from '@/shared/ui/entity';
 import type { CreateInvoiceRequest, UpdateInvoiceRequest } from '../types/invoicesTypes';
 import type { InvoiceFormValues } from '../schema/invoiceSchema';
 import type { InvoiceRecord } from '../types/invoicesTypes';
 import type { InvoiceStatus } from '../constants/invoicesConstants';
 
-// Form values -> POST /invoices body. Drops blank optionals so we never send
-// empty strings the DTO would reject (applicationId is IsUUID gated; status is
-// an enum). companyName + amount are always sent.
+// Form values -> POST /invoices body. Nullable optionals go as explicit nulls so
+// clearing one in the edit form actually clears the column — an omitted key in a
+// PATCH means "leave unchanged".
+//
+// invoiceNumber is the exception and MUST stay `opt`: its column is NOT NULL and
+// the service fills it with `dto.invoiceNumber ?? generateInvoiceNumber()`. An
+// absent key generates one; an explicit null slips past `??` on create but
+// violates NOT NULL on update. status is likewise NOT NULL with a DB default.
 export function toCreateInvoice(values: InvoiceFormValues): CreateInvoiceRequest {
   return {
     companyName: values.companyName.trim(),
     amount: values.amount,
     ...opt('invoiceNumber', values.invoiceNumber),
-    ...opt('feeModel', values.feeModel),
-    ...opt('dueDate', values.dueDate),
-    ...opt('applicationId', values.applicationId),
-    ...opt('notes', values.notes),
+    ...optOrNull('feeModel', values.feeModel),
+    ...optOrNull('dueDate', values.dueDate),
+    ...optOrNull('applicationId', values.applicationId),
+    ...optOrNull('notes', values.notes),
     ...(values.status ? { status: values.status as InvoiceStatus } : {}),
   };
 }

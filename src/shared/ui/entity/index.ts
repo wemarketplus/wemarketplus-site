@@ -28,7 +28,7 @@ export {
   type BulkDeleteProgress,
 } from './useBulkDelete';
 export { BulkActionBar } from './BulkActionBar';
-export { opt, optNum } from './formValues';
+export { opt, optNum, optOrNull, optNumOrNull } from './formValues';
 export type {
   EntityField,
   EntityFieldType,

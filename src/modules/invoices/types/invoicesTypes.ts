@@ -20,15 +20,18 @@ export interface InvoiceRecord {
 }
 
 // Mirrors CreateInvoiceDto — companyName + amount required, rest optional.
+// `null` on a nullable optional means "clear this column"; an omitted key means
+// "leave unchanged" — see optOrNull in shared/ui/entity/formValues. invoiceNumber
+// is NOT nullable (auto-generated when absent), so it is never sent as null.
 export interface CreateInvoiceRequest {
   companyName: string;
   amount: number;
   invoiceNumber?: string;
-  applicationId?: string;
-  feeModel?: string;
+  applicationId?: string | null;
+  feeModel?: string | null;
   status?: InvoiceStatus;
-  dueDate?: string;
-  notes?: string;
+  dueDate?: string | null;
+  notes?: string | null;
 }
 
 // Mirrors UpdateInvoiceDto — any subset of the create fields.

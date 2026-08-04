@@ -20,15 +20,18 @@ export interface ContractRecord {
 }
 
 // Mirrors CreateContractDto — companyName required, rest optional.
+// `null` on a nullable optional means "clear this column"; an omitted key means
+// "leave unchanged" — see optOrNull in shared/ui/entity/formValues. contractNumber
+// is NOT nullable (auto-generated when absent), so it is never sent as null.
 export interface CreateContractRequest {
   companyName: string;
   contractNumber?: string;
-  contractType?: string;
-  value?: number;
+  contractType?: string | null;
+  value?: number | null;
   status?: ContractStatus;
-  signedDate?: string;
-  expiryDate?: string;
-  notes?: string;
+  signedDate?: string | null;
+  expiryDate?: string | null;
+  notes?: string | null;
 }
 
 // Mirrors UpdateContractDto — any subset of the create fields.

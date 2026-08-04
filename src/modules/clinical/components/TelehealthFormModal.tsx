@@ -13,7 +13,7 @@ const EMPTY: TelehealthFormValues = {
   providerName: '',
   sessionType: '',
   scheduledAt: '',
-  durationMin: '',
+  durationMin: undefined,
   status: TELEHEALTH_STATUS.Scheduled,
   notes: '',
 };

@@ -35,7 +35,7 @@ export const INVOICE_FIELDS: ReadonlyArray<EntityField<InvoiceFormValues>> = [
   },
   { name: 'invoiceNumber', label: 'Invoice number', placeholder: 'auto-generated' },
   { name: 'feeModel', label: 'Fee model', placeholder: 'success fee, flat…' },
-  { name: 'dueDate', label: 'Due date', type: 'text', placeholder: 'YYYY-MM-DD' },
+  { name: 'dueDate', label: 'Due date', type: 'date' },
   { name: 'applicationId', label: 'Application', type: 'lookup', placeholder: 'No application' },
   { name: 'notes', label: 'Notes', type: 'textarea', full: true },
 ];

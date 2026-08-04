@@ -3,7 +3,7 @@ import { ADMIN_ONLY, useRole } from '@/shared/rbac';
 import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
 import { EmptyState } from '@/shared/ui/feedback';
 import { EntityRowActions } from '@/shared/ui/entity';
-import { formatDate } from '@/shared/utils/dateFormatter';
+import { formatDateTime } from '@/shared/utils/dateFormatter';
 import {
   TELEHEALTH_STATUS_LABELS,
   TELEHEALTH_STATUS_PILL,
@@ -47,7 +47,8 @@ export function TelehealthTable({
     {
       key: 'scheduled',
       header: 'Scheduled',
-      cell: (s) => (s.scheduledAt ? formatDate(s.scheduledAt) : '—'),
+      // scheduledAt is a timestamp — show the time, not just the day.
+      cell: (s) => (s.scheduledAt ? formatDateTime(s.scheduledAt) : '—'),
     },
     {
       key: 'duration',

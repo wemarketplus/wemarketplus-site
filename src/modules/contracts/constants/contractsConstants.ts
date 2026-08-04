@@ -35,7 +35,7 @@ export const CONTRACT_FIELDS: ReadonlyArray<EntityField<ContractFormValues>> = [
     options: CONTRACT_STATUS_OPTIONS.map((o) => ({ value: o.value, label: o.label })),
   },
   { name: 'contractNumber', label: 'Contract number', placeholder: 'auto-generated' },
-  { name: 'signedDate', label: 'Signed date', placeholder: 'YYYY-MM-DD' },
-  { name: 'expiryDate', label: 'Expiry date', placeholder: 'YYYY-MM-DD' },
+  { name: 'signedDate', label: 'Signed date', type: 'date' },
+  { name: 'expiryDate', label: 'Expiry date', type: 'date' },
   { name: 'notes', label: 'Notes', type: 'textarea', full: true },
 ];

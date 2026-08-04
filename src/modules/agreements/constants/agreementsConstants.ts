@@ -46,7 +46,7 @@ export const AGREEMENT_FIELDS: ReadonlyArray<EntityField<AgreementFormValues>> =
   { name: 'agreementType', label: 'Type', placeholder: 'MSA, NDA…' },
   { name: 'status', label: 'Status', type: 'select', options: STATUS_OPTIONS },
   { name: 'value', label: 'Value', type: 'number', placeholder: '0' },
-  { name: 'effectiveDate', label: 'Effective date', placeholder: 'YYYY-MM-DD' },
-  { name: 'expirationDate', label: 'Expiration date', placeholder: 'YYYY-MM-DD' },
+  { name: 'effectiveDate', label: 'Effective date', type: 'date' },
+  { name: 'expirationDate', label: 'Expiration date', type: 'date' },
   { name: 'notes', label: 'Notes', type: 'textarea', full: true },
 ];

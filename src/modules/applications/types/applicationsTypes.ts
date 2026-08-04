@@ -19,18 +19,20 @@ export interface ApplicationRecord {
   updatedAt: ISODateString;
 }
 
+// `null` on an optional field means "clear this column"; an omitted key means
+// "leave unchanged" — see optOrNull in shared/ui/entity/formValues.
 export interface CreateApplicationRequest {
   companyId: string;
-  fundingOpportunityId?: string;
+  fundingOpportunityId?: string | null;
   status?: ApplicationStatus;
-  awardAmountRequested?: number;
-  submissionDate?: string;
-  notes?: string;
+  awardAmountRequested?: number | null;
+  submissionDate?: string | null;
+  notes?: string | null;
 }
 
 export type UpdateApplicationRequest = Partial<CreateApplicationRequest> & {
-  awardAmountApproved?: number;
-  decisionDate?: string;
+  awardAmountApproved?: number | null;
+  decisionDate?: string | null;
 };
 
 export interface ListApplicationsQuery extends PaginationParams {

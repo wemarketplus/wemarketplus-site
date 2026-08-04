@@ -1,20 +1,26 @@
-import { opt, optNum } from '@/shared/ui/entity';
+import { opt, optNumOrNull, optOrNull } from '@/shared/ui/entity';
 import type { CreateContractRequest, UpdateContractRequest } from '../types/contractsTypes';
 import type { ContractFormValues } from '../schema/contractSchema';
 import type { ContractRecord } from '../types/contractsTypes';
 import type { ContractStatus } from '../constants/contractsConstants';
 
-// Form values -> POST /contracts body. Drops blank optionals so we never send
-// empty strings the DTO would reject. value is dropped when blank/NaN.
+// Form values -> POST /contracts body. Nullable optionals go as explicit nulls so
+// clearing one in the edit form actually clears the column — an omitted key in a
+// PATCH means "leave unchanged".
+//
+// contractNumber is the exception and MUST stay `opt`: its column is NOT NULL and
+// the service fills it with `dto.contractNumber ?? generateContractNumber()`. An
+// absent key generates one; an explicit null slips past `??` on create but
+// violates NOT NULL on update. status is likewise NOT NULL with a DB default.
 export function toCreateContract(values: ContractFormValues): CreateContractRequest {
   return {
     companyName: values.companyName.trim(),
-    ...opt('contractType', values.contractType),
+    ...optOrNull('contractType', values.contractType),
     ...opt('contractNumber', values.contractNumber),
-    ...opt('signedDate', values.signedDate),
-    ...opt('expiryDate', values.expiryDate),
-    ...opt('notes', values.notes),
-    ...optNum('value', values.value),
+    ...optOrNull('signedDate', values.signedDate),
+    ...optOrNull('expiryDate', values.expiryDate),
+    ...optOrNull('notes', values.notes),
+    ...optNumOrNull('value', values.value),
     ...(values.status ? { status: values.status as ContractStatus } : {}),
   };
 }

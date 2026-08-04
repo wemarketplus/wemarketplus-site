@@ -1,4 +1,4 @@
-import { opt, optNum } from '@/shared/ui/entity';
+import { optNumOrNull, optOrNull } from '@/shared/ui/entity';
 import type { FundingStatus } from '../constants/fundingConstants';
 import type {
   CreateFundingRequest,
@@ -7,18 +7,20 @@ import type {
 } from '../types/fundingTypes';
 import type { FundingFormValues } from '../schema/fundingSchema';
 
-// Form values -> POST /funding body. Drops blank optionals so we never send an
-// empty string where the DTO expects an absent field.
+// Form values -> POST /funding body. Blank optionals go as explicit nulls, not
+// omitted keys, so clearing one in the edit form actually clears the column
+// (every field below is nullable). `status` stays conditional: its column is NOT
+// NULL with a DB default.
 export function toCreateFunding(values: FundingFormValues): CreateFundingRequest {
   return {
     opportunityName: values.opportunityName.trim(),
     sourceUrl: values.sourceUrl.trim(),
     ...(values.status ? { status: values.status as FundingStatus } : {}),
-    ...opt('programType', values.programType),
-    ...optNum('maxAwardPerEin', values.maxAwardPerEin),
-    ...opt('applicationDeadline', values.applicationDeadline),
-    ...opt('applicationLink', values.applicationLink),
-    ...opt('notes', values.notes),
+    ...optOrNull('programType', values.programType),
+    ...optNumOrNull('maxAwardPerEin', values.maxAwardPerEin),
+    ...optOrNull('applicationDeadline', values.applicationDeadline),
+    ...optOrNull('applicationLink', values.applicationLink),
+    ...optOrNull('notes', values.notes),
   };
 }
 

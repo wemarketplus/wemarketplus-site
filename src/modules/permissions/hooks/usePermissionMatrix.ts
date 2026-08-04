@@ -1,21 +1,30 @@
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
-import { Role, useRole } from '@/shared/rbac';
+import { useRole, type Role } from '@/shared/rbac';
 import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
 import { useGetPermissionsQuery, useUpdatePermissionMutation } from '../api/permissionsApi';
 import type { PermissionKey } from '../constants/permissionMatrixKeys';
 
 // Drives the live RBAC matrix page:
-//   - reads GET /permissions (effective matrix + locked cells),
-//   - exposes whether the current user may edit (super admin only — the backend
-//     @Roles(SuperAdmin) gate returns 403 for anyone else),
+//   - reads GET /permissions (effective matrix, locked cells, and what THIS actor
+//     is allowed to change),
+//   - exposes whether the current user may edit,
 //   - toggles a cell via PUT /permissions with optimistic update (handled in the
 //     API's onQueryStarted) and surfaces the backend's 400/403 message verbatim.
+//
+// `canEdit` comes from the SERVER, not from a role check here. The editable
+// audience is defined once, in the backend's PERMISSION_MATRIX_EDIT_ROLES.
+// Re-deriving it client-side is how the UI ends up disagreeing with the API —
+// which is exactly what happened before: this hook hardcoded "super admin only"
+// and showed every Owner a permanently read-only grid.
 export function usePermissionMatrix() {
-  const { is } = useRole();
-  const canEdit = is(Role.SuperAdmin);
+  // The "viewing as" switcher previews a lesser persona, so it must not offer an
+  // action that persona could not perform — even though the JWT (and therefore
+  // the server's canEdit) still reflects the real role.
+  const { isViewingAs } = useRole();
 
   const { data, isLoading, isFetching, isError, error, refetch } = useGetPermissionsQuery();
+  const canEdit = (data?.canEdit ?? false) && !isViewingAs;
   const [updatePermission] = useUpdatePermissionMutation();
 
   // Tracks the cell currently being saved so the grid can disable just that
