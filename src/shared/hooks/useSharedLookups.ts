@@ -1,9 +1,16 @@
 import { useListApplicationsQuery } from '@/modules/applications/api/applicationsApi';
 import { useListCompaniesQuery } from '@/modules/companies/api/companiesApi';
 import { useListFundingQuery } from '@/modules/funding/api/fundingApi';
+import { useListReferralsQuery } from '@/modules/referrals/api/referralsApi';
 import { useListUsersQuery } from '@/modules/users/api/usersApi';
+import { fullName } from '@/modules/users/utils/userDisplay';
 import type { EntitySelectOption } from '@/shared/ui/entity';
-import { LOOKUP_PAGE_SIZE, useLookupOptions } from './useRecordLookups';
+import {
+  LOOKUP_PAGE_SIZE,
+  useLookupOptions,
+  useNameTable,
+  type NameTable,
+} from './useRecordLookups';
 
 /**
  * The record pickers shared by the back-office forms (Applications, Invoices,
@@ -53,4 +60,22 @@ export function useUserLookup(enabled: boolean): Options {
     const name = [u.firstName, u.lastName].filter(Boolean).join(' ').trim();
     return name ? `${name} — ${u.email}` : u.email;
   });
+}
+
+// --- Display-side name tables ------------------------------------------------
+// The pickers above WRITE a reference; these READ one back, so a list view can
+// show a name where the row only stores an id. Unlike the pickers these are not
+// gated on a modal being open — a table needs them on first paint — and they
+// resolve through `displayName()`, which yields '' rather than the id.
+
+/** Tenant users, for rendering a stored `createdBy` / `assignedTo`. */
+export function useUserNames(): NameTable {
+  const { data } = useListUsersQuery(PAGE);
+  return useNameTable(data?.data, (u) => fullName(u) || u.email);
+}
+
+/** Referral sources, for rendering a stored `referralSourceId`. */
+export function useReferralSourceNames(): NameTable {
+  const { data } = useListReferralsQuery(PAGE);
+  return useNameTable(data?.data, (r) => r.name);
 }

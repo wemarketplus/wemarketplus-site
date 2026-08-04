@@ -1,3 +1,4 @@
+import { displayName, type NameTable } from '@/shared/hooks';
 import { ProspectStatus as ProspectStatusEnum } from '@/shared/types';
 import type { Prospect, ProspectStatus, Urgency } from '@/shared/types';
 import { ProspectStage, type ProspectRecord } from '../types/prospectsTypes';
@@ -33,15 +34,33 @@ function stageToStatus(stage: ProspectStage): ProspectStatus {
   }
 }
 
-export function mapProspectRecord(r: ProspectRecord): Prospect {
+/**
+ * Display names for the ids a prospect row carries. A ProspectRecord only stores
+ * `referralSourceId` / `assignedTo` — bare uuid columns, and the entity declares
+ * no TypeORM relation, so the API cannot join a name in. The caller resolves them
+ * from the referral-source and user lists.
+ *
+ * Resolved with `displayName`, which yields '' for an id it cannot place rather
+ * than falling back to the id: these two fields used to be assigned the uuid
+ * itself, which is what put a raw "053d0a2b-…" in the Source column.
+ */
+export interface ProspectNameLookups {
+  referralSources?: NameTable;
+  users?: NameTable;
+}
+
+export function mapProspectRecord(
+  r: ProspectRecord,
+  names: ProspectNameLookups = {},
+): Prospect {
   return {
     id: r.id,
     name: r.pipelineName ?? r.patientName,
     status: stageToStatus(r.stage),
     phone: r.phone ?? '',
     email: '',
-    referralSource: r.referralSourceId ?? '',
-    assignedMarketer: r.assignedTo ?? '',
+    referralSource: displayName(names.referralSources, r.referralSourceId),
+    assignedMarketer: displayName(names.users, r.assignedTo),
     nextStep: '',
     // Real pipeline timing now exists: prefer the stage-entry stamp over updatedAt.
     followUpDate: r.stageEnteredAt ?? r.updatedAt,

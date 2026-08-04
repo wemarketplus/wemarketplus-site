@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useUserNames } from '@/shared/hooks';
 import type { ProspectNote } from '@/shared/types';
 import { useEntityCrud } from '@/shared/ui/entity';
 import {
@@ -21,9 +22,14 @@ export function useProspectNotes() {
   // Keep the raw records around so edit can seed from the full note (the
   // ProspectNote view-model drops fields the form needs, e.g. prospectId).
   const records = useMemo<readonly NoteRecord[]>(() => data?.data ?? [], [data]);
+
+  // A note stores only `createdBy` (a user id). Without this table the card
+  // header rendered that uuid where the author's name belongs.
+  const userNames = useUserNames();
+
   const notes = useMemo<readonly ProspectNote[]>(
-    () => records.map(toProspectNote),
-    [records],
+    () => records.map((r) => toProspectNote(r, userNames)),
+    [records, userNames],
   );
 
   const [createNote, createState] = useCreateNoteMutation();

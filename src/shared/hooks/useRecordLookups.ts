@@ -51,3 +51,44 @@ export function useLookupOptions<T extends { id: string }>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rows, isLoading]);
 }
+
+/** id -> display name, for READING a stored reference back out. */
+export type NameTable = ReadonlyMap<string, string>;
+
+/**
+ * The display-side counterpart to `useLookupOptions`.
+ *
+ * `useLookupOptions` is for WRITING a reference (a picker); this is for READING one
+ * back — turning the id a row stores into the name a column shows. Several list
+ * views were rendering the id itself, which is how a raw uuid ended up in a Source
+ * column and as a note's author.
+ *
+ * Resolve with `displayName()`, never with `?? id`: a uuid on screen is worse than
+ * a blank, because it looks like data while telling the user nothing.
+ */
+export function useNameTable<T extends { id: string }>(
+  rows: readonly T[] | undefined,
+  toLabel: (record: T) => string,
+): NameTable {
+  return useMemo(() => {
+    return new Map((rows ?? []).map((record) => [record.id, toLabel(record)]));
+    // toLabel is a stable module-level function at every call site.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rows]);
+}
+
+/**
+ * Resolves an id against a name table. An id we cannot resolve yields '' so the
+ * caller renders an empty cell.
+ *
+ * Name tables are capped at one page (LOOKUP_PAGE_SIZE), so a partially resolved
+ * table is a NORMAL state, not an error — which is exactly why the fallback must
+ * not be the id.
+ */
+export function displayName(
+  table: NameTable | undefined,
+  id: string | null | undefined,
+): string {
+  if (!id) return '';
+  return table?.get(id) ?? '';
+}

@@ -1,3 +1,4 @@
+import { displayName, type NameTable } from '@/shared/hooks';
 import { opt } from '@/shared/ui/entity';
 import type {
   CreateGoalRequest,
@@ -33,16 +34,23 @@ export function toDailyGoal(g: GoalRecord): DailyGoal {
   };
 }
 
-// The backend NoteResponseDto doesn't store author/position/interactionType, so
-// those render blank until the read model exposes them (createdBy is a user id).
-export function toProspectNote(n: NoteRecord): ProspectNote {
+// The backend NoteResponseDto doesn't store position/interactionType, so those
+// render blank until the read model exposes them.
+//
+// `author` is resolved from `createdBy`, which is a USER ID. It used to be
+// rendered as-is, which put a bare uuid where the note's author name belongs.
+// `displayName` yields '' for an id it cannot resolve — never the id.
+export function toProspectNote(
+  n: NoteRecord,
+  userNames?: NameTable,
+): ProspectNote {
   return {
     id: n.id,
     // Nullable since FIX-1 — a note may target an account or a person instead of
     // a prospect. The legacy ProspectNote shape has no room for that, so an
     // account-scoped note renders with an empty prospectId here.
     prospectId: n.prospectId ?? '',
-    author: n.createdBy ?? '',
+    author: displayName(userNames, n.createdBy),
     position: '',
     interactionType: n.contactType ?? '',
     contactType: n.contactType ?? '',
