@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { VoiceDictateButton } from '@/shared/ui/core';
 import { EntityFormModal } from '@/shared/ui/entity';
 import { useNoteLookups } from '../hooks/useNoteLookups';
 import { Urgency } from '@/shared/types';
@@ -41,6 +42,8 @@ export function NoteFormModal({ open, isSaving, editing, onClose, onSubmit }: No
     register,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<NoteFormValues>({
     resolver: zodResolver(noteSchema),
@@ -78,6 +81,17 @@ export function NoteFormModal({ open, isSaving, editing, onClose, onSubmit }: No
       lookups={lookups}
       onSubmit={submit}
       onClose={close}
+      // Windshield Voice Mode. Uses the existing footerNote slot rather than changing the
+      // shared EntityFormModal, so no other form is affected. Renders nothing on a browser
+      // without speech recognition (Firefox), instead of a button that does nothing.
+      footerNote={
+        <VoiceDictateButton
+          baseText={watch('summary') ?? ''}
+          onTranscript={(text) =>
+            setValue('summary', text, { shouldDirty: true })
+          }
+        />
+      }
     />
   );
 }

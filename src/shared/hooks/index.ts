@@ -8,3 +8,4 @@ export {
 } from './useSharedLookups';
 export { useScrollReveal } from './useScrollReveal';
 export { useThemeColors } from './useThemeColors';
+export { useVoiceDictation, type VoiceDictation } from './useVoiceDictation';

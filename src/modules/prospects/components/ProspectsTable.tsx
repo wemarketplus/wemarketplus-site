@@ -27,6 +27,25 @@ const columns: ReadonlyArray<Column<Prospect>> = [
     cell: (p) => <Pill tone={STATUS_PILL[p.status]}>{PROSPECT_STATUS_LABELS[p.status]}</Pill>,
   },
   {
+    // AI Referral Triage, 1-10. Null on rows created before the column had a writer —
+    // shown as an em dash rather than 0, because "not scored" and "scored zero" are
+    // different statements and the second one would be a lie about the referral.
+    key: 'aiAdmitScore',
+    header: 'Triage',
+    // `?? null` covers both null (scored column, no value) and undefined (a caller
+    // whose payload predates the field) with one branch.
+    cell: (p) => {
+      const score = p.aiAdmitScore ?? null;
+      return score === null ? (
+        <span className="text-muted-soft">—</span>
+      ) : (
+        <Pill tone={score >= 7.5 ? 'g' : score >= 5 ? 'y' : 'r'}>
+          {Number(score).toFixed(1)}
+        </Pill>
+      );
+    },
+  },
+  {
     key: 'urgency',
     header: 'Urgency',
     cell: (p) => <Pill tone={URGENCY_PILL[p.urgency]}>{URGENCY_LABELS[p.urgency]}</Pill>,

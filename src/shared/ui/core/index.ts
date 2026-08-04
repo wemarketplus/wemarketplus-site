@@ -6,6 +6,7 @@ export { Logo } from './Logo';
 export { PasswordInput } from './PasswordInput';
 export { Select, type SelectProps } from './Select';
 export { Textarea, type TextareaProps } from './Textarea';
+export { VoiceDictateButton } from './VoiceDictateButton';
 export { SecurityBadges } from './SecurityBadges';
 // ThemeToggle is intentionally NOT exported — the app is dark-only today.
 // Re-export it here if light mode is ever reintroduced.

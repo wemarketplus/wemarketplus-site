@@ -7,6 +7,7 @@ import type {
   MarketingRoi,
   ReferralAnalytics,
   RevenueIntelligence,
+  WeeklyReport,
 } from '../types/intelligenceTypes';
 
 // Verified against wemarketplus-backend/src/intelligence/intelligence.controller.ts:
@@ -61,6 +62,12 @@ export const intelligenceApi = createApi({
       providesTags: ['Leaderboard'],
     }),
 
+    getWeeklyReport: build.query<WeeklyReport, void>({
+      query: () => ({ url: '/intelligence/weekly-report' }),
+      transformResponse: env<WeeklyReport>,
+      providesTags: ['Revenue'],
+    }),
+
     getReferralAnalytics: build.query<
       ReferralAnalytics,
       IntelligenceQuery | void
@@ -80,4 +87,5 @@ export const {
   useGetMarketingRoiQuery,
   useGetLeaderboardQuery,
   useGetReferralAnalyticsQuery,
+  useGetWeeklyReportQuery,
 } = intelligenceApi;

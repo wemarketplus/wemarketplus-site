@@ -139,3 +139,18 @@ export interface RangeOption {
   value: IntelligenceUiState['range'];
   label: string;
 }
+
+/** Mirrors WeeklyReportDto. The Executive Director's Monday-morning digest. */
+export interface WeeklyReport {
+  window: IntelligenceWindow;
+  leadsReceived: number;
+  leadsConverted: number;
+  admits: number;
+  lost: number;
+  revenueBilled: number;
+  revenueCollected: number;
+  visitsCompleted: number;
+  topSources: RevenueBySource[];
+  leaderboard: LeaderboardRow[];
+  lostReasons: { lostReason: string; count: number }[];
+}

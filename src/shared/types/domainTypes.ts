@@ -41,6 +41,12 @@ export interface Prospect {
   conversionRisk?: number;
   notes?: string;
   lastContactDate?: ISODateString;
+  /**
+   * AI Referral Triage score, 1-10 with one decimal. Optional and nullable: the column
+   * had no writer until recently, so rows created before then carry null, and null must
+   * render as "not scored" rather than as zero.
+   */
+  aiAdmitScore?: number | null;
 }
 
 export const ReferralSourceStatus = {

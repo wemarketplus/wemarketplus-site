@@ -191,6 +191,9 @@ const AiAssistantPage = lazy(() =>
 const ClinicalPage = lazy(() =>
   import('@/modules/clinical').then((m) => ({ default: m.ClinicalPage })),
 );
+const WeeklyReportPage = lazy(() =>
+  import('@/modules/intelligence').then((m) => ({ default: m.WeeklyReportPage })),
+);
 const IntelligencePage = lazy(() =>
   import('@/modules/intelligence').then((m) => ({ default: m.IntelligencePage })),
 );
@@ -501,6 +504,7 @@ export function AppRouter() {
           <Route path="intelligence/revenue" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={STAFF_ROLES}><IntelligencePage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="intelligence/marketing-roi" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={STAFF_ROLES}><IntelligencePage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="intelligence/leaderboard" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={STAFF_ROLES}><IntelligencePage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="intelligence/weekly" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={STAFF_ROLES}><WeeklyReportPage /></ProtectedRoute></RequireEntitlement>} />
 
           {/* Field execution — Max. EVV and mileage had endpoints (and, for EVV,
               written RTK hooks) but no nav entry and no route, so both were

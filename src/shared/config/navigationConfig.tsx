@@ -217,6 +217,8 @@ const HOSPICELINK_INTELLIGENCE: NavSection = {
     { to: '/intelligence/revenue', label: 'Revenue intelligence', icon: TrendingUp, product: Product.HospiceLink, minTier: Tier.Gold, allow: STAFF_ROLES },
     { to: '/intelligence/marketing-roi', label: 'Marketing ROI', icon: Activity, product: Product.HospiceLink, minTier: Tier.Gold, allow: STAFF_ROLES },
     { to: '/intelligence/leaderboard', label: 'Leaderboard', icon: Trophy, product: Product.HospiceLink, minTier: Tier.Gold, allow: STAFF_ROLES },
+    // The Executive Director touchpoint that was absent from the 42-module inventory.
+    { to: '/intelligence/weekly', label: 'Weekly report', icon: ScrollText, product: Product.HospiceLink, minTier: Tier.Gold, allow: STAFF_ROLES },
   ],
 };
 
