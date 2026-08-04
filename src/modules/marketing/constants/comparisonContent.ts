@@ -8,7 +8,7 @@ export const HOSPICE_COMPARISON: readonly ComparisonRow[] = [
   { feature: 'CSV Import', pro: true, max: true, gold: true },
   { feature: '14-Day Cold Alerts', pro: false, max: true, gold: true },
   { feature: 'EVV / GPS Mileage', pro: false, max: true, gold: true },
-  { feature: 'Territory Heat Map', pro: false, max: true, gold: true },
+  { feature: 'Territory Heat Map', pro: false, max: false, gold: true },
   { feature: 'AI Playbook Generator', pro: false, max: true, gold: true },
   { feature: 'Windshield Voice Mode', pro: false, max: false, gold: true },
   { feature: 'Revenue Intelligence', pro: false, max: false, gold: true },

@@ -167,6 +167,9 @@ const HOSPICELINK_MARKETING: NavSection = {
     { to: '/hl-leads', label: 'Inbound leads', icon: Inbox, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     { to: '/prospects', label: 'Prospects', icon: UserPlus, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     { to: '/referrals', label: 'Referral sources', icon: Heart, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
+    // The contact record every conversion creates. Had no nav entry and no route
+    // at all despite being what Prospects and Jobs point at (decision item 1).
+    { to: '/hl-contacts', label: 'Hospice contacts', icon: Contact, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     { to: '/pipeline', label: 'Pipeline', icon: LineChart, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     { to: '/jobs', label: 'Jobs', icon: ClipboardList, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     { to: '/territories', label: 'Territories', icon: Map, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },

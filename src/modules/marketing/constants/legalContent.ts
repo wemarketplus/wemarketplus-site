@@ -63,7 +63,7 @@ export const PRIVACY_BLOCKS: readonly LegalBlock[] = [
   {
     heading: '6. Security',
     paragraphs: [
-      'We implement appropriate technical and organizational measures to protect personal data including: AES-256 encryption at rest; TLS 1.2+ encryption in transit; bcrypt password hashing; role-based access controls; audit logging of all PHI access; and regular security review.',
+      'We implement appropriate technical and organizational measures to protect personal data including: AES-256 encryption at rest; TLS 1.2+ encryption in transit; bcrypt password hashing; role-based access controls; tamper-evident audit logging of administrative actions and record changes; and regular security review.',
     ],
   },
   {

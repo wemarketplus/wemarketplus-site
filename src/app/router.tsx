@@ -222,6 +222,11 @@ const ThreatMonitorPage = lazy(() =>
   import('@/modules/compliance').then((m) => ({ default: m.ThreatMonitorPage })),
 );
 
+const HospiceContactsPage = lazy(() =>
+  import('@/modules/hospice-contacts').then((m) => ({
+    default: m.HospiceContactsPage,
+  })),
+);
 const EvvPage = lazy(() =>
   import('@/modules/field').then((m) => ({ default: m.EvvPage })),
 );
@@ -466,6 +471,7 @@ export function AppRouter() {
           <Route path="hl-leads" element={<HlLeadsPage />} />
           <Route path="prospects" element={<ProspectsPage />} />
           <Route path="referrals" element={<ReferralsPage />} />
+          <Route path="hl-contacts" element={<HospiceContactsPage />} />
           <Route path="pipeline" element={<PipelinePage />} />
           <Route path="jobs" element={<JobsPage />} />
           <Route path="appointments" element={<AppointmentsPage />} />

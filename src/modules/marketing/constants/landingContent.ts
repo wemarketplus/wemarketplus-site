@@ -100,7 +100,7 @@ export const HOSPICE_FEATURE_CARDS: readonly FeatureCard[] = [
   },
   {
     title: 'Aircall — Call, Text & Email',
-    body: 'Reach referral sources and prospects directly from the CRM. One-click calls, templated texts, tracked emails — all auto-logged to the HIPAA audit trail.',
+    body: 'Reach referral sources and prospects directly from the CRM. One-click calls, texts and emails, each one logged against the record as a typed activity.',
     badge: 'Gold Only',
     tone: 'amber',
     icon: 'phone',
@@ -155,7 +155,7 @@ export const SECURITY_CARDS: readonly SecurityCard[] = [
   { title: 'TLS 1.3 Encryption', body: 'All data encrypted in transit and at rest. Zero plaintext storage of PHI.', icon: 'encryption' },
   { title: 'BAA at Checkout', body: 'Business Associate Agreement executed for every plan on signup.', icon: 'baa' },
   { title: 'Role-Based Access', body: 'Seat-cap enforcement, admin controls, and server-side validation throughout.', icon: 'roles' },
-  { title: 'HIPAA Audit Log', body: 'Every PHI access logged with timestamp, user, and IP. Gold tier.', icon: 'audit' },
+  { title: 'HIPAA Audit Log', body: 'Every record change logged with timestamp and acting user, on a tamper-evident hash chain. Gold tier.', icon: 'audit' },
   { title: '99.9% Uptime SLA', body: 'Enterprise cloud infrastructure. Public status page available 24/7.', icon: 'uptime' },
   { title: '30-Day Guarantee', body: 'Not satisfied within 30 days? Full refund, no questions, no delays.', icon: 'guarantee' },
 ];
