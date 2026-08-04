@@ -51,7 +51,7 @@ import { territoriesApi } from '@/modules/territories';
 import { dashboardApi, dashboardReducer, reportsApi } from '@/modules/dashboard';
 import { featureFlagsApi, featureFlagsReducer } from '@/modules/feature-flags';
 import { integrationsApi, integrationsReducer } from '@/modules/integrations';
-import { intelligenceReducer } from '@/modules/intelligence';
+import { intelligenceApi, intelligenceReducer } from '@/modules/intelligence';
 import { marketingReducer } from '@/modules/marketing';
 import { notificationsApi, notificationsReducer } from '@/modules/notifications';
 import { onboardingApi, onboardingReducer } from '@/modules/onboarding';
@@ -129,6 +129,7 @@ const rootReducer = combineReducers({
   [featureFlagsApi.reducerPath]: featureFlagsApi.reducer,
   [impersonationApi.reducerPath]: impersonationApi.reducer,
   [financeApi.reducerPath]: financeApi.reducer,
+  [intelligenceApi.reducerPath]: intelligenceApi.reducer,
   [fundingApi.reducerPath]: fundingApi.reducer,
   [locationsApi.reducerPath]: locationsApi.reducer,
   [territoriesApi.reducerPath]: territoriesApi.reducer,
@@ -206,6 +207,7 @@ export const store = configureStore({
       featureFlagsApi.middleware,
       impersonationApi.middleware,
       financeApi.middleware,
+      intelligenceApi.middleware,
       fundingApi.middleware,
       locationsApi.middleware,
       territoriesApi.middleware,
