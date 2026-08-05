@@ -26,6 +26,14 @@ export const CONTACTS_PAGE_SIZE = 20;
  * renamed casually; they follow the singular snake_case the app's other polymorphic
  * descriptors use (compliance alerts store "application" / "revenue_record").
  * Adding a type here means adding its lookup in useAttachableRecordLookup too.
+ *
+ * NOTE (2026-08-06): `funding_opportunity` and `application` are Grants-domain
+ * records. The Grants domain is NOT NEEDED and PENDING REMOVAL, so both are now
+ * hidden from the pickers — see CONTACT_RECORD_TYPE_OPTIONS below. They stay in
+ * this map (and in the labels map) on purpose: the values are already persisted
+ * in `contacts.recordType`, and both the zod enum in contactSchema and the table
+ * label lookup read this map, so dropping the keys would break editing and
+ * labelling any contact already attached to one. Purge the stored rows first.
  */
 export const CONTACT_RECORD_TYPE = {
   Company: 'company',
@@ -42,11 +50,21 @@ export const CONTACT_RECORD_TYPE_LABELS: Record<ContactRecordType, string> = {
   application: 'Application',
 };
 
+// The record types a user may actually PICK — drives both the create/edit
+// modal's recordType select and the Contacts list filter.
+//
+// Company only. The two Grants types (Funding opportunity / Application) are
+// deliberately omitted: the Grants domain is NOT NEEDED and PENDING REMOVAL, and
+// was hidden from the UI on 2026-08-06 per the product owner, so a user must not
+// be able to attach a new contact to a Grants record or filter by one. Restore
+// by listing them here again (they are still in CONTACT_RECORD_TYPE above, and
+// useAttachableRecordLookup still resolves their lists).
+//
 // Blank first: a contact does not have to be attached to anything, and picking
 // this back is how the pair is cleared (it clears `recordId` with it).
 export const CONTACT_RECORD_TYPE_OPTIONS: ReadonlyArray<EntitySelectOption> = [
   { value: '', label: 'Not attached' },
-  ...Object.values(CONTACT_RECORD_TYPE).map((value) => ({
+  ...[CONTACT_RECORD_TYPE.Company].map((value) => ({
     value,
     label: CONTACT_RECORD_TYPE_LABELS[value],
   })),

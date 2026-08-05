@@ -15,6 +15,16 @@ import storage from 'redux-persist/lib/storage';
 import { accessReducer } from '@/modules/access';
 import { activityApi, activityReducer } from '@/modules/activity';
 import { adminApi } from '@/modules/admin';
+// DEPRECATED — NOT NEEDED, PENDING REMOVAL: agreementsApi / applicationsApi /
+// fundingApi belong to the three Grants modules, which were removed from the
+// sidebar on 2026-08-06 and are slated to be removed/purged from FE and BE.
+// Their store wiring (reducer + middleware, below) stays only so the modules
+// still compile and can be restored quickly. No mounted screen dispatches
+// against these slices any more: the routes are commented out in router.tsx and
+// the last two callers of the shared lookups were unwired on the same date
+// (Invoices' Application field, Contacts' Grants record types). The remaining
+// references are the dormant funding/application branches in
+// contacts/hooks/useAttachableRecordLookup.ts, which no picker can now select.
 import { agreementsApi } from '@/modules/agreements';
 import { aiAssistantReducer } from '@/modules/ai-assistant';
 import { applicationsApi } from '@/modules/applications';

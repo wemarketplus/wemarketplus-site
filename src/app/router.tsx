@@ -127,15 +127,23 @@ const ContractsPage = lazy(() =>
 const FinanceOverviewPage = lazy(() =>
   import('@/modules/finance').then((m) => ({ default: m.FinanceOverviewPage })),
 );
-const FundingPage = lazy(() =>
-  import('@/modules/funding').then((m) => ({ default: m.FundingPage })),
-);
-const ApplicationsPage = lazy(() =>
-  import('@/modules/applications').then((m) => ({ default: m.ApplicationsPage })),
-);
-const AgreementsPage = lazy(() =>
-  import('@/modules/agreements').then((m) => ({ default: m.AgreementsPage })),
-);
+// DEPRECATED — NOT NEEDED, PENDING REMOVAL. The three Grants modules
+// (Funding / Applications / Agreements) were removed from the sidebar AND from
+// the UI entirely on 2026-08-06 per the product owner, and are slated to be
+// removed/purged from FE and BE. Their lazy imports and routes are commented
+// out — not just nav-hidden — so /funding, /applications and /agreements are
+// unreachable even by typing the URL. The module code is left on disk only so
+// the section can be restored quickly if it turns out to be needed; uncomment
+// these three imports and their routes below to do that.
+// const FundingPage = lazy(() =>
+//   import('@/modules/funding').then((m) => ({ default: m.FundingPage })),
+// );
+// const ApplicationsPage = lazy(() =>
+//   import('@/modules/applications').then((m) => ({ default: m.ApplicationsPage })),
+// );
+// const AgreementsPage = lazy(() =>
+//   import('@/modules/agreements').then((m) => ({ default: m.AgreementsPage })),
+// );
 const LocationsPage = lazy(() =>
   import('@/modules/locations').then((m) => ({ default: m.LocationsPage })),
 );
@@ -616,9 +624,15 @@ export function AppRouter() {
           <Route path="invoices" element={<InvoicesPage />} />
           <Route path="contracts" element={<ContractsPage />} />
           <Route path="finance" element={<FinanceOverviewPage />} />
-          <Route path="funding" element={<FundingPage />} />
-          <Route path="applications" element={<ApplicationsPage />} />
-          <Route path="agreements" element={<AgreementsPage />} />
+          {/* DEPRECATED Grants routes — NOT NEEDED, PENDING REMOVAL. Disabled
+              outright (not merely nav-hidden) per the product owner: the Grants
+              domain is gone from the UI, so these three paths now fall through
+              to the `path="*"` catch-all and redirect to the dashboard. See
+              navigationConfig's commented-out GRANTS_SECTION. Do NOT re-enable without
+              product-owner sign-off; to be removed/purged with the modules. */}
+          {/* <Route path="funding" element={<FundingPage />} /> */}
+          {/* <Route path="applications" element={<ApplicationsPage />} /> */}
+          {/* <Route path="agreements" element={<AgreementsPage />} /> */}
           <Route path="locations" element={<LocationsPage />} />
           <Route path="territories-list" element={<TerritoriesEntityPage />} />
           {/* HIDDEN (intentionally): Training providers route disabled by request. Do NOT re-enable without product-owner sign-off. */}

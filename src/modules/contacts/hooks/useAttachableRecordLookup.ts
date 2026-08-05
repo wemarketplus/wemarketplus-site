@@ -18,6 +18,13 @@ import { CONTACT_RECORD_TYPE } from '../constants/contactsConstants';
  * Returns `undefined` both while the chosen list is loading and when no type is
  * chosen yet — either way there is nothing to pick, and EntityFormModal keeps the
  * picker disabled (naming the record-type field in the latter case).
+ *
+ * DORMANT BRANCHES: the `funding` and `applications` lookups below are
+ * Grants-domain and NOT NEEDED / PENDING REMOVAL. Since 2026-08-06 neither type
+ * appears in CONTACT_RECORD_TYPE_OPTIONS, so `recordType` can never equal them
+ * from the UI — both hooks stay permanently `skip`ped and no request goes out.
+ * They are kept only so a contact already attached to one still resolves, and so
+ * the picker can be restored in one edit. Remove with the Grants modules.
  */
 export function useAttachableRecordLookup(
   recordType: string | undefined,

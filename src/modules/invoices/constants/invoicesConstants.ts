@@ -36,6 +36,12 @@ export const INVOICE_FIELDS: ReadonlyArray<EntityField<InvoiceFormValues>> = [
   { name: 'invoiceNumber', label: 'Invoice number', placeholder: 'auto-generated' },
   { name: 'feeModel', label: 'Fee model', placeholder: 'success fee, flat…' },
   { name: 'dueDate', label: 'Due date', type: 'date' },
-  { name: 'applicationId', label: 'Application', type: 'lookup', placeholder: 'No application' },
+  // DEPRECATED — NOT NEEDED, PENDING REMOVAL. The Application picker links an
+  // invoice to a grant application; the Grants domain was hidden from the UI on
+  // 2026-08-06 per the product owner, so the field is removed from the form. The
+  // column (invoices.applicationId) and its DTO/schema handling stay — existing
+  // links are preserved and simply left untouched by the form. Re-add this field
+  // (and the `lookups` prop in InvoiceFormModal) to restore.
+  // { name: 'applicationId', label: 'Application', type: 'lookup', placeholder: 'No application' },
   { name: 'notes', label: 'Notes', type: 'textarea', full: true },
 ];

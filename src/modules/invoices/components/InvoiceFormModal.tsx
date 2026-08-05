@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useApplicationLookup } from '@/shared/hooks';
 import { EntityFormModal } from '@/shared/ui/entity';
 import { INVOICE_FIELDS } from '../constants/invoicesConstants';
 import { invoiceSchema, type InvoiceFormValues } from '../schema/invoiceSchema';
@@ -61,7 +60,12 @@ export function InvoiceFormModal({
     if (ok) reset(EMPTY);
   });
 
-  const lookups = { applicationId: useApplicationLookup(open) };
+  // DEPRECATED — NOT NEEDED, PENDING REMOVAL: the Application lookup that fed
+  // the (now removed) applicationId field. The Grants domain was hidden from the
+  // UI on 2026-08-06 per the product owner, so the form no longer fetches
+  // GET /applications. Restore alongside the field in INVOICE_FIELDS:
+  //   const lookups = { applicationId: useApplicationLookup(open) };
+  // ...and pass `lookups={lookups}` to EntityFormModal below.
   return (
     <EntityFormModal<InvoiceFormValues>
       open={open}
@@ -72,7 +76,6 @@ export function InvoiceFormModal({
       register={register}
       errors={errors}
       onSubmit={submit}
-      lookups={lookups}
       onClose={close}
     />
   );

@@ -60,8 +60,13 @@ export interface DatasetOption {
 export const DATASET_OPTIONS: readonly DatasetOption[] = [
   { type: 'companies', label: 'Companies', canImport: true, elevated: false },
   { type: 'locations', label: 'Locations', canImport: true, elevated: false },
-  { type: 'funding', label: 'Funding opportunities', canImport: true, elevated: false },
-  { type: 'applications', label: 'Applications', canImport: true, elevated: false },
+  // DEPRECATED — NOT NEEDED, PENDING REMOVAL. The `funding` and `applications`
+  // datasets are Grants-domain; the domain was hidden from the UI on 2026-08-06
+  // per the product owner, so they are no longer offered for import/export. The
+  // backend registry still declares them (dataset-registry.ts) — this only
+  // removes them from the picker. Re-list them here to restore.
+  // { type: 'funding', label: 'Funding opportunities', canImport: true, elevated: false },
+  // { type: 'applications', label: 'Applications', canImport: true, elevated: false },
   { type: 'revenue', label: 'Revenue', canImport: false, elevated: false },
   { type: 'users', label: 'Users', canImport: false, elevated: true },
   { type: 'audit', label: 'Audit log', canImport: false, elevated: true },

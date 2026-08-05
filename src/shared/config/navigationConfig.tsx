@@ -123,21 +123,29 @@ const FINANCIAL_SECTION: NavSection = {
   ],
 };
 
-// --- Grants domain (cross-product) ------------------------------------------
-// Grant-CRM back office — management/staff only.
-const GRANTS_SECTION: NavSection = {
-  id: 'grants',
-  label: 'Grants',
-  items: [
-    { to: '/funding', label: 'Funding', icon: Target, allow: STAFF_ROLES },
-    { to: '/applications', label: 'Applications', icon: ClipboardList, allow: STAFF_ROLES },
-    { to: '/agreements', label: 'Agreements', icon: ScrollText, allow: STAFF_ROLES },
-    // WIBs (Workforce Investment Boards) used to sit here, hidden. The module,
-    // its route and its store wiring have now been removed outright — a
-    // Grants-domain concept has no meaning in this CRM. The backend endpoints
-    // still exist for the Grants product; nothing in this app calls them.
-  ],
-};
+// --- Grants domain (cross-product) — REMOVED FROM THE SIDEBAR ---------------
+//
+// DEPRECATED / NOT NEEDED. The Grants section and its three modules (Funding,
+// Applications, Agreements) are not part of the product and are slated to be
+// removed/purged outright. Per product owner (2026-08-06) they are taken out of
+// the sidebar now; the module code, routes and store wiring are left in place
+// only so the section can be restored quickly if it turns out to be needed.
+// Do NOT build on these modules, and do NOT re-add this section to
+// SECTIONS_BY_PRODUCT without product-owner sign-off.
+//
+// const GRANTS_SECTION: NavSection = {
+//   id: 'grants',
+//   label: 'Grants',
+//   items: [
+//     { to: '/funding', label: 'Funding', icon: Target, allow: STAFF_ROLES },
+//     { to: '/applications', label: 'Applications', icon: ClipboardList, allow: STAFF_ROLES },
+//     { to: '/agreements', label: 'Agreements', icon: ScrollText, allow: STAFF_ROLES },
+//     // WIBs (Workforce Investment Boards) used to sit here, hidden. The module,
+//     // its route and its store wiring have now been removed outright — a
+//     // Grants-domain concept has no meaning in this CRM. The backend endpoints
+//     // still exist for the Grants product; nothing in this app calls them.
+//   ],
+// };
 
 // --- Operations records (cross-product) -------------------------------------
 // Locations/territories/providers config — management/staff only.
@@ -380,7 +388,9 @@ export const SECTIONS_BY_PRODUCT: Record<Product, readonly NavSection[]> = {
     HOSPICELINK_ACTIVITY,
     HOSPICELINK_CLINICAL,
     HOSPICELINK_INTELLIGENCE,
-    GRANTS_SECTION,
+    // GRANTS_SECTION removed — the Grants domain (Funding/Applications/
+    // Agreements) is not needed and will be removed/purged. See the commented
+    // section definition above.
     FINANCIAL_SECTION,
     OPERATIONS_RECORDS_SECTION,
     HOSPICELINK_INTEGRATIONS,
