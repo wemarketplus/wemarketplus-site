@@ -13,9 +13,15 @@ export {
   useCreateMileageLogMutation,
   useUpdateMileageLogMutation,
   useDeleteMileageLogMutation,
+  useListExpenseReceiptsQuery,
+  useUploadExpenseReceiptMutation,
 } from './api/mileageApi';
+export { AttachReceiptDialog } from './components/AttachReceiptDialog';
+export { ReceiptFileButton } from './components/ReceiptFileButton';
 export type {
   MileageLogRecord,
   CreateMileageLogRequest,
   UpdateMileageLogRequest,
+  ExpenseReceiptRecord,
+  UploadExpenseReceiptRequest,
 } from './types/fieldTypes';

@@ -10,12 +10,25 @@ import {
 } from '../constants/appointmentsConstants';
 import type { AppointmentRecord } from '../types/appointmentsTypes';
 import { isCompletable, isPastDue, timeRange } from '../utils/appointmentsUtils';
+import { calendarColorFor } from '../utils/calendarColors';
 
 interface AppointmentsCalendarProps {
   days: ReadonlyArray<{ date: string; items: AppointmentRecord[] }>;
   isEmpty: boolean;
   isBusy: boolean;
   onComplete: (appointment: AppointmentRecord) => void;
+  /**
+   * When true, each row is colour-coded by its assigned rep. Only meaningful in
+   * the "All users" view — in a personal calendar every row is the same person,
+   * so a colour would carry no information.
+   */
+  showOwnerColors?: boolean;
+  /**
+   * userId -> the colour that user chose in their profile settings. Optional:
+   * omit it and every row falls back to the colour derived from the rep's id,
+   * which is what this calendar did before colours could be chosen.
+   */
+  ownerColorMap?: Readonly<Record<string, string>>;
 }
 
 /** Day-grouped agenda over the real appointments feed. */
@@ -24,6 +37,8 @@ export function AppointmentsCalendar({
   isEmpty,
   isBusy,
   onComplete,
+  showOwnerColors = false,
+  ownerColorMap,
 }: AppointmentsCalendarProps) {
   if (isEmpty) {
     return (
@@ -53,10 +68,21 @@ export function AppointmentsCalendar({
                   key={appointment.id}
                   className="flex flex-wrap items-start gap-3 px-6 py-3"
                 >
+                  {/* Past-due always wins over the owner colour: "this was
+                      missed" is more urgent than "this is Dana's". */}
                   <span
                     className={cn(
                       'mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full',
-                      isPastDue(appointment) ? 'bg-destructive' : 'bg-primary',
+                      isPastDue(appointment)
+                        ? 'bg-destructive'
+                        : showOwnerColors
+                          ? calendarColorFor(
+                              appointment.assignedRep,
+                              appointment.assignedRep
+                                ? ownerColorMap?.[appointment.assignedRep]
+                                : null,
+                            ).dot
+                          : 'bg-primary',
                     )}
                   />
                   <div className="min-w-0 flex-1">

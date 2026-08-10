@@ -6,11 +6,13 @@ import type {
   Leaderboard,
   MarketingRoi,
   ReferralAnalytics,
+  MyPerformance,
   RevenueIntelligence,
   WeeklyReport,
 } from '../types/intelligenceTypes';
 
 // Verified against wemarketplus-backend/src/intelligence/intelligence.controller.ts:
+//   GET /intelligence/my-performance?from&to   (marketing roles; no tier gate)
 //   GET /intelligence/revenue?from&to
 //   GET /intelligence/roi?from&to
 //   GET /intelligence/leaderboard?from&to
@@ -30,8 +32,30 @@ const env = <T>(res: ApiEnvelope<T>) => res.data;
 export const intelligenceApi = createApi({
   reducerPath: 'intelligenceApi',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Revenue', 'Roi', 'Leaderboard', 'ReferralAnalytics'],
+  tagTypes: [
+    'Revenue',
+    'Roi',
+    'Leaderboard',
+    'ReferralAnalytics',
+    'MyPerformance',
+  ],
   endpoints: (build) => ({
+    /**
+     * The ONE Intelligence route a field marketer can reach: their own numbers
+     * plus team standings, with revenue stripped server-side.
+     *
+     * Unlike its four siblings this carries NO tier gate — a marketer seeing
+     * their own visit and call counts is table stakes, not a Gold report — so it
+     * will not 402 on a Pro tenant.
+     */
+    getMyPerformance: build.query<MyPerformance, IntelligenceQuery | void>({
+      query: (params) => ({
+        url: '/intelligence/my-performance',
+        params: params ?? undefined,
+      }),
+      transformResponse: env<MyPerformance>,
+      providesTags: ['MyPerformance'],
+    }),
     getRevenueIntelligence: build.query<
       RevenueIntelligence,
       IntelligenceQuery | void
@@ -83,6 +107,7 @@ export const intelligenceApi = createApi({
 });
 
 export const {
+  useGetMyPerformanceQuery,
   useGetRevenueIntelligenceQuery,
   useGetMarketingRoiQuery,
   useGetLeaderboardQuery,

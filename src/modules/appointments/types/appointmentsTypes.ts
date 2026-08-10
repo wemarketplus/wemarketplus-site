@@ -119,3 +119,25 @@ export interface CompleteAppointmentRequest {
 export interface AppointmentsUiState {
   statusFilter: AppointmentStatus | 'all';
 }
+
+/**
+ * POST /hl/appointments/schedule-visit.
+ *
+ * Exactly one of `pipelineId` (a patient referral) or `companyId` (a facility)
+ * says what the visit is about. The backend creates the Job the appointment
+ * needs — and, for a facility, resolves that account's outreach pipeline — so
+ * the caller never has to know either exists.
+ */
+export interface ScheduleVisitRequest {
+  pipelineId?: string;
+  companyId?: string;
+  contactId?: string;
+  title: string;
+  startAt: ISODateString;
+  endAt: ISODateString;
+  appointmentType?: AppointmentType;
+  activityType?: ActivityType;
+  location?: string;
+  assignedRep?: string;
+  objective?: string;
+}

@@ -39,7 +39,14 @@ export function mapReferralSource(r: ReferralSourceRecord): ReferralSource {
     status: accountStatusToHealth(r.status),
     trustLevel: scoreToTrust(r.aiScore),
     priorityLevel: r.priorityTier,
-    lastContactDate: r.updatedAt,
+    // Legacy field, kept only so the demo/fixture consumers still typecheck. It
+    // used to be fed `updatedAt`, which meant "last touch" moved whenever anyone
+    // edited the record — a phone-number correction read as a visit. Live screens
+    // must read `lastInteractionAt` / `isCold` below instead.
+    lastContactDate: r.lastInteractionAt ?? r.createdAt,
+    lastInteractionAt: r.lastInteractionAt,
+    isCold: r.isCold,
+    daysSinceLastInteraction: r.daysSinceLastInteraction,
     assignedMarketer: r.accountOwnerId ?? '',
     territoryArea: [r.city, r.state].filter(Boolean).join(', ') || undefined,
     // Real rollup, maintained by the backend on lead conversion.
@@ -67,4 +74,21 @@ export function filterReferrals(
 export function daysSince(iso: string, now: Date = new Date()): number {
   const then = new Date(iso).getTime();
   return Math.floor((now.getTime() - then) / (1000 * 60 * 60 * 24));
+}
+
+/**
+ * How long since anyone actually visited or called this account.
+ *
+ * Reads the server-supplied day count rather than subtracting dates here, so the
+ * cell and the Cold pill can never round differently. "Never contacted" is shown
+ * verbatim instead of a number — it is the state a marketer most needs to notice,
+ * and rendering it as a very large day count buries it.
+ */
+export function lastTouchLabel(r: ReferralSource): string {
+  if (!r.lastInteractionAt) return 'Never contacted';
+  const days = r.daysSinceLastInteraction;
+  if (days === null || days === undefined) return 'Contacted';
+  if (days === 0) return 'Today';
+  if (days === 1) return 'Yesterday';
+  return `${days} days ago`;
 }

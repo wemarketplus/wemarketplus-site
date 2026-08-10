@@ -23,7 +23,13 @@ export function AddProspectModal({ open, isSaving, onClose, onSubmit: submit }: 
     defaultValues: {
       patientName: '',
       facilityName: '',
-      stage: ProspectStage.Inquiry,
+      // MUST be a value that exists in PROSPECT_STAGE_OPTIONS (the canonical
+      // ADMIT_STAGES). It used to default to the LEGACY `inquiry`, which is not
+      // one of the options — so the <select> displayed "New Referral" while the
+      // form state held `inquiry`, and an untouched form created a prospect at a
+      // stage the Pipeline board has no column for. The card was saved and then
+      // invisible.
+      stage: ProspectStage.NewReferral,
       urgency: ProspectUrgency.Warm,
       referringPhysician: '',
       diagnosis: '',

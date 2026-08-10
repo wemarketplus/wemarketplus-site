@@ -4,6 +4,7 @@ import { useListJobsQuery } from '@/modules/jobs';
 import { Button } from '@/shared/ui/core';
 import { cn } from '@/shared/utils/cn';
 import { AppointmentsCalendar } from '../components/AppointmentsCalendar';
+import { CalendarScopeToggle } from '../components/CalendarScopeToggle';
 import { AppointmentsDayPanel } from '../components/AppointmentsDayPanel';
 import { AppointmentsMonthGrid } from '../components/AppointmentsMonthGrid';
 import { CompleteAppointmentModal } from '../components/CompleteAppointmentModal';
@@ -11,6 +12,7 @@ import { ScheduleAppointmentModal } from '../components/ScheduleAppointmentModal
 import { useAppointmentActions } from '../hooks/useAppointmentActions';
 import { useAppointmentsCalendar } from '../hooks/useAppointmentsCalendar';
 import { useAppointmentsMonth } from '../hooks/useAppointmentsMonth';
+import { useTenantCalendarColors } from '../hooks/useTenantCalendarColors';
 
 type CalendarMode = 'month' | 'agenda';
 
@@ -39,6 +41,12 @@ export function AppointmentsPage() {
   } = useAppointmentActions();
   // An appointment always hangs off a job, so the picker needs the job list.
   const { data: jobsPage } = useListJobsQuery({ limit: 100 });
+  // Per-rep colours, only for the "All users" agenda. Saving a colour in
+  // /my-profile invalidates this query's tag, so the dots repaint here without
+  // a reload — including for whoever else is looking at the same view.
+  const ownerColorMap = useTenantCalendarColors(
+    mode === 'agenda' && agenda.scope === 'all',
+  );
 
   const isMonth = mode === 'month';
   const active = isMonth ? month : agenda;
@@ -115,12 +123,17 @@ export function AppointmentsPage() {
           />
         </div>
       ) : (
-        <AppointmentsCalendar
-          days={agenda.days}
-          isEmpty={agenda.isEmpty}
-          isBusy={isCompleting}
-          onComplete={openComplete}
-        />
+        <div className="space-y-3">
+          <CalendarScopeToggle scope={agenda.scope} onChange={agenda.setScope} />
+          <AppointmentsCalendar
+            showOwnerColors={agenda.scope === 'all'}
+            ownerColorMap={ownerColorMap}
+            days={agenda.days}
+            isEmpty={agenda.isEmpty}
+            isBusy={isCompleting}
+            onComplete={openComplete}
+          />
+        </div>
       )}
 
       <ScheduleAppointmentModal

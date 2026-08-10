@@ -70,6 +70,20 @@ export interface ReferralSource {
   trustLevel: 1 | 2 | 3 | 4 | 5;
   priorityLevel: 'A' | 'B' | 'C';
   lastContactDate: ISODateString;
+  /**
+   * The REAL last logged visit or call, from `referral_sources.lastInteractionAt`.
+   * Null means never touched.
+   *
+   * Distinct from `lastContactDate`, which is the legacy field the demo fixtures
+   * populate and which the live mapper could only ever fill with `updatedAt` —
+   * i.e. when the row was last EDITED. Correcting a typo in a phone number reset
+   * it, so "last touch" was not a measure of contact at all. Live screens read
+   * these three fields; the fixtures keep the legacy one.
+   */
+  lastInteractionAt?: ISODateString | null;
+  /** Server-derived against the 14-day rule. Never recompute it client-side. */
+  isCold?: boolean;
+  daysSinceLastInteraction?: number | null;
   nextScheduledVisit?: ISODateString;
   nextAction?: string;
   assignedMarketer: string;

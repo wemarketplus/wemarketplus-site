@@ -154,3 +154,37 @@ export interface WeeklyReport {
   leaderboard: LeaderboardRow[];
   lostReasons: { lostReason: string; count: number }[];
 }
+
+/**
+ * One rep's row in the marketer-facing standings.
+ *
+ * Deliberately NARROWER than LeaderboardRow: revenue, email and role are absent
+ * because the server never sends them here. The Leaderboard is an admin report
+ * carrying per-rep revenue; a marketer sees how they are pacing against the
+ * team, not what each colleague bills. See the backend's getMyPerformance.
+ */
+export interface MyPerformanceRow {
+  userId: string;
+  name: string;
+  rank: number;
+  admits: number;
+  touches: number;
+  jobsCompleted: number;
+  appointmentsCompleted: number;
+  /**
+   * Share of this rep's CLOSED referrals that were admitted, 0–1. Null when
+   * nothing has closed yet — "no rate", which a 0 would misreport as a total
+   * failure to convert. Open referrals are NOT in the denominator, so a full
+   * pipeline never drags the number down.
+   */
+  conversionRate: number | null;
+  /** True for the caller's own row, so it can be highlighted. */
+  isMe: boolean;
+}
+
+export interface MyPerformance {
+  window: IntelligenceWindow;
+  /** The caller's own row; null when they have no activity in the window. */
+  me: MyPerformanceRow | null;
+  standings: MyPerformanceRow[];
+}

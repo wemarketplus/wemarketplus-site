@@ -4,6 +4,7 @@ import type { ApiEnvelope, PaginatedPayload } from '@/shared/types';
 import { USERS_TAGS } from '../constants/usersConstants';
 import type {
   AdminResetPasswordResponse,
+  CalendarColorRecord,
   CreateUserRequest,
   ListUsersQuery,
   UpdateOwnProfileRequest,
@@ -14,7 +15,7 @@ import type {
 export const usersApi = createApi({
   reducerPath: 'usersApi',
   baseQuery: baseQueryWithReauth,
-  tagTypes: [USERS_TAGS.List, USERS_TAGS.Detail],
+  tagTypes: [USERS_TAGS.List, USERS_TAGS.Detail, USERS_TAGS.CalendarColors],
   endpoints: (build) => ({
     listUsers: build.query<PaginatedPayload<UserRecord>, ListUsersQuery>({
       query: (params = {}) => ({ url: '/users', params }),
@@ -45,10 +46,26 @@ export const usersApi = createApi({
         { type: USERS_TAGS.List, id: 'PARTIAL-LIST' },
       ],
     }),
+    // Every authenticated role may call this — it is the one write endpoint a
+    // Marketer or Nurse has, and it can only ever touch their own record.
     updateOwnProfile: build.mutation<UserRecord, UpdateOwnProfileRequest>({
       query: (patch) => ({ url: '/users/me', method: 'PATCH', body: patch }),
       transformResponse: (res: ApiEnvelope<UserRecord>) => res.data,
-      invalidatesTags: [{ type: USERS_TAGS.List, id: 'PARTIAL-LIST' }],
+      // Invalidating CalendarColors is what repaints the Appointments "All
+      // users" calendar the moment a colour is saved, with no page reload: RTK
+      // Query refetches the map for whatever screen is currently mounted.
+      invalidatesTags: [
+        { type: USERS_TAGS.List, id: 'PARTIAL-LIST' },
+        USERS_TAGS.CalendarColors,
+      ],
+    }),
+    // id -> chosen colour for the whole tenant. Unpaginated by design: the
+    // calendar needs a complete lookup or a colleague's row silently falls back
+    // to the derived colour. Bounded server-side.
+    listCalendarColors: build.query<CalendarColorRecord[], void>({
+      query: () => ({ url: '/users/calendar-colors' }),
+      transformResponse: (res: ApiEnvelope<CalendarColorRecord[]>) => res.data,
+      providesTags: [USERS_TAGS.CalendarColors],
     }),
     deleteUser: build.mutation<void, string>({
       query: (id) => ({ url: `/users/${id}`, method: 'DELETE' }),
@@ -72,6 +89,7 @@ export const {
   useCreateUserMutation,
   useUpdateUserMutation,
   useUpdateOwnProfileMutation,
+  useListCalendarColorsQuery,
   useDeleteUserMutation,
   useAdminResetPasswordMutation,
 } = usersApi;

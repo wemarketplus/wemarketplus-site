@@ -1,7 +1,7 @@
 import { Plus } from 'lucide-react';
 import { Button, Card, CardContent } from '@/shared/ui/core';
 import { EntityRowActions } from '@/shared/ui/entity';
-import { useRole, STAFF_ROLES } from '@/shared/rbac';
+import { useRole, HL_FIELD_ROLES, STAFF_ROLES } from '@/shared/rbac';
 import { cn } from '@/shared/utils/cn';
 import { useDailyGoals } from '../hooks/useDailyGoals';
 import { computeGoalProgress } from '../utils/activityUtils';
@@ -10,9 +10,15 @@ import { GoalFormModal } from './GoalFormModal';
 export function DailyGoalsView() {
   const { goals, crud, submit, recordById } = useDailyGoals();
 
-  // Add/edit/delete is a staff action; read-only roles see the tiles only.
   const { isAny } = useRole();
-  const canEdit = isAny(STAFF_ROLES);
+  // A field user sets their OWN goals — that is the point of a daily goal. The
+  // backend scopes anything they create to themselves and refuses edits to
+  // anyone else's, so this affordance cannot be widened by the client.
+  const canEdit = isAny(HL_FIELD_ROLES);
+  // Deleting stays management-only, matching the backend's @Roles on
+  // DELETE /goals/:id. Showing the action to a marketer would only produce a
+  // 403 they cannot act on.
+  const canDelete = isAny(STAFF_ROLES);
 
   const edit = (id: string) => {
     const record = recordById(id);
@@ -54,7 +60,7 @@ export function DailyGoalsView() {
                     {canEdit && (
                       <EntityRowActions
                         onEdit={() => edit(g.id)}
-                        onDelete={() => remove(g.id)}
+                        onDelete={canDelete ? () => remove(g.id) : undefined}
                       />
                     )}
                   </div>
@@ -71,6 +77,21 @@ export function DailyGoalsView() {
                       style={{ width: `${pct}%` }}
                     />
                   </div>
+
+                  {/* Daily and weekly pacing, shown only for a TRACKED goal —
+                      a manual goal has no activity behind it to break down, and
+                      rendering zeroes would imply nothing had happened. */}
+                  {g.isTracked && (
+                    <p className="text-[11px] text-muted-soft">
+                      <span className="text-muted">Today</span> {g.today ?? 0}
+                      <span className="mx-1.5">·</span>
+                      <span className="text-muted">This week</span>{' '}
+                      {g.weekToDate ?? 0}
+                      <span className="ml-1.5 text-muted-soft">
+                        · tracked automatically
+                      </span>
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             );

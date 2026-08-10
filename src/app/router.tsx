@@ -27,6 +27,7 @@ import {
   CL_COMPETITOR_INTEL_ROLES,
   CL_FIELD_ACTIVITY_ROLES,
   HL_FIELD_ROLES,
+  HL_MARKETING_ROLES,
 } from '@/shared/rbac';
 
 // --- Public auth funnel ---------------------------------------------------
@@ -108,6 +109,9 @@ const NotificationsPage = lazy(() =>
 const SubscriptionStatusPage = lazy(() =>
   import('@/modules/billing').then((m) => ({ default: m.SubscriptionStatusPage })),
 );
+const MyProfilePage = lazy(() =>
+  import('@/modules/settings').then((m) => ({ default: m.MyProfilePage })),
+);
 const SettingsPage = lazy(() =>
   import('@/modules/settings').then((m) => ({ default: m.SettingsPage })),
 );
@@ -178,6 +182,35 @@ const JobsPage = lazy(() =>
 const AppointmentsPage = lazy(() =>
   import('@/modules/appointments').then((m) => ({ default: m.AppointmentsPage })),
 );
+const PublicReferralFormPage = lazy(() =>
+  import('@/modules/referral-portal').then((m) => ({
+    default: m.PublicReferralFormPage,
+  })),
+);
+const TerritoryPlannerPage = lazy(() =>
+  import('@/modules/territories').then((m) => ({
+    default: m.TerritoryPlannerPage,
+  })),
+);
+const ReferralPortalPage = lazy(() =>
+  import('@/modules/referral-portal').then((m) => ({
+    default: m.ReferralPortalPage,
+  })),
+);
+const ReengagementPage = lazy(() =>
+  import('@/modules/prospects').then((m) => ({ default: m.ReengagementPage })),
+);
+const MarketerLeaderboardPage = lazy(() =>
+  import('@/modules/intelligence').then((m) => ({
+    default: m.MarketerLeaderboardPage,
+  })),
+);
+const AutomationPage = lazy(() =>
+  import('@/modules/automation').then((m) => ({ default: m.AutomationPage })),
+);
+const DailyQueuePage = lazy(() =>
+  import('@/modules/daily-queue').then((m) => ({ default: m.DailyQueuePage })),
+);
 const ProspectsPage = lazy(() =>
   import('@/modules/prospects').then((m) => ({ default: m.ProspectsPage })),
 );
@@ -192,6 +225,11 @@ const SchedulingPage = lazy(() =>
 );
 const ActivityPage = lazy(() =>
   import('@/modules/activity').then((m) => ({ default: m.ActivityPage })),
+);
+const PlaybookGeneratorPage = lazy(() =>
+  import('@/modules/ai-assistant').then((m) => ({
+    default: m.PlaybookGeneratorPage,
+  })),
 );
 const AiAssistantPage = lazy(() =>
   import('@/modules/ai-assistant').then((m) => ({ default: m.AiAssistantPage })),
@@ -374,6 +412,15 @@ export function AppRouter() {
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/communitylink" element={<CommunityLinkLandingPage />} />
         <Route path="/communitylink/pricing" element={<CommunityLinkPricingPage />} />
+        {/* The facility referral portal. Fully public and OUTSIDE the
+            authenticated shell — the people who open this have no account, and
+            wrapping it in PublicRoute (which redirects a signed-in user to the
+            dashboard) would break it for a hospice admin testing their own QR
+            code. The token in the path is the only authorisation. */}
+        <Route
+          path="/refer/:token"
+          element={<PublicReferralFormPage />}
+        />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/terms" element={<TermsPage />} />
         <Route path="/compliance" element={<CompliancePublicPage />} />
@@ -479,14 +526,40 @@ export function AppRouter() {
               </RequireProduct>
             }
           >
-          <Route path="hl-leads" element={<HlLeadsPage />} />
-          <Route path="prospects" element={<ProspectsPage />} />
-          <Route path="referrals" element={<ReferralsPage />} />
-          <Route path="hl-contacts" element={<HospiceContactsPage />} />
-          <Route path="pipeline" element={<PipelinePage />} />
-          <Route path="jobs" element={<JobsPage />} />
+          {/* Marketing group — HL_MARKETING_ROLES. These eight routes carried NO
+              role guard at all: navigationConfig has hidden them from Nurse and
+              Caregiver since the role groups landed, but a hidden nav item is
+              not access control and typing the URL rendered the page. Grouped
+              rather than repeated per route so a new marketing screen inherits
+              the gate instead of having to remember it. `allow` mirrors
+              navigationConfig's HL_MARKETING_ROLES exactly, and the matching
+              backend @Roles now answers 403 — change one side, change all
+              three. Appointments is deliberately NOT in here: it is an
+              HL_FIELD_ROLES surface that Nurse and Caregiver do work in. */}
+          <Route
+            element={
+              <ProtectedRoute allow={HL_MARKETING_ROLES}>
+                <Outlet />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="daily-tasks" element={<DailyQueuePage />} />
+            <Route path="automation" element={<AutomationPage />} />
+            <Route path="re-engagement" element={<ReengagementPage />} />
+            {/* The MARKETER-facing leaderboard: no revenue. Distinct from
+                /intelligence/leaderboard, which is the Gold, admin-only report. */}
+            <Route path="leaderboard" element={<MarketerLeaderboardPage />} />
+            <Route path="hl-leads" element={<HlLeadsPage />} />
+            <Route path="prospects" element={<ProspectsPage />} />
+            <Route path="referrals" element={<ReferralsPage />} />
+            <Route path="hl-contacts" element={<HospiceContactsPage />} />
+            <Route path="referral-portal" element={<ReferralPortalPage />} />
+            <Route path="pipeline" element={<PipelinePage />} />
+            <Route path="jobs" element={<JobsPage />} />
+            <Route path="territories" element={<TerritoriesEntityPage />} />
+            <Route path="territory-planner" element={<TerritoryPlannerPage />} />
+          </Route>
           <Route path="appointments" element={<AppointmentsPage />} />
-          <Route path="territories" element={<TerritoriesEntityPage />} />
           <Route path="activity/calendar" element={<ActivityPage />} />
           <Route path="activity/notes" element={<ActivityPage />} />
           <Route path="activity/reminders" element={<ActivityPage />} />
@@ -529,7 +602,10 @@ export function AppRouter() {
               Playbook generator is MAX, not Gold — do not "align" these three. */}
           <Route path="integrations/import" element={<DataImportExportPage />} />
           <Route path="integrations/aircall" element={<RequireEntitlement minTier={Tier.Gold}><IntegrationsPage /></RequireEntitlement>} />
-          <Route path="integrations/playbooks" element={<RequireEntitlement minTier={Tier.Max}><IntegrationsPage /></RequireEntitlement>} />
+          {/* Was rendering IntegrationsPage — the nav item and the
+              `playbook_generator` tier key existed with nothing behind them.
+              Now the real screen; the backend gates the same key at Max. */}
+          <Route path="integrations/playbooks" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={HL_MARKETING_ROLES}><PlaybookGeneratorPage /></ProtectedRoute></RequireEntitlement>} />
 
           {/* Compliance — Gold + admin. Covers the three nav entries plus the
               sub-screens (access review, DR test, breach, evidence, BAA records)
@@ -650,6 +726,10 @@ export function AppRouter() {
               the new app's chrome links to /billing. Both resolve. */}
           <Route path="billing" element={<SubscriptionStatusPage />} />
           <Route path="subscription-status" element={<SubscriptionStatusPage />} />
+          {/* Personal profile — deliberately NO role gate. Every authenticated
+              role must be able to edit their own name and calendar colour;
+              /settings above stays ADMIN_ONLY because it edits the org. */}
+          <Route path="my-profile" element={<MyProfilePage />} />
           <Route path="settings" element={<ProtectedRoute allow={ADMIN_ONLY}><SettingsPage /></ProtectedRoute>} />
           {/* Change-password is available both as the legacy site URL and the
               nested /account/password we already linked from settings. */}

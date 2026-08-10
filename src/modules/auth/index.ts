@@ -8,7 +8,12 @@ export { ChangePasswordPage } from './pages/ChangePasswordPage';
 export { ProfileSync } from './components/ProfileSync';
 export { useResendVerification } from './hooks/useResendVerification';
 export { useMfaManagement } from './hooks/useMfaManagement';
-export { default as authReducer, setCredentials, logout } from './store/authSlice';
+export {
+  default as authReducer,
+  setCredentials,
+  patchUser,
+  logout,
+} from './store/authSlice';
 export {
   authApi,
   useLoginMutation,

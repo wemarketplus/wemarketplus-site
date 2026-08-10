@@ -29,6 +29,12 @@ import { agreementsApi } from '@/modules/agreements';
 import { aiAssistantReducer } from '@/modules/ai-assistant';
 import { applicationsApi } from '@/modules/applications';
 import { appointmentsApi, appointmentsReducer } from '@/modules/appointments';
+import { dailyQueueApi } from '@/modules/daily-queue';
+import { automationApi } from '@/modules/automation';
+import {
+  referralPortalApi,
+  publicReferralPortalApi,
+} from '@/modules/referral-portal';
 import { authApi, authReducer } from '@/modules/auth';
 import { chatApi } from '@/modules/chat';
 import { documentsApi } from '@/modules/documents';
@@ -116,6 +122,10 @@ const rootReducer = combineReducers({
   [agreementsApi.reducerPath]: agreementsApi.reducer,
   [applicationsApi.reducerPath]: applicationsApi.reducer,
   [appointmentsApi.reducerPath]: appointmentsApi.reducer,
+  [dailyQueueApi.reducerPath]: dailyQueueApi.reducer,
+  [automationApi.reducerPath]: automationApi.reducer,
+  [referralPortalApi.reducerPath]: referralPortalApi.reducer,
+  [publicReferralPortalApi.reducerPath]: publicReferralPortalApi.reducer,
   [authApi.reducerPath]: authApi.reducer,
   [billingApi.reducerPath]: billingApi.reducer,
   [clAdminSettingsApi.reducerPath]: clAdminSettingsApi.reducer,
@@ -196,6 +206,10 @@ export const store = configureStore({
       agreementsApi.middleware,
       applicationsApi.middleware,
       appointmentsApi.middleware,
+      dailyQueueApi.middleware,
+      automationApi.middleware,
+      referralPortalApi.middleware,
+      publicReferralPortalApi.middleware,
       authApi.middleware,
       billingApi.middleware,
       clAdminSettingsApi.middleware,

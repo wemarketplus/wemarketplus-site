@@ -1,5 +1,7 @@
 // Grant-CRM territories — full CRUD UI on the shared entity kit.
 export { TerritoriesPage } from './pages/TerritoriesPage';
+// HospiceLink territory planning: accounts grouped by patch, cold ones first.
+export { TerritoryPlannerPage } from './pages/TerritoryPlannerPage';
 export {
   territoriesApi,
   useListTerritoriesQuery,

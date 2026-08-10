@@ -4,7 +4,6 @@ import { NavLink } from 'react-router-dom';
 // NavItem in navigationConfig already carries one.
 import { HeartPulse as BrandMark } from 'lucide-react';
 import {
-  ProductSwitcher,
   RoleSwitcher,
   useActiveEntitlement,
 } from '@/modules/access';
@@ -70,8 +69,9 @@ export function Sidebar() {
             </div>
           </div>
         </div>
-        {/* Only renders for users entitled to more than one product. */}
-        <ProductSwitcher />
+        {/* "Viewing as" — only renders for a HospiceLink management user, and
+            only ever narrows what is shown. The product switcher that used to
+            sit here has moved to the topbar beside the bell. */}
         <RoleSwitcher />
       </div>
 

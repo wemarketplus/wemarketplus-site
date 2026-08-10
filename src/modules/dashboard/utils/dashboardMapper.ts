@@ -23,21 +23,36 @@ function stage(summary: DashboardSummary, key: string): number {
   return summary.prospects.byStage[key] ?? 0;
 }
 
+/**
+ * The tiles read CANONICAL stages.
+ *
+ * They previously counted `inquiry`, `pending` and `evaluation` — all three of
+ * which are LEGACY stages that `moveStage` rejects as targets and that nothing
+ * in the current flow writes. Both tiles therefore read 0 for every tenant on
+ * the current pipeline, permanently, which looks like an empty pipeline rather
+ * than a broken tile.
+ */
 function hospicelinkStats(summary: DashboardSummary): DashboardStatCard[] {
   return [
     {
-      id: 'inquiries',
-      label: 'New inquiries',
+      id: 'new-referrals',
+      label: 'New referrals',
       icon: Inbox,
-      value: String(stage(summary, 'inquiry')),
-      hint: 'Inquiry stage',
+      value: String(stage(summary, 'new_referral')),
+      hint: 'Awaiting eligibility check',
       tone: 'primary',
     },
     {
-      id: 'pending',
-      label: 'Pending admission',
+      id: 'in-progress',
+      label: 'Working',
       icon: ClipboardList,
-      value: String(stage(summary, 'pending') + stage(summary, 'evaluation')),
+      // The three middle stages of the admit pipeline — everything that is
+      // being actively worked but not yet closed either way.
+      value: String(
+        stage(summary, 'eligibility') +
+          stage(summary, 'face_to_face') +
+          stage(summary, 'consent_order'),
+      ),
       hint: `${summary.tasks.open} open task${summary.tasks.open === 1 ? '' : 's'}`,
       tone: 'warning',
     },

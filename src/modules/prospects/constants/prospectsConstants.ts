@@ -68,8 +68,8 @@ export const URGENCY_CHIPS: ReadonlyArray<{ value: Urgency | 'all'; label: strin
 export const STAGE_LABELS: Record<ProspectStage, string> = {
   [ProspectStage.NewReferral]: 'New referral',
   [ProspectStage.Eligibility]: 'Eligibility',
-  [ProspectStage.FaceToFace]: 'Face-to-face',
-  [ProspectStage.ConsentOrder]: 'Consent / order',
+  [ProspectStage.FaceToFace]: 'In-person visit',
+  [ProspectStage.ConsentOrder]: 'Paperwork',
   [ProspectStage.Admitted]: 'Admitted',
   [ProspectStage.Identified]: 'Identified',
   [ProspectStage.FirstVisit]: 'First visit',

@@ -10,6 +10,7 @@ export {
   useSendDmMutation,
   useMarkDmReadMutation,
   useAskAiMutation,
+  useGeneratePlaybookMutation,
   useGenerateNoteMutation,
   useAiEmployerAssistMutation,
   useAiApplicationAssistMutation,

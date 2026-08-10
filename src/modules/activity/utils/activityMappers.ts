@@ -31,6 +31,12 @@ export function toDailyGoal(g: GoalRecord): DailyGoal {
     // progress math (computeGoalProgress) operates on real numbers.
     current: Number(g.currentValue),
     target: Number(g.targetValue),
+    // Carried through so the card can show WHERE the number came from. A tracked
+    // goal's progress is derived from logged visits/calls/referrals; presenting
+    // it identically to a hand-typed one would invite someone to "correct" it.
+    isTracked: g.isTracked,
+    today: g.todayValue,
+    weekToDate: g.weekToDateValue,
   };
 }
 
@@ -188,6 +194,9 @@ export function toGoalFormValues(g: GoalRecord): GoalFormValues {
     // Coerce the Postgres-string numerics back to numbers for the form.
     targetValue: Number(g.targetValue),
     currentValue: Number(g.currentValue),
+    // Pre-metric rows have no value on the wire; `manual` is both the backend
+    // default and the behaviour those rows already had.
+    metric: g.metric ?? 'manual',
     unit: g.unit ?? '',
     period: g.period,
   };

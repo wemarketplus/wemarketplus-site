@@ -1,5 +1,6 @@
 import { LogOut } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { ProductSwitcher } from '@/modules/access';
 import { logout } from '@/modules/auth';
 import { NotificationsBell } from '@/modules/notifications';
 import { GlobalSearch } from '@/modules/search';
@@ -24,6 +25,9 @@ export function DashboardHeader() {
 
       <div className="flex items-center gap-2">
         <GlobalSearch />
+        {/* Which dashboard is live, next to the bell. Renders nothing for
+            single-product users. */}
+        <ProductSwitcher />
         <NotificationsBell />
         {user && (
           <div className="flex items-center gap-3 rounded-pill border border-border/[0.08] bg-surface/60 py-1 pr-3 pl-1">

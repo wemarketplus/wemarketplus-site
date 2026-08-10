@@ -39,6 +39,11 @@ import {
   UserPlus,
   Users,
   Wrench,
+  ListChecks,
+  QrCode,
+  MapPinned,
+  UserCog,
+  RotateCcw,
 } from 'lucide-react';
 import type { ComponentType } from 'react';
 import {
@@ -93,6 +98,7 @@ const MAIN_SECTION: NavSection = {
   label: 'Main',
   items: [
     { to: '/', label: 'Dashboard', icon: LayoutDashboard },
+    { to: '/my-profile', label: 'My profile', icon: UserCog },
     { to: '/notifications', label: 'Notifications', icon: Bell },
   ],
 };
@@ -173,15 +179,27 @@ const HOSPICELINK_MARKETING: NavSection = {
   id: 'hl-marketing',
   label: 'Marketing',
   items: [
+    // The marketer's home: everything due today, assembled from five modules.
+    // First in the section because it is where the day starts.
+    { to: '/daily-tasks', label: 'Daily tasks', icon: ListChecks, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
+    // Standing follow-ups on a prospect; each lands in Daily tasks on its due
+    // date. Next to Daily tasks because it is the input to it.
+    { to: '/automation', label: 'Automation', icon: BellRing, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
+    { to: '/re-engagement', label: 'Re-engagement', icon: RotateCcw, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
+    { to: '/leaderboard', label: 'Leaderboard', icon: Trophy, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     { to: '/hl-leads', label: 'Inbound leads', icon: Inbox, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     { to: '/prospects', label: 'Prospects', icon: UserPlus, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     { to: '/referrals', label: 'Referral sources', icon: Heart, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     // The contact record every conversion creates. Had no nav entry and no route
     // at all despite being what Prospects and Jobs point at (decision item 1).
     { to: '/hl-contacts', label: 'Hospice contacts', icon: Contact, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
+    // Issue/revoke the QR links facilities use to submit referrals with no login.
+    { to: '/referral-portal', label: 'Referral portal', icon: QrCode, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     { to: '/pipeline', label: 'Pipeline', icon: LineChart, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     { to: '/jobs', label: 'Jobs', icon: ClipboardList, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     { to: '/territories', label: 'Territories', icon: Map, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
+    // The planning view over the same data: accounts per patch, cold first.
+    { to: '/territory-planner', label: 'Territory planner', icon: MapPinned, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     // Renamed from "Smart scheduling": the module is nurse rostering now, and a label
     // that does not say what the screen does is how the demo/build gap started.
     { to: '/scheduling', label: 'Nurse scheduling', icon: CalendarClock, product: Product.HospiceLink, minTier: Tier.Gold, allow: HL_FIELD_ROLES },
@@ -196,7 +214,7 @@ const HOSPICELINK_ACTIVITY: NavSection = {
   label: 'Activity',
   items: [
     { to: '/appointments', label: 'Appointments', icon: CalendarCheck, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
-    { to: '/activity/calendar', label: 'Follow-up calendar', icon: Calendar, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
+    { to: '/activity/calendar', label: 'Calendar', icon: Calendar, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
     { to: '/activity/notes', label: 'Notes', icon: ScrollText, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
     { to: '/activity/reminders', label: 'Reminders', icon: Pin, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
     { to: '/activity/goals', label: 'Daily goals', icon: Goal, product: Product.HospiceLink, allow: HL_FIELD_ROLES },

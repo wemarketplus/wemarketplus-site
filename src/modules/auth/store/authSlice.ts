@@ -27,6 +27,22 @@ const authSlice = createSlice({
       if (action.payload.user !== undefined) state.user = action.payload.user;
       state.isAuthenticated = Boolean(state.token);
     },
+    /**
+     * Merges freshly saved profile fields into the cached user.
+     *
+     * Deliberately a MERGE, and deliberately not `setCredentials({ user })`.
+     * PATCH /users/me returns a plain UserResponseDto with no tenant context, so
+     * assigning it wholesale would drop `product`, `tier`, `organizationName`,
+     * `subscriptionStatus` and `entitlements` — the fields the sidebar, the
+     * dashboard router and the product switcher all gate on. Someone renaming
+     * themselves would find the product switcher had vanished.
+     *
+     * A no-op when there is no user: a profile save cannot create a session.
+     */
+    patchUser(state, action: PayloadAction<Partial<AuthenticatedUser>>) {
+      if (!state.user) return;
+      state.user = { ...state.user, ...action.payload };
+    },
     logout(state) {
       state.token = null;
       state.refreshToken = null;
@@ -36,5 +52,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const { setCredentials, patchUser, logout } = authSlice.actions;
 export default authSlice.reducer;

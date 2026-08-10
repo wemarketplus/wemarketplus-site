@@ -5,6 +5,7 @@ import type { PillProps } from '@/shared/ui/data-display';
 export const PASSWORD_MIN_LENGTH = 8;
 export const NAME_MIN_LENGTH = 1;
 export const NAME_MAX_LENGTH = 120;
+export const PHONE_MAX_LENGTH = 40;
 
 // Backend caps `limit` at 100 (see common/dto/pagination.dto.ts). We pick a
 // sensible default page size for the UI table.
@@ -13,6 +14,11 @@ export const DEFAULT_PAGE_SIZE = 20;
 export const USERS_TAGS = {
   List: 'Users.List',
   Detail: 'Users.Detail',
+  // The tenant's calendar-colour map. Its own tag (not List) because the two
+  // have different audiences: every role reads the colour map, only staff read
+  // the user list, so a Marketer saving a colour must be able to refresh the
+  // calendar without invalidating a list they were never allowed to fetch.
+  CalendarColors: 'Users.CalendarColors',
 } as const;
 
 // Pastel pill tone per role (matching crm-*.html .pill-*).

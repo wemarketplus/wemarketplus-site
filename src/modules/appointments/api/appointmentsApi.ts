@@ -8,6 +8,7 @@ import type {
   CompleteAppointmentRequest,
   CreateAppointmentRequest,
   ListAppointmentsQuery,
+  ScheduleVisitRequest,
   UpdateAppointmentRequest,
 } from '../types/appointmentsTypes';
 
@@ -16,6 +17,7 @@ import type {
 //   GET    /hl/appointments/calendar?from&to&assignedRep -> AppointmentResponseDto[]
 //   GET    /hl/appointments/:id
 //   POST   /hl/appointments
+//   POST   /hl/appointments/schedule-visit  (creates the job too; marketing roles)
 //   PATCH  /hl/appointments/:id
 //   POST   /hl/appointments/:id/complete   (chains the next job best-effort)
 //   DELETE /hl/appointments/:id            (admin/owner/manager only)
@@ -52,6 +54,24 @@ export const appointmentsApi = createApi({
       query: (id) => ({ url: `/hl/appointments/${id}` }),
       transformResponse: env<AppointmentRecord>,
       providesTags: (_r, _e, id) => [{ type: APPOINTMENTS_TAGS.Detail, id }],
+    }),
+    /**
+     * Books a visit from a Prospect or Referral Source record, creating the Job
+     * the appointment needs server-side. Invalidates the calendar as well as the
+     * list — the whole point is that the visit shows up on the calendar without
+     * the user going to look for it.
+     */
+    scheduleVisit: build.mutation<AppointmentRecord, ScheduleVisitRequest>({
+      query: (body) => ({
+        url: '/hl/appointments/schedule-visit',
+        method: 'POST',
+        body,
+      }),
+      transformResponse: env<AppointmentRecord>,
+      invalidatesTags: [
+        { type: APPOINTMENTS_TAGS.List, id: 'PARTIAL-LIST' },
+        { type: APPOINTMENTS_TAGS.Calendar, id: 'WINDOW' },
+      ],
     }),
     createAppointment: build.mutation<
       AppointmentRecord,
@@ -110,6 +130,7 @@ export const {
   useListAppointmentsQuery,
   useGetCalendarQuery,
   useGetAppointmentQuery,
+  useScheduleVisitMutation,
   useCreateAppointmentMutation,
   useUpdateAppointmentMutation,
   useCompleteAppointmentMutation,

@@ -1,13 +1,27 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { useAppSelector } from '@/app/hooks';
 import { useGetCalendarQuery } from '../api/appointmentsApi';
 import { defaultCalendarWindow, groupByDay } from '../utils/appointmentsUtils';
+
+/** Whose appointments the calendar shows. */
+export type CalendarScope = 'mine' | 'all';
 
 /**
  * The real calendar feed. This replaces the previous fake, which mapped
  * `prospects.updatedAt` because no appointments table existed.
  */
 export function useAppointmentsCalendar(window = defaultCalendarWindow()) {
-  const { data, isLoading, isFetching, isError } = useGetCalendarQuery(window);
+  const [scope, setScope] = useState<CalendarScope>('mine');
+  const myUserId = useAppSelector((s) => s.auth.user?.id ?? null);
+
+  // Scoping is done SERVER-side via the existing `assignedRep` filter rather
+  // than by filtering the response: the feed is capped at CALENDAR_MAX_RESULTS,
+  // so a client-side filter on a busy tenant would silently drop a rep's own
+  // visits that fell past the cap.
+  const { data, isLoading, isFetching, isError } = useGetCalendarQuery({
+    ...window,
+    ...(scope === 'mine' && myUserId ? { assignedRep: myUserId } : {}),
+  });
 
   // Memoised so the `?? []` fallback does not produce a new array identity every
   // render, which would re-run the grouping (and any consumer's effects) needlessly.
@@ -21,5 +35,8 @@ export function useAppointmentsCalendar(window = defaultCalendarWindow()) {
     isLoading,
     isFetching,
     isError,
+    scope,
+    setScope,
+    myUserId,
   };
 }

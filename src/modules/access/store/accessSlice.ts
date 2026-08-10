@@ -31,6 +31,15 @@ const accessSlice = createSlice({
   reducers: {
     setActiveProduct(state, action: PayloadAction<Product>) {
       state.activeProduct = action.payload;
+      // A "viewing as" persona belongs to the dashboard it was chosen in.
+      // HL_VIEW_AS_ROLES holds HospiceLink personas (Marketer/Nurse/Caregiver),
+      // and viewAsRole is persisted, so a preview started on HospiceLink used to
+      // survive a switch to CommunityLink — where usePermission would keep
+      // rendering for, say, Nurse, a role in NO CommunityLink group. The result
+      // was a CommunityLink dashboard with nothing in the sidebar but Main, which
+      // reads as "switching is broken" rather than "you are still previewing".
+      // The preview is scoped to one dashboard; leaving that dashboard ends it.
+      state.viewAsRole = null;
     },
     clearActiveProduct(state) {
       state.activeProduct = null;

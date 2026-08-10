@@ -5,6 +5,7 @@ import type { ReferralsUiState } from '../types/referralsTypes';
 const initialState: ReferralsUiState = {
   search: '',
   statusFilter: 'all',
+  coldOnly: false,
 };
 
 const referralsSlice = createSlice({
@@ -20,9 +21,15 @@ const referralsSlice = createSlice({
     ) {
       state.statusFilter = action.payload;
     },
+    setReferralColdOnly(state, action: PayloadAction<boolean>) {
+      state.coldOnly = action.payload;
+    },
   },
 });
 
-export const { setReferralSearch, setReferralStatusFilter } =
-  referralsSlice.actions;
+export const {
+  setReferralSearch,
+  setReferralStatusFilter,
+  setReferralColdOnly,
+} = referralsSlice.actions;
 export default referralsSlice.reducer;

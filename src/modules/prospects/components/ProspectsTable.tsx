@@ -10,15 +10,17 @@ import {
   URGENCY_PILL,
 } from '../constants/prospectsConstants';
 
-const columns: ReadonlyArray<Column<Prospect>> = [
+const buildColumns = (
+  onOpen: (id: string) => void,
+): ReadonlyArray<Column<Prospect>> => [
   {
     key: 'prospect',
     header: 'Prospect',
     cell: (p) => (
-      <div>
-        <p className="font-bold text-foreground">{p.name}</p>
+      <button type="button" onClick={() => onOpen(p.id)} className="text-left">
+        <p className="font-bold text-foreground hover:text-primary">{p.name}</p>
         <p className="text-[11px] text-muted">{p.email}</p>
-      </div>
+      </button>
     ),
   },
   {
@@ -63,12 +65,14 @@ interface ProspectsTableProps {
   // True when a search/status/urgency filter is active — swaps the empty copy
   // from "get started" to "no matches" so the CTA is not misleading.
   hasFilters?: boolean;
+  /** Opens the detail drawer for a row. */
+  onOpen: (id: string) => void;
 }
 
-export function ProspectsTable({ prospects, onAdd, hasFilters }: ProspectsTableProps) {
+export function ProspectsTable({ prospects, onAdd, hasFilters, onOpen }: ProspectsTableProps) {
   return (
     <DataTable
-      columns={columns}
+      columns={buildColumns(onOpen)}
       rows={prospects}
       rowKey={(p) => p.id}
       empty={

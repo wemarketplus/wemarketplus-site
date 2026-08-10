@@ -4,6 +4,10 @@ import type { ID, ISODateString, PaginationParams, ProspectNote, Reminder } from
 export type { ProspectNote, Reminder };
 
 export interface DailyGoal {
+  /** Set when the figure is computed from real activity, not typed. */
+  isTracked?: boolean;
+  today?: number | null;
+  weekToDate?: number | null;
   id: string;
   label: string;
   current: number;
@@ -103,6 +107,13 @@ export interface NoteRecord {
   /** Reminder auto-created from `followUpDate` (FIX-4). */
   followUpReminderId: ID | null;
   isHotLead: boolean;
+  /**
+   * Team-only content: something the family should not be shown. A
+   * CLASSIFICATION, not an access control — everyone who can read the note still
+   * reads it. It exists so a future family-facing surface has a field to filter
+   * on. Do not render it as if it restricted anything.
+   */
+  isFamilySensitive: boolean;
   createdBy: ID | null;
   createdAt: ISODateString;
   updatedAt: ISODateString;
@@ -133,6 +144,8 @@ export interface CreateNoteRequest {
   assignedTo?: string;
   gpsLocation?: string;
   isHotLead?: boolean;
+  /** Marks team-only content. See NoteRecord.isFamilySensitive. */
+  isFamilySensitive?: boolean;
 }
 
 // Backend UpdateNoteDto excludes all three target ids — a note cannot be
@@ -152,6 +165,19 @@ export interface ListNotesQuery extends PaginationParams {
 // wemarketplus-backend/src/goals/dto/goal-response.dto.ts
 export type GoalPeriod = 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly';
 
+/**
+ * What a goal counts. `manual` is the default and preserves the original
+ * behaviour exactly — hand-entered `currentValue`, nothing computed. Mirrors
+ * wemarketplus-backend/src/goals/goals.constants.ts GoalMetric.
+ */
+export const GoalMetric = {
+  Manual: 'manual',
+  Visits: 'visits',
+  Calls: 'calls',
+  Referrals: 'referrals',
+} as const;
+export type GoalMetric = (typeof GoalMetric)[keyof typeof GoalMetric];
+
 export interface GoalRecord {
   id: ID;
   tenantId: ID;
@@ -161,6 +187,17 @@ export interface GoalRecord {
   currentValue: number;
   unit: string;
   period: GoalPeriod;
+  metric: GoalMetric;
+  /**
+   * True when `currentValue` was COMPUTED from activity rather than typed. The
+   * client must not offer to edit progress on a tracked goal — the number comes
+   * from the visits, calls and referrals the flow already records.
+   */
+  isTracked: boolean;
+  /** Achieved since midnight today. Null for a manual goal — nothing to count. */
+  todayValue: number | null;
+  /** Achieved since Monday. Null for a manual goal. */
+  weekToDateValue: number | null;
   startDate: string | null;
   endDate: string | null;
   createdAt: ISODateString;
@@ -171,6 +208,8 @@ export interface CreateGoalRequest {
   title: string;
   targetValue: number;
   userId?: string;
+  /** Omitted = `manual`, the pre-existing behaviour. */
+  metric?: GoalMetric;
   currentValue?: number;
   unit?: string;
   period?: GoalPeriod;

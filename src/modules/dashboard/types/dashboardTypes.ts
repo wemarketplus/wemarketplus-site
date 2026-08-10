@@ -59,3 +59,31 @@ export interface DashboardSummaryActivity {
 export interface DashboardUiState {
   _placeholder: true;
 }
+
+/** Mirrors the backend GoalMetric — what a dashboard tile counts. */
+export type DashboardMetric = 'visits' | 'calls' | 'referrals';
+
+export interface MetricProgress {
+  metric: DashboardMetric;
+  achieved: number;
+  /** The user's own weekly target, or null when they have not set one. */
+  target: number | null;
+}
+
+export type HotAlertReason = 'overdue_work' | 'flagged_hot';
+
+export interface HotAlert {
+  prospectId: string;
+  patientName: string;
+  stage: string;
+  facilityName: string | null;
+  aiAdmitScore: number | null;
+  reason: HotAlertReason;
+  detail: string;
+}
+
+/** GET /dashboard/my-day — the marketer's own pacing and today's urgent work. */
+export interface MyDay {
+  goals: MetricProgress[];
+  hotAlerts: HotAlert[];
+}

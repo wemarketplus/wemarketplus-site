@@ -1,3 +1,8 @@
 export { ReferralsPage } from './pages/ReferralsPage';
 export { default as referralsReducer } from './store/referralsSlice';
-export { referralsApi } from './api/referralsApi';
+export {
+  referralsApi,
+  useGetReferralQuery,
+  useListReferralsQuery,
+} from './api/referralsApi';
+export type { ReferralSourceRecord } from './types/referralsTypes';

@@ -55,6 +55,23 @@ export const chatApi = createApi({
       query: (body) => ({ url: '/ai', method: 'POST', body }),
       transformResponse: env<AiReply>,
     }),
+    /**
+     * The Playbook Generator — POST /ai/playbook.
+     *
+     * Lives beside the other AI calls because it IS the same assistant: same
+     * rate limit, same daily quota, same audit trail. Only the system prompt and
+     * a per-kind instruction differ, server-side.
+     *
+     * Gated at Max by `playbook_generator`; a lower tier gets 402, which
+     * baseQueryWithReauth already routes to billing.
+     */
+    generatePlaybook: build.mutation<
+      AiReply,
+      { kind: string; situation: string; context?: string }
+    >({
+      query: (body) => ({ url: '/ai/playbook', method: 'POST', body }),
+      transformResponse: env<AiReply>,
+    }),
     generateNote: build.mutation<AiReply, { prompt: string; context?: string }>({
       query: (body) => ({ url: '/ai/note-generator', method: 'POST', body }),
       transformResponse: env<AiReply>,
@@ -86,6 +103,7 @@ export const {
   useSendDmMutation,
   useMarkDmReadMutation,
   useAskAiMutation,
+  useGeneratePlaybookMutation,
   useGenerateNoteMutation,
   useAiEmployerAssistMutation,
   useAiApplicationAssistMutation,

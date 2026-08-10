@@ -67,6 +67,18 @@ const TASK_STATUS_OPTIONS: readonly EntitySelectOption[] = [
   { value: TaskStatus.Cancelled, label: 'Cancelled' },
 ];
 
+/**
+ * A goal either counts something the CRM already records, or it is a number
+ * somebody types. The manual option is named "Manual entry" rather than "None"
+ * so it is clear that progress will not move on its own.
+ */
+const GOAL_METRIC_OPTIONS: readonly EntitySelectOption[] = [
+  { value: 'manual', label: 'Manual entry' },
+  { value: 'visits', label: 'Visits (completed appointments)' },
+  { value: 'calls', label: 'Calls (notes logged as a phone call)' },
+  { value: 'referrals', label: 'Referrals (prospects assigned to you)' },
+];
+
 const GOAL_PERIOD_OPTIONS: readonly EntitySelectOption[] = [
   { value: 'daily', label: 'Daily' },
   { value: 'weekly', label: 'Weekly' },
@@ -117,4 +129,10 @@ export const GOAL_FIELDS: ReadonlyArray<EntityField<GoalFormValues>> = [
   { name: 'currentValue', label: 'Current', type: 'number', placeholder: '0' },
   { name: 'unit', label: 'Unit', placeholder: 'count, visits, calls…' },
   { name: 'period', label: 'Period', type: 'select', options: GOAL_PERIOD_OPTIONS },
+  {
+    name: 'metric',
+    label: 'Track automatically',
+    type: 'select',
+    options: GOAL_METRIC_OPTIONS,
+  },
 ];

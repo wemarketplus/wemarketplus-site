@@ -172,3 +172,13 @@ export interface AddProspectModalProps {
   // Returns true when the create succeeded, so the form can reset.
   onSubmit: (values: NewProspectFormValues) => Promise<boolean>;
 }
+
+/**
+ * One row of the re-engagement queue: the prospect plus WHY it is listed.
+ * Mirrors the backend ReengagementRowDto.
+ */
+export interface ReengagementRow {
+  prospect: ProspectRecord;
+  lastActivityAt: ISODateString;
+  daysInactive: number;
+}

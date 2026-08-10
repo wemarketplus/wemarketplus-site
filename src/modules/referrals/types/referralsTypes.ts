@@ -56,6 +56,16 @@ export interface ReferralSourceRecord {
   accountOwnerId: ID | null;
   notes: string | null;
   aiScore: number;
+  /** Last logged visit or call. Null = never touched. */
+  lastInteractionAt: ISODateString | null;
+  /**
+   * Derived server-side from `lastInteractionAt` against the 14-day rule. Read it
+   * rather than recomputing: the threshold is backend business logic, and a second
+   * copy here is how the badge and the cold worklist start disagreeing.
+   */
+  isCold: boolean;
+  /** Whole days since the last interaction; null when never touched. */
+  daysSinceLastInteraction: number | null;
   createdAt: ISODateString;
   updatedAt: ISODateString;
 }
@@ -94,11 +104,22 @@ export interface ListReferralSourcesQuery extends PaginationParams {
   territoryId?: string;
   accountOwnerId?: string;
   parentCompanyId?: string;
+  /** true = only cold accounts, false = only warm. Omit to include both. */
+  cold?: boolean;
+}
+
+/** GET /referral-sources/cold — the worklist, not a page of the table. */
+export interface ColdReferralSourcesQuery {
+  limit?: number;
+  accountOwnerId?: string;
 }
 
 export interface ReferralsUiState {
   search: string;
   statusFilter: ReferralSourceStatus | 'all';
+  /** Cold-only view. Separate from statusFilter: `status` is the account's
+   *  lifecycle (prospect/active/dormant), coldness is about contact recency. */
+  coldOnly: boolean;
 }
 
 export interface ReferralFilterChip {

@@ -13,6 +13,7 @@ const EMPTY: GoalFormValues = {
   currentValue: 0,
   unit: '',
   period: 'daily',
+  metric: 'manual',
 };
 
 interface GoalFormModalProps {

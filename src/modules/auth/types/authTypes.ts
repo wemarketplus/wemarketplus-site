@@ -19,6 +19,11 @@ export interface AuthenticatedUser {
   role: Role;
   phone: string | null;
   avatarUrl: string | null;
+  // The user's chosen shared-calendar colour ('#rrggbb'), or null to fall back
+  // to the colour derived from the id. Ships on /auth/me AND on login, so the
+  // calendar and the profile picker both have it with no extra request.
+  // Optional so an older backend (or a plain user listing) still fits.
+  calendarColor?: string | null;
   isActive: boolean;
   // False until the user clicks the verification link (production enforces
   // this before login; dev environments may skip it).

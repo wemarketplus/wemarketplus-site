@@ -7,6 +7,7 @@ import type {
   ListProspectsQuery,
   ProspectRecord,
   UpdateProspectRequest,
+  ReengagementRow,
 } from '../types/prospectsTypes';
 
 // Verified against wemarketplus-backend/src/prospects/prospects.controller.ts:
@@ -30,6 +31,23 @@ export const prospectsApi = createApi({
               { type: PROSPECTS_TAGS.List, id: 'PARTIAL-LIST' },
             ]
           : [{ type: PROSPECTS_TAGS.List, id: 'PARTIAL-LIST' }],
+    }),
+    /**
+     * The re-engagement queue: open pipeline rows quiet past the 30-day
+     * threshold, longest-quiet first. Inactivity is derived server-side from
+     * notes, completed visits, completed jobs and stage changes — never from
+     * `updatedAt`, which any field edit would reset.
+     */
+    listReengagement: build.query<
+      ReengagementRow[],
+      { limit?: number; assignedTo?: string } | void
+    >({
+      query: (params) => ({
+        url: '/prospects/re-engagement',
+        params: params ?? undefined,
+      }),
+      transformResponse: (res: ApiEnvelope<ReengagementRow[]>) => res.data,
+      providesTags: [{ type: PROSPECTS_TAGS.List, id: 'REENGAGEMENT' }],
     }),
     getProspect: build.query<ProspectRecord, string>({
       query: (id) => ({ url: `/prospects/${id}` }),
@@ -60,6 +78,7 @@ export const prospectsApi = createApi({
 });
 
 export const {
+  useListReengagementQuery,
   useListProspectsQuery,
   useGetProspectQuery,
   useCreateProspectMutation,
