@@ -329,9 +329,16 @@ const HOSPICELINK_INTELLIGENCE: NavSection = {
   id: 'hl-intelligence',
   label: 'Intelligence (Admin)',
   items: [
+    /**
+     * ONE row, not three. IntelligencePage deliberately renders attribution,
+     * marketing ROI and the team leaderboard on a single screen over a single
+     * window, and it does not switch on the pathname — so the former "Marketing
+     * ROI" and "Team performance" rows were three doors into one identical view,
+     * which reads as a broken tab. The reports are all still here, as sections of
+     * this page. `/intelligence/{marketing-roi,leaderboard}` stay routed (see
+     * router.tsx) so old bookmarks keep working; they just have no nav entry.
+     */
     { to: '/intelligence/revenue', label: 'Revenue intelligence', icon: TrendingUp, product: Product.HospiceLink, minTier: Tier.Gold, allow: STAFF_ROLES },
-    { to: '/intelligence/marketing-roi', label: 'Marketing ROI', icon: Activity, product: Product.HospiceLink, minTier: Tier.Gold, allow: STAFF_ROLES },
-    { to: '/intelligence/leaderboard', label: 'Team performance', icon: Trophy, product: Product.HospiceLink, minTier: Tier.Gold, allow: STAFF_ROLES },
     // Automatic 1-10 grade per referring facility. Its own backend feature key
     // (intelligence_referral_scorecard), same Gold rank as the rest of the group.
     { to: '/intelligence/referral-scorecard', label: 'Referral source scorecard', icon: Gauge, product: Product.HospiceLink, minTier: Tier.Gold, allow: STAFF_ROLES },

@@ -654,6 +654,10 @@ export function AppRouter() {
 
           {/* Intelligence — Gold + staff. */}
           <Route path="intelligence/revenue" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={STAFF_ROLES}><IntelligencePage /></ProtectedRoute></RequireEntitlement>} />
+          {/* Aliases of intelligence/revenue, kept so existing bookmarks resolve.
+              Deliberately NOT in the sidebar: all three reports live on the one
+              screen, so separate rows pointed at an identical view. Same guards as
+              the row that is navigable. */}
           <Route path="intelligence/marketing-roi" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={STAFF_ROLES}><IntelligencePage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="intelligence/leaderboard" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={STAFF_ROLES}><IntelligencePage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="intelligence/weekly" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={STAFF_ROLES}><WeeklyReportPage /></ProtectedRoute></RequireEntitlement>} />
