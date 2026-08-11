@@ -27,6 +27,9 @@ export function useAddUser() {
       firstName: values.firstName.trim(),
       lastName: values.lastName.trim(),
       role: values.role,
+      // Omitted entirely when blank — sending null would CLEAR an assignment, which
+      // is meaningless on create and confusing to read in the request log.
+      ...(values.customRoleId ? { customRoleId: values.customRoleId } : {}),
     };
 
     let user: UserRecord;

@@ -7,6 +7,8 @@ interface DashboardPageHeaderProps {
   greeting: string;
   name: string;
   role: Role | null;
+  /** The user's display title (custom role name when they hold one). */
+  title?: string;
   product: Product;
   tier: Tier;
   organizationName: string;
@@ -23,6 +25,7 @@ export function DashboardPageHeader({
   greeting,
   name,
   role,
+  title,
   product,
   tier,
   organizationName,
@@ -53,7 +56,7 @@ export function DashboardPageHeader({
         {role && (
           <>
             <span className="mx-2 text-muted-soft">·</span>
-            <span>Signed in as {ROLE_LABELS[role] ?? role}</span>
+            <span>Signed in as {title ?? ROLE_LABELS[role] ?? role}</span>
           </>
         )}
       </p>

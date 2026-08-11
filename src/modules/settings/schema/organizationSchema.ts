@@ -8,6 +8,10 @@ export const organizationSchema = z.object({
   city: z.string().min(1, 'Required').max(120),
   state: z.string().length(2, 'Pick a state'),
   phone: z.string().min(7).max(40),
+  // Not validated against the option list: the backend accepts any zone the
+  // runtime resolves, so restricting the client to the curated set would make a
+  // support-set zone unsaveable the moment an admin touched any other field.
+  reportTimezone: z.string().min(1, 'Pick a time zone').max(64),
 });
 
 export type OrganizationFormValues = z.infer<typeof organizationSchema>;

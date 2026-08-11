@@ -10,8 +10,23 @@ export type CalendarScope = 'mine' | 'all';
  * The real calendar feed. This replaces the previous fake, which mapped
  * `prospects.updatedAt` because no appointments table existed.
  */
-export function useAppointmentsCalendar(window = defaultCalendarWindow()) {
-  const [scope, setScope] = useState<CalendarScope>('mine');
+export function useAppointmentsCalendar(
+  options: {
+    /**
+     * Scope supplied by the caller, making this hook CONTROLLED. AppointmentsPage
+     * passes it so the month grid and the agenda share one My calendar / All users
+     * choice instead of each owning a separate copy — switching views used to
+     * silently change whose calendar you were looking at. Omitted (the Follow-ups
+     * screen) the hook keeps its own state and behaves exactly as before.
+     */
+    scope?: CalendarScope;
+    window?: ReturnType<typeof defaultCalendarWindow>;
+  } = {},
+) {
+  const [ownScope, setOwnScope] = useState<CalendarScope>('mine');
+  const scope = options.scope ?? ownScope;
+  const setScope = setOwnScope;
+  const window = options.window ?? defaultCalendarWindow();
   const myUserId = useAppSelector((s) => s.auth.user?.id ?? null);
 
   // Scoping is done SERVER-side via the existing `assignedRep` filter rather

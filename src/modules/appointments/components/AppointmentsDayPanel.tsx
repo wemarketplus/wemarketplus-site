@@ -1,4 +1,4 @@
-import { CalendarPlus, Clock, MapPin, Video } from 'lucide-react';
+import { CalendarPlus, Clock, MapPin, User, Video } from 'lucide-react';
 import { Button, Card } from '@/shared/ui/core';
 import { cn } from '@/shared/utils/cn';
 import {
@@ -46,7 +46,13 @@ interface AppointmentsDayPanelProps {
   items: readonly AppointmentRecord[];
   isBusy: boolean;
   onComplete: (appointment: AppointmentRecord) => void;
-  onSchedule: () => void;
+  /**
+   * Omitted for roles that cannot create an appointment (no pipeline access means
+   * no job to hang one off). Their calendar is self-scoped and usually empty, so
+   * this empty state is the first thing they see — offering an action that always
+   * fails would be the worst place to put one.
+   */
+  onSchedule?: () => void;
 }
 
 /** The selected day's detail, beside the month grid. */
@@ -74,9 +80,11 @@ export function AppointmentsDayPanel({
         // Compact empty state with the obvious next action — not a tall blank void.
         <div className="flex flex-col items-start gap-2 border-t border-border/[0.09] px-4 py-4">
           <p className="text-xs text-muted">Nothing scheduled.</p>
-          <Button variant="ghost" onClick={onSchedule}>
-            <CalendarPlus className="h-4 w-4" /> Schedule
-          </Button>
+          {onSchedule && (
+            <Button variant="ghost" onClick={onSchedule}>
+              <CalendarPlus className="h-4 w-4" /> Schedule
+            </Button>
+          )}
         </div>
       ) : (
         <ul className="divide-y divide-border/[0.09] border-t border-border/[0.09]">
@@ -93,6 +101,15 @@ export function AppointmentsDayPanel({
                 <p className="text-sm font-bold leading-snug text-foreground">
                   {appointment.title}
                 </p>
+                {/* Who the visit is for. The panel gave a time, a place and a
+                    status but never a person, so "click into any visit for the
+                    patient details before you head out" had nothing to read. */}
+                {appointment.patientName && (
+                  <p className="flex items-center gap-1.5 text-[11px] font-semibold text-foreground">
+                    <User className="h-3 w-3 shrink-0 text-muted" />
+                    {appointment.patientName}
+                  </p>
+                )}
                 <p className="flex items-center gap-1.5 text-[11px] text-muted">
                   <Clock className="h-3 w-3 shrink-0" />
                   {timeRange(appointment)}

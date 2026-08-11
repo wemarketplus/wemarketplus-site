@@ -39,6 +39,13 @@ export const noteSchema = z
     barriers: z.string().max(2000).optional().or(z.literal('')),
     nextStep: z.string().max(500).optional().or(z.literal('')),
     followUpDate: z.string().optional().or(z.literal('')),
+    /**
+     * "Team only — not for the family". A CLASSIFICATION the author applies, not
+     * a permission: the note stays readable by every teammate either way (see
+     * Note.isFamilySensitive on the backend). Optional and unvalidated beyond its
+     * type, because there is no wrong answer to record — only an unrecorded one.
+     */
+    isFamilySensitive: z.boolean().optional(),
   })
   .refine(
     (v) => Boolean(v.prospectId || v.referralSourceId || v.contactId),

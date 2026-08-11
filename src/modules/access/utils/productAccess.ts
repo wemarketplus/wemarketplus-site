@@ -1,10 +1,43 @@
 import { Product, type ProductEntitlement } from '@/shared/types';
 import type { AuthenticatedUser } from '@/modules/auth/types/authTypes';
 
-// The products a user can actually use. Prefers the `entitlements` array (the
+/**
+ * DASHBOARD ACCESS vs. BILLING ENTITLEMENT — two different questions.
+ *
+ * `switchableProducts` / `hasProductAccess` answer "which dashboards may this
+ * signed-in user OPEN": both of them, always. One login is one session, and the
+ * console can render either dashboard for it.
+ *
+ * `entitledProducts` / `entitlementForProduct` / `tierForProduct` answer "what
+ * has this tenant PAID FOR": unchanged, and still the only input to tier/feature
+ * gating (navigationConfig's minTier/maxTier, RequireEntitlement, the backend
+ * TierGuard). Nothing here relaxes those.
+ *
+ * These used to be the same function, which is why a single-product tenant had
+ * no switcher and a switch to a non-entitled dashboard was silently dropped.
+ */
+
+// Every dashboard the console can render. Order is the order the switcher menu
+// lists them in.
+export const SWITCHABLE_PRODUCTS: readonly Product[] = [
+  Product.HospiceLink,
+  Product.CommunityLink,
+];
+
+// The dashboards a signed-in user may switch between: BOTH, for every
+// authenticated user, whatever their role or the tenant's entitlements. Empty
+// when there is no user — no session, no dashboards.
+export function switchableProducts(user: AuthenticatedUser | null): Product[] {
+  return user ? [...SWITCHABLE_PRODUCTS] : [];
+}
+
+// The products the TENANT IS BILLED FOR. Prefers the `entitlements` array (the
 // authoritative multi-product source); falls back to the single legacy
 // `product` scalar for older backends that don't yet ship entitlements, and to
 // HospiceLink as the ultimate default (matches the rest of the app).
+//
+// NOT dashboard access — use hasProductAccess/switchableProducts for that. This
+// is the plan question: which product's tier applies, what billing shows.
 export function entitledProducts(user: AuthenticatedUser | null): Product[] {
   if (!user) return [];
   const active = (user.entitlements ?? []).filter((e) => e.isActive);
@@ -23,18 +56,32 @@ export function primaryProduct(user: AuthenticatedUser | null): Product {
   return entitledProducts(user)[0] ?? Product.HospiceLink;
 }
 
-// Whether the user is entitled to a given product (the client-side mirror of
-// the backend ProductGuard). Nav hiding and route guards both build on this.
+/**
+ * Whether the user may OPEN a given dashboard — the client-side mirror of the
+ * backend ProductGuard, which likewise admits any authenticated tenant user to
+ * either product surface (see CROSS_PRODUCT_DASHBOARD_ACCESS there).
+ *
+ * True for both products for anyone with a session. This is deliberately NOT an
+ * entitlement check: it used to be `entitledProducts(user).includes(product)`,
+ * which made the switcher a no-op (useActiveProduct drops the dispatch) and made
+ * every route of a non-entitled dashboard bounce home (RequireProduct).
+ *
+ * What still gates, unchanged, once inside a dashboard: role groups
+ * (`allow` in navigationConfig, ProtectedRoute/RoleGate, backend @Roles) and
+ * plan tier (minTier/maxTier, RequireEntitlement, backend TierGuard). Opening a
+ * dashboard is not the same as being allowed into its modules.
+ */
 export function hasProductAccess(
   user: AuthenticatedUser | null,
   product: Product,
 ): boolean {
-  return entitledProducts(user).includes(product);
+  return switchableProducts(user).includes(product);
 }
 
-// Resolves the effective active product: the stored selection when the user is
-// still entitled to it, otherwise their primary product. Keeps a stale/persisted
-// selection from ever surfacing a dashboard the user can't access.
+// Resolves the effective active product: the stored selection when the user may
+// open it, otherwise their primary product. A persisted selection now survives
+// for both dashboards; it is still discarded when there is no session, so the
+// next login starts from its own primary product.
 export function resolveActiveProduct(
   user: AuthenticatedUser | null,
   stored: Product | null,

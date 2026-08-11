@@ -2,7 +2,12 @@ import type { ReactNode } from 'react';
 
 export interface AuditLogEntry {
   id: string;
+  /** Display name of the actor, e.g. "Admin User" / "System". */
   actor: string;
+  /** Actor's email, shown under the name. Null for system rows. */
+  actorEmail: string | null;
+  /** Retained for filtering and for support to correlate against the API. */
+  actorId: string | null;
   action: string;
   resource: string;
   target: string;

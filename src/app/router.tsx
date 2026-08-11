@@ -9,6 +9,7 @@ import { RequireRoleAtTier } from '@/routes/RequireRoleAtTier';
 import { Product, Tier } from '@/shared/types';
 import { RootRoute } from '@/routes/RootRoute';
 import { LEGACY_DEMO_REDIRECTS } from '@/shared/config/demoUrls';
+import { CHANGE_PASSWORD_PATH } from '@/shared/constants/routeConstants';
 import {
   Role,
   SUPER_ADMIN_ONLY,
@@ -28,6 +29,8 @@ import {
   CL_FIELD_ACTIVITY_ROLES,
   HL_FIELD_ROLES,
   HL_MARKETING_ROLES,
+  HL_CLINICAL_ROLES,
+  HL_MANAGEMENT_ROLES,
 } from '@/shared/rbac';
 
 // --- Public auth funnel ---------------------------------------------------
@@ -236,6 +239,9 @@ const AiAssistantPage = lazy(() =>
 );
 const ClinicalPage = lazy(() =>
   import('@/modules/clinical').then((m) => ({ default: m.ClinicalPage })),
+);
+const ReferralScorecardPage = lazy(() =>
+  import('@/modules/intelligence').then((m) => ({ default: m.ReferralScorecardPage })),
 );
 const WeeklyReportPage = lazy(() =>
   import('@/modules/intelligence').then((m) => ({ default: m.WeeklyReportPage })),
@@ -505,6 +511,31 @@ export function AppRouter() {
           }
         />
 
+        {/*
+          The FORCED password change, and the one screen an admin-issued password
+          can open. Deliberately a sibling of the dashboard shell rather than a
+          child of it, for two reasons:
+
+            1. ProtectedRoute redirects a pending user here. Inside the shell that
+               would be a route redirecting to itself.
+            2. Everything in the shell — sidebar counts, notification bell, every
+               page widget — would fire requests the backend answers with 403
+               PASSWORD_CHANGE_REQUIRED. The user would meet a broken dashboard
+               instead of the one form they need.
+
+          ChangePasswordPage is already an AuthCardShell standalone card, so it
+          wants no dashboard chrome anyway. `allowPasswordChangePending` is the
+          exemption that stops the redirect looping; it still requires a session.
+        */}
+        <Route
+          path={CHANGE_PASSWORD_PATH}
+          element={
+            <ProtectedRoute allowPasswordChangePending>
+              <ChangePasswordPage />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Protected app — dashboard shell. The shell renders dashboard
             children inside <DashboardLayout>'s <Outlet/>. The index ("/")
             is handled by RootRoute above, so this block has no index. */}
@@ -535,7 +566,21 @@ export function AppRouter() {
               navigationConfig's HL_MARKETING_ROLES exactly, and the matching
               backend @Roles now answers 403 — change one side, change all
               three. Appointments is deliberately NOT in here: it is an
-              HL_FIELD_ROLES surface that Nurse and Caregiver do work in. */}
+              HL_FIELD_ROLES surface that Nurse and Caregiver do work in. Nor is
+              Daily tasks (below, on its own field-roles gate) — the nurse and
+              caregiver guides both open the day on it. */}
+          {/* The personal work queue: every persona's morning screen, so it sits
+              on HL_FIELD_ROLES rather than inside the marketing group. Server-side
+              the queue is self-scoped (no userId parameter at all), which is what
+              makes admitting the clinical roles safe. */}
+          <Route
+            path="daily-tasks"
+            element={
+              <ProtectedRoute allow={HL_FIELD_ROLES}>
+                <DailyQueuePage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             element={
               <ProtectedRoute allow={HL_MARKETING_ROLES}>
@@ -543,7 +588,6 @@ export function AppRouter() {
               </ProtectedRoute>
             }
           >
-            <Route path="daily-tasks" element={<DailyQueuePage />} />
             <Route path="automation" element={<AutomationPage />} />
             <Route path="re-engagement" element={<ReengagementPage />} />
             {/* The MARKETER-facing leaderboard: no revenue. Distinct from
@@ -559,12 +603,31 @@ export function AppRouter() {
             <Route path="territories" element={<TerritoriesEntityPage />} />
             <Route path="territory-planner" element={<TerritoryPlannerPage />} />
           </Route>
-          <Route path="appointments" element={<AppointmentsPage />} />
-          <Route path="activity/calendar" element={<ActivityPage />} />
-          <Route path="activity/notes" element={<ActivityPage />} />
-          <Route path="activity/reminders" element={<ActivityPage />} />
-          <Route path="activity/goals" element={<ActivityPage />} />
-          <Route path="activity/ai" element={<AiAssistantPage />} />
+          {/* Activity group — HL_FIELD_ROLES. These six carried no role guard at
+              all while navigationConfig's HOSPICELINK_ACTIVITY has gated every one
+              of them to HL_FIELD_ROLES, so a CommunityLink-only persona or any
+              future non-field HospiceLink role that typed the URL rendered the
+              page. Grouped rather than repeated per route for the same reason the
+              marketing and compliance groups are: a new Activity screen inherits
+              the gate instead of having to remember it. HL_FIELD_ROLES (not
+              HL_MARKETING_ROLES) is the point — Nurse and Caregiver log their
+              visits, notes and goals here, and these screens plus Clinical are
+              their workspace. `allow` mirrors navigationConfig exactly; change one
+              side, change both. */}
+          <Route
+            element={
+              <ProtectedRoute allow={HL_FIELD_ROLES}>
+                <Outlet />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="appointments" element={<AppointmentsPage />} />
+            <Route path="activity/calendar" element={<ActivityPage />} />
+            <Route path="activity/notes" element={<ActivityPage />} />
+            <Route path="activity/reminders" element={<ActivityPage />} />
+            <Route path="activity/goals" element={<ActivityPage />} />
+            <Route path="activity/ai" element={<AiAssistantPage />} />
+          </Route>
 
           {/* Premium HospiceLink modules. These were previously hidden by
               navigationConfig alone, which is not access control — typing the URL
@@ -575,17 +638,35 @@ export function AppRouter() {
               allow values mirror navigationConfig exactly — change one side, change
               both. */}
 
-          {/* Clinical — Gold. Deliberately no `allow`: the nav shows Clinical to
-              every role, Nurse and Caregiver included. */}
-          <Route path="clinical/family" element={<RequireEntitlement minTier={Tier.Gold}><ClinicalPage /></RequireEntitlement>} />
-          <Route path="clinical/messaging" element={<RequireEntitlement minTier={Tier.Gold}><ClinicalPage /></RequireEntitlement>} />
-          <Route path="clinical/admissions" element={<RequireEntitlement minTier={Tier.Gold}><ClinicalPage /></RequireEntitlement>} />
+          {/* Clinical — Gold + HL_CLINICAL_ROLES. These three carried the tier gate
+              only, on the since-falsified premise that the nav showed Clinical to
+              every role: navigationConfig's HOSPICELINK_CLINICAL gates all three to
+              HL_CLINICAL_ROLES (management + Nurse + Caregiver), so the sidebar
+              already hid Family communication from a Marketer or Rep while typing
+              the URL still rendered it. That is a patient/family PHI surface, and a
+              hidden nav item is not access control — the tier gate alone let every
+              role on a Gold tenant in. `allow` now mirrors the nav exactly; change
+              one side, change both. Marketing personas are deliberately excluded:
+              their view of a patient stops at the referral, not the care. */}
+          <Route path="clinical/family" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={HL_CLINICAL_ROLES}><ClinicalPage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="clinical/messaging" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={HL_CLINICAL_ROLES}><ClinicalPage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="clinical/admissions" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={HL_CLINICAL_ROLES}><ClinicalPage /></ProtectedRoute></RequireEntitlement>} />
 
           {/* Intelligence — Gold + staff. */}
           <Route path="intelligence/revenue" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={STAFF_ROLES}><IntelligencePage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="intelligence/marketing-roi" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={STAFF_ROLES}><IntelligencePage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="intelligence/leaderboard" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={STAFF_ROLES}><IntelligencePage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="intelligence/weekly" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={STAFF_ROLES}><WeeklyReportPage /></ProtectedRoute></RequireEntitlement>} />
+          <Route
+            path="intelligence/referral-scorecard"
+            element={
+              <RequireEntitlement minTier={Tier.Gold}>
+                <ProtectedRoute allow={STAFF_ROLES}>
+                  <ReferralScorecardPage />
+                </ProtectedRoute>
+              </RequireEntitlement>
+            }
+          />
 
           {/* Field execution — Max. EVV and mileage had endpoints (and, for EVV,
               written RTK hooks) but no nav entry and no route, so both were
@@ -595,13 +676,39 @@ export function AppRouter() {
           <Route path="field/evv" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={HL_FIELD_ROLES}><EvvPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="field/mileage" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={HL_FIELD_ROLES}><MileagePage /></ProtectedRoute></RequireEntitlement>} />
 
-          {/* Smart scheduling — Gold. */}
-          <Route path="scheduling" element={<RequireEntitlement minTier={Tier.Gold}><SchedulingPage /></RequireEntitlement>} />
+          {/* Nurse scheduling (the roster) — Gold + HL_MANAGEMENT_ROLES. This is
+              the ADMIN view of who is on shift, not a nurse's own diary, and
+              nurse-scheduling.controller.ts gates every write (@Post/@Patch/
+              @Delete) to Admin/Owner/Manager — so a Nurse or Caregiver let in here
+              got a read-only roster of the whole team, which is neither useful to
+              them nor theirs to see. `allow` mirrors the nav item's
+              HL_MANAGEMENT_ROLES, which in turn mirrors that backend @Roles list;
+              change one, change all three. The nurse's own-schedule view is the
+              separate `comingSoon` "My visit schedule" row in the Clinical group. */}
+          <Route path="scheduling" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={HL_MANAGEMENT_ROLES}><SchedulingPage /></ProtectedRoute></RequireEntitlement>} />
 
           {/* Integrations. Data import is every tier; Aircall is Gold; the
-              Playbook generator is MAX, not Gold — do not "align" these three. */}
-          <Route path="integrations/import" element={<DataImportExportPage />} />
-          <Route path="integrations/aircall" element={<RequireEntitlement minTier={Tier.Gold}><IntegrationsPage /></RequireEntitlement>} />
+              Playbook generator is MAX, not Gold — do not "align" these three
+              TIERS. The role gates are a separate axis and each has its own reason
+              below. */}
+          {/* Import/export — STAFF_ROLES, no tier gate. The screen had no guard at
+              all, so any role could type the URL and reach a bulk data mover.
+              data-transfer.controller.ts is @RequirePermission("import_export"),
+              which the default permission matrix denies to Caregiver outright, and
+              the end-user guide files Import Data under Admin/Office Manager — so
+              STAFF_ROLES is the frontend mirror of that backend permission.
+              DataImportExportPage serves BOTH halves and this route is the only way
+              in to the EXPORT screen too; bulk export of the tenant's book of
+              business is if anything the more sensitive half, so STAFF_ROLES is
+              correct for both and must not be widened "because export is harmless".
+              Mirrors the nav item; change one side, change both. */}
+          <Route path="integrations/import" element={<ProtectedRoute allow={STAFF_ROLES}><DataImportExportPage /></ProtectedRoute>} />
+          {/* Aircall — Gold + HL_MARKETING_ROLES. A phone console over the call and
+              text history of referral accounts: outbound dialling and that history
+              belong to the people who own those relationships, so it sits with the
+              marketing group rather than with the field roles. Route and nav item
+              were both ungated by role; both now carry this list. */}
+          <Route path="integrations/aircall" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={HL_MARKETING_ROLES}><IntegrationsPage /></ProtectedRoute></RequireEntitlement>} />
           {/* Was rendering IntegrationsPage — the nav item and the
               `playbook_generator` tier key existed with nothing behind them.
               Now the real screen; the backend gates the same key at Max. */}
@@ -663,8 +770,6 @@ export function AppRouter() {
           <Route path="activity-notes" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_SALES_ROLES}><ActivityNotesPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="gift-gratuity" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_FIELD_ACTIVITY_ROLES}><GiftGratuityPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="aircall" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_SALES_ROLES}><AircallPage /></ProtectedRoute></RequireEntitlement>} />
-          <Route path="alert-settings" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={ADMIN_ONLY}><AlertSettingsPage /></ProtectedRoute></RequireEntitlement>} />
-          <Route path="financial-settings" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={ADMIN_ONLY}><FinancialSettingsPage /></ProtectedRoute></RequireEntitlement>} />
           {/* Tasks is visible/usable by every CommunityLink role, including
               the field roles — matches every role's sidebar in the demo. */}
           <Route path="tasks" element={<ProtectedRoute allow={CL_ALL_ROLES}><TasksPage /></ProtectedRoute>} />
@@ -730,10 +835,62 @@ export function AppRouter() {
               role must be able to edit their own name and calendar colour;
               /settings above stays ADMIN_ONLY because it edits the org. */}
           <Route path="my-profile" element={<MyProfilePage />} />
+          {/*
+            Alert settings is CROSS-PRODUCT: the backend route carries no
+            @RequireProduct, and the screen now takes its alert vocabulary from
+            the server, which scopes it to the products the tenant holds. It
+            moved out of the CommunityLink group so a HospiceLink admin can reach
+            it at the same URL — two routes with the same path in two product
+            groups would have made the first one win for everybody.
+
+            The tier differs by product because the two ladders are inverted:
+            this capability sits at the TOP tier of each (HL Gold, CL Max), which
+            is rank 3 on both and matches the backend's single `alert_settings`
+            feature key.
+          */}
+          {/*
+            Financial settings is cross-product for the same reason as
+            alert-settings: the backend controller carries no @RequireProduct (it
+            lives in src/mileage and is keyed by setting name, not product), and
+            HospiceLink now needs it — Revenue Intelligence's cost-per-admission
+            is driven by the `marketing_spend_monthly` value recorded here, and
+            its "Record it in financial settings" call to action pointed at a
+            route only CommunityLink could reach.
+          */}
+          <Route
+            path="financial-settings"
+            element={
+              <RequireEntitlement
+                minTier={{
+                  [Product.HospiceLink]: Tier.Gold,
+                  [Product.CommunityLink]: Tier.Max,
+                }}
+              >
+                <ProtectedRoute allow={ADMIN_ONLY}>
+                  <FinancialSettingsPage />
+                </ProtectedRoute>
+              </RequireEntitlement>
+            }
+          />
+          <Route
+            path="alert-settings"
+            element={
+              <RequireEntitlement
+                minTier={{
+                  [Product.HospiceLink]: Tier.Gold,
+                  [Product.CommunityLink]: Tier.Max,
+                }}
+              >
+                <ProtectedRoute allow={ADMIN_ONLY}>
+                  <AlertSettingsPage />
+                </ProtectedRoute>
+              </RequireEntitlement>
+            }
+          />
           <Route path="settings" element={<ProtectedRoute allow={ADMIN_ONLY}><SettingsPage /></ProtectedRoute>} />
-          {/* Change-password is available both as the legacy site URL and the
-              nested /account/password we already linked from settings. */}
-          <Route path="change-password" element={<ChangePasswordPage />} />
+          {/* The VOLUNTARY change, reached from settings, so it keeps the dashboard
+              chrome around it. The forced one is /change-password, declared outside
+              this shell — see the note there for why it cannot live in here. */}
           <Route path="account/password" element={<ChangePasswordPage />} />
         </Route>
 

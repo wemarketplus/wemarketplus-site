@@ -8,6 +8,7 @@ import type {
   CompleteAppointmentRequest,
   CreateAppointmentRequest,
   ListAppointmentsQuery,
+  MyPatientRecord,
   ScheduleVisitRequest,
   UpdateAppointmentRequest,
 } from '../types/appointmentsTypes';
@@ -15,6 +16,7 @@ import type {
 // Verified against wemarketplus-backend/src/appointments/appointments.controller.ts:
 //   GET    /hl/appointments?page&limit&jobId&assignedRep&status&appointmentType&outcome
 //   GET    /hl/appointments/calendar?from&to&assignedRep -> AppointmentResponseDto[]
+//   GET    /hl/appointments/my-patients -> MyPatientResponseDto[]  (field roles)
 //   GET    /hl/appointments/:id
 //   POST   /hl/appointments
 //   POST   /hl/appointments/schedule-visit  (creates the job too; marketing roles)
@@ -50,6 +52,21 @@ export const appointmentsApi = createApi({
       transformResponse: env<AppointmentRecord[]>,
       providesTags: [{ type: APPOINTMENTS_TAGS.Calendar, id: 'WINDOW' }],
     }),
+    /**
+     * The patients the CALLER has visits with — a nurse's or caregiver's only
+     * route to a patient list, since GET /prospects is marketing-only (403).
+     * Takes no argument on purpose: the server reads the acting user, so there is
+     * no way to ask for a colleague's patients.
+     *
+     * Returns a bare array of {id, patientName, stage} — not the PHI-bearing
+     * prospect record.
+     */
+    getMyPatients: build.query<MyPatientRecord[], void>({
+      query: () => ({ url: '/hl/appointments/my-patients' }),
+      transformResponse: env<MyPatientRecord[]>,
+      // Booking or deleting a visit can change who "my patients" are.
+      providesTags: [{ type: APPOINTMENTS_TAGS.List, id: 'MY-PATIENTS' }],
+    }),
     getAppointment: build.query<AppointmentRecord, string>({
       query: (id) => ({ url: `/hl/appointments/${id}` }),
       transformResponse: env<AppointmentRecord>,
@@ -70,6 +87,7 @@ export const appointmentsApi = createApi({
       transformResponse: env<AppointmentRecord>,
       invalidatesTags: [
         { type: APPOINTMENTS_TAGS.List, id: 'PARTIAL-LIST' },
+        { type: APPOINTMENTS_TAGS.List, id: 'MY-PATIENTS' },
         { type: APPOINTMENTS_TAGS.Calendar, id: 'WINDOW' },
       ],
     }),
@@ -120,6 +138,7 @@ export const appointmentsApi = createApi({
       query: (id) => ({ url: `/hl/appointments/${id}`, method: 'DELETE' }),
       invalidatesTags: [
         { type: APPOINTMENTS_TAGS.List, id: 'PARTIAL-LIST' },
+        { type: APPOINTMENTS_TAGS.List, id: 'MY-PATIENTS' },
         { type: APPOINTMENTS_TAGS.Calendar, id: 'WINDOW' },
       ],
     }),
@@ -129,6 +148,7 @@ export const appointmentsApi = createApi({
 export const {
   useListAppointmentsQuery,
   useGetCalendarQuery,
+  useGetMyPatientsQuery,
   useGetAppointmentQuery,
   useScheduleVisitMutation,
   useCreateAppointmentMutation,

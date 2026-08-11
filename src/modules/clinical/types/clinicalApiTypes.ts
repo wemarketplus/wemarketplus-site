@@ -16,8 +16,14 @@ export interface EvvLogRecord extends Base {
   clockIn: ISODateString | null;
   clockOut: ISODateString | null;
   locationIn: string | null;
+  /** Where the visit ended. The API has always returned this; the type omitted it,
+   *  so the table could only ever show the arrival location. */
+  locationOut: string | null;
   visitType: string | null;
+  /** Written at clock-in. */
   notes: string | null;
+  /** Written at clock-out. Separate column so it cannot overwrite `notes`. */
+  notesOut: string | null;
 }
 export interface ClockInRequest {
   prospectId?: string;
@@ -27,7 +33,9 @@ export interface ClockInRequest {
 }
 export interface ClockOutRequest {
   locationOut?: string;
-  notes?: string;
+  /** Maps to `notesOut`. Sending `notes` here used to erase the clock-in note and
+   *  is now rejected by the backend DTO. */
+  notesOut?: string;
 }
 
 export interface TelehealthSessionRecord extends Base {

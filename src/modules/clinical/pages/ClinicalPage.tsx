@@ -1,11 +1,12 @@
 import { useLocation } from 'react-router-dom';
 import { AdmissionsPage } from './AdmissionsPage';
+import { FamilyCommunicationPage } from './FamilyCommunicationPage';
 import { TelehealthPage } from './TelehealthPage';
 
 // The three /clinical/* routes all mount this component (see app/router.tsx), so
 // the active sub-view is derived from the pathname:
 //   /clinical/admissions -> bed-units CRUD
-//   /clinical/family     -> telehealth sessions (family visits framing)
+//   /clinical/family     -> the family communication LOG (phone/text/in-person)
 //   /clinical/messaging  -> telehealth sessions (care-team framing)
 // Each is a real list + create/edit/delete against the clinicalApi.
 export function ClinicalPage() {
@@ -24,11 +25,13 @@ export function ClinicalPage() {
     );
   }
 
-  // Default (/clinical/family) — family-facing video visits.
-  return (
-    <TelehealthPage
-      title="Family telehealth visits"
-      subtitle={(total) => `${total} scheduled video visits with families`}
-    />
-  );
+  /**
+   * Default (/clinical/family) — the family communication log.
+   *
+   * This used to render TelehealthPage ("Family telehealth visits"). Video visits
+   * are a different product surface from the log of phone/text/in-person family
+   * conversations the nurse guide sends people here to keep, and only the log is
+   * built: Telehealth & patient portal is announced as coming soon in the sidebar.
+   */
+  return <FamilyCommunicationPage />;
 }

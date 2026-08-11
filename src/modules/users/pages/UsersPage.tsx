@@ -1,6 +1,8 @@
 import { Plus } from 'lucide-react';
 import { extractApiErrorMessage } from '@/modules/auth/utils/errorUtils';
-import { RoleGate, STAFF_ROLES } from '@/shared/rbac';
+import { useActiveEntitlement } from '@/modules/access';
+import { ADMIN_ONLY, RoleGate, STAFF_ROLES } from '@/shared/rbac';
+import { Product } from '@/shared/types';
 import { Button, Card, CardContent } from '@/shared/ui/core';
 import { useUsersList } from '../hooks/useUsersList';
 import { useAddUser } from '../hooks/useAddUser';
@@ -12,11 +14,17 @@ import { UsersTable } from '../components/UsersTable';
 import { AddUserModal } from '../components/AddUserModal';
 import { EditUserModal } from '../components/EditUserModal';
 import { TempPasswordDialog } from '../components/TempPasswordDialog';
+import { TeamOverviewStats } from '../components/TeamOverviewStats';
 
 export function UsersPage() {
   const { users, total, page, lastPage, setPage, isLoading, isFetching, error } =
     useUsersList();
   const { open, isSaving, submitError, openModal, close, submit } = useAddUser();
+  // HospiceLink reaches this screen from a nav item called "Admin" (its product
+  // guide says "Click Admin in the left menu"), so the heading matches what the
+  // reader clicked. CommunityLink still calls it Team.
+  const { product } = useActiveEntitlement();
+  const isHospiceLink = product === Product.HospiceLink;
   const edit = useEditUser();
   const { deleteUser, isDeleting } = useDeleteUser();
   const {
@@ -32,7 +40,9 @@ export function UsersPage() {
     <div className="space-y-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex flex-col gap-1">
-          <h1 className="font-display text-3xl text-foreground">Team members</h1>
+          <h1 className="font-display text-3xl text-foreground">
+            {isHospiceLink ? 'Admin' : 'Team members'}
+          </h1>
           <p className="text-sm text-muted">
             {total} {total === 1 ? 'user' : 'users'} across your CRM. Filter or search to
             narrow the list.
@@ -40,10 +50,20 @@ export function UsersPage() {
         </div>
         <RoleGate allow={STAFF_ROLES}>
           <Button onClick={openModal}>
-            <Plus className="h-4 w-4" /> Add user
+            <Plus className="h-4 w-4" />{' '}
+            {isHospiceLink ? 'Invite team member' : 'Add user'}
           </Button>
         </RoleGate>
       </header>
+
+      {/*
+        Admin / Office Manager only. Both endpoints behind this band are
+        Admin/Owner-gated server-side, so the RoleGate is what stops a Manager —
+        who may legitimately read the list below — from firing two 403s.
+      */}
+      <RoleGate allow={ADMIN_ONLY}>
+        <TeamOverviewStats />
+      </RoleGate>
 
       <Card>
         <CardContent className="space-y-5 pt-6">

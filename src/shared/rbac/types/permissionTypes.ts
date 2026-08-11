@@ -44,3 +44,22 @@ export const ALL_ROLES: readonly Role[] = [
   Role.Maintenance,
   Role.Housekeeping,
 ];
+
+/**
+ * A tenant-defined job title with the sidebar tabs it shows. Mirrors the backend
+ * CustomRoleResponseDto (wemarketplus-backend/src/custom-roles).
+ *
+ * `baseRole` is the role whose PERMISSIONS the holder actually has — the user's own
+ * `role` field always equals it, and every guard reads that. `navKeys` only NARROWS
+ * the menu (see isNavItemVisible), so a custom role can never grant anything its
+ * base role lacks.
+ */
+export interface CustomRole {
+  id: string;
+  name: string;
+  baseRole: Role;
+  navKeys: string[];
+  isActive: boolean;
+  /** Present on the admin list only — how many users hold this role. */
+  memberCount?: number;
+}

@@ -1,7 +1,13 @@
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import { useAppDispatch } from '@/app/hooks';
+// API slices by direct path, matching the existing prospectsApi import below —
+// the module barrels also export page components, and importing those here would
+// drag whole route trees into this hook.
+import { hospiceContactsApi } from '@/modules/hospice-contacts/api/hospiceContactsApi';
 import { prospectsApi } from '@/modules/prospects/api/prospectsApi';
+import { referralsApi } from '@/modules/referrals/api/referralsApi';
+import { REFERRALS_TAGS } from '@/modules/referrals/constants/referralsConstants';
 import {
   useConvertLeadMutation,
   useCreateLeadMutation,
@@ -57,6 +63,16 @@ export function useLeadActions() {
             { type: 'Prospects.List', id: 'PARTIAL-LIST' },
           ]),
         );
+        // ...and, per the header comment, an account and a contact as well. All
+        // three caches have to be refreshed, not just the pipeline: the Source
+        // column on Prospects resolves its name from the cached accounts list, so
+        // a stale one renders the new row with no source at all.
+        dispatch(
+          referralsApi.util.invalidateTags([
+            { type: REFERRALS_TAGS.List, id: 'PARTIAL-LIST' },
+          ]),
+        );
+        dispatch(hospiceContactsApi.util.invalidateTags(['HospiceContact']));
         toast.success(
           `Converted · pipeline created${
             result.companyId ? ' and linked to the account' : ''

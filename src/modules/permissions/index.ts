@@ -10,4 +10,11 @@ export {
   permissionsApi,
   useGetPermissionsQuery,
   useUpdatePermissionMutation,
+  // Custom roles (Admin → Manage Roles). Exported for the Users module's role
+  // pickers, which need the tenant's assignable job titles.
+  useListCustomRolesQuery,
+  useCreateCustomRoleMutation,
+  useUpdateCustomRoleMutation,
+  useDeleteCustomRoleMutation,
 } from './api/permissionsApi';
+export { ManageCustomRoles } from './components/ManageCustomRoles';

@@ -14,14 +14,15 @@ import { useEntitlements } from '../hooks/useEntitlements';
  * dashboard, and the chrome should say which. A menu makes the current state
  * unambiguous and the switch an explicit act.
  *
- * Renders nothing for single-product users: with one entitlement there is no
- * state to disclose and nothing to switch to, so a control would be noise.
+ * Lists BOTH dashboards for EVERY authenticated user, whatever their role and
+ * whatever the tenant is billed for. It previously rendered nothing unless the
+ * tenant held two entitlements, so most users never saw it — dashboard access
+ * and billing entitlement are different questions (see productAccess.ts).
  *
- * Switching lands on `/` rather than the current path — a route that exists for
- * one product may not exist, or may not be authorized, for the other.
+ * Renders nothing when there is no session: no user, no dashboards to switch.
  */
 export function ProductSwitcher() {
-  const { products, hasMultiple } = useEntitlements();
+  const { products } = useEntitlements();
   const { activeProduct, changeProduct } = useActiveProduct();
 
   const [open, setOpen] = useState(false);
@@ -49,7 +50,7 @@ export function ProductSwitcher() {
     };
   }, [open]);
 
-  if (!hasMultiple) return null;
+  if (products.length === 0) return null;
 
   const onSelect = (product: Product) => {
     setOpen(false);

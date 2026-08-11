@@ -1,17 +1,49 @@
 import { AlertChannel } from '../types/adminSettingsApiTypes';
 
-// Mirrors the backend's SEEDED_ALERT_TYPES (alert-settings.constants.ts) —
-// the list is not auto-seeded server-side, so the frontend owns which alert
-// types are configurable and falls back to sane defaults for any type that
-// has no saved row yet.
-export const ALERT_TYPES: ReadonlyArray<{ key: string; label: string; description: string }> = [
-  { key: 'paid_referral', label: 'Paid referral received', description: 'A new paid referral comes in from a placement agency.' },
-  { key: 'tour', label: 'Tour scheduled', description: 'A prospect tour is booked or rescheduled.' },
-  { key: 'move_in', label: 'Move-in', description: 'A lead converts to a confirmed move-in.' },
-  { key: 'lost_lead', label: 'Lost lead', description: 'A lead is marked lost.' },
-  { key: 'organic_lead', label: 'Organic lead', description: 'A new inbound lead arrives with no referral source.' },
-  { key: 'failed_payment', label: 'Failed payment', description: 'A billing charge fails for this tenant.' },
-];
+/**
+ * Human copy for each alert type.
+ *
+ * This is a LOOKUP, not the list. The list itself now comes from
+ * GET /alert-settings, which scopes it to the products the tenant actually
+ * holds — a HospiceLink agency must not be shown CommunityLink's `tour` and
+ * `move_in` events, and vice versa. Owning the list here (as this file used to)
+ * made that impossible and meant the screen could offer a type the dispatcher
+ * would never raise.
+ *
+ * Covers both products' vocabularies because the screen serves both. An unknown
+ * key degrades to a humanised label rather than rendering blank — see
+ * alertTypeMeta.
+ */
+export const ALERT_TYPE_META: Record<
+  string,
+  { label: string; description: string }
+> = {
+  // CommunityLink
+  paid_referral: { label: 'Paid referral received', description: 'A new paid referral comes in from a placement agency.' },
+  tour: { label: 'Tour scheduled', description: 'A prospect tour is booked or rescheduled.' },
+  move_in: { label: 'Move-in', description: 'A lead converts to a confirmed move-in.' },
+  lost_lead: { label: 'Lost lead', description: 'A lead is marked lost.' },
+  organic_lead: { label: 'Organic lead', description: 'A new inbound lead arrives with no referral source.' },
+  // HospiceLink
+  admission: { label: 'Admission recorded', description: 'A pipeline row reaches the admitted stage.' },
+  prospect_lost: { label: 'Pipeline closed as lost', description: 'A pipeline row is closed as lost, with a reason.' },
+  referral_received: { label: 'Referral received', description: 'A referral arrives from any origin.' },
+  referral_source_cold: { label: 'Referral source went cold', description: 'An account passes the cold threshold with no logged interaction.' },
+  // Shared
+  failed_payment: { label: 'Failed payment', description: 'A billing charge fails for this tenant.' },
+};
+
+/**
+ * Copy for an alert type, falling back to a humanised key. A type added on the
+ * server ships as a usable row here without a frontend release.
+ */
+export const alertTypeMeta = (
+  key: string,
+): { label: string; description: string } =>
+  ALERT_TYPE_META[key] ?? {
+    label: key.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase()),
+    description: 'Configure who is notified when this event occurs.',
+  };
 
 export const ALERT_CHANNEL_OPTIONS: ReadonlyArray<{ value: AlertChannel; label: string }> = [
   { value: AlertChannel.Email, label: 'Email' },

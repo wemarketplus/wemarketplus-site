@@ -9,15 +9,26 @@ interface RequireProductProps {
   product: Product;
 }
 
-// Route-level product gate: a user not entitled to `product` cannot reach this
-// route even by typing the URL. Mirrors the backend ProductGuard (which answers
-// 403 on the underlying API), so this is defense in depth plus a clean redirect
-// rather than a raw error. Authentication is handled by the outer
-// ProtectedRoute; here we only decide product access.
+/**
+ * Route-level product binding. Two jobs, and only two:
+ *
+ *  1. ALIGN — arriving on a product's route (a deep link, a bookmark) switches
+ *     the active dashboard to that product, so the sidebar and tier gating match
+ *     what is being rendered.
+ *  2. RELEASE — using the switcher while standing on this product's route sends
+ *     the user to `/`, the one route both dashboards share.
+ *
+ * It is no longer an access gate. `hasProductAccess` is true for both products
+ * for every authenticated user (mirroring the backend ProductGuard), so the
+ * redirect below only fires when there is no session at all — and the outer
+ * ProtectedRoute has already sent that case to /login. Role and tier gating for
+ * these routes lives where it always did: ProtectedRoute's `allow`,
+ * RequireEntitlement's `minTier`, RequireRoleAtTier, and the backend guards.
+ */
 export function RequireProduct({ children, product }: RequireProductProps) {
   const user = useAppSelector((s) => s.auth.user);
   const { activeProduct, changeProduct } = useActiveProduct();
-  const entitled = hasProductAccess(user, product);
+  const canOpen = hasProductAccess(user, product);
 
   // Read the active product WITHOUT subscribing the alignment effect to it.
   const activeProductRef = useRef(activeProduct);
@@ -46,7 +57,7 @@ export function RequireProduct({ children, product }: RequireProductProps) {
    * alignment is handled below, at render, by `switchedAway`.
    */
   useEffect(() => {
-    if (!entitled) return;
+    if (!canOpen) return;
     // Already aligned for this route's product on this mount — do nothing. This
     // guard is what makes the effect immune to its own dependencies churning:
     // `changeProduct` is a useCallback over `[dispatch, user]`, so ANY refetch
@@ -59,9 +70,9 @@ export function RequireProduct({ children, product }: RequireProductProps) {
     if (activeProductRef.current !== product) {
       changeProduct(product);
     }
-  }, [entitled, product, changeProduct]);
+  }, [canOpen, product, changeProduct]);
 
-  if (!entitled) {
+  if (!canOpen) {
     return <Navigate to="/" replace />;
   }
 

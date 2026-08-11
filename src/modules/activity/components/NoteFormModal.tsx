@@ -23,6 +23,7 @@ const EMPTY: NoteFormValues = {
   barriers: '',
   nextStep: '',
   followUpDate: '',
+  isFamilySensitive: false,
 };
 
 interface NoteFormModalProps {
@@ -81,16 +82,48 @@ export function NoteFormModal({ open, isSaving, editing, onClose, onSubmit }: No
       lookups={lookups}
       onSubmit={submit}
       onClose={close}
-      // Windshield Voice Mode. Uses the existing footerNote slot rather than changing the
-      // shared EntityFormModal, so no other form is affected. Renders nothing on a browser
-      // without speech recognition (Firefox), instead of a button that does nothing.
+      // Two controls the field-descriptor grid cannot express, in the existing
+      // footerNote slot rather than by teaching the shared EntityFormModal new
+      // field types — no other module's form is touched either way.
       footerNote={
-        <VoiceDictateButton
-          baseText={watch('summary') ?? ''}
-          onTranscript={(text) =>
-            setValue('summary', text, { shouldDirty: true })
-          }
-        />
+        <div className="space-y-3">
+          {/*
+            The family-sensitive classification, which is the whole point of a
+            clinician writing here: the guide tells a Nurse to "mark anything
+            family-sensitive so it's handled with care by whoever reads it next".
+            Without this control the flag existed on the record and on the
+            prospect drawer's log, but nothing on this screen could set it.
+
+            The copy is the LogInteractionModal's, word for word, and it is
+            load-bearing: isFamilySensitive is a classification, not an access
+            control. Wording that implied the note was hidden from teammates
+            would get staff writing to it as if it were one.
+          */}
+          <label className="flex items-start gap-2 text-sm text-foreground">
+            <input
+              type="checkbox"
+              className="mt-1"
+              {...register('isFamilySensitive')}
+            />
+            <span>
+              Team only — not for the family
+              <span className="block text-[11px] text-muted-soft">
+                Flags the note as family-sensitive. It stays visible to everyone
+                on your team; this marks it so it is never surfaced to a family
+                member.
+              </span>
+            </span>
+          </label>
+
+          {/* Windshield Voice Mode. Renders nothing on a browser without speech
+              recognition (Firefox), instead of a button that does nothing. */}
+          <VoiceDictateButton
+            baseText={watch('summary') ?? ''}
+            onTranscript={(text) =>
+              setValue('summary', text, { shouldDirty: true })
+            }
+          />
+        </div>
       }
     />
   );

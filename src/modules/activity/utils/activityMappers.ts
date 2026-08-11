@@ -46,6 +46,12 @@ export function toDailyGoal(g: GoalRecord): DailyGoal {
 // `author` is resolved from `createdBy`, which is a USER ID. It used to be
 // rendered as-is, which put a bare uuid where the note's author name belongs.
 // `displayName` yields '' for an id it cannot resolve — never the id.
+//
+// The SERVER-supplied `n.author` is preferred over the local NameTable lookup.
+// That table is built from the user roster, and GET /users is staff-only, so on
+// the clinical roles' own team-notes screen it was always empty and every note
+// read "Unknown author". The lookup stays as a fallback so a staff caller with a
+// warm roster keeps working even if a response predates the `author` field.
 export function toProspectNote(
   n: NoteRecord,
   userNames?: NameTable,
@@ -56,7 +62,7 @@ export function toProspectNote(
     // a prospect. The legacy ProspectNote shape has no room for that, so an
     // account-scoped note renders with an empty prospectId here.
     prospectId: n.prospectId ?? '',
-    author: displayName(userNames, n.createdBy),
+    author: n.author ?? displayName(userNames, n.createdBy),
     position: '',
     interactionType: n.contactType ?? '',
     contactType: n.contactType ?? '',
@@ -105,6 +111,10 @@ export function toCreateNote(v: NoteFormValues): CreateNoteRequest {
   return {
     summary: v.summary.trim(),
     urgency: v.urgency,
+    // Sent as a real boolean rather than through `opt`, which drops falsy values:
+    // on an edit, UNCHECKING the box has to reach the backend as `false` or the
+    // flag could be applied but never withdrawn.
+    isFamilySensitive: v.isFamilySensitive ?? false,
     // At least one of these three is guaranteed by noteSchema's refinement.
     ...opt('prospectId', v.prospectId),
     ...opt('referralSourceId', v.referralSourceId),
@@ -145,6 +155,7 @@ export function toNoteFormValues(n: NoteRecord): NoteFormValues {
     barriers: n.barriers ?? '',
     nextStep: n.nextStep ?? '',
     followUpDate: n.followUpDate ?? '',
+    isFamilySensitive: n.isFamilySensitive,
   };
 }
 

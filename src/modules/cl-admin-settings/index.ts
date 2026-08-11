@@ -7,3 +7,6 @@ export {
   useListFinancialSettingsQuery,
   useUpsertFinancialSettingMutation,
 } from './api/adminSettingsApi';
+
+// Shared with HospiceLink's Notifications > Alerts tab — see the component.
+export { AlertRoutingPanel } from './components/AlertRoutingPanel';

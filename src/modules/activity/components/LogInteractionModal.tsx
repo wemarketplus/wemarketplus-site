@@ -19,6 +19,17 @@ interface LogInteractionModalProps {
   >;
   /** Shown when the note is about a patient, hidden for an account. */
   showFamilySensitive?: boolean;
+  /**
+   * Narrows "what happened" to a subset of the shared enum. The Family
+   * Communication screen passes the family channels: this enum is shared with
+   * marketing, so the default list offers a nurse a Lunch & Learn and a Gift
+   * Delivery as ways of describing a call to a patient's daughter — and the log
+   * filters on the family set, so an entry filed under a marketing type would not
+   * appear in it. Omit for the full list.
+   */
+  activityTypeOptions?: ReadonlyArray<{ value: string; label: string }>;
+  /** Overrides the default "what happened". */
+  defaultActivityType?: ActivityType;
   onClose: () => void;
   onSubmit: (body: CreateNoteRequest) => Promise<boolean>;
 }
@@ -51,10 +62,15 @@ export function LogInteractionModal({
   title,
   target,
   showFamilySensitive = false,
+  activityTypeOptions = ACTIVITY_TYPE_OPTIONS,
+  defaultActivityType,
   onClose,
   onSubmit,
 }: LogInteractionModalProps) {
-  const [values, setValues] = useState(EMPTY);
+  const blank = defaultActivityType
+    ? { ...EMPTY, activityType: defaultActivityType }
+    : EMPTY;
+  const [values, setValues] = useState(blank);
   const [error, setError] = useState<string | null>(null);
 
   const needsDetail = values.activityType === ACTIVITY_TYPE_REQUIRING_DETAIL;
@@ -65,7 +81,7 @@ export function LogInteractionModal({
   ) => setValues((v) => ({ ...v, [key]: value }));
 
   const close = () => {
-    setValues(EMPTY);
+    setValues(blank);
     setError(null);
     onClose();
   };
@@ -122,7 +138,7 @@ export function LogInteractionModal({
             value={values.activityType}
             onChange={(e) => set('activityType', e.target.value as ActivityType)}
           >
-            {ACTIVITY_TYPE_OPTIONS.map((o) => (
+            {activityTypeOptions.map((o) => (
               <option key={o.value} value={o.value}>
                 {o.label}
               </option>

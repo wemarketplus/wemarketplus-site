@@ -9,6 +9,7 @@ import {
   ReferralFunnelTable,
 } from '../components/ReferralFunnelTable';
 import { RevenueBySourceTable } from '../components/RevenueBySourceTable';
+import { RevenueOutlookPanel } from '../components/RevenueOutlookPanel';
 import { RANGES } from '../constants/intelligenceConstants';
 import { useIntelligence } from '../hooks/useIntelligence';
 import { setIntelligenceRange } from '../store/intelligenceSlice';
@@ -98,6 +99,13 @@ export function IntelligencePage() {
           ))}
         </div>
       )}
+
+      {/*
+        Cost per admission and the forecast. Rendered above the per-source table
+        because they answer the two questions a director asks before "which
+        facility" — what did this cost, and what is coming.
+      */}
+      {revenue && <RevenueOutlookPanel outlook={revenue.outlook} />}
 
       {revenue && revenue.bySource.length > 0 && (
         <section className="space-y-3">

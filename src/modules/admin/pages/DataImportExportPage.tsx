@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 import { Download, FileSpreadsheet, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAppSelector } from '@/app/hooks';
+import { useActiveEntitlement } from '@/modules/access';
 import { Button, Card, CardContent, Select } from '@/shared/ui/core';
 import { Alert } from '@/shared/ui/data-display';
 import { useDataImport } from '../hooks/useDataImport';
@@ -12,7 +13,7 @@ import {
   importTemplateCsvUrl,
   importTemplateXlsxUrl,
 } from '../utils/dataTransferUrls';
-import { DATASET_OPTIONS } from '../types/adminTypes';
+import { datasetOptionsForProduct } from '../types/adminTypes';
 
 // Data Import / Export — wired to the wemarketplus-backend data-transfer hub
 // (GET /export/:type[/xlsx], GET /template/:type, GET /import/template/:type/xlsx,
@@ -20,13 +21,23 @@ import { DATASET_OPTIONS } from '../types/adminTypes';
 // downloads and the import call surface 401/403 to the user.
 export function DataImportExportPage() {
   const token = useAppSelector((s) => s.auth?.token ?? null);
-  const [type, setType] = useState(DATASET_OPTIONS[0].type);
+  // The hub is a shared screen; the dataset list is scoped to the dashboard in
+  // use so a CommunityLink tenant is never offered HospiceLink's prospects.
+  const { product } = useActiveEntitlement();
+  const datasetOptions = useMemo(
+    () => datasetOptionsForProduct(product),
+    [product],
+  );
+  const [type, setType] = useState(datasetOptions[0].type);
   const [busyAction, setBusyAction] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const dataset = useMemo(
-    () => DATASET_OPTIONS.find((d) => d.type === type) ?? DATASET_OPTIONS[0],
-    [type],
+    // Falls back to the first option when the selected type is not available for
+    // this product — which happens if the user switches dashboards while the
+    // page is open.
+    () => datasetOptions.find((d) => d.type === type) ?? datasetOptions[0],
+    [datasetOptions, type],
   );
 
   const {
@@ -90,7 +101,7 @@ export function DataImportExportPage() {
               value={type}
               onChange={(e) => onSelectType(e.target.value)}
             >
-              {DATASET_OPTIONS.map((option) => (
+              {datasetOptions.map((option) => (
                 <option key={option.type} value={option.type}>
                   {option.label}
                 </option>

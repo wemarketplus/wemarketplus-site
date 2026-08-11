@@ -10,6 +10,20 @@ import { useAskAiMutation } from '@/modules/chat';
 import { generateMessageId } from '../utils/aiAssistantUtils';
 
 /**
+ * Whether a rejected RTK Query request was refused for authorization rather than
+ * failing in a way a retry could fix. Same shape check the owner portal uses
+ * (`'status' in error`), kept local because it is the only consumer here.
+ */
+function isPermissionDenied(error: unknown): boolean {
+  return Boolean(
+    error &&
+      typeof error === 'object' &&
+      'status' in error &&
+      (error as { status?: unknown }).status === 403,
+  );
+}
+
+/**
  * The AI assistant, talking to the real backend (POST /ai).
  *
  * It previously called a CLIENT-SIDE STUB that returned canned sentences — and not
@@ -52,11 +66,20 @@ export function useAiAssistant() {
           result.text ??
           result.reply ??
           'The assistant returned no content. Please try again.';
-      } catch {
+      } catch (error) {
         // Never invent an answer on failure. Saying nothing useful is correct here;
         // saying something plausible is what the old stub did wrong.
-        reply =
-          'The assistant is unavailable right now, so there is no answer to give. Please try again shortly.';
+        //
+        // But "try again shortly" must be reserved for failures that a retry could
+        // actually fix. POST /ai is guarded by @RequirePermission("ai_assistant"),
+        // and a tenant whose permission matrix denies the caller's role gets a 403
+        // on every single attempt — so telling that user to wait sent them into an
+        // endless retry loop over a setting only an admin can change. Observed with
+        // a Caregiver on 2026-08-11: the role is allowed by the code default and
+        // denied by the tenant's saved override.
+        reply = isPermissionDenied(error)
+          ? 'Your role does not have access to the AI assistant. An administrator can grant it under Admin → Roles & permissions.'
+          : 'The assistant is unavailable right now, so there is no answer to give. Please try again shortly.';
       }
       dispatch(
         appendMessage({

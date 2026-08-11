@@ -1,6 +1,7 @@
 import { useEffect, type ReactNode } from 'react';
 import { X } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
+import { useRegisterOverlay } from './overlayPresence';
 
 interface ModalProps {
   open: boolean;
@@ -16,6 +17,11 @@ interface ModalProps {
 // #0d1b31 panel with a titled header and a close (×). Closes on Escape /
 // backdrop click. Used by every CommunityLink create form.
 export function Modal({ open, onClose, title, children, footer, size = 'md' }: ModalProps) {
+  // Hides the app topbar for as long as this is open. Registered here rather than
+  // in each caller because every form popup in the app — ConfirmDialog,
+  // EntityFormModal, the entity drawers, and ~30 module modals — is this component.
+  useRegisterOverlay(open);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {

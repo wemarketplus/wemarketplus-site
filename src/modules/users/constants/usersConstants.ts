@@ -19,6 +19,9 @@ export const USERS_TAGS = {
   // the user list, so a Marketer saving a colour must be able to refresh the
   // calendar without invalidating a list they were never allowed to fetch.
   CalendarColors: 'Users.CalendarColors',
+  // Seat utilisation. Its own tag so adding or deactivating a user refreshes the
+  // seat counter without refetching the whole (paginated) user list.
+  Seats: 'Users.Seats',
 } as const;
 
 // Pastel pill tone per role (matching crm-*.html .pill-*).

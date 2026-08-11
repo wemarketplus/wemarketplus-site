@@ -1,6 +1,13 @@
-// Access module: single source of truth for which product(s) a user can use and
-// which dashboard is currently active. Powers the product switcher, the
-// product-aware navigation, and the RequireProduct route guard.
+// Access module: single source of truth for which dashboard(s) a user can open,
+// which one is currently active, and which products the tenant is billed for.
+// Powers the product switcher, the product-aware navigation, and the
+// RequireProduct route guard.
+//
+// Two distinct questions, deliberately kept apart (see utils/productAccess.ts):
+//   switchableProducts / hasProductAccess -> may this session OPEN that
+//     dashboard? Both, for every authenticated user.
+//   entitledProducts / entitlementForProduct / tierForProduct -> what has the
+//     tenant PAID FOR? Drives tier gating only.
 export {
   default as accessReducer,
   setActiveProduct,
@@ -15,6 +22,8 @@ export { useEntitlements } from './hooks/useEntitlements';
 export { useActiveProduct } from './hooks/useActiveProduct';
 export { useActiveEntitlement } from './hooks/useActiveEntitlement';
 export {
+  SWITCHABLE_PRODUCTS,
+  switchableProducts,
   entitledProducts,
   primaryProduct,
   hasProductAccess,

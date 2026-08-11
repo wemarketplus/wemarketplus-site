@@ -29,3 +29,21 @@ export interface UpdatePermissionRequest {
   role: Role;
   value: boolean;
 }
+
+/**
+ * POST /custom-roles. `navKeys` are navItemKey values (`<sectionId>:<path>`), and
+ * the backend refuses an empty list — a role that shows no tabs is an account that
+ * can log in and see nothing.
+ */
+export interface CreateCustomRoleRequest {
+  name: string;
+  baseRole: Role;
+  navKeys: string[];
+  isActive?: boolean;
+}
+
+/** PATCH /custom-roles/:id — every field optional. */
+export interface UpdateCustomRoleRequest {
+  id: string;
+  patch: Partial<Omit<CreateCustomRoleRequest, never>>;
+}

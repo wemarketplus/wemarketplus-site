@@ -87,7 +87,7 @@ export function ReferralSourceDrawer({
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <StatTile
               label="Referrals"
-              value={String(source.referralVolume)}
+              value={String(source.referralCount)}
               tone="g"
             />
             <StatTile

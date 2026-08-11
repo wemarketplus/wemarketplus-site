@@ -6,6 +6,7 @@ import type {
   Leaderboard,
   MarketingRoi,
   ReferralAnalytics,
+  ReferralScorecard,
   MyPerformance,
   RevenueIntelligence,
   WeeklyReport,
@@ -37,6 +38,7 @@ export const intelligenceApi = createApi({
     'Roi',
     'Leaderboard',
     'ReferralAnalytics',
+    'ReferralScorecard',
     'MyPerformance',
   ],
   endpoints: (build) => ({
@@ -92,6 +94,23 @@ export const intelligenceApi = createApi({
       providesTags: ['Revenue'],
     }),
 
+    /**
+     * The automatic 1-10 referral source scorecard.
+     *
+     * NOTE this GET also PERSISTS the computed scores server-side, so the grade
+     * shown here is the same one stored on each account record. It is
+     * idempotent (the same window yields the same numbers) and takes no user
+     * input, which is why it is safe as a query.
+     */
+    getReferralScorecard: build.query<ReferralScorecard, IntelligenceQuery | void>({
+      query: (params) => ({
+        url: '/intelligence/referral-scorecard',
+        params: params ?? undefined,
+      }),
+      transformResponse: env<ReferralScorecard>,
+      providesTags: ['ReferralScorecard'],
+    }),
+
     getReferralAnalytics: build.query<
       ReferralAnalytics,
       IntelligenceQuery | void
@@ -112,5 +131,6 @@ export const {
   useGetMarketingRoiQuery,
   useGetLeaderboardQuery,
   useGetReferralAnalyticsQuery,
+  useGetReferralScorecardQuery,
   useGetWeeklyReportQuery,
 } = intelligenceApi;

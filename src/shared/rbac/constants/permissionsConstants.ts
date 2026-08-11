@@ -1,5 +1,20 @@
 import { Role } from '../types/permissionTypes';
 
+/**
+ * What to CALL this person: their tenant-defined job title when they hold a custom
+ * role, otherwise their role's standard label.
+ *
+ * One helper rather than `customRole?.name ?? ROLE_LABELS[role]` at each call site:
+ * the header, the sidebar footer, the dashboard greeting and the users table must
+ * agree, or a Volunteer Coordinator reads as "Caregiver" on some screens and not
+ * others. Takes the two fields rather than a user object so it works for a
+ * UserRecord row and for the authenticated user alike.
+ */
+export const roleTitle = (
+  role: Role | null | undefined,
+  customRoleName?: string | null,
+): string => customRoleName?.trim() || (role ? ROLE_LABELS[role] : '');
+
 // Human-readable labels for roles. Used in admin UIs (user list, role pickers).
 export const ROLE_LABELS: Record<Role, string> = {
   [Role.SuperAdmin]: 'Super Admin',

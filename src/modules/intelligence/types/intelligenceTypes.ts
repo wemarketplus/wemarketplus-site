@@ -25,6 +25,32 @@ export interface RevenueByMonth {
   paid: number;
 }
 
+/**
+ * Cost-per-admission and the admissions forecast (RevenueOutlookDto).
+ *
+ * Every money field is nullable because the product has exactly ONE cost input —
+ * the monthly marketing spend an admin records in financial settings. Null means
+ * "no spend recorded", which the UI must render as unavailable rather than as
+ * zero: "we do not know your cost" and "your marketing is free" are different
+ * claims and only one is ever true.
+ */
+export interface RevenueOutlook {
+  /** Recorded monthly marketing spend, pro-rated across the window. */
+  marketingSpend: number | null;
+  /** Mileage reimbursement paid in the window — measured, not entered. */
+  mileageCost: number;
+  totalCost: number | null;
+  admits: number;
+  /** Null when cost is unknown OR there were no admissions to divide by. */
+  costPerAdmission: number | null;
+  /** Blend of run-rate and triage-weighted pipeline. Null if the window is too short. */
+  forecastedAdmits: number | null;
+  forecastRunRate: number | null;
+  forecastPipeline: number | null;
+  forecastHorizonDays: number;
+  openPipelineCount: number;
+}
+
 export interface RevenueIntelligence {
   window: IntelligenceWindow;
   totalInvoiced: number;
@@ -39,6 +65,7 @@ export interface RevenueIntelligence {
   unattributedInvoiced: number;
   bySource: RevenueBySource[];
   byMonth: RevenueByMonth[];
+  outlook: RevenueOutlook;
 }
 
 export interface MarketingRoiBySource {
@@ -187,4 +214,41 @@ export interface MyPerformance {
   /** The caller's own row; null when they have no activity in the window. */
   me: MyPerformanceRow | null;
   standings: MyPerformanceRow[];
+}
+
+
+/** One signed contribution to a scorecard grade, with the reason it applied. */
+export interface ScorecardFactor {
+  key: string;
+  points: number;
+  detail: string;
+}
+
+/** One account's computed scorecard (ReferralScorecardRowDto). */
+export interface ReferralScorecardRow {
+  referralSourceId: string;
+  name: string;
+  priorityTier: string | null;
+  status: string | null;
+  /** The COMPUTED 1-10 grade. */
+  score: number;
+  /**
+   * The hand-set 1-10 opinion (referral_sources.aiScore). Shown alongside the
+   * computed grade so the screen can surface where the team's judgement and the
+   * data disagree — which is the most useful thing this report produces.
+   */
+  handSetScore: number | null;
+  factors: ScorecardFactor[];
+  referrals: number;
+  admits: number;
+  revenue: number;
+  touches: number;
+  lastInteractionAt: string | null;
+}
+
+export interface ReferralScorecard {
+  window: IntelligenceWindow;
+  /** Highest score first. */
+  rows: ReferralScorecardRow[];
+  computedAt: string;
 }

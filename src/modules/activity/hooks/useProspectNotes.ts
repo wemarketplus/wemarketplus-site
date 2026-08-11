@@ -9,15 +9,24 @@ import {
 } from '../api/activityApi';
 import { toProspectNote, toCreateNote, toUpdateNote } from '../utils/activityMappers';
 import type { NoteFormValues } from '../schema/noteSchema';
-import type { NoteRecord } from '../types/activityTypes';
+import type { ListNotesQuery, NoteRecord } from '../types/activityTypes';
 
 // The backend exposes no DELETE for notes; this no-op keeps the shared
 // useEntityCrud contract satisfied so the notes view never renders a delete
 // action it can't fulfil.
 const noRemove = () => ({ unwrap: async () => undefined });
 
-export function useProspectNotes() {
-  const { data } = useListNotesQuery();
+/**
+ * The team notes list plus its create/edit flow.
+ *
+ * `filters` goes straight to GET /notes, so it may only carry what QueryNotesDto
+ * actually accepts (prospectId / referralSourceId / contactId / isFamilySensitive
+ * / pagination). Filtering server-side rather than in the component matters here:
+ * the list is tenant-wide, so a clinician looking for one patient's notes would
+ * otherwise have to page through every note the marketing team ever wrote.
+ */
+export function useProspectNotes(filters?: ListNotesQuery) {
+  const { data } = useListNotesQuery(filters ?? undefined);
 
   // Keep the raw records around so edit can seed from the full note (the
   // ProspectNote view-model drops fields the form needs, e.g. prospectId).

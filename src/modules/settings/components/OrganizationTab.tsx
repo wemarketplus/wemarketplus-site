@@ -8,6 +8,7 @@ import {
   type OrganizationFormValues,
 } from '../schema/organizationSchema';
 import { US_STATES } from '@/modules/onboarding/constants/onboardingConstants';
+import { REPORT_TIMEZONE_OPTIONS } from '../constants/settingsConstants';
 import { cn } from '@/shared/utils/cn';
 
 export function OrganizationTab() {
@@ -122,6 +123,35 @@ export function OrganizationTab() {
               />
               {errors.phone && (
                 <p className="text-xs text-destructive">{errors.phone.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="orgReportTimezone">Report time zone</Label>
+              <select
+                id="orgReportTimezone"
+                disabled={busy}
+                {...register('reportTimezone')}
+                className={cn(
+                  'flex h-11 w-full rounded-md border border-border/10 bg-surface-raised px-3 text-sm text-foreground',
+                  'transition-colors focus-visible:outline-none focus-visible:border-azure/70 focus-visible:bg-surface',
+                  'disabled:cursor-not-allowed disabled:opacity-60',
+                )}
+              >
+                {REPORT_TIMEZONE_OPTIONS.map((tz) => (
+                  <option key={tz.value} value={tz.value}>
+                    {tz.label}
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-muted">
+                Scheduled reports are timed against this zone. The Weekly Report is
+                emailed to administrators every Monday at 7:00&nbsp;AM local time.
+              </p>
+              {errors.reportTimezone && (
+                <p className="text-xs text-destructive">
+                  {errors.reportTimezone.message}
+                </p>
               )}
             </div>
 

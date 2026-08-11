@@ -48,6 +48,27 @@ export interface MileageSummary {
   monthToDate: MileageWindowTotals;
 }
 
+/** One team member's contribution to the tenant's mileage total. */
+export interface TeamMileageMember {
+  userId: string;
+  /** Null when the user was deleted — the mileage still counts to the total. */
+  name: string | null;
+  miles: number;
+  reimbursement: number;
+  trips: number;
+}
+
+/**
+ * GET /mileage-logs/team-summary — the tenant-wide roll-up for the Admin /
+ * Office Manager team page. Admin/Owner only server-side.
+ */
+export interface TeamMileageSummary {
+  weekToDate: MileageWindowTotals;
+  monthToDate: MileageWindowTotals;
+  /** Month-to-date breakdown, highest mileage first. */
+  byUser: TeamMileageMember[];
+}
+
 /** Mirrors wemarketplus-backend/src/mileage/mileage.constants.ts ExpenseType. */
 export const ExpenseType = {
   Parking: 'parking',

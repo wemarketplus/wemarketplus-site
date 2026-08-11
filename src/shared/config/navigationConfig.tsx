@@ -2,6 +2,8 @@ import {
   Activity,
   Bell,
   BellRing,
+  Video,
+  Gauge,
   Bot,
   Building2,
   Calendar,
@@ -50,6 +52,7 @@ import {
   Role,
   STAFF_ROLES,
   ADMIN_ONLY,
+  HL_MANAGEMENT_ROLES,
   HL_MARKETING_ROLES,
   HL_CLINICAL_ROLES,
   HL_FIELD_ROLES,
@@ -83,6 +86,17 @@ export interface NavItem {
   // tiers streamline away (e.g. CommunityLink drops GPS/Mileage/Outreach log
   // from the sidebar at Gold/Max). Omit for items with no upper bound.
   maxTier?: Tier;
+  /**
+   * Announced but not yet built. The Sidebar renders these as an inert row with a
+   * "Soon" badge — NOT a link, because there is nothing to route to.
+   *
+   * Exists because the nurse product guide ends with "Coming soon to your view",
+   * and a guide that names a screen the sidebar never mentions reads as a broken
+   * product rather than a roadmap. `to` is still required and still holds the path
+   * the item WILL use: it keys the row, and turning the row into a real link later
+   * is then a one-line deletion of this flag.
+   */
+  comingSoon?: boolean;
 }
 
 export interface NavSection {
@@ -172,21 +186,39 @@ const OPERATIONS_RECORDS_SECTION: NavSection = {
 
 // --- HospiceLink sections (mirrors wemarketplus-site/crm-pro.html) -----
 
-// Gated to HL_MARKETING_ROLES: this section is where account strategy and
-// referral-source value live, so Nurse and Caregiver do not see it. Before these
-// `allow` lists existed every HospiceLink role saw every item here.
+// Gated to HL_MARKETING_ROLES by default: this section is where account strategy
+// and referral-source value live, so Nurse and Caregiver do not see it. Before
+// these `allow` lists existed every HospiceLink role saw every item here.
+//
+// Two rows deliberately depart from the section default, each for a reason spelled
+// out at the row: Daily tasks widens to HL_FIELD_ROLES (both clinical guides open
+// the day on it, and the queue is self-scoped server-side), and Nurse scheduling
+// NARROWS to HL_MANAGEMENT_ROLES (it is the roster, and only management can write
+// to it). Per-row `allow` always wins over this paragraph — read the row.
 const HOSPICELINK_MARKETING: NavSection = {
   id: 'hl-marketing',
   label: 'Marketing',
   items: [
-    // The marketer's home: everything due today, assembled from five modules.
-    // First in the section because it is where the day starts.
-    { to: '/daily-tasks', label: 'Daily tasks', icon: ListChecks, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
+    // Everything due today, assembled from five modules. First in the section
+    // because it is where the day starts.
+    //
+    // HL_FIELD_ROLES, not HL_MARKETING_ROLES: the nurse guide says "Check Daily
+    // Task each morning for anything the system has flagged for you" and the
+    // caregiver guide opens with "Check Daily Task first thing", so both clinical
+    // personas need it. The queue is self-scoped server-side (DailyQueueService
+    // filters every section to the acting user), so a caregiver sees their own
+    // tasks and visits — not a marketer's accounts. Backend @Roles widened to
+    // match, or the guide's first instruction would 403.
+    { to: '/daily-tasks', label: 'Daily tasks', icon: ListChecks, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
     // Standing follow-ups on a prospect; each lands in Daily tasks on its due
     // date. Next to Daily tasks because it is the input to it.
     { to: '/automation', label: 'Automation', icon: BellRing, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     { to: '/re-engagement', label: 'Re-engagement', icon: RotateCcw, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
-    { to: '/leaderboard', label: 'Leaderboard', icon: Trophy, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
+    // Named for the guide's "Click Marketer Leaderboard to see how your whole
+    // team is performing side by side". Two items were previously both called
+    // "Leaderboard" — this is the base-tier, team-standings one; the Intelligence
+    // group's is the Gold admin report that additionally carries revenue.
+    { to: '/leaderboard', label: 'Marketer leaderboard', icon: Trophy, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     { to: '/hl-leads', label: 'Inbound leads', icon: Inbox, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     { to: '/prospects', label: 'Prospects', icon: UserPlus, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     { to: '/referrals', label: 'Referral sources', icon: Heart, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
@@ -202,7 +234,18 @@ const HOSPICELINK_MARKETING: NavSection = {
     { to: '/territory-planner', label: 'Territory planner', icon: MapPinned, product: Product.HospiceLink, allow: HL_MARKETING_ROLES },
     // Renamed from "Smart scheduling": the module is nurse rostering now, and a label
     // that does not say what the screen does is how the demo/build gap started.
-    { to: '/scheduling', label: 'Nurse scheduling', icon: CalendarClock, product: Product.HospiceLink, minTier: Tier.Gold, allow: HL_FIELD_ROLES },
+    //
+    // HL_MANAGEMENT_ROLES, not HL_FIELD_ROLES: this is the rostering tool — who is
+    // on shift across the team — and nurse-scheduling.controller.ts gates every
+    // write (@Post/@Patch/@Delete) to Admin/Owner/Manager. The `allow` mirrors that
+    // @Roles list, so the people who can see the screen are the people who can act
+    // on it. On HL_FIELD_ROLES a nurse got a live row here, in a Marketing group her
+    // guide tells her to ignore, opening a read-only roster of everyone else — while
+    // the SAME sidebar offered her a "Soon"-badged "My visit schedule" in Clinical.
+    // Two scheduling rows, one live and one promised, is precisely the guide/product
+    // mismatch `comingSoon` exists to prevent. The nurse's own-schedule view IS that
+    // /clinical/my-schedule row; widen this one back and the pair reappears.
+    { to: '/scheduling', label: 'Nurse scheduling', icon: CalendarClock, product: Product.HospiceLink, minTier: Tier.Gold, allow: HL_MANAGEMENT_ROLES },
   ],
 };
 
@@ -213,9 +256,29 @@ const HOSPICELINK_ACTIVITY: NavSection = {
   id: 'hl-activity',
   label: 'Activity',
   items: [
-    { to: '/appointments', label: 'Appointments', icon: CalendarCheck, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
-    { to: '/activity/calendar', label: 'Calendar', icon: Calendar, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
-    { to: '/activity/notes', label: 'Notes', icon: ScrollText, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
+    /**
+     * THE CALENDAR THE PRODUCT GUIDE MEANS. Every role's guide says "Click Calendar
+     * … use the dropdown at the top to switch between My Calendar and All Users",
+     * and this is the only screen that has any of that: the month grid, the
+     * scope toggle, and the per-user colours. It was labelled "Appointments" while
+     * the row below — a flat list of upcoming follow-ups with none of those things —
+     * held the name "Calendar", so anyone following the guide clicked the wrong row
+     * and concluded the feature was missing.
+     *
+     * Renamed rather than merged: both screens are real and both are wanted. Only
+     * the labels were lying. Routes are untouched, so existing links still resolve.
+     */
+    { to: '/appointments', label: 'Calendar', icon: CalendarCheck, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
+    // Named for what it actually is. Its own page header already said "Upcoming
+    // follow-ups"; only the sidebar called it a calendar.
+    { to: '/activity/calendar', label: 'Follow-ups', icon: Calendar, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
+    // Labelled for both jobs it now does. "Team notes" used to exist only as a tab
+    // inside the marketer-only prospect drawer, so clinical staff had no route to a
+    // surface their guide tells them to use; the Notes screen now serves as that
+    // surface for Nurse and Caregiver, and the label says so rather than leaving
+    // them hunting for a "Team notes" row that does not exist. `allow` is unchanged:
+    // HL_FIELD_ROLES already covered exactly the personas that needed it.
+    { to: '/activity/notes', label: 'Notes & team notes', icon: ScrollText, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
     { to: '/activity/reminders', label: 'Reminders', icon: Pin, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
     { to: '/activity/goals', label: 'Daily goals', icon: Goal, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
     { to: '/activity/ai', label: 'AI assistant', icon: Sparkles, product: Product.HospiceLink, allow: HL_FIELD_ROLES },
@@ -231,8 +294,34 @@ const HOSPICELINK_CLINICAL: NavSection = {
   label: 'Clinical (Gold)',
   items: [
     { to: '/clinical/family', label: 'Family communication', icon: MessagesSquare, product: Product.HospiceLink, minTier: Tier.Gold, allow: HL_CLINICAL_ROLES },
-    { to: '/clinical/messaging', label: 'Secure messaging', icon: MessagesSquare, product: Product.HospiceLink, minTier: Tier.Gold, allow: HL_CLINICAL_ROLES },
+    /**
+     * Labelled for the screen it actually opens. This route mounts the care-team
+     * TELEHEALTH SESSION list (see ClinicalPage's pathname switch), and calling it
+     * "Secure messaging" promised a chat product that is not what loads — the one
+     * mislabel in the sidebar where the name and the page disagreed outright.
+     *
+     * There IS a complete messaging backend (src/chat: channels, direct messages,
+     * unread counts, presence) with no screen in front of it. Building that screen
+     * is a feature, not a rename, so it stays a separate piece of work — but until
+     * it exists, no row should claim it. Distinct from "Telehealth & patient portal"
+     * below, which is the PATIENT-facing video product and still coming soon.
+     */
+    { to: '/clinical/messaging', label: 'Care-team telehealth', icon: Video, product: Product.HospiceLink, minTier: Tier.Gold, allow: HL_CLINICAL_ROLES },
     { to: '/clinical/admissions', label: 'Admission workflow', icon: Stethoscope, product: Product.HospiceLink, minTier: Tier.Gold, allow: HL_CLINICAL_ROLES },
+    /**
+     * The nurse guide's "Coming soon to your view" — announced to the nurse, and
+     * to the nurse only (the caregiver guide promises nothing, and management has
+     * the roster tool already).
+     *
+     * "My visit schedule" is deliberately NOT called "Nurse scheduling": that name
+     * is taken by the Gold rostering screen in the Marketing group, which is the
+     * ADMIN view of who is on shift. What the guide promises a nurse is the
+     * opposite — "a dedicated view of your own visit schedule" — and shipping two
+     * sidebar rows with near-identical names is how a guide stops matching the
+     * product.
+     */
+    { to: '/clinical/telehealth', label: 'Telehealth & patient portal', icon: Video, product: Product.HospiceLink, minTier: Tier.Gold, allow: [Role.Nurse], comingSoon: true },
+    { to: '/clinical/my-schedule', label: 'My visit schedule', icon: CalendarClock, product: Product.HospiceLink, minTier: Tier.Gold, allow: [Role.Nurse], comingSoon: true },
   ],
 };
 
@@ -242,7 +331,10 @@ const HOSPICELINK_INTELLIGENCE: NavSection = {
   items: [
     { to: '/intelligence/revenue', label: 'Revenue intelligence', icon: TrendingUp, product: Product.HospiceLink, minTier: Tier.Gold, allow: STAFF_ROLES },
     { to: '/intelligence/marketing-roi', label: 'Marketing ROI', icon: Activity, product: Product.HospiceLink, minTier: Tier.Gold, allow: STAFF_ROLES },
-    { to: '/intelligence/leaderboard', label: 'Leaderboard', icon: Trophy, product: Product.HospiceLink, minTier: Tier.Gold, allow: STAFF_ROLES },
+    { to: '/intelligence/leaderboard', label: 'Team performance', icon: Trophy, product: Product.HospiceLink, minTier: Tier.Gold, allow: STAFF_ROLES },
+    // Automatic 1-10 grade per referring facility. Its own backend feature key
+    // (intelligence_referral_scorecard), same Gold rank as the rest of the group.
+    { to: '/intelligence/referral-scorecard', label: 'Referral source scorecard', icon: Gauge, product: Product.HospiceLink, minTier: Tier.Gold, allow: STAFF_ROLES },
     // The Executive Director touchpoint that was absent from the 42-module inventory.
     { to: '/intelligence/weekly', label: 'Weekly report', icon: ScrollText, product: Product.HospiceLink, minTier: Tier.Gold, allow: STAFF_ROLES },
   ],
@@ -252,9 +344,31 @@ const HOSPICELINK_INTEGRATIONS: NavSection = {
   id: 'hl-integrations',
   label: 'Integrations',
   items: [
-    { to: '/integrations/import', label: 'Data import', icon: Upload, product: Product.HospiceLink },
-    { to: '/integrations/aircall', label: 'Aircall phone', icon: Phone, product: Product.HospiceLink, minTier: Tier.Gold },
-    { to: '/integrations/playbooks', label: 'Playbook generator', icon: Bot, product: Product.HospiceLink, minTier: Tier.Max },
+    // STAFF_ROLES mirrors the backend: data-transfer.controller.ts is
+    // @RequirePermission("import_export") and the default permission matrix denies
+    // that permission to Caregiver outright, so with no `allow` here a caregiver saw
+    // a tab that could only ever 403. The end-user guide files Import Data as an
+    // Admin/Office-Manager task, and STAFF_ROLES is the same group that already
+    // gates the Admin/Team page in ADMIN_SECTION.
+    //
+    // This row is also the ONLY entry point to the data EXPORT screen —
+    // DataImportExportPage serves both halves. That is deliberate and STAFF_ROLES is
+    // right for both: bulk-exporting the tenant's referral book is at least as
+    // sensitive as importing into it. Do not widen this on the grounds that "export
+    // is read-only".
+    { to: '/integrations/import', label: 'Import data', icon: Upload, product: Product.HospiceLink, allow: STAFF_ROLES },
+    // HL_MARKETING_ROLES: the Aircall console dials referral accounts and shows the
+    // call/text history against them, which is the marketing group's relationship
+    // data — a clinical persona has no account to dial from here. Previously the row
+    // (and its route) carried the Gold tier gate only, so every role on a Gold tenant
+    // saw a phone console. Mirrors the route's `allow`; change one side, change both.
+    { to: '/integrations/aircall', label: 'Aircall phone', icon: Phone, product: Product.HospiceLink, minTier: Tier.Gold, allow: HL_MARKETING_ROLES },
+    // HL_MARKETING_ROLES mirrors the backend exactly: POST /ai/playbooks already
+    // carries `@Roles(...HL_MARKETING_ROLES)`, so with no `allow` here a Nurse and a
+    // Caregiver saw a tab that could only ever 403 — the same defect the two rows
+    // above were fixed for, left behind because this one had no `allow` line to
+    // correct. The end-user guide also files it under the Marketer's tools.
+    { to: '/integrations/playbooks', label: 'Playbook generator', icon: Bot, product: Product.HospiceLink, minTier: Tier.Max, allow: HL_MARKETING_ROLES },
   ],
 };
 
@@ -263,8 +377,12 @@ const HOSPICELINK_COMPLIANCE: NavSection = {
   label: 'Compliance (Admin)',
   items: [
     { to: '/compliance', label: 'HIPAA readiness', icon: ShieldCheck, product: Product.HospiceLink, minTier: Tier.Gold, allow: ADMIN_ONLY },
-    { to: '/compliance/audit', label: 'Audit log', icon: ScrollText, product: Product.HospiceLink, minTier: Tier.Gold, allow: ADMIN_ONLY },
+    { to: '/compliance/audit', label: 'HIPAA audit log', icon: ScrollText, product: Product.HospiceLink, minTier: Tier.Gold, allow: ADMIN_ONLY },
     { to: '/compliance/threat-monitor', label: 'Threat monitor', icon: ShieldCheck, product: Product.HospiceLink, minTier: Tier.Gold, allow: ADMIN_ONLY },
+    // NOTE: HospiceLink has no "Alert settings" entry on purpose. Its product
+    // guide routes an Office Manager to Notifications > Team alerts for the same
+    // controls, and two entry points to one screen is how a guide stops matching
+    // the product. CommunityLink keeps its own page (COMMUNITYLINK_ADMIN_SETTINGS).
   ],
 };
 
@@ -386,8 +504,17 @@ const ADMIN_SECTION: NavSection = {
   id: 'admin',
   label: 'Admin',
   items: [
-    { to: '/users', label: 'Team', icon: Users, allow: STAFF_ROLES },
+    // The HospiceLink product guide instructs an Office Manager to "Click Admin
+    // in the left menu" and expects seat counts, team-wide mileage and the
+    // invite action there — which is exactly this page. Split per product so the
+    // rename does not touch CommunityLink, whose own guide says "Team".
+    { to: '/users', label: 'Admin', icon: Users, product: Product.HospiceLink, allow: STAFF_ROLES },
+    { to: '/users', label: 'Team', icon: Users, product: Product.CommunityLink, allow: STAFF_ROLES },
     { to: '/permissions', label: 'Roles & permissions', icon: ShieldCheck, allow: ADMIN_ONLY },
+    // HospiceLink's entry to the same cross-product screen CommunityLink lists
+    // under its own Admin section. Holds `marketing_spend_monthly`, the only cost
+    // input behind Revenue Intelligence's cost-per-admission figure.
+    { to: '/financial-settings', label: 'Financial settings', icon: Settings2, product: Product.HospiceLink, minTier: Tier.Gold, allow: ADMIN_ONLY },
     { to: '/billing', label: 'Billing', icon: CreditCard, allow: ADMIN_ONLY },
     // Settings is admin/owner-only, PLUS CommunityLink's Owner/Investor (the
     // Max demo shows Settings under Administrator, Owner, AND Owner/Investor
@@ -439,16 +566,58 @@ export const SECTIONS_BY_PRODUCT: Record<Product, readonly NavSection[]> = {
 // Returns true when the user's current role + tier permit the item. Tier
 // comparison is product-aware (CommunityLink orders tiers Pro<Gold<Max, unlike
 // HospiceLink's Pro<Max<Gold), so the caller passes the active product.
+//
+/**
+ * The stable identifier for one nav row — what a custom role stores to say "this tab
+ * is visible" (custom_roles.navKeys).
+ *
+ * `<sectionId>:<to>` rather than the path alone, because a path alone is NOT unique:
+ * Occupancy overview appears twice (two tier windows) and /outreach/mileage appears
+ * in both the Sales and Activity groups under different labels. Keying on the path
+ * would make one admin checkbox silently govern two rows in different sections.
+ *
+ * Derived rather than hand-written on every NavItem: 200-odd items would each need a
+ * literal key and a mistyped one is invisible until a row goes missing. The tradeoff
+ * is that MOVING an item between sections, or changing its path, invalidates stored
+ * keys — that row then stops appearing for custom roles until the admin re-checks it,
+ * which is visible and recoverable rather than a silent permission change.
+ */
+export const navItemKey = (sectionId: string, item: NavItem): string =>
+  `${sectionId}:${item.to}`;
+
 export function isNavItemVisible(
   item: NavItem,
   product: Product,
   role: Role | null,
   tier: Tier,
+  /**
+   * A custom role's chosen tabs (`navItemKey` values), or undefined for a user
+   * holding a plain role.
+   *
+   * Applied AFTER the product, role and tier rules — never instead of them — and
+   * that ordering is what makes a custom role a pure NARROWING. An admin who checks
+   * a tab their chosen base role cannot see, or that the tenant's tier does not
+   * include, grants nothing: an earlier rule has already returned false. The worst a
+   * mis-built custom role can do is show too FEW tabs.
+   */
+  allowedNavKeys?: readonly string[],
+  /** The section this item is rendered in — see navItemKey for why it is needed. */
+  sectionId?: string,
 ): boolean {
+  // Product first. Until an item in a SHARED section needed to differ per
+  // product (ADMIN_SECTION's "Admin"/"Team"), separation came entirely from
+  // SECTIONS_BY_PRODUCT and this field was documentary — so a product-tagged
+  // item in a shared section appeared under BOTH dashboards. For every item in a
+  // product-specific section this check is a no-op, because the tag and the
+  // section already agree.
+  if (item.product && item.product !== product) return false;
   if (item.allow && !(role && item.allow.includes(role))) return false;
   if (item.minTier && !tierIncludes(product, tier, item.minTier)) return false;
   // maxTier is an upper bound: the item shows only up to (and including) that
   // tier. tierIncludes(maxTier, current) is true when current <= maxTier.
   if (item.maxTier && !tierIncludes(product, item.maxTier, tier)) return false;
+  if (allowedNavKeys && sectionId !== undefined) {
+    return allowedNavKeys.includes(navItemKey(sectionId, item));
+  }
   return true;
 }

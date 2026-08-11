@@ -5,6 +5,7 @@ import {
   useGetMyTenantQuery,
   useUpdateMyTenantMutation,
 } from '../api/settingsApi';
+import { DEFAULT_REPORT_TIMEZONE } from '../constants/settingsConstants';
 import type { OrganizationFormValues } from '../schema/organizationSchema';
 
 // Loads the caller's own tenant profile (GET /tenants/me) and persists edits
@@ -20,6 +21,7 @@ export function useOrganizationForm() {
       city: data?.city ?? '',
       state: data?.state ?? '',
       phone: data?.phone ?? '',
+      reportTimezone: data?.reportTimezone ?? DEFAULT_REPORT_TIMEZONE,
     }),
     [data],
   );

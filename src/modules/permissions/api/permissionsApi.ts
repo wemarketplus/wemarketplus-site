@@ -1,7 +1,12 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQuery';
 import type { ApiEnvelope } from '@/shared/types';
+import type { CustomRole } from '@/shared/rbac';
 import type { PermissionsView, UpdatePermissionRequest } from '../types/permissionsApiTypes';
+import type {
+  CreateCustomRoleRequest,
+  UpdateCustomRoleRequest,
+} from '../types/permissionsApiTypes';
 
 // Backend permission matrix — wemarketplus-backend/src/permissions.
 //   GET /permissions  -> { permissions, locked, canEdit, restricted }
@@ -13,12 +18,43 @@ import type { PermissionsView, UpdatePermissionRequest } from '../types/permissi
 export const permissionsApi = createApi({
   reducerPath: 'permissionsApi',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Permissions'],
+  tagTypes: ['Permissions', 'CustomRoles'],
   endpoints: (build) => ({
     getPermissions: build.query<PermissionsView, void>({
       query: () => ({ url: '/permissions' }),
       transformResponse: (res: ApiEnvelope<PermissionsView>) => res.data,
       providesTags: ['Permissions'],
+    }),
+    /**
+     * Admin → Manage Roles. Lives in this slice rather than its own because it is
+     * the same screen and the same audience as the permission matrix, and a second
+     * createApi would need its own store registration for two extra endpoints.
+     *
+     * Every route here answers 402 UPGRADE_REQUIRED on a Pro tenant
+     * (@RequireFeature("custom_roles")) and 403 for anyone below Admin/Owner.
+     */
+    listCustomRoles: build.query<CustomRole[], void>({
+      query: () => ({ url: '/custom-roles' }),
+      transformResponse: (res: ApiEnvelope<CustomRole[]>) => res.data,
+      providesTags: ['CustomRoles'],
+    }),
+    createCustomRole: build.mutation<CustomRole, CreateCustomRoleRequest>({
+      query: (body) => ({ url: '/custom-roles', method: 'POST', body }),
+      transformResponse: (res: ApiEnvelope<CustomRole>) => res.data,
+      invalidatesTags: ['CustomRoles'],
+    }),
+    updateCustomRole: build.mutation<CustomRole, UpdateCustomRoleRequest>({
+      query: ({ id, patch }) => ({
+        url: `/custom-roles/${id}`,
+        method: 'PATCH',
+        body: patch,
+      }),
+      transformResponse: (res: ApiEnvelope<CustomRole>) => res.data,
+      invalidatesTags: ['CustomRoles'],
+    }),
+    deleteCustomRole: build.mutation<void, string>({
+      query: (id) => ({ url: `/custom-roles/${id}`, method: 'DELETE' }),
+      invalidatesTags: ['CustomRoles'],
     }),
     updatePermission: build.mutation<PermissionsView, UpdatePermissionRequest>({
       query: (body) => ({ url: '/permissions', method: 'PUT', body }),
@@ -54,4 +90,11 @@ export const permissionsApi = createApi({
   }),
 });
 
-export const { useGetPermissionsQuery, useUpdatePermissionMutation } = permissionsApi;
+export const {
+  useGetPermissionsQuery,
+  useUpdatePermissionMutation,
+  useListCustomRolesQuery,
+  useCreateCustomRoleMutation,
+  useUpdateCustomRoleMutation,
+  useDeleteCustomRoleMutation,
+} = permissionsApi;

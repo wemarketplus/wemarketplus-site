@@ -9,13 +9,19 @@ import type {
   ListUsersQuery,
   UpdateOwnProfileRequest,
   UpdateUserRequest,
+  SeatUsage,
   UserRecord,
 } from '../types/usersTypes';
 
 export const usersApi = createApi({
   reducerPath: 'usersApi',
   baseQuery: baseQueryWithReauth,
-  tagTypes: [USERS_TAGS.List, USERS_TAGS.Detail, USERS_TAGS.CalendarColors],
+  tagTypes: [
+    USERS_TAGS.List,
+    USERS_TAGS.Detail,
+    USERS_TAGS.CalendarColors,
+    USERS_TAGS.Seats,
+  ],
   endpoints: (build) => ({
     listUsers: build.query<PaginatedPayload<UserRecord>, ListUsersQuery>({
       query: (params = {}) => ({ url: '/users', params }),
@@ -28,6 +34,13 @@ export const usersApi = createApi({
             ]
           : [{ type: USERS_TAGS.List, id: 'PARTIAL-LIST' }],
     }),
+    // Admin/Owner only server-side; the Team page renders it behind a RoleGate so
+    // a Manager (who may read the list) never fires a request that would 403.
+    getSeatUsage: build.query<SeatUsage, void>({
+      query: () => ({ url: '/users/seats' }),
+      transformResponse: (res: ApiEnvelope<SeatUsage>) => res.data,
+      providesTags: [USERS_TAGS.Seats],
+    }),
     getUser: build.query<UserRecord, string>({
       query: (id) => ({ url: `/users/${id}` }),
       transformResponse: (res: ApiEnvelope<UserRecord>) => res.data,
@@ -36,7 +49,8 @@ export const usersApi = createApi({
     createUser: build.mutation<UserRecord, CreateUserRequest>({
       query: (body) => ({ url: '/users', method: 'POST', body }),
       transformResponse: (res: ApiEnvelope<UserRecord>) => res.data,
-      invalidatesTags: [{ type: USERS_TAGS.List, id: 'PARTIAL-LIST' }],
+      // Seats too: a new user consumes one, and the counter must move with it.
+      invalidatesTags: [{ type: USERS_TAGS.List, id: 'PARTIAL-LIST' }, USERS_TAGS.Seats],
     }),
     updateUser: build.mutation<UserRecord, { id: string; patch: UpdateUserRequest }>({
       query: ({ id, patch }) => ({ url: `/users/${id}`, method: 'PATCH', body: patch }),
@@ -44,6 +58,8 @@ export const usersApi = createApi({
       invalidatesTags: (_r, _e, { id }) => [
         { type: USERS_TAGS.Detail, id },
         { type: USERS_TAGS.List, id: 'PARTIAL-LIST' },
+        // Deactivating a user frees a seat — `used` counts ACTIVE users only.
+        USERS_TAGS.Seats,
       ],
     }),
     // Every authenticated role may call this — it is the one write endpoint a
@@ -72,6 +88,7 @@ export const usersApi = createApi({
       invalidatesTags: (_r, _e, id) => [
         { type: USERS_TAGS.Detail, id },
         { type: USERS_TAGS.List, id: 'PARTIAL-LIST' },
+        USERS_TAGS.Seats,
       ],
     }),
     // Admin resets another user's password; backend returns a one-time
@@ -85,6 +102,7 @@ export const usersApi = createApi({
 
 export const {
   useListUsersQuery,
+  useGetSeatUsageQuery,
   useGetUserQuery,
   useCreateUserMutation,
   useUpdateUserMutation,

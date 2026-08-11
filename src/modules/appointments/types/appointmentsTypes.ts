@@ -51,6 +51,11 @@ export interface AppointmentRecord {
   createdBy: ID | null;
   createdAt: ISODateString;
   updatedAt: ISODateString;
+  /**
+   * Who the visit is for, resolved server-side through job → pipeline → prospect.
+   * Null for an appointment with no patient behind it (an in-service, say).
+   */
+  patientName: string | null;
 }
 
 // POST /hl/appointments body.
@@ -140,4 +145,19 @@ export interface ScheduleVisitRequest {
   location?: string;
   assignedRep?: string;
   objective?: string;
+}
+
+/**
+ * One row of GET /hl/appointments/my-patients — a patient this user has visits
+ * with, as a clinical role is allowed to see them.
+ *
+ * Mirrors wemarketplus-backend MyPatientResponseDto, and its narrowness is the
+ * point: no DOB, diagnosis, address or emergency contact. Widening the audience of
+ * the patient list must not widen the field list, so do NOT "upgrade" this to
+ * ProspectRecord.
+ */
+export interface MyPatientRecord {
+  id: ID;
+  patientName: string;
+  stage: string;
 }

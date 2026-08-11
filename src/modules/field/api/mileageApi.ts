@@ -10,6 +10,7 @@ import type {
   MileageLogRecord,
   UpdateMileageLogRequest,
   MileageSummary,
+  TeamMileageSummary,
   ExpenseReceiptRecord,
   CreateExpenseReceiptRequest,
   UploadExpenseReceiptRequest,
@@ -59,6 +60,20 @@ export const mileageApi = createApi({
     getMileageSummary: build.query<MileageSummary, void>({
       query: () => ({ url: '/mileage-logs/summary' }),
       transformResponse: (res: ApiEnvelope<MileageSummary>) => res.data,
+      providesTags: ['MileageLog'],
+    }),
+
+    /**
+     * TEAM-wide mileage for the Admin / Office Manager team page.
+     *
+     * A separate endpoint rather than a `userId` parameter on the summary above:
+     * the personal route deliberately exposes no way to total someone else's
+     * reimbursement, so the team view is its own Admin/Owner-gated route. Called
+     * only from behind a RoleGate for that reason.
+     */
+    getTeamMileageSummary: build.query<TeamMileageSummary, void>({
+      query: () => ({ url: '/mileage-logs/team-summary' }),
+      transformResponse: env<TeamMileageSummary>,
       providesTags: ['MileageLog'],
     }),
     // Expense receipts — /expense-receipts had a complete backend (create, list,
@@ -138,6 +153,7 @@ export const mileageApi = createApi({
 export const {
   useListMileageLogsQuery,
   useGetMileageSummaryQuery,
+  useGetTeamMileageSummaryQuery,
   useListExpenseReceiptsQuery,
   useCreateExpenseReceiptMutation,
   useUploadExpenseReceiptMutation,

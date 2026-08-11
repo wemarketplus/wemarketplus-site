@@ -186,7 +186,7 @@ export function TerritoryPlannerPage() {
                             </p>
                           </div>
                           <span className="text-[11px] tabular-nums text-muted">
-                            {account.referralVolume} referrals
+                            {account.referralCount} referrals
                           </span>
                           {account.isCold && <Pill tone="r">Cold</Pill>}
                         </li>

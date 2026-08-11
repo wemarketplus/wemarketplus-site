@@ -13,6 +13,7 @@ export {
   useCreateMileageLogMutation,
   useUpdateMileageLogMutation,
   useDeleteMileageLogMutation,
+  useGetTeamMileageSummaryQuery,
   useListExpenseReceiptsQuery,
   useUploadExpenseReceiptMutation,
 } from './api/mileageApi';
@@ -22,6 +23,7 @@ export type {
   MileageLogRecord,
   CreateMileageLogRequest,
   UpdateMileageLogRequest,
+  TeamMileageSummary,
   ExpenseReceiptRecord,
   UploadExpenseReceiptRequest,
 } from './types/fieldTypes';

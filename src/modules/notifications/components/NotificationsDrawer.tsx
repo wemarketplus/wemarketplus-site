@@ -6,10 +6,14 @@ import { useNotificationsControls } from '../hooks/useNotificationsControls';
 import { useNotificationsDrawer } from '../hooks/useNotificationsDrawer';
 import { NotificationsList } from './NotificationsList';
 import { NOTIFICATIONS_DRAWER_FILTERS } from '../constants/notificationsConstants';
+import { useRegisterOverlay } from '@/shared/ui/feedback';
 import { cn } from '@/shared/utils/cn';
 
 export function NotificationsDrawer() {
   const { open, close } = useNotificationsDrawer();
+  // Same rule as the modals: no topbar behind an open popup surface. This one
+  // stays mounted and fades, so the flag follows `open`, not mount state.
+  useRegisterOverlay(open);
   const { filtered, unreadCount } = useNotifications();
   const { filter, changeFilter, markAllRead, isMarkingAll } = useNotificationsControls();
   const activate = useNotificationActivate();

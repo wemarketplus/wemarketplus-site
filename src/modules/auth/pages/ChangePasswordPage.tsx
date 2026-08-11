@@ -1,7 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { Button, PasswordInput } from '@/shared/ui/core';
+import { logout } from '../store/authSlice';
 import { AuthCardShell } from '../components/AuthCardShell';
 import { AuthField } from '../components/AuthField';
 import { PasswordStrengthMeter } from '../components/PasswordStrengthMeter';
@@ -14,9 +16,16 @@ import {
 // Mirrors wemarketplus-site/change-password.html — a standalone centered
 // auth card (reached when login returns must_change_password). Current +
 // new + confirm, strength meter, gradient submit.
+//
+// Serves both the FORCED change (/change-password, where ProtectedRoute sends a
+// user holding an admin-issued password) and the voluntary one from settings
+// (/account/password). The form is identical; only the copy below differs, because
+// someone who was sent here needs to know why.
 export function ChangePasswordPage() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { submit, isLoading } = useChangePassword();
+  const forced = useAppSelector((s) => s.auth.user?.mustChangePassword ?? false);
 
   const {
     register,
@@ -33,15 +42,27 @@ export function ChangePasswordPage() {
 
   return (
     <AuthCardShell
-      title="Change Your Password"
-      description="Create a new password to secure your account."
+      title={forced ? 'Set a new password' : 'Change Your Password'}
+      description={
+        forced
+          ? 'The password you signed in with was issued by an administrator. Choose your own to continue.'
+          : 'Create a new password to secure your account.'
+      }
       maxWidth={440}
     >
       <form
         onSubmit={handleSubmit(({ currentPassword, password: next }) =>
           submit({ currentPassword, password: next }, () => {
             reset();
-            navigate('/login');
+            /**
+             * Changing a password revokes every session for that user server-side
+             * (auth.service.changePassword), so the token this tab is holding is
+             * already dead. Clearing it locally is what makes /login render — while
+             * the store still says "authenticated", PublicRoute bounces us to "/",
+             * which then fails on the revoked token.
+             */
+            dispatch(logout());
+            navigate('/login', { replace: true });
           }),
         )}
         noValidate

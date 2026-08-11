@@ -23,6 +23,9 @@ import type { EvvLogRecord } from '@/modules/clinical/types/clinicalApiTypes';
  * on a laptop still sees the visit as open.
  */
 export function EvvPage() {
+  // No userId is passed deliberately. EvvController pins a non-oversight caller to
+  // their own id and ignores any userId in the query, so scoping lives in exactly
+  // one place — a second copy of the rule here could only ever drift from it.
   const { data, isLoading, isError } = useListEvvLogsQuery({ limit: 50 });
   const [clockIn, { isLoading: isClockingIn }] = useClockInMutation();
   const [clockOut, { isLoading: isClockingOut }] = useClockOutMutation();
@@ -55,7 +58,12 @@ export function EvvPage() {
     try {
       await clockOut({
         id: openVisit.id,
-        body: { locationOut: location || undefined, notes: notes || undefined },
+        // `notesOut`, NOT `notes`: this used to send `notes`, which the backend
+        // spread over the row and erased whatever was written at clock-in.
+        body: {
+          locationOut: location || undefined,
+          notesOut: notes || undefined,
+        },
       }).unwrap();
       setLocation('');
       setNotes('');
@@ -94,9 +102,49 @@ export function EvvPage() {
     {
       key: 'locationIn',
       header: 'Location',
-      cell: (row) => row.locationIn ?? '—',
+      // Both ends, because they can differ (picked up at the office, dropped at a
+      // facility) and a compliance record that shows only one is misleading.
+      cell: (row) =>
+        row.locationOut && row.locationOut !== row.locationIn ? (
+          <span>
+            {row.locationIn ?? '—'}
+            <span className="text-muted-soft"> → </span>
+            {row.locationOut}
+          </span>
+        ) : (
+          (row.locationIn ?? row.locationOut ?? '—')
+        ),
     },
-    { key: 'notes', header: 'Notes', cell: (row) => row.notes ?? '—' },
+    {
+      key: 'notes',
+      header: 'Notes',
+      // Arrival and departure notes are shown as distinct, labelled lines. They
+      // used to share one column AND one database field, so writing the second
+      // destroyed the first.
+      cell: (row) =>
+        row.notes || row.notesOut ? (
+          <span className="block space-y-0.5">
+            {row.notes && (
+              <span className="block">
+                <span className="text-[11px] uppercase tracking-wide text-muted-soft">
+                  In{' '}
+                </span>
+                {row.notes}
+              </span>
+            )}
+            {row.notesOut && (
+              <span className="block">
+                <span className="text-[11px] uppercase tracking-wide text-muted-soft">
+                  Out{' '}
+                </span>
+                {row.notesOut}
+              </span>
+            )}
+          </span>
+        ) : (
+          '—'
+        ),
+    },
   ];
 
   return (

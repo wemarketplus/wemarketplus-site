@@ -8,14 +8,35 @@ export type AlertChannel = (typeof AlertChannel)[keyof typeof AlertChannel];
 
 // wemarketplus-backend/src/alert-settings — per-tenant alert routing config.
 export interface AlertSettingRecord {
-  id: string;
-  tenantId: string;
+  /** Null for an alert type that has never been configured. */
+  id: string | null;
+  tenantId: string | null;
   alertType: string;
   enabled: boolean;
   recipientRoles: string[] | null;
   recipientUserIds: string[] | null;
   channel: AlertChannel;
-  updatedAt: string;
+  updatedAt: string | null;
+  /**
+   * False when the row is a server-supplied default rather than a saved
+   * setting. Distinguishes "nobody has set this up" from "an admin deliberately
+   * turned it off", which look identical otherwise.
+   */
+  configured: boolean;
+}
+
+/**
+ * Whether a delivery channel can actually deliver in this deployment
+ * (GET /alert-settings/channels).
+ *
+ * The platform ships no SMS provider, so SMS reports available: false. The UI
+ * disables it rather than letting an office manager select a channel that would
+ * silently drop every message.
+ */
+export interface AlertChannelAvailability {
+  channel: AlertChannel;
+  available: boolean;
+  reason: string | null;
 }
 
 export interface UpsertAlertSettingRequest {

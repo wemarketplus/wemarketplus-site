@@ -50,4 +50,26 @@ export const ACTIVITY_TYPE_OPTIONS = (
 /** The one value that makes the free-text field mandatory. */
 export const ACTIVITY_TYPE_REQUIRING_DETAIL = ActivityType.Other;
 
+/**
+ * The channels a clinician speaks to a patient's family on. Mirrors the
+ * backend's FAMILY_CONTACT_ACTIVITY_TYPES exactly — the Family Communication log
+ * filters on this set, so the form must not offer a value the log then hides.
+ *
+ * Phone Call leads because the guide leads with it ("by phone, text, or in
+ * person"), and it is the default for a new family contact.
+ */
+export const FAMILY_CONTACT_ACTIVITY_TYPES: readonly ActivityType[] = [
+  ActivityType.PhoneCall,
+  ActivityType.TextSms,
+  ActivityType.Email,
+  ActivityType.VirtualVideoMeeting,
+  ActivityType.FacilityOfficeVisit,
+  ActivityType.Other,
+];
+
+/** Select options for a family conversation, in guide order. */
+export const FAMILY_CONTACT_ACTIVITY_OPTIONS = FAMILY_CONTACT_ACTIVITY_TYPES.map(
+  (value) => ({ value, label: ACTIVITY_TYPE_LABELS[value] }),
+);
+
 export const ACTIVITY_TYPE_OTHER_MAX_LENGTH = 200;

@@ -18,6 +18,8 @@ export interface UserRecord {
   isActive: boolean;
   createdAt: ISODateString;
   updatedAt: ISODateString;
+  /** Set when this user holds a tenant-defined job title. */
+  customRoleId?: string | null;
 }
 
 // GET /users/calendar-colors — wemarketplus-backend/src/users/dto/calendar-color.dto.ts.
@@ -36,6 +38,12 @@ export interface CreateUserRequest {
   firstName: string;
   lastName: string;
   role?: Role;
+  /**
+   * A tenant-defined job title to give this user (custom_roles.id) instead of a bare
+   * role. When set, the backend FORCES `role` to that custom role's baseRole, so the
+   * enforced permissions and the job title can never disagree.
+   */
+  customRoleId?: string | null;
 }
 
 // PATCH /users/:id body — wemarketplus-backend/src/users/dto/update-user.dto.ts.
@@ -47,6 +55,12 @@ export interface UpdateUserRequest {
   // Enable/disable (deactivate/reactivate) the account. The backend guards
   // self-disable and the last privileged (Owner/Admin) account.
   isActive?: boolean;
+  /**
+   * A tenant-defined job title to give this user (custom_roles.id) instead of a bare
+   * role. When set, the backend FORCES `role` to that custom role's baseRole, so the
+   * enforced permissions and the job title can never disagree.
+   */
+  customRoleId?: string | null;
 }
 
 // PATCH /users/me body — wemarketplus-backend/src/users/dto/update-own-profile.dto.ts.
@@ -101,4 +115,20 @@ export interface EditUserModalProps {
   onClose: () => void;
   // Returns true when the update succeeded, so the modal can close.
   onSubmit: (values: EditUserFormValues) => Promise<boolean>;
+}
+
+/**
+ * Seat utilisation for the tenant (GET /users/seats).
+ *
+ * Mirrors wemarketplus-backend/src/users/dto/seat-usage.dto.ts. `allowed` and
+ * `remaining` are nullable because an unrecognised plan is treated as UNCAPPED
+ * server-side — null means "no cap known", never "zero seats".
+ */
+export interface SeatUsage {
+  planName: string | null;
+  allowed: number | null;
+  used: number;
+  remaining: number | null;
+  /** False in dev/test, where the limit is displayed but not enforced. */
+  enforced: boolean;
 }

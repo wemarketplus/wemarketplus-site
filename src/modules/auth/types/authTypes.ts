@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { Role } from '@/shared/rbac';
+import type { CustomRole, Role } from '@/shared/rbac';
 import type {
   ISODateString,
   ID,
@@ -17,6 +17,14 @@ export interface AuthenticatedUser {
   firstName: string;
   lastName: string;
   role: Role;
+  /**
+   * The tenant-defined job title this user holds, if any. `role` above stays the
+   * ENFORCED role (always the custom role's baseRole); this narrows the sidebar and
+   * relabels the user's title. Ships on /auth/me and login. Absent for the vast
+   * majority of users, who hold a plain role.
+   */
+  customRoleId?: string | null;
+  customRole?: CustomRole;
   phone: string | null;
   avatarUrl: string | null;
   // The user's chosen shared-calendar colour ('#rrggbb'), or null to fall back
@@ -28,6 +36,16 @@ export interface AuthenticatedUser {
   // False until the user clicks the verification link (production enforces
   // this before login; dev environments may skip it).
   emailVerified?: boolean;
+  /**
+   * True while this user still holds a password an administrator chose for them —
+   * an admin-created account or an admin reset. Ships on login and /auth/me.
+   *
+   * ProtectedRoute sends such a user to /change-password and keeps them there. The
+   * real enforcement is the backend's PasswordChangeGuard, which 403s every other
+   * endpoint; this flag only lets the UI explain why instead of showing a wall of
+   * failed requests. Optional so an older backend still satisfies the type.
+   */
+  mustChangePassword?: boolean;
   // Whether TOTP two-factor auth is enabled. Ships on /auth/me; the Security
   // tab reads it to show status and toggle the enable/disable flow.
   mfaEnabled?: boolean;

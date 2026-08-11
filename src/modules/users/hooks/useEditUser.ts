@@ -24,6 +24,9 @@ export function useEditUser() {
       firstName: values.firstName.trim(),
       lastName: values.lastName.trim(),
       role: values.role,
+      // '' -> null CLEARS the assignment (back to a standard role); a chosen id sets
+      // it, and the server then forces `role` to that custom role's base role.
+      customRoleId: values.customRoleId ? values.customRoleId : null,
       isActive: values.isActive,
     };
 

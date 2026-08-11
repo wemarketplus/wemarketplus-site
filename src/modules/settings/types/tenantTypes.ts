@@ -15,6 +15,12 @@ export interface TenantProfile {
   subscriptionStatus: string;
   isActive: boolean;
   baaSigned: boolean;
+  /**
+   * IANA zone scheduled reports are timed against. The Weekly Report is emailed
+   * at 07:00 local Monday in this zone — see the backend's
+   * WeeklyReportScheduleService.
+   */
+  reportTimezone: string;
   createdAt: ISODateString;
   updatedAt: ISODateString;
 }
@@ -26,4 +32,9 @@ export interface UpdateMyTenantRequest {
   city?: string;
   state?: string;
   phone?: string;
+  /**
+   * Safe on this self-service route: it changes WHEN the tenant's own scheduled
+   * reports are sent, never what they contain or who may read them.
+   */
+  reportTimezone?: string;
 }

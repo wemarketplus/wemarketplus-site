@@ -5,8 +5,9 @@
 
 export { PermissionGate, RoleGate } from './components/PermissionGate';
 export { usePermission, useRole } from './hooks/usePermission';
-export { Role, ALL_ROLES } from './types/permissionTypes';
+export { Role, ALL_ROLES, type CustomRole } from './types/permissionTypes';
 export {
+  roleTitle,
   ROLE_LABELS,
   STAFF_ROLES,
   ADMIN_ONLY,

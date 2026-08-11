@@ -1,6 +1,7 @@
 import { Role, ROLE_LABELS, STAFF_ROLES, useRole } from '@/shared/rbac';
 import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
 import { formatDate } from '@/shared/utils/dateFormatter';
+import { useListCustomRolesQuery } from '@/modules/permissions';
 import { ROLE_PILL } from '../constants/usersConstants';
 import type { UserRecord } from '../types/usersTypes';
 import { fullName, initials } from '../utils/userDisplay';
@@ -30,6 +31,17 @@ export function UsersTable({
   actionsDisabled,
 }: UsersTableProps) {
   const { role, isAny } = useRole();
+  /**
+   * id -> job title for the tenant's custom roles. The user list payload carries
+   * `customRoleId` but not the name (a user row has no business embedding the whole
+   * role definition), so the names are resolved once here for the whole table.
+   * Answers 402/403 for plans or roles without the feature, in which case the map is
+   * simply empty and every row falls back to its standard role label.
+   */
+  const { data: customRoles } = useListCustomRolesQuery();
+  const customRoleNames = new Map(
+    (customRoles ?? []).map((custom) => [custom.id, custom.name]),
+  );
   // Management roles may run the row actions (matches the page's Add-user gate
   // and the backend's manage_users permission on the mutations).
   const canManage = isAny(STAFF_ROLES);
@@ -65,7 +77,24 @@ export function UsersTable({
     {
       key: 'role',
       header: 'Role',
-      cell: (u) => <Pill tone={ROLE_PILL[u.role]}>{ROLE_LABELS[u.role]}</Pill>,
+      // A custom-role holder is shown by their JOB TITLE with the inherited role
+      // beneath it: the title is what the team calls them, the role is what the
+      // system enforces, and an admin reading this table needs both.
+      cell: (u) => {
+        const custom = customRoleNames.get(u.customRoleId ?? '');
+        return (
+          <div className="min-w-0">
+            <Pill tone={ROLE_PILL[u.role]}>
+              {custom ?? ROLE_LABELS[u.role]}
+            </Pill>
+            {custom && (
+              <span className="mt-0.5 block truncate text-[10px] text-muted-soft">
+                {ROLE_LABELS[u.role]} permissions
+              </span>
+            )}
+          </div>
+        );
+      },
     },
     {
       key: 'status',

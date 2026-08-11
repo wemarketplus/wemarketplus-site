@@ -4,14 +4,16 @@ import { NavLink } from 'react-router-dom';
 // NavItem in navigationConfig already carries one.
 import { HeartPulse as BrandMark } from 'lucide-react';
 import {
-  RoleSwitcher,
+  // RoleSwitcher — the "Viewing as" control is switched off (see below).
+  // RoleSwitcher,
   useActiveEntitlement,
 } from '@/modules/access';
 import {
   SECTIONS_BY_PRODUCT,
   isNavItemVisible,
 } from '@/shared/config/navigationConfig';
-import { useRole, ROLE_LABELS } from '@/shared/rbac';
+import { useAppSelector } from '@/app/hooks';
+import { useRole, roleTitle } from '@/shared/rbac';
 import { Product, TIER_LABELS, PRODUCT_LABELS } from '@/shared/types';
 import { cn } from '@/shared/utils/cn';
 
@@ -35,6 +37,20 @@ export function Sidebar() {
   const hasActivePlan = ['active', 'trialing', 'past_due'].includes(
     subscriptionStatus ?? '',
   );
+
+  /**
+   * A custom role's chosen tabs, when this user holds one. Ships on the auth payload
+   * (see AuthService.withTenantPlanInfo), so the sidebar needs no extra request and
+   * an ordinary user never has to be able to read the tenant's whole role design.
+   *
+   * A DISABLED custom role is ignored on purpose: the user falls back to their base
+   * role's normal menu rather than being left with a role that no longer applies.
+   */
+  const customRole = useAppSelector((s) => s.auth.user?.customRole);
+  const allowedNavKeys =
+    customRole?.isActive && customRole.navKeys.length > 0
+      ? customRole.navKeys
+      : undefined;
 
   const sections = SECTIONS_BY_PRODUCT[product];
   const isCommunity = product === Product.CommunityLink;
@@ -69,17 +85,19 @@ export function Sidebar() {
             </div>
           </div>
         </div>
-        {/* "Viewing as" — only renders for a HospiceLink management user, and
-            only ever narrows what is shown. The product switcher that used to
-            sit here has moved to the topbar beside the bell. */}
-        <RoleSwitcher />
+        {/* "Viewing as" role preview — DISABLED. It only ever rendered for a
+            HospiceLink management user, and the HospiceLink dashboards are not to
+            show a role-preview section at all. The component and its store
+            plumbing are left in place; restore by uncommenting this and the
+            import above (and the preview resolution in usePermission). */}
+        {/* <RoleSwitcher /> */}
       </div>
 
       {/* .sb-nav */}
       <nav className="flex-1 overflow-y-auto px-2 pb-2" aria-label="Primary navigation">
         {sections.map((section) => {
           const visibleItems = section.items.filter((i) =>
-            isNavItemVisible(i, product, role, tier),
+            isNavItemVisible(i, product, role, tier, allowedNavKeys, section.id),
           );
           if (visibleItems.length === 0) return null;
           const isAdmin = section.id.endsWith('intelligence') || section.id === 'admin' || section.id.endsWith('compliance');
@@ -91,6 +109,29 @@ export function Sidebar() {
               </span>
               {visibleItems.map((item) => {
                 const Icon = item.icon;
+                /**
+                 * Announced, not built. Rendered as an inert row rather than a
+                 * NavLink: there is no route behind it, and a link that goes
+                 * nowhere (or to a 404) is worse than no link. Not a <button>
+                 * either — nothing happens on click, so it must not invite one.
+                 * `aria-disabled` + the visible "Soon" badge say the same thing to
+                 * a screen reader and to the eye.
+                 */
+                if (item.comingSoon) {
+                  return (
+                    <div
+                      key={item.to}
+                      aria-disabled="true"
+                      className="mb-px flex cursor-default items-center gap-2.5 rounded-[8px] px-2.5 py-2 text-[12px] font-semibold text-muted-soft/70"
+                    >
+                      <Icon className="h-4 w-4 shrink-0 text-muted-soft/60" />
+                      <span className="truncate">{item.label}</span>
+                      <span className="ml-auto shrink-0 rounded-pill border border-border/[0.12] px-1.5 py-px text-[8px] font-black uppercase tracking-[0.1em] text-muted-soft">
+                        Soon
+                      </span>
+                    </div>
+                  );
+                }
                 return (
                   <NavLink
                     key={item.to}
@@ -129,7 +170,7 @@ export function Sidebar() {
       {/* .sb-foot */}
       <div className="flex-shrink-0 border-t border-border/[0.07] px-3 py-2.5 text-[10px] uppercase tracking-[0.1em] text-muted-soft">
         {role ? (
-          <>Signed in as <span className="font-bold text-foreground">{ROLE_LABELS[role]}</span></>
+          <>Signed in as <span className="font-bold text-foreground">{roleTitle(role, customRole?.name)}</span></>
         ) : (
           'Not signed in'
         )}

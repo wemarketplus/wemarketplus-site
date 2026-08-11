@@ -13,8 +13,16 @@ export const ACTIVITY_TABS: ReadonlyArray<{
   label: string;
   icon: typeof Calendar;
 }> = [
-  { value: 'calendar', label: 'Calendar', icon: Calendar },
-  { value: 'notes', label: 'Notes', icon: ScrollText },
+  // "Follow-ups", matching the renamed sidebar row. This tab lists upcoming
+  // follow-up dates — it is not the calendar, and the guide's "Calendar" is now
+  // the Appointments screen (month grid, My calendar / All users, per-user
+  // colours). Two rows called Calendar is what sent people to the wrong one.
+  { value: 'calendar', label: 'Follow-ups', icon: Calendar },
+  // "Notes & team notes", matching the sidebar row: this tab IS the team-notes
+  // surface for clinical staff, who cannot reach the copy inside the prospect
+  // drawer (Prospects is marketing-only). A tab labelled just "Notes" read as a
+  // private scratchpad, which is the opposite of what the list is.
+  { value: 'notes', label: 'Notes & team notes', icon: ScrollText },
   { value: 'reminders', label: 'Reminders', icon: Pin },
   { value: 'goals', label: 'Daily goals', icon: Goal },
 ];
@@ -87,12 +95,17 @@ const GOAL_PERIOD_OPTIONS: readonly EntitySelectOption[] = [
   { value: 'yearly', label: 'Yearly' },
 ];
 
-// Notes: prospectId is a raw UUID field (the reminders/notes tabs do not yet
-// have a prospect picker, so it is entered directly).
-// A note now targets a prospect, a referral source or a contact — at least one,
-// possibly several (FIX-1). `activityType` replaces the old free-text
-// "contact type": one canonical enum shared with appointments, so a brochure
-// drop-off and a lunch-and-learn are finally distinguishable in the log (FIX-3).
+// Notes: a note targets a prospect, a referral source or a contact — at least
+// one, possibly several (FIX-1). All three are pickers, never typed: they were
+// once free-text "paste the UUID" boxes, which no end user could fill.
+// `activityType` replaces the old free-text "contact type": one canonical enum
+// shared with appointments, so a brochure drop-off and a lunch-and-learn are
+// finally distinguishable in the log (FIX-3).
+//
+// `isFamilySensitive` is deliberately absent from this list: it is a checkbox,
+// which the field-descriptor grid has no type for, so NoteFormModal renders it in
+// the footerNote slot rather than every other module's form gaining a field type
+// it does not use.
 /** Activity-type options with a leading blank, since the field is optional. */
 const ACTIVITY_TYPE_SELECT_OPTIONS = [
   { value: '', label: 'Not recorded' },

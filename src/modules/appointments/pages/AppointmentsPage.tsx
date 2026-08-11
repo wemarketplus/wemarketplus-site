@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { CalendarDays, List, Plus } from 'lucide-react';
 import { useListJobsQuery } from '@/modules/jobs';
+import { HL_MARKETING_ROLES, useRole } from '@/shared/rbac';
 import { Button } from '@/shared/ui/core';
 import { cn } from '@/shared/utils/cn';
 import { AppointmentsCalendar } from '../components/AppointmentsCalendar';
@@ -10,7 +11,10 @@ import { AppointmentsMonthGrid } from '../components/AppointmentsMonthGrid';
 import { CompleteAppointmentModal } from '../components/CompleteAppointmentModal';
 import { ScheduleAppointmentModal } from '../components/ScheduleAppointmentModal';
 import { useAppointmentActions } from '../hooks/useAppointmentActions';
-import { useAppointmentsCalendar } from '../hooks/useAppointmentsCalendar';
+import {
+  useAppointmentsCalendar,
+  type CalendarScope,
+} from '../hooks/useAppointmentsCalendar';
 import { useAppointmentsMonth } from '../hooks/useAppointmentsMonth';
 import { useTenantCalendarColors } from '../hooks/useTenantCalendarColors';
 
@@ -25,8 +29,20 @@ type CalendarMode = 'month' | 'agenda';
  */
 export function AppointmentsPage() {
   const [mode, setMode] = useState<CalendarMode>('month');
-  const month = useAppointmentsMonth();
-  const agenda = useAppointmentsCalendar();
+  // ONE scope for both views. Previously only the agenda had this control, so the
+  // month grid — the view the page opens on — was always tenant-wide, and moving
+  // between tabs quietly changed whose calendar you were reading.
+  const [scope, setScope] = useState<CalendarScope>('mine');
+  // Every appointment hangs off a job, and the create form requires one. Roles
+  // without pipeline access get 403 on /hl/jobs and cannot create a job anywhere in
+  // their own menu, so for them the create button opened a form whose required Job
+  // dropdown held nothing but its placeholder — POST /hl/appointments answers
+  // "jobId must be a UUID" no matter what they type. Hidden rather than disabled:
+  // a caregiver is not waiting on a permission here, scheduling simply is not part
+  // of their job.
+  const canSchedule = useRole().isAny(HL_MARKETING_ROLES);
+  const month = useAppointmentsMonth(scope);
+  const agenda = useAppointmentsCalendar({ scope });
   const {
     pending,
     openComplete,
@@ -40,12 +56,17 @@ export function AppointmentsPage() {
     submitSchedule,
   } = useAppointmentActions();
   // An appointment always hangs off a job, so the picker needs the job list.
-  const { data: jobsPage } = useListJobsQuery({ limit: 100 });
+  // Skipped for roles without pipeline access: /hl/jobs is 403 for them, and it was
+  // firing on every calendar load to populate a form they can never open.
+  const { data: jobsPage } = useListJobsQuery(
+    { limit: 100 },
+    { skip: !canSchedule },
+  );
   // Per-rep colours, only for the "All users" agenda. Saving a colour in
   // /my-profile invalidates this query's tag, so the dots repaint here without
   // a reload — including for whoever else is looking at the same view.
   const ownerColorMap = useTenantCalendarColors(
-    mode === 'agenda' && agenda.scope === 'all',
+    mode === 'agenda' && scope === 'all',
   );
 
   const isMonth = mode === 'month';
@@ -55,7 +76,11 @@ export function AppointmentsPage() {
     <div className="space-y-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-display text-3xl text-foreground">Appointments</h1>
+          {/* "Calendar", matching the sidebar row that now leads here. The product
+              guide sends every role to a tab by that name for the month grid and
+              the My calendar / All users switch, both of which are on this screen
+              and nowhere else. */}
+          <h1 className="font-display text-3xl text-foreground">Calendar</h1>
           <p className="text-sm text-muted">
             {isMonth
               ? `${month.appointments.length} in view`
@@ -87,9 +112,11 @@ export function AppointmentsPage() {
               </button>
             ))}
           </div>
-          <Button onClick={openSchedule}>
-            <Plus className="h-4 w-4" /> Schedule appointment
-          </Button>
+          {canSchedule && (
+            <Button onClick={openSchedule}>
+              <Plus className="h-4 w-4" /> Schedule appointment
+            </Button>
+          )}
         </div>
       </header>
 
@@ -98,6 +125,10 @@ export function AppointmentsPage() {
           Could not load the calendar.
         </p>
       )}
+
+      {/* Above the view switch, so the answer to "whose calendar is this?" is on
+          screen in BOTH views rather than only in the agenda. */}
+      <CalendarScopeToggle scope={scope} onChange={setScope} />
 
       {active.isLoading ? (
         <p className="text-sm text-muted-soft">Loading calendar…</p>
@@ -119,14 +150,13 @@ export function AppointmentsPage() {
             items={month.selectedDay?.items ?? []}
             isBusy={isCompleting}
             onComplete={openComplete}
-            onSchedule={openSchedule}
+            onSchedule={canSchedule ? openSchedule : undefined}
           />
         </div>
       ) : (
         <div className="space-y-3">
-          <CalendarScopeToggle scope={agenda.scope} onChange={agenda.setScope} />
           <AppointmentsCalendar
-            showOwnerColors={agenda.scope === 'all'}
+            showOwnerColors={scope === 'all'}
             ownerColorMap={ownerColorMap}
             days={agenda.days}
             isEmpty={agenda.isEmpty}

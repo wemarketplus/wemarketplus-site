@@ -14,7 +14,14 @@ const columns: ReadonlyArray<Column<AuditLogEntry>> = [
     key: 'actor',
     header: 'Actor',
     cell: (e) => (
-      <span className="font-mono text-[11px] font-bold text-foreground">{e.actor}</span>
+      <div className="min-w-0">
+        <span className="block truncate text-[12.5px] font-semibold text-foreground">
+          {e.actor}
+        </span>
+        {e.actorEmail && (
+          <span className="block truncate text-[11px] text-muted">{e.actorEmail}</span>
+        )}
+      </div>
     ),
   },
   { key: 'action', header: 'Action', cell: (e) => e.action },

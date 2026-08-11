@@ -5,7 +5,8 @@ import {
   type FetchBaseQueryError,
 } from '@reduxjs/toolkit/query';
 import { Mutex } from 'async-mutex';
-import { logout, setCredentials } from '@/modules/auth/store/authSlice';
+import { logout, patchUser, setCredentials } from '@/modules/auth/store/authSlice';
+import { CHANGE_PASSWORD_PATH } from '@/shared/constants/routeConstants';
 import type { ApiEnvelope } from '@/shared/types';
 import type { LoginResponse } from '@/modules/auth/types/authTypes';
 import type { RootState } from './store';
@@ -36,6 +37,35 @@ function forceLogout(api: Parameters<typeof rawBaseQuery>[1]): void {
 // Both spellings of the billing screen (see router.tsx).
 const BILLING_PATHS = ['/billing', '/subscription-status'];
 
+// Thrown by the backend's PasswordChangeGuard. 403 alone is not enough to act on
+// — it is also every ordinary role denial — so this matches the specific code.
+const PASSWORD_CHANGE_REQUIRED = 'PASSWORD_CHANGE_REQUIRED';
+
+function isPasswordChangeRequired(error: FetchBaseQueryError): boolean {
+  if (error.status !== 403) return false;
+  const data = error.data as { error?: unknown } | undefined;
+  return data?.error === PASSWORD_CHANGE_REQUIRED;
+}
+
+/**
+ * Recovery for a client that does not yet know it is locked out.
+ *
+ * ProtectedRoute already redirects on the `mustChangePassword` flag, so in the
+ * normal flow this never fires. It covers the case the flag cannot: an admin
+ * resetting someone's password mid-session. That user's stored profile still says
+ * false, and without this every screen would quietly fill with failed requests.
+ * Flipping the flag makes the router's own gate do the rest.
+ */
+function requirePasswordChange(api: Parameters<typeof rawBaseQuery>[1]): void {
+  api.dispatch(patchUser({ mustChangePassword: true }));
+  if (
+    typeof window !== 'undefined' &&
+    window.location.pathname !== CHANGE_PASSWORD_PATH
+  ) {
+    window.location.assign(CHANGE_PASSWORD_PATH);
+  }
+}
+
 // 402 SUBSCRIPTION_REQUIRED: the tenant has no live subscription, so every
 // feature endpoint is gated until they pick a plan. Hard redirect to the
 // plan picker, mirroring forceLogout's style; the pathname guard prevents a
@@ -59,6 +89,13 @@ export const baseQueryWithReauth: BaseQueryFn<
 
   if (result.error?.status === 402) {
     redirectToBilling();
+    return result;
+  }
+
+  // Before the 401 branch: this is a 403, so refreshing the token would not help
+  // and the request must not be replayed.
+  if (result.error && isPasswordChangeRequired(result.error)) {
+    requirePasswordChange(api);
     return result;
   }
 

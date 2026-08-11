@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Role } from '@/shared/rbac';
 import { Button, Input, Label, PasswordInput, Select } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
+import { useListCustomRolesQuery } from '@/modules/permissions';
 import { ASSIGNABLE_ROLE_OPTIONS } from '../constants/usersConstants';
 import { newUserSchema, type NewUserFormValues } from '../schema/usersSchema';
 import type { AddUserModalProps } from '../types/usersTypes';
@@ -13,6 +14,7 @@ const DEFAULT_VALUES: NewUserFormValues = {
   lastName: '',
   email: '',
   role: Role.Marketer,
+  customRoleId: '',
   password: '',
   sendInvite: true,
 };
@@ -31,11 +33,22 @@ export function AddUserModal({
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<NewUserFormValues>({
     resolver: zodResolver(newUserSchema),
     defaultValues: DEFAULT_VALUES,
   });
+
+  /**
+   * The tenant's assignable job titles. Skipped until the modal is open so a plan
+   * that lacks the feature does not 402 on every visit to the users page.
+   */
+  const { data: customRoles } = useListCustomRolesQuery(undefined, { skip: !open });
+  const activeCustomRoles = (customRoles ?? []).filter((role) => role.isActive);
+  // Watched, not read once: choosing a custom role decides the base role, so the
+  // Role select has to react in the same render.
+  const hasCustomRole = Boolean(watch('customRoleId'));
 
   const close = () => {
     reset();
@@ -93,7 +106,7 @@ export function AddUserModal({
         </div>
         <div>
           <Label htmlFor="au-role">Role</Label>
-          <Select id="au-role" {...register('role')}>
+          <Select id="au-role" disabled={hasCustomRole} {...register('role')}>
             {ASSIGNABLE_ROLE_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>
                 {o.label}
@@ -103,7 +116,32 @@ export function AddUserModal({
           {errors.role && (
             <p className="mt-1 text-[12px] text-destructive">{errors.role.message}</p>
           )}
+          {hasCustomRole && (
+            // Disabled rather than hidden: the admin needs to see that the role is
+            // decided, and by what. The server ignores this field when a custom role
+            // is named (it forces the custom role's base role), so leaving it live
+            // would offer a choice that has no effect.
+            <p className="mt-1 text-[11px] leading-snug text-muted-soft">
+              Set by the custom role below.
+            </p>
+          )}
         </div>
+        {/* Only rendered when the tenant HAS custom roles. On a Pro plan the list
+            request answers 402 and on a non-admin it answers 403; either way the
+            field simply does not appear, rather than showing an empty picker. */}
+        {activeCustomRoles.length > 0 && (
+          <div>
+            <Label htmlFor="au-custom-role">Custom role</Label>
+            <Select id="au-custom-role" {...register('customRoleId')}>
+              <option value="">Standard role (above)</option>
+              {activeCustomRoles.map((role) => (
+                <option key={role.id} value={role.id}>
+                  {role.name}
+                </option>
+              ))}
+            </Select>
+          </div>
+        )}
         <div className="sm:col-span-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="au-password">Temporary password</Label>

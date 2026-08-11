@@ -1,3 +1,4 @@
+import { Product, Tier } from '@/shared/types';
 import { AlertTriangle, Bell, CheckCheck, MessageSquare } from 'lucide-react';
 import type { ComponentType } from 'react';
 import type { AppNotification } from '@/shared/types';
@@ -67,3 +68,21 @@ export const NOTIFICATIONS_PAGE_TABS: ReadonlyArray<{
   { value: 'mention', label: 'Mentions' },
   { value: 'system', label: 'System' },
 ];
+
+/**
+ * Tier required to configure ALERT ROUTING (who is notified, over which
+ * channel), per product.
+ *
+ * Mirrors the backend's per-product override of the `alert_settings` feature
+ * rank (FEATURE_MIN_RANK_BY_PRODUCT in plan-catalog.ts): HospiceLink sells this
+ * as base functionality — its product guide presents "choose who gets a text or
+ * email alert" alongside the team roster — while CommunityLink sells it in the
+ * Max admin bundle.
+ *
+ * Change one side, change both, or the tab appears for a tenant whose API calls
+ * will 402.
+ */
+export const ALERT_ROUTING_MIN_TIER = {
+  [Product.HospiceLink]: Tier.Pro,
+  [Product.CommunityLink]: Tier.Max,
+} as const satisfies Partial<Record<Product, Tier>>;

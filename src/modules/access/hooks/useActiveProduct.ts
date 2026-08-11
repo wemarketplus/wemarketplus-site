@@ -5,10 +5,16 @@ import { setActiveProduct } from '../store/accessSlice';
 import { hasProductAccess, resolveActiveProduct } from '../utils/productAccess';
 
 /**
- * The currently-active dashboard/product and a setter that switches it. The
- * active product is resolved against the user's entitlements, so it can never
- * be a product the user isn't allowed to use. `changeProduct` ignores requests
- * for products the user has no access to (defence in depth alongside the guard).
+ * The currently-active dashboard/product and a setter that switches it.
+ *
+ * `changeProduct` succeeds for BOTH dashboards for any authenticated user — that
+ * is what makes the switcher work for every logged-in user regardless of role or
+ * entitlement. It still refuses when there is no session (`hasProductAccess`
+ * returns false with no user), so nothing can select a dashboard before login.
+ *
+ * The switch is a single reducer on the access slice: no token is touched, no
+ * request re-issued, no navigation to /login. The user stays exactly as
+ * authenticated as they were a moment before.
  */
 export function useActiveProduct() {
   const dispatch = useAppDispatch();

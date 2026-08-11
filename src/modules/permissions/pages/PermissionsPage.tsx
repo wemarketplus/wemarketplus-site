@@ -1,5 +1,6 @@
 import { Info, Loader2, ShieldCheck, TriangleAlert } from 'lucide-react';
 import { Button } from '@/shared/ui/core';
+import { ManageCustomRoles } from '../components/ManageCustomRoles';
 import { PermissionMatrixGrid } from '../components/PermissionMatrixGrid';
 import { usePermissionMatrix } from '../hooks/usePermissionMatrix';
 
@@ -75,6 +76,10 @@ export function PermissionsPage() {
           onToggle={toggle}
         />
       )}
+
+      {/* The tenant's own job titles. Below the matrix: the matrix defines what each
+          ROLE may do, and a custom role is built on top of one of those rows. */}
+      <ManageCustomRoles />
     </div>
   );
 }

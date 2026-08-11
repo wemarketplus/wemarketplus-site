@@ -76,3 +76,30 @@ export const INTEGRATIONS: readonly SettingsIntegration[] = [
     kind: 'managed',
   },
 ];
+
+/**
+ * Report time zones offered in Organization settings.
+ *
+ * A curated list of US zones rather than the full IANA database (600+ entries):
+ * the product serves US hospice agencies, and a searchable global picker would
+ * be a worse experience for a field whose answer is almost always one of these.
+ *
+ * The BACKEND validates against the runtime's tz database, not this list, so a
+ * tenant needing a zone outside it can still be set by support without a
+ * frontend release — and this list can grow without a migration.
+ */
+export const REPORT_TIMEZONE_OPTIONS: ReadonlyArray<{
+  value: string;
+  label: string;
+}> = [
+  { value: 'America/New_York', label: 'Eastern (New York)' },
+  { value: 'America/Chicago', label: 'Central (Chicago)' },
+  { value: 'America/Denver', label: 'Mountain (Denver)' },
+  { value: 'America/Phoenix', label: 'Arizona (no DST)' },
+  { value: 'America/Los_Angeles', label: 'Pacific (Los Angeles)' },
+  { value: 'America/Anchorage', label: 'Alaska (Anchorage)' },
+  { value: 'Pacific/Honolulu', label: 'Hawaii (Honolulu)' },
+];
+
+/** Matches the backend default on tenants.reportTimezone. */
+export const DEFAULT_REPORT_TIMEZONE = 'America/New_York';

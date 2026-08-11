@@ -6,6 +6,7 @@ export {
   useListUsersQuery,
   useListCalendarColorsQuery,
   useUpdateOwnProfileMutation,
+  useGetSeatUsageQuery,
 } from './api/usersApi';
 export type {
   UserRecord,
@@ -13,4 +14,5 @@ export type {
   CreateUserRequest,
   UpdateUserRequest,
   UpdateOwnProfileRequest,
+  SeatUsage,
 } from './types/usersTypes';

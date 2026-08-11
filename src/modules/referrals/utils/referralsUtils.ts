@@ -49,8 +49,9 @@ export function mapReferralSource(r: ReferralSourceRecord): ReferralSource {
     daysSinceLastInteraction: r.daysSinceLastInteraction,
     assignedMarketer: r.accountOwnerId ?? '',
     territoryArea: [r.city, r.state].filter(Boolean).join(', ') || undefined,
-    // Real rollup, maintained by the backend on lead conversion.
-    referralCount: r.referralVolume,
+    // Counted live server-side. NOT `referralVolume`, which only ever counted
+    // conversions and so read 0 for referrals logged through Add Prospect.
+    referralCount: r.referralCount,
     acceptsGifts: false,
   };
 }

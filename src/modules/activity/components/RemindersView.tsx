@@ -1,7 +1,7 @@
 import { Plus } from 'lucide-react';
 import { Button, Card, CardContent } from '@/shared/ui/core';
 import { EntityRowActions } from '@/shared/ui/entity';
-import { useRole, STAFF_ROLES } from '@/shared/rbac';
+import { useRole, HL_FIELD_ROLES, STAFF_ROLES } from '@/shared/rbac';
 import { formatDate } from '@/shared/utils/dateFormatter';
 import {
   REMINDER_BUCKETS,
@@ -14,9 +14,20 @@ import { ReminderFormModal } from './ReminderFormModal';
 export function RemindersView() {
   const { buckets, crud, submit, recordById } = useReminders();
 
-  // Add/edit/delete is a staff action; read-only roles see the list only.
+  /**
+   * Creating and editing a reminder is field work — the nurse guide's "Notes and
+   * Reminders" section has both clinical personas logging a next step with a due
+   * date, which is what lands it in Daily tasks the next morning. So writes follow
+   * HL_FIELD_ROLES (same split DailyGoalsView already uses).
+   *
+   * DELETE stays management-only, mirroring the backend: POST/PATCH /tasks carry no
+   * @Roles, but DELETE /tasks/:id is @Roles(Admin, Owner, Manager). Splitting the
+   * two here keeps the buttons and the API in agreement instead of offering a
+   * delete that 403s.
+   */
   const { isAny } = useRole();
-  const canEdit = isAny(STAFF_ROLES);
+  const canEdit = isAny(HL_FIELD_ROLES);
+  const canDelete = isAny(STAFF_ROLES);
 
   const edit = (id: string) => {
     const record = recordById(id);
@@ -77,7 +88,9 @@ export function RemindersView() {
                         {canEdit && (
                           <EntityRowActions
                             onEdit={() => edit(r.id)}
-                            onDelete={() => remove(r.id)}
+                            // Omitted for a field persona: DELETE /tasks/:id is
+                            // management-only server-side.
+                            onDelete={canDelete ? () => remove(r.id) : undefined}
                           />
                         )}
                       </div>

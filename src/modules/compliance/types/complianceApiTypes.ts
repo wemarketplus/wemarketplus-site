@@ -72,6 +72,16 @@ export interface AuditLogItem {
   id: ID;
   tenantId: ID | null;
   userId: ID | null;
+  /**
+   * Resolved display name of the acting user. The backend has always sent this
+   * (AuditLogResponseDto joins the actor), but the client only read `userId` —
+   * so a compliance screen whose job is to answer "who did this" was rendering
+   * raw uuids. "System" for cron/webhook-written rows, "Unknown user" when the
+   * account has since been hard-deleted.
+   */
+  actorName: string;
+  /** Null for system rows and for actors that no longer resolve. */
+  actorEmail: string | null;
   action: string;
   resource: string | null;
   resourceId: ID | null;

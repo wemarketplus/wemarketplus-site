@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { Button, Input, Label, Select } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import { Role } from '@/shared/rbac';
+import { useListCustomRolesQuery } from '@/modules/permissions';
 import { ASSIGNABLE_ROLE_OPTIONS, ASSIGNABLE_ROLES } from '../constants/usersConstants';
 import { editUserSchema, type EditUserFormValues } from '../schema/usersSchema';
 import type { EditUserModalProps } from '../types/usersTypes';
@@ -32,6 +33,7 @@ export function EditUserModal({
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm<EditUserFormValues>({
     resolver: zodResolver(editUserSchema),
@@ -39,9 +41,16 @@ export function EditUserModal({
       firstName: '',
       lastName: '',
       role: Role.Marketer,
+      customRoleId: '',
       isActive: true,
     },
   });
+
+  const { data: customRoles } = useListCustomRolesQuery(undefined, { skip: !open });
+  const activeCustomRoles = (customRoles ?? []).filter((role) => role.isActive);
+  // Choosing a custom role decides the base role, so the Role select must react in
+  // the same render rather than on submit.
+  const hasCustomRole = Boolean(watch('customRoleId'));
 
   // Re-seed the form whenever the target user changes (a new row was opened).
   useEffect(() => {
@@ -50,6 +59,7 @@ export function EditUserModal({
         firstName: user.firstName,
         lastName: user.lastName,
         role: toAssignableRole(user.role),
+        customRoleId: user.customRoleId ?? '',
         isActive: user.isActive,
       });
     }
@@ -102,7 +112,7 @@ export function EditUserModal({
         </div>
         <div>
           <Label htmlFor="eu-role">Role</Label>
-          <Select id="eu-role" {...register('role')}>
+          <Select id="eu-role" disabled={hasCustomRole} {...register('role')}>
             {ASSIGNABLE_ROLE_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>
                 {o.label}
@@ -112,7 +122,27 @@ export function EditUserModal({
           {errors.role && (
             <p className="mt-1 text-[12px] text-destructive">{errors.role.message}</p>
           )}
+          {hasCustomRole && (
+            <p className="mt-1 text-[11px] leading-snug text-muted-soft">
+              Set by the custom role beside it.
+            </p>
+          )}
         </div>
+        {/* Absent unless the tenant has assignable custom roles — the list request
+            answers 402 on a Pro plan and 403 below Admin. */}
+        {activeCustomRoles.length > 0 && (
+          <div>
+            <Label htmlFor="eu-custom-role">Custom role</Label>
+            <Select id="eu-custom-role" {...register('customRoleId')}>
+              <option value="">Standard role (beside)</option>
+              {activeCustomRoles.map((role) => (
+                <option key={role.id} value={role.id}>
+                  {role.name}
+                </option>
+              ))}
+            </Select>
+          </div>
+        )}
         <label className="flex items-start gap-3 self-end text-sm text-foreground">
           <input
             type="checkbox"

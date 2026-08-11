@@ -88,6 +88,15 @@ export function AppointmentsCalendar({
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-semibold text-foreground">
                       {appointment.title}
+                      {/* The patient reads as part of the visit's identity, not as
+                          metadata below it: on a nurse's own agenda, "Home visit"
+                          alone does not say which home. */}
+                      {appointment.patientName && (
+                        <span className="font-normal text-muted">
+                          {' · '}
+                          {appointment.patientName}
+                        </span>
+                      )}
                     </p>
                     <p className="mt-0.5 text-xs text-muted">
                       {timeRange(appointment)} ·{' '}

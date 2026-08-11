@@ -2,6 +2,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQuery';
 import type { ApiEnvelope } from '@/shared/types';
 import type {
+  AlertChannelAvailability,
   AlertSettingRecord,
   FinancialSettingRecord,
   UpsertAlertSettingRequest,
@@ -20,6 +21,12 @@ export const adminSettingsApi = createApi({
       query: () => ({ url: '/alert-settings' }),
       transformResponse: (res: ApiEnvelope<AlertSettingRecord[]>) => res.data,
       providesTags: ['AlertSetting'],
+    }),
+    // Deployment capability, not tenant data — which channels can actually
+    // deliver. Admin/Owner-only server-side, same as the write route.
+    listAlertChannels: build.query<AlertChannelAvailability[], void>({
+      query: () => ({ url: '/alert-settings/channels' }),
+      transformResponse: (res: ApiEnvelope<AlertChannelAvailability[]>) => res.data,
     }),
     upsertAlertSetting: build.mutation<AlertSettingRecord, UpsertAlertSettingRequest>({
       query: (body) => ({ url: '/alert-settings', method: 'PUT', body }),
@@ -41,6 +48,7 @@ export const adminSettingsApi = createApi({
 
 export const {
   useListAlertSettingsQuery,
+  useListAlertChannelsQuery,
   useUpsertAlertSettingMutation,
   useListFinancialSettingsQuery,
   useUpsertFinancialSettingMutation,

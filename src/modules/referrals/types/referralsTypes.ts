@@ -52,7 +52,13 @@ export interface ReferralSourceRecord {
   territoryId: ID | null;
   priorityTier: ReferralSourcePriorityTier;
   status: ReferralAccountStatus;
+  /**
+   * Legacy conversion-only rollup — undercounts, because the backend only bumps
+   * it on lead conversion. Never display it; use `referralCount`.
+   */
   referralVolume: number;
+  /** Live count of pipeline rows attributed to this account. Derived server-side. */
+  referralCount: number;
   accountOwnerId: ID | null;
   notes: string | null;
   aiScore: number;

@@ -115,6 +115,15 @@ export interface NoteRecord {
    */
   isFamilySensitive: boolean;
   createdBy: ID | null;
+  /**
+   * The author's display name, resolved server-side from `createdBy`.
+   *
+   * NotesList has always rendered `author`, but the API never returned it, so every
+   * note on the team-notes screen read "Unknown author". It has to come from the
+   * server: GET /users is staff-only, so the clinical roles this screen is built
+   * for cannot resolve a name client-side. Null means the id no longer resolves.
+   */
+  author: string | null;
   createdAt: ISODateString;
   updatedAt: ISODateString;
 }
@@ -160,6 +169,23 @@ export interface ListNotesQuery extends PaginationParams {
   referralSourceId?: string;
   /** Notes on a person. */
   contactId?: string;
+  /**
+   * Only the "never surface this to a family member" notes (true), or only the
+   * rest (false). Omit for both.
+   *
+   * NOT the membership test for the Family Communication log — it used to be, and
+   * every ordinary family call (box left clear, correctly) disappeared from the
+   * compliance record. Mirrors QueryNotesDto.isFamilySensitive.
+   */
+  isFamilySensitive?: boolean;
+  /**
+   * Restrict to these activity types. Comma-separated on the wire; mirrors
+   * QueryNotesDto.activityTypes. The Family Communication log passes
+   * FAMILY_CONTACT_ACTIVITY_TYPES.
+   */
+  activityTypes?: string;
+  /** true = only notes attached to a patient. Mirrors QueryNotesDto.hasProspect. */
+  hasProspect?: boolean;
 }
 
 // wemarketplus-backend/src/goals/dto/goal-response.dto.ts

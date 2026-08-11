@@ -24,6 +24,9 @@ export const createUserSchema = z.object({
   firstName: nameField,
   lastName: nameField,
   role: roleField,
+  // A custom role id, or '' for "standard role". Kept as a plain string rather than a
+  // uuid check: the value always comes from a <select> of the tenant's own roles.
+  customRoleId: z.string().optional(),
 });
 
 export type CreateUserFormValues = z.infer<typeof createUserSchema>;
@@ -41,6 +44,7 @@ export const updateUserSchema = z.object({
   firstName: nameField.optional(),
   lastName: nameField.optional(),
   role: roleField.optional(),
+  customRoleId: z.string().nullable().optional(),
 });
 
 export type UpdateUserFormValues = z.infer<typeof updateUserSchema>;
@@ -52,6 +56,9 @@ export const editUserSchema = z.object({
   firstName: nameField,
   lastName: nameField,
   role: roleField,
+  // '' means "no custom role" and is sent as null, which CLEARS an existing
+  // assignment — unlike create, where blank simply omits the field.
+  customRoleId: z.string().optional(),
   isActive: z.boolean(),
 });
 
