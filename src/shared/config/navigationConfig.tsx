@@ -376,7 +376,16 @@ const HOSPICELINK_COMPLIANCE: NavSection = {
   id: 'hl-compliance',
   label: 'Compliance (Admin)',
   items: [
-    { to: '/compliance', label: 'HIPAA readiness', icon: ShieldCheck, product: Product.HospiceLink, minTier: Tier.Gold, allow: ADMIN_ONLY },
+    /**
+     * `/compliance/readiness`, NOT `/compliance` — the latter is taken by the
+     * PUBLIC marketing "Compliance posture" page, declared earlier in the same
+     * <Routes>. Two routes with the identical path resolve to whichever is
+     * declared first, so an admin clicking this row was thrown out of the app
+     * shell onto the marketing site (it reads as "went back to the homepage").
+     * The authenticated readiness screen already answered on both paths; this is
+     * the one nothing else claims.
+     */
+    { to: '/compliance/readiness', label: 'HIPAA readiness', icon: ShieldCheck, product: Product.HospiceLink, minTier: Tier.Gold, allow: ADMIN_ONLY },
     { to: '/compliance/audit', label: 'HIPAA audit log', icon: ScrollText, product: Product.HospiceLink, minTier: Tier.Gold, allow: ADMIN_ONLY },
     { to: '/compliance/threat-monitor', label: 'Threat monitor', icon: ShieldCheck, product: Product.HospiceLink, minTier: Tier.Gold, allow: ADMIN_ONLY },
     // NOTE: HospiceLink has no "Alert settings" entry on purpose. Its product

@@ -136,7 +136,21 @@ export function Sidebar() {
                   <NavLink
                     key={item.to}
                     to={item.to}
-                    end={item.to === '/'}
+                    /**
+                     * EXACT matching for every row, not just "/".
+                     *
+                     * Without `end`, NavLink treats the target as a path PREFIX, so
+                     * any row that is an ancestor of another lights up alongside it:
+                     * on /compliance/audit both "HIPAA audit log" and the /compliance
+                     * row rendered as active at once. Two highlighted rows tell the
+                     * user they are in two places.
+                     *
+                     * Safe to apply to all of them because the nav is flat — every
+                     * item points at a leaf route, and record detail is shown in
+                     * drawers rather than child routes, so there is no row that needs
+                     * to stay lit for a deeper path.
+                     */
+                    end
                     className={({ isActive }) =>
                       cn(
                         'mb-px flex items-center gap-2.5 rounded-[8px] px-2.5 py-2 text-[12px] font-semibold transition-colors',

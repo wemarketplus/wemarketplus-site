@@ -726,7 +726,11 @@ export function AppRouter() {
               </RequireEntitlement>
             }
           >
-            <Route path="compliance" element={<ReadinessPage />} />
+            {/* NOTE: there is deliberately no bare `compliance` route here. The
+                public marketing /compliance page above claims that path, and a
+                duplicate declared later never matches — it looked like a working
+                route while silently sending signed-in admins to the marketing
+                site. The sidebar points at /compliance/readiness. */}
             <Route path="compliance/readiness" element={<ReadinessPage />} />
             <Route path="compliance/audit" element={<CompliancePage />} />
             <Route path="compliance/access-review" element={<AccessReviewPage />} />
