@@ -8,6 +8,13 @@ export {
   useUpdateOwnProfileMutation,
   useGetSeatUsageQuery,
 } from './api/usersApi';
+// Role-aware "who is doing this?" picker data. Shared by the tour scheduler and
+// the CommunityLink calendar; see the hook for why it degrades to "Me" instead
+// of 403-ing for the sales roles.
+export {
+  useTenantStaffOptions,
+  type TenantStaffOptions,
+} from './hooks/useTenantStaffOptions';
 export type {
   UserRecord,
   CalendarColorRecord,

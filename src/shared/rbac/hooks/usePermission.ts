@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useAppSelector } from '@/app/hooks';
-import { HL_VIEW_AS_ROLES } from '../constants/permissionsConstants';
+import { CL_VIEW_AS_ROLES } from '../constants/permissionsConstants';
 import { Role } from '../types/permissionTypes';
 
 interface RoleApi {
@@ -55,21 +55,31 @@ export function usePermission(): RoleApi {
       actualRole === Role.Owner ||
       actualRole === Role.Manager;
 
-    // The "Viewing as" switcher is DISABLED (the control is commented out in
-    // Sidebar.tsx), so no preview may take effect. This must stay pinned to null
-    // rather than merely hiding the buttons: viewAsRole is persisted, so a user
-    // who had already selected a persona would otherwise stay locked in that
-    // narrowed navigation with no control left to leave it.
-    const viewAsRole: Role | null = null;
-    // Restore alongside the switcher — a stale persisted value (or a hand-edited
-    // store) must not take effect, so the requested role has to be both permitted
-    // for this user and in the allow-list:
-    // const viewAsRole =
-    //   canViewAs && requestedViewAs && HL_VIEW_AS_ROLES.includes(requestedViewAs)
-    //     ? requestedViewAs
-    //     : null;
-    void requestedViewAs;
-    void HL_VIEW_AS_ROLES;
+    /**
+     * The preview, resolved for COMMUNITYLINK PERSONAS ONLY.
+     *
+     * The CommunityLink guide makes this control the third thing a user does and
+     * calls it important — "CommunityLink actually asks which role you are and
+     * shows you a menu built just for that job" — and each CommunityLink role now
+     * genuinely has a different sidebar and a different dashboard, so previewing is
+     * how an admin verifies that. HospiceLink stays switched off deliberately: the
+     * standing decision is that HospiceLink dashboards show no role-preview
+     * section, and HL_VIEW_AS_ROLES is therefore not consulted here.
+     *
+     * Two guards, both required. A stale persisted value or a hand-edited store
+     * must not take effect, so the requested role has to be BOTH permitted for this
+     * user (`canViewAs` — management only) AND in the allow-list.
+     *
+     * The escape-hatch concern that kept this pinned to null is answered on two
+     * sides: RoleSwitcher renders whenever the active product is CommunityLink, so
+     * a previewing user always has the control to leave; and accessSlice clears
+     * `viewAsRole` on every product switch, so a CommunityLink preview cannot
+     * follow the user into HospiceLink, where no control would be rendered.
+     */
+    const viewAsRole =
+      canViewAs && requestedViewAs && CL_VIEW_AS_ROLES.includes(requestedViewAs)
+        ? requestedViewAs
+        : null;
 
     const role = viewAsRole ?? actualRole;
 

@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Button, Input, Label, Select, Textarea } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
+import { useTenantStaffOptions } from '@/modules/users';
 import type { EntitySelectOption } from '@/shared/ui/entity';
 import { CL_TOUR_STATUS } from '../constants/clToursApiConstants';
 import { TOUR_DURATION_OPTIONS, TOUR_STATUS_OPTIONS } from '../constants/clToursConstants';
@@ -12,6 +13,7 @@ import type { ClTourRecord } from '../types/clToursApiTypes';
 
 const EMPTY: TourFormValues = {
   leadId: '',
+  guideUserId: '',
   scheduledAt: '',
   status: CL_TOUR_STATUS.Scheduled,
   durationMin: '60',
@@ -47,6 +49,10 @@ export function TourFormModal({
     resolver: zodResolver(tourSchema),
     defaultValues: EMPTY,
   });
+
+  // Only fetched while the modal is open — a closed modal should not hold the
+  // team directory in the cache for every visit to the tour list.
+  const staff = useTenantStaffOptions(open);
 
   useEffect(() => {
     if (!open) return;
@@ -91,6 +97,25 @@ export function TourFormModal({
               </option>
             ))}
           </Select>
+        </div>
+        {/* "…and which staff member is giving the tour." For a role that may not
+            read the directory this collapses to "Me" — see useTenantStaffOptions. */}
+        <div className="sm:col-span-2">
+          <Label htmlFor="tf-guide">Tour guide</Label>
+          <Select id="tf-guide" {...register('guideUserId')}>
+            <option value="">— Unassigned —</option>
+            {staff.options.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </Select>
+          {!staff.isFullDirectory && (
+            <p className="mt-1 text-[11px] text-muted-soft">
+              You can assign yourself; an administrator can assign anyone on the
+              team.
+            </p>
+          )}
         </div>
         <div className="sm:col-span-2">
           <Label htmlFor="tf-when">Date &amp; time</Label>

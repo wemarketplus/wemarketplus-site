@@ -15,8 +15,9 @@ import {
   SUPER_ADMIN_ONLY,
   ADMIN_ONLY,
   STAFF_ROLES,
-  CL_MANAGEMENT_ROLES,
   CL_SALES_ROLES,
+  CL_ACTIVITY_NOTES_ROLES,
+  CL_MILEAGE_ROLES,
   CL_ALL_ROLES,
   CL_INVENTORY_ROLES,
   CL_MAKE_READY_ROLES,
@@ -338,6 +339,15 @@ const FinancialSettingsPage = lazy(() =>
 );
 const ClReportsPage = lazy(() =>
   import('@/modules/cl-reports').then((m) => ({ default: m.ClReportsPage })),
+);
+// The CommunityLink shared team calendar and self-assembling morning list. Both
+// are CommunityLink's own screens over cl/* data — see each module's barrel for
+// why HospiceLink's /appointments and /daily-tasks could not be reused.
+const ClCalendarPage = lazy(() =>
+  import('@/modules/cl-calendar').then((m) => ({ default: m.ClCalendarPage })),
+);
+const ClDailyTaskPage = lazy(() =>
+  import('@/modules/cl-daily-task').then((m) => ({ default: m.ClDailyTaskPage })),
 );
 // Self-contained CommunityLink Pro CRM demo (pixel replica of
 // communitylinkpro-demo.html — own sidebar/topbar/tabs, forced amber theme).
@@ -774,15 +784,29 @@ export function AppRouter() {
           <Route path="cl-referrals" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClReferralsPage /></ProtectedRoute>} />
           <Route path="paid-referrals" element={<ProtectedRoute allow={CL_SALES_ROLES}><PaidReferralsPage /></ProtectedRoute>} />
           <Route path="tours" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClToursPage /></ProtectedRoute>} />
+          {/* The shared team calendar. `cl-calendar`, not `calendar`/`appointments`:
+              HospiceLink's Calendar owns /appointments, and a duplicate path
+              declared in a second product group would resolve to whichever came
+              first for EVERY user (see the alert-settings note below). Mirrors the
+              nav item's CL_SALES_ROLES — change one side, change both. */}
+          <Route path="cl-calendar" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClCalendarPage /></ProtectedRoute>} />
+          {/* Same prefixing reason: /daily-tasks is HospiceLink's daily queue. */}
+          <Route path="cl-daily-task" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClDailyTaskPage /></ProtectedRoute>} />
           <Route path="ai-assistant" element={<ProtectedRoute allow={CL_SALES_ROLES}><AiAssistantPage /></ProtectedRoute>} />
-          <Route path="activity-notes" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_SALES_ROLES}><ActivityNotesPage /></ProtectedRoute></RequireEntitlement>} />
+          {/* CL_ACTIVITY_NOTES_ROLES — the sales roles plus Nurse/Caregiver, whom the
+              guide points here as the stand-in for the unbuilt Resident Care Log.
+              Mirrors the Care nav section; change one side, change both. */}
+          <Route path="activity-notes" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_ACTIVITY_NOTES_ROLES}><ActivityNotesPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="gift-gratuity" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_FIELD_ACTIVITY_ROLES}><GiftGratuityPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="aircall" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_SALES_ROLES}><AircallPage /></ProtectedRoute></RequireEntitlement>} />
           {/* Tasks is visible/usable by every CommunityLink role, including
               the field roles — matches every role's sidebar in the demo. */}
           <Route path="tasks" element={<ProtectedRoute allow={CL_ALL_ROLES}><TasksPage /></ProtectedRoute>} />
           <Route path="outreach/checkin" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClOutreachPage /></ProtectedRoute>} />
-          <Route path="outreach/mileage" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClOutreachPage /></ProtectedRoute>} />
+          {/* CL_MILEAGE_ROLES, not CL_SALES_ROLES: the guide tells care staff to "log
+              those trips in Mileage & Expenses the same way a Sales Marketer does".
+              Only mileage widens — GPS check-in and the outreach log stay sales-only. */}
+          <Route path="outreach/mileage" element={<ProtectedRoute allow={CL_MILEAGE_ROLES}><ClOutreachPage /></ProtectedRoute>} />
           <Route path="outreach/log" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClOutreachPage /></ProtectedRoute>} />
           {/* CommunityLink Operations — Gold tier and up (product-aware). */}
           <Route path="operations/communities" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={CL_INVENTORY_ROLES}><ClOperationsPage /></ProtectedRoute></RequireEntitlement>} />
@@ -799,7 +823,11 @@ export function AppRouter() {
           <Route path="financial/concessions" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_FINANCIAL_ROLES}><ClFinancialPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="financial/competitors" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_COMPETITOR_INTEL_ROLES}><ClFinancialPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="financial/loc" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_FINANCIAL_ROLES}><ClFinancialPage /></ProtectedRoute></RequireEntitlement>} />
-          <Route path="reports" element={<ProtectedRoute allow={CL_MANAGEMENT_ROLES}><ClReportsPage /></ProtectedRoute>} />
+          {/* CL_SALES_ROLES, widened from CL_MANAGEMENT_ROLES to match the nav item:
+              the guide lists Reports Center among the Sales Marketer's everyday
+              tools ("your leads-by-source chart and your tour-to-move-in conversion
+              rate"). Field roles are still excluded. */}
+          <Route path="reports" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClReportsPage /></ProtectedRoute>} />
           </Route>
 
           {/* Grant CRM — contacts & employer companies. Shared/back-office

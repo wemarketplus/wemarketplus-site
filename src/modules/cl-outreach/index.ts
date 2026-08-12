@@ -17,4 +17,16 @@ export {
   type ClTaskStatus,
   type TicketPriority,
 } from './constants/clOutreachApiConstants';
-export type { ClTaskRecord, CreateClTaskRequest } from './types/clOutreachApiTypes';
+export type {
+  ClTaskRecord,
+  CreateClTaskRequest,
+  ClOutreachVisitRecord,
+  CreateClOutreachVisitRequest,
+} from './types/clOutreachApiTypes';
+// The visit-type vocabulary, shared with the CommunityLink calendar so a visit
+// scheduled there and one logged here offer (and label) the same buckets.
+export {
+  VISIT_TYPE_OPTIONS,
+  VISIT_TYPE_LABELS,
+  visitTypeLabel,
+} from './constants/clOutreachConstants';

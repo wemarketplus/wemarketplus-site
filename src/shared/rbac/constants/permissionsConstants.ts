@@ -170,10 +170,17 @@ export const CL_MAKE_READY_ROLES: readonly Role[] = [
 
 // Every CommunityLink role. Tasks is a cross-role surface — every role in the
 // demo screenshots (including both field roles) has a "Tasks" sidebar item.
+//
+// Nurse and Caregiver are included because the guide gives them Tasks explicitly
+// ("Use Tasks for medication reminders and check-in rounds"); a CommunityLink
+// tenant offering Assisted Living or Memory Care staffs those roles, so they are
+// CommunityLink roles and this list means what its name says.
 export const CL_ALL_ROLES: readonly Role[] = [
   ...CL_SALES_ROLES,
   Role.Maintenance,
   Role.Housekeeping,
+  Role.Nurse,
+  Role.Caregiver,
 ];
 
 // Read-only "Unit Status" surface (Max tier): apartment status visibility for
@@ -208,6 +215,90 @@ export const CL_FIELD_ACTIVITY_ROLES: readonly Role[] = [
   Role.Manager,
   Role.Marketer,
   Role.SalesAdmissions,
+];
+
+/**
+ * CommunityLink CARE roles — Nurse and Caregiver on a community offering Assisted
+ * Living or Memory Care, plus management oversight.
+ *
+ * The guide gives these two personas their own section and is explicit that it is
+ * unfinished: "These roles are being built… Once live, here's how they'll work",
+ * and the Resident Care Log it describes "may not be live yet". Until then their
+ * CommunityLink menu is the three surfaces the guide tells them to use in the
+ * meantime — Tasks, Activity Notes ("the closest available substitute") and
+ * Mileage & Expenses — plus a `comingSoon` Resident Care Log row so the sidebar
+ * admits the gap the guide already told them about.
+ *
+ * Deliberately NOT folded into CL_SALES_ROLES: a caregiver has no business in the
+ * lead pipeline or referral-source financials, which is the same line HospiceLink
+ * draws with HL_MARKETING_ROLES vs HL_CLINICAL_ROLES.
+ *
+ * ONLY the two care personas — management is deliberately absent, unlike every
+ * other CL_* group. This list gates the sidebar's Care SECTION, and management
+ * already reaches Tasks, Activity Notes and Mileage from their own Sales and
+ * Activity groups; including them here would print those three rows twice in one
+ * sidebar. Route guards that must admit management use the wider groups below
+ * (CL_ALL_ROLES, CL_ACTIVITY_NOTES_ROLES, CL_MILEAGE_ROLES), all of which contain
+ * these two roles as well.
+ */
+export const CL_CARE_ROLES: readonly Role[] = [Role.Nurse, Role.Caregiver];
+
+/**
+ * Activity Notes: the sales roles PLUS the care roles.
+ *
+ * Widened for the care personas because the guide routes them here as the stand-in
+ * for the unbuilt Resident Care Log — "Until that's ready, use Activity Notes as
+ * the closest available substitute." Kept as its own list rather than widening
+ * CL_SALES_ROLES, which would also hand a caregiver the lead pipeline and the
+ * referral-source book.
+ */
+export const CL_ACTIVITY_NOTES_ROLES: readonly Role[] = [
+  ...CL_SALES_ROLES,
+  Role.Nurse,
+  Role.Caregiver,
+];
+
+/**
+ * Mileage & Expenses: the field-activity roles PLUS the care roles.
+ *
+ * The guide is explicit that care staff log travel the same way sales does: "If
+ * your role involves traveling between communities or in-home visits, log those
+ * trips in Mileage & Expenses the same way a Sales Marketer does — including
+ * receipt photos and your weekly/monthly totals." Separate from
+ * CL_FIELD_ACTIVITY_ROLES so admitting them to mileage does not also admit them to
+ * Gift & Gratuity, which their guide never mentions.
+ */
+export const CL_MILEAGE_ROLES: readonly Role[] = [
+  ...CL_FIELD_ACTIVITY_ROLES,
+  Role.Nurse,
+  Role.Caregiver,
+];
+
+/**
+ * Roles a CommunityLink management user may PREVIEW with the "Viewing as" control.
+ *
+ * The guide's Getting Started makes this the third thing a user does — "Look for
+ * the Viewing As dropdown… Pick your role from the dropdown (Sales Marketer,
+ * Administrator, Executive Director, Maintenance, Housekeeping, Owner/Investor, or
+ * a custom role your Admin created)" — and calls it important, because each
+ * CommunityLink role gets a genuinely different menu and dashboard.
+ *
+ * Same invariant as HL_VIEW_AS_ROLES and it matters more here, because this list
+ * includes roles that are not strictly "below" the previewer: previewing changes
+ * only what RENDERS. The JWT is untouched, so every request still gets its real
+ * authorization answer, and a management user previewing Owner/Investor cannot
+ * read a financial endpoint their own role is denied. See usePermission.
+ *
+ * Administrator is NOT listed: only management may preview at all, so an
+ * "Administrator" option would be a no-op for the people who can see it.
+ */
+export const CL_VIEW_AS_ROLES: readonly Role[] = [
+  Role.Director,
+  Role.SalesAdmissions,
+  Role.OwnerInvestor,
+  Role.Marketer,
+  Role.Maintenance,
+  Role.Housekeeping,
 ];
 
 // Read-only "Maintenance View" surface (Max tier): a nav/route item scoped to

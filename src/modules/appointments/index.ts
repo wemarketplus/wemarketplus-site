@@ -18,6 +18,13 @@ export type {
   CalendarColor,
   CalendarPaletteEntry,
 } from './utils/calendarColors';
+// The tenant's chosen colours, as a lookup. Exported alongside the palette so
+// CommunityLink's calendar colours its team by the same values HospiceLink's does
+// — one palette and one source of chosen colours across both products.
+export {
+  useTenantCalendarColors,
+  type CalendarColorMap,
+} from './hooks/useTenantCalendarColors';
 export { useAppointmentActions } from './hooks/useAppointmentActions';
 export {
   appointmentsApi,

@@ -56,7 +56,6 @@ import {
   HL_MARKETING_ROLES,
   HL_CLINICAL_ROLES,
   HL_FIELD_ROLES,
-  CL_MANAGEMENT_ROLES,
   CL_SALES_ROLES,
   CL_FINANCIAL_ROLES,
   CL_INVENTORY_ROLES,
@@ -68,6 +67,7 @@ import {
   CL_MAINTENANCE_VIEW_ROLES,
   CL_COMPETITOR_INTEL_ROLES,
   CL_FIELD_ACTIVITY_ROLES,
+  CL_CARE_ROLES,
 } from '@/shared/rbac';
 import { Product, Tier, tierIncludes } from '@/shared/types';
 
@@ -410,6 +410,18 @@ const COMMUNITYLINK_SALES: NavSection = {
   id: 'cl-sales',
   label: 'Sales & outreach',
   items: [
+    /**
+     * The self-assembling morning list. FIRST in the section because the guide
+     * opens the marketer's day on it: "Check Daily Task (or your Dashboard) every
+     * morning."
+     *
+     * `/cl-daily-task`, not `/daily-tasks` — that path belongs to HospiceLink's
+     * daily queue, and two routes with the same path in two product groups resolve
+     * to whichever is declared first, for everybody (the same trap documented on
+     * alert-settings in router.tsx). Prefixing the colliding route follows the
+     * existing /hl-leads · /cl-referrals convention.
+     */
+    { to: '/cl-daily-task', label: 'Daily task', icon: ListChecks, product: Product.CommunityLink, allow: CL_SALES_ROLES },
     { to: '/leads', label: 'Lead pipeline', icon: LineChart, product: Product.CommunityLink, allow: CL_SALES_ROLES },
     // Referral Pipeline is a Max-tier addition alongside Lead Pipeline — a
     // stage-grouped view over the same paid-referral data as Paid Referral
@@ -421,6 +433,21 @@ const COMMUNITYLINK_SALES: NavSection = {
     { to: '/cl-referrals', label: 'Referral sources', icon: Heart, product: Product.CommunityLink, allow: CL_SALES_ROLES },
     { to: '/paid-referrals', label: 'Paid referral portal', icon: Heart, product: Product.CommunityLink, allow: CL_SALES_ROLES },
     { to: '/tours', label: 'Tour scheduler', icon: Calendar, product: Product.CommunityLink, allow: CL_SALES_ROLES },
+    /**
+     * THE SHARED TEAM CALENDAR the guide devotes a section to — "Click Calendar
+     * … use the dropdown to switch between My Calendar and All Users … schedule a
+     * tour, a facility visit, or even a physician lunch directly."
+     *
+     * CommunityLink had no such row and no such route. HospiceLink's /appointments
+     * cannot be shared: it is product-gated and every appointment there requires a
+     * `jobId`, an HL pipeline concept with no CommunityLink equivalent — so this
+     * points at @/modules/cl-calendar, built over cl/tours and cl/outreach-visits.
+     *
+     * Sits next to Tour Scheduler because they are two views of overlapping data:
+     * the scheduler is the paginated tour table, this is the month grid across
+     * tours AND outreach.
+     */
+    { to: '/cl-calendar', label: 'Calendar', icon: CalendarCheck, product: Product.CommunityLink, allow: CL_SALES_ROLES },
     // AI Sales Assistant is CommunityLink-baseline (Pro+, no tier cap) — the
     // Pro demo shows it and Gold/Max's mockups simply don't re-show it
     // (those demos focus on that tier's new capabilities), not a deliberate
@@ -471,6 +498,19 @@ const COMMUNITYLINK_ADMIN_SETTINGS: NavSection = {
   items: [
     { to: '/alert-settings', label: 'Alert settings', icon: BellRing, product: Product.CommunityLink, allow: ADMIN_ONLY, minTier: Tier.Max },
     { to: '/financial-settings', label: 'Financial settings', icon: Settings2, product: Product.CommunityLink, allow: ADMIN_ONLY, minTier: Tier.Max },
+    /**
+     * "A team-wide mileage and expense view — showing every rep's weekly/monthly
+     * totals and receipts in one place — is planned but not live yet. For now, check
+     * each rep's own Mileage Tracker individually."
+     *
+     * The guide names it AND says it is unbuilt, so it is a `comingSoon` row: an
+     * admin who read that sentence can see the feature is real and pending rather
+     * than wondering whether they are failing to find it. `to` holds the path it
+     * will take. Do NOT make this a link until a team-wide endpoint exists —
+     * /outreach/mileage is the acting user's OWN log, so pointing here at it would
+     * quietly show an admin their personal mileage under a team-wide label.
+     */
+    { to: '/team-mileage', label: 'Team mileage', icon: Car, product: Product.CommunityLink, allow: ADMIN_ONLY, minTier: Tier.Max, comingSoon: true },
   ],
 };
 
@@ -510,7 +550,57 @@ const COMMUNITYLINK_FINANCIAL: NavSection = {
     { to: '/financial/concessions', label: 'Concession approvals', icon: TrendingUp, product: Product.CommunityLink, allow: CL_FINANCIAL_ROLES, minTier: Tier.Max },
     { to: '/financial/competitors', label: 'Competitor intel', icon: Activity, product: Product.CommunityLink, allow: CL_COMPETITOR_INTEL_ROLES, minTier: Tier.Max },
     { to: '/financial/loc', label: 'LOC calculator', icon: TrendingUp, product: Product.CommunityLink, allow: CL_FINANCIAL_ROLES, minTier: Tier.Max },
-    { to: '/reports', label: 'Reports', icon: ScrollText, product: Product.CommunityLink, allow: CL_MANAGEMENT_ROLES },
+    /**
+     * CL_SALES_ROLES, not CL_MANAGEMENT_ROLES.
+     *
+     * The guide lists "Reports Center" among the Sales Marketer's everyday tools —
+     * "See your leads-by-source chart and your tour-to-move-in conversion rate" —
+     * which are the marketer's OWN two numbers, not management-only financials.
+     * With the narrower group a Marketer, Manager and Sales/Admissions could not
+     * see the row at all, so a marketer following that line found no such tab.
+     *
+     * Note this widens only the SALES roles; the field roles (Maintenance,
+     * Housekeeping) are still excluded, and the Financial section's other rows keep
+     * their own narrower gates. The matching route guard is widened in step —
+     * change one side, change both.
+     */
+    { to: '/reports', label: 'Reports', icon: ScrollText, product: Product.CommunityLink, allow: CL_SALES_ROLES },
+  ],
+};
+
+/**
+ * CommunityLink CARE — the Nurse / Caregiver menu, for AL and Memory Care
+ * communities.
+ *
+ * Everything the guide tells these two personas to use in the interim, and nothing
+ * else: Tasks for "medication reminders and check-in rounds", Activity Notes as
+ * "the closest available substitute" for the Resident Care Log, and Mileage &
+ * Expenses for travel between communities or in-home visits. The Resident Care Log
+ * itself is `comingSoon` — the guide already tells the nurse it is being rolled
+ * out, so the sidebar names it rather than leaving them hunting for a row that
+ * does not exist.
+ */
+const COMMUNITYLINK_CARE: NavSection = {
+  id: 'cl-care',
+  label: 'Care',
+  items: [
+    /**
+     * "The Resident Care Log will be where you log wellness checks, incident notes,
+     * and family updates tied to a specific resident — similar to how HospiceLink's
+     * Family Communication tab works."
+     *
+     * Announced but NOT built: rendered as an inert "Soon" row (see NavItem.comingSoon)
+     * because there is no route behind it. `to` holds the path it will take, so
+     * turning this into a live link later is a one-line deletion of the flag.
+     */
+    { to: '/resident-care-log', label: 'Resident care log', icon: Stethoscope, product: Product.CommunityLink, allow: CL_CARE_ROLES, comingSoon: true },
+    // These three all point at existing screens. `allow` is CL_CARE_ROLES rather
+    // than the wider route groups so the rows appear HERE, under Care, for the two
+    // care personas — the sales and field personas keep reaching the same screens
+    // from their own sections, and no role sees a duplicate row.
+    { to: '/tasks', label: 'Tasks', icon: ClipboardList, product: Product.CommunityLink, allow: CL_CARE_ROLES },
+    { to: '/activity-notes', label: 'Activity notes', icon: NotebookPen, product: Product.CommunityLink, allow: CL_CARE_ROLES, minTier: Tier.Max },
+    { to: '/outreach/mileage', label: 'Mileage & expenses', icon: Receipt, product: Product.CommunityLink, allow: CL_CARE_ROLES, minTier: Tier.Max },
   ],
 };
 
@@ -572,6 +662,10 @@ export const SECTIONS_BY_PRODUCT: Record<Product, readonly NavSection[]> = {
     // here). Leads/Referral Sources are CommunityLink's own contact model.
     COMMUNITYLINK_SALES,
     COMMUNITYLINK_OPERATIONS,
+    // Nurse/Caregiver only in practice — every row is gated to CL_CARE_ROLES, so
+    // the whole section collapses for the sales, field and owner personas (the
+    // Sidebar drops a section whose visible items are empty).
+    COMMUNITYLINK_CARE,
     COMMUNITYLINK_FINANCIAL,
     COMMUNITYLINK_ACTIVITY,
     COMMUNITYLINK_ADMIN_SETTINGS,
