@@ -72,15 +72,20 @@ export const activityApi = createApi({
       transformResponse: env<NoteRecord>,
       providesTags: ['Note'],
     }),
+    // Both note mutations invalidate 'Task' as well, because a `followUpDate` makes
+    // the server create or re-date a reminder (NotesService.ensureFollowUpReminder).
+    // The reminder is what the Follow-ups tab and the calendar's follow-up markers
+    // render, so without this the promise a nurse just made would not appear until
+    // something else happened to refetch tasks.
     createNote: build.mutation<NoteRecord, CreateNoteRequest>({
       query: (body) => ({ url: '/notes', method: 'POST', body }),
       transformResponse: env<NoteRecord>,
-      invalidatesTags: ['Note'],
+      invalidatesTags: ['Note', 'Task'],
     }),
     updateNote: build.mutation<NoteRecord, { id: string; patch: UpdateNoteRequest }>({
       query: ({ id, patch }) => ({ url: `/notes/${id}`, method: 'PATCH', body: patch }),
       transformResponse: env<NoteRecord>,
-      invalidatesTags: ['Note'],
+      invalidatesTags: ['Note', 'Task'],
     }),
     // goals
     listGoals: build.query<PaginatedPayload<GoalRecord>, { userId?: string } | void>({

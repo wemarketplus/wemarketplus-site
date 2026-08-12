@@ -71,3 +71,19 @@ export const APPOINTMENT_STATUS_CHIPS: ReadonlyArray<{
 
 /** Default calendar window: the current month plus the next, in days. */
 export const CALENDAR_DEFAULT_WINDOW_DAYS = 60;
+
+/**
+ * How far back the agenda reaches for visits that are still OPEN.
+ *
+ * The agenda used to start at today 00:00, so a visit still marked `scheduled`
+ * from yesterday simply vanished — the nurse's guide says "use the My Calendar
+ * view to see just your own scheduled visits", and a nurse whose only open visit
+ * was yesterday read an empty list as a broken calendar. The agenda already styles
+ * past-due visits in red (`isPastDue`), which the forward-only window made almost
+ * unreachable: nothing before today could ever be in the feed.
+ *
+ * Two weeks, not unbounded: this is a "you still owe this" tail, not visit history.
+ * Completed and cancelled visits in that tail are dropped by the hook — only the
+ * outstanding ones come forward.
+ */
+export const CALENDAR_PAST_DUE_LOOKBACK_DAYS = 14;

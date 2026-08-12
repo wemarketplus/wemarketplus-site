@@ -1,4 +1,5 @@
 import { CalendarPlus, Clock, MapPin, User, Video } from 'lucide-react';
+import type { FollowUpItem } from '@/modules/activity/hooks/useFollowUps';
 import { Button, Card } from '@/shared/ui/core';
 import { cn } from '@/shared/utils/cn';
 import {
@@ -44,6 +45,8 @@ function dayHeading(dateKey: string): string {
 interface AppointmentsDayPanelProps {
   dateKey: string | null;
   items: readonly AppointmentRecord[];
+  /** Follow-ups due on this day — reminders, not visits. Listed after the visits. */
+  followUps?: readonly FollowUpItem[];
   isBusy: boolean;
   onComplete: (appointment: AppointmentRecord) => void;
   /**
@@ -59,6 +62,7 @@ interface AppointmentsDayPanelProps {
 export function AppointmentsDayPanel({
   dateKey,
   items,
+  followUps = [],
   isBusy,
   onComplete,
   onSchedule,
@@ -76,7 +80,9 @@ export function AppointmentsDayPanel({
         )}
       </header>
 
-      {items.length === 0 ? (
+      {/* "Nothing scheduled" is only honest when there are no follow-ups either —
+          a day holding a promise to ring a family back is not an empty day. */}
+      {items.length === 0 && followUps.length === 0 ? (
         // Compact empty state with the obvious next action — not a tall blank void.
         <div className="flex flex-col items-start gap-2 border-t border-border/[0.09] px-4 py-4">
           <p className="text-xs text-muted">Nothing scheduled.</p>
@@ -151,6 +157,32 @@ export function AppointmentsDayPanel({
                     Log visit
                   </Button>
                 )}
+              </div>
+            </li>
+          ))}
+
+          {/* Follow-ups after the visits, visually distinct: a dashed amber rail
+              rather than a status colour, and no "Log visit" — there is no visit to
+              log. They are closed from Reminders or Daily tasks. */}
+          {followUps.map((followUp) => (
+            <li key={followUp.id} className="flex gap-2.5 px-4 py-3">
+              <span className="mt-0.5 w-[3px] shrink-0 rounded-full bg-warning" />
+              <div className="min-w-0 flex-1 space-y-1">
+                <p className="text-sm font-bold leading-snug text-foreground">
+                  {followUp.title}
+                </p>
+                {followUp.patientName && (
+                  <p className="flex items-center gap-1.5 text-[11px] font-semibold text-foreground">
+                    <User className="h-3 w-3 shrink-0 text-muted" />
+                    {followUp.patientName}
+                  </p>
+                )}
+                {followUp.detail && (
+                  <p className="text-[11px] text-muted">{followUp.detail}</p>
+                )}
+                <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-warning">
+                  Follow-up
+                </p>
               </div>
             </li>
           ))}

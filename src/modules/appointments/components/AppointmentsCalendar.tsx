@@ -102,6 +102,17 @@ export function AppointmentsCalendar({
                       {timeRange(appointment)} ·{' '}
                       {APPOINTMENT_TYPE_LABELS[appointment.appointmentType]}
                       {appointment.location ? ` · ${appointment.location}` : ''}
+                      {/* Says in words what the red dot says in colour. The dot was
+                          the only past-due signal, which is invisible to a
+                          colour-blind reader and to anyone who has not learned the
+                          convention — and these rows are now reachable, so it is
+                          worth stating. */}
+                      {isPastDue(appointment) && (
+                        <span className="font-semibold text-destructive">
+                          {' · '}Still open — was due{' '}
+                          {formatDate(appointment.startAt)}
+                        </span>
+                      )}
                     </p>
                     {appointment.outcome && (
                       <p className="mt-0.5 text-[11px] text-muted-soft">

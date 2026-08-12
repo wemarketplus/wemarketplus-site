@@ -62,8 +62,12 @@ export function FamilyCommunicationPage() {
       </header>
 
       {/* Pick the patient first: the log entry is a note ABOUT a patient, and the
-          backend rejects one with no target. Nurses and caregivers see the patients
-          they have visits with; marketing roles see the whole pipeline. */}
+          backend rejects one with no target. Clinical roles see every patient in the
+          tenant (names only — GET /prospects/patient-directory); marketing roles see
+          the whole pipeline. It is deliberately NOT scoped to the patients the caller
+          has visits with: the rule this screen serves is "log every call", and a
+          nurse covering a shift or with no visit booked yet must still be able to
+          file one. See useNoteLookups. */}
       <Card>
         <CardContent className="flex flex-wrap items-end gap-3 px-6 py-5">
           <div className="min-w-[240px] flex-1">
@@ -74,11 +78,15 @@ export function FamilyCommunicationPage() {
               disabled={patients === undefined}
               onChange={(e) => setPatientId(e.target.value)}
             >
+              {/* The empty case is now genuinely "this tenant has no patients on
+                  file", not "none are assigned to you" — so it names the person who
+                  can fix it instead of leaving a clinician stuck at a disabled
+                  button with a compliance record to file. */}
               <option value="">
                 {patients === undefined
-                  ? 'Loading your patients…'
+                  ? 'Loading patients…'
                   : patients.length === 0
-                    ? 'No patients assigned to you yet'
+                    ? 'No patients on file yet — ask your administrator to add one'
                     : 'Select a patient…'}
               </option>
               {(patients ?? []).map((p) => (

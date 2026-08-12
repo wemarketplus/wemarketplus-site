@@ -182,3 +182,30 @@ export interface ReengagementRow {
   lastActivityAt: ISODateString;
   daysInactive: number;
 }
+
+/**
+ * One patient in the directory — mirrors the backend MyPatientResponseDto, which is
+ * deliberately NOT a pipeline row: id, name and stage, with none of the PHI a
+ * `ProspectRecord` carries. This is what the clinical roles are allowed to read, so
+ * never widen it into `ProspectRecord` at a call site.
+ */
+export interface PatientDirectoryEntry {
+  id: ID;
+  patientName: string;
+  stage: string;
+}
+
+/**
+ * Read-only context about one patient — mirrors the backend
+ * PatientContextResponseDto. Names only: who referred them and the contact on that
+ * referral, with none of the account data (volume, scorecard, phone, email) the
+ * referral-source and contact records carry.
+ */
+export interface PatientContextRecord {
+  id: ID;
+  patientName: string;
+  referralSourceName: string | null;
+  primaryContactName: string | null;
+  /** Raw enum value, e.g. `discharge_planner`. */
+  primaryContactRole: string | null;
+}

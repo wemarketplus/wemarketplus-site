@@ -42,7 +42,11 @@ export function AppointmentsPage() {
   // of their job.
   const canSchedule = useRole().isAny(HL_MARKETING_ROLES);
   const month = useAppointmentsMonth(scope);
-  const agenda = useAppointmentsCalendar({ scope });
+  // `includeOverdue`: the agenda is where the guide sends a nurse to "see just your
+  // own scheduled visits", and a visit still open from before today is the one they
+  // most need to see. Without it the month grid showed a visit the agenda swore did
+  // not exist.
+  const agenda = useAppointmentsCalendar({ scope, includeOverdue: true });
   const {
     pending,
     openComplete,
@@ -62,12 +66,13 @@ export function AppointmentsPage() {
     { limit: 100 },
     { skip: !canSchedule },
   );
-  // Per-rep colours, only for the "All users" agenda. Saving a colour in
-  // /my-profile invalidates this query's tag, so the dots repaint here without
-  // a reload — including for whoever else is looking at the same view.
-  const ownerColorMap = useTenantCalendarColors(
-    mode === 'agenda' && scope === 'all',
-  );
+  // Per-rep colours for the calendar. The tenant list is fetched only for "All
+  // users"; on "My calendar" the hook supplies the session user's own colour from
+  // the auth slice at no network cost, so a user who just picked one sees it on
+  // the view the page opens on. Saving a colour in /my-profile invalidates this
+  // query's tag, so the blocks repaint without a reload — including for whoever
+  // else is looking at the same view.
+  const ownerColorMap = useTenantCalendarColors(scope === 'all');
 
   const isMonth = mode === 'month';
   const active = isMonth ? month : agenda;
@@ -81,10 +86,27 @@ export function AppointmentsPage() {
               the My calendar / All users switch, both of which are on this screen
               and nowhere else. */}
           <h1 className="font-display text-3xl text-foreground">Calendar</h1>
+          {/* The agenda counts overdue visits SEPARATELY rather than folding them
+              into "scheduled in the next 60 days", which would have been a false
+              statement about a visit that was due yesterday. */}
           <p className="text-sm text-muted">
             {isMonth
-              ? `${month.appointments.length} in view`
-              : `${agenda.appointments.length} scheduled in the next 60 days`}
+              ? [
+                  `${month.appointments.length} visit${month.appointments.length === 1 ? '' : 's'} in view`,
+                  month.followUpsInView > 0
+                    ? `${month.followUpsInView} follow-up${month.followUpsInView === 1 ? '' : 's'}`
+                    : null,
+                ]
+                  .filter(Boolean)
+                  .join(' · ')
+              : [
+                  agenda.overdueCount > 0
+                    ? `${agenda.overdueCount} still open from earlier`
+                    : null,
+                  `${agenda.appointments.length - agenda.overdueCount} scheduled in the next 60 days`,
+                ]
+                  .filter(Boolean)
+                  .join(' · ')}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -144,10 +166,12 @@ export function AppointmentsPage() {
             isFetching={month.isFetching}
             onSelectDay={month.selectDay}
             onOpenAppointment={openComplete}
+            ownerColorMap={ownerColorMap}
           />
           <AppointmentsDayPanel
             dateKey={month.selectedKey}
             items={month.selectedDay?.items ?? []}
+            followUps={month.selectedDay?.followUps ?? []}
             isBusy={isCompleting}
             onComplete={openComplete}
             onSchedule={canSchedule ? openSchedule : undefined}

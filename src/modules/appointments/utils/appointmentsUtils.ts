@@ -1,19 +1,51 @@
+import type { FollowUpItem } from '@/modules/activity/hooks/useFollowUps';
 import { CALENDAR_DEFAULT_WINDOW_DAYS } from '../constants/appointmentsConstants';
 import {
   AppointmentStatus,
   type AppointmentRecord,
 } from '../types/appointmentsTypes';
 
-/** The default calendar window: today through +N days, as ISO instants. */
-export function defaultCalendarWindow(now = new Date()): {
+/**
+ * The default calendar window: today through +N days, as ISO instants.
+ *
+ * `lookbackDays` pulls `from` backwards so still-open visits from before today can
+ * be fetched at all (see CALENDAR_PAST_DUE_LOOKBACK_DAYS). It defaults to 0, which
+ * keeps every existing caller on the forward-only window; the caller that opts in
+ * is responsible for dropping the finished visits the wider window also returns.
+ * `to` stays +N days from TODAY rather than from `from`, so asking for a lookback
+ * widens the past end without also stretching the future one.
+ */
+export function defaultCalendarWindow(
+  now = new Date(),
+  lookbackDays = 0,
+): {
   from: string;
   to: string;
 } {
-  const from = new Date(now);
-  from.setHours(0, 0, 0, 0);
-  const to = new Date(from);
+  const today = new Date(now);
+  today.setHours(0, 0, 0, 0);
+  const from = new Date(today);
+  from.setDate(from.getDate() - lookbackDays);
+  const to = new Date(today);
   to.setDate(to.getDate() + CALENDAR_DEFAULT_WINDOW_DAYS);
   return { from: from.toISOString(), to: to.toISOString() };
+}
+
+/**
+ * Does this visit belong on a forward-looking agenda that also carries what you
+ * still owe? Everything from today onward, plus anything before today that is still
+ * open. A visit finished (or cancelled) last week is history and stays out.
+ */
+export function isOnOpenAgenda(
+  appointment: AppointmentRecord,
+  now = new Date(),
+): boolean {
+  const todayStart = new Date(now);
+  todayStart.setHours(0, 0, 0, 0);
+  return (
+    new Date(appointment.startAt).getTime() >= todayStart.getTime() ||
+    isPastDue(appointment, now)
+  );
 }
 
 /** A scheduled visit whose start time has already passed. */
@@ -79,16 +111,29 @@ export interface CalendarCell {
   inMonth: boolean;
   isToday: boolean;
   items: AppointmentRecord[];
+  /**
+   * Follow-ups due on this day — the reminders a dated note creates, NOT visits.
+   * Kept in their own array rather than mixed into `items` on purpose: they are a
+   * different kind of thing (a promise to make contact, with no time and no
+   * location), and merging them would have let a follow-up render through the
+   * appointment paths as if it were a scheduled visit.
+   */
+  followUps: FollowUpItem[];
 }
 
 /**
  * Builds a 6-row Monday-first month grid for `month`, bucketing appointments into
  * their local calendar day. Always 42 cells so the grid height never jumps
  * between months.
+ *
+ * `followUps` are bucketed by their own `YYYY-MM-DD` string with no Date parsing:
+ * a date-only value is not an instant, and putting it through `new Date()` would
+ * shift it a day for anyone behind UTC.
  */
 export function buildMonthGrid(
   month: Date,
   appointments: readonly AppointmentRecord[],
+  followUps: readonly FollowUpItem[] = [],
   today = new Date(),
 ): CalendarCell[] {
   const byDay = new Map<string, AppointmentRecord[]>();
@@ -110,6 +155,16 @@ export function buildMonthGrid(
   const gridStart = new Date(firstOfMonth);
   gridStart.setDate(gridStart.getDate() - leading);
 
+  const followUpsByDay = new Map<string, FollowUpItem[]>();
+  for (const followUp of followUps) {
+    const bucket = followUpsByDay.get(followUp.dueDate);
+    if (bucket) {
+      bucket.push(followUp);
+    } else {
+      followUpsByDay.set(followUp.dueDate, [followUp]);
+    }
+  }
+
   const todayKey = localDateKey(today);
   const cells: CalendarCell[] = [];
   for (let index = 0; index < 42; index += 1) {
@@ -122,6 +177,7 @@ export function buildMonthGrid(
       inMonth: date.getMonth() === month.getMonth(),
       isToday: key === todayKey,
       items: byDay.get(key) ?? [],
+      followUps: followUpsByDay.get(key) ?? [],
     });
   }
   return cells;

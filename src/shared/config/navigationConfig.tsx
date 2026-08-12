@@ -291,9 +291,26 @@ const HOSPICELINK_ACTIVITY: NavSection = {
 
 const HOSPICELINK_CLINICAL: NavSection = {
   id: 'hl-clinical',
-  label: 'Clinical (Gold)',
+  // Not "Clinical (Gold)" any more: Family communication below is Max-and-up while
+  // the rest of the section is Gold, so a tier in the heading would be wrong for
+  // one audience or the other.
+  label: 'Clinical',
   items: [
-    { to: '/clinical/family', label: 'Family communication', icon: MessagesSquare, product: Product.HospiceLink, minTier: Tier.Gold, allow: HL_CLINICAL_ROLES },
+    /**
+     * Max, NOT Gold — the one item in this section that is not Gold-only.
+     *
+     * HospiceLink ranks Pro < Max < Gold (see TIER_RANK_BY_PRODUCT; Gold is the top
+     * tier, which is why this reads backwards), so `minTier: Max` means Max AND
+     * Gold, and still excludes Pro.
+     *
+     * This is a COMPLIANCE surface, not a premium one. The client's guide says "every
+     * time you speak with a patient's family — by phone, text, or in person — log it
+     * here; this is required for compliance, so don't skip it even for a quick call",
+     * and this screen is the only way to write that record. Selling a nurse a plan
+     * that hides the log they are required to keep is the wrong trade, so the gate
+     * matches the obligation rather than the price sheet.
+     */
+    { to: '/clinical/family', label: 'Family communication', icon: MessagesSquare, product: Product.HospiceLink, minTier: Tier.Max, allow: HL_CLINICAL_ROLES },
     /**
      * Labelled for the screen it actually opens. This route mounts the care-team
      * TELEHEALTH SESSION list (see ClinicalPage's pathname switch), and calling it
