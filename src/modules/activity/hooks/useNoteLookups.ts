@@ -2,8 +2,10 @@ import {
   hospiceContactLabel,
   useListHospiceContactsQuery,
 } from '@/modules/hospice-contacts/api/hospiceContactsApi';
-import { useGetMyPatientsQuery } from '@/modules/appointments/api/appointmentsApi';
-import { useListProspectsQuery } from '@/modules/prospects/api/prospectsApi';
+import {
+  useGetPatientDirectoryQuery,
+  useListProspectsQuery,
+} from '@/modules/prospects/api/prospectsApi';
 import { useListReferralsQuery } from '@/modules/referrals/api/referralsApi';
 import { useRole, HL_MARKETING_ROLES } from '@/shared/rbac';
 import { LOOKUP_PAGE_SIZE, useLookupOptions } from '@/shared/hooks';
@@ -15,13 +17,26 @@ const PAGE = { page: 1, limit: LOOKUP_PAGE_SIZE } as const;
  * The patients a user may attach a note to, as picker options.
  *
  * TWO DIFFERENT PATIENT SOURCES, chosen by role. Marketing roles pick from the
- * whole pipeline (GET /prospects). Nurse and Caregiver get 403 there — a pipeline
- * row is PHI-bearing account data — so they pick from GET
- * /hl/appointments/my-patients, the patients their OWN calendar already names.
- * Without this split their picker came back empty from a failed request and the
- * form could not be submitted at all: a note requires a target
+ * whole pipeline (GET /prospects), which includes the outreach rows they work —
+ * facilities — labelled by `pipelineName`. Nurse and Caregiver get 403 there (a
+ * pipeline row is PHI-bearing account data) so they pick from GET
+ * /prospects/patient-directory: the same patients, projected down to id + name +
+ * stage. Without this split their picker came back empty from a failed request and
+ * the form could not be submitted at all: a note requires a target
  * (NotesService.assertHasTarget plus a DB check constraint), so an empty picker is
  * not a cosmetic problem, it is a dead form.
+ *
+ * THE CLINICAL SOURCE USED TO BE `my-patients` (the patients the caller's OWN
+ * calendar names) and that was too narrow for the requirement it served. Family
+ * Communication is a compliance log — "every time you speak with a patient's family,
+ * by phone, text or in person, log it; don't skip it even for a quick call" — and
+ * this picker is the only way to write one. A nurse with no visit booked got "No
+ * patients assigned to you yet" over a permanently disabled button; a nurse covering
+ * a colleague's shift or taking an after-hours call could not name that patient
+ * either. Nothing in the app let them fix it themselves: booking a visit is
+ * `@Roles(...HL_MARKETING_ROLES)`, and the Calendar hides its "Schedule appointment"
+ * button from clinicians. The rule says EVERY call, so the picker has to be able to
+ * name every patient.
  *
  * Exported separately from `useNoteLookups` because the Notes screen needs THIS
  * list on its own, to filter the team notes down to one patient. Reading it from
@@ -40,7 +55,7 @@ export function useNotePatientOptions(
   const prospects = useListProspectsQuery(PAGE, {
     skip: !enabled || !isMarketing,
   });
-  const myPatients = useGetMyPatientsQuery(undefined, {
+  const directory = useGetPatientDirectoryQuery(undefined, {
     skip: !enabled || isMarketing,
   });
 
@@ -49,13 +64,13 @@ export function useNotePatientOptions(
     prospects.isLoading,
     (p) => p.pipelineName?.trim() || p.patientName,
   );
-  const myPatientOptions = useLookupOptions(
-    myPatients.data,
-    myPatients.isLoading,
+  const directoryOptions = useLookupOptions(
+    directory.data,
+    directory.isLoading,
     (p) => p.patientName,
   );
 
-  return isMarketing ? pipelineOptions : myPatientOptions;
+  return isMarketing ? pipelineOptions : directoryOptions;
 }
 
 /**

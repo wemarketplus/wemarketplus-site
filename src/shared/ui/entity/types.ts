@@ -37,7 +37,20 @@ export type EntityFieldType =
    * NEVER use a plain text input for a record reference: an end user has no way
    * to obtain a UUID, so a "paste the id" field is not a feature they can use.
    */
-  | 'lookup';
+  | 'lookup'
+  /**
+   * Context the user may READ but not set: rendered as its label and a line of
+   * text, with the display string supplied at render time through
+   * EntityFormModalProps.readOnlyValues (keyed by field name, like `lookups`).
+   *
+   * Its purpose is a field whose value some roles choose and others only need to
+   * see. The note form's Referral source is the case it exists for: a Marketer
+   * picks one, a clinician is 403 on the list, and rendering the picker anyway
+   * gave them a dropdown that could never contain anything. Any value already on
+   * the record stays registered and is submitted untouched — this changes what is
+   * rendered, not what is saved.
+   */
+  | 'readonly';
 
 export interface EntitySelectOption {
   value: string;
@@ -99,6 +112,12 @@ export interface EntityFormModalProps<TValues extends FieldValues> {
    * slow list never looks like an empty one.
    */
   lookups?: Readonly<Record<string, readonly EntitySelectOption[] | undefined>>;
+  /**
+   * Display strings for `type: 'readonly'` fields, keyed by field name.
+   * `undefined` means still loading; `null` means "nothing on file", which is a
+   * real answer and is shown as such rather than as a blank gap.
+   */
+  readOnlyValues?: Readonly<Record<string, string | null | undefined>>;
   // Optional slot rendered below the fields (e.g. a hint or extra control).
   footerNote?: ReactNode;
 }

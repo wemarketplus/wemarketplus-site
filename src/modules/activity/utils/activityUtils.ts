@@ -39,8 +39,19 @@ export function bucketReminders(
   return buckets as Record<(typeof REMINDER_BUCKETS)[number], Reminder[]>;
 }
 
-export function isEventOverdue(followUpDate: string): boolean {
-  return new Date(followUpDate).getTime() < Date.now();
+/**
+ * Is this follow-up date already past? Compared as a CALENDAR DAY, not an instant.
+ *
+ * The old form was `new Date(followUpDate) < Date.now()`, and a `YYYY-MM-DD` string
+ * parses as UTC midnight — so anything due TODAY read as overdue from 00:01 local
+ * onward (and, for readers east of UTC, a date due tomorrow could too). Comparing
+ * the day strings makes "due today" simply due, which is what a nurse looking at
+ * today's follow-up expects to see.
+ */
+export function isEventOverdue(followUpDate: string, now = new Date()): boolean {
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  // Tolerates a full ISO timestamp as well as a date-only string.
+  return followUpDate.slice(0, 10) < today;
 }
 
 export function computeGoalProgress(

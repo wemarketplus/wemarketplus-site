@@ -9,6 +9,7 @@ import {
   AppointmentStatus,
   type AppointmentRecord,
 } from '../types/appointmentsTypes';
+import { calendarColorFor } from '../utils/calendarColors';
 import {
   WEEKDAY_LABELS,
   monthLabel,
@@ -17,17 +18,20 @@ import {
 
 /**
  * Solid event fills with white text, the way Google Calendar renders month-view
- * events. Every token here is a dark mid-tone in the light theme, so white text
- * stays legible; cancelled is deliberately the muted grey + strikethrough.
+ * events — but the fill is now the OWNER'S CHOSEN COLOUR, not the status.
+ *
+ * The block used to be painted by status (azure = scheduled, green = completed…)
+ * and the colour a user picked for themselves appeared nowhere on this view, so
+ * choosing one looked like it did nothing. The colour is the point of the
+ * setting, so it gets the fill; status keeps the marks below plus the full text
+ * label in the day panel and the chip's own tooltip.
  */
-const STATUS_CHIP: Record<AppointmentStatus, string> = {
-  [AppointmentStatus.Scheduled]: 'bg-azure text-white hover:bg-azure/90',
-  [AppointmentStatus.Completed]: 'bg-success text-white hover:bg-success/90',
-  [AppointmentStatus.NoShow]:
-    'bg-destructive text-white hover:bg-destructive/90',
-  [AppointmentStatus.Cancelled]:
-    'bg-muted text-white line-through hover:bg-muted/90',
-  [AppointmentStatus.Rescheduled]: 'bg-warning text-white hover:bg-warning/90',
+const STATUS_MARK: Partial<Record<AppointmentStatus, string>> = {
+  // A cancelled visit must never read as a live one, whatever colour its owner
+  // picked — this is the one status the block still has to state on sight.
+  [AppointmentStatus.Cancelled]: 'line-through opacity-60',
+  // Didn't happen, but not called off: dimmed without the strikethrough.
+  [AppointmentStatus.NoShow]: 'opacity-75',
 };
 
 /** Appointments rendered per cell before collapsing into a "+N more" line. */
@@ -55,6 +59,16 @@ interface AppointmentsMonthGridProps {
   onToday: () => void;
   onSelectDay: (key: string) => void;
   onOpenAppointment: (appointment: AppointmentRecord) => void;
+  /**
+   * userId -> chosen `#rrggbb`. Drives the owner stripe on each chip.
+   *
+   * The chip FILL stays the status colour: "whose visit is this" and "did it
+   * happen" are two different questions, and this view answered only the second
+   * — so a user who set a calendar colour saw nothing change on the view the
+   * page actually opens on. The stripe adds the first answer without spending
+   * the fill, which is why it is a stripe and not a recolour.
+   */
+  ownerColorMap?: Readonly<Record<string, string>>;
 }
 
 export function AppointmentsMonthGrid({
@@ -67,6 +81,7 @@ export function AppointmentsMonthGrid({
   onToday,
   onSelectDay,
   onOpenAppointment,
+  ownerColorMap,
 }: AppointmentsMonthGridProps) {
   return (
     <Card className="overflow-hidden">
@@ -180,8 +195,14 @@ export function AppointmentsMonthGrid({
                       }
                     }}
                     className={cn(
-                      'flex items-baseline gap-1 truncate rounded-[4px] px-1.5 py-[2px] text-[10px] font-semibold leading-[14px] transition',
-                      STATUS_CHIP[appointment.status],
+                      'flex items-baseline gap-1 truncate rounded-[4px] px-1.5 py-[2px] text-[10px] font-semibold leading-[14px] text-white transition hover:opacity-90',
+                      calendarColorFor(
+                        appointment.assignedRep,
+                        appointment.assignedRep
+                          ? ownerColorMap?.[appointment.assignedRep]
+                          : null,
+                      ).dot,
+                      STATUS_MARK[appointment.status],
                     )}
                   >
                     <span className="shrink-0 tabular-nums opacity-90">
@@ -193,6 +214,33 @@ export function AppointmentsMonthGrid({
                 {cell.items.length > MAX_CHIPS_PER_DAY && (
                   <span className="px-1.5 text-[10px] font-semibold text-muted">
                     +{cell.items.length - MAX_CHIPS_PER_DAY} more
+                  </span>
+                )}
+
+                {/* Follow-ups sit BELOW the visits and look deliberately unlike
+                    them — outlined rather than filled, a dot instead of a time,
+                    because a follow-up is a promise to make contact, not a booked
+                    visit with a slot. Not clickable: there is nothing to complete
+                    here, the reminder is closed from Reminders or Daily tasks. */}
+                {cell.followUps.slice(0, MAX_CHIPS_PER_DAY).map((followUp) => (
+                  <span
+                    key={followUp.id}
+                    title={`Follow-up · ${followUp.title}${
+                      followUp.patientName ? ` · ${followUp.patientName}` : ''
+                    }${followUp.detail ? ` — ${followUp.detail}` : ''}`}
+                    className="flex items-baseline gap-1 truncate rounded-[4px] border border-dashed border-warning/60 bg-warning/[0.08] px-1.5 py-[2px] text-[10px] font-semibold leading-[14px] text-warning"
+                  >
+                    <span aria-hidden className="shrink-0">
+                      •
+                    </span>
+                    <span className="truncate">
+                      {followUp.patientName ?? followUp.title}
+                    </span>
+                  </span>
+                ))}
+                {cell.followUps.length > MAX_CHIPS_PER_DAY && (
+                  <span className="px-1.5 text-[10px] font-semibold text-muted">
+                    +{cell.followUps.length - MAX_CHIPS_PER_DAY} more follow-ups
                   </span>
                 )}
               </span>

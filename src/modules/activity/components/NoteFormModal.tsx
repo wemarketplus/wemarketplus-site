@@ -3,9 +3,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { VoiceDictateButton } from '@/shared/ui/core';
 import { EntityFormModal } from '@/shared/ui/entity';
+import { useNoteFormFields } from '../hooks/useNoteFormFields';
 import { useNoteLookups } from '../hooks/useNoteLookups';
 import { Urgency } from '@/shared/types';
-import { NOTE_FIELDS } from '../constants/activityConstants';
 import { noteSchema, type NoteFormValues } from '../schema/noteSchema';
 import { toNoteFormValues } from '../utils/activityMappers';
 import type { NoteRecord } from '../types/activityTypes';
@@ -69,6 +69,7 @@ export function NoteFormModal({ open, isSaving, editing, onClose, onSubmit }: No
   // Prospect / referral-source / contact pickers. Only fetched while the modal is
   // open, so opening the Notes tab doesn't pull three extra lists nobody asked for.
   const lookups = useNoteLookups(open);
+  const { fields, readOnlyValues } = useNoteFormFields(open, watch('prospectId'));
 
   return (
     <EntityFormModal<NoteFormValues>
@@ -76,15 +77,18 @@ export function NoteFormModal({ open, isSaving, editing, onClose, onSubmit }: No
       isSaving={isSaving}
       title={editing ? 'Edit note' : 'Add note'}
       submitLabel={editing ? 'Save changes' : 'Save note'}
-      fields={NOTE_FIELDS}
+      fields={fields}
       register={register}
       errors={errors}
       lookups={lookups}
+      readOnlyValues={readOnlyValues}
       onSubmit={submit}
       onClose={close}
-      // Two controls the field-descriptor grid cannot express, in the existing
-      // footerNote slot rather than by teaching the shared EntityFormModal new
-      // field types — no other module's form is touched either way.
+      // Two controls the field-descriptor grid cannot express — a checkbox with
+      // help text and a speech button — so they live in the footerNote slot.
+      // (The grid did gain a 'readonly' field type for the clinical role's
+      // Referred by / Main contact rows; see useNoteFormFields. A checkbox and a
+      // dictation button are still not field descriptors.)
       footerNote={
         <div className="space-y-3">
           {/*

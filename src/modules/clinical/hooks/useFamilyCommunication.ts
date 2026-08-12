@@ -39,8 +39,10 @@ import { FAMILY_CONTACT_ACTIVITY_TYPES } from '@/shared/constants/activityTypeCo
  * column set by this screen — a migration, not a filter change.
  *
  * The patient picker comes from `useNoteLookups`, which already resolves the right
- * source per role: the pipeline for marketing roles, "my patients" (the caller's own
- * visits) for Nurse and Caregiver, who are 403 on the pipeline.
+ * source per role: the pipeline for marketing roles, and the name-only patient
+ * directory for Nurse and Caregiver, who are 403 on the pipeline. That source is
+ * tenant-wide ON PURPOSE — see useNoteLookups for why scoping it to the caller's own
+ * visits made this compliance log impossible to write for most nurses.
  */
 export function useFamilyCommunication() {
   // The whole log, not just this user's: it is a compliance record, and the next
@@ -79,11 +81,12 @@ export function useFamilyCommunication() {
         // clinical roles this screen exists for, and every row would read as
         // written by nobody.
         author: note.author,
-        // A note whose patient is outside this role's visible set still belongs in
-        // the log — the conversation happened. Say so plainly rather than printing
-        // a raw uuid or dropping the row.
+        // Now that the picker is the whole patient directory this is a rare edge:
+        // an outreach (facility) row, or a patient soft-deleted since the note was
+        // written. The conversation still happened, so the row stays — say so
+        // plainly rather than printing a raw uuid or dropping it.
         patientName: note.prospectId
-          ? (patientNames.get(note.prospectId) ?? 'Patient not in your list')
+          ? (patientNames.get(note.prospectId) ?? 'Patient no longer on file')
           : '—',
       })),
     [data, patientNames],

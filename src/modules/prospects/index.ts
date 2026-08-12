@@ -3,6 +3,7 @@ export { ReengagementPage } from './pages/ReengagementPage';
 export { default as prospectsReducer } from './store/prospectsSlice';
 export {
   prospectsApi,
+  useGetPatientDirectoryQuery,
   useListProspectsQuery,
   useGetProspectQuery,
   useCreateProspectMutation,

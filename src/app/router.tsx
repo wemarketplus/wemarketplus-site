@@ -648,7 +648,11 @@ export function AppRouter() {
               role on a Gold tenant in. `allow` now mirrors the nav exactly; change
               one side, change both. Marketing personas are deliberately excluded:
               their view of a patient stops at the referral, not the care. */}
-          <Route path="clinical/family" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={HL_CLINICAL_ROLES}><ClinicalPage /></ProtectedRoute></RequireEntitlement>} />
+          {/* Max, not Gold, and deliberately out of step with the two routes below:
+              HospiceLink ranks Pro < Max < Gold, so this admits Max AND Gold. The
+              family log is the record a nurse is required to keep, not an upsell —
+              see the nav entry for the full argument. Change one side, change both. */}
+          <Route path="clinical/family" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={HL_CLINICAL_ROLES}><ClinicalPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="clinical/messaging" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={HL_CLINICAL_ROLES}><ClinicalPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="clinical/admissions" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={HL_CLINICAL_ROLES}><ClinicalPage /></ProtectedRoute></RequireEntitlement>} />
 

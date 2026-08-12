@@ -22,6 +22,7 @@ export function EntityFormModal<TValues extends FieldValues>({
   onSubmit,
   onClose,
   lookups,
+  readOnlyValues,
   footerNote,
 }: EntityFormModalProps<TValues>) {
   return (
@@ -58,6 +59,7 @@ export function EntityFormModal<TValues extends FieldValues>({
             watch={watch}
             setValue={setValue}
             lookupOptions={lookups?.[String(field.name)]}
+            readOnlyValue={readOnlyValues?.[String(field.name)]}
           />
         ))}
         {footerNote && <div className="sm:col-span-2">{footerNote}</div>}
@@ -75,6 +77,7 @@ function EntityFieldControl<TValues extends FieldValues>({
   watch,
   setValue,
   lookupOptions,
+  readOnlyValue,
 }: {
   field: EntityField<TValues>;
   dependents: ReadonlyArray<EntityField<TValues>>;
@@ -84,6 +87,7 @@ function EntityFieldControl<TValues extends FieldValues>({
   watch?: EntityFormModalProps<TValues>['watch'];
   setValue?: EntityFormModalProps<TValues>['setValue'];
   lookupOptions?: readonly { value: string; label: string }[];
+  readOnlyValue?: string | null;
 }) {
   const id = `ef-${String(field.name)}`;
   const type = field.type ?? 'text';
@@ -129,7 +133,26 @@ function EntityFieldControl<TValues extends FieldValues>({
   return (
     <div className={field.full ? 'sm:col-span-2' : undefined}>
       <Label htmlFor={id}>{field.label}</Label>
-      {type === 'textarea' ? (
+      {type === 'readonly' ? (
+        // Context, not an input. The value is still registered (hidden) so an
+        // existing reference on the record survives a save by a role that only
+        // reads it — dropping the input must not drop the data.
+        <>
+          <input type="hidden" {...reg} />
+          <p
+            id={id}
+            className="pt-1.5 text-sm text-foreground [word-break:break-word]"
+          >
+            {readOnlyValue === undefined ? (
+              <span className="text-muted-soft">Loading…</span>
+            ) : (
+              (readOnlyValue ?? (
+                <span className="text-muted-soft">Not on file</span>
+              ))
+            )}
+          </p>
+        </>
+      ) : type === 'textarea' ? (
         <Textarea id={id} placeholder={field.placeholder} {...control} />
       ) : type === 'lookup' ? (
         // A record reference. Options arrive from the caller's list query; until

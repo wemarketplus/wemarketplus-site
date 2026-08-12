@@ -8,6 +8,17 @@ import type { NoteFormValues } from '../schema/noteSchema';
 import type { TaskFormValues } from '../schema/taskSchema';
 import type { GoalFormValues } from '../schema/goalSchema';
 
+/**
+ * Page size for the follow-up feed (`GET /tasks`), which backs both the Follow-ups
+ * tab and the follow-up markers on the month calendar.
+ *
+ * MAX_LIMIT on the backend is 100, so this is the most one request can ask for —
+ * not a number chosen for comfort. The default was 20, which silently truncated the
+ * list; if a user ever holds more than 100 open follow-ups the feed needs a date
+ * window (`GET /tasks` has only `dueOnOrBefore` today), not a bigger page.
+ */
+export const FOLLOW_UP_FEED_LIMIT = 100;
+
 export const ACTIVITY_TABS: ReadonlyArray<{
   value: ActivityUiState['activeTab'];
   label: string;

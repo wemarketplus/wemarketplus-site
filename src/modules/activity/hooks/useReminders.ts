@@ -7,6 +7,7 @@ import {
   useListTasksQuery,
   useUpdateTaskMutation,
 } from '../api/activityApi';
+import { FOLLOW_UP_FEED_LIMIT } from '../constants/activityConstants';
 import { TaskStatus } from '../types/activityTypes';
 import { toReminder, toCreateTask, toUpdateTask } from '../utils/activityMappers';
 import { bucketReminders } from '../utils/activityUtils';
@@ -14,7 +15,10 @@ import type { TaskFormValues } from '../schema/taskSchema';
 import type { TaskRecord } from '../types/activityTypes';
 
 export function useReminders() {
-  const { data } = useListTasksQuery();
+  // Explicit page size: the default is 20, so a user with more open reminders than
+  // that silently lost the tail of their own list — and this screen presents itself
+  // as the complete set, bucketed into overdue / today / this week.
+  const { data } = useListTasksQuery({ limit: FOLLOW_UP_FEED_LIMIT });
 
   // Raw task records back every reminder; kept so the edit form can seed from
   // the full record (the Reminder view-model drops fields the form needs).

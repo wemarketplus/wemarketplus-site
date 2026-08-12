@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useAppSelector } from '@/app/hooks';
+import { useFollowUps } from '@/modules/activity/hooks/useFollowUps';
 import { useGetCalendarQuery } from '../api/appointmentsApi';
 import type { CalendarScope } from './useAppointmentsCalendar';
 import {
@@ -40,9 +41,16 @@ export function useAppointmentsMonth(scope: CalendarScope = 'mine') {
   });
   const appointments = useMemo(() => data ?? [], [data]);
 
+  // Follow-ups ride along on the same grid: logging a family contact with a "Follow
+  // up on" date is the one thing on the nurse's guide that puts a future obligation
+  // in the diary, and until now it landed only on the Reminders tab — so the
+  // calendar looked empty right after the log that was supposed to fill it.
+  // Scoped with the same My calendar / All users switch as the visits.
+  const { followUps } = useFollowUps(scope === 'mine');
+
   const cells = useMemo(
-    () => buildMonthGrid(month, appointments),
-    [month, appointments],
+    () => buildMonthGrid(month, appointments, followUps),
+    [month, appointments, followUps],
   );
 
   const shiftMonth = useCallback((delta: number) => {
@@ -66,10 +74,18 @@ export function useAppointmentsMonth(scope: CalendarScope = 'mine') {
     [cells, selectedKey],
   );
 
+  // Only the ones the visible grid actually shows, so the page's count line matches
+  // what is on screen rather than every open follow-up the user holds.
+  const followUpsInView = useMemo(
+    () => cells.reduce((total, cell) => total + cell.followUps.length, 0),
+    [cells],
+  );
+
   return {
     month,
     cells,
     appointments,
+    followUpsInView,
     selectedKey,
     selectedDay,
     selectDay: setSelectedKey,
