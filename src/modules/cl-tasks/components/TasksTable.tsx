@@ -15,6 +15,8 @@ import {
 
 interface TasksTableProps {
   tasks: readonly ClTaskRecord[];
+  /** Resolves an assignee id to a name — see useOpsStaff. */
+  assigneeName: (id: string | null) => string;
   isMutating: boolean;
   hasFilters: boolean;
   onEdit: (task: ClTaskRecord) => void;
@@ -25,6 +27,7 @@ interface TasksTableProps {
 
 export function TasksTable({
   tasks,
+  assigneeName,
   isMutating,
   hasFilters,
   onEdit,
@@ -75,6 +78,11 @@ export function TasksTable({
           </select>
         </span>
       ),
+    },
+    {
+      key: 'assignee',
+      header: 'Assigned to',
+      cell: (t) => assigneeName(t.assignedTo),
     },
     {
       key: 'dueDate',

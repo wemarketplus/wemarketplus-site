@@ -59,7 +59,7 @@ export const FINANCIAL_SETTING_DEFS: ReadonlyArray<{
   suffix: string;
   defaultValue: string;
 }> = [
-  { key: 'mileage_rate', label: 'Mileage reimbursement rate', hint: 'Per mile (IRS 2026 standard rate).', suffix: '/ mile', defaultValue: '0.67' },
+  { key: 'mileage_rate', label: 'Mileage reimbursement rate', hint: 'Per mile. Defaults to the IRS 2025 standard rate; update it here when the IRS publishes a new one.', suffix: '/ mile', defaultValue: '0.70' },
   { key: 'gift_gratuity_limit', label: 'Gift & gratuity limit', hint: 'Max value per visit before a compliance flag.', suffix: '/ visit', defaultValue: '15.00' },
   { key: 'parking_max', label: 'Parking expense max', hint: 'Per-day maximum reimbursable parking expense.', suffix: '/ day', defaultValue: '20.00' },
   { key: 'meal_max', label: 'Meal expense max', hint: 'Per-person maximum when meals are allowed.', suffix: '', defaultValue: '25.00' },

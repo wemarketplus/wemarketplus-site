@@ -13,6 +13,18 @@ export const visitSchema = z.object({
     .or(z.literal(''))
     .refine((v) => !v || /^\d+(\.\d)?$/.test(v), 'Enter miles like 12.5'),
   notes: z.string().max(2000).optional().or(z.literal('')),
+  /**
+   * Captured coordinates. Held as STRINGS because every other value on this form
+   * is one (react-hook-form reads inputs as strings) and the mapper already
+   * converts on the way out — a lone number field here would be the only value
+   * whose empty state is `undefined` rather than `''`, which is how a "clear the
+   * GPS" edit ends up sending `NaN`.
+   *
+   * Not user-typed: set by the Capture GPS button via setValue, and validated only
+   * loosely for that reason. The DTO is the real gate (numeric, 7 decimal places).
+   */
+  gpsLat: z.string().optional().or(z.literal('')),
+  gpsLng: z.string().optional().or(z.literal('')),
 });
 
 export type VisitFormValues = z.infer<typeof visitSchema>;

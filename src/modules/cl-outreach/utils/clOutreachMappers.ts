@@ -1,5 +1,5 @@
 import { opt } from '@/shared/ui/entity';
-import type { GPSCheckIn, MileageEntry } from '@/shared/types';
+import type { GPSCheckIn } from '@/shared/types';
 import type {
   ClOutreachVisitRecord,
   CreateClOutreachVisitRequest,
@@ -15,6 +15,12 @@ export function toCreateVisit(values: VisitFormValues): CreateClOutreachVisitReq
     ...opt('locationName', values.locationName),
     ...opt('visitType', values.visitType),
     ...(values.miles?.trim() ? { miles: Number(values.miles) } : {}),
+    // Both or neither: a latitude on its own is not a location, and the check-in
+    // list renders the pair as one "lat, lng" line — half of which would read as a
+    // corrupt fix rather than an absent one.
+    ...(values.gpsLat?.trim() && values.gpsLng?.trim()
+      ? { gpsLat: Number(values.gpsLat), gpsLng: Number(values.gpsLng) }
+      : {}),
     ...opt('notes', values.notes),
   };
 }
@@ -32,13 +38,18 @@ export function toVisitFormValues(v: ClOutreachVisitRecord): VisitFormValues {
     locationName: v.locationName ?? '',
     visitType: v.visitType ?? 'in_person',
     miles: v.miles != null ? String(v.miles) : '',
+    gpsLat: v.gpsLat != null ? String(v.gpsLat) : '',
+    gpsLng: v.gpsLng != null ? String(v.gpsLng) : '',
     notes: v.notes ?? '',
   };
 }
 
-// A single backend outreach visit feeds both the GPS check-in list and the
-// mileage log in the UI. Pure mappers — kept in utils/ so the hook stays
-// orchestration-only.
+// Pure mapper — kept in utils/ so the hook stays orchestration-only.
+//
+// `toMileage` used to sit alongside this, projecting the same visit row into a
+// MileageEntry for a third "Mileage" lens. Mileage is now the shared
+// `mileage_logs` screen, which is the only one carrying from/to, purpose, the
+// reimbursement rate and receipts, so that projection had nowhere left to go.
 export function toCheckIn(v: ClOutreachVisitRecord): GPSCheckIn {
   const gps = v.gpsLat != null && v.gpsLng != null ? `${v.gpsLat},${v.gpsLng}` : '';
   return {
@@ -51,13 +62,3 @@ export function toCheckIn(v: ClOutreachVisitRecord): GPSCheckIn {
   };
 }
 
-export function toMileage(v: ClOutreachVisitRecord): MileageEntry {
-  // Postgres numeric columns arrive as strings via TypeORM — coerce to number.
-  return {
-    id: v.id,
-    distanceMiles: v.miles != null ? Number(v.miles) : 0,
-    date: v.visitDate,
-    purpose: v.visitType ?? v.locationName ?? 'Outreach visit',
-    notes: v.notes ?? undefined,
-  };
-}

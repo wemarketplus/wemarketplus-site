@@ -1,13 +1,16 @@
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { Role, type CustomRole } from '@/shared/rbac';
+import { useAppSelector } from '@/app/hooks';
+import { entitledProducts, useActiveProduct } from '@/modules/access';
+import { ALL_ROLES, Role, type CustomRole } from '@/shared/rbac';
 import {
   useCreateCustomRoleMutation,
   useDeleteCustomRoleMutation,
   useListCustomRolesQuery,
   useUpdateCustomRoleMutation,
 } from '../api/permissionsApi';
-import { buildNavCatalog } from '../utils/navCatalog';
+import { DEFAULT_CUSTOM_ROLE_BASE } from '../constants/customRolesConstants';
+import { buildNavCatalog, isRoleUsedByProducts } from '../utils/navCatalog';
 
 export interface CustomRoleDraft {
   name: string;
@@ -15,16 +18,6 @@ export interface CustomRoleDraft {
   navKeys: string[];
   isActive: boolean;
 }
-
-const EMPTY_DRAFT: CustomRoleDraft = {
-  name: '',
-  // Caregiver is the NARROWEST field role, so a half-finished role starts from the
-  // least permission rather than the most. An admin who forgets to change it has
-  // created something harmless.
-  baseRole: Role.Caregiver,
-  navKeys: [],
-  isActive: true,
-};
 
 /**
  * Admin → Manage Roles: the tenant's own job titles and the tabs each one shows.
@@ -40,8 +33,24 @@ export function useCustomRoles() {
   const [updateRole, updateState] = useUpdateCustomRoleMutation();
   const [deleteRole] = useDeleteCustomRoleMutation();
 
+  /**
+   * A blank role, based on the narrowest persona of the dashboard the admin is
+   * standing in — so "save without touching the base role" is both harmless AND
+   * usable. See DEFAULT_CUSTOM_ROLE_BASE for why one shared default was neither.
+   */
+  const { activeProduct } = useActiveProduct();
+  const emptyDraft = useMemo<CustomRoleDraft>(
+    () => ({
+      name: '',
+      baseRole: DEFAULT_CUSTOM_ROLE_BASE[activeProduct],
+      navKeys: [],
+      isActive: true,
+    }),
+    [activeProduct],
+  );
+
   const [editing, setEditing] = useState<CustomRole | null>(null);
-  const [draft, setDraft] = useState<CustomRoleDraft>(EMPTY_DRAFT);
+  const [draft, setDraft] = useState<CustomRoleDraft>(emptyDraft);
   const [open, setOpen] = useState(false);
 
   const status =
@@ -49,13 +58,48 @@ export function useCustomRoles() {
   const needsUpgrade = status === 402;
   const forbidden = status === 403;
 
-  // The checkbox catalogue follows the draft's base role — a custom role can only
-  // narrow what that role already sees.
-  const catalog = useMemo(() => buildNavCatalog(draft.baseRole), [draft.baseRole]);
+  /**
+   * The checkbox catalogue follows the draft's base role — a custom role can only
+   * narrow what that role already sees — and is limited to the dashboards the
+   * tenant actually pays for. Read off the store user rather than `useEntitlements`
+   * so the memo has a stable dependency: that hook builds a fresh array per render,
+   * which would rebuild the catalogue on every keystroke in the name field.
+   */
+  const user = useAppSelector((s) => s.auth.user);
+  const products = useMemo(() => entitledProducts(user), [user]);
+  const catalog = useMemo(
+    () => buildNavCatalog(draft.baseRole, products),
+    [draft.baseRole, products],
+  );
+
+  /**
+   * The base roles worth offering: the ones that actually have tabs on a dashboard
+   * this tenant holds. Super Admin is absent because it is the platform-staff role
+   * and the backend rejects it too (CUSTOM_ROLE_BASE_ROLES); the rest drop out per
+   * tenant — a CommunityLink-only community has no use for Nurse, Caregiver or
+   * Sales Rep, and picking one would leave the admin staring at an empty checkbox
+   * list with no indication of what they did wrong.
+   *
+   * THE DRAFT'S OWN BASE ROLE IS ALWAYS INCLUDED, even when it would otherwise be
+   * filtered out. Roles created before this filter existed can be based on a role
+   * that no longer qualifies — a CommunityLink tenant really does have a
+   * Caregiver-based "Volunteer Coordinator" on file — and a <select> whose value is
+   * absent from its options renders as the FIRST option instead. Opening such a
+   * role to rename it would silently re-base it on save.
+   */
+  const selectableRoles = useMemo(
+    () =>
+      ALL_ROLES.filter(
+        (role) =>
+          role !== Role.SuperAdmin &&
+          (role === draft.baseRole || isRoleUsedByProducts(role, products)),
+      ),
+    [products, draft.baseRole],
+  );
 
   const openCreate = () => {
     setEditing(null);
-    setDraft(EMPTY_DRAFT);
+    setDraft(emptyDraft);
     setOpen(true);
   };
 
@@ -148,6 +192,7 @@ export function useCustomRoles() {
     isError: Boolean(error) && !needsUpgrade && !forbidden,
     refetch,
     catalog,
+    selectableRoles,
     open,
     editing,
     draft,

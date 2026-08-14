@@ -31,6 +31,18 @@ export interface CalendarColorRecord {
   calendarColor: string | null;
 }
 
+/**
+ * GET /users/assignable — id + name only, for assignment pickers.
+ *
+ * Deliberately not UserRecord: the full user list is Admin/Owner/Manager-only, and
+ * a field persona picking which colleague gives a tour needs a name and nothing
+ * else. Mirrors the backend StaffOptionDto.
+ */
+export interface StaffOptionRecord {
+  id: ID;
+  name: string;
+}
+
 // POST /users body — wemarketplus-backend/src/users/dto/create-user.dto.ts.
 export interface CreateUserRequest {
   email: string;

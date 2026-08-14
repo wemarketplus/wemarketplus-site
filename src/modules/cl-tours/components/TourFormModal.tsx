@@ -12,6 +12,7 @@ import type { ClTourRecord } from '../types/clToursApiTypes';
 
 const EMPTY: TourFormValues = {
   leadId: '',
+  guideUserId: '',
   scheduledAt: '',
   status: CL_TOUR_STATUS.Scheduled,
   durationMin: '60',
@@ -24,6 +25,8 @@ interface TourFormModalProps {
   isSaving: boolean;
   editing?: ClTourRecord | null;
   leadOptions: readonly EntitySelectOption[];
+  /** Tenant users who could give the tour. Undefined while still loading. */
+  guideOptions: readonly EntitySelectOption[] | undefined;
   onClose: () => void;
   onSubmit: (values: TourFormValues) => Promise<boolean>;
 }
@@ -35,6 +38,7 @@ export function TourFormModal({
   isSaving,
   editing,
   leadOptions,
+  guideOptions,
   onClose,
   onSubmit,
 }: TourFormModalProps) {
@@ -86,6 +90,27 @@ export function TourFormModal({
           <Select id="tf-lead" {...register('leadId')}>
             <option value="">— No lead —</option>
             {leadOptions.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </Select>
+        </div>
+        {/* Who is giving the tour — the guide's fourth thing to pick, and the
+            reason cl_tours.guideUserId existed with nothing writing it. Disabled
+            while the user list loads rather than rendering an empty picker that
+            looks like "nobody works here". */}
+        <div className="sm:col-span-2">
+          <Label htmlFor="tf-guide">Tour guide</Label>
+          <Select
+            id="tf-guide"
+            disabled={guideOptions === undefined}
+            {...register('guideUserId')}
+          >
+            <option value="">
+              {guideOptions === undefined ? 'Loading…' : '— Unassigned —'}
+            </option>
+            {(guideOptions ?? []).map((o) => (
               <option key={o.value} value={o.value}>
                 {o.label}
               </option>

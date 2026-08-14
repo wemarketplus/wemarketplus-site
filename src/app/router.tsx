@@ -11,22 +11,23 @@ import { RootRoute } from '@/routes/RootRoute';
 import { LEGACY_DEMO_REDIRECTS } from '@/shared/config/demoUrls';
 import { CHANGE_PASSWORD_PATH } from '@/shared/constants/routeConstants';
 import {
-  Role,
   SUPER_ADMIN_ONLY,
   ADMIN_ONLY,
   STAFF_ROLES,
-  CL_MANAGEMENT_ROLES,
   CL_SALES_ROLES,
   CL_ALL_ROLES,
+  CL_ACTIVITY_NOTES_ROLES,
   CL_INVENTORY_ROLES,
   CL_MAKE_READY_ROLES,
   CL_MAINTENANCE_ROLES,
   CL_HOUSEKEEPING_ROLES,
   CL_FINANCIAL_ROLES,
+  CL_MANAGEMENT_ROLES,
   CL_UNIT_STATUS_ROLES,
   CL_MAINTENANCE_VIEW_ROLES,
   CL_COMPETITOR_INTEL_ROLES,
   CL_FIELD_ACTIVITY_ROLES,
+  CALENDAR_ROLES,
   HL_FIELD_ROLES,
   HL_MARKETING_ROLES,
   HL_CLINICAL_ROLES,
@@ -211,8 +212,13 @@ const MarketerLeaderboardPage = lazy(() =>
 const AutomationPage = lazy(() =>
   import('@/modules/automation').then((m) => ({ default: m.AutomationPage })),
 );
-const DailyQueuePage = lazy(() =>
-  import('@/modules/daily-queue').then((m) => ({ default: m.DailyQueuePage })),
+// Product-aware: picks the HospiceLink queue or the CommunityLink one from the
+// active dashboard. Mounted cross-product — see the route.
+const ClFieldQueuePage = lazy(() =>
+  import('@/modules/daily-queue').then((m) => ({ default: m.ClFieldQueuePage })),
+);
+const DailyTasksRoute = lazy(() =>
+  import('@/modules/daily-queue').then((m) => ({ default: m.DailyTasksRoute })),
 );
 const ProspectsPage = lazy(() =>
   import('@/modules/prospects').then((m) => ({ default: m.ProspectsPage })),
@@ -573,14 +579,8 @@ export function AppRouter() {
               on HL_FIELD_ROLES rather than inside the marketing group. Server-side
               the queue is self-scoped (no userId parameter at all), which is what
               makes admitting the clinical roles safe. */}
-          <Route
-            path="daily-tasks"
-            element={
-              <ProtectedRoute allow={HL_FIELD_ROLES}>
-                <DailyQueuePage />
-              </ProtectedRoute>
-            }
-          />
+          {/* NOTE: `daily-tasks` has MOVED OUT of this HospiceLink-only group to
+              the cross-product block further down. See the note there. */}
           <Route
             element={
               <ProtectedRoute allow={HL_MARKETING_ROLES}>
@@ -621,7 +621,9 @@ export function AppRouter() {
               </ProtectedRoute>
             }
           >
-            <Route path="appointments" element={<AppointmentsPage />} />
+            {/* NOTE: `appointments` — the shared team calendar — has MOVED OUT of
+                this HospiceLink-only group to the cross-product block further
+                down. See the note there. */}
             <Route path="activity/calendar" element={<ActivityPage />} />
             <Route path="activity/notes" element={<ActivityPage />} />
             <Route path="activity/reminders" element={<ActivityPage />} />
@@ -676,13 +678,15 @@ export function AppRouter() {
             }
           />
 
-          {/* Field execution — Max. EVV and mileage had endpoints (and, for EVV,
-              written RTK hooks) but no nav entry and no route, so both were
-              unreachable while being sold at Max. `allow` mirrors the nav's
-              HL_FIELD_ROLES so Nurse and Caregiver reach them — these two screens
-              plus Notes and Family communication ARE the caregiver's workspace. */}
+          {/* Field execution — Max. EVV had endpoints and written RTK hooks but no
+              nav entry and no route, so it was unreachable while being sold at Max.
+              `allow` mirrors the nav's HL_FIELD_ROLES so Nurse and Caregiver reach
+              it — this screen plus Mileage, Notes and Family communication ARE the
+              caregiver's workspace.
+
+              NOTE: `field/mileage` has MOVED OUT of this HospiceLink-only group to
+              the cross-product block further down. See the note there. */}
           <Route path="field/evv" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={HL_FIELD_ROLES}><EvvPage /></ProtectedRoute></RequireEntitlement>} />
-          <Route path="field/mileage" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={HL_FIELD_ROLES}><MileagePage /></ProtectedRoute></RequireEntitlement>} />
 
           {/* Nurse scheduling (the roster) — Gold + HL_MANAGEMENT_ROLES. This is
               the ADMIN view of who is on shift, not a nurse's own diary, and
@@ -765,7 +769,10 @@ export function AppRouter() {
             element={
               <RequireRoleAtTier
                 windows={[
-                  { minTier: Tier.Gold, maxTier: Tier.Gold, allow: [Role.SuperAdmin, Role.Director] },
+                  // CL_MANAGEMENT_ROLES, mirroring the nav row — the narrower
+                  // pair locked a Gold Administrator and Owner/Investor out of a
+                  // screen both their guides promise. See navigationConfig.
+                  { minTier: Tier.Gold, maxTier: Tier.Gold, allow: CL_MANAGEMENT_ROLES },
                   { minTier: Tier.Max, allow: CL_FINANCIAL_ROLES },
                 ]}
               >
@@ -779,19 +786,59 @@ export function AppRouter() {
           <Route path="paid-referrals" element={<ProtectedRoute allow={CL_SALES_ROLES}><PaidReferralsPage /></ProtectedRoute>} />
           <Route path="tours" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClToursPage /></ProtectedRoute>} />
           <Route path="ai-assistant" element={<ProtectedRoute allow={CL_SALES_ROLES}><AiAssistantPage /></ProtectedRoute>} />
-          <Route path="activity-notes" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_SALES_ROLES}><ActivityNotesPage /></ProtectedRoute></RequireEntitlement>} />
+          {/* Activity notes — no tier gate. The end-user guide files it under
+              everyday tools while explicitly marking the genuinely premium rows
+              ("larger plans"), and it writes to /cl/lead-notes, which every
+              CommunityLink tier already reaches for per-lead notes. Mirrors the
+              nav item; change one side, change both. */}
+          {/* CL_ACTIVITY_NOTES_ROLES: the sales group plus Nurse/Caregiver, who the
+              care guide sends here as the stand-in for the not-yet-built Resident
+              Care Log. Matches the nav row and the /cl/lead-notes controller. */}
+          <Route path="activity-notes" element={<ProtectedRoute allow={CL_ACTIVITY_NOTES_ROLES}><ActivityNotesPage /></ProtectedRoute>} />
           <Route path="gift-gratuity" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_FIELD_ACTIVITY_ROLES}><GiftGratuityPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="aircall" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_SALES_ROLES}><AircallPage /></ProtectedRoute></RequireEntitlement>} />
           {/* Tasks is visible/usable by every CommunityLink role, including
               the field roles — matches every role's sidebar in the demo. */}
           <Route path="tasks" element={<ProtectedRoute allow={CL_ALL_ROLES}><TasksPage /></ProtectedRoute>} />
           <Route path="outreach/checkin" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClOutreachPage /></ProtectedRoute>} />
-          <Route path="outreach/mileage" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClOutreachPage /></ProtectedRoute>} />
+          {/* Was a third ClOutreachPage lens over `cl_outreach_visits.miles`.
+              Mileage is the shared /field/mileage screen now, so this redirects
+              rather than 404s — it is a live sidebar link in every existing
+              user's muscle memory, and two screens both called Mileage showing
+              different totals is worse than either one alone. */}
+          <Route path="outreach/mileage" element={<Navigate to="/field/mileage" replace />} />
           <Route path="outreach/log" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClOutreachPage /></ProtectedRoute>} />
+          {/* MY QUEUE — the field-ops counterpart of /daily-tasks, and the field
+              technician's landing screen ("Check My Queue first thing").
+
+              A separate path rather than a third branch inside DailyTasksRoute,
+              because the split here is by AUDIENCE, not by product: the field roles
+              are excluded from /cl/daily-queue by the API itself (CL_SALES_ROLES),
+              so one path serving both would 403 for whichever half it was not built
+              for. Two paths, two role gates, no branch that can send a reader to a
+              queue they cannot read.
+
+              Inside the CommunityLink group, not beside /daily-tasks, because it is
+              CL-only — and because a bare `minTier={Tier.Gold}` means opposite
+              things in the two products (HL orders Pro<Max<Gold, CL Pro<Gold<Max),
+              so it must resolve against a known product.
+
+              CL_MAKE_READY_ROLES matches the backend @Roles on /cl/field-queue —
+              the only CommunityLink group admitting both field roles. The nav row is
+              narrower still (CL_FIELD_ROLES): management may open this by URL, they
+              are just not offered it. */}
+          <Route path="my-queue" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={CL_MAKE_READY_ROLES}><ClFieldQueuePage /></ProtectedRoute></RequireEntitlement>} />
           {/* CommunityLink Operations — Gold tier and up (product-aware). */}
           <Route path="operations/communities" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={CL_INVENTORY_ROLES}><ClOperationsPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="operations/inventory" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={CL_INVENTORY_ROLES}><ClOperationsPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="operations/make-ready" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={CL_MAKE_READY_ROLES}><ClOperationsPage /></ProtectedRoute></RequireEntitlement>} />
+          {/* Make-Ready Clean — the same board narrowed to the housekeeping
+              category (the page pins `type=housekeeping` on the request). The
+              guide gives a cleaner "specifically which units are in the move-in
+              prep pipeline", which is this slice of the shared board rather than
+              a second one. CL_HOUSEKEEPING_ROLES, matching the nav tab: the full
+              board is already there for everyone else. */}
+          <Route path="operations/make-ready-clean" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={CL_HOUSEKEEPING_ROLES}><ClOperationsPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="operations/maintenance" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={CL_MAINTENANCE_ROLES}><ClOperationsPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="operations/housekeeping" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={CL_HOUSEKEEPING_ROLES}><ClOperationsPage /></ProtectedRoute></RequireEntitlement>} />
           {/* Max-tier-only read-only surfaces for the field roles. */}
@@ -803,8 +850,101 @@ export function AppRouter() {
           <Route path="financial/concessions" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_FINANCIAL_ROLES}><ClFinancialPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="financial/competitors" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_COMPETITOR_INTEL_ROLES}><ClFinancialPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="financial/loc" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_FINANCIAL_ROLES}><ClFinancialPage /></ProtectedRoute></RequireEntitlement>} />
-          <Route path="reports" element={<ProtectedRoute allow={CL_MANAGEMENT_ROLES}><ClReportsPage /></ProtectedRoute>} />
+          {/* Reports Center — CL_SALES_ROLES (a superset of CL_MANAGEMENT_ROLES),
+              no tier gate. cl/reports filters per report by the tenant's tier, so
+              a Pro marketer reaches the two sales reports and everything above
+              Pro adds the operations/finance ones. Mirrors the nav item and
+              ClReportsController; change one side, change all three. */}
+          <Route path="reports" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClReportsPage /></ProtectedRoute>} />
           </Route>
+
+          {/* The SHARED TEAM CALENDAR — cross-product, and the reason it moved
+              out of the HospiceLink Activity group above.
+
+              It is the only calendar in the product: the month grid, the
+              My calendar / All users scope toggle and the per-user colours all
+              live in modules/appointments, and the CommunityLink guide hands a
+              Sales Marketer exactly that screen. Building a second one for
+              CommunityLink would have duplicated the feature rather than shared
+              it, so the backend's @RequireProduct(HospiceLink) came off the
+              controller instead (see appointments.controller.ts).
+
+              CALENDAR_ROLES is HL_FIELD_ROLES ∪ CL_SALES_ROLES — everyone who had
+              it before, plus the CommunityLink personas. The matching backend
+              handlers carry no @Roles at all, so this gate is the narrower side.
+
+              The path stays `appointments`; the sidebar labels it "Calendar" in
+              both products, which is what every guide calls it. */}
+          <Route
+            path="appointments"
+            element={
+              <ProtectedRoute allow={CALENDAR_ROLES}>
+                <AppointmentsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* DAILY TASKS — cross-product, one path, two queues.
+
+              Both products' guides open the day here, and each builds the list
+              from its own tables: HospiceLink from tasks/jobs/appointments/cold
+              accounts/re-engagement, CommunityLink from lead follow-ups, today's
+              tours and leads gone quiet. DailyTasksRoute picks by active product.
+
+              It used to sit inside the HospiceLink group, so a CommunityLink
+              marketer typing the URL their guide gives them did not get a 404 —
+              they got RequireProduct's arrival alignment, which switched the whole
+              console to HospiceLink. Silently landing someone in the other product
+              is worse than a missing page, because nothing tells them it happened.
+
+              CALENDAR_ROLES — HL_FIELD_ROLES ∪ CL_SALES_ROLES — is the union of
+              what the two backends allow (HL_FIELD_ROLES on /daily-queue,
+              CL_SALES_ROLES on /cl/daily-queue); each server still enforces its
+              own, narrower list. */}
+          <Route
+            path="daily-tasks"
+            element={
+              <ProtectedRoute allow={CALENDAR_ROLES}>
+                <DailyTasksRoute />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* MILEAGE & EXPENSES — cross-product, and no longer tier-gated.
+
+              CommunityLink used to reach a different screen entirely: a read-only
+              lens over `cl_outreach_visits.miles`, which has no from/to, no
+              purpose, no reimbursement rate, no receipts and no week/month totals.
+              The client's guide asks for every one of those, and `mileage_logs`
+              plus modules/field already had all of them — so CommunityLink now
+              opens the SAME screen rather than growing a second implementation.
+
+              The tier map keeps HospiceLink EXACTLY as it was — Max, inherited
+              from the EVV/mileage bundle the pricing page sells — while opening
+              CommunityLink at Pro, its base tier, so the comparison is always
+              true. Deliberately not "simplified" to no gate at all: the backend
+              gates neither `/mileage-logs` nor `/expense-receipts` (no
+              @RequireProduct, no @RequireFeature), so dropping the HospiceLink
+              side here would silently un-gate a sold feature. Mirrors the two nav
+              rows; change one side, change both.
+
+              CALENDAR_ROLES — same union as the calendar, for the same reason:
+              every field persona in either product files mileage. */}
+          <Route
+            path="field/mileage"
+            element={
+              <RequireEntitlement
+                minTier={{
+                  [Product.HospiceLink]: Tier.Max,
+                  [Product.CommunityLink]: Tier.Pro,
+                }}
+              >
+                <ProtectedRoute allow={CALENDAR_ROLES}>
+                  <MileagePage />
+                </ProtectedRoute>
+              </RequireEntitlement>
+            }
+          />
 
           {/* Grant CRM — contacts & employer companies. Shared/back-office
               routes below are NOT product-gated (cross-product); they appear

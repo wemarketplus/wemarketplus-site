@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
-import { useRole, type Role } from '@/shared/rbac';
+import type { Role } from '@/shared/rbac';
 import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
 import { useGetPermissionsQuery, useUpdatePermissionMutation } from '../api/permissionsApi';
 import type { PermissionKey } from '../constants/permissionMatrixKeys';
@@ -18,13 +18,13 @@ import type { PermissionKey } from '../constants/permissionMatrixKeys';
 // which is exactly what happened before: this hook hardcoded "super admin only"
 // and showed every Owner a permanently read-only grid.
 export function usePermissionMatrix() {
-  // The "viewing as" switcher previews a lesser persona, so it must not offer an
-  // action that persona could not perform — even though the JWT (and therefore
-  // the server's canEdit) still reflects the real role.
-  const { isViewingAs } = useRole();
-
+  // `canEdit` comes from the SERVER, which decides on the JWT's role. It used to
+  // be ANDed with `!isViewingAs`, because the "viewing as" switcher could render
+  // the app as a lesser persona and the grid must not offer an action that persona
+  // could not perform. The switcher is gone — the UI now always renders for the
+  // real role — so the server's answer is the whole answer again.
   const { data, isLoading, isFetching, isError, error, refetch } = useGetPermissionsQuery();
-  const canEdit = (data?.canEdit ?? false) && !isViewingAs;
+  const canEdit = data?.canEdit ?? false;
   const [updatePermission] = useUpdatePermissionMutation();
 
   // Tracks the cell currently being saved so the grid can disable just that
@@ -59,7 +59,6 @@ export function usePermissionMatrix() {
     errorMessage: isError ? extractApiErrorMessage(error, 'Could not load permissions') : null,
     refetch,
     canEdit,
-    isViewingAs,
     pendingCell,
     toggle,
   };

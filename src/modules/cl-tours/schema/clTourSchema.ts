@@ -5,6 +5,10 @@ import { CL_TOUR_STATUS } from '../constants/clToursApiConstants';
 // is the only field the backend requires; it comes from a datetime-local input.
 export const tourSchema = z.object({
   leadId: z.string().optional().or(z.literal('')),
+  // Which staff member is giving the tour. The column and both DTOs have always
+  // accepted it; the form never collected it, so every tour was unassigned and
+  // the guide's "pick … which staff member is giving the tour" had no control.
+  guideUserId: z.string().optional().or(z.literal('')),
   scheduledAt: z.string().min(1, 'Pick a date and time'),
   status: z.enum([
     CL_TOUR_STATUS.Scheduled,

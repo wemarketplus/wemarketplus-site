@@ -86,21 +86,10 @@ export const HL_FIELD_ROLES: readonly Role[] = [
   Role.Caregiver,
 ];
 
-/**
- * Roles a management user may PREVIEW via the "viewing as" switcher. Only the
- * three field personas are listed: the switcher exists to check what a scoped user
- * sees, so previewing another management role would be pointless, and previewing
- * "up" must be impossible.
- *
- * The switcher only ever NARROWS the navigation. It never grants anything — every
- * API call still carries the real role in the JWT, so a previewing Admin who
- * reaches a hidden route still gets that route's real authorization answer.
- */
-export const HL_VIEW_AS_ROLES: readonly Role[] = [
-  Role.Marketer,
-  Role.Nurse,
-  Role.Caregiver,
-];
+// NOTE: HL_VIEW_AS_ROLES / CL_VIEW_AS_ROLES / VIEW_AS_ROLES used to live here —
+// the personas a management user could PREVIEW via the "viewing as" switcher. The
+// switcher is gone: that row now reports the signed-in role and offers no others
+// (see ViewingAsBadge), so no list of other people's roles is needed anywhere.
 
 // --- CommunityLink role groups (mirror the /demo/communitylink/* sidebars) ---
 // Each group defines which roles may SEE a class of module. Field roles see the
@@ -168,19 +157,82 @@ export const CL_MAKE_READY_ROLES: readonly Role[] = [
   Role.Housekeeping,
 ];
 
+/**
+ * The two CLINICAL CARE personas as they appear in CommunityLink — the roles a
+ * community offering Assisted Living or Memory Care staffs its floors with.
+ *
+ * NEW TO COMMUNITYLINK. Nurse and Caregiver have existed as HospiceLink roles since
+ * the beginning (see HL_CLINICAL_ROLES) but named in NO CommunityLink group at all,
+ * which meant a Nurse signed into a CommunityLink tenant saw three ungated rows —
+ * Dashboard, My profile, Notifications — and nothing else. The client's guide gives
+ * them four working surfaces (Activity Notes, Tasks, Mileage & Expenses, and a
+ * Resident Care Log that is still being built), so they need a group to be named in.
+ *
+ * DELIBERATELY NOT ADDED TO CL_SALES_ROLES, which would have been the one-line
+ * change. That group gates the lead pipeline, tour scheduler, referral sources, the
+ * paid referral portal, GPS check-in and the AI sales assistant — a floor nurse has
+ * no business in a family's referral fee, and widening it would have handed them
+ * fourteen screens to get the two the guide asks for.
+ */
+export const CL_CARE_ROLES: readonly Role[] = [Role.Nurse, Role.Caregiver];
+
 // Every CommunityLink role. Tasks is a cross-role surface — every role in the
-// demo screenshots (including both field roles) has a "Tasks" sidebar item.
+// demo screenshots (including both field roles) has a "Tasks" sidebar item, and
+// the care personas use it for medication reminders and check-in rounds.
 export const CL_ALL_ROLES: readonly Role[] = [
   ...CL_SALES_ROLES,
   Role.Maintenance,
   Role.Housekeeping,
+  ...CL_CARE_ROLES,
 ];
+
+/**
+ * The cross-lead ACTIVITY NOTES log.
+ *
+ * `CL_SALES_ROLES` plus the care personas, because the guide routes a Nurse or
+ * Caregiver here explicitly: the Resident Care Log is not built yet, and "until that's
+ * ready, use Activity Notes as the closest available substitute". Its own group rather
+ * than widening CL_SALES_ROLES — see CL_CARE_ROLES for why.
+ */
+export const CL_ACTIVITY_NOTES_ROLES: readonly Role[] = [
+  ...CL_SALES_ROLES,
+  ...CL_CARE_ROLES,
+];
+
+/**
+ * The still-being-built RESIDENT CARE LOG — wellness checks, incident notes and
+ * family updates tied to a resident.
+ *
+ * Care personas only, and rendered as a `comingSoon` row (inert, "Soon" badge) because
+ * there is no resident entity to hang a care log off yet: `cl_apartments.residentName`
+ * is a nullable varchar on a unit, not a record you can attach a wellness check to.
+ * The row exists because the guide tells a nurse the tab is coming and names what will
+ * be in it — announcing it inertly is honest, and shipping a link to a screen that
+ * cannot store a care note would not be.
+ */
+export const CL_RESIDENT_CARE_ROLES: readonly Role[] = [...CL_CARE_ROLES];
 
 // Read-only "Unit Status" surface (Max tier): apartment status visibility for
 // the two field roles, who are NOT in CL_INVENTORY_ROLES (no inventory write
 // access). Mirrors the backend's method-level @Roles() override on
 // ClApartmentController's GET handlers.
 export const CL_UNIT_STATUS_ROLES: readonly Role[] = [
+  Role.Maintenance,
+  Role.Housekeeping,
+];
+
+/**
+ * The two CommunityLink FIELD personas — the people who work a queue of assigned
+ * work orders rather than a book of leads.
+ *
+ * Holds the same two members as CL_UNIT_STATUS_ROLES today and is deliberately NOT
+ * an alias of it: that constant exists because Unit Status is a read-only window
+ * management does not need a duplicate of, this one because "is this person a field
+ * technician" is a question about the person. Gates the "My Queue" nav row, which
+ * management does not get — they have the Executive Dashboard, and their own work is
+ * not assigned to them one ticket at a time.
+ */
+export const CL_FIELD_ROLES: readonly Role[] = [
   Role.Maintenance,
   Role.Housekeeping,
 ];
@@ -210,6 +262,27 @@ export const CL_FIELD_ACTIVITY_ROLES: readonly Role[] = [
   Role.SalesAdmissions,
 ];
 
+/**
+ * MILEAGE & EXPENSES on CommunityLink.
+ *
+ * `CL_FIELD_ACTIVITY_ROLES` plus the care personas. Its own constant because that
+ * group gates TWO surfaces — Mileage and Gift & Gratuity — and the guide gives the
+ * care roles only the first: "If your role involves traveling between communities or
+ * in-home visits, log those trips in Mileage & Expenses the same way a Sales Marketer
+ * does." It says nothing about gift and gratuity compliance logging, which is an
+ * outreach-gifting surface, so widening the shared group would have granted a screen
+ * nobody asked for.
+ *
+ * The ROUTE already admits them (`CALENDAR_ROLES` is a union that includes
+ * `HL_FIELD_ROLES`, which has both care roles), and the backend mileage controller
+ * carries no `@Roles` and self-scopes its list. So this nav row was the only thing
+ * standing between a CommunityLink nurse and a screen already built for them.
+ */
+export const CL_MILEAGE_ROLES: readonly Role[] = [
+  ...CL_FIELD_ACTIVITY_ROLES,
+  ...CL_CARE_ROLES,
+];
+
 // Read-only "Maintenance View" surface (Max tier): a nav/route item scoped to
 // Housekeeping only — management/Sales-Admissions already have the full
 // "Maintenance" item (CL_MAINTENANCE_ROLES) and don't need a duplicate
@@ -218,3 +291,24 @@ export const CL_FIELD_ACTIVITY_ROLES: readonly Role[] = [
 // Maintenance module — this constant is deliberately narrower and only for
 // gating this distinct nav item/route.
 export const CL_MAINTENANCE_VIEW_ROLES: readonly Role[] = [Role.Housekeeping];
+
+// --- Cross-product groups ---------------------------------------------------
+
+/**
+ * Roles that may open the SHARED TEAM CALENDAR and the MILEAGE screen — the two
+ * surfaces that stopped being HospiceLink-only.
+ *
+ * Both are `HL_FIELD_ROLES` (who already had them) plus the CommunityLink sales
+ * and management personas, which is exactly the union of the two products' field
+ * groups. Written as a union rather than a hand-listed set so adding a role to
+ * either product's group carries into both screens automatically — the failure
+ * mode of a hand-listed set is a new persona silently losing its calendar.
+ *
+ * The backend agrees by carrying NO `@Roles` on the calendar and mileage handlers
+ * at all (see appointments.controller.ts and mileage.controller.ts), so this list
+ * is the narrower of the two sides — never the wider.
+ */
+export const CALENDAR_ROLES: readonly Role[] = [
+  ...HL_FIELD_ROLES,
+  ...CL_SALES_ROLES.filter((role) => !HL_FIELD_ROLES.includes(role)),
+];

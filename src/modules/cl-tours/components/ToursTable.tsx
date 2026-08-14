@@ -16,9 +16,12 @@ interface ToursTableProps {
   isMutating: boolean;
   hasFilters: boolean;
   leadName: (id: string | null) => string;
+  guideName: (id: string | null) => string;
   onEdit: (tour: ClTourRecord) => void;
   onDelete: (tour: ClTourRecord) => void;
   onStatusChange: (tour: ClTourRecord, status: string) => void;
+  /** Stamp or clear `confirmedAt` — the guide's Confirm action. */
+  onConfirmToggle: (tour: ClTourRecord) => void;
   onAdd?: () => void;
 }
 
@@ -27,9 +30,11 @@ export function ToursTable({
   isMutating,
   hasFilters,
   leadName,
+  guideName,
   onEdit,
   onDelete,
   onStatusChange,
+  onConfirmToggle,
   onAdd,
 }: ToursTableProps) {
   const { isAny } = useRole();
@@ -42,6 +47,40 @@ export function ToursTable({
       cell: (t) => <span className="font-bold text-foreground">{leadName(t.leadId)}</span>,
     },
     { key: 'when', header: 'Scheduled', cell: (t) => tourWhen(t.scheduledAt) },
+    { key: 'guide', header: 'Guide', cell: (t) => guideName(t.guideUserId) },
+    /**
+     * Confirmation — its own column, because it is its own axis.
+     *
+     * Green "Confirmed" once the family has acknowledged, orange "Pending" with a
+     * Confirm button until then, exactly as the end-user guide describes. It is
+     * NOT folded into Status: a tour can be confirmed AND completed, and the
+     * status enum can only ever say one thing at a time.
+     *
+     * Confirm stays available on a completed or cancelled tour rather than being
+     * hidden — a marketer confirming yesterday's tour after the fact is recording
+     * history, and the button is also the only way to undo a mis-click.
+     */
+    {
+      key: 'confirmed',
+      header: 'Confirmation',
+      cell: (t) => (
+        <span className="inline-flex items-center gap-2">
+          {t.confirmedAt ? (
+            <Pill tone="g">Confirmed</Pill>
+          ) : (
+            <Pill tone="y">Pending</Pill>
+          )}
+          <button
+            type="button"
+            disabled={isMutating}
+            onClick={() => onConfirmToggle(t)}
+            className="text-[11px] font-semibold text-muted underline-offset-2 hover:text-foreground hover:underline disabled:opacity-50"
+          >
+            {t.confirmedAt ? 'Undo' : 'Confirm'}
+          </button>
+        </span>
+      ),
+    },
     {
       key: 'duration',
       header: 'Duration',

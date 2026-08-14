@@ -46,7 +46,8 @@ export type UpdateClLeadRequest = Partial<CreateClLeadRequest>;
 export interface ClLeadNoteRecord {
   id: ID;
   tenantId: ID;
-  leadId: ID;
+  /** Null for an Activity Note — a general note with no lead as its subject. */
+  leadId: ID | null;
   summary: string;
   contactType: string | null;
   nextStep: string | null;
@@ -57,7 +58,8 @@ export interface ClLeadNoteRecord {
 }
 
 export interface CreateClLeadNoteRequest {
-  leadId: string;
+  /** Omit for a general Activity Note. */
+  leadId?: string;
   summary: string;
   contactType?: string;
   nextStep?: string;

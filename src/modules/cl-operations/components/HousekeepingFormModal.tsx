@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { EntityFormModal } from '@/shared/ui/entity';
+import { EntityFormModal, type EntitySelectOption } from '@/shared/ui/entity';
 import { HOUSEKEEPING_STATUS } from '../constants/clOperationsApiConstants';
 import { HOUSEKEEPING_FIELDS } from '../constants/clOperationsConstants';
 import { housekeepingSchema, type HousekeepingFormValues } from '../schema/clOperationsSchema';
@@ -12,6 +12,7 @@ const EMPTY: HousekeepingFormValues = {
   taskType: '',
   area: '',
   status: HOUSEKEEPING_STATUS.Pending,
+  assignedTo: '',
   dueDate: '',
 };
 
@@ -19,11 +20,20 @@ interface Props {
   open: boolean;
   isSaving: boolean;
   editing?: ClHousekeepingTaskRecord | null;
+  /** Tenant staff for the "Assigned to" picker. Undefined while still loading. */
+  staffOptions: readonly EntitySelectOption[] | undefined;
   onClose: () => void;
   onSubmit: (values: HousekeepingFormValues) => Promise<boolean>;
 }
 
-export function HousekeepingFormModal({ open, isSaving, editing, onClose, onSubmit }: Props) {
+export function HousekeepingFormModal({
+  open,
+  isSaving,
+  editing,
+  staffOptions,
+  onClose,
+  onSubmit,
+}: Props) {
   const {
     register,
     handleSubmit,
@@ -60,6 +70,10 @@ export function HousekeepingFormModal({ open, isSaving, editing, onClose, onSubm
       errors={errors}
       onSubmit={submit}
       onClose={close}
+      // Keyed by field name, which is how EntityFormModal feeds a `lookup` field
+      // its options. Undefined while loading renders the picker disabled rather
+      // than empty — an empty staff list reads as "nobody works here".
+      lookups={{ assignedTo: staffOptions }}
     />
   );
 }

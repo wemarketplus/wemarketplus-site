@@ -14,6 +14,8 @@ import type { ClMakeReadyTaskRecord } from '../types/clOperationsApiTypes';
 interface MakeReadyTableProps {
   tasks: readonly ClMakeReadyTaskRecord[];
   unitLabel: (apartmentId: string | null) => string;
+  /** Resolves an assignee id to a name — see useOpsStaff. */
+  assigneeName: (id: string | null) => string;
   isMutating: boolean;
   hasFilters: boolean;
   onEdit: (t: ClMakeReadyTaskRecord) => void;
@@ -25,6 +27,7 @@ interface MakeReadyTableProps {
 export function MakeReadyTable({
   tasks,
   unitLabel,
+  assigneeName,
   isMutating,
   hasFilters,
   onEdit,
@@ -63,6 +66,11 @@ export function MakeReadyTable({
           </select>
         </span>
       ),
+    },
+    {
+      key: 'assignee',
+      header: 'Assigned to',
+      cell: (t) => assigneeName(t.assignedTo),
     },
     { key: 'due', header: 'Due', cell: (t) => (t.dueDate ? formatDate(t.dueDate) : '—') },
     {

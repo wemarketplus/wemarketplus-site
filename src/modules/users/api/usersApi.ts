@@ -10,6 +10,7 @@ import type {
   UpdateOwnProfileRequest,
   UpdateUserRequest,
   SeatUsage,
+  StaffOptionRecord,
   UserRecord,
 } from '../types/usersTypes';
 
@@ -83,6 +84,14 @@ export const usersApi = createApi({
       transformResponse: (res: ApiEnvelope<CalendarColorRecord[]>) => res.data,
       providesTags: [USERS_TAGS.CalendarColors],
     }),
+    // id -> name for the whole tenant, open to every authenticated role. Backs the
+    // assignment pickers (e.g. a tour's guide) that a Marketer must use but cannot
+    // fill from /users, which is staff-only. See StaffOptionDto for why it is safe.
+    listAssignableStaff: build.query<StaffOptionRecord[], void>({
+      query: () => ({ url: '/users/assignable' }),
+      transformResponse: (res: ApiEnvelope<StaffOptionRecord[]>) => res.data,
+      providesTags: [USERS_TAGS.List],
+    }),
     deleteUser: build.mutation<void, string>({
       query: (id) => ({ url: `/users/${id}`, method: 'DELETE' }),
       invalidatesTags: (_r, _e, id) => [
@@ -102,6 +111,7 @@ export const usersApi = createApi({
 
 export const {
   useListUsersQuery,
+  useListAssignableStaffQuery,
   useGetSeatUsageQuery,
   useGetUserQuery,
   useCreateUserMutation,

@@ -45,6 +45,7 @@ export function toCreateTour(
     status: values.status,
     durationMin: Number(values.durationMin),
     ...(values.leadId ? { leadId: values.leadId } : {}),
+    ...(values.guideUserId ? { guideUserId: values.guideUserId } : {}),
     ...opt('outcome', values.outcome),
     ...opt('notes', values.notes),
   };
@@ -61,6 +62,7 @@ export function toUpdateTour(
 export function toTourFormValues(r: ClTourRecord): TourFormValues {
   return {
     leadId: r.leadId ?? '',
+    guideUserId: r.guideUserId ?? '',
     scheduledAt: isoToLocalInput(r.scheduledAt),
     status: r.status,
     durationMin: String(r.durationMin ?? 60),

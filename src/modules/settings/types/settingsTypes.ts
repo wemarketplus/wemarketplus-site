@@ -7,6 +7,7 @@ import type { ComponentType } from 'react';
 export type SettingsTab =
   | 'profile'
   | 'organization'
+  | 'roles'
   | 'integrations'
   | 'security'
   | 'data-export';

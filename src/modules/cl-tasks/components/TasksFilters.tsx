@@ -5,13 +5,22 @@ import { STATUS_OPTIONS } from '../constants/tasksConstants';
 interface TasksFiltersProps {
   search: string;
   status: string;
+  mineOnly: boolean;
   onSearch: (value: string) => void;
   onStatus: (value: string) => void;
+  onMineOnly: (value: boolean) => void;
 }
 
 // Search box + status select for the task list. Both are applied client-side
 // (the /cl/tasks backend list is plain pagination with no filter params).
-export function TasksFilters({ search, status, onSearch, onStatus }: TasksFiltersProps) {
+export function TasksFilters({
+  search,
+  status,
+  mineOnly,
+  onSearch,
+  onStatus,
+  onMineOnly,
+}: TasksFiltersProps) {
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
       <div className="relative sm:max-w-sm sm:flex-1">
@@ -37,6 +46,19 @@ export function TasksFilters({ search, status, onSearch, onStatus }: TasksFilter
           </option>
         ))}
       </Select>
+      {/* "Anything else assigned to you" — the guide's words for every role that
+          ends on this screen. A toggle rather than a staff picker: this list is
+          the reader's own to-do list, and filtering it by a COLLEAGUE is a
+          management question that belongs on a management screen. */}
+      <label className="inline-flex cursor-pointer items-center gap-2 text-[13px] text-foreground">
+        <input
+          type="checkbox"
+          className="h-3.5 w-3.5 accent-current"
+          checked={mineOnly}
+          onChange={(e) => onMineOnly(e.target.checked)}
+        />
+        Assigned to me
+      </label>
     </div>
   );
 }

@@ -2,7 +2,10 @@ export interface ReportDefinition {
   id: string;
   title: string;
   description: string;
-  category: 'occupancy' | 'revenue' | 'operations' | 'compliance';
+  // `sales` is the Sales Marketer's group (leads by source, tour conversion) and
+  // the only category available on every tier — the other four come from the
+  // Gold+ operations bundle. See ClReportsService's per-report gating.
+  category: 'sales' | 'occupancy' | 'revenue' | 'operations' | 'compliance';
   lastRunAt?: string;
 }
 

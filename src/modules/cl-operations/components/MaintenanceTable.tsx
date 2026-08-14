@@ -14,6 +14,8 @@ import type { ClMaintenanceTicketRecord } from '../types/clOperationsApiTypes';
 
 interface MaintenanceTableProps {
   tickets: readonly ClMaintenanceTicketRecord[];
+  /** Resolves an assignee id to a name — see useOpsStaff. */
+  assigneeName: (id: string | null) => string;
   isMutating: boolean;
   hasFilters: boolean;
   onEdit?: (t: ClMaintenanceTicketRecord) => void;
@@ -27,6 +29,7 @@ interface MaintenanceTableProps {
 
 export function MaintenanceTable({
   tickets,
+  assigneeName,
   isMutating,
   hasFilters,
   onEdit,
@@ -60,6 +63,11 @@ export function MaintenanceTable({
       cell: (t) => (
         <Pill tone={TICKET_PRIORITY_PILL[t.priority]}>{TICKET_PRIORITY_LABELS[t.priority]}</Pill>
       ),
+    },
+    {
+      key: 'assignee',
+      header: 'Assigned to',
+      cell: (t) => assigneeName(t.assignedTo),
     },
     {
       key: 'status',

@@ -1,6 +1,6 @@
 import { Button, Input, Label, Select } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
-import { ROLE_LABELS, Role, ALL_ROLES } from '@/shared/rbac';
+import { ROLE_LABELS, type Role } from '@/shared/rbac';
 import type { CustomRoleDraft } from '../hooks/useCustomRoles';
 import type { NavCatalogGroup } from '../utils/navCatalog';
 
@@ -10,6 +10,8 @@ interface CustomRoleFormModalProps {
   isSaving: boolean;
   draft: CustomRoleDraft;
   catalog: NavCatalogGroup[];
+  /** Base roles that have tabs on a dashboard this tenant holds — see the hook. */
+  selectableRoles: readonly Role[];
   onPatch: (patch: Partial<CustomRoleDraft>) => void;
   onToggleKey: (key: string) => void;
   onClose: () => void;
@@ -26,8 +28,10 @@ interface CustomRoleFormModalProps {
  * a volunteer coordinator administrator rights by picking the role whose tab list
  * looked closest.
  *
- * Super Admin is absent from the picker: it is the platform-staff role, and the
- * backend rejects it too (CUSTOM_ROLE_BASE_ROLES).
+ * The picker's contents come from the hook (`selectableRoles`) rather than the full
+ * role list: Super Admin is always absent — it is the platform-staff role, and the
+ * backend rejects it too (CUSTOM_ROLE_BASE_ROLES) — and roles with no tabs on any
+ * dashboard the tenant holds are dropped as well.
  */
 export function CustomRoleFormModal({
   open,
@@ -35,13 +39,12 @@ export function CustomRoleFormModal({
   isSaving,
   draft,
   catalog,
+  selectableRoles,
   onPatch,
   onToggleKey,
   onClose,
   onSave,
 }: CustomRoleFormModalProps) {
-  const selectableRoles = ALL_ROLES.filter((role) => role !== Role.SuperAdmin);
-
   return (
     <Modal
       open={open}

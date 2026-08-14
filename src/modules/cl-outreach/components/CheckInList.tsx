@@ -1,6 +1,7 @@
 import { MapPin } from 'lucide-react';
 import { Card, CardContent } from '@/shared/ui/core';
 import { formatDateTime } from '@/shared/utils/dateFormatter';
+import { visitTypeLabel } from '../constants/clOutreachConstants';
 import type { CheckInListProps } from '../types/clOutreachTypes';
 
 export function CheckInList({ items }: CheckInListProps) {
@@ -15,8 +16,12 @@ export function CheckInList({ items }: CheckInListProps) {
                 <p className="text-sm font-semibold text-foreground">
                   {c.organization}
                 </p>
+                {/* visitTypeLabel, not the raw column: the stored value is a
+                    snake_case key ("lunch_learn"), which the outreach-log table
+                    has always mapped and this list did not — so a visit logged as
+                    "Lunch & learn" read as "lunch_learn" here. */}
                 <p className="text-xs text-muted">
-                  {c.contactName} · {c.visitType}
+                  {c.contactName} · {visitTypeLabel(c.visitType || null)}
                 </p>
                 <p className="mt-1 font-mono text-[10px] text-muted-soft">
                   {c.gpsLocation}

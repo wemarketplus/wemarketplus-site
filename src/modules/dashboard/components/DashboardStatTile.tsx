@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Card } from '@/shared/ui/core';
 import { cn } from '@/shared/utils/cn';
 import type { DashboardStatCard } from '../types/dashboardTypes';
@@ -17,8 +18,17 @@ const TONE_CHIP: Record<NonNullable<DashboardStatCard['tone']>, string> = {
 export function DashboardStatTile({ stat }: { stat: DashboardStatCard }) {
   const Icon = stat.icon;
 
-  return (
-    <Card dense className="px-5 py-5">
+  const body = (
+    <Card
+      dense
+      className={cn(
+        'h-full px-5 py-5',
+        // Only a tile that goes somewhere gets affordances. A hover state on a
+        // tile that does nothing is a promise the tile cannot keep.
+        stat.to &&
+          'transition-colors hover:border-primary/25 hover:bg-primary/[0.02]',
+      )}
+    >
       <div className="flex items-start justify-between gap-3">
         <p className="max-w-[8.5rem] text-[10.5px] font-semibold uppercase leading-[1.35] tracking-[0.12em] text-muted-soft">
           {stat.label}
@@ -51,5 +61,21 @@ export function DashboardStatTile({ stat }: { stat: DashboardStatCard }) {
         </p>
       )}
     </Card>
+  );
+
+  // The whole tile is the target, not a "view" link tucked in a corner: the
+  // number IS the thing being clicked, and a 40px numeral is a far easier hit
+  // than a caption. `aria-label` names the destination, because "12" on its own
+  // tells a screen-reader user nothing about where the link goes.
+  return stat.to ? (
+    <Link
+      to={stat.to}
+      aria-label={`${stat.label}: ${stat.value}`}
+      className="block rounded-[14px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+    >
+      {body}
+    </Link>
+  ) : (
+    body
   );
 }

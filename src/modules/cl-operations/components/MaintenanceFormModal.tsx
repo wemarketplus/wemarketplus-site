@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { EntityFormModal } from '@/shared/ui/entity';
+import { EntityFormModal, type EntitySelectOption } from '@/shared/ui/entity';
 import { MAINTENANCE_STATUS, TICKET_PRIORITY } from '../constants/clOperationsApiConstants';
 import { MAINTENANCE_FIELDS } from '../constants/clOperationsConstants';
 import { maintenanceSchema, type MaintenanceFormValues } from '../schema/clOperationsSchema';
@@ -13,6 +13,7 @@ const EMPTY: MaintenanceFormValues = {
   ticketNumber: '',
   priority: TICKET_PRIORITY.Medium,
   status: MAINTENANCE_STATUS.Open,
+  assignedTo: '',
   reporterName: '',
   resolution: '',
 };
@@ -21,11 +22,20 @@ interface Props {
   open: boolean;
   isSaving: boolean;
   editing?: ClMaintenanceTicketRecord | null;
+  /** Tenant staff for the "Assigned to" picker. Undefined while still loading. */
+  staffOptions: readonly EntitySelectOption[] | undefined;
   onClose: () => void;
   onSubmit: (values: MaintenanceFormValues) => Promise<boolean>;
 }
 
-export function MaintenanceFormModal({ open, isSaving, editing, onClose, onSubmit }: Props) {
+export function MaintenanceFormModal({
+  open,
+  isSaving,
+  editing,
+  staffOptions,
+  onClose,
+  onSubmit,
+}: Props) {
   const {
     register,
     handleSubmit,
@@ -62,6 +72,10 @@ export function MaintenanceFormModal({ open, isSaving, editing, onClose, onSubmi
       errors={errors}
       onSubmit={submit}
       onClose={close}
+      // Keyed by field name — how EntityFormModal feeds a `lookup` its options.
+      // Undefined while loading disables the picker rather than rendering it
+      // empty, which would read as "nobody works here".
+      lookups={{ assignedTo: staffOptions }}
     />
   );
 }

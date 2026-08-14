@@ -14,6 +14,8 @@ export function toCreateTask(values: TaskFormValues): CreateClTaskRequest {
     title: values.title.trim(),
     priority: values.priority as TicketPriority,
     status: values.status as ClTaskStatus,
+    // Blank omitted rather than sent as '': assignedTo is @IsUUID() on the DTO.
+    ...opt('assignedTo', values.assignedTo),
     ...opt('dueDate', values.dueDate),
     ...opt('description', values.description),
   };
@@ -30,6 +32,7 @@ export function toTaskFormValues(task: ClTaskRecord): TaskFormValues {
     title: task.title,
     priority: task.priority,
     status: task.status,
+    assignedTo: task.assignedTo ?? '',
     dueDate: task.dueDate ?? '',
     description: task.description ?? '',
   };

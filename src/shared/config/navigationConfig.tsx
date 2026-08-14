@@ -18,6 +18,7 @@ import {
   Inbox,
   Goal,
   Heart,
+  HeartPulse,
   LayoutDashboard,
   LineChart,
   Map,
@@ -28,7 +29,6 @@ import {
   PieChart,
   Pin,
   Plug,
-  Receipt,
   ScrollText,
   Settings2,
   ShieldCheck,
@@ -56,18 +56,22 @@ import {
   HL_MARKETING_ROLES,
   HL_CLINICAL_ROLES,
   HL_FIELD_ROLES,
-  CL_MANAGEMENT_ROLES,
   CL_SALES_ROLES,
   CL_FINANCIAL_ROLES,
+  CL_MANAGEMENT_ROLES,
   CL_INVENTORY_ROLES,
   CL_MAINTENANCE_ROLES,
   CL_HOUSEKEEPING_ROLES,
   CL_MAKE_READY_ROLES,
   CL_ALL_ROLES,
   CL_UNIT_STATUS_ROLES,
+  CL_FIELD_ROLES,
+  CL_ACTIVITY_NOTES_ROLES,
+  CL_RESIDENT_CARE_ROLES,
   CL_MAINTENANCE_VIEW_ROLES,
   CL_COMPETITOR_INTEL_ROLES,
   CL_FIELD_ACTIVITY_ROLES,
+  CL_MILEAGE_ROLES,
 } from '@/shared/rbac';
 import { Product, Tier, tierIncludes } from '@/shared/types';
 
@@ -427,6 +431,16 @@ const COMMUNITYLINK_SALES: NavSection = {
   id: 'cl-sales',
   label: 'Sales & outreach',
   items: [
+    /**
+     * DAILY TASKS — first, because it is where the guide says the day starts:
+     * "Check Daily Task (or your Dashboard) every morning."
+     *
+     * The same `/daily-tasks` path HospiceLink uses; the route picks the queue by
+     * active product. CommunityLink had no such screen at all, and the path was
+     * inside the HospiceLink product group, so following that instruction moved
+     * the user to the other dashboard.
+     */
+    { to: '/daily-tasks', label: 'Daily tasks', icon: ListChecks, product: Product.CommunityLink, allow: CL_SALES_ROLES },
     { to: '/leads', label: 'Lead pipeline', icon: LineChart, product: Product.CommunityLink, allow: CL_SALES_ROLES },
     // Referral Pipeline is a Max-tier addition alongside Lead Pipeline — a
     // stage-grouped view over the same paid-referral data as Paid Referral
@@ -438,17 +452,72 @@ const COMMUNITYLINK_SALES: NavSection = {
     { to: '/cl-referrals', label: 'Referral sources', icon: Heart, product: Product.CommunityLink, allow: CL_SALES_ROLES },
     { to: '/paid-referrals', label: 'Paid referral portal', icon: Heart, product: Product.CommunityLink, allow: CL_SALES_ROLES },
     { to: '/tours', label: 'Tour scheduler', icon: Calendar, product: Product.CommunityLink, allow: CL_SALES_ROLES },
+    /**
+     * The SHARED TEAM CALENDAR — the same screen HospiceLink lists under Activity,
+     * not a second one. The CommunityLink guide gives a Sales Marketer "Click
+     * Calendar … use the dropdown to switch between My Calendar and All Users",
+     * colour-coded per person, and modules/appointments is the only thing in the
+     * product that does any of that. It was HospiceLink-gated on the route AND on
+     * the controller, so CommunityLink had no calendar at all.
+     *
+     * Sits directly under Tour scheduler because that is the order the guide walks
+     * a marketer through them, and because a tour booked here is the same
+     * appointment the scheduler is about.
+     */
+    { to: '/appointments', label: 'Calendar', icon: CalendarCheck, product: Product.CommunityLink, allow: CL_SALES_ROLES },
     // AI Sales Assistant is CommunityLink-baseline (Pro+, no tier cap) — the
     // Pro demo shows it and Gold/Max's mockups simply don't re-show it
     // (those demos focus on that tier's new capabilities), not a deliberate
     // removal on upgrade. Reuses the same generic, product-agnostic AI
     // assistant page/route already used by HospiceLink.
     { to: '/ai-assistant', label: 'AI sales assistant', icon: Sparkles, product: Product.CommunityLink, allow: CL_SALES_ROLES },
-    // GPS check-in / Outreach log are the Pro-tier field-outreach tools. Gold
-    // and Max streamline the sidebar and drop them (maxTier: Pro).
-    { to: '/outreach/checkin', label: 'GPS check-in', icon: Target, product: Product.CommunityLink, allow: CL_SALES_ROLES, maxTier: Tier.Pro },
-    { to: '/outreach/mileage', label: 'Mileage', icon: Map, product: Product.CommunityLink, allow: CL_SALES_ROLES, maxTier: Tier.Pro },
-    { to: '/outreach/log', label: 'Outreach log', icon: ScrollText, product: Product.CommunityLink, allow: CL_SALES_ROLES, maxTier: Tier.Pro },
+    /**
+     * GPS check-in and Outreach log — the field-outreach tools, on EVERY tier.
+     *
+     * Both carried `maxTier: Tier.Pro`, read off the Gold/Max demo sidebars, which
+     * simply do not re-show the Pro tools they inherit. Taken literally it meant a
+     * Sales Marketer LOST GPS check-in and the outreach log the moment their
+     * community upgraded to Gold — while the routes stayed reachable by URL and
+     * the API kept serving them, so the capability was never actually withdrawn,
+     * only hidden. The end-user guide gives a marketer both tools with no mention
+     * of a plan, which settles it: the upper bound was a reading of the mockups,
+     * not a pricing decision.
+     */
+    { to: '/outreach/checkin', label: 'GPS check-in', icon: Target, product: Product.CommunityLink, allow: CL_SALES_ROLES },
+    { to: '/outreach/log', label: 'Outreach log', icon: ScrollText, product: Product.CommunityLink, allow: CL_SALES_ROLES },
+    /**
+     * MILEAGE — the shared `mileage_logs` screen, not the old lens over
+     * `cl_outreach_visits`.
+     *
+     * The guide asks for "date, miles, from/to locations, and purpose", automatic
+     * reimbursement "using the current IRS mileage rate", a receipt photo attached
+     * to the trip, weekly and monthly totals, and CSV export. `cl_outreach_visits`
+     * has a `miles` column and none of the rest; `mileage_logs` + modules/field had
+     * every one of them already, behind a HospiceLink-only route. Pointing this row
+     * at the built screen is reuse; adding those six things to the CL entity would
+     * have been a second implementation of a solved problem.
+     *
+     * ONE row, where there used to be two — this label at Max in the Activity
+     * group and a "Mileage" row capped at Pro in this one, both aimed at the same
+     * `/outreach/mileage` view. No tier bound: the backend gates neither
+     * `/mileage-logs` nor `/expense-receipts`.
+     *
+     * CL_MILEAGE_ROLES is CL_FIELD_ACTIVITY_ROLES plus the two care personas, and
+     * preserves that group's one deliberate exclusion: the Max demo gives
+     * Owner/Investor Activity notes, Tasks and Aircall but not mileage.
+     *
+     * The care roles are added because the Nurse/Caregiver guide sends them here by
+     * name — "if your role involves traveling between communities or in-home visits,
+     * log those trips in Mileage & Expenses the same way a Sales Marketer does,
+     * including receipt photos and your weekly/monthly totals". A separate constant
+     * rather than widening CL_FIELD_ACTIVITY_ROLES, which also gates Gift & gratuity
+     * — a surface the guide does not give them.
+     *
+     * The route admits the wider CALENDAR_ROLES (which already includes both care
+     * roles via HL_FIELD_ROLES) because the API does; a nav narrower than its route
+     * is the safe direction.
+     */
+    { to: '/field/mileage', label: 'Mileage & expenses', icon: Car, product: Product.CommunityLink, allow: CL_MILEAGE_ROLES },
   ],
 };
 
@@ -461,21 +530,79 @@ const COMMUNITYLINK_MAIN_EXTRA: NavSection = {
   id: 'cl-main-extra',
   label: 'Main',
   items: [
-    { to: '/occupancy-overview', label: 'Occupancy overview', icon: PieChart, product: Product.CommunityLink, allow: [Role.SuperAdmin, Role.Director], minTier: Tier.Gold, maxTier: Tier.Gold },
+    /**
+     * MY QUEUE — the field technician's first stop, and the first row they see.
+     *
+     * "Check My Queue first thing — it shows today's assigned tickets." It is
+     * FIELD-ROLES-ONLY (CL_FIELD_ROLES) rather than the wider group its route and
+     * API admit: management can reach /my-queue by URL and get a valid answer, but
+     * their landing screen is the Executive Dashboard, and a second "your assigned
+     * work" row would be noise for someone whose work is not assigned to them one
+     * ticket at a time. A nav narrower than its route is the safe direction.
+     *
+     * Gold+, matching the Operations bundle every board it summarises belongs to —
+     * a Pro tenant has no tickets, make-ready or housekeeping to queue.
+     */
+    { to: '/my-queue', label: 'My Queue', icon: ListChecks, product: Product.CommunityLink, allow: CL_FIELD_ROLES, minTier: Tier.Gold },
+    /**
+     * The Gold window is CL_MANAGEMENT_ROLES, not [SuperAdmin, Director].
+     *
+     * It was the narrower pair, read off the Gold demo's sidebar — with the
+     * consequence that a Gold ADMINISTRATOR could neither see nor open the screen,
+     * flatly contradicting their own guide ("every tab described for every other
+     * role in this guide is also available to you", and "your Administrator and
+     * Executive Director are also tracking occupancy"). An Owner/Investor was shut
+     * out too, while their dashboard's Occupancy tile linked here regardless.
+     *
+     * Max still widens further, to CL_FINANCIAL_ROLES — that adds Sales/Admissions,
+     * which is a genuine tier difference rather than an accident.
+     */
+    { to: '/occupancy-overview', label: 'Occupancy overview', icon: PieChart, product: Product.CommunityLink, allow: CL_MANAGEMENT_ROLES, minTier: Tier.Gold, maxTier: Tier.Gold },
     { to: '/occupancy-overview', label: 'Occupancy overview', icon: PieChart, product: Product.CommunityLink, allow: CL_FINANCIAL_ROLES, minTier: Tier.Max },
   ],
 };
 
-// Activity is a CommunityLink MAX-tier bundle: cross-lead activity notes, a
-// combined mileage/expense view, gift & gratuity compliance logging, and the
-// Aircall phone integration. Owner/Investor gets only Notes/Tasks/Aircall
-// (not Mileage & Expenses or Gift & Gratuity) — see CL_FIELD_ACTIVITY_ROLES.
+// Activity: gift & gratuity compliance logging and the Aircall phone integration
+// are the Max-tier bundle. Owner/Investor gets Notes/Tasks/Aircall but not Gift &
+// Gratuity — see CL_FIELD_ACTIVITY_ROLES.
+//
+// "Mileage & expenses" USED TO LIVE HERE, at Max, pointing at the same
+// `/outreach/mileage` view a Pro-capped "Mileage" row in the Sales group also
+// pointed at. It is now a single un-tiered row in that group aimed at the real
+// mileage screen — see the note there.
 const COMMUNITYLINK_ACTIVITY: NavSection = {
   id: 'cl-activity',
   label: 'Activity',
   items: [
-    { to: '/activity-notes', label: 'Activity notes', icon: NotebookPen, product: Product.CommunityLink, allow: CL_SALES_ROLES, minTier: Tier.Max },
-    { to: '/outreach/mileage', label: 'Mileage & expenses', icon: Receipt, product: Product.CommunityLink, allow: CL_FIELD_ACTIVITY_ROLES, minTier: Tier.Max },
+    /**
+     * Activity notes — Pro and up, not Max.
+     *
+     * The guide files this under "Other everyday tools" with no plan caveat, and
+     * marks the three rows below it that ARE premium ("larger plans") — so the
+     * omission is deliberate on the client's side. It is also the plainest of
+     * surfaces: a note not attached to one lead, written against `/cl/lead-notes`,
+     * which every CommunityLink tier already reaches for the per-lead notes on the
+     * Lead Pipeline. Selling the same table twice is not a tier.
+     */
+    { to: '/activity-notes', label: 'Activity notes', icon: NotebookPen, product: Product.CommunityLink, allow: CL_ACTIVITY_NOTES_ROLES },
+    /**
+     * Resident care log — ANNOUNCED, NOT BUILT (`comingSoon`).
+     *
+     * The client's Nurse/Caregiver guide describes this tab in the future tense
+     * ("The Resident Care Log WILL BE where you log wellness checks, incident notes
+     * and family updates tied to a specific resident") and tells the reader to use
+     * Activity Notes above until it lands. This row says exactly that, using the
+     * same inert "Soon" treatment the two Nurse-only HospiceLink rows already use.
+     *
+     * It cannot be built yet, and the blocker is a data model, not a screen: there
+     * is no resident record in CommunityLink to attach a wellness check to.
+     * `cl_apartments.residentName` is a nullable varchar on a UNIT — it cannot carry
+     * a history, it disappears when the unit turns over, and two residents sharing a
+     * companion suite have one field between them. The HospiceLink Family
+     * Communication tab this is modelled on hangs off `notes.prospectId`, a real
+     * per-person record with a stage and a history; CommunityLink has no equivalent.
+     */
+    { to: '/resident-care-log', label: 'Resident care log', icon: HeartPulse, product: Product.CommunityLink, allow: CL_RESIDENT_CARE_ROLES, comingSoon: true },
     { to: '/gift-gratuity', label: 'Gift & gratuity', icon: Gift, product: Product.CommunityLink, allow: CL_FIELD_ACTIVITY_ROLES, minTier: Tier.Max },
     { to: '/aircall', label: 'Aircall — call · text · email', icon: Phone, product: Product.CommunityLink, allow: CL_SALES_ROLES, minTier: Tier.Max },
   ],
@@ -503,7 +630,24 @@ const COMMUNITYLINK_OPERATIONS: NavSection = {
     { to: '/operations/communities', label: 'Communities', icon: Building2, product: Product.CommunityLink, minTier: Tier.Gold, allow: CL_INVENTORY_ROLES },
     { to: '/operations/inventory', label: 'Apartment inventory', icon: Building2, product: Product.CommunityLink, minTier: Tier.Gold, allow: CL_INVENTORY_ROLES },
     { to: '/operations/make-ready', label: 'Make-ready board', icon: ClipboardList, product: Product.CommunityLink, minTier: Tier.Gold, allow: CL_MAKE_READY_ROLES },
-    { to: '/operations/maintenance', label: 'Maintenance', icon: Wrench, product: Product.CommunityLink, minTier: Tier.Gold, allow: CL_MAINTENANCE_ROLES },
+    /**
+     * MAKE-READY CLEAN — the same board, housekeeping category only.
+     *
+     * The Housekeeping guide's step 5: "Click Make-Ready Clean to see specifically
+     * which units are in the move-in prep pipeline." A cleaner working a turnover
+     * needs the cleaning tasks on it, not the plumbing and the inspection, and the
+     * shared board shows all three.
+     *
+     * CL_HOUSEKEEPING_ROLES rather than CL_MAKE_READY_ROLES: Maintenance already has
+     * the full board above and the cleaning slice is not theirs to work, so a second
+     * row would be noise. Management keeps the full board for the same reason.
+     */
+    { to: '/operations/make-ready-clean', label: 'Make-Ready Clean', icon: Sparkles, product: Product.CommunityLink, minTier: Tier.Gold, allow: CL_HOUSEKEEPING_ROLES },
+    // "Maintenance tickets", not "Maintenance": it matches the page's own heading
+    // (HEADER.maintenance in ClOperationsPage) and the instruction the field guide
+    // gives — "Click Maintenance Tickets to see everything: open, in progress, and
+    // completed". The label is what a reader scans the sidebar for.
+    { to: '/operations/maintenance', label: 'Maintenance tickets', icon: Wrench, product: Product.CommunityLink, minTier: Tier.Gold, allow: CL_MAINTENANCE_ROLES },
     { to: '/operations/housekeeping', label: 'Housekeeping', icon: Wrench, product: Product.CommunityLink, minTier: Tier.Gold, allow: CL_HOUSEKEEPING_ROLES },
     // Max-tier-only read-only surfaces for the field roles (per the Max demo):
     // Unit Status gives Maintenance/Housekeeping apartment-status visibility
@@ -527,7 +671,20 @@ const COMMUNITYLINK_FINANCIAL: NavSection = {
     { to: '/financial/concessions', label: 'Concession approvals', icon: TrendingUp, product: Product.CommunityLink, allow: CL_FINANCIAL_ROLES, minTier: Tier.Max },
     { to: '/financial/competitors', label: 'Competitor intel', icon: Activity, product: Product.CommunityLink, allow: CL_COMPETITOR_INTEL_ROLES, minTier: Tier.Max },
     { to: '/financial/loc', label: 'LOC calculator', icon: TrendingUp, product: Product.CommunityLink, allow: CL_FINANCIAL_ROLES, minTier: Tier.Max },
-    { to: '/reports', label: 'Reports', icon: ScrollText, product: Product.CommunityLink, allow: CL_MANAGEMENT_ROLES },
+    /**
+     * Reports Center — CL_SALES_ROLES and every tier, not management-at-Gold.
+     *
+     * The guide files it among a Sales Marketer's everyday tools ("See your
+     * leads-by-source chart and your tour-to-move-in conversion rate"), and neither
+     * Marketer nor Sales/Admissions is in CL_MANAGEMENT_ROLES — so the row was
+     * hidden from the persona it was written for, and the API 403'd them behind it.
+     *
+     * The tier gate came off too: cl/reports now filters PER REPORT, so a Pro
+     * tenant gets the two sales reports and a Gold tenant additionally gets the
+     * five operations/finance ones. Mirrors the route and ClReportsController;
+     * change one side, change all three.
+     */
+    { to: '/reports', label: 'Reports', icon: ScrollText, product: Product.CommunityLink, allow: CL_SALES_ROLES },
   ],
 };
 
@@ -552,7 +709,14 @@ const ADMIN_SECTION: NavSection = {
     // Settings is admin/owner-only, PLUS CommunityLink's Owner/Investor (the
     // Max demo shows Settings under Administrator, Owner, AND Owner/Investor
     // — but NOT the Executive Director, who gets Reports but not Settings).
-    { to: '/settings', label: 'Settings', icon: Plug, allow: [...ADMIN_ONLY, Role.OwnerInvestor] },
+    /**
+     * ADMIN_ONLY, matching the route. The row used to admit Owner/Investor because
+     * the Max demo lists Settings under that persona — but /settings is
+     * ProtectedRoute allow={ADMIN_ONLY}, so the row was a dead end that bounced
+     * them, and PATCH /tenants/me is @Roles(Admin, Owner) anyway, so even a
+     * widened route would have given them a form they could not save.
+     */
+    { to: '/settings', label: 'Settings', icon: Plug, allow: ADMIN_ONLY },
   ],
 };
 

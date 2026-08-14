@@ -43,6 +43,10 @@ export const OPERATIONS_VIEWS: ReadonlyArray<{
   { value: 'communities', label: 'Communities', allow: CL_INVENTORY_ROLES },
   { value: 'inventory', label: 'Apartments', allow: CL_INVENTORY_ROLES },
   { value: 'make-ready', label: 'Make-ready', allow: CL_MAKE_READY_ROLES },
+  // Same board, housekeeping category only. CL_HOUSEKEEPING_ROLES rather than
+  // CL_MAKE_READY_ROLES: a Maintenance tech has the full board and the cleaning
+  // slice is not theirs to work, so a tab for it would be noise.
+  { value: 'make-ready-clean', label: 'Make-Ready Clean', allow: CL_HOUSEKEEPING_ROLES },
   { value: 'maintenance', label: 'Maintenance', allow: CL_MAINTENANCE_ROLES },
   { value: 'housekeeping', label: 'Housekeeping', allow: CL_HOUSEKEEPING_ROLES },
   { value: 'unit-status', label: 'Unit Status', allow: CL_UNIT_STATUS_ROLES },
@@ -166,6 +170,9 @@ export const MAINTENANCE_FIELDS: ReadonlyArray<EntityField<MaintenanceFormValues
   { name: 'ticketNumber', label: 'Ticket #', placeholder: 'M-006' },
   { name: 'priority', label: 'Priority', type: 'select', options: TICKET_PRIORITY_OPTIONS },
   { name: 'status', label: 'Status', type: 'select', options: MAINTENANCE_STATUS_OPTIONS },
+  // `lookup` — options come from the live staff list at render time, same as
+  // housekeeping's. This is what puts a ticket on a technician's My Queue.
+  { name: 'assignedTo', label: 'Assigned to', type: 'lookup' },
   { name: 'reporterName', label: 'Reported by', placeholder: 'Unit 101 · Earl Davis' },
   { name: 'resolution', label: 'Resolution', type: 'textarea', full: true, placeholder: 'How it was resolved…' },
 ];
@@ -174,5 +181,8 @@ export const HOUSEKEEPING_FIELDS: ReadonlyArray<EntityField<HousekeepingFormValu
   { name: 'taskType', label: 'Task', full: true, placeholder: 'Unit 103 Make-Ready Deep Clean' },
   { name: 'area', label: 'Unit / area', placeholder: '103, Common, Dining…' },
   { name: 'status', label: 'Status', type: 'select', options: HOUSEKEEPING_STATUS_OPTIONS },
+  // `lookup`, so the options come from the live staff list at render time — see
+  // EntityField's note on why a record reference is never a free-text field.
+  { name: 'assignedTo', label: 'Assigned to', type: 'lookup' },
   { name: 'dueDate', label: 'Due date', type: 'date' },
 ];

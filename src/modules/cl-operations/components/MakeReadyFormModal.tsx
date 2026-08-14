@@ -14,6 +14,7 @@ const EMPTY: MakeReadyFormValues = {
   apartmentId: '',
   taskName: '',
   status: MAKE_READY_STATUS.Pending,
+  assignedTo: '',
   dueDate: '',
   notes: '',
 };
@@ -23,6 +24,8 @@ interface Props {
   isSaving: boolean;
   editing?: ClMakeReadyTaskRecord | null;
   apartmentOptions: readonly EntitySelectOption[];
+  /** Tenant staff for the "Assigned to" picker. Undefined while still loading. */
+  staffOptions: readonly EntitySelectOption[] | undefined;
   onClose: () => void;
   onSubmit: (values: MakeReadyFormValues) => Promise<boolean>;
 }
@@ -32,6 +35,7 @@ export function MakeReadyFormModal({
   isSaving,
   editing,
   apartmentOptions,
+  staffOptions,
   onClose,
   onSubmit,
 }: Props) {
@@ -115,6 +119,23 @@ export function MakeReadyFormModal({
         <div>
           <Label htmlFor="mr-due">Due date</Label>
           <Input id="mr-due" type="date" {...register('dueDate')} />
+        </div>
+        {/* Who does the turn. Disabled rather than empty while the staff list
+            loads — an empty picker reads as "nobody works here". */}
+        <div className="sm:col-span-2">
+          <Label htmlFor="mr-assignee">Assigned to</Label>
+          <Select
+            id="mr-assignee"
+            disabled={staffOptions === undefined}
+            {...register('assignedTo')}
+          >
+            <option value="">— Unassigned —</option>
+            {(staffOptions ?? []).map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </Select>
         </div>
         <div className="sm:col-span-2">
           <Label htmlFor="mr-notes">Notes</Label>

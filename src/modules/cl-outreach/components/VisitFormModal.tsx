@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { EntityFormModal } from '@/shared/ui/entity';
+import { GpsCaptureField } from './GpsCaptureField';
 import { VISIT_FIELDS } from '../constants/clOutreachConstants';
 import { visitSchema, type VisitFormValues } from '../schema/clOutreachSchema';
 import { toVisitFormValues } from '../utils/clOutreachMappers';
@@ -13,6 +14,8 @@ const EMPTY: VisitFormValues = {
   locationName: '',
   visitType: 'in_person',
   miles: '',
+  gpsLat: '',
+  gpsLng: '',
   notes: '',
 };
 
@@ -35,11 +38,18 @@ export function VisitFormModal({
     register,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<VisitFormValues>({
     resolver: zodResolver(visitSchema),
     defaultValues: EMPTY,
   });
+
+  // Watched rather than read once: the Capture GPS button writes these through
+  // setValue, which does not re-render on its own.
+  const gpsLat = watch('gpsLat') ?? '';
+  const gpsLng = watch('gpsLng') ?? '';
 
   useEffect(() => {
     if (!open) return;
@@ -67,6 +77,20 @@ export function VisitFormModal({
       errors={errors}
       onSubmit={submit}
       onClose={close}
+      footerNote={
+        <GpsCaptureField
+          lat={gpsLat}
+          lng={gpsLng}
+          onCapture={(lat, lng) => {
+            setValue('gpsLat', lat, { shouldDirty: true });
+            setValue('gpsLng', lng, { shouldDirty: true });
+          }}
+          onClear={() => {
+            setValue('gpsLat', '', { shouldDirty: true });
+            setValue('gpsLng', '', { shouldDirty: true });
+          }}
+        />
+      }
     />
   );
 }

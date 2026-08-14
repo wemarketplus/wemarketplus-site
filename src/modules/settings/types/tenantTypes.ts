@@ -1,11 +1,14 @@
 import type { ID, ISODateString } from '@/shared/types';
 
 // Mirrors wemarketplus-backend TenantResponseDto. The settings Organization tab
-// only edits the profile subset (name, city, state, phone) via PATCH /tenants/me;
-// subscription/tier fields are read-only here and driven by the billing pipeline.
+// only edits the profile subset (name, address, city, state, phone) via
+// PATCH /tenants/me; subscription/tier fields are read-only here and driven by
+// the billing pipeline.
 export interface TenantProfile {
   id: ID;
   name: string;
+  /** Street line. City/state are separate fields, as they are on the server. */
+  address: string | null;
   city: string | null;
   state: string | null;
   phone: string | null;
@@ -29,6 +32,7 @@ export interface TenantProfile {
 // only — anything else is rejected by the backend's forbidNonWhitelisted pipe.
 export interface UpdateMyTenantRequest {
   name?: string;
+  address?: string;
   city?: string;
   state?: string;
   phone?: string;

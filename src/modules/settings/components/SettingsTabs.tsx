@@ -1,19 +1,21 @@
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useAppDispatch } from '@/app/hooks';
 import { cn } from '@/shared/utils/cn';
 import {
   SETTINGS_TAB_ICONS,
   SETTINGS_TAB_LABELS,
-  SETTINGS_TABS,
 } from '../constants/settingsConstants';
+import { useSettingsTabs } from '../hooks/useSettingsTabs';
 import { setActiveTab } from '../store/settingsSlice';
 
 export function SettingsTabs() {
   const dispatch = useAppDispatch();
-  const active = useAppSelector((s) => s.settings.activeTab);
+  // Product/role-filtered, and `active` is the RESOLVED tab — so the strip can
+  // never render with nothing selected. See the hook.
+  const { tabs, activeTab: active } = useSettingsTabs();
 
   return (
     <nav className="flex flex-wrap gap-1.5" aria-label="Settings sections">
-      {SETTINGS_TABS.map((tab) => {
+      {tabs.map((tab) => {
         const Icon = SETTINGS_TAB_ICONS[tab];
         const selected = active === tab;
         return (

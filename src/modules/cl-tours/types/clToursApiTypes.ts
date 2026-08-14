@@ -10,6 +10,12 @@ export interface ClTourRecord {
   scheduledAt: ISODateString;
   durationMin: number | null;
   status: ClTourStatus;
+  /**
+   * When the family confirmed, or null while the booking is still pending.
+   * Separate from `status` on purpose — a tour can be confirmed and then
+   * completed, cancelled or no-showed, and the enum cannot hold both facts.
+   */
+  confirmedAt: ISODateString | null;
   outcome: string | null;
   notes: string | null;
   createdAt: ISODateString;
@@ -26,4 +32,8 @@ export interface CreateClTourRequest {
   notes?: string;
 }
 
-export type UpdateClTourRequest = Partial<CreateClTourRequest>;
+// `confirmedAt` is update-only (see UpdateClTourDto): a tour is booked pending and
+// confirmed afterwards. `null` clears a confirmation booked by mistake.
+export type UpdateClTourRequest = Partial<CreateClTourRequest> & {
+  confirmedAt?: string | null;
+};
