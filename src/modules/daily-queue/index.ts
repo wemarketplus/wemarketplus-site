@@ -15,6 +15,11 @@ export {
   useGetClFieldQueueQuery,
 } from './api/dailyQueueApi';
 export { useDailyQueue } from './hooks/useDailyQueue';
+// The queue's section shell — heading, count and the "nothing due" empty state.
+// Exported so the other morning screens (CommunityLink's Daily Task and the
+// dashboards' My Queue panel) render a section the same way rather than each
+// growing its own idea of what an empty list should look like.
+export { QueueSection } from './components/QueueSection';
 export type {
   ClDailyQueue,
   ClFieldQueue,
