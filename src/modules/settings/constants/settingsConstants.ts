@@ -8,21 +8,39 @@ import {
   HardDrive,
   MessageCircle,
   DownloadCloud,
+  UserCog,
 } from 'lucide-react';
 import type { ComponentType } from 'react';
+import { Product } from '@/shared/types';
 import type { SettingsIntegration, SettingsTab } from '../types/settingsTypes';
 
 export const SETTINGS_TABS: readonly SettingsTab[] = [
   'profile',
   'organization',
+  'roles',
   'integrations',
   'security',
   'data-export',
 ];
 
+/**
+ * Tabs that only exist on one product's Settings screen. `roles` is
+ * CommunityLink-only: its Administrator guide is the one that says "In Settings,
+ * look for Manage Roles", whereas a HospiceLink admin is sent to the
+ * Roles & permissions page — which still carries the same panel, for both
+ * products. Resolved by useSettingsTabs, not read directly by components.
+ */
+export const SETTINGS_TABS_BY_PRODUCT: Partial<Record<SettingsTab, Product>> = {
+  roles: Product.CommunityLink,
+};
+
+/** Tabs whose backing endpoints are Admin/Owner-only server-side. */
+export const ADMIN_SETTINGS_TABS: readonly SettingsTab[] = ['roles'];
+
 export const SETTINGS_TAB_LABELS: Record<SettingsTab, string> = {
   profile: 'Profile',
   organization: 'Organization',
+  roles: 'Manage roles',
   integrations: 'Integrations',
   security: 'Security',
   'data-export': 'Data export',
@@ -34,6 +52,7 @@ export const SETTINGS_TAB_ICONS: Record<
 > = {
   profile: CircleUserRound,
   organization: Building2,
+  roles: UserCog,
   integrations: Plug,
   security: ShieldCheck,
   'data-export': DownloadCloud,

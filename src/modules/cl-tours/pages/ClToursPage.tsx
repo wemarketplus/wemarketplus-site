@@ -23,10 +23,13 @@ export function ClToursPage() {
     hasFilters,
     leadName,
     leadOptions,
+    guideName,
+    guideOptions,
     isMutating,
     crud,
     submit,
     changeStatus,
+    toggleConfirmed,
   } = useToursPage();
 
   const { isAny } = useRole();
@@ -64,9 +67,11 @@ export function ClToursPage() {
         isMutating={isMutating}
         hasFilters={hasFilters}
         leadName={leadName}
+        guideName={guideName}
         onEdit={crud.openEdit}
         onDelete={crud.confirmDelete}
         onStatusChange={changeStatus}
+        onConfirmToggle={toggleConfirmed}
         onAdd={canEdit ? crud.openCreate : undefined}
       />
 
@@ -75,6 +80,7 @@ export function ClToursPage() {
         isSaving={crud.isSaving}
         editing={crud.editing}
         leadOptions={leadOptions}
+        guideOptions={guideOptions}
         onClose={crud.editing ? crud.closeEdit : crud.closeCreate}
         onSubmit={submit}
       />

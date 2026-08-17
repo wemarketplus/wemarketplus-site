@@ -1,14 +1,23 @@
 export { DailyQueuePage } from './pages/DailyQueuePage';
-export { dailyQueueApi, useGetDailyQueueQuery } from './api/dailyQueueApi';
+export { ClDailyTasksPage } from './pages/ClDailyTasksPage';
+// "My Queue" — the CommunityLink field-ops counterpart, mounted at /my-queue.
+// A separate route rather than a branch of DailyTasksRoute: it is a different
+// AUDIENCE, not a different product. The field roles are excluded from the sales
+// queue by the API itself, so one path serving both would 403 for whoever it was
+// not built for.
+export { ClFieldQueuePage } from './pages/ClFieldQueuePage';
+// The product-aware entry point the router mounts at /daily-tasks.
+export { DailyTasksRoute } from './pages/DailyTasksRoute';
+export {
+  dailyQueueApi,
+  useGetDailyQueueQuery,
+  useGetClDailyQueueQuery,
+  useGetClFieldQueueQuery,
+} from './api/dailyQueueApi';
 export { useDailyQueue } from './hooks/useDailyQueue';
-/**
- * The "one block of a work queue" card, made public API.
- *
- * Presentational and record-agnostic — it takes a title, a count and children —
- * so CommunityLink's My Queue and Daily Task reuse it rather than growing a
- * second, slightly-different queue card. The "renders even when empty, and says
- * so" property documented on the component is exactly what those screens need,
- * and it is easier to keep one of these honest than three.
- */
-export { QueueSection } from './components/QueueSection';
-export type { DailyQueue, ReengagementRow } from './types/dailyQueueTypes';
+export type {
+  ClDailyQueue,
+  ClFieldQueue,
+  DailyQueue,
+  ReengagementRow,
+} from './types/dailyQueueTypes';

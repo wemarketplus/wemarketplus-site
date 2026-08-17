@@ -80,6 +80,21 @@ export function OrganizationTab() {
               )}
             </div>
 
+            <div className="space-y-1.5">
+              <Label htmlFor="orgAddress">Street address</Label>
+              <Input
+                id="orgAddress"
+                autoComplete="street-address"
+                disabled={busy}
+                {...register('address')}
+              />
+              {errors.address && (
+                <p className="text-xs text-destructive">
+                  {errors.address.message}
+                </p>
+              )}
+            </div>
+
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div className="space-y-1.5 sm:col-span-2">
                 <Label htmlFor="orgCity">City</Label>

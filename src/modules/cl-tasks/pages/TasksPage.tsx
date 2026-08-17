@@ -20,6 +20,10 @@ export function TasksPage() {
     setSearch,
     status,
     setStatus,
+    mineOnly,
+    setMineOnly,
+    staffOptions,
+    assigneeName,
     hasFilters,
     isMutating,
     crud,
@@ -44,8 +48,10 @@ export function TasksPage() {
         <TasksFilters
           search={search}
           status={status}
+          mineOnly={mineOnly}
           onSearch={setSearch}
           onStatus={setStatus}
+          onMineOnly={setMineOnly}
         />
       }
       pagination={
@@ -60,6 +66,7 @@ export function TasksPage() {
     >
       <TasksTable
         tasks={rows}
+        assigneeName={assigneeName}
         isMutating={isMutating}
         hasFilters={hasFilters}
         onEdit={crud.openEdit}
@@ -72,6 +79,7 @@ export function TasksPage() {
         open={crud.createOpen || crud.editing !== null}
         isSaving={crud.isSaving}
         editing={crud.editing}
+        staffOptions={staffOptions}
         onClose={crud.editing ? crud.closeEdit : crud.closeCreate}
         onSubmit={submit}
       />

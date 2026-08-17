@@ -1,6 +1,6 @@
-import { Search } from 'lucide-react';
+import { MapPin, Search } from 'lucide-react';
 import { useRole, CL_SALES_ROLES } from '@/shared/rbac';
-import { Input, Select } from '@/shared/ui/core';
+import { Button, Input, Select } from '@/shared/ui/core';
 import { EntityListPage, EntityPagination } from '@/shared/ui/entity';
 import { cn } from '@/shared/utils/cn';
 import { OUTREACH_VIEWS, VISIT_TYPE_OPTIONS } from '../constants/clOutreachConstants';
@@ -8,7 +8,6 @@ import { useOutreach } from '../hooks/useOutreach';
 import { useOutreachView } from '../hooks/useOutreachView';
 import { useOutreachLog } from '../hooks/useOutreachLog';
 import { CheckInList } from '../components/CheckInList';
-import { MileageList } from '../components/MileageList';
 import { OutreachLogTable } from '../components/OutreachLogTable';
 import { VisitFormModal } from '../components/VisitFormModal';
 
@@ -17,19 +16,16 @@ const HEADER_BY_VIEW = {
     title: 'GPS check-in',
     subtitle: 'Field visits logged with GPS location and timestamp.',
   },
-  mileage: {
-    title: 'Mileage',
-    subtitle: 'Reimbursable miles captured from field visits.',
-  },
   log: {
     title: 'Outreach log',
     subtitle: 'Full history of referral-source visits and touchpoints.',
   },
 } as const;
 
-// The view tabs (checkin / mileage / log) all read /cl/outreach-visits. The log
-// view is the write surface (log/edit/delete a visit); checkin + mileage are
-// read-only lenses over the same records.
+// The view tabs (checkin / log) both read /cl/outreach-visits. The log view is
+// the write surface (log/edit/delete a visit); checkin is a read-only lens over
+// the same records. A third "Mileage" tab used to sit between them, projecting
+// the same rows; mileage is now the shared `mileage_logs` screen.
 function ViewTabs({
   view,
   setView,
@@ -62,24 +58,45 @@ export function ClOutreachPage() {
   const { view, setView } = useOutreachView();
   const header = HEADER_BY_VIEW[view];
 
-  // Read-only lenses (checkin / mileage) source the same live visits.
-  const { checkIns, mileage } = useOutreach();
+  // The read-only check-in lens sources the same live visits as the log.
+  const { checkIns } = useOutreach();
 
   // The log view owns full CRUD + server-side search/type filters.
   const log = useOutreachLog();
   const { isAny } = useRole();
   const canEdit = isAny(CL_SALES_ROLES);
 
+  /**
+   * The check-in view is where the guide's flow STARTS — "Click GPS Check-In when
+   * you arrive somewhere. Click Capture GPS, then fill in the facility, contact,
+   * and visit type … then save." It was read-only, with the only write action
+   * sitting on the Outreach log tab, so following that instruction dead-ended on a
+   * list. It now opens the same VisitFormModal (which is where Capture GPS lives),
+   * against the same `crud` the log view uses — one write path, two entry points.
+   */
   if (view !== 'log') {
     return (
       <div className="space-y-6">
-        <header className="space-y-1">
-          <h1 className="font-display text-3xl text-foreground">{header.title}</h1>
-          <p className="text-sm text-muted">{header.subtitle}</p>
+        <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div className="space-y-1">
+            <h1 className="font-display text-3xl text-foreground">{header.title}</h1>
+            <p className="text-sm text-muted">{header.subtitle}</p>
+          </div>
+          {canEdit && (
+            <Button onClick={log.crud.openCreate}>
+              <MapPin className="h-4 w-4" /> Check in
+            </Button>
+          )}
         </header>
         <ViewTabs view={view} setView={setView} />
         {view === 'checkin' && <CheckInList items={checkIns} />}
-        {view === 'mileage' && <MileageList entries={mileage} />}
+        <VisitFormModal
+          open={log.crud.createOpen || log.crud.editing !== null}
+          isSaving={log.crud.isSaving}
+          editing={log.crud.editing}
+          onClose={log.crud.editing ? log.crud.closeEdit : log.crud.closeCreate}
+          onSubmit={log.submit}
+        />
       </div>
     );
   }

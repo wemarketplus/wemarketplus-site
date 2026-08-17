@@ -18,6 +18,7 @@ export function useOrganizationForm() {
   const initialValues: OrganizationFormValues = useMemo(
     () => ({
       name: data?.name ?? '',
+      address: data?.address ?? '',
       city: data?.city ?? '',
       state: data?.state ?? '',
       phone: data?.phone ?? '',

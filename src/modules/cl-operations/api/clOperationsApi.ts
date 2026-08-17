@@ -26,6 +26,13 @@ const list = <T>(res: ApiEnvelope<PaginatedPayload<T>>) => res.data;
 export interface OpsListParams extends PaginationParams {
   search?: string;
   status?: string;
+  /**
+   * The backend's shared `type` filter (ClListQueryDto). On the make-ready board it
+   * maps to `category`, which is what the Make-Ready Clean view narrows on —
+   * server-side, because the list is paginated and filtering the fetched page would
+   * show a cleaner part of their pipeline and call it all of it.
+   */
+  type?: string;
 }
 
 export const clOperationsApi = createApi({

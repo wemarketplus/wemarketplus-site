@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 // stroke, rounded caps) and is already the app's icon dependency — every
 // NavItem in navigationConfig already carries one.
 import { HeartPulse as BrandMark } from 'lucide-react';
-import { RoleSwitcher, useActiveEntitlement } from '@/modules/access';
+import { ViewingAsBadge, useActiveEntitlement } from '@/modules/access';
 import {
   SECTIONS_BY_PRODUCT,
   isNavItemVisible,
@@ -81,12 +81,11 @@ export function Sidebar() {
             </div>
           </div>
         </div>
-        {/* "Viewing as" role preview. The component renders ONLY on CommunityLink
-            and only for a management user — the CommunityLink guide makes this
-            dropdown its Getting Started Step 3, while HospiceLink dashboards are
-            deliberately not to show a role-preview section. It narrows what renders
-            and never grants anything; see RoleSwitcher and usePermission. */}
-        <RoleSwitcher />
+        {/* "Viewing as" — reports the signed-in role, on both dashboards, for
+            every role. The end-user guide makes it a step-1 instruction
+            ("confirm you're set to Sales Marketer"), so it must be visible to
+            everyone; it shows that one role and offers no others. */}
+        <ViewingAsBadge />
       </div>
 
       {/* .sb-nav */}

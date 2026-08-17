@@ -16,6 +16,11 @@ export const maintenanceSchema = z.object({
   ticketNumber: z.string().max(200).optional().or(z.literal('')),
   priority: z.enum(enumValues(TICKET_PRIORITY)),
   status: z.enum(enumValues(MAINTENANCE_STATUS)),
+  // Who is working the ticket. Same story as housekeeping's: the column and both
+  // DTOs have always accepted it and My Queue filters on it, but no form collected
+  // it — so every ticket had assignedTo = null and a technician's queue was empty
+  // by construction, whatever the dispatcher did.
+  assignedTo: z.string().optional().or(z.literal('')),
   reporterName: z.string().max(200).optional().or(z.literal('')),
   resolution: z.string().max(2000).optional().or(z.literal('')),
 });
@@ -26,6 +31,11 @@ export const housekeepingSchema = z.object({
   taskType: z.string().min(1, 'Required').max(200),
   area: z.string().max(200).optional().or(z.literal('')),
   status: z.enum(enumValues(HOUSEKEEPING_STATUS)),
+  // Who is doing the clean. The column and both DTOs have always accepted it; the
+  // form never collected it, so every row in the database has assignedTo = null and
+  // the guide's "+ Assign Task … if you're assigning cleaning work to someone else
+  // on your team" assigned it to nobody.
+  assignedTo: z.string().optional().or(z.literal('')),
   dueDate: z.string().optional().or(z.literal('')),
 });
 export type HousekeepingFormValues = z.infer<typeof housekeepingSchema>;
@@ -66,6 +76,10 @@ export const makeReadySchema = z.object({
   apartmentId: z.string().min(1, 'Pick a unit'),
   taskName: z.string().min(1, 'Required').max(200),
   status: z.enum(enumValues(MAKE_READY_STATUS)),
+  // The make-ready board is the shared handoff surface both field roles work, so
+  // it is the one place an unassigned task is most likely to stall. Same column /
+  // DTO / empty-queue story as the other two boards.
+  assignedTo: z.string().optional().or(z.literal('')),
   dueDate: z.string().optional().or(z.literal('')),
   notes: z.string().max(2000).optional().or(z.literal('')),
 });

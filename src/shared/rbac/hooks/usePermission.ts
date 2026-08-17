@@ -1,98 +1,56 @@
 import { useMemo } from 'react';
 import { useAppSelector } from '@/app/hooks';
-import { CL_VIEW_AS_ROLES } from '../constants/permissionsConstants';
 import { Role } from '../types/permissionTypes';
 
 interface RoleApi {
   /**
-   * The role the UI should render for. This is the real role, UNLESS a management
-   * user has switched "viewing as" to a field persona — then it is that persona.
+   * The role the UI renders for. Always the role on the JWT — see the note below
+   * on why there is no longer a second answer to this question.
    */
   role: Role | null;
   is: (role: Role) => boolean;
   isAny: (roles: readonly Role[]) => boolean;
-  /** The role actually on the JWT. Never affected by the switcher. */
+  /**
+   * The role on the JWT. Identical to `role`, kept as a distinct name because call
+   * sites read better saying which one they mean, and because it is the field that
+   * would stay honest if a render-only preview ever returns.
+   */
   actualRole: Role | null;
-  /** The previewed persona, or null when viewing as yourself. */
-  viewAsRole: Role | null;
-  /** True while previewing — drives the "viewing as" banner. */
-  isViewingAs: boolean;
-  /** Whether this user is allowed to use the switcher at all. */
-  canViewAs: boolean;
 }
 
 /**
  * Named `usePermission` to match the scaffold spec's filename, but the backend is
  * role-based so the returned API is role-shaped. See ../types/permissionTypes.
  *
- * THE "VIEWING AS" SWITCHER IS A PREVIEW, NOT PRIVILEGE. HospiceLink Gold is sold
- * as "4-role access" and had no role switcher at all, so a Nurse and an Admin saw
- * an identical sidebar. This hook is the single place the app resolves "which role
- * am I rendering for", so the switcher lives here rather than being threaded
- * through every component.
+ * ONE ROLE, ALWAYS THE REAL ONE. This hook used to resolve a "viewing as" preview —
+ * a management user could render the app as a lesser persona — and the sidebar
+ * offered the other roles as buttons. That is gone: the "Viewing as" row now
+ * reports the signed-in role and nothing else (see ViewingAsBadge).
  *
- * Two invariants make it safe:
+ * The preview machinery was removed rather than left dormant, deliberately. Its
+ * value lived in `access.viewAsRole`, which is PERSISTED; with no control left to
+ * clear it, a stale value would have kept narrowing someone's navigation with no
+ * way out — and a code path that changes which role the UI renders for, reachable
+ * only by hand-editing storage, is the shape of an escalation bug even when it can
+ * only ever hide things. Nothing reads that field any more.
  *
- *   1. Only a management user may switch (`canViewAs`), and only INTO one of the
- *      three field personas (HL_VIEW_AS_ROLES). Previewing "up" into another
- *      management role is impossible — there is no value in it and it would be the
- *      shape of an escalation bug.
- *   2. Switching changes only what is RENDERED. Every request still carries the
- *      real role in its JWT, so a previewing Admin who types a hidden URL gets
- *      that route's real authorization answer from the server. The switcher can
- *      hide a screen; it can never unlock one, in either direction.
+ * What never changed, and is why the preview was safe while it existed: rendering
+ * has never been authorization. Every request carries the real role in its JWT and
+ * the server answers on that alone, so this hook can hide a screen and could never
+ * unlock one.
  */
 export function usePermission(): RoleApi {
   const actualRole = useAppSelector((s) => s.auth.user?.role ?? null);
-  const requestedViewAs = useAppSelector((s) => s.access.viewAsRole);
 
-  return useMemo<RoleApi>(() => {
-    // Management roles are the only ones offered the switcher. A Nurse cannot
-    // "view as" anything — least of all a Marketer.
-    const canViewAs =
-      actualRole === Role.SuperAdmin ||
-      actualRole === Role.Admin ||
-      actualRole === Role.Owner ||
-      actualRole === Role.Manager;
-
-    /**
-     * The preview, resolved for COMMUNITYLINK PERSONAS ONLY.
-     *
-     * The CommunityLink guide makes this control the third thing a user does and
-     * calls it important — "CommunityLink actually asks which role you are and
-     * shows you a menu built just for that job" — and each CommunityLink role now
-     * genuinely has a different sidebar and a different dashboard, so previewing is
-     * how an admin verifies that. HospiceLink stays switched off deliberately: the
-     * standing decision is that HospiceLink dashboards show no role-preview
-     * section, and HL_VIEW_AS_ROLES is therefore not consulted here.
-     *
-     * Two guards, both required. A stale persisted value or a hand-edited store
-     * must not take effect, so the requested role has to be BOTH permitted for this
-     * user (`canViewAs` — management only) AND in the allow-list.
-     *
-     * The escape-hatch concern that kept this pinned to null is answered on two
-     * sides: RoleSwitcher renders whenever the active product is CommunityLink, so
-     * a previewing user always has the control to leave; and accessSlice clears
-     * `viewAsRole` on every product switch, so a CommunityLink preview cannot
-     * follow the user into HospiceLink, where no control would be rendered.
-     */
-    const viewAsRole =
-      canViewAs && requestedViewAs && CL_VIEW_AS_ROLES.includes(requestedViewAs)
-        ? requestedViewAs
-        : null;
-
-    const role = viewAsRole ?? actualRole;
-
-    return {
-      role,
-      is: (target) => role === target,
-      isAny: (targets) => (role ? targets.includes(role) : false),
+  return useMemo<RoleApi>(
+    () => ({
+      role: actualRole,
+      is: (target) => actualRole === target,
+      isAny: (targets) => (actualRole ? targets.includes(actualRole) : false),
       actualRole,
-      viewAsRole,
-      isViewingAs: viewAsRole !== null,
-      canViewAs,
-    };
-  }, [actualRole, requestedViewAs]);
+    }),
+    [actualRole],
+  );
 }
 
 // Friendlier alias used throughout the app.

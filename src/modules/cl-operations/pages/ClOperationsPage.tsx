@@ -11,6 +11,7 @@ import { Input } from '@/shared/ui/core';
 import { EntityListPage, EntityPagination } from '@/shared/ui/entity';
 import { useOperationsView } from '../hooks/useOperationsView';
 import { useOpsResource } from '../hooks/useOpsResource';
+import { useOpsStaff } from '../hooks/useOpsStaff';
 import { useCommunities } from '../hooks/useCommunities';
 import { CommunitiesTable } from '../components/CommunitiesTable';
 import { CommunityFormModal } from '../components/CommunityFormModal';
@@ -33,6 +34,7 @@ import {
   useUpdateClHousekeepingMutation,
   useDeleteClHousekeepingMutation,
 } from '../api/clOperationsApi';
+import { MAKE_READY_CATEGORY } from '../constants/clOperationsApiConstants';
 import {
   APARTMENT_STATUS_OPTIONS,
   CL_OPS_PAGE_SIZE,
@@ -62,6 +64,7 @@ import { HousekeepingFormModal } from '../components/HousekeepingFormModal';
 const HEADER = {
   inventory: 'Apartment inventory',
   'make-ready': 'Make-ready board',
+  'make-ready-clean': 'Make-Ready Clean',
   maintenance: 'Maintenance tickets',
   housekeeping: 'Housekeeping tasks',
   'unit-status': 'Unit Status',
@@ -70,6 +73,8 @@ const HEADER = {
 
 export function ClOperationsPage() {
   const { view, changeView } = useOperationsView();
+  // Staff for the housekeeping board's "Assigned to" picker and column.
+  const { staffOptions, assigneeName } = useOpsStaff();
   const { isAny } = useRole();
   // Per-view edit permission, mirroring the resource's role group (communities
   // share apartment inventory's group). "Unit Status" / "Maintenance View" are
@@ -77,7 +82,7 @@ export function ClOperationsPage() {
   const canEdit =
     view === 'communities' || view === 'inventory'
       ? isAny(CL_INVENTORY_ROLES)
-      : view === 'make-ready'
+      : view === 'make-ready' || view === 'make-ready-clean'
         ? isAny(CL_MAKE_READY_ROLES)
         : view === 'maintenance'
           ? isAny(CL_MAINTENANCE_ROLES)
@@ -130,7 +135,22 @@ export function ClOperationsPage() {
   const makeReady = useOpsResource({
     noun: 'make-ready task',
     pageSize: CL_OPS_PAGE_SIZE,
-    useListQuery: useListClMakeReadyQuery,
+    /**
+     * The SAME resource serves both make-ready views; the Clean one just pins
+     * `category=housekeeping` on the request.
+     *
+     * A wrapper rather than a second `useOpsResource`: the two views never render
+     * together, so a second instance would mean a second live list query on every
+     * operations screen for a board only one of them shows. The closure reads
+     * `view`, and RTK Query re-fetches when the params change — which is exactly
+     * what switching tabs should do.
+     */
+    useListQuery: (params) =>
+      useListClMakeReadyQuery(
+        view === 'make-ready-clean'
+          ? { ...params, type: MAKE_READY_CATEGORY.Housekeeping }
+          : params,
+      ),
     create: createMr,
     createState: mrC,
     update: updateMr,
@@ -185,7 +205,7 @@ export function ClOperationsPage() {
   const active =
     view === 'inventory' || view === 'unit-status'
       ? apartments
-      : view === 'make-ready'
+      : view === 'make-ready' || view === 'make-ready-clean'
         ? makeReady
         : view === 'maintenance' || view === 'maintenance-view'
           ? maintenance
@@ -194,7 +214,7 @@ export function ClOperationsPage() {
   const statusOptions =
     view === 'inventory' || view === 'unit-status'
       ? APARTMENT_STATUS_OPTIONS
-      : view === 'make-ready'
+      : view === 'make-ready' || view === 'make-ready-clean'
         ? MAKE_READY_STATUS_OPTIONS
         : view === 'maintenance' || view === 'maintenance-view'
           ? MAINTENANCE_STATUS_OPTIONS
@@ -203,7 +223,7 @@ export function ClOperationsPage() {
   const addLabel =
     view === 'inventory'
       ? 'Add Unit'
-      : view === 'make-ready'
+      : view === 'make-ready' || view === 'make-ready-clean'
         ? 'Add Task'
         : view === 'maintenance'
           ? 'New Ticket'
@@ -328,11 +348,12 @@ export function ClOperationsPage() {
         </>
       )}
 
-      {view === 'make-ready' && (
+      {(view === 'make-ready' || view === 'make-ready-clean') && (
         <>
           <MakeReadyTable
             tasks={makeReady.rows}
             unitLabel={unitLabel}
+            assigneeName={assigneeName}
             isMutating={makeReady.isMutating}
             hasFilters={makeReady.hasFilters}
             onEdit={makeReady.crud.openEdit}
@@ -345,6 +366,7 @@ export function ClOperationsPage() {
             isSaving={makeReady.crud.isSaving}
             editing={makeReady.crud.editing}
             apartmentOptions={apartmentOptions}
+            staffOptions={staffOptions}
             onClose={makeReady.crud.editing ? makeReady.crud.closeEdit : makeReady.crud.closeCreate}
             onSubmit={makeReady.submit}
           />
@@ -355,6 +377,7 @@ export function ClOperationsPage() {
         <>
           <MaintenanceTable
             tickets={maintenance.rows}
+            assigneeName={assigneeName}
             isMutating={maintenance.isMutating}
             hasFilters={maintenance.hasFilters}
             onEdit={maintenance.crud.openEdit}
@@ -366,6 +389,7 @@ export function ClOperationsPage() {
             open={maintenance.crud.createOpen || maintenance.crud.editing !== null}
             isSaving={maintenance.crud.isSaving}
             editing={maintenance.crud.editing}
+            staffOptions={staffOptions}
             onClose={maintenance.crud.editing ? maintenance.crud.closeEdit : maintenance.crud.closeCreate}
             onSubmit={maintenance.submit}
           />
@@ -378,6 +402,7 @@ export function ClOperationsPage() {
             tasks={housekeeping.rows}
             isMutating={housekeeping.isMutating}
             hasFilters={housekeeping.hasFilters}
+            assigneeName={assigneeName}
             onEdit={housekeeping.crud.openEdit}
             onDelete={housekeeping.crud.confirmDelete}
             onStatusChange={housekeeping.changeStatus}
@@ -387,6 +412,7 @@ export function ClOperationsPage() {
             open={housekeeping.crud.createOpen || housekeeping.crud.editing !== null}
             isSaving={housekeeping.crud.isSaving}
             editing={housekeeping.crud.editing}
+            staffOptions={staffOptions}
             onClose={housekeeping.crud.editing ? housekeeping.crud.closeEdit : housekeeping.crud.closeCreate}
             onSubmit={housekeeping.submit}
           />
@@ -407,6 +433,7 @@ export function ClOperationsPage() {
       {view === 'maintenance-view' && (
         <MaintenanceTable
           tickets={maintenance.rows}
+          assigneeName={assigneeName}
           isMutating={maintenance.isMutating}
           hasFilters={maintenance.hasFilters}
           readOnly

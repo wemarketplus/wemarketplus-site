@@ -7,12 +7,16 @@ import { useCustomRoles } from '../hooks/useCustomRoles';
 import { CustomRoleFormModal } from './CustomRoleFormModal';
 
 /**
- * Admin → Manage Roles, rendered under the permission matrix on the same page.
+ * Admin → Manage Roles.
  *
- * Same page rather than its own route because it is the same job and the same
- * audience: the matrix says what each role may DO, this says which roles the tenant
- * has and what each one SEES. Splitting them would mean an admin configuring one role
- * has to visit two screens to understand it.
+ * TWO ENTRY POINTS, ONE COMPONENT. It renders under the permission matrix on
+ * /permissions — same page rather than its own route because it is the same job
+ * and the same audience: the matrix says what each role may DO, this says which
+ * roles the tenant has and what each one SEES, and splitting them would mean an
+ * admin configuring one role has to visit two screens to understand it. It also
+ * renders as the CommunityLink "Manage roles" tab in Settings, because that
+ * product's Administrator guide sends the reader there ("In Settings, look for
+ * Manage Roles"). Both mount this; neither owns a copy.
  */
 export function ManageCustomRoles() {
   const {
@@ -23,6 +27,7 @@ export function ManageCustomRoles() {
     isError,
     refetch,
     catalog,
+    selectableRoles,
     open,
     editing,
     draft,
@@ -52,9 +57,10 @@ export function ManageCustomRoles() {
               Manage roles
             </h2>
             <p className="mt-1 max-w-2xl text-sm text-muted">
-              Create a role for a job that does not fit Marketer, Nurse or Caregiver
-              — a Volunteer Coordinator, a part-time biller — and choose exactly which
-              tabs it sees. Its permissions come from the role you base it on.
+              Create a role for a job that none of the standard roles describes — an
+              Activities Director, a Volunteer Coordinator, a part-time biller — and
+              choose exactly which tabs it sees. Its permissions come from the role
+              you base it on.
             </p>
           </div>
         </div>
@@ -140,6 +146,7 @@ export function ManageCustomRoles() {
         isSaving={isSaving}
         draft={draft}
         catalog={catalog}
+        selectableRoles={selectableRoles}
         onPatch={patchDraft}
         onToggleKey={toggleKey}
         onClose={close}

@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useAppSelector } from '@/app/hooks';
 import { useDebounce } from '@/shared/hooks';
+import { useOpsStaff } from '@/modules/cl-operations';
 import { usePaginatedList, useEntityCrud } from '@/shared/ui/entity';
 import {
   useListClTasksQuery,
@@ -22,14 +24,24 @@ export function useTasksPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('');
+  /**
+   * "Check Tasks for anything else assigned to you" — every role guide says some
+   * version of that sentence, and until now the list had no notion of "you". The
+   * backend list is plain pagination (ClListQueryDto exposes no owner param), so
+   * this narrows the fetched page in memory exactly as search and status do.
+   */
+  const [mineOnly, setMineOnly] = useState(false);
+  const myUserId = useAppSelector((s) => s.auth.user?.id ?? null);
   const debouncedSearch = useDebounce(search, 300);
+  const { staffOptions, assigneeName } = useOpsStaff();
 
   // Any filter change resets to page 1 (the filtered view is a fresh list).
-  useEffect(() => setPage(1), [debouncedSearch, status]);
+  useEffect(() => setPage(1), [debouncedSearch, status, mineOnly]);
 
   const needle = debouncedSearch.trim().toLowerCase();
   const filter = useMemo(
     () => (t: ClTaskRecord) => {
+      if (mineOnly && t.assignedTo !== myUserId) return false;
       if (status && t.status !== status) return false;
       if (!needle) return true;
       return (
@@ -37,7 +49,7 @@ export function useTasksPage() {
         (t.description?.toLowerCase().includes(needle) ?? false)
       );
     },
-    [needle, status],
+    [needle, status, mineOnly, myUserId],
   );
 
   const query = useListClTasksQuery({ page, limit: CL_TASKS_PAGE_SIZE });
@@ -72,7 +84,7 @@ export function useTasksPage() {
   const changeStatus = (task: ClTaskRecord, statusValue: string) =>
     crud.submitUpdate(task.id, { status: statusValue as ClTaskRecord['status'] });
 
-  const hasFilters = Boolean(needle || status);
+  const hasFilters = Boolean(needle || status || mineOnly);
 
   return {
     ...list,
@@ -83,6 +95,10 @@ export function useTasksPage() {
     setSearch,
     status,
     setStatus,
+    mineOnly,
+    setMineOnly,
+    staffOptions,
+    assigneeName,
     hasFilters,
     isMutating: createState.isLoading || updateState.isLoading || deleteState.isLoading,
     crud,

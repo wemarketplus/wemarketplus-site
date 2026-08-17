@@ -55,6 +55,8 @@ export const TASK_FIELDS: ReadonlyArray<EntityField<TaskFormValues>> = [
   { name: 'title', label: 'Title', full: true, placeholder: 'Follow up with family on tour' },
   { name: 'priority', label: 'Priority', type: 'select', options: PRIORITY_OPTIONS },
   { name: 'status', label: 'Status', type: 'select', options: STATUS_OPTIONS },
+  // `lookup` — options come from the live staff list at render time.
+  { name: 'assignedTo', label: 'Assigned to', type: 'lookup' },
   { name: 'dueDate', label: 'Due date', type: 'date' },
   { name: 'description', label: 'Description', type: 'textarea', full: true, placeholder: 'Details, context, next steps…' },
 ];

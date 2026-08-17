@@ -38,13 +38,21 @@ export interface NavCatalogGroup {
  * `comingSoon` rows are excluded: they are announcements, not destinations, and there
  * is nothing to grant or withhold.
  *
- * Both products are listed. A dual-product tenant's custom role legitimately spans
- * both dashboards, and for a single-product tenant the other product's groups are
- * simply never rendered by the sidebar.
+ * SCOPED TO THE PRODUCTS THE TENANT IS ENTITLED TO, which the caller passes in. A
+ * dual-product tenant's custom role legitimately spans both dashboards, so both are
+ * offered there. This used to be unconditional, on the reasoning that a
+ * single-product tenant's other-product groups are "simply never rendered by the
+ * sidebar" — true, but it made the control unusable for the tenant it mattered to:
+ * a CommunityLink-only admin building an "Activities Director" was shown a
+ * checkbox list consisting ENTIRELY of HospiceLink tabs, none of which their
+ * dashboard can render. Harmless checkboxes are still the wrong checkboxes.
  */
-export function buildNavCatalog(baseRole: Role): NavCatalogGroup[] {
+export function buildNavCatalog(
+  baseRole: Role,
+  products: readonly Product[],
+): NavCatalogGroup[] {
   const groups: NavCatalogGroup[] = [];
-  for (const product of [Product.HospiceLink, Product.CommunityLink]) {
+  for (const product of products) {
     for (const section of SECTIONS_BY_PRODUCT[product]) {
       const entries = section.items
         .filter((item: NavItem) => !item.comingSoon)
@@ -70,6 +78,33 @@ export function buildNavCatalog(baseRole: Role): NavCatalogGroup[] {
     }
   }
   return groups;
+}
+
+/**
+ * Whether a product's navigation KNOWS this role at all — i.e. at least one nav
+ * item on one of `products` names it in `allow`.
+ *
+ * The question a base-role picker needs to ask, and NOT the same as "does
+ * buildNavCatalog return anything". Main's Dashboard / My profile / Notifications
+ * carry no `allow` at all, so every role passes an emptiness check on every
+ * product: on a CommunityLink-only tenant, basing a role on Nurse would offer
+ * exactly those three generic tabs and nothing else — a role that can see the
+ * product but do nothing in it. This says no to that, while still letting the
+ * ungated tabs appear in the catalogue of a role the product does recognise.
+ */
+export function isRoleUsedByProducts(
+  role: Role,
+  products: readonly Product[],
+): boolean {
+  return products.some((product) =>
+    SECTIONS_BY_PRODUCT[product].some((section) =>
+      section.items.some(
+        (item: NavItem) =>
+          (!item.product || item.product === product) &&
+          item.allow?.includes(role),
+      ),
+    ),
+  );
 }
 
 /** Every key in the catalogue — backs the "select all" affordance. */

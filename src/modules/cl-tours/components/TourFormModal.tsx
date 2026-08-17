@@ -3,7 +3,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Button, Input, Label, Select, Textarea } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
-import { useTenantStaffOptions } from '@/modules/users';
 import type { EntitySelectOption } from '@/shared/ui/entity';
 import { CL_TOUR_STATUS } from '../constants/clToursApiConstants';
 import { TOUR_DURATION_OPTIONS, TOUR_STATUS_OPTIONS } from '../constants/clToursConstants';
@@ -26,6 +25,8 @@ interface TourFormModalProps {
   isSaving: boolean;
   editing?: ClTourRecord | null;
   leadOptions: readonly EntitySelectOption[];
+  /** Tenant users who could give the tour. Undefined while still loading. */
+  guideOptions: readonly EntitySelectOption[] | undefined;
   onClose: () => void;
   onSubmit: (values: TourFormValues) => Promise<boolean>;
 }
@@ -37,6 +38,7 @@ export function TourFormModal({
   isSaving,
   editing,
   leadOptions,
+  guideOptions,
   onClose,
   onSubmit,
 }: TourFormModalProps) {
@@ -49,10 +51,6 @@ export function TourFormModal({
     resolver: zodResolver(tourSchema),
     defaultValues: EMPTY,
   });
-
-  // Only fetched while the modal is open — a closed modal should not hold the
-  // team directory in the cache for every visit to the tour list.
-  const staff = useTenantStaffOptions(open);
 
   useEffect(() => {
     if (!open) return;
@@ -98,24 +96,26 @@ export function TourFormModal({
             ))}
           </Select>
         </div>
-        {/* "…and which staff member is giving the tour." For a role that may not
-            read the directory this collapses to "Me" — see useTenantStaffOptions. */}
+        {/* Who is giving the tour — the guide's fourth thing to pick, and the
+            reason cl_tours.guideUserId existed with nothing writing it. Disabled
+            while the user list loads rather than rendering an empty picker that
+            looks like "nobody works here". */}
         <div className="sm:col-span-2">
           <Label htmlFor="tf-guide">Tour guide</Label>
-          <Select id="tf-guide" {...register('guideUserId')}>
-            <option value="">— Unassigned —</option>
-            {staff.options.map((o) => (
+          <Select
+            id="tf-guide"
+            disabled={guideOptions === undefined}
+            {...register('guideUserId')}
+          >
+            <option value="">
+              {guideOptions === undefined ? 'Loading…' : '— Unassigned —'}
+            </option>
+            {(guideOptions ?? []).map((o) => (
               <option key={o.value} value={o.value}>
                 {o.label}
               </option>
             ))}
           </Select>
-          {!staff.isFullDirectory && (
-            <p className="mt-1 text-[11px] text-muted-soft">
-              You can assign yourself; an administrator can assign anyone on the
-              team.
-            </p>
-          )}
         </div>
         <div className="sm:col-span-2">
           <Label htmlFor="tf-when">Date &amp; time</Label>

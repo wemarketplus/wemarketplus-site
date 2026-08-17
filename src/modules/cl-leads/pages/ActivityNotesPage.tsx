@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { NotebookPen } from 'lucide-react';
+import { CL_SALES_ROLES, useRole } from '@/shared/rbac';
 import { Button, Card, CardContent, Input, Select } from '@/shared/ui/core';
 import { EmptyState } from '@/shared/ui/feedback';
 import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
@@ -11,10 +12,30 @@ import {
 
 const PAGE_SIZE = 50;
 
-// Activity Notes (Max tier): a cross-lead timeline — log a note against any
-// lead, then see every note across the pipeline in one place, newest first.
+/**
+ * Activity Notes: "general notes not tied to one specific lead" — plus, for the
+ * roles that can see the pipeline, the option to attach one to a lead.
+ *
+ * A LEAD IS OPTIONAL, which is the whole point of the screen and was impossible
+ * until `cl_lead_notes.leadId` became nullable: the Save button required a lead,
+ * so the one thing the screen is defined as doing could not be done.
+ *
+ * THE LEAD PICKER IS SKIPPED FOR ROLES THAT CANNOT READ LEADS. `GET /cl/leads` is
+ * CL_SALES_ROLES; Nurse and Caregiver are not in it, and they are precisely the
+ * roles told to "use Activity Notes as the closest available substitute" for the
+ * unbuilt Resident Care Log. Firing that query for them produced a 403, an empty
+ * picker, and a Save button that never enabled — the workaround was read-only for
+ * the only people it was written for. Skipping the query (rather than widening
+ * the leads endpoint) keeps the sales pipeline unreadable to care roles, which is
+ * the correct boundary; they simply get the lead-less form.
+ */
 export function ActivityNotesPage() {
-  const { data: leadsData } = useListClLeadsQuery({ page: 1, limit: 200 });
+  const { isAny } = useRole();
+  const canReadLeads = isAny(CL_SALES_ROLES);
+  const { data: leadsData } = useListClLeadsQuery(
+    { page: 1, limit: 200 },
+    { skip: !canReadLeads },
+  );
   const leadOptions = useMemo(
     () =>
       (leadsData?.data ?? []).map((l) => ({
@@ -25,7 +46,10 @@ export function ActivityNotesPage() {
   );
   const leadLabel = useMemo(() => {
     const map = new Map(leadOptions.map((o) => [o.value, o.label]));
-    return (id: string) => map.get(id) ?? 'Unknown lead';
+    // A note with no lead is a general note, not a broken reference — say so,
+    // rather than printing "Unknown lead" over a deliberately empty field.
+    return (id: string | null) =>
+      id === null ? 'General note' : (map.get(id) ?? 'Unknown lead');
   }, [leadOptions]);
 
   const { data: notesData, isLoading, error } = useListClLeadNotesQuery({ page: 1, limit: PAGE_SIZE });
@@ -40,12 +64,14 @@ export function ActivityNotesPage() {
   const [nextStep, setNextStep] = useState('');
   const [followUpDate, setFollowUpDate] = useState('');
 
-  const canSave = Boolean(leadId && summary.trim()) && !isSaving;
+  // The summary is the note. A lead is an optional subject.
+  const canSave = Boolean(summary.trim()) && !isSaving;
 
   const save = async () => {
     if (!canSave) return;
     await createNote({
-      leadId,
+      // Omitted when blank: leadId is @IsUUID() on the DTO, so '' would 400.
+      ...(leadId ? { leadId } : {}),
       summary: summary.trim(),
       nextStep: nextStep.trim() || undefined,
       followUpDate: followUpDate || undefined,
@@ -59,7 +85,11 @@ export function ActivityNotesPage() {
     <div className="space-y-6">
       <header>
         <h1 className="font-display text-3xl text-foreground">Activity notes</h1>
-        <p className="text-sm text-muted">Every call, visit, and touchpoint — logged against a lead.</p>
+        <p className="text-sm text-muted">
+          {canReadLeads
+            ? 'General notes, and every call, visit and touchpoint you attach to a lead.'
+            : 'General notes — wellness checks, incident notes and family updates.'}
+        </p>
       </header>
 
       <Card>
@@ -70,14 +100,16 @@ export function ActivityNotesPage() {
               {extractApiErrorMessage(saveError, 'Failed to save note')}
             </p>
           )}
-          <Select value={leadId} onChange={(e) => setLeadId(e.target.value)} aria-label="Lead">
-            <option value="">Select a lead…</option>
-            {leadOptions.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </Select>
+          {canReadLeads && (
+            <Select value={leadId} onChange={(e) => setLeadId(e.target.value)} aria-label="Lead">
+              <option value="">No lead — general note</option>
+              {leadOptions.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </Select>
+          )}
           <textarea
             className="w-full rounded-md border border-border/10 bg-surface px-3 py-2.5 text-sm text-foreground outline-none focus:border-primary/50"
             rows={3}

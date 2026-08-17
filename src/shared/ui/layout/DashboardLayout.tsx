@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+import { CopilotLauncher } from '@/modules/ai-assistant';
 import { NotificationsDrawer, useNotificationsStream } from '@/modules/notifications';
 import { ImpersonationBanner } from '@/modules/owner-portal';
 import { Sidebar } from './Sidebar';
@@ -28,6 +29,11 @@ export function DashboardLayout() {
       {/* Drawer lives at the layout level so any page can open it via dispatch
           without each page needing to mount its own portal. */}
       <NotificationsDrawer />
+      {/* Floating Copilot — same reasoning as the drawer: one mount for the whole
+          authenticated shell, so it follows a field technician from their queue onto
+          a ticket instead of appearing and vanishing per page. Renders null for
+          every role that has the AI assistant in its nav. */}
+      <CopilotLauncher />
     </div>
   );
 }

@@ -26,9 +26,27 @@ export function useReportCatalog() {
     return map;
   }, [data]);
 
+  /**
+   * The cards to render.
+   *
+   * For CommunityLink this is the catalog NARROWED to what the server actually
+   * returned, because cl/reports now filters per report by the tenant's tier — the
+   * five operations/finance reports need Gold, the two sales ones do not. Rendering
+   * the full static catalog would put five permanently empty cards on a Pro
+   * tenant's Reports Center, which reads as broken rather than as not-purchased.
+   *
+   * Until the request resolves `metricsById` is empty; showing the full catalog for
+   * that beat is the right placeholder — the alternative flashes an empty screen
+   * and then fills in — and the page already renders its own loading state.
+   */
+  const reports = useMemo(() => {
+    if (!isCommunityLink || metricsById.size === 0) return REPORT_CATALOG;
+    return REPORT_CATALOG.filter((r) => metricsById.has(r.id));
+  }, [isCommunityLink, metricsById]);
+
   return {
-    reports: REPORT_CATALOG,
-    grouped: groupReportsByCategory(REPORT_CATALOG),
+    reports,
+    grouped: groupReportsByCategory(reports),
     // True only for non-CL products (which still have no backend); CL is now
     // backed by cl/reports.
     isUsingFixture: !isCommunityLink,

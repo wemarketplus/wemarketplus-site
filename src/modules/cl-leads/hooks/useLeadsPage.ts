@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useDebounce } from '@/shared/hooks';
 import { usePaginatedList, useEntityCrud } from '@/shared/ui/entity';
 import {
@@ -18,10 +19,21 @@ import type { ClLeadRecord } from '../types/clLeadApiTypes';
 // delete orchestration wired to the real mutations. Mirrors the canonical
 // modules/contacts template — no in-memory slice.
 export function useLeadsPage() {
+  /**
+   * Filters SEED FROM THE QUERY STRING so a caller can link to a narrowed
+   * pipeline: the dashboard's "Hot leads" tile is the guide's "check the Hot
+   * Leads list first", and without this it could only drop the reader into the
+   * full book to re-apply the filter by hand.
+   *
+   * Read once as the initial state rather than kept in sync with the URL — the
+   * selects are the source of truth once the screen is open, and rewriting the
+   * URL on every keystroke would put filter churn in the back-button history.
+   */
+  const [searchParams] = useSearchParams();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  const [stage, setStage] = useState('');
-  const [urgency, setUrgency] = useState('');
+  const [stage, setStage] = useState(() => searchParams.get('stage') ?? '');
+  const [urgency, setUrgency] = useState(() => searchParams.get('urgency') ?? '');
   const debouncedSearch = useDebounce(search, 300);
 
   // Any filter change resets to page 1 (the filtered result set is a new list).

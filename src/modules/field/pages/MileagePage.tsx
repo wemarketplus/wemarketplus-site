@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { Paperclip } from 'lucide-react';
+import { Download, Paperclip } from 'lucide-react';
+import { useCsvDownload } from '@/shared/hooks';
 import { Button, Input, Label } from '@/shared/ui/core';
 import { Alert, DataTable, type Column } from '@/shared/ui/data-display';
 import { StatTile } from '@/shared/ui/data-display';
+import { mileageLogsToCsv } from '../utils/mileageCsv';
 import { AttachReceiptDialog } from '../components/AttachReceiptDialog';
 import { ExpenseReceipts } from '../components/ExpenseReceipts';
 import { ReceiptFileButton } from '../components/ReceiptFileButton';
@@ -74,6 +76,25 @@ export function MileagePage() {
   // page, so summing it would under-report a rep who drives a lot — and an
   // expense figure that is quietly too low is worse than showing none.
   const { data: summary } = useGetMileageSummaryQuery();
+
+  /**
+   * "Export CSV any time you need your mileage log as a spreadsheet" — the one
+   * step of the client's mileage flow that had nothing behind it.
+   *
+   * Exports the LOADED trips, and the button says so, because that is what this
+   * screen holds: `useListMileageLogsQuery({ limit: 50 })` is the most recent
+   * page, not the year. Silently exporting 50 rows under a bare "Export CSV" is
+   * how someone files an expense claim short — the count in the label is the
+   * whole safeguard until the endpoint grows a date range.
+   */
+  const downloadCsv = useCsvDownload();
+  const onExport = () => {
+    if (logs.length === 0) {
+      toast.error('No trips to export yet.');
+      return;
+    }
+    downloadCsv(mileageLogsToCsv(logs), 'mileage');
+  };
 
   const onSubmit = async () => {
     const parsed = Number(miles);
@@ -162,13 +183,19 @@ export function MileagePage() {
 
   return (
     <div className="space-y-6">
-      <header>
-        <h1 className="font-display text-3xl text-foreground">
-          Mileage &amp; expenses
-        </h1>
-        <p className="text-sm text-muted">
-          Log a trip and the reimbursement is calculated at your tenant's rate.
-        </p>
+      <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="font-display text-3xl text-foreground">
+            Mileage &amp; expenses
+          </h1>
+          <p className="text-sm text-muted">
+            Log a trip and the reimbursement is calculated at your tenant's rate.
+          </p>
+        </div>
+        <Button variant="secondary" onClick={onExport} disabled={logs.length === 0}>
+          <Download className="h-4 w-4" />
+          Export CSV ({logs.length})
+        </Button>
       </header>
 
       {/* Week and month to date — the two figures an expense claim is filed on.

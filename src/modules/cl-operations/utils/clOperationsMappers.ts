@@ -38,6 +38,11 @@ export function toCreateMaintenance(
     priority: v.priority as TicketPriority,
     status: v.status as MaintenanceStatus,
     ...opt('ticketNumber', v.ticketNumber),
+    // `opt` drops a blank rather than sending '': assignedTo is @IsUUID() on the
+    // DTO, so an empty string would 400 the save. Omitting it leaves the ticket
+    // unassigned — a real state, since a ticket is often logged before anyone
+    // decides who takes it.
+    ...opt('assignedTo', v.assignedTo),
     ...opt('reporterName', v.reporterName),
     ...opt('resolution', v.resolution),
   };
@@ -48,6 +53,7 @@ export function toMaintenanceFormValues(t: ClMaintenanceTicketRecord): Maintenan
     ticketNumber: t.ticketNumber ?? '',
     priority: t.priority,
     status: t.status,
+    assignedTo: t.assignedTo ?? '',
     reporterName: t.reporterName ?? '',
     resolution: t.resolution ?? '',
   };
@@ -60,6 +66,11 @@ export function toCreateHousekeeping(
     taskType: v.taskType.trim(),
     status: v.status as HousekeepingStatus,
     ...opt('area', v.area),
+    // `opt` drops a blank rather than sending '': assignedTo is @IsUUID() on the
+    // DTO, so an empty string would 400 the whole save. Omitting it leaves the task
+    // unassigned, which is a legitimate state — a supervisor can add a task to the
+    // board before deciding who cleans it.
+    ...opt('assignedTo', v.assignedTo),
     ...opt('dueDate', v.dueDate),
   };
 }
@@ -68,6 +79,7 @@ export function toHousekeepingFormValues(t: ClHousekeepingTaskRecord): Housekeep
     taskType: t.taskType,
     area: t.area ?? '',
     status: t.status,
+    assignedTo: t.assignedTo ?? '',
     dueDate: t.dueDate ?? '',
   };
 }
@@ -104,6 +116,8 @@ export function toCreateMakeReady(
     apartmentId: v.apartmentId,
     taskName: v.taskName.trim(),
     status: v.status as MakeReadyStatus,
+    // Blank omitted, not sent as '' — see toCreateMaintenance for why.
+    ...opt('assignedTo', v.assignedTo),
     ...opt('dueDate', v.dueDate),
     ...opt('notes', v.notes),
   };
@@ -113,6 +127,7 @@ export function toMakeReadyFormValues(t: ClMakeReadyTaskRecord): MakeReadyFormVa
     apartmentId: t.apartmentId,
     taskName: t.taskName,
     status: t.status,
+    assignedTo: t.assignedTo ?? '',
     dueDate: t.dueDate ?? '',
     notes: t.notes ?? '',
   };

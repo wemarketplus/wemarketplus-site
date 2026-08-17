@@ -9,7 +9,11 @@ export { DemoButton } from './components/DemoButton';
 export { Field } from './components/Field';
 export { DemoToast } from './components/DemoToast';
 export { useToastAutohide } from './hooks/useToastAutohide';
-export { useCsvDownload } from './hooks/useCsvDownload';
+// Re-export, not a definition: useCsvDownload moved to shared/hooks when a
+// production screen (modules/field's mileage export) started needing it, and
+// production must not import from this demo-only design system. Kept on this
+// surface so the three demo modules' call sites are untouched.
+export { useCsvDownload } from '@/shared/hooks';
 export { cap, todayIso } from './utils';
 export type { BadgeTone, ToastState } from './types';
 export * from './styles';
