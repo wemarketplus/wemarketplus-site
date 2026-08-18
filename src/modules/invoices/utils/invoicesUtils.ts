@@ -20,6 +20,10 @@ export function toCreateInvoice(values: InvoiceFormValues): CreateInvoiceRequest
     ...optOrNull('feeModel', values.feeModel),
     ...optOrNull('dueDate', values.dueDate),
     ...optOrNull('applicationId', values.applicationId),
+    // Explicit nulls, so clearing the picker on an edit actually detaches the
+    // invoice rather than silently keeping the old attribution.
+    ...optOrNull('prospectId', values.prospectId),
+    ...optOrNull('referralSourceId', values.referralSourceId),
     ...optOrNull('notes', values.notes),
     ...(values.status ? { status: values.status as InvoiceStatus } : {}),
   };
@@ -40,6 +44,8 @@ export function toInvoiceFormValues(invoice: InvoiceRecord): InvoiceFormValues {
     feeModel: invoice.feeModel ?? '',
     dueDate: invoice.dueDate ?? '',
     applicationId: invoice.applicationId ?? '',
+    prospectId: invoice.prospectId ?? '',
+    referralSourceId: invoice.referralSourceId ?? '',
     notes: invoice.notes ?? '',
   };
 }

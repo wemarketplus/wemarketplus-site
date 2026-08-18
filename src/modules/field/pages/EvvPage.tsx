@@ -5,6 +5,12 @@ import {
   useClockOutMutation,
   useListEvvLogsQuery,
 } from '@/modules/clinical';
+import {
+  EMPTY_LOCATION,
+  LocationField,
+  fromLocationValue,
+  type LocationValue,
+} from '@/modules/geocoding';
 import { Button, Input, Label } from '@/shared/ui/core';
 import { Alert, DataTable, type Column } from '@/shared/ui/data-display';
 import type { EvvLogRecord } from '@/modules/clinical/types/clinicalApiTypes';
@@ -31,7 +37,10 @@ export function EvvPage() {
   const [clockOut, { isLoading: isClockingOut }] = useClockOutMutation();
 
   const [visitType, setVisitType] = useState('');
-  const [location, setLocation] = useState('');
+  // A place, not a string. EVV is sold as "EVV/GPS ... compliance log", and a
+  // verification record whose location is only whatever the worker typed is the
+  // part that was missing: the same four characters can be typed from anywhere.
+  const [location, setLocation] = useState<LocationValue>(EMPTY_LOCATION);
   const [notes, setNotes] = useState('');
 
   const logs = data?.data ?? [];
@@ -39,13 +48,17 @@ export function EvvPage() {
 
   const onClockIn = async () => {
     try {
+      const { label, lat, lng } = fromLocationValue(location);
       await clockIn({
         visitType: visitType || undefined,
-        locationIn: location || undefined,
+        locationIn: label,
+        // Paired or absent — the server rejects a lone half.
+        locationInLat: lat,
+        locationInLng: lng,
         notes: notes || undefined,
       }).unwrap();
       setVisitType('');
-      setLocation('');
+      setLocation(EMPTY_LOCATION);
       setNotes('');
       toast.success('Clocked in.');
     } catch {
@@ -55,17 +68,24 @@ export function EvvPage() {
 
   const onClockOut = async () => {
     if (!openVisit) return;
+    const { label, lat, lng } = fromLocationValue(location);
     try {
       await clockOut({
         id: openVisit.id,
         // `notesOut`, NOT `notes`: this used to send `notes`, which the backend
         // spread over the row and erased whatever was written at clock-in.
         body: {
-          locationOut: location || undefined,
+          locationOut: label,
+          // The DEPARTURE fix, written to its own columns. Clock-out cannot
+          // reach the clock-in pair, for the same reason it writes `notesOut`
+          // rather than `notes`: closing a visit must not rewrite what arriving
+          // at it recorded.
+          locationOutLat: lat,
+          locationOutLng: lng,
           notesOut: notes || undefined,
         },
       }).unwrap();
-      setLocation('');
+      setLocation(EMPTY_LOCATION);
       setNotes('');
       toast.success('Clocked out.');
     } catch {
@@ -178,7 +198,7 @@ export function EvvPage() {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {!openVisit && (
-          <div className="space-y-1.5">
+          <div>
             <Label htmlFor="evv-visit-type">Visit type</Label>
             <Input
               id="evv-visit-type"
@@ -188,16 +208,14 @@ export function EvvPage() {
             />
           </div>
         )}
-        <div className="space-y-1.5">
-          <Label htmlFor="evv-location">Location</Label>
-          <Input
-            id="evv-location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            placeholder="Address or facility"
-          />
-        </div>
-        <div className="space-y-1.5">
+        <LocationField
+          id="evv-location"
+          label="Location"
+          value={location}
+          onChange={setLocation}
+          placeholder="Address or facility"
+        />
+        <div>
           <Label htmlFor="evv-notes">Notes</Label>
           <Input
             id="evv-notes"

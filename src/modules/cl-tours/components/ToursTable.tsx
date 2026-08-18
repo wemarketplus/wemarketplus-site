@@ -1,4 +1,5 @@
-import { CalendarClock } from 'lucide-react';
+import { CalendarClock, MapPin } from 'lucide-react';
+import { formatCoords } from '@/modules/geocoding';
 import { CL_MANAGEMENT_ROLES, useRole } from '@/shared/rbac';
 import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
 import { EmptyState } from '@/shared/ui/feedback';
@@ -8,7 +9,7 @@ import {
   TOUR_STATUS_OPTIONS,
   TOUR_STATUS_PILL,
 } from '../constants/clToursConstants';
-import { tourWhen } from '../utils/clToursUtils';
+import { tourEndpoint, tourWhen } from '../utils/clToursUtils';
 import type { ClTourRecord } from '../types/clToursApiTypes';
 
 interface ToursTableProps {
@@ -23,6 +24,36 @@ interface ToursTableProps {
   /** Stamp or clear `confirmedAt` — the guide's Confirm action. */
   onConfirmToggle: (tour: ClTourRecord) => void;
   onAdd?: () => void;
+}
+
+/**
+ * One endpoint as a table cell: the name a person reads, with a pin when the place
+ * was actually pinned on the map.
+ *
+ * The LABEL is what goes down the column — a lat/lng pair per row would bury the
+ * four names a guide is scanning for — so the coordinates ride in the pin's
+ * tooltip, exactly as the mileage table's Route cell does. Truncated with a
+ * width cap because a geocoded label can be a full postal address and the
+ * scheduler already carries eight other columns.
+ */
+function endpointCell(tour: ClTourRecord, side: 'from' | 'to') {
+  const place = tourEndpoint(tour, side);
+  if (!place.label) return '—';
+  return (
+    <span className="inline-flex max-w-[150px] items-center gap-1.5">
+      <span className="truncate" title={place.label}>
+        {place.label}
+      </span>
+      {place.coords && (
+        <span title={formatCoords(place.coords)}>
+          <MapPin
+            className="h-3 w-3 shrink-0 text-primary"
+            aria-label="Pinned on a map"
+          />
+        </span>
+      )}
+    </span>
+  );
 }
 
 export function ToursTable({
@@ -48,6 +79,12 @@ export function ToursTable({
     },
     { key: 'when', header: 'Scheduled', cell: (t) => tourWhen(t.scheduledAt) },
     { key: 'guide', header: 'Guide', cell: (t) => guideName(t.guideUserId) },
+    // WHERE the tour runs: the pickup point and the community being shown. Next
+    // to Guide rather than at the end because "who is showing which building,
+    // and are they collecting anyone first" is one thought, and the answer used
+    // to live nowhere on this screen at all.
+    { key: 'from', header: 'From', cell: (t) => endpointCell(t, 'from') },
+    { key: 'to', header: 'To', cell: (t) => endpointCell(t, 'to') },
     /**
      * Confirmation — its own column, because it is its own axis.
      *

@@ -1,4 +1,11 @@
 import { useState } from 'react';
+import {
+  EMPTY_LOCATION,
+  LocationField,
+  fromLocationValue,
+  type LocationValue,
+} from '@/modules/geocoding';
+import { useTenantStaffOptions } from '@/modules/users';
 import { Button, Input, Label, Select } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import {
@@ -19,6 +26,23 @@ interface ScheduleVisitModalProps {
   onClose: () => void;
   onSubmit: (body: ScheduleVisitRequest) => Promise<boolean>;
 }
+
+/**
+ * The location as the three fields the request carries.
+ *
+ * Coordinates are dropped for anything but an in-person visit: switching the
+ * type after picking a place would otherwise leave a video call pinned to a
+ * building nobody is driving to.
+ */
+const locationFields = (
+  location: LocationValue,
+  appointmentType: AppointmentType,
+) => {
+  const { label, lat, lng } = fromLocationValue(location);
+  return appointmentType === AppointmentType.InPerson
+    ? { location: label, locationLat: lat, locationLng: lng }
+    : { location: label };
+};
 
 /** Default slot length. A drop-off is short; the user can change the end time. */
 const DEFAULT_DURATION_MINUTES = 30;
@@ -53,9 +77,29 @@ export function ScheduleVisitModal({
     ),
     appointmentType: AppointmentType.InPerson as AppointmentType,
     activityType: ActivityType.FacilityOfficeVisit as ActivityType,
-    location: '',
+    // A place, not a string: the label is what the calendar shows, the
+    // coordinates are what say WHICH "main campus" it was.
+    location: EMPTY_LOCATION as LocationValue,
+    /**
+     * WHO IS DOING THE VISIT — blank means "me".
+     *
+     * Left blank rather than pre-filled with the signed-in user: the server already
+     * defaults `assignedRep` to the caller, so an empty value and the caller's own
+     * id mean the same thing, and pre-selecting a name would make "assign this to a
+     * nurse" look like a change of owner rather than the normal case.
+     */
+    assignedRep: '',
   });
   const [error, setError] = useState<string | null>(null);
+  // Only fetched while the modal is open — a closed form should not hold a
+  // subscription to the directory.
+  const staff = useTenantStaffOptions(open);
+
+  /**
+   * The map picker is for in-person visits only. A video call or a phone call
+   * has a link or a number in this field, and neither has a place on a map.
+   */
+  const isInPerson = values.appointmentType === AppointmentType.InPerson;
 
   const set = <K extends keyof typeof values>(
     key: K,
@@ -90,7 +134,10 @@ export function ScheduleVisitModal({
       endAt: endAt.toISOString(),
       appointmentType: values.appointmentType,
       activityType: values.activityType,
-      location: values.location.trim() || undefined,
+      // Omitted entirely when blank. Sending `undefined` lets the server apply its
+      // own default (the caller); sending an empty string would fail @IsUUID.
+      ...(values.assignedRep ? { assignedRep: values.assignedRep } : {}),
+      ...locationFields(values.location, values.appointmentType),
     });
     if (ok) close();
   };
@@ -173,13 +220,53 @@ export function ScheduleVisitModal({
           </Select>
         </div>
 
+        {/* The assignment that makes the visit somebody's work. Without it every
+            visit lands on the person who booked it, so a nurse or caregiver never
+            acquires a patient and their Family communication / Notes screens have
+            nothing to write against. */}
         <div className="sm:col-span-2">
-          <Label htmlFor="sv-location">Location</Label>
-          <Input
-            id="sv-location"
-            value={values.location}
-            onChange={(e) => set('location', e.target.value)}
-          />
+          <Label htmlFor="sv-assignee">Assign to</Label>
+          <Select
+            id="sv-assignee"
+            value={values.assignedRep}
+            onChange={(e) => set('assignedRep', e.target.value)}
+            disabled={staff.isLoading}
+          >
+            <option value="">— Me —</option>
+            {staff.options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </Select>
+          <p className="mt-1 text-[11px] text-muted-soft">
+            Assigning a nurse or caregiver is what puts this patient on their “My
+            patients” list.
+          </p>
+        </div>
+
+        <div className="sm:col-span-2">
+          {isInPerson ? (
+            <LocationField
+              id="sv-location"
+              label="Location"
+              value={values.location}
+              onChange={(next) => set('location', next)}
+              placeholder="Search or drop a pin"
+            />
+          ) : (
+            <>
+              <Label htmlFor="sv-location">Location</Label>
+              <Input
+                id="sv-location"
+                value={values.location.label}
+                onChange={(e) =>
+                  set('location', { label: e.target.value, coords: null })
+                }
+                placeholder="Meeting link or number"
+              />
+            </>
+          )}
         </div>
 
         {error && (

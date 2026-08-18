@@ -1,5 +1,6 @@
 export { useCsvDownload } from './useCsvDownload';
 export { useDebounce } from './useDebounce';
+export { useGpsCapture, type GpsFix, type GpsStatus } from './useGpsCapture';
 export {
   useLookupOptions,
   useNameTable,
@@ -11,6 +12,8 @@ export {
   useApplicationLookup,
   useCompanyLookup,
   useFundingLookup,
+  useProspectLookup,
+  useReferralSourceLookup,
   useUserLookup,
   useUserNames,
   useReferralSourceNames,

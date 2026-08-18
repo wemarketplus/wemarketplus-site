@@ -243,6 +243,12 @@ const PlaybookGeneratorPage = lazy(() =>
 const AiAssistantPage = lazy(() =>
   import('@/modules/ai-assistant').then((m) => ({ default: m.AiAssistantPage })),
 );
+const MyVisitSchedulePage = lazy(() =>
+  import('@/modules/clinical').then((m) => ({ default: m.MyVisitSchedulePage })),
+);
+const SecureMessagingPage = lazy(() =>
+  import('@/modules/chat').then((m) => ({ default: m.SecureMessagingPage })),
+);
 const ClinicalPage = lazy(() =>
   import('@/modules/clinical').then((m) => ({ default: m.ClinicalPage })),
 );
@@ -657,6 +663,18 @@ export function AppRouter() {
           <Route path="clinical/family" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={HL_CLINICAL_ROLES}><ClinicalPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="clinical/messaging" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={HL_CLINICAL_ROLES}><ClinicalPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="clinical/admissions" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={HL_CLINICAL_ROLES}><ClinicalPage /></ProtectedRoute></RequireEntitlement>} />
+          {/* Secure messaging — the UI for src/chat, which shipped without one.
+              HL_FIELD_ROLES rather than HL_CLINICAL_ROLES, matching the nav row and
+              the fact that the chat controllers carry no @Roles at all; the Gold
+              gate is the whole of the server's opinion, so RequireEntitlement is
+              what has to agree with it. */}
+          {/* The nurse's (and caregiver's) own visits. HL_CLINICAL_ROLES rather than
+              [Role.Nurse]: management already reads the roster tool, but a caregiver
+              acquires visits by exactly the same assignment path and had no
+              self-scoped view of them. Self-scoping is enforced by the hook fixing
+              `scope: 'mine'`, which filters server-side on assignedRep. */}
+          <Route path="clinical/my-schedule" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={HL_CLINICAL_ROLES}><MyVisitSchedulePage /></ProtectedRoute></RequireEntitlement>} />
+          <Route path="clinical/secure-messaging" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={HL_FIELD_ROLES}><SecureMessagingPage /></ProtectedRoute></RequireEntitlement>} />
 
           {/* Intelligence — Gold + staff. */}
           <Route path="intelligence/revenue" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={STAFF_ROLES}><IntelligencePage /></ProtectedRoute></RequireEntitlement>} />

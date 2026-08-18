@@ -1,6 +1,11 @@
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import {
+  LocationField,
+  toLocationValue,
+  type LocationValue,
+} from '@/modules/geocoding';
 import { Button, Input, Label, Select, Textarea } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import type { EntitySelectOption } from '@/shared/ui/entity';
@@ -16,6 +21,12 @@ const EMPTY: TourFormValues = {
   scheduledAt: '',
   status: CL_TOUR_STATUS.Scheduled,
   durationMin: '60',
+  fromLocation: '',
+  fromLat: undefined,
+  fromLng: undefined,
+  toLocation: '',
+  toLat: undefined,
+  toLng: undefined,
   outcome: '',
   notes: '',
 };
@@ -46,11 +57,36 @@ export function TourFormModal({
     register,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<TourFormValues>({
     resolver: zodResolver(tourSchema),
     defaultValues: EMPTY,
   });
+
+  /**
+   * The two endpoints, assembled from the flat form fields for the picker and
+   * split back out when it returns.
+   *
+   * `watch` + `setValue` rather than a registered input, because the value is a
+   * place and not a string: <LocationField> is read-only text plus a map dialog,
+   * so there is no change event for `register` to bind to. Same shape the
+   * appointment form uses.
+   */
+  const endpoint = (side: 'from' | 'to'): LocationValue =>
+    side === 'from'
+      ? toLocationValue(watch('fromLocation'), watch('fromLat'), watch('fromLng'))
+      : toLocationValue(watch('toLocation'), watch('toLat'), watch('toLng'));
+
+  const setEndpoint = (side: 'from' | 'to') => (next: LocationValue) => {
+    // Label and coordinates move TOGETHER — including on a clear, where all
+    // three go blank at once. A label left behind with the old pin still
+    // attached is a row that names one place and points at another.
+    setValue(`${side}Location`, next.label, { shouldDirty: true });
+    setValue(`${side}Lat`, next.coords?.lat, { shouldDirty: true });
+    setValue(`${side}Lng`, next.coords?.lng, { shouldDirty: true });
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -144,6 +180,25 @@ export function TourFormModal({
             ))}
           </Select>
         </div>
+        {/* WHERE the tour happens — the two questions a guide asks the morning
+            of: am I collecting them from somewhere, and which community am I
+            showing. Each opens the shared map picker, so a place can be
+            searched, tapped on the map, or taken from the device's own location
+            ("Use my location") when the marketer is standing in it. */}
+        <LocationField
+          id="tf-from"
+          label="From"
+          value={endpoint('from')}
+          onChange={setEndpoint('from')}
+          placeholder="Pickup point — hospital, home…"
+        />
+        <LocationField
+          id="tf-to"
+          label="To"
+          value={endpoint('to')}
+          onChange={setEndpoint('to')}
+          placeholder="Community being toured"
+        />
         <div className="sm:col-span-2">
           <Label htmlFor="tf-outcome">Outcome</Label>
           <Input id="tf-outcome" placeholder="Toured, deposit taken…" {...register('outcome')} />

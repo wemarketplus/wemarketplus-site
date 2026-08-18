@@ -27,6 +27,26 @@ export const invoiceSchema = z.object({
     .uuid('Application id must be a valid UUID')
     .optional()
     .or(z.literal('')),
+  /**
+   * REVENUE ATTRIBUTION — the admitted patient this invoice bills for and the
+   * referral source (facility/account) that produced them.
+   *
+   * Both existed as backend columns and both are what Revenue Intelligence
+   * aggregates on, but neither had a form field, so every invoice raised in the
+   * app stored null and "revenue by referral source" was always empty. Optional
+   * because a Grants-side invoice legitimately has neither — null there means
+   * "not hospice-attributed", not "missing data".
+   */
+  prospectId: z
+    .string()
+    .uuid('Pick a patient from the list')
+    .optional()
+    .or(z.literal('')),
+  referralSourceId: z
+    .string()
+    .uuid('Pick a referral source from the list')
+    .optional()
+    .or(z.literal('')),
   notes: z.string().optional(),
 });
 

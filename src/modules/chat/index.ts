@@ -1,8 +1,8 @@
-// Team chat + DM + AI assistant — API-only module (no page UI yet).
+// Secure messaging (staff channels + DMs) and the AI assistant client.
 export {
   chatApi,
   useListChatUsersQuery,
-  useHeartbeatMutation,
+  useHeartbeatQuery,
   useListChannelMessagesQuery,
   useSendChannelMessageMutation,
   useDmUnreadCountsQuery,
@@ -16,4 +16,15 @@ export {
   useAiApplicationAssistMutation,
   useAiCommunicationsAssistMutation,
 } from './api/chatApi';
-export type { ChatUser, ChatMessage, AiReply } from './types/chatTypes';
+export { SecureMessagingPage } from './pages/SecureMessagingPage';
+export { useSecureMessaging, type Conversation } from './hooks/useSecureMessaging';
+export { useChatPresence } from './hooks/useChatPresence';
+export { CHAT_CHANNELS } from './constants/chatConstants';
+export type {
+  AiReply,
+  ChannelMessage,
+  ChatRosterEntry,
+  ChatUser,
+  DmMessage,
+  ThreadMessage,
+} from './types/chatTypes';

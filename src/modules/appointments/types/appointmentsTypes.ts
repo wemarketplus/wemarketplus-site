@@ -39,6 +39,14 @@ export interface AppointmentRecord {
   endAt: ISODateString;
   appointmentType: AppointmentType;
   location: string | null;
+  /**
+   * Coordinates for `location` when it is a PLACE, from the map picker. Null in
+   * pairs — and legitimately null for a `virtual`/`call` appointment, whose
+   * "location" is a meeting link or a phone number, as well as for anything
+   * booked before the form had a map.
+   */
+  locationLat: number | null;
+  locationLng: number | null;
   /** Always an array — the backend normalises null away. */
   attendeeIds: ID[];
   assignedRep: ID | null;
@@ -66,6 +74,13 @@ export interface CreateAppointmentRequest {
   endAt: string;
   appointmentType?: AppointmentType;
   location?: string;
+  /**
+   * Sent in PAIRS or not at all — the server rejects a lone half with a 400.
+   * Already rounded to 7 decimals by the picker (`roundCoord`), matching
+   * numeric(10,7).
+   */
+  locationLat?: number;
+  locationLng?: number;
   attendeeIds?: string[];
   assignedRep?: string;
   status?: AppointmentStatus;
@@ -143,6 +158,9 @@ export interface ScheduleVisitRequest {
   appointmentType?: AppointmentType;
   activityType?: ActivityType;
   location?: string;
+  /** Paired, like every other coordinate in the API. */
+  locationLat?: number;
+  locationLng?: number;
   assignedRep?: string;
   objective?: string;
 }

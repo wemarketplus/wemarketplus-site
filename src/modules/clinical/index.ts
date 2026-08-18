@@ -1,5 +1,6 @@
 export { ClinicalPage } from './pages/ClinicalPage';
 export { FamilyCommunicationPage } from './pages/FamilyCommunicationPage';
+export { MyVisitSchedulePage } from './pages/MyVisitSchedulePage';
 export { default as clinicalReducer } from './store/clinicalSlice';
 export {
   clinicalApi,

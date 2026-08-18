@@ -19,6 +19,17 @@ export interface EvvLogRecord extends Base {
   /** Where the visit ended. The API has always returned this; the type omitted it,
    *  so the table could only ever show the arrival location. */
   locationOut: string | null;
+  /**
+   * The two ends as coordinates, from the map picker. Separate pairs because
+   * arrival and departure are genuinely different places (picked up at the
+   * office, dropped at a facility) and this is the GPS half of an EVV record.
+   * Null in pairs — a visit clocked before the screen had a map, or a location
+   * typed by hand.
+   */
+  locationInLat: number | null;
+  locationInLng: number | null;
+  locationOutLat: number | null;
+  locationOutLng: number | null;
   visitType: string | null;
   /** Written at clock-in. */
   notes: string | null;
@@ -28,11 +39,18 @@ export interface EvvLogRecord extends Base {
 export interface ClockInRequest {
   prospectId?: string;
   locationIn?: string;
+  /** Paired or absent — the server 400s a lone half. */
+  locationInLat?: number;
+  locationInLng?: number;
   visitType?: string;
   notes?: string;
 }
 export interface ClockOutRequest {
   locationOut?: string;
+  /** Paired or absent. Named for the clock-OUT end so it cannot reach the
+   *  clock-in columns — the same rule `notesOut` exists for. */
+  locationOutLat?: number;
+  locationOutLng?: number;
   /** Maps to `notesOut`. Sending `notes` here used to erase the clock-in note and
    *  is now rejected by the backend DTO. */
   notesOut?: string;

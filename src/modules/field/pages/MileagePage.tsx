@@ -1,7 +1,12 @@
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { Download, Paperclip } from 'lucide-react';
+import { Download, MapPin, Paperclip } from 'lucide-react';
 import { useCsvDownload } from '@/shared/hooks';
+import {
+  EMPTY_LOCATION,
+  LocationField,
+  type LocationValue,
+} from '@/modules/geocoding';
 import { Button, Input, Label } from '@/shared/ui/core';
 import { Alert, DataTable, type Column } from '@/shared/ui/data-display';
 import { StatTile } from '@/shared/ui/data-display';
@@ -15,6 +20,11 @@ import {
   useListExpenseReceiptsQuery,
   useListMileageLogsQuery,
 } from '../api/mileageApi';
+import {
+  endpointFields,
+  hasCoordinates,
+  routeCoordinates,
+} from '../utils/tripLocations';
 import type {
   ExpenseReceiptRecord,
   MileageLogRecord,
@@ -48,8 +58,11 @@ export function MileagePage() {
   const [create, { isLoading: isSaving }] = useCreateMileageLogMutation();
 
   const [date, setDate] = useState(todayLocal());
-  const [fromLocation, setFrom] = useState('');
-  const [toLocation, setTo] = useState('');
+  // From/To are LOCATIONS now, not strings: a label a reviewer reads plus the
+  // coordinates it stands for. `EMPTY_LOCATION` is both halves absent — the same
+  // state a trip typed before the picker existed comes back in.
+  const [fromLocation, setFrom] = useState<LocationValue>(EMPTY_LOCATION);
+  const [toLocation, setTo] = useState<LocationValue>(EMPTY_LOCATION);
   const [purpose, setPurpose] = useState('');
   const [miles, setMiles] = useState('');
   // The trip the attach dialog is filing against. Null = closed.
@@ -105,13 +118,13 @@ export function MileagePage() {
     try {
       await create({
         date,
-        fromLocation: fromLocation || undefined,
-        toLocation: toLocation || undefined,
+        ...endpointFields('from', fromLocation),
+        ...endpointFields('to', toLocation),
         purpose: purpose || undefined,
         miles: parsed,
       }).unwrap();
-      setFrom('');
-      setTo('');
+      setFrom(EMPTY_LOCATION);
+      setTo(EMPTY_LOCATION);
       setPurpose('');
       setMiles('');
       toast.success('Trip logged.');
@@ -129,7 +142,23 @@ export function MileagePage() {
     {
       key: 'route',
       header: 'Route',
-      cell: (row) => `${row.fromLocation ?? '—'} → ${row.toLocation ?? '—'}`,
+      // The pin marks a trip whose endpoints were PICKED rather than typed, and
+      // its tooltip carries the coordinates. Kept to an icon: the route names
+      // are what an expense reviewer reads down the column, and two lat/lng
+      // pairs per row would bury them.
+      cell: (row) => (
+        <span className="inline-flex items-center gap-1.5">
+          {`${row.fromLocation ?? '—'} → ${row.toLocation ?? '—'}`}
+          {hasCoordinates(row) && (
+            <span title={routeCoordinates(row)}>
+              <MapPin
+                className="h-3 w-3 shrink-0 text-primary"
+                aria-label="Locations captured on a map"
+              />
+            </span>
+          )}
+        </span>
+      ),
     },
     { key: 'purpose', header: 'Purpose', cell: (row) => row.purpose ?? '—' },
     { key: 'miles', header: 'Miles', cell: (row) => Number(row.miles).toFixed(1) },
@@ -235,7 +264,7 @@ export function MileagePage() {
       )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-        <div className="space-y-1.5">
+        <div>
           <Label htmlFor="mileage-date">Date</Label>
           <Input
             id="mileage-date"
@@ -244,25 +273,24 @@ export function MileagePage() {
             onChange={(e) => setDate(e.target.value)}
           />
         </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="mileage-from">From</Label>
-          <Input
-            id="mileage-from"
-            value={fromLocation}
-            onChange={(e) => setFrom(e.target.value)}
-            placeholder="Office"
-          />
-        </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="mileage-to">To</Label>
-          <Input
-            id="mileage-to"
-            value={toLocation}
-            onChange={(e) => setTo(e.target.value)}
-            placeholder="Mercy General"
-          />
-        </div>
-        <div className="space-y-1.5">
+        {/* From/To open the map picker. Same grid cell, same Input styling and
+            the same optional-field rules as before — what changed is that the
+            value now carries coordinates as well as a name. */}
+        <LocationField
+          id="mileage-from"
+          label="From"
+          value={fromLocation}
+          onChange={setFrom}
+          placeholder="Office"
+        />
+        <LocationField
+          id="mileage-to"
+          label="To"
+          value={toLocation}
+          onChange={setTo}
+          placeholder="Mercy General"
+        />
+        <div>
           <Label htmlFor="mileage-purpose">Purpose</Label>
           <Input
             id="mileage-purpose"
@@ -271,7 +299,7 @@ export function MileagePage() {
             placeholder="Assessment visit"
           />
         </div>
-        <div className="space-y-1.5">
+        <div>
           <Label htmlFor="mileage-miles">Miles</Label>
           <Input
             id="mileage-miles"

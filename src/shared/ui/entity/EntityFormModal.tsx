@@ -1,6 +1,11 @@
 import { useEffect } from 'react';
 import type { FieldValues, Path, PathValue } from 'react-hook-form';
 import { get } from 'react-hook-form';
+import {
+  LocationField,
+  toLocationValue,
+  type LocationValue,
+} from '@/modules/geocoding';
 import { Button, Input, Label, Select, Textarea } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import type { EntityField, EntityFormModalProps } from './types';
@@ -129,6 +134,50 @@ function EntityFieldControl<TValues extends FieldValues>({
         },
       }
     : reg;
+
+  // A place picker owns its own label and writes THREE values (the name and the
+  // two coordinates), so it returns before the shared label/branch below rather
+  // than pretending to be a one-value input.
+  if (type === 'location' && field.latField && field.lngField) {
+    const asText = (path: Path<TValues>): string =>
+      (watch?.(path) as string | undefined) ?? '';
+    const write = (path: Path<TValues>, value: string) =>
+      setValue?.(path, value as PathValue<TValues, Path<TValues>>, {
+        shouldDirty: true,
+      });
+    const lat = Number(asText(field.latField));
+    const lng = Number(asText(field.lngField));
+    const value = toLocationValue(
+      asText(field.name),
+      asText(field.latField) && Number.isFinite(lat) ? lat : null,
+      asText(field.lngField) && Number.isFinite(lng) ? lng : null,
+    );
+    const onChange = (next: LocationValue) => {
+      write(field.name, next.label);
+      // Written as a pair or cleared as a pair — half a point is not a location,
+      // and the API rejects one anyway.
+      write(field.latField!, next.coords ? String(next.coords.lat) : '');
+      write(field.lngField!, next.coords ? String(next.coords.lng) : '');
+    };
+    return (
+      <div className={field.full ? 'sm:col-span-2' : undefined}>
+        {/* Registered but hidden: the form still owns these values, so a save
+            carries the coordinates even though no visible input holds them. */}
+        <input type="hidden" {...register(field.latField)} />
+        <input type="hidden" {...register(field.lngField)} />
+        <LocationField
+          id={id}
+          label={field.label}
+          value={value}
+          onChange={onChange}
+          placeholder={field.placeholder}
+        />
+        {error?.message && (
+          <p className="mt-1 text-[12px] text-destructive">{error.message}</p>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className={field.full ? 'sm:col-span-2' : undefined}>

@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Button, Input, Label, Select, Textarea } from '@/shared/ui/core';
+import { useCompanyNameOptions } from '@/shared/hooks/useSharedLookups';
 import { Modal } from '@/shared/ui/feedback';
 import { LEAD_SOURCE_OPTIONS } from '../constants/leadsConstants';
 import { newLeadSchema, type NewLeadFormValues } from '../schema/leadSchema';
@@ -37,6 +38,12 @@ export function AddLeadModal({
       referringOrg: '',
     },
   });
+
+  // Referring organisations come from the Companies tab rather than being typed:
+  // free text spawned a new spelling of the same facility on every intake, which
+  // is what made referral-source reporting unusable. Gated on `open` so closing
+  // the modal is the whole cost of not needing the list.
+  const companyOptions = useCompanyNameOptions(open);
 
   const close = () => {
     reset();
@@ -111,7 +118,24 @@ export function AddLeadModal({
         </div>
         <div>
           <Label htmlFor="al-org">Referring organisation</Label>
-          <Input id="al-org" {...register('referringOrg')} />
+          <Select
+            id="al-org"
+            {...register('referringOrg')}
+            disabled={!companyOptions}
+          >
+            <option value="">
+              {!companyOptions
+                ? 'Loading…'
+                : companyOptions.length
+                  ? 'Select a company…'
+                  : 'No companies yet — add one in Companies'}
+            </option>
+            {(companyOptions ?? []).map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </Select>
         </div>
         <div className="sm:col-span-2">
           <Label htmlFor="al-reason">Diagnosis / reason</Label>

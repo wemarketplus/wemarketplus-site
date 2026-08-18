@@ -67,8 +67,14 @@ export const HL_MARKETING_ROLES: readonly Role[] = [
   Role.Rep,
 ];
 
-// Clinical group (family communication, secure messaging, admissions). Management
-// plus the two clinical personas.
+// Clinical group (family communication, admissions). Management plus the two
+// clinical personas.
+//
+// Secure messaging used to be listed here and is deliberately NOT: it is staff
+// coordination, not patient care, and it sits on HL_FIELD_ROLES so a marketer who
+// has just assigned a visit can talk to the nurse who has to make it. The chat
+// backend applies no @Roles at all — only the Gold feature key — so the wider group
+// cannot 403.
 export const HL_CLINICAL_ROLES: readonly Role[] = [
   ...HL_MANAGEMENT_ROLES,
   Role.Nurse,

@@ -10,6 +10,12 @@ export interface InvoiceRecord {
   invoiceNumber: string;
   companyName: string;
   applicationId: ID | null;
+  /**
+   * Revenue attribution — see the same pair on the backend Invoice entity. Null
+   * means "not hospice-attributed" (a Grants-side invoice), not missing data.
+   */
+  prospectId: ID | null;
+  referralSourceId: ID | null;
   amount: number;
   feeModel: string | null;
   status: InvoiceStatus;
@@ -28,6 +34,8 @@ export interface CreateInvoiceRequest {
   amount: number;
   invoiceNumber?: string;
   applicationId?: string | null;
+  prospectId?: string | null;
+  referralSourceId?: string | null;
   feeModel?: string | null;
   status?: InvoiceStatus;
   dueDate?: string | null;

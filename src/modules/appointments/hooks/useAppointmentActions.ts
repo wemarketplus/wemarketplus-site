@@ -37,7 +37,15 @@ export function useAppointmentActions() {
           startAt: new Date(values.startAt).toISOString(),
           endAt: new Date(values.endAt).toISOString(),
           appointmentType: values.appointmentType as AppointmentType,
+          // Blank means "leave it to the server", which assigns the caller. An
+          // empty string would fail @IsUUID, so it is dropped rather than sent.
+          assignedRep: values.assignedRep || undefined,
           location: values.location?.trim() || undefined,
+          // Sent as a pair or not at all — the server 400s a lone half. The
+          // form only ever sets both (the picker writes them together) or
+          // neither (a virtual/call appointment, whose location is a link).
+          locationLat: values.locationLat,
+          locationLng: values.locationLng,
         }).unwrap();
         toast.success('Appointment scheduled.');
         setScheduleOpen(false);

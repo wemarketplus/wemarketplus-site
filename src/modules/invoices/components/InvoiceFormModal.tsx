@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useProspectLookup, useReferralSourceLookup } from '@/shared/hooks';
 import { EntityFormModal } from '@/shared/ui/entity';
 import { INVOICE_FIELDS } from '../constants/invoicesConstants';
 import { invoiceSchema, type InvoiceFormValues } from '../schema/invoiceSchema';
@@ -15,6 +16,8 @@ const EMPTY: InvoiceFormValues = {
   feeModel: '',
   dueDate: '',
   applicationId: '',
+  prospectId: '',
+  referralSourceId: '',
   notes: '',
 };
 
@@ -60,12 +63,21 @@ export function InvoiceFormModal({
     if (ok) reset(EMPTY);
   });
 
+  /**
+   * The attribution pickers. Gated on `open` so a closed modal fetches neither
+   * list, matching every other lookup in the app.
+   */
+  const lookups = {
+    referralSourceId: useReferralSourceLookup(open),
+    prospectId: useProspectLookup(open),
+  };
+
   // DEPRECATED — NOT NEEDED, PENDING REMOVAL: the Application lookup that fed
   // the (now removed) applicationId field. The Grants domain was hidden from the
   // UI on 2026-08-06 per the product owner, so the form no longer fetches
-  // GET /applications. Restore alongside the field in INVOICE_FIELDS:
-  //   const lookups = { applicationId: useApplicationLookup(open) };
-  // ...and pass `lookups={lookups}` to EntityFormModal below.
+  // GET /applications. To restore it, re-add the field to INVOICE_FIELDS and add
+  //   applicationId: useApplicationLookup(open)
+  // to the `lookups` object above.
   return (
     <EntityFormModal<InvoiceFormValues>
       open={open}
@@ -75,6 +87,7 @@ export function InvoiceFormModal({
       fields={INVOICE_FIELDS}
       register={register}
       errors={errors}
+      lookups={lookups}
       onSubmit={submit}
       onClose={close}
     />

@@ -42,6 +42,7 @@ import { mileageApi } from '@/modules/field';
 import { schedulingApi } from '@/modules/scheduling';
 import { financeApi } from '@/modules/finance';
 import { fundingApi } from '@/modules/funding';
+import { geocodingApi } from '@/modules/geocoding';
 import { trainingApi } from '@/modules/training-providers';
 import { billingApi, billingReducer } from '@/modules/billing';
 import { adminSettingsApi as clAdminSettingsApi } from '@/modules/cl-admin-settings';
@@ -152,6 +153,7 @@ const rootReducer = combineReducers({
   [impersonationApi.reducerPath]: impersonationApi.reducer,
   [financeApi.reducerPath]: financeApi.reducer,
   [mileageApi.reducerPath]: mileageApi.reducer,
+  [geocodingApi.reducerPath]: geocodingApi.reducer,
   [schedulingApi.reducerPath]: schedulingApi.reducer,
   [intelligenceApi.reducerPath]: intelligenceApi.reducer,
   [fundingApi.reducerPath]: fundingApi.reducer,
@@ -236,6 +238,7 @@ export const store = configureStore({
       impersonationApi.middleware,
       financeApi.middleware,
       mileageApi.middleware,
+      geocodingApi.middleware,
       schedulingApi.middleware,
       intelligenceApi.middleware,
       fundingApi.middleware,
