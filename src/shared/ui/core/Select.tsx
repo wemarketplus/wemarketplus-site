@@ -1,17 +1,17 @@
 import { forwardRef, type SelectHTMLAttributes } from 'react';
 import { cn } from '@/shared/utils/cn';
+import { CONTROL_BASE, CONTROL_HEIGHT } from './controlStyles';
 
 export type SelectProps = SelectHTMLAttributes<HTMLSelectElement>;
 
-// Matches the demo `.fi` select: dark surface, 10px radius, accent focus.
+// Matches the demo `.fi` select. Shares CONTROL_BASE/CONTROL_HEIGHT with
+// <Input> so the two are exactly the same height and inset wherever they sit in
+// the same row — see controlStyles.ts.
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ({ className, children, ...props }, ref) => (
     <select
       ref={ref}
-      className={cn(
-        'w-full rounded-[10px] border border-border/[0.12] bg-surface-raised px-3 py-[10px] text-[14px] text-foreground outline-none transition-colors focus:border-primary disabled:opacity-50',
-        className,
-      )}
+      className={cn(CONTROL_BASE, CONTROL_HEIGHT, className)}
       {...props}
     >
       {children}

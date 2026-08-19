@@ -2,8 +2,11 @@ import { ReferralSourceStatus as Status } from '@/shared/types';
 import type { ReferralSource, ReferralSourceStatus } from '@/shared/types';
 import {
   ReferralAccountStatus,
+  type CreateReferralSourceRequest,
   type ReferralSourceRecord,
+  type UpdateReferralSourceRequest,
 } from '../types/referralsTypes';
+import type { NewReferralFormValues } from '../schema/referralSchema';
 
 // The backend referral_sources row is now the full account record, so the health
 // pill and priority come from REAL columns (`status`, `priorityTier`) instead of
@@ -53,6 +56,42 @@ export function mapReferralSource(r: ReferralSourceRecord): ReferralSource {
     // conversions and so read 0 for referrals logged through Add Prospect.
     referralCount: r.referralCount,
     acceptsGifts: false,
+  };
+}
+
+// Add/edit form <-> POST/PATCH /referral-sources body. Blank optionals are
+// dropped so the backend's whitelist DTO never sees an empty string on an
+// optional field.
+export function toCreateReferral(values: NewReferralFormValues): CreateReferralSourceRequest {
+  return {
+    name: values.name.trim(),
+    type: values.type,
+    ...(values.status ? { status: values.status as ReferralAccountStatus } : {}),
+    ...(values.contactName?.trim() ? { contactName: values.contactName.trim() } : {}),
+    ...(values.phone?.trim() ? { phone: values.phone.trim() } : {}),
+    ...(values.email?.trim() ? { email: values.email.trim() } : {}),
+    ...(values.city?.trim() ? { city: values.city.trim() } : {}),
+    ...(values.state?.trim() ? { state: values.state.trim() } : {}),
+    ...(values.notes?.trim() ? { notes: values.notes.trim() } : {}),
+  };
+}
+
+export function toUpdateReferral(values: NewReferralFormValues): UpdateReferralSourceRequest {
+  return toCreateReferral(values);
+}
+
+// Seeds the edit form from an existing record.
+export function toReferralFormValues(record: ReferralSourceRecord): NewReferralFormValues {
+  return {
+    name: record.name,
+    type: record.type,
+    status: record.status,
+    contactName: record.contactName ?? '',
+    phone: record.phone ?? '',
+    email: record.email ?? '',
+    city: record.city ?? '',
+    state: record.state ?? '',
+    notes: record.notes ?? '',
   };
 }
 

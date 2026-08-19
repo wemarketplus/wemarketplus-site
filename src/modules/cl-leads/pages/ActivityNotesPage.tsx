@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { NotebookPen } from 'lucide-react';
 import { CL_SALES_ROLES, useRole } from '@/shared/rbac';
-import { Button, Card, CardContent, Input, Select } from '@/shared/ui/core';
+import { Button, Card, CardContent, DatePicker, Input, Select } from '@/shared/ui/core';
 import { EmptyState } from '@/shared/ui/feedback';
 import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
 import {
@@ -123,8 +123,7 @@ export function ActivityNotesPage() {
               value={nextStep}
               onChange={(e) => setNextStep(e.target.value)}
             />
-            <Input
-              type="date"
+            <DatePicker
               value={followUpDate}
               onChange={(e) => setFollowUpDate(e.target.value)}
               aria-label="Follow-up date"

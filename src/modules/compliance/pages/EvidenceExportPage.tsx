@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Card, CardContent, Input, Label } from '@/shared/ui/core';
+import { Button, Card, CardContent, DatePicker, Label } from '@/shared/ui/core';
 import { PortalShell } from '../components/PortalShell';
 import { useEvidenceExport } from '../hooks/useEvidenceExport';
 
@@ -21,11 +21,11 @@ export function EvidenceExportPage() {
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label htmlFor="start">Start Date</Label>
-                <Input id="start" type="date" value={start} onChange={(e) => setStart(e.target.value)} />
+                <DatePicker id="start" value={start} onChange={(e) => setStart(e.target.value)} />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="end">End Date</Label>
-                <Input id="end" type="date" value={end} onChange={(e) => setEnd(e.target.value)} />
+                <DatePicker id="end" value={end} onChange={(e) => setEnd(e.target.value)} />
               </div>
             </div>
             <div className="flex gap-2">

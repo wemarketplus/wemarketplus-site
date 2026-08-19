@@ -1,6 +1,7 @@
 import { UserPlus } from 'lucide-react';
 import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
 import { EmptyState } from '@/shared/ui/feedback';
+import { EntityRowActions } from '@/shared/ui/entity';
 import { formatDate } from '@/shared/utils/dateFormatter';
 import type { Prospect } from '@/shared/types';
 import {
@@ -12,6 +13,8 @@ import {
 
 const buildColumns = (
   onOpen: (id: string) => void,
+  onEdit: (id: string) => void,
+  onDelete: ((id: string) => void) | undefined,
 ): ReadonlyArray<Column<Prospect>> => [
   {
     key: 'prospect',
@@ -56,6 +59,20 @@ const buildColumns = (
   { key: 'marketer', header: 'Marketer', cell: (p) => p.assignedMarketer },
   { key: 'next', header: 'Next step', cell: (p) => p.nextStep },
   { key: 'due', header: 'Due', cell: (p) => formatDate(p.followUpDate) },
+  {
+    key: 'actions',
+    header: '',
+    headerClassName: 'w-20',
+    className: 'text-right',
+    cell: (p) => (
+      <EntityRowActions
+        onEdit={() => onEdit(p.id)}
+        onDelete={onDelete ? () => onDelete(p.id) : undefined}
+        editLabel={`Edit ${p.name}`}
+        deleteLabel={`Delete ${p.name}`}
+      />
+    ),
+  },
 ];
 
 interface ProspectsTableProps {
@@ -67,12 +84,23 @@ interface ProspectsTableProps {
   hasFilters?: boolean;
   /** Opens the detail drawer for a row. */
   onOpen: (id: string) => void;
+  /** Opens the Edit modal, seeded from this row. */
+  onEdit: (id: string) => void;
+  /** Omitted (hides the action) for a caller without delete permission. */
+  onDelete?: (id: string) => void;
 }
 
-export function ProspectsTable({ prospects, onAdd, hasFilters, onOpen }: ProspectsTableProps) {
+export function ProspectsTable({
+  prospects,
+  onAdd,
+  hasFilters,
+  onOpen,
+  onEdit,
+  onDelete,
+}: ProspectsTableProps) {
   return (
     <DataTable
-      columns={buildColumns(onOpen)}
+      columns={buildColumns(onOpen, onEdit, onDelete)}
       rows={prospects}
       rowKey={(p) => p.id}
       empty={

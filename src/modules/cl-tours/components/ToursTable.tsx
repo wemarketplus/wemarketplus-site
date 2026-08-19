@@ -1,11 +1,10 @@
 import { CalendarClock, MapPin } from 'lucide-react';
 import { formatCoords } from '@/modules/geocoding';
 import { CL_MANAGEMENT_ROLES, useRole } from '@/shared/rbac';
-import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
+import { DataTable, Pill, StatusSelect, type Column } from '@/shared/ui/data-display';
 import { EmptyState } from '@/shared/ui/feedback';
 import { EntityRowActions } from '@/shared/ui/entity';
 import {
-  TOUR_STATUS_LABELS,
   TOUR_STATUS_OPTIONS,
   TOUR_STATUS_PILL,
 } from '../constants/clToursConstants';
@@ -123,26 +122,27 @@ export function ToursTable({
       header: 'Duration',
       cell: (t) => (t.durationMin ? `${t.durationMin} min` : '—'),
     },
+    /**
+     * Status — ONE control, not a badge plus a dropdown saying the same thing.
+     *
+     * The badge and the select were both bound to `t.status`, so each row
+     * printed its status twice. <StatusSelect> is the badge and the picker in
+     * one element: same pill colour for scanning the column, still changeable
+     * in place without opening the edit modal (the PATCH behind
+     * `onStatusChange` is untouched).
+     */
     {
       key: 'status',
       header: 'Status',
       cell: (t) => (
-        <span className="inline-flex items-center gap-2">
-          <Pill tone={TOUR_STATUS_PILL[t.status]}>{TOUR_STATUS_LABELS[t.status]}</Pill>
-          <select
-            aria-label={`Change status for tour`}
-            value={t.status}
-            disabled={isMutating}
-            onChange={(e) => onStatusChange(t, e.target.value)}
-            className="rounded-md border border-border/[0.15] bg-white px-1.5 py-1 text-[11px] text-foreground"
-          >
-            {TOUR_STATUS_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-        </span>
+        <StatusSelect
+          value={t.status}
+          tone={TOUR_STATUS_PILL[t.status]}
+          options={TOUR_STATUS_OPTIONS}
+          disabled={isMutating}
+          onChange={(status) => onStatusChange(t, status)}
+          aria-label={`Change status for the tour with ${leadName(t.leadId)}`}
+        />
       ),
     },
     { key: 'outcome', header: 'Outcome', cell: (t) => t.outcome ?? '—' },

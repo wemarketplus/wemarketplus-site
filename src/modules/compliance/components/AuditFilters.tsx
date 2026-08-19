@@ -1,6 +1,6 @@
 import { X } from 'lucide-react';
 import { useUserLookup } from '@/shared/hooks';
-import { Button, Input, Label, Select } from '@/shared/ui/core';
+import { Button, DatePicker, Input, Label, Select } from '@/shared/ui/core';
 import type { AuditLogFilters } from '../types/complianceTypes';
 
 interface AuditFiltersProps {
@@ -59,18 +59,16 @@ export function AuditFilters({ filters, onChange, onClear }: AuditFiltersProps) 
       </div>
       <div>
         <Label htmlFor="audit-from">From</Label>
-        <Input
+        <DatePicker
           id="audit-from"
-          type="date"
           value={filters.dateFrom}
           onChange={(e) => onChange('dateFrom', e.target.value)}
         />
       </div>
       <div>
         <Label htmlFor="audit-to">To</Label>
-        <Input
+        <DatePicker
           id="audit-to"
-          type="date"
           value={filters.dateTo}
           onChange={(e) => onChange('dateTo', e.target.value)}
         />

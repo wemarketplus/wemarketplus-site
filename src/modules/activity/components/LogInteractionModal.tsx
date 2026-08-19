@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Input, Label, Select, Textarea } from '@/shared/ui/core';
+import { Button, DatePicker, Input, Label, Select, Textarea } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import {
   ACTIVITY_TYPE_OPTIONS,
@@ -179,9 +179,8 @@ export function LogInteractionModal({
 
         <div>
           <Label htmlFor="li-follow">Follow up on</Label>
-          <Input
+          <DatePicker
             id="li-follow"
-            type="date"
             value={values.followUpDate}
             onChange={(e) => set('followUpDate', e.target.value)}
           />

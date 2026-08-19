@@ -38,6 +38,10 @@ export function useProspectsList() {
 
   return {
     prospects: filtered,
+    // Raw records, keyed by id — the Edit modal seeds from the full record
+    // (facility, physician, diagnosis, ...), which the `Prospect` view-model
+    // the table renders does not carry.
+    records: data?.data ?? [],
     total: data?.total ?? 0,
     isLoading,
     isUsingFixture: false,

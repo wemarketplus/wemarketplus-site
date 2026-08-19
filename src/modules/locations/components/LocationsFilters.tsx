@@ -1,5 +1,4 @@
-import { Search } from 'lucide-react';
-import { Input, Select } from '@/shared/ui/core';
+import { Input, Select, SearchInput } from '@/shared/ui/core';
 import { LOCATION_STATUS_FILTER_OPTIONS } from '../constants/locationsConstants';
 
 interface LocationsFiltersProps {
@@ -24,15 +23,12 @@ export function LocationsFilters({
 }: LocationsFiltersProps) {
   return (
     <div className="flex flex-col gap-3 sm:flex-row">
-      <div className="relative max-w-sm flex-1">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
-        <Input
-          value={search}
-          onChange={(e) => onSearch(e.target.value)}
-          placeholder="Search by location name…"
-          className="pl-9"
-        />
-      </div>
+      <SearchInput
+        wrapperClassName="max-w-sm flex-1"
+        value={search}
+        onChange={onSearch}
+        placeholder="Search by location name…"
+      />
       <Select value={status} onChange={(e) => onStatus(e.target.value)} className="max-w-[12rem]">
         {LOCATION_STATUS_FILTER_OPTIONS.map((o) => (
           <option key={o.value} value={o.value}>

@@ -1,5 +1,4 @@
-import { Search } from 'lucide-react';
-import { Input, Select } from '@/shared/ui/core';
+import { SearchInput, Select } from '@/shared/ui/core';
 import { COMPANY_STATUS_FILTER_OPTIONS } from '../constants/companiesConstants';
 
 interface CompaniesFiltersProps {
@@ -18,13 +17,11 @@ export function CompaniesFilters({
 }: CompaniesFiltersProps) {
   return (
     <div className="flex flex-col gap-3 sm:flex-row">
-      <div className="relative max-w-sm flex-1">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
-        <Input
+      <div className="max-w-sm flex-1">
+        <SearchInput
           value={search}
-          onChange={(e) => onSearch(e.target.value)}
+          onChange={onSearch}
           placeholder="Search by name, contact, or domain…"
-          className="pl-9"
         />
       </div>
       <Select

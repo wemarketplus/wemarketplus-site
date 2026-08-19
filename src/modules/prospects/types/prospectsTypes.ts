@@ -168,8 +168,10 @@ export interface ProspectsUiState {
 export interface AddProspectModalProps {
   open: boolean;
   isSaving: boolean;
+  // When set, the modal is in edit mode and seeds from this record.
+  editing?: ProspectRecord | null;
   onClose: () => void;
-  // Returns true when the create succeeded, so the form can reset.
+  // Returns true when the create/update succeeded, so the form can reset.
   onSubmit: (values: NewProspectFormValues) => Promise<boolean>;
 }
 

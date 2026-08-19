@@ -6,7 +6,7 @@ import {
   toLocationValue,
   type LocationValue,
 } from '@/modules/geocoding';
-import { Button, Input, Label, Select, Textarea } from '@/shared/ui/core';
+import { Button, DatePicker, Input, Label, Select, Textarea } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import type { EntityField, EntityFormModalProps } from './types';
 
@@ -228,8 +228,37 @@ function EntityFieldControl<TValues extends FieldValues>({
             </option>
           ))}
         </Select>
+      ) : type === 'date' ? (
+        // The shared calendar control rather than `<input type="date">`, whose
+        // icon Chrome draws as a grey glyph, Safari omits, and Firefox draws
+        // differently again. The value stays a `yyyy-MM-dd` string, so `control`
+        // (the react-hook-form registration) spreads in unchanged and every
+        // schema and DTO downstream is untouched — see DatePicker.
+        <DatePicker
+          id={id}
+          min={
+            field.min
+              ? typeof field.min === 'function'
+                ? field.min()
+                : field.min
+              : undefined
+          }
+          {...control}
+        />
       ) : (
-        <Input id={id} type={type} placeholder={field.placeholder} {...control} />
+        <Input
+          id={id}
+          type={type}
+          placeholder={field.placeholder}
+          min={
+            type === 'datetime-local' && field.min
+              ? typeof field.min === 'function'
+                ? field.min()
+                : field.min
+              : undefined
+          }
+          {...control}
+        />
       )}
       {error?.message && (
         <p className="mt-1 text-[12px] text-destructive">{error.message}</p>

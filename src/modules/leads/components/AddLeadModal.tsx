@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Button, Input, Label, Select, Textarea } from '@/shared/ui/core';
+import { Button, DatePicker, Input, Label, Select, Textarea } from '@/shared/ui/core';
 import { useCompanyNameOptions } from '@/shared/hooks/useSharedLookups';
 import { Modal } from '@/shared/ui/feedback';
 import { LEAD_SOURCE_OPTIONS } from '../constants/leadsConstants';
@@ -105,7 +105,7 @@ export function AddLeadModal({
         </div>
         <div>
           <Label htmlFor="al-dob">Patient DOB</Label>
-          <Input id="al-dob" type="date" {...register('patientDob')} />
+          <DatePicker id="al-dob" {...register('patientDob')} />
           {errors.patientDob && (
             <p className="mt-1 text-[12px] text-destructive">
               {errors.patientDob.message}

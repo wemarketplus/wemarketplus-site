@@ -6,7 +6,7 @@ import { NotificationsBell } from '@/modules/notifications';
 import { GlobalSearch } from '@/modules/search';
 import { roleTitle } from '@/shared/rbac';
 import { Button } from '@/shared/ui/core/Button';
-import { useOverlayOpen } from '@/shared/ui/feedback';
+import { confirm, useOverlayOpen } from '@/shared/ui/feedback';
 import { cn } from '@/shared/utils/cn';
 
 // Topbar mirrors wemarketplus-site dashboards: thin hairline divider, user
@@ -40,6 +40,33 @@ export function DashboardHeader() {
     ? `${user.firstName?.[0] ?? ''}${user.lastName?.[0] ?? ''}`.toUpperCase() || '?'
     : '';
 
+  /**
+   * Sign-out ASKS FIRST. It used to dispatch `logout()` straight from the click,
+   * so a mis-aimed click on a control that sits inches from the notifications
+   * bell ended the session outright — and because the button is in the shell,
+   * that is reachable from every screen in the app, including one with a
+   * half-filled form open.
+   *
+   * Reuses the same `confirm()` host every delete in the app already goes
+   * through, so there is no second dialog implementation to keep in sync.
+   * `destructive: false` — signing out is reversible (log back in), so this
+   * gets the neutral primary button and no "cannot be undone" line, unlike a
+   * record delete.
+   *
+   * Fails closed: `confirm()` resolves false when no host is mounted, so a
+   * missing ConfirmHost keeps the user signed in rather than logging them out.
+   */
+  const signOut = async () => {
+    const ok = await confirm({
+      title: 'Sign out?',
+      body: 'You will be returned to the sign-in screen and any unsaved work on this page will be lost.',
+      confirmLabel: 'Sign out',
+      cancelLabel: 'Cancel',
+      destructive: false,
+    });
+    if (ok) dispatch(logout());
+  };
+
   return (
     <header
       className={cn(
@@ -51,6 +78,19 @@ export function DashboardHeader() {
         WeMarketPlus CRM
       </div>
 
+      {/*
+        Every control in this row is 36px tall (h-9 — the Button `sm`/`icon`
+        size), so they share one centre line and one cap height. They were
+        previously each sized by their own padding (`py-1`, `py-1.5`, `h-9`),
+        which left the search pill, the switcher, the bell and the profile chip
+        at four different heights stacked against a hairline — the "unbalanced"
+        header. The sizing now lives in each component (see GlobalSearch,
+        ProductSwitcher, NotificationsBell), not in per-instance overrides here.
+
+        `gap-2` throughout, widening to `gap-3` before the sign-out button so the
+        session-ending control is not flush against the profile chip it is most
+        likely to be mis-clicked for.
+      */}
       <div className="flex items-center gap-2">
         <GlobalSearch />
         {/* Which dashboard is live, next to the bell. Available to every
@@ -58,15 +98,15 @@ export function DashboardHeader() {
         <ProductSwitcher />
         <NotificationsBell />
         {user && (
-          <div className="flex items-center gap-3 rounded-pill border border-border/[0.08] bg-surface/60 py-1 pr-3 pl-1">
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/20 text-[11px] font-semibold text-primary">
+          <div className="flex h-9 items-center gap-2.5 rounded-pill border border-border/[0.08] bg-surface/60 pl-1 pr-3">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/20 text-[11px] font-semibold text-primary">
               {initials}
             </div>
-            <div className="hidden text-right sm:block">
-              <p className="text-xs font-semibold text-foreground leading-none">
+            <div className="hidden leading-none sm:block">
+              <p className="text-[12px] font-semibold leading-none text-foreground">
                 {user.firstName} {user.lastName}
               </p>
-              <p className="mt-0.5 text-[10px] uppercase tracking-[0.1em] text-muted-soft leading-none">
+              <p className="mt-1 text-[10px] uppercase leading-none tracking-[0.1em] text-muted-soft">
                 {roleTitle(user.role, user.customRole?.name)}
               </p>
             </div>
@@ -75,8 +115,9 @@ export function DashboardHeader() {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => dispatch(logout())}
+          onClick={signOut}
           aria-label="Sign out"
+          className="ml-1"
         >
           <LogOut className="h-4 w-4" />
           <span className="hidden sm:inline">Sign out</span>

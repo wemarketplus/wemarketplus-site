@@ -1,8 +1,11 @@
+import { Plus } from 'lucide-react';
 import { PIPELINE_TYPE_OPTIONS } from '@/modules/prospects/constants/prospectsConstants';
-import type { ProspectPipelineType } from '@/modules/prospects/types/prospectsTypes';
-import { Card, CardContent, Select } from '@/shared/ui/core';
+import { ProspectPipelineType } from '@/modules/prospects/types/prospectsTypes';
+import { Button, Card, CardContent, Select } from '@/shared/ui/core';
+import { AddOpportunityModal } from '../components/AddOpportunityModal';
 import { LostReasonModal } from '../components/LostReasonModal';
 import { PipelineColumn } from '../components/PipelineColumn';
+import { useAddOpportunity } from '../hooks/useAddOpportunity';
 import { usePipelineBoard } from '../hooks/usePipelineBoard';
 import { cardTitle, stageLabel } from '../utils/pipelineUtils';
 
@@ -25,6 +28,13 @@ export function PipelinePage() {
     cancelLostMove,
   } = usePipelineBoard();
 
+  // Add Opportunity is the board's only creation path, and only makes sense for
+  // the Outreach type: a referral-to-admit row is a patient, created from the
+  // Prospects screen's Add Prospect — building a second form for that type here
+  // would duplicate it rather than close a gap.
+  const opportunity = useAddOpportunity();
+  const isOutreach = pipelineType === ProspectPipelineType.Outreach;
+
   return (
     <div className="space-y-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -39,21 +49,28 @@ export function PipelinePage() {
             )}
           </p>
         </div>
-        <label className="flex items-center gap-2 text-xs text-muted">
-          Pipeline
-          <Select
-            value={pipelineType}
-            onChange={(event) =>
-              changePipelineType(event.target.value as ProspectPipelineType)
-            }
-          >
-            {PIPELINE_TYPE_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </Select>
-        </label>
+        <div className="flex flex-wrap items-end gap-3">
+          <label className="flex items-center gap-2 text-xs text-muted">
+            Pipeline
+            <Select
+              value={pipelineType}
+              onChange={(event) =>
+                changePipelineType(event.target.value as ProspectPipelineType)
+              }
+            >
+              {PIPELINE_TYPE_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
+          </label>
+          {isOutreach && (
+            <Button onClick={opportunity.openModal}>
+              <Plus className="h-4 w-4" /> Add opportunity
+            </Button>
+          )}
+        </div>
       </header>
 
       {isError && (
@@ -120,6 +137,13 @@ export function PipelinePage() {
         cardTitle={pendingLostMove?.cardTitle ?? ''}
         onCancel={cancelLostMove}
         onConfirm={confirmLostMove}
+      />
+
+      <AddOpportunityModal
+        open={opportunity.open}
+        isSaving={opportunity.isSaving}
+        onClose={opportunity.close}
+        onSubmit={opportunity.submit}
       />
     </div>
   );

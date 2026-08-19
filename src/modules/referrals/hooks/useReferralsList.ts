@@ -30,6 +30,10 @@ export function useReferralsList() {
 
   return {
     referrals: filtered,
+    // Raw records, keyed by id — the Edit modal seeds from the full record
+    // (status, priority tier, address, ...), which the `ReferralSource`
+    // view-model the table renders does not carry.
+    records: data?.data ?? [],
     total: data?.total ?? referrals.length,
     // Counted from the CURRENT page's rows, which is honest when the cold view
     // is on (every row is cold) and a floor otherwise. The authoritative list is

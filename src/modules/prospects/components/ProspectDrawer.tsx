@@ -6,7 +6,7 @@ import { TouchLog } from '@/modules/activity';
 import { formatDate } from '@/shared/utils/dateFormatter';
 import type { NoteRecord } from '@/modules/activity/types/activityTypes';
 import type { ReferralSourceRecord } from '@/modules/referrals/types/referralsTypes';
-import { STAGE_LABELS } from '../constants/prospectsConstants';
+import { STAGE_LABELS, URGENCY_LABELS, URGENCY_PILL } from '../constants/prospectsConstants';
 import type { ProspectRecord } from '../types/prospectsTypes';
 
 interface ProspectDrawerProps {
@@ -73,7 +73,18 @@ export function ProspectDrawer({
         <div className="space-y-6">
           <div className="flex flex-wrap items-center gap-2">
             <Pill tone="b">{STAGE_LABELS[prospect.stage]}</Pill>
-            {prospect.isHotLead && <Pill tone="r">Hot</Pill>}
+            {/*
+              The urgency field (Hot/Warm/Cold), not the legacy `isHotLead`
+              boolean this used to read. `isHotLead` predates `urgency`, no
+              form writes it any more (see my-day.service.ts's hotAlerts —
+              "the two fields meaning one thing is a product cleanup"), and
+              reading it here meant Warm/Cold prospects showed no badge at
+              all while the Prospects table's own urgency pill (right next
+              to this drawer) disagreed for the same record.
+            */}
+            <Pill tone={URGENCY_PILL[prospect.urgency]}>
+              {URGENCY_LABELS[prospect.urgency]}
+            </Pill>
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">

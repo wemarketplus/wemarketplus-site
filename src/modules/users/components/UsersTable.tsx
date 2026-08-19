@@ -62,14 +62,24 @@ export function UsersTable({
     {
       key: 'user',
       header: 'User',
+      // `min-w-0` on both the row and the text column is what makes the name
+      // readable: without it the text block refuses to shrink below its content
+      // width, overflows the cell, and DataTable's `overflow-hidden` wrapper cuts
+      // it off mid-word with no ellipsis and no way to see the rest. With it the
+      // name ellipsizes cleanly, and `title` surfaces the full value on hover.
+      // `shrink-0` keeps the avatar a circle instead of an oval when it does.
       cell: (u) => (
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#dff1ff] text-xs font-semibold text-[#0f5c8a]">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#dff1ff] text-xs font-semibold text-[#0f5c8a]">
             {initials(u)}
           </div>
-          <div>
-            <p className="font-bold text-foreground">{fullName(u)}</p>
-            <p className="text-[11px] text-muted">{u.email}</p>
+          <div className="min-w-0">
+            <p className="truncate font-bold text-foreground" title={fullName(u)}>
+              {fullName(u)}
+            </p>
+            <p className="truncate text-[11px] text-muted" title={u.email}>
+              {u.email}
+            </p>
           </div>
         </div>
       ),

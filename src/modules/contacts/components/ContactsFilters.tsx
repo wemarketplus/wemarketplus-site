@@ -1,5 +1,4 @@
-import { Search } from 'lucide-react';
-import { Input, Select } from '@/shared/ui/core';
+import { Select, SearchInput } from '@/shared/ui/core';
 import { CONTACT_RECORD_TYPE_OPTIONS } from '../constants/contactsConstants';
 
 interface ContactsFiltersProps {
@@ -19,15 +18,12 @@ export function ContactsFilters({
 }: ContactsFiltersProps) {
   return (
     <div className="flex flex-col gap-3 sm:flex-row">
-      <div className="relative max-w-sm flex-1">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
-        <Input
-          value={search}
-          onChange={(e) => onSearch(e.target.value)}
-          placeholder="Search by name, email, or title…"
-          className="pl-9"
-        />
-      </div>
+      <SearchInput
+        wrapperClassName="max-w-sm flex-1"
+        value={search}
+        onChange={onSearch}
+        placeholder="Search by name, email, or title…"
+      />
       {/*
         A picker, not a text box: the filter is compared against the stored value,
         which is a machine string (`funding_opportunity`). Typing the label a user

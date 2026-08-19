@@ -1,6 +1,5 @@
-import { Search } from 'lucide-react';
 import { useRole, CL_FINANCIAL_ROLES } from '@/shared/rbac';
-import { Input, Select } from '@/shared/ui/core';
+import { Select, SearchInput } from '@/shared/ui/core';
 import { EntityListPage, EntityPagination } from '@/shared/ui/entity';
 import { cn } from '@/shared/utils/cn';
 import {
@@ -100,16 +99,13 @@ export function ClFinancialPage() {
         <div className="space-y-3">
           <ViewTabs view={view} setView={setView} />
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="relative sm:max-w-sm sm:flex-1">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
-              <Input
-                value={active.search}
-                onChange={(e) => active.setSearch(e.target.value)}
-                placeholder="Search…"
-                className="pl-9"
-                aria-label="Search"
-              />
-            </div>
+            <SearchInput
+              wrapperClassName="sm:max-w-sm sm:flex-1"
+              value={active.search}
+              onChange={active.setSearch}
+              placeholder="Search…"
+              aria-label="Search"
+            />
             {view === 'concessions' && (
               <Select
                 value={concessions.status}

@@ -1,43 +1,83 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { useCreateReferralMutation } from '../api/referralsApi';
+import { confirm } from '@/shared/ui/feedback';
+import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
+import {
+  useCreateReferralMutation,
+  useDeleteReferralMutation,
+  useUpdateReferralMutation,
+} from '../api/referralsApi';
+import { toCreateReferral, toUpdateReferral } from '../utils/referralsUtils';
 import type { NewReferralFormValues } from '../schema/referralSchema';
-import type { CreateReferralSourceRequest } from '../types/referralsTypes';
+import type { ReferralSourceRecord } from '../types/referralsTypes';
 
-// Orchestrates the Add-referral-source modal: open/close state plus the real
-// POST /referral-sources mutation (list tag invalidation refreshes the table).
+// Orchestrates the Add/Edit-referral-source modal and the delete confirm:
+// open/close and editing state, plus the real POST/PATCH/DELETE
+// /referral-sources mutations (list tag invalidation refreshes the table).
 export function useAddReferral() {
   const [open, setOpen] = useState(false);
-  const [createReferral, { isLoading }] = useCreateReferralMutation();
+  const [editing, setEditing] = useState<ReferralSourceRecord | null>(null);
+  const [createReferral, { isLoading: isCreating }] = useCreateReferralMutation();
+  const [updateReferral, { isLoading: isUpdating }] = useUpdateReferralMutation();
+  const [deleteReferral] = useDeleteReferralMutation();
 
   const submit = async (values: NewReferralFormValues): Promise<boolean> => {
-    const body: CreateReferralSourceRequest = {
-      name: values.name.trim(),
-      type: values.type,
-      ...(values.contactName?.trim() ? { contactName: values.contactName.trim() } : {}),
-      ...(values.phone?.trim() ? { phone: values.phone.trim() } : {}),
-      ...(values.email?.trim() ? { email: values.email.trim() } : {}),
-      ...(values.city?.trim() ? { city: values.city.trim() } : {}),
-      ...(values.state?.trim() ? { state: values.state.trim() } : {}),
-      ...(values.notes?.trim() ? { notes: values.notes.trim() } : {}),
-    };
-
     try {
-      await createReferral(body).unwrap();
-      toast.success('Referral source added');
+      if (editing) {
+        await updateReferral({ id: editing.id, patch: toUpdateReferral(values) }).unwrap();
+        toast.success('Referral source updated');
+      } else {
+        await createReferral(toCreateReferral(values)).unwrap();
+        toast.success('Referral source added');
+      }
       setOpen(false);
+      setEditing(null);
       return true;
-    } catch {
-      toast.error('Could not add referral source. Please try again.');
+    } catch (err) {
+      toast.error(
+        extractApiErrorMessage(
+          err,
+          editing
+            ? 'Could not update referral source. Please try again.'
+            : 'Could not add referral source. Please try again.',
+        ),
+      );
       return false;
+    }
+  };
+
+  const remove = async (source: ReferralSourceRecord): Promise<void> => {
+    const ok = await confirm({
+      title: `Delete ${source.name}?`,
+      body: `${source.name} will be permanently removed.`,
+      confirmLabel: 'Delete',
+    });
+    if (!ok) return;
+    try {
+      await deleteReferral(source.id).unwrap();
+      toast.success(`Deleted ${source.name}`);
+    } catch (err) {
+      toast.error(extractApiErrorMessage(err, 'Could not delete referral source.'));
     }
   };
 
   return {
     open,
-    isSaving: isLoading,
-    openModal: () => setOpen(true),
-    close: () => setOpen(false),
+    editing,
+    isSaving: editing ? isUpdating : isCreating,
+    openModal: () => {
+      setEditing(null);
+      setOpen(true);
+    },
+    openEdit: (source: ReferralSourceRecord) => {
+      setEditing(source);
+      setOpen(true);
+    },
+    close: () => {
+      setOpen(false);
+      setEditing(null);
+    },
     submit,
+    remove,
   };
 }

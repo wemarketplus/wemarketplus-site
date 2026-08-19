@@ -2,6 +2,8 @@ import { displayName, type NameTable } from '@/shared/hooks';
 import { ProspectStatus as ProspectStatusEnum } from '@/shared/types';
 import type { Prospect, ProspectStatus, Urgency } from '@/shared/types';
 import { ProspectStage, type ProspectRecord } from '../types/prospectsTypes';
+import type { CreateProspectRequest, UpdateProspectRequest } from '../types/prospectsTypes';
+import type { NewProspectFormValues } from '../schema/prospectSchema';
 
 // The backend ProspectResponseDto (patientName/stage/aiAdmitScore/...) maps
 // onto the UI's Prospect view-model (name/status/conversionRisk/...). Shared
@@ -72,6 +74,41 @@ export function mapProspectRecord(
     conversionRisk: r.aiAdmitScore ?? undefined,
     notes: r.notes ?? undefined,
     lastContactDate: r.updatedAt,
+  };
+}
+
+// Add/edit form <-> POST/PATCH /prospects body. Blank optionals are dropped so
+// the backend's whitelist DTO never sees an empty string on an optional field.
+export function toCreateProspect(values: NewProspectFormValues): CreateProspectRequest {
+  return {
+    patientName: values.patientName.trim(),
+    stage: values.stage,
+    urgency: values.urgency,
+    ...(values.facilityName?.trim() ? { facilityName: values.facilityName.trim() } : {}),
+    ...(values.referringPhysician?.trim()
+      ? { referringPhysician: values.referringPhysician.trim() }
+      : {}),
+    ...(values.diagnosis?.trim() ? { diagnosis: values.diagnosis.trim() } : {}),
+    ...(values.phone?.trim() ? { phone: values.phone.trim() } : {}),
+    ...(values.notes?.trim() ? { notes: values.notes.trim() } : {}),
+  };
+}
+
+export function toUpdateProspect(values: NewProspectFormValues): UpdateProspectRequest {
+  return toCreateProspect(values);
+}
+
+// Seeds the edit form from an existing record.
+export function toProspectFormValues(record: ProspectRecord): NewProspectFormValues {
+  return {
+    patientName: record.patientName,
+    facilityName: record.facilityName ?? '',
+    stage: record.stage,
+    urgency: record.urgency,
+    referringPhysician: record.referringPhysician ?? '',
+    diagnosis: record.diagnosis ?? '',
+    phone: record.phone ?? '',
+    notes: record.notes ?? '',
   };
 }
 

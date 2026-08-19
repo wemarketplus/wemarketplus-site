@@ -27,7 +27,17 @@ export function Providers({ children }: ProvidersProps) {
         <ThemeProvider>
           <ProfileSync />
           <BrowserRouter>{children}</BrowserRouter>
-          <Toaster position="top-right" richColors closeButton />
+          {/*
+            `offset` pushes toasts below DashboardHeader (h-16 = 64px + its
+            hairline border). Sonner's default top-right position (~32px
+            from the viewport corner) landed inside that same 0-64px band,
+            so a toast rendered on top of — and fully hid — the search box,
+            product switcher, notification bell, and user menu until it
+            dismissed. Every authenticated screen shares that one header, so
+            this reproduced on any action that fires a toast (e.g. saving a
+            new Contact), not just this one.
+          */}
+          <Toaster position="top-right" richColors closeButton offset={{ top: 80 }} />
           {/* Single host for every confirm() call — see shared/ui/feedback/confirm.tsx.
               Mounted once here so no page has to plumb a dialog through. */}
           <ConfirmHost />

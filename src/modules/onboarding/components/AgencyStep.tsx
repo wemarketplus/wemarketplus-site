@@ -1,13 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Button, Input, Label } from '@/shared/ui/core';
+import { Button, Input, Label, Select } from '@/shared/ui/core';
 import { useOnboarding } from '../hooks/useOnboarding';
 import { US_STATES } from '../constants/onboardingConstants';
 import {
   agencyInfoSchema,
   type AgencyInfoFormValues,
 } from '../schema/onboardingSchema';
-import { cn } from '@/shared/utils/cn';
 
 export function AgencyStep() {
   const { draft, next, back, saveAgency } = useOnboarding();
@@ -53,21 +52,14 @@ export function AgencyStep() {
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="state">State</Label>
-          <select
-            id="state"
-            className={cn(
-              'flex h-11 w-full rounded-md border border-border/10 bg-surface-raised px-3 text-sm text-foreground',
-              'transition-colors focus-visible:outline-none focus-visible:border-azure/70 focus-visible:bg-surface',
-            )}
-            {...register('state')}
-          >
-            <option value="">—</option>
+          <Select id="state" {...register('state')}>
+            <option value="">Select a state…</option>
             {US_STATES.map((s) => (
               <option key={s.value} value={s.value}>
                 {s.value}
               </option>
             ))}
-          </select>
+          </Select>
           {errors.state && (
             <p className="text-xs text-destructive">{errors.state.message}</p>
           )}
@@ -100,7 +92,7 @@ export function AgencyStep() {
       </div>
 
       <div className="flex justify-between">
-        <Button type="button" variant="ghost" onClick={back}>
+        <Button type="button" variant="outline" onClick={back}>
           Back
         </Button>
         <Button type="submit" size="lg">Continue</Button>

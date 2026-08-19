@@ -13,10 +13,21 @@ import { useRole, roleTitle } from '@/shared/rbac';
 import { Product, TIER_LABELS, PRODUCT_LABELS } from '@/shared/types';
 import { cn } from '@/shared/utils/cn';
 
-// 220px rail on the light surface wash: .sb-top brand block (mark + wordmark),
+// 200px rail on the light surface wash: .sb-top brand block (mark + wordmark),
 // .nav-sec section eyebrows, icon+label nav rows at an 8px radius, and .sb-foot
 // at the bottom. Colour is token-driven and uniform — one accent for every
 // product and tier, per the reference design.
+//
+// SPACING SCALE — every nav row, in every section, on every dashboard, uses
+// exactly these three constants. They exist so a row cannot be tuned per page:
+// the rail is one component, and a one-off `py-` on a single item is what made
+// the spacing read as uneven in the first place.
+const NAV_ROW_BASE =
+  'mb-0.5 flex h-8 items-center gap-2.5 rounded-[8px] px-2.5 text-[12px] font-semibold';
+// Section eyebrows: same rhythm above every group, including the first.
+const NAV_SECTION_HEADING =
+  'block px-2.5 pb-1 pt-3 text-[10px] font-extrabold uppercase tracking-[0.11em] text-muted';
+
 export function Sidebar() {
   const { role } = useRole();
   // Product/tier follow the ACTIVE dashboard (which the switcher can change),
@@ -59,7 +70,7 @@ export function Sidebar() {
   return (
     <aside
       data-product={product}
-      className="hidden h-full w-[220px] min-w-[220px] shrink-0 flex-col border-r border-border/[0.08] bg-surface-raised md:flex"
+      className="hidden h-full w-[200px] min-w-[200px] shrink-0 flex-col border-r border-border/[0.08] bg-surface-raised md:flex"
     >
       {/* .sb-top — brand block: a filled mark in a rounded square beside the
           wordmark, per the reference design. */}
@@ -98,10 +109,14 @@ export function Sidebar() {
           const isAdmin = section.id.endsWith('intelligence') || section.id === 'admin' || section.id.endsWith('compliance');
           return (
             <div key={section.id}>
-              {/* .nav-sec */}
-              <span className="block px-1.5 pb-[3px] pt-2.5 text-[9px] font-black uppercase tracking-[0.12em] text-muted-soft">
-                {section.label}
-              </span>
+              {/* .nav-sec — MAIN / SALES & OUTREACH / FINANCIAL / ADMIN.
+                  Reads as a heading through the token change (muted rather than
+                  muted-soft, which failed contrast on the light rail) plus one
+                  step up in size, NOT through extra weight: at 9px/900 the
+                  glyphs were dense enough to blur together. Still visibly
+                  quieter than a nav row — uppercase, tracked out, and a size
+                  below the 12px item labels. */}
+              <span className={NAV_SECTION_HEADING}>{section.label}</span>
               {visibleItems.map((item) => {
                 const Icon = item.icon;
                 /**
@@ -117,7 +132,7 @@ export function Sidebar() {
                     <div
                       key={item.to}
                       aria-disabled="true"
-                      className="mb-px flex cursor-default items-center gap-2.5 rounded-[8px] px-2.5 py-2 text-[12px] font-semibold text-muted-soft/70"
+                      className={cn(NAV_ROW_BASE, 'cursor-default text-muted-soft/70')}
                     >
                       <Icon className="h-4 w-4 shrink-0 text-muted-soft/60" />
                       <span className="truncate">{item.label}</span>
@@ -146,11 +161,29 @@ export function Sidebar() {
                      * to stay lit for a deeper path.
                      */
                     end
+                    /**
+                     * ACTIVE STATE — three signals, not one.
+                     *
+                     * The previous active row was a 9% accent tint and accent
+                     * text, which on the light rail is a wash a few percent off
+                     * the sidebar's own background: with a hover tint sitting at
+                     * 5%, "selected" and "the mouse is here" were nearly the same
+                     * swatch. Depth of tint alone cannot carry this.
+                     *
+                     * So the active row now also gets an accent bar on its
+                     * leading edge and a heavier weight. The bar is the signal
+                     * that survives — it is the only element on the rail with
+                     * that shape, so the eye finds the current page without
+                     * comparing fills. Kept to the existing `primary` token at a
+                     * restrained 14% fill rather than a saturated block, per the
+                     * design's quiet-accent rule.
+                     */
                     className={({ isActive }) =>
                       cn(
-                        'mb-px flex items-center gap-2.5 rounded-[8px] px-2.5 py-2 text-[12px] font-semibold transition-colors',
+                        NAV_ROW_BASE,
+                        'relative transition-colors',
                         isActive
-                          ? 'bg-primary/[0.09] text-primary'
+                          ? 'bg-primary/[0.14] font-bold text-primary before:absolute before:left-0 before:top-1/2 before:h-[18px] before:w-[3px] before:-translate-y-1/2 before:rounded-r-full before:bg-primary before:content-[""]'
                           : isAdmin
                           ? 'text-muted hover:bg-primary/[0.05] hover:text-primary'
                           : 'text-muted hover:bg-primary/[0.05] hover:text-foreground',

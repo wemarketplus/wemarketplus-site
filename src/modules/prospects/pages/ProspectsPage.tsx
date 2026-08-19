@@ -1,5 +1,6 @@
 import { Plus } from 'lucide-react';
 import { useAppSelector } from '@/app/hooks';
+import { STAFF_ROLES, useRole } from '@/shared/rbac';
 import { Button } from '@/shared/ui/core';
 import { ProspectsFilters } from '../components/ProspectsFilters';
 import { ProspectsTable } from '../components/ProspectsTable';
@@ -12,9 +13,24 @@ import { useAddProspect } from '../hooks/useAddProspect';
 import { useProspectDetail } from '../hooks/useProspectDetail';
 
 export function ProspectsPage() {
-  const { prospects, total, isUsingFixture } = useProspectsList();
-  const { open, isSaving, openModal, close, submit } = useAddProspect();
+  const { prospects, records, total, isUsingFixture } = useProspectsList();
+  const { open, editing, isSaving, openModal, openEdit, close, submit, remove } = useAddProspect();
   const detail = useProspectDetail();
+
+  // Deletion is Admin/Owner/Manager-only on the backend (legacy: admin-only
+  // delete) — mirror that gate on the action so a marketer never sees a button
+  // that would just 403.
+  const { isAny } = useRole();
+  const canDelete = isAny(STAFF_ROLES);
+
+  const editById = (id: string) => {
+    const record = records.find((r) => r.id === id);
+    if (record) openEdit(record);
+  };
+  const deleteById = (id: string) => {
+    const record = records.find((r) => r.id === id);
+    if (record) void remove(record);
+  };
 
   // Distinguish a genuinely empty pipeline from a filtered-empty view so the
   // empty state shows the right message (get-started vs no-matches).
@@ -50,9 +66,17 @@ export function ProspectsPage() {
         onAdd={openModal}
         hasFilters={hasFilters}
         onOpen={detail.open}
+        onEdit={editById}
+        onDelete={canDelete ? deleteById : undefined}
       />
 
-      <AddProspectModal open={open} isSaving={isSaving} onClose={close} onSubmit={submit} />
+      <AddProspectModal
+        open={open}
+        isSaving={isSaving}
+        editing={editing}
+        onClose={close}
+        onSubmit={submit}
+      />
 
       <ProspectDrawer
         open={detail.isOpen}

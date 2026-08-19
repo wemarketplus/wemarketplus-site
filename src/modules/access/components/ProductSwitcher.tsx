@@ -83,8 +83,11 @@ export function ProductSwitcher() {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={`Active dashboard: ${PRODUCT_LABELS[activeProduct]}. Change dashboard`}
+        // h-9 to match the search pill, bell and profile chip either side of it
+        // in the topbar; it was `py-1`, which made it the shortest control in
+        // the row.
         className={cn(
-          'flex items-center gap-2 rounded-pill border py-1 pl-3 pr-2 transition-colors',
+          'flex h-9 items-center gap-2 rounded-pill border pl-3 pr-2 transition-colors',
           'border-border/[0.08] bg-surface/60 hover:border-border/20',
           open && 'border-primary/40 bg-primary/[0.06]',
         )}

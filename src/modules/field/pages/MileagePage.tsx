@@ -7,7 +7,7 @@ import {
   LocationField,
   type LocationValue,
 } from '@/modules/geocoding';
-import { Button, Input, Label } from '@/shared/ui/core';
+import { Button, DatePicker, Input, Label } from '@/shared/ui/core';
 import { Alert, DataTable, type Column } from '@/shared/ui/data-display';
 import { StatTile } from '@/shared/ui/data-display';
 import { mileageLogsToCsv } from '../utils/mileageCsv';
@@ -266,9 +266,8 @@ export function MileagePage() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         <div>
           <Label htmlFor="mileage-date">Date</Label>
-          <Input
+          <DatePicker
             id="mileage-date"
-            type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />

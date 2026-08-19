@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { ExternalLink, Paperclip, Plus } from 'lucide-react';
-import { Button, Card, CardContent, Input, Label, Select } from '@/shared/ui/core';
+import { Button, Card, CardContent, DatePicker, Input, Label, Select } from '@/shared/ui/core';
 import { Pill } from '@/shared/ui/data-display';
 import { Modal } from '@/shared/ui/feedback';
 import {
@@ -185,9 +185,8 @@ export function ExpenseReceipts() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <Label htmlFor="er-date">Date</Label>
-            <Input
+            <DatePicker
               id="er-date"
-              type="date"
               value={form.expenseDate}
               onChange={(e) =>
                 setForm((f) => ({ ...f, expenseDate: e.target.value }))

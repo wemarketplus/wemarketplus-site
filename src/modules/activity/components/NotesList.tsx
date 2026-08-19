@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Plus } from 'lucide-react';
 import { Button, Card, CardContent, Label, Select } from '@/shared/ui/core';
+import { Pill } from '@/shared/ui/data-display';
 import { EntityRowActions } from '@/shared/ui/entity';
 import { useRole, HL_FIELD_ROLES } from '@/shared/rbac';
 import {
@@ -179,11 +180,9 @@ export function NotesList() {
                   </div>
                   <div className="flex shrink-0 items-center gap-2">
                     {record?.isFamilySensitive && <TeamOnlyPill />}
-                    <span
-                      className={`rounded-pill border px-2.5 py-0.5 text-[10px] uppercase tracking-[0.08em] ${URGENCY_TONE[n.urgency]}`}
-                    >
+                    <Pill tone="none" className={URGENCY_TONE[n.urgency]}>
                       {URGENCY_LABELS[n.urgency]}
-                    </span>
+                    </Pill>
                     {canEdit && (
                       <EntityRowActions
                         onEdit={() => {

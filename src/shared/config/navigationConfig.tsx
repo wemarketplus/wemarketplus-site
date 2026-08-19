@@ -178,7 +178,14 @@ const OPERATIONS_RECORDS_SECTION: NavSection = {
   label: 'Operations',
   items: [
     { to: '/locations', label: 'Locations', icon: Pin, allow: STAFF_ROLES },
-    { to: '/territories-list', label: 'Territories', icon: Map, allow: STAFF_ROLES },
+    // REMOVED (duplicate): this rendered a second "Territories" row in the
+    // HospiceLink sidebar. `/territories-list` and `/territories` resolve to the
+    // SAME component (TerritoriesEntityPage — router.tsx), and this section is
+    // composed only into HospiceLink, so both rows showed together for anyone in
+    // STAFF_ROLES. The surviving entry is HOSPICELINK_MARKETING's `/territories`,
+    // which sits beside Territory planner and is allowed to HL_MARKETING_ROLES —
+    // a SUPERSET of STAFF_ROLES, so no role loses access. The `/territories-list`
+    // route itself is left in place so existing bookmarks keep working.
     // HIDDEN (intentionally): Training providers module hidden from the frontend
     // by request. Do NOT re-enable without confirming with the product owner.
     // The module code, route, and store wiring still exist; only the nav entry

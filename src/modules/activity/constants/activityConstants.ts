@@ -2,6 +2,7 @@ import { ACTIVITY_TYPE_OPTIONS } from '@/shared/constants/activityTypeConstants'
 import { Calendar, ScrollText, Pin, Goal } from 'lucide-react';
 import type { EntityField, EntitySelectOption } from '@/shared/ui/entity';
 import { Urgency } from '@/shared/types';
+import { todayLocalDate } from '@/shared/utils/dateFormatter';
 import { TaskPriority, TaskStatus } from '../types/activityTypes';
 import type { ActivityUiState, DailyGoal } from '../types/activityTypes';
 import type { NoteFormValues } from '../schema/noteSchema';
@@ -142,7 +143,7 @@ export const NOTE_FIELDS: ReadonlyArray<EntityField<NoteFormValues>> = [
 export const TASK_FIELDS: ReadonlyArray<EntityField<TaskFormValues>> = [
   { name: 'title', label: 'Title', full: true, placeholder: 'Follow up with prospect' },
   { name: 'description', label: 'Description', type: 'textarea', full: true, placeholder: 'Details…' },
-  { name: 'dueDate', label: 'Due date', type: 'date' },
+  { name: 'dueDate', label: 'Due date', type: 'date', min: todayLocalDate },
   { name: 'priority', label: 'Priority', type: 'select', options: TASK_PRIORITY_OPTIONS },
   { name: 'status', label: 'Status', type: 'select', options: TASK_STATUS_OPTIONS },
 ];

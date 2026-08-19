@@ -76,6 +76,14 @@ export interface EntityField<TValues extends FieldValues> {
   // supplied at render time through EntityFormModalProps.lookups instead, since
   // they come from a server list the form cannot know about statically.
   options?: readonly EntitySelectOption[];
+  /**
+   * For `type: 'date'` / `'datetime-local'` only — the native input's `min`,
+   * e.g. todayLocalDate() to grey out past dates in the picker itself. A
+   * function so a `min` of "today" is read fresh each render rather than
+   * frozen at module load (a form left open across midnight must not still
+   * treat yesterday as selectable).
+   */
+  min?: string | (() => string);
   placeholder?: string;
   /**
    * For `type: 'location'` — the fields holding the picked coordinates. Both

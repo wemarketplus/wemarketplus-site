@@ -1,6 +1,6 @@
-import { MapPin, Search } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { useRole, CL_SALES_ROLES } from '@/shared/rbac';
-import { Button, Input, Select } from '@/shared/ui/core';
+import { Button, Select, SearchInput } from '@/shared/ui/core';
 import { EntityListPage, EntityPagination } from '@/shared/ui/entity';
 import { cn } from '@/shared/utils/cn';
 import { OUTREACH_VIEWS, VISIT_TYPE_OPTIONS } from '../constants/clOutreachConstants';
@@ -114,16 +114,13 @@ export function ClOutreachPage() {
         <div className="space-y-3">
           <ViewTabs view={view} setView={setView} />
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="relative sm:max-w-sm sm:flex-1">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
-              <Input
-                value={log.search}
-                onChange={(e) => log.setSearch(e.target.value)}
-                placeholder="Search visits…"
-                className="pl-9"
-                aria-label="Search visits"
-              />
-            </div>
+            <SearchInput
+              wrapperClassName="sm:max-w-sm sm:flex-1"
+              value={log.search}
+              onChange={log.setSearch}
+              placeholder="Search visits…"
+              aria-label="Search visits"
+            />
             <Select
               value={log.type}
               onChange={(e) => log.setType(e.target.value)}

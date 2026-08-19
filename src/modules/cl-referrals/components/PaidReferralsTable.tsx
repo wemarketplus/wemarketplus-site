@@ -1,11 +1,10 @@
 import { HandCoins } from 'lucide-react';
 import { CL_MANAGEMENT_ROLES, useRole } from '@/shared/rbac';
-import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
+import { DataTable, Pill, StatusSelect, type Column } from '@/shared/ui/data-display';
 import { EmptyState } from '@/shared/ui/feedback';
 import { EntityRowActions } from '@/shared/ui/entity';
 import { formatUsd } from '@/modules/cl-financial/utils/financialFormat';
 import {
-  FEE_STATUS_LABELS,
   FEE_STATUS_OPTIONS,
   FEE_STATUS_PILL,
   URGENCY_LABELS,
@@ -63,23 +62,17 @@ export function PaidReferralsTable({
     {
       key: 'feeStatus',
       header: 'Fee status',
+      // One control, not a badge beside a dropdown of the same value — see
+      // StatusSelect. The PATCH behind `onFeeStatusChange` is unchanged.
       cell: (r) => (
-        <span className="inline-flex items-center gap-2">
-          <Pill tone={FEE_STATUS_PILL[r.feeStatus]}>{FEE_STATUS_LABELS[r.feeStatus]}</Pill>
-          <select
-            aria-label={`Change fee status for ${r.prospectName}`}
-            value={r.feeStatus}
-            disabled={isMutating}
-            onChange={(e) => onFeeStatusChange(r, e.target.value)}
-            className="rounded-md border border-border/[0.15] bg-white px-1.5 py-1 text-[11px] text-foreground"
-          >
-            {FEE_STATUS_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-        </span>
+        <StatusSelect
+          value={r.feeStatus}
+          tone={FEE_STATUS_PILL[r.feeStatus]}
+          options={FEE_STATUS_OPTIONS}
+          disabled={isMutating}
+          onChange={(feeStatus) => onFeeStatusChange(r, feeStatus)}
+          aria-label={`Change fee status for ${r.prospectName}`}
+        />
       ),
     },
     {

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Button, Input, Label, Select, Textarea } from '@/shared/ui/core';
+import { Button, DatePicker, Input, Label, Select, Textarea } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import type { EntitySelectOption } from '@/shared/ui/entity';
 import {
@@ -133,7 +133,7 @@ export function FollowUpFormModal({
 
         <div>
           <Label htmlFor="follow-up-due">Due date</Label>
-          <Input id="follow-up-due" type="date" {...register('dueDate')} />
+          <DatePicker id="follow-up-due" {...register('dueDate')} />
           {errors.dueDate?.message && (
             <p className="mt-1 text-[12px] text-destructive">
               {errors.dueDate.message}

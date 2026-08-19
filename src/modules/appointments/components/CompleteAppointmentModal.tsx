@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Input, Label, Select, Textarea } from '@/shared/ui/core';
+import { Button, DatePicker, Input, Label, Select, Textarea } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import { JOB_TYPE_OPTIONS } from '@/modules/jobs/constants/jobsConstants';
 import type { JobType } from '@/modules/jobs/types/jobsTypes';
@@ -178,9 +178,8 @@ export function CompleteAppointmentModal({
           </div>
           <div>
             <Label htmlFor="ca-nextsteps-due">Due by</Label>
-            <Input
+            <DatePicker
               id="ca-nextsteps-due"
-              type="date"
               value={nextStepsDueDate}
               onChange={(event) => setNextStepsDueDate(event.target.value)}
             />
@@ -221,9 +220,8 @@ export function CompleteAppointmentModal({
           </div>
           <div>
             <Label htmlFor="ca-due">Due date</Label>
-            <Input
+            <DatePicker
               id="ca-due"
-              type="date"
               value={nextJobDueDate}
               onChange={(event) => setNextJobDueDate(event.target.value)}
             />

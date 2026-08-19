@@ -138,7 +138,9 @@ export interface ReferralFilterChip {
 export interface AddReferralModalProps {
   open: boolean;
   isSaving: boolean;
+  // When set, the modal is in edit mode and seeds from this record.
+  editing?: ReferralSourceRecord | null;
   onClose: () => void;
-  // Returns true when the create succeeded, so the form can reset.
+  // Returns true when the create/update succeeded, so the form can reset.
   onSubmit: (values: NewReferralFormValues) => Promise<boolean>;
 }

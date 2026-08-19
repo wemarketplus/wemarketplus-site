@@ -1,6 +1,5 @@
-import { Search } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { Input } from '@/shared/ui/core';
+import { SearchInput } from '@/shared/ui/core';
 import { cn } from '@/shared/utils/cn';
 import { ROLE_FILTER_CHIPS } from '../constants/usersConstants';
 import { setSearch, setSelectedRole } from '../store/usersSlice';
@@ -12,15 +11,12 @@ export function UsersFilters() {
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div className="relative max-w-sm">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
-        <Input
-          value={search}
-          onChange={(e) => dispatch(setSearch(e.target.value))}
-          placeholder="Search by name or email…"
-          className="pl-9"
-        />
-      </div>
+      <SearchInput
+        wrapperClassName="max-w-sm"
+        value={search}
+        onChange={(value) => dispatch(setSearch(value))}
+        placeholder="Search by name or email…"
+      />
       <div className="flex flex-wrap gap-1.5">
         {ROLE_FILTER_CHIPS.map((chip) => (
           <button

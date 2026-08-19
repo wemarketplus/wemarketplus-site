@@ -113,6 +113,10 @@ export const stagesForPipelineType = (
 export const PROSPECT_STAGE_OPTIONS: ReadonlyArray<{ value: ProspectStage; label: string }> =
   ADMIT_STAGES.map((value) => ({ value, label: STAGE_LABELS[value] }));
 
+// Select options for the Add-opportunity form (Pipeline board, Outreach type).
+export const OUTREACH_STAGE_OPTIONS: ReadonlyArray<{ value: ProspectStage; label: string }> =
+  OUTREACH_STAGES.map((value) => ({ value, label: STAGE_LABELS[value] }));
+
 export const PIPELINE_TYPE_OPTIONS: ReadonlyArray<{
   value: ProspectPipelineType;
   label: string;

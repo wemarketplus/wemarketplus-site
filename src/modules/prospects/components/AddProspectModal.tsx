@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Button, Input, Label, Select, Textarea } from '@/shared/ui/core';
@@ -8,11 +9,37 @@ import {
   PROSPECT_URGENCY_OPTIONS,
 } from '../constants/prospectsConstants';
 import { newProspectSchema, type NewProspectFormValues } from '../schema/prospectSchema';
+import { toProspectFormValues } from '../utils/prospectsUtils';
 import type { AddProspectModalProps } from '../types/prospectsTypes';
 
-// Add Prospect modal — presentational. The page owns useAddProspect and passes
-// the open/saving state plus the submit handler down.
-export function AddProspectModal({ open, isSaving, onClose, onSubmit: submit }: AddProspectModalProps) {
+// MUST be a value that exists in PROSPECT_STAGE_OPTIONS (the canonical
+// ADMIT_STAGES). It used to default to the LEGACY `inquiry`, which is not
+// one of the options — so the <select> displayed "New Referral" while the
+// form state held `inquiry`, and an untouched form created a prospect at a
+// stage the Pipeline board has no column for. The card was saved and then
+// invisible.
+const EMPTY: NewProspectFormValues = {
+  patientName: '',
+  facilityName: '',
+  stage: ProspectStage.NewReferral,
+  urgency: ProspectUrgency.Warm,
+  referringPhysician: '',
+  diagnosis: '',
+  phone: '',
+  notes: '',
+};
+
+// Add/Edit Prospect modal — presentational. The page owns useAddProspect and
+// passes the open/saving state plus the submit handler down. Doubles as the
+// edit form: passing `editing` seeds the fields from that record and switches
+// the copy from Add to Edit.
+export function AddProspectModal({
+  open,
+  isSaving,
+  editing,
+  onClose,
+  onSubmit: submit,
+}: AddProspectModalProps) {
   const {
     register,
     handleSubmit,
@@ -20,39 +47,29 @@ export function AddProspectModal({ open, isSaving, onClose, onSubmit: submit }: 
     formState: { errors },
   } = useForm<NewProspectFormValues>({
     resolver: zodResolver(newProspectSchema),
-    defaultValues: {
-      patientName: '',
-      facilityName: '',
-      // MUST be a value that exists in PROSPECT_STAGE_OPTIONS (the canonical
-      // ADMIT_STAGES). It used to default to the LEGACY `inquiry`, which is not
-      // one of the options — so the <select> displayed "New Referral" while the
-      // form state held `inquiry`, and an untouched form created a prospect at a
-      // stage the Pipeline board has no column for. The card was saved and then
-      // invisible.
-      stage: ProspectStage.NewReferral,
-      urgency: ProspectUrgency.Warm,
-      referringPhysician: '',
-      diagnosis: '',
-      phone: '',
-      notes: '',
-    },
+    defaultValues: EMPTY,
   });
 
+  useEffect(() => {
+    if (!open) return;
+    reset(editing ? toProspectFormValues(editing) : EMPTY);
+  }, [open, editing, reset]);
+
   const close = () => {
-    reset();
+    reset(EMPTY);
     onClose();
   };
 
   const onSubmit = async (values: NewProspectFormValues) => {
     const ok = await submit(values);
-    if (ok) reset();
+    if (ok) reset(EMPTY);
   };
 
   return (
     <Modal
       open={open}
       onClose={close}
-      title="Add Prospect"
+      title={editing ? 'Edit Prospect' : 'Add Prospect'}
       size="lg"
       footer={
         <>
@@ -60,7 +77,7 @@ export function AddProspectModal({ open, isSaving, onClose, onSubmit: submit }: 
             Cancel
           </Button>
           <Button onClick={handleSubmit(onSubmit)} disabled={isSaving}>
-            {isSaving ? 'Saving…' : 'Save Prospect'}
+            {isSaving ? 'Saving…' : editing ? 'Save changes' : 'Save Prospect'}
           </Button>
         </>
       }

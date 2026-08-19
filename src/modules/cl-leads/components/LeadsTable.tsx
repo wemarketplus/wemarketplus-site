@@ -1,12 +1,11 @@
 import { Users } from 'lucide-react';
 import { CL_MANAGEMENT_ROLES, useRole } from '@/shared/rbac';
-import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
+import { DataTable, Pill, StatusSelect, type Column } from '@/shared/ui/data-display';
 import { EmptyState } from '@/shared/ui/feedback';
 import { EntityRowActions } from '@/shared/ui/entity';
 import { formatDate } from '@/shared/utils/dateFormatter';
 import {
   CARE_LEVEL_LABELS,
-  LEAD_STAGE_LABELS,
   STAGE_OPTIONS,
   STAGE_PILL,
   URGENCY_LABELS,
@@ -56,24 +55,21 @@ export function LeadsTable({
     },
     {
       key: 'stage',
-      header: 'Status',
+      // "Stage", not "Status": the create/edit form labels this field Stage
+      // (LEAD_FIELDS in leadsConstants) and the filter bar says "All stages", so
+      // a column headed "Status" read as a different field than the one just set.
+      header: 'Stage',
+      // One control, not a badge beside a dropdown of the same value — see
+      // StatusSelect. The PATCH behind `onStageChange` is unchanged.
       cell: (l) => (
-        <span className="inline-flex items-center gap-2">
-          <Pill tone={STAGE_PILL[l.stage]}>{LEAD_STAGE_LABELS[l.stage]}</Pill>
-          <select
-            aria-label={`Change stage for ${leadName(l)}`}
-            value={l.stage}
-            disabled={isMutating}
-            onChange={(e) => onStageChange(l, e.target.value)}
-            className="rounded-md border border-border/[0.15] bg-white px-1.5 py-1 text-[11px] text-foreground"
-          >
-            {STAGE_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-        </span>
+        <StatusSelect
+          value={l.stage}
+          tone={STAGE_PILL[l.stage]}
+          options={STAGE_OPTIONS}
+          disabled={isMutating}
+          onChange={(stage) => onStageChange(l, stage)}
+          aria-label={`Change stage for ${leadName(l)}`}
+        />
       ),
     },
     {
