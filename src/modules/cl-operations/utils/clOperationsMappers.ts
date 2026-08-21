@@ -1,6 +1,6 @@
 import { CareLevel } from '@/shared/types';
 import type { Apartment } from '@/shared/types';
-import { opt } from '@/shared/ui/entity';
+import { opt, optOrNull } from '@/shared/ui/entity';
 import type {
   ClApartmentRecord,
   ClCommunityRecord,
@@ -38,13 +38,14 @@ export function toCreateMaintenance(
     priority: v.priority as TicketPriority,
     status: v.status as MaintenanceStatus,
     ...opt('ticketNumber', v.ticketNumber),
-    // `opt` drops a blank rather than sending '': assignedTo is @IsUUID() on the
-    // DTO, so an empty string would 400 the save. Omitting it leaves the ticket
-    // unassigned — a real state, since a ticket is often logged before anyone
-    // decides who takes it.
-    ...opt('assignedTo', v.assignedTo),
-    ...opt('reporterName', v.reporterName),
-    ...opt('resolution', v.resolution),
+    // `optOrNull`, not `opt`. Both avoid sending '' to an @IsUUID field, but
+    // `opt` omits the key entirely — and an omitted key in a PATCH means "leave
+    // unchanged", so clearing Assigned to could never actually unassign a
+    // ticket. An explicit null does: @IsOptional skips validation on null and
+    // the column is nullable. Same fix as cl-tasks/tasksUtils.ts.
+    ...optOrNull('assignedTo', v.assignedTo),
+    ...optOrNull('reporterName', v.reporterName),
+    ...optOrNull('resolution', v.resolution),
   };
 }
 export function toMaintenanceFormValues(t: ClMaintenanceTicketRecord): MaintenanceFormValues {
@@ -65,13 +66,10 @@ export function toCreateHousekeeping(
   return {
     taskType: v.taskType.trim(),
     status: v.status as HousekeepingStatus,
-    ...opt('area', v.area),
-    // `opt` drops a blank rather than sending '': assignedTo is @IsUUID() on the
-    // DTO, so an empty string would 400 the whole save. Omitting it leaves the task
-    // unassigned, which is a legitimate state — a supervisor can add a task to the
-    // board before deciding who cleans it.
-    ...opt('assignedTo', v.assignedTo),
-    ...opt('dueDate', v.dueDate),
+    ...optOrNull('area', v.area),
+    // Clearable — see toCreateMaintenance above for why this is optOrNull.
+    ...optOrNull('assignedTo', v.assignedTo),
+    ...optOrNull('dueDate', v.dueDate),
   };
 }
 export function toHousekeepingFormValues(t: ClHousekeepingTaskRecord): HousekeepingFormValues {
@@ -116,10 +114,10 @@ export function toCreateMakeReady(
     apartmentId: v.apartmentId,
     taskName: v.taskName.trim(),
     status: v.status as MakeReadyStatus,
-    // Blank omitted, not sent as '' — see toCreateMaintenance for why.
-    ...opt('assignedTo', v.assignedTo),
-    ...opt('dueDate', v.dueDate),
-    ...opt('notes', v.notes),
+    // Clearable — see toCreateMaintenance above for why this is optOrNull.
+    ...optOrNull('assignedTo', v.assignedTo),
+    ...optOrNull('dueDate', v.dueDate),
+    ...optOrNull('notes', v.notes),
   };
 }
 export function toMakeReadyFormValues(t: ClMakeReadyTaskRecord): MakeReadyFormValues {

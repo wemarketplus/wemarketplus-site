@@ -1,5 +1,6 @@
 import type { PillProps } from '@/shared/ui/data-display';
 import type { EntityField, EntitySelectOption } from '@/shared/ui/entity';
+import { todayLocalDate } from '@/shared/utils/dateFormatter';
 import {
   CL_CARE_LEVEL,
   CL_LEAD_STAGE,
@@ -33,9 +34,11 @@ export const LEAD_STAGE_LABELS: Record<ClLeadStage, string> = {
 };
 
 export const URGENCY_LABELS: Record<ClUrgency, string> = {
-  [CL_URGENCY.Hot]: 'Hot',
-  [CL_URGENCY.Warm]: 'Warm',
-  [CL_URGENCY.Cold]: 'Cold',
+  // High / Medium / Low, not Hot / Warm / Cold — see the note on
+  // shared/constants/urgencyConstants.ts. The wire values are unchanged.
+  [CL_URGENCY.Hot]: 'High',
+  [CL_URGENCY.Warm]: 'Medium',
+  [CL_URGENCY.Cold]: 'Low',
 };
 
 export const STAGE_PILL: Record<ClLeadStage, PillProps['tone']> = {
@@ -68,13 +71,24 @@ export const URGENCY_OPTIONS = toOptions(URGENCY_LABELS);
 // --- Create/edit form field descriptors (drive EntityFormModal) ------------
 
 export const LEAD_FIELDS: ReadonlyArray<EntityField<LeadFormValues>> = [
-  { name: 'fullName', label: 'Full name', full: true, placeholder: 'Dorothy Harrison' },
+  // Required by leadSchema and by CreateClLeadDto; everything below is optional.
+  { name: 'fullName', label: 'Full name', required: true, full: true, placeholder: 'Dorothy Harrison' },
   { name: 'phone', label: 'Phone', type: 'tel', placeholder: '(214) 555-0100' },
   { name: 'email', label: 'Email', type: 'email', placeholder: 'name@example.com' },
   { name: 'careLevel', label: 'Care level', type: 'select', options: CARE_LEVEL_OPTIONS },
   { name: 'stage', label: 'Stage', type: 'select', options: STAGE_OPTIONS },
   { name: 'urgency', label: 'Urgency', type: 'select', options: URGENCY_OPTIONS },
   { name: 'source', label: 'Referral source', placeholder: 'Website, Physician Referral…' },
-  { name: 'followUpDate', label: 'Follow-up date', type: 'date' },
+  /**
+   * `min` greys out past days in the picker itself, the same way the reminder
+   * form's due date does. A function, not a literal, so a form left open across
+   * midnight does not still treat yesterday as selectable.
+   *
+   * This is the FIRST of three layers, and the weakest — it stops the calendar
+   * offering a past day but not a value typed straight into the field. See the
+   * submit guard in LeadFormModal for the second, and IsNotPastDate on
+   * CreateClLeadDto for the one that actually protects the column.
+   */
+  { name: 'followUpDate', label: 'Follow-up date', type: 'date', min: todayLocalDate },
   { name: 'notes', label: 'Notes', type: 'textarea', full: true, placeholder: 'Key details, family contacts, budget…' },
 ];

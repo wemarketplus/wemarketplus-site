@@ -4,7 +4,7 @@
 // ── Add Lead modal (saveNewLead) ──
 export const LEAD_CARE_OPTS = ['Independent Living', 'Assisted Living', 'Memory Care', 'Undecided'];
 export const LEAD_SOURCE_OPTS = ['A Place for Mom', 'Caring.com', 'SeniorAdvisor', 'Physician Referral', 'Hospital Discharge', 'Social Worker', 'Family Self-Referral', 'Website', 'Walk-In', 'Event', 'Other'];
-export const LEAD_URGENCY_OPTS = ['Hot', 'Warm', 'Cold'];
+export const LEAD_URGENCY_OPTS = ['High', 'Medium', 'Low'];
 export const LEAD_STAGE_OPTS = ['Inquiry', 'Tour Scheduled', 'Touring', 'Proposal Sent', 'Deposit Pending', 'Approved', 'Move-In Scheduled'];
 export const LEAD_ASSIGNED_OPTS = ['Sarah M.', 'Mike R.', 'Angela T.', 'Unassigned'];
 

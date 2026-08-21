@@ -14,11 +14,11 @@ import type {
 } from '../types/goldTypes';
 
 export const SEED_LEADS: Lead[] = [
-  { id: 1, name: 'Dorothy Harrison', care: 'Independent Living', status: 'Tour Scheduled', urgency: 'Hot', source: 'Physician', phone: '(214)555-0142', fu: '2026-02-14', notes: 'Son James is POA.' },
-  { id: 2, name: 'Walter Simmons', care: 'Assisted Living', status: 'Inquiry', urgency: 'Warm', source: 'Website', phone: '(972)555-0278', fu: '2026-02-16', notes: 'Looking for 2BR.' },
-  { id: 3, name: 'Gloria Tran', care: 'Memory Care', status: 'Proposal Sent', urgency: 'Hot', source: 'Hospital Discharge', phone: '(469)555-0391', fu: '2026-02-13', notes: 'MNSD diagnosis. Quick move wanted.' },
-  { id: 4, name: 'Raymond Flores', care: 'Independent Living', status: 'Follow-up', urgency: 'Cold', source: 'Community Event', phone: '(817)555-0456', fu: '2026-03-05', notes: 'Not ready yet.' },
-  { id: 5, name: 'Edna Michaels', care: 'Assisted Living', status: 'Tour Scheduled', urgency: 'Warm', source: 'Google', phone: '(214)555-0567', fu: '2026-02-15', notes: 'Has VA benefits.' },
+  { id: 1, name: 'Dorothy Harrison', care: 'Independent Living', status: 'Tour Scheduled', urgency: 'High', source: 'Physician', phone: '(214)555-0142', fu: '2026-02-14', notes: 'Son James is POA.' },
+  { id: 2, name: 'Walter Simmons', care: 'Assisted Living', status: 'Inquiry', urgency: 'Medium', source: 'Website', phone: '(972)555-0278', fu: '2026-02-16', notes: 'Looking for 2BR.' },
+  { id: 3, name: 'Gloria Tran', care: 'Memory Care', status: 'Proposal Sent', urgency: 'High', source: 'Hospital Discharge', phone: '(469)555-0391', fu: '2026-02-13', notes: 'MNSD diagnosis. Quick move wanted.' },
+  { id: 4, name: 'Raymond Flores', care: 'Independent Living', status: 'Follow-up', urgency: 'Low', source: 'Community Event', phone: '(817)555-0456', fu: '2026-03-05', notes: 'Not ready yet.' },
+  { id: 5, name: 'Edna Michaels', care: 'Assisted Living', status: 'Tour Scheduled', urgency: 'Medium', source: 'Google', phone: '(214)555-0567', fu: '2026-02-15', notes: 'Has VA benefits.' },
   { id: 6, name: 'James Owens', care: 'Memory Care', status: 'Move-In', urgency: '', source: 'Physician', phone: '(972)555-0678', fu: '', notes: 'Moved in Jan 28.' },
 ];
 

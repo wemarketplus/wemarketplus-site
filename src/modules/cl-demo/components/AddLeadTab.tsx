@@ -14,7 +14,7 @@ export function AddLeadTab() {
   const [phone, setPhone] = useState('');
   const [care, setCare] = useState<string>(CARE_LEVELS[0]);
   const [status, setStatus] = useState<LeadStatus>('Inquiry');
-  const [urgency, setUrgency] = useState<Urgency>('Warm');
+  const [urgency, setUrgency] = useState<Urgency>('Medium');
   const [source, setSource] = useState<string>(LEAD_SOURCES[0]);
   const [fu, setFu] = useState('');
   const [age, setAge] = useState('');

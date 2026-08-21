@@ -13,8 +13,12 @@ interface ClCalendarDayPanelProps {
   /** `YYYY-MM-DD` of the selected cell. */
   dayKey: string;
   events: readonly ClCalendarEvent[];
+  /**
+   * userId → chosen hex. In "my calendar" scope this holds just the session
+   * user's own colour (useTenantCalendarColors reads it from the auth slice with
+   * no request), so a personal calendar still shows the colour its owner picked.
+   */
   colors: CalendarColorMap;
-  showOwnerColors: boolean;
   onSchedule: () => void;
 }
 
@@ -36,7 +40,6 @@ export function ClCalendarDayPanel({
   dayKey,
   events,
   colors,
-  showOwnerColors,
   onSchedule,
 }: ClCalendarDayPanelProps) {
   return (
@@ -82,9 +85,13 @@ export function ClCalendarDayPanel({
                   >
                     {/* Owner dot — the legend for the grid's colour coding. */}
                     <span
+                      // The owner's colour in every scope — on a personal
+                      // calendar that is the user's own choice from their
+                      // profile, which is the whole point of offering the
+                      // picker. See chipStyle in ClCalendarMonthGrid.
                       className={cn(
                         'mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full',
-                        showOwnerColors ? owner.dot : 'bg-primary',
+                        owner.dot,
                       )}
                     />
                     <div className="min-w-0 flex-1">

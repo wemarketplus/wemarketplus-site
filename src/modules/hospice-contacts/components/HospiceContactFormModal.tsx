@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Input, Label, Select, Textarea } from '@/shared/ui/core';
+import { Button, Checkbox, Input, Label, Select, Textarea } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import {
   CONTACT_TYPE_LABELS,
@@ -225,8 +225,7 @@ export function HospiceContactFormModal({
         </div>
         <div className="flex items-end">
           <label className="flex items-center gap-2 text-[13px] text-foreground">
-            <input
-              type="checkbox"
+            <Checkbox
               checked={doNotContact}
               onChange={(e) => setDoNotContact(e.target.checked)}
             />

@@ -4,13 +4,21 @@ import { ClCalendarEventKind } from '../types/clCalendarTypes';
  * How many tours / visits the calendar loads.
  *
  * Neither /cl/tours nor /cl/outreach-visits accepts a date range, so the calendar
- * cannot ask for "the visible month" — it loads a page and buckets it. 200 covers
- * roughly a year of ordinary activity for a single community, which is what makes
- * month navigation feel instant (no refetch) at the cost of a month far outside
- * the page reading as empty. A `from`/`to` filter on those endpoints is what turns
- * this into a real windowed query.
+ * cannot ask for "the visible month" — it loads a page and buckets it. Month
+ * navigation therefore re-buckets one cached page instead of refetching, which is
+ * instant, at the cost of a month outside the page reading as empty. A `from`/`to`
+ * filter on those endpoints is what turns this into a real windowed query.
+ *
+ * 100, NOT 200: ClListQueryDto caps `limit` at MAX_LIMIT (100), so every request
+ * this page made was answered `400 · limit must not be greater than 100` — the
+ * whole screen sat on its "could not load the calendar" state, and the schedule
+ * modal's Lead and Referral-source pickers (useClScheduleEvent, same constant)
+ * came back empty for the same reason. It went unnoticed because the page was
+ * exported but never routed; it is routed now (CalendarRoute), so the ceiling has
+ * to be the one the API actually allows. Raising it again means raising MAX_LIMIT
+ * on the server first — or, better, adding the date window described above.
  */
-export const CL_CALENDAR_FETCH_LIMIT = 200;
+export const CL_CALENDAR_FETCH_LIMIT = 100;
 
 /** Events drawn per cell before collapsing into "+N more". */
 export const CL_MAX_CHIPS_PER_DAY = 2;

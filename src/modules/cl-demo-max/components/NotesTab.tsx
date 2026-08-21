@@ -102,7 +102,7 @@ export function NotesTab() {
                   <div key={c.id} onMouseDown={() => selectContact(c)} className="flex cursor-pointer items-start gap-2.5 border-b border-white/[0.05] px-3.5 py-2.5 hover:bg-white/[0.05]">
                     <Badge tone={(CONTACT_TYPE_TONE[c.type] || 'green') as BadgeTone}>{c.type}</Badge>
                     <div className="min-w-0 flex-1">
-                      <div className="text-[13px] font-bold text-[#f4f8ff]">{c.name}{(c.urgency === 'Hot' || c.urgency === 'hot') && <span className="ml-1 rounded-full bg-[#f87171]/10 px-1.5 py-px text-[9px] font-black text-[#f87171]">HOT</span>}</div>
+                      <div className="text-[13px] font-bold text-[#f4f8ff]">{c.name}{(c.urgency === 'High' || c.urgency === 'high') && <span className="ml-1 rounded-full bg-[#f87171]/10 px-1.5 py-px text-[9px] font-black text-[#f87171]">HIGH</span>}</div>
                       <div className="mt-px text-[11px] text-[#6b7fa3]">{c.sub}</div>
                     </div>
                   </div>

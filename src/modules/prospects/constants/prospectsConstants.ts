@@ -125,8 +125,12 @@ export const PIPELINE_TYPE_OPTIONS: ReadonlyArray<{
   { value: ProspectPipelineType.Outreach, label: 'Outreach' },
 ];
 
+// ProspectUrgency mirrors the backend enum (hot/warm/cold codes); the labels are
+// the shared High/Medium/Low urgency scale, so the Add-prospect and
+// Add-opportunity dropdowns read the same as the URGENCY_CHIPS above them and the
+// pill the saved row is drawn with.
 export const PROSPECT_URGENCY_OPTIONS: ReadonlyArray<{ value: ProspectUrgency; label: string }> = [
-  { value: ProspectUrgency.Hot, label: 'Hot' },
-  { value: ProspectUrgency.Warm, label: 'Warm' },
-  { value: ProspectUrgency.Cold, label: 'Cold' },
+  { value: ProspectUrgency.Hot, label: URGENCY_LABELS.hot },
+  { value: ProspectUrgency.Warm, label: URGENCY_LABELS.warm },
+  { value: ProspectUrgency.Cold, label: URGENCY_LABELS.cold },
 ];

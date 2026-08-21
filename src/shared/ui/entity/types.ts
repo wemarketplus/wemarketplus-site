@@ -115,6 +115,22 @@ export interface EntityField<TValues extends FieldValues> {
    * `watch` + `setValue` on EntityFormModal.
    */
   dependsOn?: Path<TValues>;
+  /**
+   * MANDATORY field: renders a `*` after the label and sets `aria-required` on
+   * the control.
+   *
+   * Declared per field rather than derived from the zod schema because the modal
+   * is handed `register` + `errors`, never the schema itself — and reaching into
+   * a resolver's internals to guess which keys are required would break the
+   * moment a field became a union or picked up a refinement.
+   *
+   * It is a LABEL, not a rule: the schema and the DTO still decide what saves.
+   * Every form's required set was previously invisible, so the only way to
+   * discover a mandatory field was to submit and read the error — which is what
+   * the client reported. Mark exactly the fields the schema really requires; a
+   * `*` on an optional field is worse than none at all.
+   */
+  required?: boolean;
   // Span both columns of the 2-col grid (defaults to false = single column).
   full?: boolean;
 }

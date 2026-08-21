@@ -29,11 +29,11 @@ const DAY = 86400000;
 const HOUR = 3600000;
 
 export const SEED_LEADS: Lead[] = [
-  { id: 1, name: 'Dorothy Harrison', care: 'Independent Living', status: 'Tour Scheduled', urgency: 'Hot', source: 'Physician', phone: '(214)555-0142', fu: '2026-02-14', notes: 'Son James is POA.' },
-  { id: 2, name: 'Walter Simmons', care: 'Assisted Living', status: 'Inquiry', urgency: 'Warm', source: 'Website', phone: '(972)555-0278', fu: '2026-02-16', notes: 'Looking for 2BR.' },
-  { id: 3, name: 'Gloria Tran', care: 'Memory Care', status: 'Proposal Sent', urgency: 'Hot', source: 'Hospital Discharge', phone: '(469)555-0391', fu: '2026-02-13', notes: 'MNSD diagnosis. Quick move wanted.' },
-  { id: 4, name: 'Raymond Flores', care: 'Independent Living', status: 'Follow-up', urgency: 'Cold', source: 'Community Event', phone: '(817)555-0456', fu: '2026-03-05', notes: 'Not ready yet.' },
-  { id: 5, name: 'Edna Michaels', care: 'Assisted Living', status: 'Tour Scheduled', urgency: 'Warm', source: 'Google', phone: '(214)555-0567', fu: '2026-02-15', notes: 'Has VA benefits.' },
+  { id: 1, name: 'Dorothy Harrison', care: 'Independent Living', status: 'Tour Scheduled', urgency: 'High', source: 'Physician', phone: '(214)555-0142', fu: '2026-02-14', notes: 'Son James is POA.' },
+  { id: 2, name: 'Walter Simmons', care: 'Assisted Living', status: 'Inquiry', urgency: 'Medium', source: 'Website', phone: '(972)555-0278', fu: '2026-02-16', notes: 'Looking for 2BR.' },
+  { id: 3, name: 'Gloria Tran', care: 'Memory Care', status: 'Proposal Sent', urgency: 'High', source: 'Hospital Discharge', phone: '(469)555-0391', fu: '2026-02-13', notes: 'MNSD diagnosis. Quick move wanted.' },
+  { id: 4, name: 'Raymond Flores', care: 'Independent Living', status: 'Follow-up', urgency: 'Low', source: 'Community Event', phone: '(817)555-0456', fu: '2026-03-05', notes: 'Not ready yet.' },
+  { id: 5, name: 'Edna Michaels', care: 'Assisted Living', status: 'Tour Scheduled', urgency: 'Medium', source: 'Google', phone: '(214)555-0567', fu: '2026-02-15', notes: 'Has VA benefits.' },
   { id: 6, name: 'James Owens', care: 'Memory Care', status: 'Move-In', urgency: '', source: 'Physician', phone: '(972)555-0678', fu: '', notes: 'Moved in Jan 28.' },
 ];
 
@@ -91,11 +91,11 @@ export const SEED_NOTES: ActivityNote[] = [
 ];
 
 export const SEED_PAID_REFERRALS: PaidReferral[] = [
-  { id: 101, source: 'A Place for Mom', partner: 'APFM', type: 'Paid', fee: 2000, feeStatus: 'Pending', name: 'Dorothy Harrison', care: 'Independent Living', stage: 'Tour Scheduled', urgency: 'Hot', assigned: 'Sarah M.', phone: '(214)555-0142', tourDate: '2026-02-14', moveInTarget: '2026-03-01', notes: 'Son James is POA. APFM referral fee $2,000 pending move-in.', lostReason: '', created: '2026-02-01' },
-  { id: 102, source: 'Caring.com', partner: 'Caring', type: 'Paid', fee: 1500, feeStatus: 'Pending', name: 'Gloria Tran', care: 'Memory Care', stage: 'Deposit Pending', urgency: 'Hot', assigned: 'Sarah M.', phone: '(469)555-0391', tourDate: '2026-02-10', moveInTarget: '2026-02-20', notes: 'MNSD diagnosis. Proposal sent. Caring.com fee $1,500 on move-in.', lostReason: '', created: '2026-01-28' },
-  { id: 103, source: 'Dr. Amanda Chen', partner: 'Internal', type: 'Organic', fee: 0, feeStatus: 'N/A', name: 'Walter Simmons', care: 'Assisted Living', stage: 'New Referral', urgency: 'Warm', assigned: 'Sarah M.', phone: '(972)555-0278', tourDate: '', moveInTarget: '', notes: 'Looking for 2BR AL. Dr. Chen referred directly.', lostReason: '', created: '2026-02-05' },
-  { id: 104, source: 'SeniorAdvisor', partner: 'SA', type: 'Paid', fee: 1800, feeStatus: 'Pending', name: 'Edna Michaels', care: 'Assisted Living', stage: 'Tour Scheduled', urgency: 'Warm', assigned: 'Sarah M.', phone: '(214)555-0567', tourDate: '2026-02-15', moveInTarget: '2026-03-15', notes: 'VA benefits confirmed. SeniorAdvisor fee $1,800 on move-in.', lostReason: '', created: '2026-02-03' },
-  { id: 105, source: 'Parkland Hospital', partner: 'Internal', type: 'Organic', fee: 0, feeStatus: 'N/A', name: 'Raymond Flores', care: 'Independent Living', stage: 'Family Reached', urgency: 'Cold', assigned: 'Sarah M.', phone: '(817)555-0456', tourDate: '', moveInTarget: '2026-04-01', notes: '60-day timeline. Family researching options.', lostReason: '', created: '2026-01-15' },
+  { id: 101, source: 'A Place for Mom', partner: 'APFM', type: 'Paid', fee: 2000, feeStatus: 'Pending', name: 'Dorothy Harrison', care: 'Independent Living', stage: 'Tour Scheduled', urgency: 'High', assigned: 'Sarah M.', phone: '(214)555-0142', tourDate: '2026-02-14', moveInTarget: '2026-03-01', notes: 'Son James is POA. APFM referral fee $2,000 pending move-in.', lostReason: '', created: '2026-02-01' },
+  { id: 102, source: 'Caring.com', partner: 'Caring', type: 'Paid', fee: 1500, feeStatus: 'Pending', name: 'Gloria Tran', care: 'Memory Care', stage: 'Deposit Pending', urgency: 'High', assigned: 'Sarah M.', phone: '(469)555-0391', tourDate: '2026-02-10', moveInTarget: '2026-02-20', notes: 'MNSD diagnosis. Proposal sent. Caring.com fee $1,500 on move-in.', lostReason: '', created: '2026-01-28' },
+  { id: 103, source: 'Dr. Amanda Chen', partner: 'Internal', type: 'Organic', fee: 0, feeStatus: 'N/A', name: 'Walter Simmons', care: 'Assisted Living', stage: 'New Referral', urgency: 'Medium', assigned: 'Sarah M.', phone: '(972)555-0278', tourDate: '', moveInTarget: '', notes: 'Looking for 2BR AL. Dr. Chen referred directly.', lostReason: '', created: '2026-02-05' },
+  { id: 104, source: 'SeniorAdvisor', partner: 'SA', type: 'Paid', fee: 1800, feeStatus: 'Pending', name: 'Edna Michaels', care: 'Assisted Living', stage: 'Tour Scheduled', urgency: 'Medium', assigned: 'Sarah M.', phone: '(214)555-0567', tourDate: '2026-02-15', moveInTarget: '2026-03-15', notes: 'VA benefits confirmed. SeniorAdvisor fee $1,800 on move-in.', lostReason: '', created: '2026-02-03' },
+  { id: 105, source: 'Parkland Hospital', partner: 'Internal', type: 'Organic', fee: 0, feeStatus: 'N/A', name: 'Raymond Flores', care: 'Independent Living', stage: 'Family Reached', urgency: 'Low', assigned: 'Sarah M.', phone: '(817)555-0456', tourDate: '', moveInTarget: '2026-04-01', notes: '60-day timeline. Family researching options.', lostReason: '', created: '2026-01-15' },
   { id: 106, source: 'A Place for Mom', partner: 'APFM', type: 'Paid', fee: 2000, feeStatus: 'Paid', name: 'James Owens', care: 'Memory Care', stage: 'Moved In', urgency: '', assigned: 'Sarah M.', phone: '(972)555-0678', tourDate: '2026-01-10', moveInTarget: '2026-01-28', notes: 'Moved in Jan 28. APFM fee $2,000 PAID.', lostReason: '', created: '2026-01-03' },
 ];
 

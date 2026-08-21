@@ -41,12 +41,17 @@ export function LeadsTable({
     {
       key: 'name',
       header: 'Name',
-      cell: (l) => (
-        <div>
-          <p className="font-bold text-foreground">{leadName(l)}</p>
-          <p className="text-[11px] text-muted">{l.phone ?? '—'}</p>
-        </div>
-      ),
+      // NAME ONLY. This cell used to print the lead's phone number on a second
+      // line under the name, in a column headed "Name" and with no contact
+      // column anywhere in the table to explain it. Three things were wrong
+      // with it: the pipeline is a scanning view (who is in play, at what stage)
+      // and a phone number is not what you scan by; the number appeared under
+      // a heading that does not claim to show it; and for the many leads with
+      // no phone on file it rendered a bare em dash under every name, so the
+      // rows carried a column of placeholders for a field nobody asked to see.
+      // Phone is still captured and edited on the lead form (LEAD_FIELDS), and
+      // that is where it belongs — one lead at a time, labelled as itself.
+      cell: (l) => <p className="font-bold text-foreground">{leadName(l)}</p>,
     },
     {
       key: 'care',

@@ -40,6 +40,22 @@ export function EntityPagination({
     'disabled:cursor-not-allowed disabled:border-border/[0.08] disabled:bg-transparent disabled:text-muted-soft ' +
     'disabled:hover:border-border/[0.08] disabled:hover:bg-transparent disabled:hover:text-muted-soft';
 
+  /**
+   * A single-page list has NO pagination footer.
+   *
+   * Every entity page passed this component unconditionally, so a list of eight
+   * contacts still rendered "Page 1 of 1" with a Previous and a Next button.
+   * Both were `disabled`, but the disabled styling above is deliberately
+   * legible rather than faded — which is right for "you are on the first of
+   * four pages" and wrong here, where it reads as two working controls that
+   * silently do nothing however often you click them.
+   *
+   * There is also nothing to report: "Page 1 of 1" is a fact about a list that
+   * is not paginated. So when there is only one page the whole footer goes,
+   * and it comes back the moment a list outgrows a page.
+   */
+  if (lastPage <= 1) return null;
+
   return (
     <div className="flex items-center justify-between text-xs text-muted-soft">
       <span className="uppercase tracking-[0.1em]">

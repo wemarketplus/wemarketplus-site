@@ -1,7 +1,8 @@
 import { LogOut } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { persistor } from '@/app/store';
 import { ProductSwitcher } from '@/modules/access';
-import { logout } from '@/modules/auth';
+import { logout, useLogoutMutation } from '@/modules/auth';
 import { NotificationsBell } from '@/modules/notifications';
 import { GlobalSearch } from '@/modules/search';
 import { roleTitle } from '@/shared/rbac';
@@ -22,8 +23,13 @@ import { cn } from '@/shared/utils/cn';
 // the whole subtree above main. Kept at 30 so the fixed z-50 overlays
 // (NotificationsDrawer, Modal) and the z-[100] command palette still cover it.
 
+// Ceiling on how long sign-out waits for the server to acknowledge the
+// revocation before giving up and clearing this device anyway.
+const REVOKE_TIMEOUT_MS = 4000;
+
 export function DashboardHeader() {
   const dispatch = useAppDispatch();
+  const [revokeSession] = useLogoutMutation();
   const user = useAppSelector((s) => s.auth.user);
   // No topbar while a popup form is open. `invisible` rather than unmounting: the
   // 64px row stays, so the page behind the backdrop does not jump up 64px on open
@@ -55,6 +61,12 @@ export function DashboardHeader() {
    *
    * Fails closed: `confirm()` resolves false when no host is mounted, so a
    * missing ConfirmHost keeps the user signed in rather than logging them out.
+   *
+   * On confirm it then has to actually END THE SESSION, which is three steps,
+   * in this order for reasons each step documents below. Clearing the Redux
+   * token — all this used to do — only makes the CLIENT forget: the refresh
+   * token stayed valid server-side until natural expiry, so a captured one kept
+   * minting access tokens for an account whose owner had signed out.
    */
   const signOut = async () => {
     const ok = await confirm({
@@ -64,7 +76,51 @@ export function DashboardHeader() {
       cancelLabel: 'Cancel',
       destructive: false,
     });
-    if (ok) dispatch(logout());
+    if (!ok) return;
+
+    /**
+     * 1. Revoke server-side FIRST, while the token still exists.
+     *
+     * `POST /auth/logout` is auth-required and `baseQuery` reads the bearer out
+     * of `state.auth.token`, so clearing the store before this call would send
+     * it unauthenticated and revoke nothing. It revokes every refresh token in
+     * the family AND records a revocation instant that the backend's JWT
+     * strategy checks `iat` against, which is what kills already-issued access
+     * tokens too.
+     *
+     * Best-effort but BOUNDED: a user who clicked "Sign out" must end up signed
+     * out of this device even with no network, so a failure or a hang cannot be
+     * allowed to strand them on an authenticated screen. Whichever way this
+     * settles, step 2 runs.
+     */
+    await Promise.race([
+      revokeSession().unwrap().catch(() => undefined),
+      new Promise((resolve) => setTimeout(resolve, REVOKE_TIMEOUT_MS)),
+    ]);
+
+    // 2. Forget the credentials locally.
+    dispatch(logout());
+
+    /**
+     * 3. Flush, then hard-reload into /login.
+     *
+     * ProtectedRoute's <Navigate> already bounces an unauthenticated user, so
+     * the reload is not what performs the redirect — it is what discards the
+     * 54 RTK Query caches, which are keyed by endpoint+args with no notion of
+     * WHO fetched them. Without it, signing out and signing in as someone else
+     * in the same tab re-mounts those queries against still-warm entries (RTKQ
+     * serves a cached entry to a new subscriber without refetching), so the
+     * next user is shown the previous user's records for up to `keepUnusedDataFor`.
+     * On patient data that is a disclosure, not a stale-UI annoyance.
+     *
+     * `flush()` is what makes the reload safe: redux-persist writes are
+     * throttled, so reloading straight after the dispatch can race the write
+     * and rehydrate the OLD authenticated state — signing the user back in.
+     * This is the same "hard redirect so caches reset cleanly" path baseQuery's
+     * 401 handler takes; the two now differ only in who triggered them.
+     */
+    await persistor.flush();
+    window.location.href = '/login';
   };
 
   return (

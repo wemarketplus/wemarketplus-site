@@ -38,6 +38,9 @@ export function PlanChangeDialog({
   // sticker price, which reads as a pricing error unless the recurring price is
   // spelled out right next to it.
   const recurringFrom = renewsOn ? formatPeriodEnd(renewsOn) : null;
+  // Upgrade vs downgrade drives the label, the copy and whether there is
+  // anything to pay, so resolve it once rather than re-testing the flag.
+  const upgrading = preview?.effectiveImmediately ?? false;
 
   return (
     <Modal
@@ -49,11 +52,28 @@ export function PlanChangeDialog({
       size="sm"
       footer={
         <>
-          <Button variant="secondary" onClick={onCancel} disabled={applying}>
+          {/*
+            `ghost`, not `secondary` — the same pairing ConfirmDialog uses, so
+            every confirm footer in the app has one filled action and one quiet
+            way out. Cancel does not need a border to be findable next to a
+            solid green pill, and giving it one made the footer read as two
+            equal choices.
+          */}
+          <Button variant="ghost" onClick={onCancel} disabled={applying}>
             Cancel
           </Button>
+          {/*
+            Names the action rather than acknowledging the question — the rule
+            ConfirmDialog documents. "Confirm change" was also the one label
+            that could not tell the two outcomes apart: an upgrade charges a card
+            right now, a downgrade only books something for the renewal date.
+          */}
           <Button onClick={onConfirm} disabled={applying}>
-            {applying ? 'Applying…' : 'Confirm change'}
+            {applying
+              ? 'Applying…'
+              : upgrading
+                ? 'Upgrade now'
+                : 'Schedule downgrade'}
           </Button>
         </>
       }
@@ -64,8 +84,14 @@ export function PlanChangeDialog({
             <span className="text-muted">Due today</span>
             <span className="text-xl font-bold text-foreground">{amount}</span>
           </div>
-          {preview.effectiveImmediately && targetPlan && (
-            <div className="flex items-baseline justify-between gap-4 border-t border-border pt-3">
+          {upgrading && targetPlan && (
+            /*
+              The rule was `border-border` — the token at FULL alpha, which on
+              the light palette is #11201a, a near-black 1px line. Inside a panel
+              whose own header and footer rules are drawn at 7% it read as a
+              heavy black bar splitting the two figures. Matches them now.
+            */
+            <div className="flex items-baseline justify-between gap-4 border-t border-border/[0.07] pt-3">
               <span className="text-muted">Then</span>
               <span className="font-semibold text-foreground">
                 {targetPlan.price}
@@ -77,10 +103,18 @@ export function PlanChangeDialog({
               </span>
             </div>
           )}
+          {/*
+            One short paragraph, not three sentences of billing policy. The old
+            upgrade copy closed with "The regular price starts at your next
+            renewal", which the "Then … from <date>" row above already states —
+            and re-stating a number in prose is how the two drift apart. What
+            prose is actually needed for is the one thing the figures cannot
+            explain: why "Due today" is LESS than the plan's sticker price.
+          */}
           <p className="text-muted">
-            {preview.effectiveImmediately
-              ? 'This upgrade takes effect immediately. Today you pay only the difference for the days left in your current billing period, after crediting the unused time on your old plan — which is why it is less than the plan price. The regular price starts at your next renewal.'
-              : `Your current plan stays active until ${effectiveDate} — you keep everything you already paid for. The new plan starts then at its regular price. Nothing is charged or refunded today.`}
+            {upgrading
+              ? 'Your new plan starts right away. Today covers only the days left in this billing period, less credit for the unused time on your old plan — which is why it is below the full price.'
+              : `Nothing is charged or refunded today. Your current plan stays active until ${effectiveDate}, and the new one starts then at its regular price.`}
           </p>
         </div>
       )}

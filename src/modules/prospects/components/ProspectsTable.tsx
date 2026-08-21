@@ -19,10 +19,16 @@ const buildColumns = (
   {
     key: 'prospect',
     header: 'Prospect',
+    // NAME ONLY — the HospiceLink half of the same fix applied to the
+    // CommunityLink lead pipeline. This cell printed the prospect's email under
+    // their name in a column headed "Prospect", with no contact column to
+    // account for it. Email is not what a pipeline is scanned by, and the row
+    // already opens a drawer (ProspectDrawer) that lists phone and email under
+    // their own labels — which is where a contact detail can be read without
+    // being guessed at.
     cell: (p) => (
       <button type="button" onClick={() => onOpen(p.id)} className="text-left">
         <p className="font-bold text-foreground hover:text-primary">{p.name}</p>
-        <p className="text-[11px] text-muted">{p.email}</p>
       </button>
     ),
   },

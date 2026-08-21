@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { EntityFormModal, type EntitySelectOption } from '@/shared/ui/entity';
+import { todayLocalDate } from '@/shared/utils/dateFormatter';
 import { CL_TASK_STATUS, TICKET_PRIORITY, type ClTaskRecord } from '@/modules/cl-outreach';
 import { TASK_FIELDS } from '../constants/tasksConstants';
 import { taskSchema, type TaskFormValues } from '../schema/taskSchema';
@@ -41,6 +42,7 @@ export function TaskFormModal({
     register,
     handleSubmit,
     reset,
+    setError,
     formState: { errors },
   } = useForm<TaskFormValues>({
     resolver: zodResolver(taskSchema),
@@ -58,6 +60,28 @@ export function TaskFormModal({
   };
 
   const submit = handleSubmit(async (values) => {
+    /**
+     * A task cannot be due on a day that has already gone.
+     *
+     * Sits between the two other layers of the same rule rather than replacing
+     * either: `min: todayLocalDate` on the field greys out past days in the
+     * picker, and `@IsNotPastDate()` on CreateClTaskDto rejects them on the
+     * wire. This layer exists because the date input still accepts a TYPED
+     * value the calendar would never have offered, and it turns what would be a
+     * raw 400 toast into an error message under the field.
+     *
+     * Two conditions, both deliberate, and identical to the lead follow-up
+     * date's rule (LeadFormModal): only on create, and on edit only when the
+     * user actually CHANGED the date. A task that quietly went overdue has to
+     * stay editable — marking it done, or fixing its title, must not be blocked
+     * by a due date nobody touched. That is also why the server-side rule is on
+     * the create DTO alone and not on UpdateClTaskDto.
+     */
+    const changedDate = !editing || values.dueDate !== (editing.dueDate ?? '');
+    if (changedDate && values.dueDate && values.dueDate < todayLocalDate()) {
+      setError('dueDate', { message: 'Due date cannot be in the past.' });
+      return;
+    }
     const ok = await onSubmit(values);
     if (ok) reset(EMPTY);
   });

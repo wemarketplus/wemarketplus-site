@@ -1,4 +1,4 @@
-import { Button, Input, Label, Select } from '@/shared/ui/core';
+import { Button, Checkbox, Input, Label, Select } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import { ROLE_LABELS, type Role } from '@/shared/rbac';
 import type { CustomRoleDraft } from '../hooks/useCustomRoles';
@@ -130,9 +130,7 @@ export function CustomRoleFormModal({
                         key={entry.key}
                         className="flex cursor-pointer items-center gap-2 rounded px-1.5 py-1 text-[13px] text-foreground hover:bg-foreground/[0.04]"
                       >
-                        <input
-                          type="checkbox"
-                          className="h-3.5 w-3.5 shrink-0 accent-current"
+                        <Checkbox
                           checked={draft.navKeys.includes(entry.key)}
                           onChange={() => onToggleKey(entry.key)}
                         />
@@ -147,9 +145,7 @@ export function CustomRoleFormModal({
         </div>
 
         <label className="flex cursor-pointer items-center gap-2 text-[13px] text-foreground">
-          <input
-            type="checkbox"
-            className="h-3.5 w-3.5 accent-current"
+          <Checkbox
             checked={draft.isActive}
             onChange={(e) => onPatch({ isActive: e.target.checked })}
           />

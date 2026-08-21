@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Plus } from 'lucide-react';
-import { Button, Card, CardContent, Label, Select } from '@/shared/ui/core';
+import { Button, Card, CardContent, Checkbox, Label, Select } from '@/shared/ui/core';
 import { Pill } from '@/shared/ui/data-display';
 import { EntityRowActions } from '@/shared/ui/entity';
 import { useRole, HL_FIELD_ROLES } from '@/shared/rbac';
@@ -109,8 +109,7 @@ export function NotesList() {
               a filter that read "Team only — not for the family" would look like
               the control that SETS the flag, which lives on the note form. */}
           <label className="flex items-center gap-2 py-2.5 text-sm text-foreground">
-            <input
-              type="checkbox"
+            <Checkbox
               checked={teamOnly}
               onChange={(e) => setTeamOnly(e.target.checked)}
             />

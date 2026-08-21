@@ -1,5 +1,5 @@
 import { displayName, type NameTable } from '@/shared/hooks';
-import { opt } from '@/shared/ui/entity';
+import { opt, optOrNull } from '@/shared/ui/entity';
 import type {
   CreateGoalRequest,
   CreateNoteRequest,
@@ -160,13 +160,17 @@ export function toNoteFormValues(n: NoteRecord): NoteFormValues {
 }
 
 // Tasks -----------------------------------------------------------------
+// optOrNull on both nullable fields: `opt` omits a blank, and an omitted key in
+// a PATCH means "leave unchanged" — so clearing a reminder's due date silently
+// kept the old one. Both columns are nullable and both DTO fields are
+// @IsOptional, so an explicit null clears them. See cl-tasks/tasksUtils.ts.
 export function toCreateTask(v: TaskFormValues): CreateTaskRequest {
   return {
     title: v.title.trim(),
     priority: v.priority as TaskPriority,
     status: v.status as TaskStatus,
-    ...opt('description', v.description),
-    ...opt('dueDate', v.dueDate),
+    ...optOrNull('description', v.description),
+    ...optOrNull('dueDate', v.dueDate),
   };
 }
 

@@ -18,12 +18,6 @@ interface AppointmentsCalendarProps {
   isBusy: boolean;
   onComplete: (appointment: AppointmentRecord) => void;
   /**
-   * When true, each row is colour-coded by its assigned rep. Only meaningful in
-   * the "All users" view — in a personal calendar every row is the same person,
-   * so a colour would carry no information.
-   */
-  showOwnerColors?: boolean;
-  /**
    * userId -> the colour that user chose in their profile settings. Optional:
    * omit it and every row falls back to the colour derived from the rep's id,
    * which is what this calendar did before colours could be chosen.
@@ -37,7 +31,6 @@ export function AppointmentsCalendar({
   isEmpty,
   isBusy,
   onComplete,
-  showOwnerColors = false,
   ownerColorMap,
 }: AppointmentsCalendarProps) {
   if (isEmpty) {
@@ -69,20 +62,35 @@ export function AppointmentsCalendar({
                   className="flex flex-wrap items-start gap-3 px-6 py-3"
                 >
                   {/* Past-due always wins over the owner colour: "this was
-                      missed" is more urgent than "this is Dana's". */}
+                      missed" is more urgent than "this is Dana's".
+
+                      Otherwise ALWAYS the owner colour, in every scope. This
+                      used to be gated on an `showOwnerColors` prop that the
+                      page set from `scope === 'all'`, on the reasoning that a
+                      personal calendar is all one person so colour says
+                      nothing. Two problems with that. It contradicted
+                      AppointmentsMonthGrid, which takes no such flag and
+                      colours by owner unconditionally — so the same screen at
+                      the same scope answered "what colour am I?" two different
+                      ways depending on which view was open. And it broke the
+                      promise the profile page makes when it asks the user to
+                      pick a colour: they pick one, open the calendar they land
+                      on by default (My calendar, agenda) and see the generic
+                      accent, which reads as the setting having done nothing.
+                      See useTenantCalendarColors, which already supplies the
+                      session user's own colour with no extra request precisely
+                      so the personal view can paint it. */}
                   <span
                     className={cn(
                       'mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full',
                       isPastDue(appointment)
                         ? 'bg-destructive'
-                        : showOwnerColors
-                          ? calendarColorFor(
-                              appointment.assignedRep,
-                              appointment.assignedRep
-                                ? ownerColorMap?.[appointment.assignedRep]
-                                : null,
-                            ).dot
-                          : 'bg-primary',
+                        : calendarColorFor(
+                            appointment.assignedRep,
+                            appointment.assignedRep
+                              ? ownerColorMap?.[appointment.assignedRep]
+                              : null,
+                          ).dot,
                     )}
                   />
                   <div className="min-w-0 flex-1">

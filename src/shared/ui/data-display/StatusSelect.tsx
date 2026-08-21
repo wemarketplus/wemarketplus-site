@@ -41,6 +41,26 @@ interface StatusSelectProps {
  *
  * Colour and geometry are imported from Pill rather than restated, so a status
  * badge and an editable status badge are the same object.
+ *
+ * ── The DEAD ZONE this also fixes ─────────────────────────────────────────────
+ * The pill's padding used to live on the wrapper <span>, so the <select> was
+ * inset INSIDE it and only covered part of the badge: measured in the leads
+ * pipeline, an 80x11px select inside a 114x22px pill — 35% of what looks like
+ * one control was live, and the other 65% belonged to a <span> that does
+ * nothing. `elementFromPoint` on the chevron returned the SPAN.
+ *
+ * The chevron is the worst of it. It is the universal "this opens" affordance,
+ * it is `pointer-events-none`, and it sat over the wrapper — so clicking the
+ * one part of the badge that advertises a dropdown neither opened it nor even
+ * focused it. Nothing was mis-selected by those clicks (the value and the
+ * network stayed put, which is what the "clicking empty space selects a status"
+ * report feared); they were simply swallowed, which reads as the control
+ * randomly ignoring you.
+ *
+ * So the PADDING moves onto the <select>. The wrapper then shrink-wraps it and
+ * every pixel of the badge — chevron included — is the select's own hit box,
+ * with the chevron's `pointer-events-none` now passing clicks down to it rather
+ * than to an inert span.
  */
 export function StatusSelect({
   value,
@@ -59,7 +79,10 @@ export function StatusSelect({
       className={cn(
         PILL_SHAPE,
         PILL_TONES[tone ?? 'b'],
-        'relative pr-6',
+        // `p-0` hands PILL_SHAPE's px-2.5 to the <select>; `items-stretch`
+        // then makes the select fill the 22px height instead of sitting on
+        // the centre line as an 11px band.
+        'relative items-stretch p-0',
         disabled && 'opacity-60',
       )}
     >
@@ -69,7 +92,10 @@ export function StatusSelect({
         aria-label={ariaLabel}
         onChange={(e) => onChange(e.target.value)}
         className={cn(
-          'cursor-pointer appearance-none bg-transparent outline-none',
+          // pl-2.5 is PILL_SHAPE's own inline padding; pr-6 is the gutter the
+          // chevron is positioned into. Both belong to the select now, so the
+          // badge has no border it does not own.
+          'cursor-pointer appearance-none rounded-pill bg-transparent pl-2.5 pr-6 outline-none',
           'focus-visible:ring-2 focus-visible:ring-primary/50',
           'disabled:cursor-not-allowed',
         )}

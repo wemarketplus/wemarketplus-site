@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, DatePicker, Input, Label, Select, Textarea } from '@/shared/ui/core';
+import { Button, Checkbox, DatePicker, Input, Label, Select, Textarea } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import {
   ACTIVITY_TYPE_OPTIONS,
@@ -191,8 +191,7 @@ export function LogInteractionModal({
 
         {showFamilySensitive && (
           <label className="flex items-start gap-2 text-sm text-foreground">
-            <input
-              type="checkbox"
+            <Checkbox
               className="mt-1"
               checked={values.isFamilySensitive}
               onChange={(e) => set('isFamilySensitive', e.target.checked)}

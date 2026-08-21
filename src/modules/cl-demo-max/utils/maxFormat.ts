@@ -20,8 +20,8 @@ export function leadStatusTone(s: string): BadgeTone {
   return 'neutral';
 }
 export function urgencyTone(u: Urgency | string): BadgeTone {
-  if (u === 'Hot') return 'red';
-  if (u === 'Warm') return 'amber';
+  if (u === 'High') return 'red';
+  if (u === 'Medium') return 'amber';
   return 'blue';
 }
 
@@ -53,13 +53,13 @@ export function rentRoll(apts: readonly Apartment[]): number {
 }
 
 export function hotLeadCount(leads: readonly Lead[]): number {
-  return leads.filter((l) => l.urgency === 'Hot').length;
+  return leads.filter((l) => l.urgency === 'High').length;
 }
 export function activeLeadCount(leads: readonly Lead[]): number {
   return leads.filter((l) => l.status !== 'Move-In').length;
 }
 export function hotLeads(leads: readonly Lead[]): Lead[] {
-  return leads.filter((l) => l.urgency === 'Hot');
+  return leads.filter((l) => l.urgency === 'High');
 }
 export function tourCount(leads: readonly Lead[]): number {
   return leads.filter((l) => l.status === 'Tour Scheduled').length;

@@ -73,3 +73,19 @@ export const US_STATES: readonly { value: string; label: string }[] = [
   { value: 'WY', label: 'Wyoming' },
   { value: 'DC', label: 'Washington, D.C.' },
 ];
+
+/**
+ * US_STATES shaped for <ListboxSelect>: the two-letter code is the label (it is
+ * what the field stores and what both forms have always displayed) and the full
+ * state name rides along as the hint.
+ *
+ * The name was previously unreachable — the native <select> rendered `s.value`
+ * for every option, so the list read "AL, AK, AZ…" and picking the right one
+ * meant knowing the abbreviation. It costs nothing to show both now that we draw
+ * the list ourselves, and type-ahead matches either, so "mary" reaches MD.
+ */
+export const US_STATE_OPTIONS: readonly {
+  value: string;
+  label: string;
+  hint: string;
+}[] = US_STATES.map((s) => ({ value: s.value, label: s.value, hint: s.label }));

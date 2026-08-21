@@ -1,4 +1,4 @@
-import { Select, SearchInput } from '@/shared/ui/core';
+import { Checkbox, Select, SearchInput } from '@/shared/ui/core';
 import { STATUS_OPTIONS } from '../constants/tasksConstants';
 
 interface TasksFiltersProps {
@@ -47,9 +47,7 @@ export function TasksFilters({
           the reader's own to-do list, and filtering it by a COLLEAGUE is a
           management question that belongs on a management screen. */}
       <label className="inline-flex cursor-pointer items-center gap-2 text-[13px] text-foreground">
-        <input
-          type="checkbox"
-          className="h-3.5 w-3.5 accent-current"
+        <Checkbox
           checked={mineOnly}
           onChange={(e) => onMineOnly(e.target.checked)}
         />

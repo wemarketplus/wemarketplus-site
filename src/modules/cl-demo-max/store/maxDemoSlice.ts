@@ -291,7 +291,7 @@ const slice = createSlice({
     addPaidReferral(state, action: PayloadAction<{ name: string; source: string; type: 'Paid' | 'Organic'; fee: number; care: string }>) {
       const p = action.payload;
       state.nextId += 1;
-      state.paidReferrals.unshift({ id: state.nextId, source: p.source, partner: p.source.split(' ')[0], type: p.type, fee: p.fee, feeStatus: p.fee > 0 ? 'Pending' : 'N/A', name: p.name, care: p.care, stage: 'New Referral', urgency: 'Warm', assigned: 'Sarah M.', phone: '', tourDate: '', moveInTarget: '', notes: '', lostReason: '', created: todayIso() });
+      state.paidReferrals.unshift({ id: state.nextId, source: p.source, partner: p.source.split(' ')[0], type: p.type, fee: p.fee, feeStatus: p.fee > 0 ? 'Pending' : 'N/A', name: p.name, care: p.care, stage: 'New Referral', urgency: 'Medium', assigned: 'Sarah M.', phone: '', tourDate: '', moveInTarget: '', notes: '', lostReason: '', created: todayIso() });
     },
     advancePaidReferral(state, action: PayloadAction<{ id: number; lostReason?: string }>) {
       const r = state.paidReferrals.find((x) => x.id === action.payload.id);

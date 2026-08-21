@@ -22,6 +22,10 @@ interface ScheduleAppointmentModalProps {
   isSaving: boolean;
   /** Jobs an appointment can be attached to — an appointment always has a parent. */
   jobs: readonly JobRecord[];
+  /** The job list is still in flight. An empty picker is not yet an empty list. */
+  isLoadingJobs?: boolean;
+  /** The job list request failed (or was refused), so the picker cannot fill. */
+  isJobsError?: boolean;
   onClose: () => void;
   onSubmit: (values: NewAppointmentFormValues) => Promise<boolean>;
 }
@@ -30,6 +34,8 @@ export function ScheduleAppointmentModal({
   open,
   isSaving,
   jobs,
+  isLoadingJobs = false,
+  isJobsError = false,
   onClose,
   onSubmit: submit,
 }: ScheduleAppointmentModalProps) {
@@ -109,8 +115,20 @@ export function ScheduleAppointmentModal({
       >
         <div className="sm:col-span-2">
           <Label htmlFor="sa-job">Job</Label>
-          <Select id="sa-job" {...register('jobId')}>
-            <option value="">Select a job…</option>
+          <Select
+            id="sa-job"
+            {...register('jobId')}
+            disabled={isLoadingJobs || isJobsError}
+          >
+            {/* The placeholder carries the state, so a picker that cannot fill
+                never looks like one you simply have not opened yet. */}
+            <option value="">
+              {isLoadingJobs
+                ? 'Loading jobs…'
+                : isJobsError
+                  ? 'Jobs unavailable'
+                  : 'Select a job…'}
+            </option>
             {jobs.map((job) => (
               <option key={job.id} value={job.id}>
                 {JOB_TYPE_LABELS[job.jobType]}
@@ -123,11 +141,27 @@ export function ScheduleAppointmentModal({
               {errors.jobId.message}
             </p>
           )}
-          {jobs.length === 0 && (
-            <p className="mt-1 text-[12px] text-muted-soft">
-              No open jobs yet — move a pipeline card to spawn one, or create a job
-              first.
+          {/*
+            Three distinct empty states, in priority order. Previously all three
+            rendered as the same silent placeholder plus a "no open jobs yet"
+            line that was a guess: a failed or refused request looked exactly
+            like a tenant with nothing scheduled, which is how "the Job dropdown
+            shows no options" became a bug report with no way to act on it.
+          */}
+          {isJobsError ? (
+            <p className="mt-1 text-[12px] text-destructive">
+              We could not load your jobs, so an appointment cannot be attached to
+              one yet. Reload the page, or open Jobs to check your access.
             </p>
+          ) : isLoadingJobs ? (
+            <p className="mt-1 text-[12px] text-muted-soft">Loading your jobs…</p>
+          ) : (
+            jobs.length === 0 && (
+              <p className="mt-1 text-[12px] text-muted-soft">
+                No open jobs yet — move a pipeline card to spawn one, or create a
+                job first.
+              </p>
+            )
           )}
         </div>
         {/* See ScheduleVisitModal for why this field matters: without it every

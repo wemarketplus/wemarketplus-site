@@ -130,7 +130,7 @@ const goldDemoSlice = createSlice({
         name: action.payload.name,
         care: action.payload.care,
         status: 'Inquiry',
-        urgency: 'Warm',
+        urgency: 'Medium',
         source: 'Direct',
         phone: '',
         fu: '',

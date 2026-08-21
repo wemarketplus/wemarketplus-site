@@ -183,8 +183,10 @@ const HlLeadsPage = lazy(() =>
 const JobsPage = lazy(() =>
   import('@/modules/jobs').then((m) => ({ default: m.JobsPage })),
 );
-const AppointmentsPage = lazy(() =>
-  import('@/modules/appointments').then((m) => ({ default: m.AppointmentsPage })),
+// Not AppointmentsPage directly: `/appointments` mounts whichever product's
+// calendar the user is standing in (see CalendarRoute).
+const CalendarRoute = lazy(() =>
+  import('@/modules/appointments').then((m) => ({ default: m.CalendarRoute })),
 );
 const PublicReferralFormPage = lazy(() =>
   import('@/modules/referral-portal').then((m) => ({
@@ -876,16 +878,22 @@ export function AppRouter() {
           <Route path="reports" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClReportsPage /></ProtectedRoute>} />
           </Route>
 
-          {/* The SHARED TEAM CALENDAR — cross-product, and the reason it moved
-              out of the HospiceLink Activity group above.
+          {/* THE TEAM CALENDAR — one path, one route, two product pages.
 
-              It is the only calendar in the product: the month grid, the
-              My calendar / All users scope toggle and the per-user colours all
-              live in modules/appointments, and the CommunityLink guide hands a
-              Sales Marketer exactly that screen. Building a second one for
-              CommunityLink would have duplicated the feature rather than shared
-              it, so the backend's @RequireProduct(HospiceLink) came off the
-              controller instead (see appointments.controller.ts).
+              It lives outside both product groups (like `daily-tasks` below) so
+              CalendarRoute can pick by active product: CommunityLink gets its own
+              tours/visits calendar, HospiceLink the appointments one.
+
+              It used to mount AppointmentsPage for BOTH, on the reasoning that a
+              second calendar would duplicate the feature. That reasoning held for
+              everything except CREATING an entry, which is most of what the
+              CommunityLink guide asks of the screen: an `hl_appointments` row
+              requires a `jobId`, and jobs are @RequireProduct(HospiceLink) — so a
+              CommunityLink marketer got a calendar whose Job picker could never
+              contain anything and whose form could never be submitted. Taking
+              @RequireProduct off the appointments controller (see
+              appointments.controller.ts) made READING cross-product, which is
+              still true and still right; it could not make jobs exist.
 
               CALENDAR_ROLES is HL_FIELD_ROLES ∪ CL_SALES_ROLES — everyone who had
               it before, plus the CommunityLink personas. The matching backend
@@ -897,7 +905,7 @@ export function AppRouter() {
             path="appointments"
             element={
               <ProtectedRoute allow={CALENDAR_ROLES}>
-                <AppointmentsPage />
+                <CalendarRoute />
               </ProtectedRoute>
             }
           />

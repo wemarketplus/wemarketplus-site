@@ -1,5 +1,6 @@
 import { Flag, Loader2, TriangleAlert } from 'lucide-react';
 import { toast } from 'sonner';
+import { Switch } from '@/shared/ui';
 import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
 import {
   useListAdminFeatureFlagsQuery,
@@ -87,23 +88,12 @@ export function FeatureFlagsPage() {
                     </p>
                   )}
                 </div>
-                <button
-                  type="button"
-                  role="switch"
-                  aria-checked={flag.enabledGlobally}
+                <Switch
+                  checked={flag.enabledGlobally}
                   aria-label={`Toggle ${flag.key} globally`}
                   disabled={isSaving}
-                  onClick={() => onToggleGlobal(flag)}
-                  className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors disabled:opacity-50 ${
-                    flag.enabledGlobally ? 'bg-primary' : 'bg-foreground/[0.14]'
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      flag.enabledGlobally ? 'translate-x-6' : 'translate-x-1'
-                    }`}
-                  />
-                </button>
+                  onCheckedChange={() => void onToggleGlobal(flag)}
+                />
               </li>
             );
           })}

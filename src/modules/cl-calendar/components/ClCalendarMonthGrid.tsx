@@ -18,10 +18,13 @@ interface ClCalendarMonthGridProps {
   cells: readonly ClCalendarCell[];
   selectedKey: string;
   isFetching: boolean;
-  /** userId → chosen hex. Empty in "my calendar" scope, where colour says nothing. */
+  /**
+   * userId → chosen hex. In "my calendar" scope this holds just the session
+   * user's own colour, which useTenantCalendarColors supplies from the auth
+   * slice without a request — so a personal calendar still paints the colour
+   * its owner picked. See that hook.
+   */
   colors: CalendarColorMap;
-  /** True in "All users" scope — colours rows by owner. */
-  showOwnerColors: boolean;
   onPrevMonth: () => void;
   onNextMonth: () => void;
   onToday: () => void;
@@ -44,20 +47,29 @@ export function ClCalendarMonthGrid({
   selectedKey,
   isFetching,
   colors,
-  showOwnerColors,
   onPrevMonth,
   onNextMonth,
   onToday,
   onSelectDay,
 }: ClCalendarMonthGridProps) {
-  const chipStyle = (event: ClCalendarEvent) => {
-    if (!showOwnerColors) {
-      // Personal calendar: one accent for everything. Every row is yours, so a
-      // per-owner hue would be decoration carrying no information.
-      return 'bg-primary/[0.14] text-primary';
-    }
-    return calendarColorFor(event.ownerId, colors[event.ownerId ?? '']).dot;
-  };
+  /**
+   * The owner's colour, in EVERY scope.
+   *
+   * This used to return a flat `bg-primary/[0.14] text-primary` tint whenever
+   * the scope was "my calendar", on the reasoning that every row there is yours
+   * so a per-owner hue carries no information. That reasoning holds for telling
+   * people apart, but it breaks a promise made elsewhere: the profile page's
+   * colour picker says "how your appointments are marked on the calendar", and
+   * the CommunityLink guide says "change your own calendar color anytime from
+   * your profile settings". A user who picks a colour and then opens the
+   * calendar they land on by default saw the generic accent — which reads as
+   * the setting having done nothing.
+   *
+   * The colour is still not carrying identity on a personal calendar; it is
+   * carrying the user's own choice, which is a different job and a real one.
+   */
+  const chipStyle = (event: ClCalendarEvent) =>
+    calendarColorFor(event.ownerId, colors[event.ownerId ?? '']).dot;
 
   return (
     <Card className="overflow-hidden">
@@ -146,7 +158,11 @@ export function ClCalendarMonthGrid({
                   className={cn(
                     'flex items-baseline gap-1 truncate rounded-[4px] px-1.5 py-[2px] text-[10px] font-semibold leading-[14px]',
                     chipStyle(event),
-                    showOwnerColors && 'text-white',
+                    // `chipStyle` is always a solid owner fill now, so the label
+                    // is always the on-fill colour. It used to be conditional
+                    // because the personal-scope branch returned a pale tint
+                    // that needed dark text instead.
+                    'text-white',
                     event.isCancelled && 'line-through opacity-70',
                   )}
                 >

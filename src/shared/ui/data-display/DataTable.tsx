@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
+import { Checkbox } from '@/shared/ui/core';
 import { cn } from '@/shared/utils/cn';
 
 export interface Column<T> {
@@ -55,11 +56,6 @@ interface DataTableProps<T> {
   selection?: DataTableSelection;
 }
 
-// Shared checkbox styling for the selection column. Token-driven so the
-// selection accent tracks the palette instead of a literal blue.
-const CHECKBOX_CLASS =
-  'h-3.5 w-3.5 cursor-pointer rounded border-border/25 text-primary accent-[rgb(var(--color-primary))] focus:ring-1 focus:ring-primary';
-
 // `.tbl`: 12px text, tinted header row, hairline row borders, 8-9px/11px cell
 // padding, 12px radius, overflow hidden. Originally a light table islanded on
 // the navy canvas with a blue-grey tint (#f2f6fc / #2563eb); now token-driven
@@ -98,10 +94,11 @@ export function DataTable<T>({ columns, rows, rowKey, empty, selection }: DataTa
           <tr>
             {selection && (
               <th className="w-9 border-b border-border/[0.09] bg-surface-elevated px-[11px] py-2 text-left">
-                <input
+                {/* The shared control, not a bare input with an
+                    `accent-color`: see Checkbox for why the native widget read
+                    as a black square once it was checked. */}
+                <Checkbox
                   ref={headerCheckbox}
-                  type="checkbox"
-                  className={CHECKBOX_CLASS}
                   checked={selection.allSelected}
                   onChange={selection.toggleAll}
                   aria-label="Select all rows on this page"
@@ -133,9 +130,7 @@ export function DataTable<T>({ columns, rows, rowKey, empty, selection }: DataTa
               >
                 {selection && (
                   <td className="border-b border-border/[0.07] px-[11px] py-[9px]">
-                    <input
-                      type="checkbox"
-                      className={CHECKBOX_CLASS}
+                    <Checkbox
                       checked={isSelected}
                       onChange={() => selection.toggle(id)}
                       aria-label="Select row"

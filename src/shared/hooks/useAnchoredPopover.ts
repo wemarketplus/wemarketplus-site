@@ -100,7 +100,16 @@ export function useAnchoredPopover<A extends HTMLElement, P extends HTMLElement>
     // A fixed-position panel would otherwise detach from its anchor the moment
     // the page moves beneath it. Capture on scroll, since scroll does not bubble
     // and the scrolling ancestor is usually not the window.
-    const onReflow = () => onClose();
+    //
+    // A scroll INSIDE the panel is exempt: capture-phase means we see those too,
+    // and a panel with its own `overflow-y-auto` list (the 51-entry state picker)
+    // would otherwise dismiss itself the instant you scrolled to find an option.
+    // The panel moving with its own content is not the panel drifting from its
+    // anchor, which is the only thing this listener exists to catch.
+    const onReflow = (e: Event) => {
+      if (e.target instanceof Node && panelRef.current?.contains(e.target)) return;
+      onClose();
+    };
 
     document.addEventListener('pointerdown', onPointerDown);
     document.addEventListener('keydown', onKey);

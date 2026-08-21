@@ -1,4 +1,5 @@
 import { ACTIVITY_TYPE_OPTIONS } from '@/shared/constants/activityTypeConstants';
+import { URGENCY_LABELS } from '@/shared/constants/urgencyConstants';
 import { Calendar, ScrollText, Pin, Goal } from 'lucide-react';
 import type { EntityField, EntitySelectOption } from '@/shared/ui/entity';
 import { Urgency } from '@/shared/types';
@@ -68,9 +69,11 @@ export const REMINDER_BUCKET_TONE: Record<
 // --- Create/edit form option lists + field descriptors ---------------------
 
 const URGENCY_OPTIONS: readonly EntitySelectOption[] = [
-  { value: Urgency.Hot, label: 'Hot' },
-  { value: Urgency.Warm, label: 'Warm' },
-  { value: Urgency.Cold, label: 'Cold' },
+  // Labels come from the shared map so the note form's dropdown cannot drift
+  // from the urgency pill the note is rendered with afterwards.
+  { value: Urgency.Hot, label: URGENCY_LABELS[Urgency.Hot] },
+  { value: Urgency.Warm, label: URGENCY_LABELS[Urgency.Warm] },
+  { value: Urgency.Cold, label: URGENCY_LABELS[Urgency.Cold] },
 ];
 
 const TASK_PRIORITY_OPTIONS: readonly EntitySelectOption[] = [

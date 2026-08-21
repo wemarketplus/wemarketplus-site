@@ -121,19 +121,28 @@ function EntityFieldControl<TValues extends FieldValues>({
   // Changing a field that others depend on invalidates their values. Done on the
   // change EVENT rather than in an effect on the value: seeding an edit form goes
   // through `reset`, which fires no event, so a stored pair survives untouched.
-  const control = dependents.length
-    ? {
-        ...reg,
-        onChange: (event: Parameters<typeof reg.onChange>[0]) => {
-          const result = reg.onChange(event);
-          for (const dependent of dependents) {
-            // A dependent field is a picker, so blank is the empty option.
-            setValue?.(dependent.name, '' as PathValue<TValues, Path<TValues>>);
-          }
-          return result;
-        },
-      }
-    : reg;
+  const control = {
+    ...(dependents.length
+      ? {
+          ...reg,
+          onChange: (event: Parameters<typeof reg.onChange>[0]) => {
+            const result = reg.onChange(event);
+            for (const dependent of dependents) {
+              // A dependent field is a picker, so blank is the empty option.
+              setValue?.(dependent.name, '' as PathValue<TValues, Path<TValues>>);
+            }
+            return result;
+          },
+        }
+      : reg),
+    // Carried on the CONTROL, not the label: `aria-required` is what tells
+    // assistive tech the field is mandatory, and it lands on every visible
+    // branch below (input, select, textarea, date) because they all spread
+    // `control`. The `readonly` branch spreads `reg` into a hidden input
+    // instead and is deliberately excluded — a value the user cannot set is
+    // not a field they can be required to fill.
+    ...(field.required ? { 'aria-required': true } : {}),
+  };
 
   // A place picker owns its own label and writes THREE values (the name and the
   // two coordinates), so it returns before the shared label/branch below rather
@@ -181,7 +190,20 @@ function EntityFieldControl<TValues extends FieldValues>({
 
   return (
     <div className={field.full ? 'sm:col-span-2' : undefined}>
-      <Label htmlFor={id}>{field.label}</Label>
+      <Label htmlFor={id}>
+        {field.label}
+        {field.required && (
+          // The conventional `*`, in the destructive tone so it reads as a
+          // requirement rather than decoration. `aria-hidden` because the
+          // requirement is already announced by `aria-required` on the control
+          // below — without it a screen reader says "star" after every
+          // mandatory label. `title` gives the same explanation to a sighted
+          // user who does not know the convention.
+          <span aria-hidden="true" title="Required" className="ml-0.5 text-destructive">
+            *
+          </span>
+        )}
+      </Label>
       {type === 'readonly' ? (
         // Context, not an input. The value is still registered (hidden) so an
         // existing reference on the record survives a save by a role that only

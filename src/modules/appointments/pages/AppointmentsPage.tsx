@@ -62,10 +62,16 @@ export function AppointmentsPage() {
   // An appointment always hangs off a job, so the picker needs the job list.
   // Skipped for roles without pipeline access: /hl/jobs is 403 for them, and it was
   // firing on every calendar load to populate a form they can never open.
-  const { data: jobsPage } = useListJobsQuery(
-    { limit: 100 },
-    { skip: !canSchedule },
-  );
+  // `isLoading`/`isError` are read, not discarded: an empty Job picker has three
+  // different causes (still fetching, the request failed, the tenant genuinely
+  // has no open jobs) and they used to be indistinguishable — the select simply
+  // held its placeholder and the form could not be submitted. The modal says
+  // which one it is.
+  const {
+    data: jobsPage,
+    isLoading: isLoadingJobs,
+    isError: isJobsError,
+  } = useListJobsQuery({ limit: 100 }, { skip: !canSchedule });
   // Per-rep colours for the calendar. The tenant list is fetched only for "All
   // users"; on "My calendar" the hook supplies the session user's own colour from
   // the auth slice at no network cost, so a user who just picked one sees it on
@@ -180,7 +186,6 @@ export function AppointmentsPage() {
       ) : (
         <div className="space-y-3">
           <AppointmentsCalendar
-            showOwnerColors={scope === 'all'}
             ownerColorMap={ownerColorMap}
             days={agenda.days}
             isEmpty={agenda.isEmpty}
@@ -194,6 +199,8 @@ export function AppointmentsPage() {
         open={scheduleOpen}
         isSaving={isScheduling}
         jobs={jobsPage?.data ?? []}
+        isLoadingJobs={isLoadingJobs}
+        isJobsError={isJobsError}
         onClose={closeSchedule}
         onSubmit={submitSchedule}
       />

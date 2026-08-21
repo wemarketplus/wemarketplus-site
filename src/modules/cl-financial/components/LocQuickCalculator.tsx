@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Card, CardContent, Select } from '@/shared/ui/core';
+import { Card, CardContent, Checkbox, Select } from '@/shared/ui/core';
 import { formatUsd } from '../utils/financialFormat';
 import { num } from '../utils/clFinancialMappers';
 import type { ClLocPricingRecord } from '../types/clFinancialApiTypes';
@@ -42,11 +42,9 @@ export function LocQuickCalculator({ levels }: LocQuickCalculatorProps) {
             ))}
           </Select>
           <label className="flex items-center gap-2 text-sm text-muted">
-            <input
-              type="checkbox"
+            <Checkbox
               checked={secondPerson}
               onChange={(e) => setSecondPerson(e.target.checked)}
-              className="h-4 w-4 accent-primary"
             />
             Second person (+{formatUsd(SECOND_PERSON_FEE)})
           </label>
