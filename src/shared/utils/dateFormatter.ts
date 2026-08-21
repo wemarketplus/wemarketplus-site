@@ -30,3 +30,13 @@ export const localInputToIso = (local: string): string => {
   const ms = Date.parse(local);
   return Number.isNaN(ms) ? '' : new Date(ms).toISOString();
 };
+
+/**
+ * Today's date, local wall-clock, as a `date` input expects ("yyyy-MM-dd").
+ *
+ * NOT `new Date().toISOString().slice(0, 10)` — that reads the UTC calendar
+ * day, which is tomorrow's date for part of the evening in every zone west of
+ * UTC (and yesterday's for part of the morning east of it). Same off-by-one
+ * class of bug isoToLocalInput above exists to avoid.
+ */
+export const todayLocalDate = (): string => format(new Date(), 'yyyy-MM-dd');

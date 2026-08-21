@@ -26,9 +26,11 @@ export const FEE_STATUS_PILL: Record<FeeStatus, PillProps['tone']> = {
 };
 
 export const URGENCY_LABELS: Record<ClUrgency, string> = {
-  [CL_URGENCY.Hot]: 'Hot',
-  [CL_URGENCY.Warm]: 'Warm',
-  [CL_URGENCY.Cold]: 'Cold',
+  // High / Medium / Low, not Hot / Warm / Cold — see the note on
+  // shared/constants/urgencyConstants.ts. The wire values are unchanged.
+  [CL_URGENCY.Hot]: 'High',
+  [CL_URGENCY.Warm]: 'Medium',
+  [CL_URGENCY.Cold]: 'Low',
 };
 
 export const URGENCY_PILL: Record<ClUrgency, PillProps['tone']> = {

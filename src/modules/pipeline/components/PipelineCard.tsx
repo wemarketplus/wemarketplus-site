@@ -5,6 +5,7 @@ import {
 } from '@/modules/prospects/constants/prospectsConstants';
 import type { ProspectRecord } from '@/modules/prospects/types/prospectsTypes';
 import type { Urgency } from '@/shared/types';
+import { Pill } from '@/shared/ui/data-display';
 import { formatDate } from '@/shared/utils/dateFormatter';
 import { cn } from '@/shared/utils/cn';
 import { cardTitle } from '../utils/pipelineUtils';
@@ -43,13 +44,9 @@ export function PipelineCard({
         <p className="truncate text-sm font-semibold text-foreground">
           {cardTitle(card)}
         </p>
-        <span
-          className={`shrink-0 rounded-pill border px-2 py-0.5 text-[9px] uppercase tracking-[0.08em] ${
-            URGENCY_TONE[card.urgency as Urgency]
-          }`}
-        >
+        <Pill tone="none" className={URGENCY_TONE[card.urgency as Urgency]}>
           {URGENCY_LABELS[card.urgency as Urgency]}
-        </span>
+        </Pill>
       </div>
       {card.facilityName && (
         <p className="truncate text-[11px] text-muted">{card.facilityName}</p>

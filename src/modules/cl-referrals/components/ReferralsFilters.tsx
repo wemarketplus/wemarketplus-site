@@ -1,5 +1,4 @@
-import { Search } from 'lucide-react';
-import { Input, Select } from '@/shared/ui/core';
+import { Select, SearchInput } from '@/shared/ui/core';
 import { REFERRAL_TYPE_OPTIONS } from '../constants/clReferralsConstants';
 
 interface ReferralsFiltersProps {
@@ -13,16 +12,13 @@ interface ReferralsFiltersProps {
 export function ReferralsFilters({ search, type, onSearch, onType }: ReferralsFiltersProps) {
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-      <div className="relative sm:max-w-sm sm:flex-1">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
-        <Input
-          value={search}
-          onChange={(e) => onSearch(e.target.value)}
-          placeholder="Search partners…"
-          className="pl-9"
-          aria-label="Search referral partners"
-        />
-      </div>
+      <SearchInput
+        wrapperClassName="sm:max-w-sm sm:flex-1"
+        value={search}
+        onChange={onSearch}
+        placeholder="Search partners…"
+        aria-label="Search referral partners"
+      />
       <Select
         value={type}
         onChange={(e) => onType(e.target.value)}

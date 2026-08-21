@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { Button, Input, Label, Select } from '@/shared/ui/core';
+import { Button, Checkbox, Input, Label, Select } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import { Role } from '@/shared/rbac';
 import { useListCustomRolesQuery } from '@/modules/permissions';
@@ -144,11 +144,7 @@ export function EditUserModal({
           </div>
         )}
         <label className="flex items-start gap-3 self-end text-sm text-foreground">
-          <input
-            type="checkbox"
-            className="mt-0.5 h-4 w-4 rounded border border-border/15 bg-surface-raised text-primary focus:ring-primary/50"
-            {...register('isActive')}
-          />
+          <Checkbox className="mt-0.5" {...register('isActive')} />
           <span>Account active (uncheck to deactivate)</span>
         </label>
       </form>

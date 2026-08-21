@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Search } from 'lucide-react';
 import { useRole, CL_SALES_ROLES } from '@/shared/rbac';
-import { Input } from '@/shared/ui/core';
+import { SearchInput } from '@/shared/ui/core';
 import { EntityListPage, EntityPagination } from '@/shared/ui/entity';
 import { cn } from '@/shared/utils/cn';
 import { usePaidReferrals } from '../hooks/usePaidReferrals';
@@ -74,16 +73,13 @@ export function ReferralPipelinePage() {
               </button>
             ))}
           </nav>
-          <div className="relative sm:max-w-sm">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search referrals…"
-              className="pl-9"
-              aria-label="Search referral pipeline"
-            />
-          </div>
+          <SearchInput
+            wrapperClassName="sm:max-w-sm"
+            value={search}
+            onChange={setSearch}
+            placeholder="Search referrals…"
+            aria-label="Search referral pipeline"
+          />
         </div>
       }
       pagination={

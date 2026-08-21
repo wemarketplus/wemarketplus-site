@@ -1,6 +1,6 @@
 import { ClipboardList } from 'lucide-react';
 import { CL_MANAGEMENT_ROLES, useRole } from '@/shared/rbac';
-import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
+import { DataTable, Pill, StatusSelect, type Column } from '@/shared/ui/data-display';
 import { EmptyState } from '@/shared/ui/feedback';
 import { EntityRowActions } from '@/shared/ui/entity';
 import { formatDate } from '@/shared/utils/dateFormatter';
@@ -8,7 +8,6 @@ import type { ClTaskRecord } from '@/modules/cl-outreach';
 import {
   PRIORITY_LABELS,
   PRIORITY_PILL,
-  STATUS_LABELS,
   STATUS_OPTIONS,
   STATUS_PILL,
 } from '../constants/tasksConstants';
@@ -60,23 +59,17 @@ export function TasksTable({
     {
       key: 'status',
       header: 'Status',
+      // One control, not a badge beside a dropdown of the same value — see
+      // StatusSelect. The PATCH behind `onStatusChange` is unchanged.
       cell: (t) => (
-        <span className="inline-flex items-center gap-2">
-          <Pill tone={STATUS_PILL[t.status]}>{STATUS_LABELS[t.status]}</Pill>
-          <select
-            aria-label={`Change status for ${t.title}`}
-            value={t.status}
-            disabled={isMutating}
-            onChange={(e) => onStatusChange(t, e.target.value)}
-            className="rounded-md border border-border/[0.15] bg-white px-1.5 py-1 text-[11px] text-foreground"
-          >
-            {STATUS_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-        </span>
+        <StatusSelect
+          value={t.status}
+          tone={STATUS_PILL[t.status]}
+          options={STATUS_OPTIONS}
+          disabled={isMutating}
+          onChange={(status) => onStatusChange(t, status)}
+          aria-label={`Change status for ${t.title}`}
+        />
       ),
     },
     {

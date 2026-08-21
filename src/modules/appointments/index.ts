@@ -1,7 +1,13 @@
 export { AppointmentsPage } from './pages/AppointmentsPage';
+// What `/appointments` actually mounts: the HospiceLink calendar above, or
+// CommunityLink's own, by active product. See CalendarRoute.
+export { CalendarRoute } from './pages/CalendarRoute';
 export { AppointmentsCalendar } from './components/AppointmentsCalendar';
 // Record-level scheduling, used from the Prospect and Referral Source screens.
 export { ScheduleVisitModal } from './components/ScheduleVisitModal';
+// Exported for the nurse's own visit schedule (modules/clinical), which reuses this
+// feed and its complete action rather than growing a second "my visits" list.
+export { CompleteAppointmentModal } from './components/CompleteAppointmentModal';
 export { default as appointmentsReducer } from './store/appointmentsSlice';
 export { useAppointmentsCalendar } from './hooks/useAppointmentsCalendar';
 export { useAppointmentsMonth } from './hooks/useAppointmentsMonth';

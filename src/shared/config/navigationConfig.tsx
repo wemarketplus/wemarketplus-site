@@ -178,7 +178,14 @@ const OPERATIONS_RECORDS_SECTION: NavSection = {
   label: 'Operations',
   items: [
     { to: '/locations', label: 'Locations', icon: Pin, allow: STAFF_ROLES },
-    { to: '/territories-list', label: 'Territories', icon: Map, allow: STAFF_ROLES },
+    // REMOVED (duplicate): this rendered a second "Territories" row in the
+    // HospiceLink sidebar. `/territories-list` and `/territories` resolve to the
+    // SAME component (TerritoriesEntityPage — router.tsx), and this section is
+    // composed only into HospiceLink, so both rows showed together for anyone in
+    // STAFF_ROLES. The surviving entry is HOSPICELINK_MARKETING's `/territories`,
+    // which sits beside Territory planner and is allowed to HL_MARKETING_ROLES —
+    // a SUPERSET of STAFF_ROLES, so no role loses access. The `/territories-list`
+    // route itself is left in place so existing bookmarks keep working.
     // HIDDEN (intentionally): Training providers module hidden from the frontend
     // by request. Do NOT re-enable without confirming with the product owner.
     // The module code, route, and store wiring still exist; only the nav entry
@@ -330,6 +337,21 @@ const HOSPICELINK_CLINICAL: NavSection = {
     { to: '/clinical/messaging', label: 'Care-team telehealth', icon: Video, product: Product.HospiceLink, minTier: Tier.Gold, allow: HL_CLINICAL_ROLES },
     { to: '/clinical/admissions', label: 'Admission workflow', icon: Stethoscope, product: Product.HospiceLink, minTier: Tier.Gold, allow: HL_CLINICAL_ROLES },
     /**
+     * NOW A REAL SCREEN. The note on the row above ("Care-team telehealth") records
+     * that a complete messaging backend — src/chat: channels, direct messages,
+     * unread counts, presence — sat behind the Gold `clinical_secure_messaging`
+     * key with nothing rendering it, and that building the front end was a feature
+     * rather than a rename. That front end now exists (SecureMessagingPage), so the
+     * row is back — pointing at the messaging screen this time, not at telehealth.
+     *
+     * HL_FIELD_ROLES, wider than this section's HL_CLINICAL_ROLES: this is staff
+     * coordination rather than patient care, and a marketer who has just assigned a
+     * visit needs to be able to tell the nurse. The chat controllers carry no
+     * @Roles — only the feature gate — so the wider audience matches the API
+     * exactly rather than outrunning it.
+     */
+    { to: '/clinical/secure-messaging', label: 'Secure messaging', icon: MessagesSquare, product: Product.HospiceLink, minTier: Tier.Gold, allow: HL_FIELD_ROLES },
+    /**
      * The nurse guide's "Coming soon to your view" — announced to the nurse, and
      * to the nurse only (the caregiver guide promises nothing, and management has
      * the roster tool already).
@@ -342,7 +364,21 @@ const HOSPICELINK_CLINICAL: NavSection = {
      * product.
      */
     { to: '/clinical/telehealth', label: 'Telehealth & patient portal', icon: Video, product: Product.HospiceLink, minTier: Tier.Gold, allow: [Role.Nurse], comingSoon: true },
-    { to: '/clinical/my-schedule', label: 'My visit schedule', icon: CalendarClock, product: Product.HospiceLink, minTier: Tier.Gold, allow: [Role.Nurse], comingSoon: true },
+    /**
+     * BUILT — `comingSoon` removed. This was the nurse guide's "Coming soon to your
+     * view"; the screen now exists (MyVisitSchedulePage) as a permanently
+     * self-scoped agenda over the same appointments feed the Calendar uses.
+     *
+     * Caregiver is included alongside Nurse: the assignment path that fills this
+     * screen (`assignedRep` on an appointment) is identical for both clinical
+     * personas, and a caregiver with visits assigned had nowhere to see just their
+     * own. The guide only promised it to the nurse, which is why the row was
+     * Nurse-only while it was a promise rather than a screen.
+     *
+     * Still NOT called "Nurse scheduling" — that name belongs to the Gold rostering
+     * tool in the Marketing group, which is the management view of who is on shift.
+     */
+    { to: '/clinical/my-schedule', label: 'My visit schedule', icon: CalendarClock, product: Product.HospiceLink, minTier: Tier.Gold, allow: HL_CLINICAL_ROLES },
   ],
 };
 

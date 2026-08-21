@@ -20,7 +20,7 @@ export type TabKey =
   | 'reports'
   | 'settings';
 
-export type Urgency = 'Hot' | 'Warm' | 'Cold' | '';
+export type Urgency = 'High' | 'Medium' | 'Low' | '';
 
 export type LeadStatus =
   | 'Inquiry'

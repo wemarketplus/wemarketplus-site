@@ -10,6 +10,19 @@ export interface MileageLogRecord {
   date: string;
   fromLocation: string | null;
   toLocation: string | null;
+  /**
+   * Where the trip's endpoints actually are, from the map picker on the Log-trip
+   * form. Null in PAIRS where none was captured — a trip logged before the
+   * picker existed, or an endpoint typed by hand — never 0,0, which is a real
+   * point in the Gulf of Guinea that a map would happily draw.
+   *
+   * The label above stays the thing people read; these are what tell two
+   * workers' "clinic" apart.
+   */
+  fromLat: number | null;
+  fromLng: number | null;
+  toLat: number | null;
+  toLng: number | null;
   purpose: string | null;
   miles: number;
   reimbursementRate: number;
@@ -22,6 +35,17 @@ export interface CreateMileageLogRequest {
   date?: string;
   fromLocation?: string;
   toLocation?: string;
+  /**
+   * Sent in PAIRS or not at all — the server's @ValidateIf rejects a lone half
+   * with a 400, because a latitude with no longitude is not a location.
+   * Coordinates must already be rounded to 7 decimals (the column is
+   * numeric(10,7) and the DTO validates maxDecimalPlaces); `roundCoord` in
+   * modules/geocoding does it for every value the picker produces.
+   */
+  fromLat?: number;
+  fromLng?: number;
+  toLat?: number;
+  toLng?: number;
   purpose?: string;
   miles: number;
   reimbursementRate?: number;

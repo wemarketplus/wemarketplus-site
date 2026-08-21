@@ -1,12 +1,11 @@
 import { RotateCcw, Sparkles } from 'lucide-react';
 import { CL_MANAGEMENT_ROLES, useRole } from '@/shared/rbac';
-import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
+import { DataTable, StatusSelect, type Column } from '@/shared/ui/data-display';
 import { EmptyState } from '@/shared/ui/feedback';
 import { EntityRowActions } from '@/shared/ui/entity';
 import { formatDate } from '@/shared/utils/dateFormatter';
 import { HOUSEKEEPING_STATUS } from '../constants/clOperationsApiConstants';
 import {
-  HOUSEKEEPING_STATUS_LABELS,
   HOUSEKEEPING_STATUS_OPTIONS,
   HOUSEKEEPING_STATUS_PILL,
 } from '../constants/clOperationsConstants';
@@ -55,25 +54,16 @@ export function HousekeepingTable({
     {
       key: 'status',
       header: 'Status',
+      // One control, not a badge beside a dropdown of the same value.
       cell: (t) => (
-        <span className="inline-flex items-center gap-2">
-          <Pill tone={HOUSEKEEPING_STATUS_PILL[t.status]}>
-            {HOUSEKEEPING_STATUS_LABELS[t.status]}
-          </Pill>
-          <select
-            aria-label="Change status"
-            value={t.status}
-            disabled={isMutating}
-            onChange={(e) => onStatusChange(t, e.target.value)}
-            className="rounded-md border border-border/[0.15] bg-white px-1.5 py-1 text-[11px] text-foreground"
-          >
-            {HOUSEKEEPING_STATUS_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-        </span>
+        <StatusSelect
+          value={t.status}
+          tone={HOUSEKEEPING_STATUS_PILL[t.status]}
+          options={HOUSEKEEPING_STATUS_OPTIONS}
+          disabled={isMutating}
+          onChange={(status) => onStatusChange(t, status)}
+          aria-label="Change status"
+        />
       ),
     },
     {

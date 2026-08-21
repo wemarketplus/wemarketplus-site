@@ -1,14 +1,31 @@
+import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Button, Input, Label, Select, Textarea } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import { ReferralSourceType } from '../types/referralsTypes';
-import { REFERRAL_TYPE_OPTIONS } from '../constants/referralsConstants';
+import { REFERRAL_ACCOUNT_STATUS_OPTIONS, REFERRAL_TYPE_OPTIONS } from '../constants/referralsConstants';
 import { newReferralSchema, type NewReferralFormValues } from '../schema/referralSchema';
+import { toReferralFormValues } from '../utils/referralsUtils';
 import type { AddReferralModalProps } from '../types/referralsTypes';
 
-// Add Referral Source modal — presentational. The page owns useAddReferral.
-export function AddReferralModal({ open, isSaving, onClose, onSubmit: submit }: AddReferralModalProps) {
+const EMPTY: NewReferralFormValues = {
+  name: '',
+  type: ReferralSourceType.Hospital,
+  status: '',
+  contactName: '',
+  phone: '',
+  email: '',
+  city: '',
+  state: '',
+  notes: '',
+};
+
+// Add/Edit Referral Source modal — presentational. The page owns
+// useAddReferral. Doubles as the edit form: passing `editing` seeds the
+// fields from that record (including its actual saved status) and switches
+// the copy from Add to Edit.
+export function AddReferralModal({ open, isSaving, editing, onClose, onSubmit: submit }: AddReferralModalProps) {
   const {
     register,
     handleSubmit,
@@ -16,33 +33,29 @@ export function AddReferralModal({ open, isSaving, onClose, onSubmit: submit }: 
     formState: { errors },
   } = useForm<NewReferralFormValues>({
     resolver: zodResolver(newReferralSchema),
-    defaultValues: {
-      name: '',
-      type: ReferralSourceType.Hospital,
-      contactName: '',
-      phone: '',
-      email: '',
-      city: '',
-      state: '',
-      notes: '',
-    },
+    defaultValues: EMPTY,
   });
 
+  useEffect(() => {
+    if (!open) return;
+    reset(editing ? toReferralFormValues(editing) : EMPTY);
+  }, [open, editing, reset]);
+
   const close = () => {
-    reset();
+    reset(EMPTY);
     onClose();
   };
 
   const onSubmit = async (values: NewReferralFormValues) => {
     const ok = await submit(values);
-    if (ok) reset();
+    if (ok) reset(EMPTY);
   };
 
   return (
     <Modal
       open={open}
       onClose={close}
-      title="Add Referral Source"
+      title={editing ? 'Edit Referral Source' : 'Add Referral Source'}
       size="lg"
       footer={
         <>
@@ -50,7 +63,7 @@ export function AddReferralModal({ open, isSaving, onClose, onSubmit: submit }: 
             Cancel
           </Button>
           <Button onClick={handleSubmit(onSubmit)} disabled={isSaving}>
-            {isSaving ? 'Saving…' : 'Save Source'}
+            {isSaving ? 'Saving…' : editing ? 'Save changes' : 'Save Source'}
           </Button>
         </>
       }
@@ -65,6 +78,17 @@ export function AddReferralModal({ open, isSaving, onClose, onSubmit: submit }: 
           <Label htmlFor="ar-type">Type</Label>
           <Select id="ar-type" {...register('type')}>
             {REFERRAL_TYPE_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </Select>
+        </div>
+        <div>
+          <Label htmlFor="ar-status">Status</Label>
+          <Select id="ar-status" {...register('status')}>
+            <option value="">Prospect (default)</option>
+            {REFERRAL_ACCOUNT_STATUS_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>
                 {o.label}
               </option>

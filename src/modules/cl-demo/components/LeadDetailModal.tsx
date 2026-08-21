@@ -12,7 +12,7 @@ export function LeadDetailModal() {
   const lead = leads.find((l) => l.id === leadModalId) ?? null;
 
   const [status, setStatus] = useState<LeadStatus>('Inquiry');
-  const [urgency, setUrgency] = useState<Urgency>('Warm');
+  const [urgency, setUrgency] = useState<Urgency>('Medium');
   const [fu, setFu] = useState('');
   const [source, setSource] = useState('');
   const [notes, setNotes] = useState('');
@@ -20,7 +20,7 @@ export function LeadDetailModal() {
   useEffect(() => {
     if (!lead) return;
     setStatus(lead.status);
-    setUrgency(lead.urgency || 'Warm');
+    setUrgency(lead.urgency || 'Medium');
     setFu(lead.fu);
     setSource(lead.source);
     setNotes(lead.notes);
@@ -51,9 +51,9 @@ export function LeadDetailModal() {
             <div>
               <div className={`mb-1 ${FLB}`}>Urgency</div>
               <select className={FI} value={urgency} onChange={(e) => setUrgency(e.target.value as Urgency)}>
-                <option value="Hot">Hot</option>
-                <option value="Warm">Warm</option>
-                <option value="Cold">Cold</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
               </select>
             </div>
             <div>

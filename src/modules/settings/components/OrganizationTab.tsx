@@ -1,13 +1,20 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { Button, Card, CardContent, Input, Label } from '@/shared/ui/core';
+import { Controller, useForm } from 'react-hook-form';
+import {
+  Button,
+  Card,
+  CardContent,
+  Input,
+  Label,
+  ListboxSelect,
+} from '@/shared/ui/core';
 import { useOrganizationForm } from '../hooks/useOrganizationForm';
 import {
   organizationSchema,
   type OrganizationFormValues,
 } from '../schema/organizationSchema';
-import { US_STATES } from '@/modules/onboarding/constants/onboardingConstants';
+import { US_STATE_OPTIONS } from '@/modules/onboarding/constants/onboardingConstants';
 import { REPORT_TIMEZONE_OPTIONS } from '../constants/settingsConstants';
 import { cn } from '@/shared/utils/cn';
 
@@ -24,6 +31,7 @@ export function OrganizationTab() {
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors, isDirty },
     reset,
@@ -105,23 +113,30 @@ export function OrganizationTab() {
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="orgState">State</Label>
-                <select
-                  id="orgState"
-                  disabled={busy}
-                  {...register('state')}
-                  className={cn(
-                    'flex h-11 w-full rounded-md border border-border/10 bg-surface-raised px-3 text-sm text-foreground',
-                    'transition-colors focus-visible:outline-none focus-visible:border-azure/70 focus-visible:bg-surface',
-                    'disabled:cursor-not-allowed disabled:opacity-60',
+                {/*
+                  A <ListboxSelect>, not a native <select>: 51 options open as a
+                  browser-drawn list hundreds of pixels tall, which Chrome places
+                  upward from this field and straight over the settings tab strip.
+                  See ListboxSelect for why no CSS reaches that popup. Controller
+                  rather than register(), since the control is not a form element
+                  RHF can attach a ref to.
+                */}
+                <Controller
+                  control={control}
+                  name="state"
+                  render={({ field }) => (
+                    <ListboxSelect
+                      id="orgState"
+                      value={field.value ?? ''}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      options={US_STATE_OPTIONS}
+                      placeholder="—"
+                      disabled={busy}
+                      invalid={Boolean(errors.state)}
+                    />
                   )}
-                >
-                  <option value="">—</option>
-                  {US_STATES.map((s) => (
-                    <option key={s.value} value={s.value}>
-                      {s.value}
-                    </option>
-                  ))}
-                </select>
+                />
                 {errors.state && (
                   <p className="text-xs text-destructive">{errors.state.message}</p>
                 )}

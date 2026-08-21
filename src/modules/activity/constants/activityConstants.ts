@@ -1,7 +1,9 @@
 import { ACTIVITY_TYPE_OPTIONS } from '@/shared/constants/activityTypeConstants';
+import { URGENCY_LABELS } from '@/shared/constants/urgencyConstants';
 import { Calendar, ScrollText, Pin, Goal } from 'lucide-react';
 import type { EntityField, EntitySelectOption } from '@/shared/ui/entity';
 import { Urgency } from '@/shared/types';
+import { todayLocalDate } from '@/shared/utils/dateFormatter';
 import { TaskPriority, TaskStatus } from '../types/activityTypes';
 import type { ActivityUiState, DailyGoal } from '../types/activityTypes';
 import type { NoteFormValues } from '../schema/noteSchema';
@@ -67,9 +69,11 @@ export const REMINDER_BUCKET_TONE: Record<
 // --- Create/edit form option lists + field descriptors ---------------------
 
 const URGENCY_OPTIONS: readonly EntitySelectOption[] = [
-  { value: Urgency.Hot, label: 'Hot' },
-  { value: Urgency.Warm, label: 'Warm' },
-  { value: Urgency.Cold, label: 'Cold' },
+  // Labels come from the shared map so the note form's dropdown cannot drift
+  // from the urgency pill the note is rendered with afterwards.
+  { value: Urgency.Hot, label: URGENCY_LABELS[Urgency.Hot] },
+  { value: Urgency.Warm, label: URGENCY_LABELS[Urgency.Warm] },
+  { value: Urgency.Cold, label: URGENCY_LABELS[Urgency.Cold] },
 ];
 
 const TASK_PRIORITY_OPTIONS: readonly EntitySelectOption[] = [
@@ -142,7 +146,7 @@ export const NOTE_FIELDS: ReadonlyArray<EntityField<NoteFormValues>> = [
 export const TASK_FIELDS: ReadonlyArray<EntityField<TaskFormValues>> = [
   { name: 'title', label: 'Title', full: true, placeholder: 'Follow up with prospect' },
   { name: 'description', label: 'Description', type: 'textarea', full: true, placeholder: 'Details…' },
-  { name: 'dueDate', label: 'Due date', type: 'date' },
+  { name: 'dueDate', label: 'Due date', type: 'date', min: todayLocalDate },
   { name: 'priority', label: 'Priority', type: 'select', options: TASK_PRIORITY_OPTIONS },
   { name: 'status', label: 'Status', type: 'select', options: TASK_STATUS_OPTIONS },
 ];

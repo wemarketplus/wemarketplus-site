@@ -1,4 +1,5 @@
 import { Plus } from 'lucide-react';
+import { STAFF_ROLES, useRole } from '@/shared/rbac';
 import { Button } from '@/shared/ui/core';
 import { LogInteractionModal } from '@/modules/activity';
 import { ScheduleVisitModal } from '@/modules/appointments';
@@ -11,9 +12,22 @@ import { useAddReferral } from '../hooks/useAddReferral';
 import { useReferralSourceDetail } from '../hooks/useReferralSourceDetail';
 
 export function ReferralsPage() {
-  const { referrals, total, coldCount } = useReferralsList();
-  const { open, isSaving, openModal, close, submit } = useAddReferral();
+  const { referrals, records, total, coldCount } = useReferralsList();
+  const { open, editing, isSaving, openModal, openEdit, close, submit, remove } = useAddReferral();
   const detail = useReferralSourceDetail();
+
+  // Deletion is Admin/Owner/Manager-only on the backend, matching prospects.
+  const { isAny } = useRole();
+  const canDelete = isAny(STAFF_ROLES);
+
+  const editById = (id: string) => {
+    const record = records.find((r) => r.id === id);
+    if (record) openEdit(record);
+  };
+  const deleteById = (id: string) => {
+    const record = records.find((r) => r.id === id);
+    if (record) void remove(record);
+  };
 
   return (
     <div className="space-y-6">
@@ -39,11 +53,17 @@ export function ReferralsPage() {
       </header>
 
       <ReferralsFilters />
-      <ReferralsTable items={referrals} onOpen={detail.open} />
+      <ReferralsTable
+        items={referrals}
+        onOpen={detail.open}
+        onEdit={editById}
+        onDelete={canDelete ? deleteById : undefined}
+      />
 
       <AddReferralModal
         open={open}
         isSaving={isSaving}
+        editing={editing}
         onClose={close}
         onSubmit={submit}
       />

@@ -11,13 +11,13 @@ import type {
 } from '../types/clDemoTypes';
 
 export const SEED_LEADS: readonly Lead[] = [
-  { id: 1, name: 'Dorothy Harrison', age: 82, care: 'Independent Living', status: 'Tour Scheduled', source: 'Physician Referral', urgency: 'Hot', phone: '(214) 555-0142', notes: 'Family meeting needed. Son James is POA.', fu: '2026-02-14' },
-  { id: 2, name: 'Walter Simmons', age: 78, care: 'Assisted Living', status: 'Inquiry', source: 'Website', urgency: 'Warm', phone: '(972) 555-0278', notes: 'Looking for 2BR. Wife passed last month.', fu: '2026-02-16' },
-  { id: 3, name: 'Gloria Tran', age: 86, care: 'Memory Care', status: 'Proposal Sent', source: 'Hospital Discharge', urgency: 'Hot', phone: '(469) 555-0391', notes: 'MNSD diagnosis. Daughter wants quick move-in.', fu: '2026-02-13' },
-  { id: 4, name: 'Raymond Flores', age: 74, care: 'Independent Living', status: 'Follow-up', source: 'Community Event', urgency: 'Cold', phone: '(817) 555-0456', notes: 'Not ready yet. Call back in March.', fu: '2026-03-05' },
-  { id: 5, name: 'Edna Michaels', age: 80, care: 'Assisted Living', status: 'Tour Scheduled', source: 'Google', urgency: 'Warm', phone: '(214) 555-0567', notes: 'Has VA benefits. Confirm eligibility.', fu: '2026-02-15' },
+  { id: 1, name: 'Dorothy Harrison', age: 82, care: 'Independent Living', status: 'Tour Scheduled', source: 'Physician Referral', urgency: 'High', phone: '(214) 555-0142', notes: 'Family meeting needed. Son James is POA.', fu: '2026-02-14' },
+  { id: 2, name: 'Walter Simmons', age: 78, care: 'Assisted Living', status: 'Inquiry', source: 'Website', urgency: 'Medium', phone: '(972) 555-0278', notes: 'Looking for 2BR. Wife passed last month.', fu: '2026-02-16' },
+  { id: 3, name: 'Gloria Tran', age: 86, care: 'Memory Care', status: 'Proposal Sent', source: 'Hospital Discharge', urgency: 'High', phone: '(469) 555-0391', notes: 'MNSD diagnosis. Daughter wants quick move-in.', fu: '2026-02-13' },
+  { id: 4, name: 'Raymond Flores', age: 74, care: 'Independent Living', status: 'Follow-up', source: 'Community Event', urgency: 'Low', phone: '(817) 555-0456', notes: 'Not ready yet. Call back in March.', fu: '2026-03-05' },
+  { id: 5, name: 'Edna Michaels', age: 80, care: 'Assisted Living', status: 'Tour Scheduled', source: 'Google', urgency: 'Medium', phone: '(214) 555-0567', notes: 'Has VA benefits. Confirm eligibility.', fu: '2026-02-15' },
   { id: 6, name: 'James Owens', age: 88, care: 'Memory Care', status: 'Move-In', source: 'Physician Referral', urgency: '', phone: '(972) 555-0678', notes: 'Moved in Jan 28. Very smooth transition.', fu: '' },
-  { id: 7, name: 'Ruth Patterson', age: 76, care: 'Independent Living', status: 'Inquiry', source: 'Word of Mouth', urgency: 'Warm', phone: '(214) 555-0789', notes: 'Daughter called. Mom is on waiting list elsewhere.', fu: '2026-02-20' },
+  { id: 7, name: 'Ruth Patterson', age: 76, care: 'Independent Living', status: 'Inquiry', source: 'Word of Mouth', urgency: 'Medium', phone: '(214) 555-0789', notes: 'Daughter called. Mom is on waiting list elsewhere.', fu: '2026-02-20' },
 ];
 
 export const SEED_REFERRALS: readonly Referral[] = [
@@ -68,7 +68,7 @@ export const SEED_NEXT_ID = 100;
 export const CARE_LEVELS = ['Independent Living', 'Assisted Living', 'Memory Care', 'Undecided'] as const;
 export const LEAD_STATUSES = ['Inquiry', 'Tour Scheduled', 'Proposal Sent', 'Follow-up', 'Decision Pending', 'Move-In'] as const;
 export const LEAD_STATUSES_FULL = ['Inquiry', 'Follow-up', 'Tour Scheduled', 'Proposal Sent', 'Decision Pending', 'Move-In', 'Lost'] as const;
-export const URGENCIES = ['Warm', 'Hot', 'Cold'] as const;
+export const URGENCIES = ['High', 'Medium', 'Low'] as const;
 export const LEAD_SOURCES = ['Website', 'Physician Referral', 'Hospital Discharge', 'Social Worker', 'Community Event', 'Word of Mouth', 'Google / Online'] as const;
 export const REFERRAL_TYPES = ['Physician', 'Hospital', 'Social Worker', 'Rehab / SNF', 'Home Health', 'Community Event', 'Financial Advisor'] as const;
 export const TOUR_CARE_LEVELS = ['IL', 'AL', 'MC'] as const;

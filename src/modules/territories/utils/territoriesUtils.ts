@@ -1,4 +1,4 @@
-import { opt } from '@/shared/ui/entity';
+import { opt, optOrNull } from '@/shared/ui/entity';
 import type { TerritoryPriority } from '../constants/territoriesConstants';
 import type {
   CreateTerritoryRequest,
@@ -26,7 +26,11 @@ export function toCreateTerritory(values: TerritoryFormValues): CreateTerritoryR
     ...opt('city', values.city),
     ...opt('state', values.state),
     ...(zipCodes ? { zipCodes } : {}),
-    ...opt('assignedTo', values.assignedTo),
+    // optOrNull, not opt: an omitted key in a PATCH means "leave unchanged", so
+    // `opt` made a territory's owner impossible to remove once set. The column
+    // is nullable and the DTO field is @IsOptional, so an explicit null clears
+    // it. Same fix as cl-tasks/tasksUtils.ts.
+    ...optOrNull('assignedTo', values.assignedTo),
     ...(values.priority ? { priority: values.priority as TerritoryPriority } : {}),
     ...opt('notes', values.notes),
   };

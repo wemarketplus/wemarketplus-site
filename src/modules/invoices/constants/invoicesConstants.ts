@@ -43,5 +43,23 @@ export const INVOICE_FIELDS: ReadonlyArray<EntityField<InvoiceFormValues>> = [
   // links are preserved and simply left untouched by the form. Re-add this field
   // (and the `lookups` prop in InvoiceFormModal) to restore.
   // { name: 'applicationId', label: 'Application', type: 'lookup', placeholder: 'No application' },
+  /**
+   * The attribution pair Revenue Intelligence reads. Rendered as lookups, not
+   * text: the columns hold UUIDs, and a field captioned "referral source id" is a
+   * field nobody can fill (see useSharedLookups for the general form of this
+   * mistake). Options arrive through InvoiceFormModal's `lookups`.
+   */
+  {
+    name: 'referralSourceId',
+    label: 'Referral source (attribution)',
+    type: 'lookup',
+    placeholder: 'Not attributed',
+  },
+  {
+    name: 'prospectId',
+    label: 'Patient (attribution)',
+    type: 'lookup',
+    placeholder: 'Not attributed',
+  },
   { name: 'notes', label: 'Notes', type: 'textarea', full: true },
 ];

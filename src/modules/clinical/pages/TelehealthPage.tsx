@@ -1,4 +1,4 @@
-import { useRole, STAFF_ROLES } from '@/shared/rbac';
+import { useRole, HL_CLINICAL_ROLES } from '@/shared/rbac';
 import { EntityListPage, EntityPagination } from '@/shared/ui/entity';
 import { TelehealthTable } from '../components/TelehealthTable';
 import { TelehealthFormModal } from '../components/TelehealthFormModal';
@@ -34,15 +34,30 @@ export function TelehealthPage({ title, subtitle }: TelehealthPageProps) {
     submit,
   } = useTelehealthPage();
 
+  /**
+   * WIDENED from `STAFF_ROLES`, which excludes Nurse and Caregiver — so the
+   * "Schedule session" button was hidden from the two clinical personas even though
+   * `POST /telehealth-sessions` and `PATCH :id` carry NO `@Roles` at all and would
+   * have accepted them. A control the server permits and the UI never renders is
+   * exactly what the nurse experienced as telehealth scheduling being a "Soon"
+   * badge rather than a working feature.
+   *
+   * HL_CLINICAL_ROLES matches this route's own `allow` in the router, so the people
+   * who can open the screen are the people who can act on it.
+   *
+   * Deletion is NOT gated here: TelehealthTable owns that gate (delete is
+   * Manager-and-above server-side), and duplicating it would give the rule two
+   * homes that could disagree.
+   */
   const { isAny } = useRole();
-  const canEdit = isAny(STAFF_ROLES);
+  const canSchedule = isAny(HL_CLINICAL_ROLES);
 
   return (
     <EntityListPage
       title={title}
       subtitle={subtitle(total)}
       addLabel="Schedule session"
-      onAdd={canEdit ? crud.openCreate : undefined}
+      onAdd={canSchedule ? crud.openCreate : undefined}
       isLoading={isLoading}
       error={error}
       errorFallback="Failed to load telehealth sessions"
@@ -74,7 +89,7 @@ export function TelehealthPage({ title, subtitle }: TelehealthPageProps) {
         hasFilters={hasFilters}
         onEdit={crud.openEdit}
         onDelete={crud.confirmDelete}
-        onAdd={canEdit ? crud.openCreate : undefined}
+        onAdd={canSchedule ? crud.openCreate : undefined}
       />
 
       <TelehealthFormModal

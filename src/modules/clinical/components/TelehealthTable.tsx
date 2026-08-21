@@ -1,5 +1,5 @@
 import { Video } from 'lucide-react';
-import { ADMIN_ONLY, useRole } from '@/shared/rbac';
+import { HL_MANAGEMENT_ROLES, useRole } from '@/shared/rbac';
 import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
 import { EmptyState } from '@/shared/ui/feedback';
 import { EntityRowActions } from '@/shared/ui/entity';
@@ -28,9 +28,11 @@ export function TelehealthTable({
   onDelete,
   onAdd,
 }: TelehealthTableProps) {
-  // Delete is Admin/Owner-only on the backend; mirror that gate.
+  // Delete is @Roles(Admin, Owner, Manager) on the backend; mirror that gate. This
+  // read ADMIN_ONLY, which is stricter than the server and hid the action from a
+  // Manager the API would have accepted.
   const { isAny } = useRole();
-  const canDelete = isAny(ADMIN_ONLY);
+  const canDelete = isAny(HL_MANAGEMENT_ROLES);
 
   const columns: ReadonlyArray<Column<TelehealthSessionRecord>> = [
     {

@@ -1,71 +1,69 @@
 import { useMemo } from 'react';
 import { useAppSelector } from '@/app/hooks';
-import { STAFF_ROLES, useRole } from '@/shared/rbac';
 import type { EntitySelectOption } from '@/shared/ui/entity';
-import { useListUsersQuery } from '../api/usersApi';
+import { useListAssignableStaffQuery } from '../api/usersApi';
 
 export interface TenantStaffOptions {
   /** Assignable people, as `<option>` data. Never empty for a signed-in user. */
   options: readonly EntitySelectOption[];
   /**
-   * False when the caller's role may not read the directory, so `options` holds
-   * only the signed-in user. A form should say "Assign to me" rather than
-   * "Assign to…" in that case — offering a picker with one entry looks broken.
+   * Whether `options` is the tenant's real directory rather than just the signed-in
+   * user. Kept in the API because callers render a different caption for the
+   * degraded case ("you can assign yourself") and that copy must not appear when
+   * the picker is genuinely complete.
+   *
+   * Now false only when the directory request has not produced anyone yet — no
+   * longer a per-ROLE answer. See the note on the hook.
    */
   isFullDirectory: boolean;
   isLoading: boolean;
 }
 
-/** How many users a staff picker loads. Tenants are single communities here. */
-const STAFF_PAGE_SIZE = 100;
-
 /**
  * The tenant's assignable people, for any "who is doing this?" picker.
  *
- * Lives in the users module because that module owns `/users`, and exists at all
- * because of an ASYMMETRY worth stating: `GET /users` is staff-only server-side,
- * but the people who most need to assign work — Marketer, Sales/Admissions — are
- * not in STAFF_ROLES. A picker that just called the endpoint would 403 for
- * exactly its main audience and render an empty dropdown.
+ * READS `GET /users/assignable`, NOT `GET /users`. This used to call the paginated
+ * user list, which is `@Roles(Admin, Owner, Manager)` server-side — so the query
+ * was skipped for exactly the roles that most need to assign work (Marketer,
+ * Sales/Admissions) and they were handed a one-entry picker containing themselves.
+ * On HospiceLink that was the whole reason a patient or visit could not be given to
+ * a Nurse or Caregiver from the UI: `assignedRep` defaults to the caller
+ * (`AppointmentsService` does `dto.assignedRep ?? actorId`), so a marketer could
+ * only ever book onto their own calendar, the clinical user's `my-patients` stayed
+ * empty, and Family Communication and Notes had no patient to attach to.
  *
- * So the query is SKIPPED for those roles rather than allowed to fail, and they
- * get the one assignment they can always make truthfully: themselves. That is a
- * real limitation, not a stopgap dressed up — a marketer genuinely cannot book a
- * colleague's tour from here today. Widening it means either opening a
- * names-only directory endpoint (the way `/users/calendar-colors` is open to
- * every role because the shared calendar needs it) or admitting the sales roles
- * to `GET /users`; both are backend decisions.
+ * `/users/assignable` exists for this and carries NO `@Roles()` — it returns id and
+ * name only (`StaffOptionDto`), leaving every sensitive column unselected at the
+ * repository, which is what makes it safe to open to a field persona. So there is
+ * no longer a role that gets a degraded picker.
+ *
+ * Deactivated users are excluded server-side (the repository selects active only),
+ * so there is no `isActive` filter here — adding one would silently depend on a
+ * field this projection deliberately does not return.
  */
 export function useTenantStaffOptions(enabled = true): TenantStaffOptions {
-  const { isAny } = useRole();
   const me = useAppSelector((s) => s.auth.user);
-  const canReadDirectory = isAny(STAFF_ROLES);
 
-  const { data, isLoading } = useListUsersQuery(
-    { page: 1, limit: STAFF_PAGE_SIZE },
-    { skip: !enabled || !canReadDirectory },
-  );
+  const { data, isLoading } = useListAssignableStaffQuery(undefined, {
+    skip: !enabled,
+  });
 
   return useMemo(() => {
-    if (!canReadDirectory) {
-      return {
-        options: me ? [{ value: me.id, label: 'Me' }] : [],
-        isFullDirectory: false,
-        isLoading: false,
-      };
+    const options = (data ?? []).map((staff) => ({
+      value: staff.id,
+      label: staff.name,
+    }));
+
+    if (options.length > 0) {
+      return { options, isFullDirectory: true, isLoading };
     }
 
-    const options = (data?.data ?? [])
-      // Deactivated accounts stay in the list for history but must not be
-      // assignable — new work should never land on someone who cannot sign in.
-      .filter((user) => user.isActive)
-      .map((user) => ({
-        value: user.id,
-        label:
-          [user.firstName, user.lastName].filter(Boolean).join(' ').trim() ||
-          user.email,
-      }));
-
-    return { options, isFullDirectory: true, isLoading };
-  }, [canReadDirectory, data, isLoading, me]);
+    // Nothing back yet, or a tenant of one. Offering the signed-in user keeps the
+    // form submittable rather than presenting an empty dropdown.
+    return {
+      options: me ? [{ value: me.id, label: 'Me' }] : [],
+      isFullDirectory: false,
+      isLoading,
+    };
+  }, [data, isLoading, me]);
 }

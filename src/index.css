@@ -31,7 +31,7 @@
     /* Text */
     --color-foreground: 22 28 25;      /* #161c19 headings */
     --color-muted: 106 114 110;        /* #6a726e body copy */
-    --color-muted-soft: 138 146 142;   /* #8a928e uppercase labels */
+    --color-muted-soft: 108 115 111;   /* #6c736f uppercase labels — darkened from #8a928e (3.2:1) to ~4.9:1 for WCAG AA at small sizes */
     --color-faint: 168 176 172;        /* #a8b0ac placeholder */
 
     /* Lines — consumed at /.09 (card) and /.12 (input). Near-black so the

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { ALL_ROLES, ROLE_LABELS } from '@/shared/rbac';
-import { Button, Card, CardContent, Select } from '@/shared/ui/core';
+import { Button, Card, CardContent, Checkbox, Select } from '@/shared/ui/core';
 import { Alert } from '@/shared/ui/data-display';
 import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
 import {
@@ -160,11 +160,9 @@ export function AlertRoutingPanel() {
                       <p className="text-xs text-muted">{meta.description}</p>
                     </div>
                     <label className="flex shrink-0 cursor-pointer items-center gap-2 text-xs text-muted">
-                      <input
-                        type="checkbox"
+                      <Checkbox
                         checked={row.enabled}
                         onChange={(e) => update(key, { enabled: e.target.checked })}
-                        className="h-4 w-4 accent-primary"
                       />
                       Enabled
                     </label>
@@ -176,11 +174,9 @@ export function AlertRoutingPanel() {
                         key={role}
                         className="flex cursor-pointer items-center gap-1.5 text-xs text-muted"
                       >
-                        <input
-                          type="checkbox"
+                        <Checkbox
                           checked={row.roles.includes(role)}
                           onChange={() => toggleRole(key, role)}
-                          className="accent-primary"
                         />
                         {ROLE_LABELS[role]}
                       </label>

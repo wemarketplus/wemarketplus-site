@@ -45,7 +45,14 @@ export const REFERRAL_TYPE_OPTIONS: readonly EntitySelectOption[] = Object.entri
 // "Add Referral Source" screen: Contact Name*, Organization, Type, Phone,
 // Email, City, Notes.
 export const REFERRAL_FIELDS: ReadonlyArray<EntityField<ReferralFormValues>> = [
-  { name: 'name', label: 'Contact name', placeholder: 'Dr. Amanda Chen' },
+  /**
+   * The ONLY mandatory field here — `referralSchema` requires `name` and nothing
+   * else, and CreateClReferralSourceDto agrees (organization, type, phone, email
+   * and City/`address` are all @IsOptional). So exactly one `*` goes on this
+   * form: marking City or Organization would be inventing a rule the server does
+   * not enforce, which is worse than the previous silence.
+   */
+  { name: 'name', label: 'Contact name', required: true, placeholder: 'Dr. Amanda Chen' },
   { name: 'organization', label: 'Organization', placeholder: 'Dallas Medical Group' },
   { name: 'type', label: 'Type', type: 'select', options: REFERRAL_TYPE_OPTIONS },
   { name: 'phone', label: 'Phone', type: 'tel', placeholder: '(214) 555-0100' },

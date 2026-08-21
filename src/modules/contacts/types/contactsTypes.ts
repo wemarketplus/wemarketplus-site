@@ -31,6 +31,8 @@ export interface CreateContactRequest {
 export type UpdateContactRequest = Partial<CreateContactRequest>;
 
 export interface ListContactsQuery extends PaginationParams {
+  /** Free text; the backend matches it against name, email and title. */
+  search?: string;
   recordType?: string;
   recordId?: string;
 }

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { ReferralSourceStatus } from '@/shared/types';
-import { ReferralSourceType } from '../types/referralsTypes';
+import { ReferralAccountStatus, ReferralSourceType } from '../types/referralsTypes';
 
 export const referralSchema = z.object({
   fullName: z.string().min(2).max(200),
@@ -28,6 +28,10 @@ export type ReferralFormValues = z.infer<typeof referralSchema>;
 export const newReferralSchema = z.object({
   name: z.string().min(1, 'Name is required').max(200),
   type: z.nativeEnum(ReferralSourceType),
+  // The account's lifecycle status. Left unset by the caller sends no `status`
+  // key at all (see toCreateReferral), so the backend's own default
+  // (`prospect`) applies on create — same as leaving the field untouched.
+  status: z.nativeEnum(ReferralAccountStatus).optional().or(z.literal('')),
   contactName: z.string().max(200).optional(),
   phone: z.string().max(40).optional(),
   email: z.union([z.literal(''), z.string().email('Enter a valid email')]).optional(),

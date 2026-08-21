@@ -1,18 +1,18 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { Button, Input, Label } from '@/shared/ui/core';
+import { Controller, useForm } from 'react-hook-form';
+import { Button, Input, Label, ListboxSelect } from '@/shared/ui/core';
 import { useOnboarding } from '../hooks/useOnboarding';
-import { US_STATES } from '../constants/onboardingConstants';
+import { US_STATE_OPTIONS } from '../constants/onboardingConstants';
 import {
   agencyInfoSchema,
   type AgencyInfoFormValues,
 } from '../schema/onboardingSchema';
-import { cn } from '@/shared/utils/cn';
 
 export function AgencyStep() {
   const { draft, next, back, saveAgency } = useOnboarding();
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<AgencyInfoFormValues>({
@@ -53,21 +53,28 @@ export function AgencyStep() {
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="state">State</Label>
-          <select
-            id="state"
-            className={cn(
-              'flex h-11 w-full rounded-md border border-border/10 bg-surface-raised px-3 text-sm text-foreground',
-              'transition-colors focus-visible:outline-none focus-visible:border-azure/70 focus-visible:bg-surface',
+          {/*
+            A <ListboxSelect>, not a <Select>: 51 options in a native select open
+            as a browser-drawn list tall enough to cover the wizard's progress
+            steps above this form. See ListboxSelect for the full note. Controller
+            rather than register(), since the control is not a form element RHF
+            can attach a ref to.
+          */}
+          <Controller
+            control={control}
+            name="state"
+            render={({ field }) => (
+              <ListboxSelect
+                id="state"
+                value={field.value ?? ''}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                options={US_STATE_OPTIONS}
+                placeholder="Select a state…"
+                invalid={Boolean(errors.state)}
+              />
             )}
-            {...register('state')}
-          >
-            <option value="">—</option>
-            {US_STATES.map((s) => (
-              <option key={s.value} value={s.value}>
-                {s.value}
-              </option>
-            ))}
-          </select>
+          />
           {errors.state && (
             <p className="text-xs text-destructive">{errors.state.message}</p>
           )}
@@ -100,7 +107,13 @@ export function AgencyStep() {
       </div>
 
       <div className="flex justify-between">
-        <Button type="button" variant="ghost" onClick={back}>
+        {/*
+          `size="lg"` to match the Continue beside it (h-12); the default `md` is
+          h-11, so the footer's two controls sat a pixel off each other. The BAA
+          step's footer now carries the same pairing — these two are the app's
+          only wizard Back buttons, so they are sized and toned alike.
+        */}
+        <Button type="button" variant="outline" size="lg" onClick={back}>
           Back
         </Button>
         <Button type="submit" size="lg">Continue</Button>

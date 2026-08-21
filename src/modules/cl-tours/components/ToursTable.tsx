@@ -1,14 +1,14 @@
-import { CalendarClock } from 'lucide-react';
+import { CalendarClock, MapPin } from 'lucide-react';
+import { formatCoords } from '@/modules/geocoding';
 import { CL_MANAGEMENT_ROLES, useRole } from '@/shared/rbac';
-import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
+import { DataTable, Pill, StatusSelect, type Column } from '@/shared/ui/data-display';
 import { EmptyState } from '@/shared/ui/feedback';
 import { EntityRowActions } from '@/shared/ui/entity';
 import {
-  TOUR_STATUS_LABELS,
   TOUR_STATUS_OPTIONS,
   TOUR_STATUS_PILL,
 } from '../constants/clToursConstants';
-import { tourWhen } from '../utils/clToursUtils';
+import { tourEndpoint, tourWhen } from '../utils/clToursUtils';
 import type { ClTourRecord } from '../types/clToursApiTypes';
 
 interface ToursTableProps {
@@ -23,6 +23,36 @@ interface ToursTableProps {
   /** Stamp or clear `confirmedAt` — the guide's Confirm action. */
   onConfirmToggle: (tour: ClTourRecord) => void;
   onAdd?: () => void;
+}
+
+/**
+ * One endpoint as a table cell: the name a person reads, with a pin when the place
+ * was actually pinned on the map.
+ *
+ * The LABEL is what goes down the column — a lat/lng pair per row would bury the
+ * four names a guide is scanning for — so the coordinates ride in the pin's
+ * tooltip, exactly as the mileage table's Route cell does. Truncated with a
+ * width cap because a geocoded label can be a full postal address and the
+ * scheduler already carries eight other columns.
+ */
+function endpointCell(tour: ClTourRecord, side: 'from' | 'to') {
+  const place = tourEndpoint(tour, side);
+  if (!place.label) return '—';
+  return (
+    <span className="inline-flex max-w-[150px] items-center gap-1.5">
+      <span className="truncate" title={place.label}>
+        {place.label}
+      </span>
+      {place.coords && (
+        <span title={formatCoords(place.coords)}>
+          <MapPin
+            className="h-3 w-3 shrink-0 text-primary"
+            aria-label="Pinned on a map"
+          />
+        </span>
+      )}
+    </span>
+  );
 }
 
 export function ToursTable({
@@ -48,6 +78,12 @@ export function ToursTable({
     },
     { key: 'when', header: 'Scheduled', cell: (t) => tourWhen(t.scheduledAt) },
     { key: 'guide', header: 'Guide', cell: (t) => guideName(t.guideUserId) },
+    // WHERE the tour runs: the pickup point and the community being shown. Next
+    // to Guide rather than at the end because "who is showing which building,
+    // and are they collecting anyone first" is one thought, and the answer used
+    // to live nowhere on this screen at all.
+    { key: 'from', header: 'From', cell: (t) => endpointCell(t, 'from') },
+    { key: 'to', header: 'To', cell: (t) => endpointCell(t, 'to') },
     /**
      * Confirmation — its own column, because it is its own axis.
      *
@@ -86,26 +122,27 @@ export function ToursTable({
       header: 'Duration',
       cell: (t) => (t.durationMin ? `${t.durationMin} min` : '—'),
     },
+    /**
+     * Status — ONE control, not a badge plus a dropdown saying the same thing.
+     *
+     * The badge and the select were both bound to `t.status`, so each row
+     * printed its status twice. <StatusSelect> is the badge and the picker in
+     * one element: same pill colour for scanning the column, still changeable
+     * in place without opening the edit modal (the PATCH behind
+     * `onStatusChange` is untouched).
+     */
     {
       key: 'status',
       header: 'Status',
       cell: (t) => (
-        <span className="inline-flex items-center gap-2">
-          <Pill tone={TOUR_STATUS_PILL[t.status]}>{TOUR_STATUS_LABELS[t.status]}</Pill>
-          <select
-            aria-label={`Change status for tour`}
-            value={t.status}
-            disabled={isMutating}
-            onChange={(e) => onStatusChange(t, e.target.value)}
-            className="rounded-md border border-border/[0.15] bg-white px-1.5 py-1 text-[11px] text-foreground"
-          >
-            {TOUR_STATUS_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-        </span>
+        <StatusSelect
+          value={t.status}
+          tone={TOUR_STATUS_PILL[t.status]}
+          options={TOUR_STATUS_OPTIONS}
+          disabled={isMutating}
+          onChange={(status) => onStatusChange(t, status)}
+          aria-label={`Change status for the tour with ${leadName(t.leadId)}`}
+        />
       ),
     },
     { key: 'outcome', header: 'Outcome', cell: (t) => t.outcome ?? '—' },

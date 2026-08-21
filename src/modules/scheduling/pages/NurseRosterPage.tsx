@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { Button, Input, Label, Select } from '@/shared/ui/core';
+import { Button, DatePicker, Input, Label, Select } from '@/shared/ui/core';
 import { Alert, DataTable, Pill, type Column } from '@/shared/ui/data-display';
 import { useListUsersQuery } from '@/modules/users';
 import {
@@ -153,18 +153,16 @@ export function NurseRosterPage() {
       <div className="flex flex-wrap items-end gap-3">
         <div>
           <Label htmlFor="roster-from">From</Label>
-          <Input
+          <DatePicker
             id="roster-from"
-            type="date"
             value={from}
             onChange={(e) => setFrom(e.target.value)}
           />
         </div>
         <div>
           <Label htmlFor="roster-to">To</Label>
-          <Input
+          <DatePicker
             id="roster-to"
-            type="date"
             value={to}
             onChange={(e) => setTo(e.target.value)}
           />
@@ -203,9 +201,8 @@ export function NurseRosterPage() {
           </div>
           <div>
             <Label htmlFor="roster-date">Day</Label>
-            <Input
+            <DatePicker
               id="roster-date"
-              type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
             />

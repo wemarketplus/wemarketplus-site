@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { Search } from 'lucide-react';
 import {
   useRole,
   CL_INVENTORY_ROLES,
@@ -7,7 +6,7 @@ import {
   CL_MAINTENANCE_ROLES,
   CL_HOUSEKEEPING_ROLES,
 } from '@/shared/rbac';
-import { Input } from '@/shared/ui/core';
+import { SearchInput } from '@/shared/ui/core';
 import { EntityListPage, EntityPagination } from '@/shared/ui/entity';
 import { useOperationsView } from '../hooks/useOperationsView';
 import { useOpsResource } from '../hooks/useOpsResource';
@@ -251,16 +250,13 @@ export function ClOperationsPage() {
         filters={
           <div className="space-y-4">
             <OperationsViewNav view={view} onViewChange={changeView} />
-            <div className="relative sm:max-w-sm">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
-              <Input
-                value={communities.search}
-                onChange={(e) => communities.setSearch(e.target.value)}
-                placeholder="Search communities…"
-                className="pl-9"
-                aria-label="Search communities"
-              />
-            </div>
+            <SearchInput
+              wrapperClassName="sm:max-w-sm"
+              value={communities.search}
+              onChange={communities.setSearch}
+              placeholder="Search communities…"
+              aria-label="Search communities"
+            />
           </div>
         }
         pagination={

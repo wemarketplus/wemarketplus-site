@@ -1,6 +1,11 @@
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import {
+  LocationField,
+  toLocationValue,
+  type LocationValue,
+} from '@/modules/geocoding';
 import { useTenantStaffOptions } from '@/modules/users';
 import { Button, Input, Label, Select, Textarea } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
@@ -29,6 +34,12 @@ const defaults = (dayKey: string): ClScheduleFormValues => ({
   leadId: '',
   guideUserId: '',
   durationMin: '60',
+  fromLocation: '',
+  fromLat: undefined,
+  fromLng: undefined,
+  toLocation: '',
+  toLat: undefined,
+  toLng: undefined,
   locationName: '',
   contactName: '',
   referralSourceId: '',
@@ -68,6 +79,25 @@ export function ScheduleClEventModal({
   const staff = useTenantStaffOptions(open);
   const kind = watch('kind');
   const isTour = kind === 'tour';
+
+  /**
+   * The tour's From/To, assembled for the picker and split back into the flat
+   * fields on return — the same `watch`/`setValue` pairing the Book-tour form
+   * uses, because <LocationField> is a dialog rather than an input `register`
+   * could bind to.
+   */
+  const endpoint = (side: 'from' | 'to'): LocationValue =>
+    side === 'from'
+      ? toLocationValue(watch('fromLocation'), watch('fromLat'), watch('fromLng'))
+      : toLocationValue(watch('toLocation'), watch('toLat'), watch('toLng'));
+
+  const setEndpoint = (side: 'from' | 'to') => (next: LocationValue) => {
+    // All three together, clears included: a label whose pin belongs to a place
+    // it no longer names is worse than no location at all.
+    setValue(`${side}Location`, next.label, { shouldDirty: true });
+    setValue(`${side}Lat`, next.coords?.lat, { shouldDirty: true });
+    setValue(`${side}Lng`, next.coords?.lng, { shouldDirty: true });
+  };
 
   useEffect(() => {
     if (open) reset(defaults(dayKey));
@@ -198,6 +228,24 @@ export function ScheduleClEventModal({
                   </p>
                 )}
               </div>
+              {/* Where the tour starts and ends. The map picker searches, takes a
+                  tap, or reads the device's own position — so a marketer already
+                  standing at the pickup point can set it without typing an
+                  address. */}
+              <LocationField
+                id="cs-from"
+                label="From"
+                value={endpoint('from')}
+                onChange={setEndpoint('from')}
+                placeholder="Pickup point — hospital, home…"
+              />
+              <LocationField
+                id="cs-to"
+                label="To"
+                value={endpoint('to')}
+                onChange={setEndpoint('to')}
+                placeholder="Community being toured"
+              />
             </>
           )}
 

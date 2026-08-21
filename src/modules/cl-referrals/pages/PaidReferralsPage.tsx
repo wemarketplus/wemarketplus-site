@@ -1,6 +1,5 @@
-import { Search } from 'lucide-react';
 import { useRole, CL_SALES_ROLES } from '@/shared/rbac';
-import { Input, Select } from '@/shared/ui/core';
+import { Select, SearchInput } from '@/shared/ui/core';
 import { EntityListPage, EntityPagination } from '@/shared/ui/entity';
 import {
   FEE_STATUS_OPTIONS,
@@ -48,16 +47,13 @@ export function PaidReferralsPage() {
       errorFallback="Failed to load paid referrals"
       filters={
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <div className="relative sm:max-w-sm sm:flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search referrals…"
-              className="pl-9"
-              aria-label="Search paid referrals"
-            />
-          </div>
+          <SearchInput
+            wrapperClassName="sm:max-w-sm sm:flex-1"
+            value={search}
+            onChange={setSearch}
+            placeholder="Search referrals…"
+            aria-label="Search paid referrals"
+          />
           <Select
             value={status}
             onChange={(e) => setStatus(e.target.value)}

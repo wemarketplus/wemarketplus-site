@@ -6,6 +6,23 @@ import { extractApiErrorMessage } from '@/modules/auth/utils/errorUtils';
 import { useUpdateOwnProfileMutation } from '@/modules/users/api/usersApi';
 
 /**
+ * ONE toast for this control, reused across every save.
+ *
+ * Passing a stable id makes Sonner UPDATE the live toast instead of pushing a
+ * new one, which is what a save-on-click picker needs: trying four colours in
+ * a row otherwise queued four identical "Calendar colour updated." toasts that
+ * stacked and overlapped each other (Sonner offsets each new toast ~15px over
+ * the last, so the earlier ones were partly hidden behind the newer ones).
+ *
+ * Replacement is also the honest report. These messages are not four separate
+ * facts to read — only the newest one is still true, because each save
+ * supersedes the one before it. The success and error toasts deliberately SHARE
+ * the id for the same reason: a failure that follows a success must replace it,
+ * not sit underneath a stale "updated" the user can still read.
+ */
+const TOAST_ID = 'calendar-colour';
+
+/**
  * The calendar-colour half of the personal profile page.
  *
  * Separate from useProfileForm even though both PATCH /users/me, because the
@@ -34,9 +51,12 @@ export function useCalendarColor() {
           calendarColor
             ? 'Calendar colour updated.'
             : 'Back to your automatic colour.',
+          { id: TOAST_ID },
         );
       } catch (err) {
-        toast.error(extractApiErrorMessage(err, "Couldn't save your colour"));
+        toast.error(extractApiErrorMessage(err, "Couldn't save your colour"), {
+          id: TOAST_ID,
+        });
       }
     },
     [current, dispatch, updateOwnProfile],

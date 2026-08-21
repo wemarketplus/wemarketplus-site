@@ -1,7 +1,12 @@
 import { useEffect } from 'react';
 import type { FieldValues, Path, PathValue } from 'react-hook-form';
 import { get } from 'react-hook-form';
-import { Button, Input, Label, Select, Textarea } from '@/shared/ui/core';
+import {
+  LocationField,
+  toLocationValue,
+  type LocationValue,
+} from '@/modules/geocoding';
+import { Button, DatePicker, Input, Label, Select, Textarea } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import type { EntityField, EntityFormModalProps } from './types';
 
@@ -116,23 +121,89 @@ function EntityFieldControl<TValues extends FieldValues>({
   // Changing a field that others depend on invalidates their values. Done on the
   // change EVENT rather than in an effect on the value: seeding an edit form goes
   // through `reset`, which fires no event, so a stored pair survives untouched.
-  const control = dependents.length
-    ? {
-        ...reg,
-        onChange: (event: Parameters<typeof reg.onChange>[0]) => {
-          const result = reg.onChange(event);
-          for (const dependent of dependents) {
-            // A dependent field is a picker, so blank is the empty option.
-            setValue?.(dependent.name, '' as PathValue<TValues, Path<TValues>>);
-          }
-          return result;
-        },
-      }
-    : reg;
+  const control = {
+    ...(dependents.length
+      ? {
+          ...reg,
+          onChange: (event: Parameters<typeof reg.onChange>[0]) => {
+            const result = reg.onChange(event);
+            for (const dependent of dependents) {
+              // A dependent field is a picker, so blank is the empty option.
+              setValue?.(dependent.name, '' as PathValue<TValues, Path<TValues>>);
+            }
+            return result;
+          },
+        }
+      : reg),
+    // Carried on the CONTROL, not the label: `aria-required` is what tells
+    // assistive tech the field is mandatory, and it lands on every visible
+    // branch below (input, select, textarea, date) because they all spread
+    // `control`. The `readonly` branch spreads `reg` into a hidden input
+    // instead and is deliberately excluded — a value the user cannot set is
+    // not a field they can be required to fill.
+    ...(field.required ? { 'aria-required': true } : {}),
+  };
+
+  // A place picker owns its own label and writes THREE values (the name and the
+  // two coordinates), so it returns before the shared label/branch below rather
+  // than pretending to be a one-value input.
+  if (type === 'location' && field.latField && field.lngField) {
+    const asText = (path: Path<TValues>): string =>
+      (watch?.(path) as string | undefined) ?? '';
+    const write = (path: Path<TValues>, value: string) =>
+      setValue?.(path, value as PathValue<TValues, Path<TValues>>, {
+        shouldDirty: true,
+      });
+    const lat = Number(asText(field.latField));
+    const lng = Number(asText(field.lngField));
+    const value = toLocationValue(
+      asText(field.name),
+      asText(field.latField) && Number.isFinite(lat) ? lat : null,
+      asText(field.lngField) && Number.isFinite(lng) ? lng : null,
+    );
+    const onChange = (next: LocationValue) => {
+      write(field.name, next.label);
+      // Written as a pair or cleared as a pair — half a point is not a location,
+      // and the API rejects one anyway.
+      write(field.latField!, next.coords ? String(next.coords.lat) : '');
+      write(field.lngField!, next.coords ? String(next.coords.lng) : '');
+    };
+    return (
+      <div className={field.full ? 'sm:col-span-2' : undefined}>
+        {/* Registered but hidden: the form still owns these values, so a save
+            carries the coordinates even though no visible input holds them. */}
+        <input type="hidden" {...register(field.latField)} />
+        <input type="hidden" {...register(field.lngField)} />
+        <LocationField
+          id={id}
+          label={field.label}
+          value={value}
+          onChange={onChange}
+          placeholder={field.placeholder}
+        />
+        {error?.message && (
+          <p className="mt-1 text-[12px] text-destructive">{error.message}</p>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className={field.full ? 'sm:col-span-2' : undefined}>
-      <Label htmlFor={id}>{field.label}</Label>
+      <Label htmlFor={id}>
+        {field.label}
+        {field.required && (
+          // The conventional `*`, in the destructive tone so it reads as a
+          // requirement rather than decoration. `aria-hidden` because the
+          // requirement is already announced by `aria-required` on the control
+          // below — without it a screen reader says "star" after every
+          // mandatory label. `title` gives the same explanation to a sighted
+          // user who does not know the convention.
+          <span aria-hidden="true" title="Required" className="ml-0.5 text-destructive">
+            *
+          </span>
+        )}
+      </Label>
       {type === 'readonly' ? (
         // Context, not an input. The value is still registered (hidden) so an
         // existing reference on the record survives a save by a role that only
@@ -179,8 +250,37 @@ function EntityFieldControl<TValues extends FieldValues>({
             </option>
           ))}
         </Select>
+      ) : type === 'date' ? (
+        // The shared calendar control rather than `<input type="date">`, whose
+        // icon Chrome draws as a grey glyph, Safari omits, and Firefox draws
+        // differently again. The value stays a `yyyy-MM-dd` string, so `control`
+        // (the react-hook-form registration) spreads in unchanged and every
+        // schema and DTO downstream is untouched — see DatePicker.
+        <DatePicker
+          id={id}
+          min={
+            field.min
+              ? typeof field.min === 'function'
+                ? field.min()
+                : field.min
+              : undefined
+          }
+          {...control}
+        />
       ) : (
-        <Input id={id} type={type} placeholder={field.placeholder} {...control} />
+        <Input
+          id={id}
+          type={type}
+          placeholder={field.placeholder}
+          min={
+            type === 'datetime-local' && field.min
+              ? typeof field.min === 'function'
+                ? field.min()
+                : field.min
+              : undefined
+          }
+          {...control}
+        />
       )}
       {error?.message && (
         <p className="mt-1 text-[12px] text-destructive">{error.message}</p>

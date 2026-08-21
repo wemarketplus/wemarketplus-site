@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Gift } from 'lucide-react';
-import { Button, Card, CardContent, Input } from '@/shared/ui/core';
+import { Button, Card, CardContent, DatePicker, Input } from '@/shared/ui/core';
 import { EmptyState } from '@/shared/ui/feedback';
 import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
 import { useCreateGiftGratuityLogMutation, useListGiftGratuityLogsQuery } from '../api/giftGratuityApi';
@@ -85,7 +85,7 @@ export function GiftGratuityPage() {
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Input placeholder="Recipient name *" value={recipientName} onChange={(e) => setRecipientName(e.target.value)} />
             <Input placeholder="Facility" value={facilityName} onChange={(e) => setFacilityName(e.target.value)} />
-            <Input type="date" aria-label="Visit date" value={visitDate} onChange={(e) => setVisitDate(e.target.value)} />
+            <DatePicker aria-label="Visit date" value={visitDate} onChange={(e) => setVisitDate(e.target.value)} />
             <Input placeholder="Gift type *" value={giftType} onChange={(e) => setGiftType(e.target.value)} />
             <Input type="number" step="0.01" placeholder="Gift value ($) *" value={giftValue} onChange={(e) => setGiftValue(e.target.value)} />
             <Input placeholder="Visit purpose" value={visitPurpose} onChange={(e) => setVisitPurpose(e.target.value)} />

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { EntityFormModal } from '@/shared/ui/entity';
+import { todayLocalDate } from '@/shared/utils/dateFormatter';
 import { TASK_FIELDS } from '../constants/activityConstants';
 import { taskSchema, type TaskFormValues } from '../schema/taskSchema';
 import { toTaskFormValues } from '../utils/activityMappers';
@@ -32,6 +33,7 @@ export function ReminderFormModal({ open, isSaving, editing, onClose, onSubmit }
     register,
     handleSubmit,
     reset,
+    setError,
     formState: { errors },
   } = useForm<TaskFormValues>({
     resolver: zodResolver(taskSchema),
@@ -49,6 +51,15 @@ export function ReminderFormModal({ open, isSaving, editing, onClose, onSubmit }
   };
 
   const submit = handleSubmit(async (values) => {
+    // Only on CREATE, and only the picker's own past-date rule (mirrors the
+    // `min` on the date field and CreateTaskDto's IsNotPastDateConstraint) —
+    // never on edit, so saving an unrelated change to an already-overdue
+    // reminder (title, priority, marking it done) is never blocked by a due
+    // date the user did not touch.
+    if (!editing && values.dueDate && values.dueDate < todayLocalDate()) {
+      setError('dueDate', { message: 'Due date cannot be in the past.' });
+      return;
+    }
     const ok = await onSubmit(values);
     if (ok) reset(EMPTY);
   });

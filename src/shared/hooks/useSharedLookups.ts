@@ -1,6 +1,9 @@
+import { useMemo } from 'react';
 import { useListApplicationsQuery } from '@/modules/applications/api/applicationsApi';
 import { useListCompaniesQuery } from '@/modules/companies/api/companiesApi';
 import { useListFundingQuery } from '@/modules/funding/api/fundingApi';
+import { STAGE_LABELS } from '@/modules/prospects/constants/prospectsConstants';
+import { useListProspectsQuery } from '@/modules/prospects/api/prospectsApi';
 import { useListReferralsQuery } from '@/modules/referrals/api/referralsApi';
 import { useListUsersQuery } from '@/modules/users/api/usersApi';
 import { fullName } from '@/modules/users/utils/userDisplay';
@@ -34,6 +37,38 @@ export function useCompanyLookup(enabled: boolean): Options {
   return useLookupOptions(data?.data, isLoading, (c) => c.companyName);
 }
 
+/**
+ * Employer companies as NAME-valued options, for the referral-intake org fields.
+ *
+ * `useCompanyLookup` above is the picker for a foreign key: it writes a company
+ * id, because the column it fills stores one. This one is NOT that. `leads.referringOrg`
+ * is a plain text column that the list view and the search filter read verbatim,
+ * so the picker has to write the company NAME the column already holds — writing
+ * an id there would put a raw uuid on screen and break the search.
+ *
+ * Same list, same tenant scope, different value. Options come from whatever the
+ * Companies tab holds, so adding a company there is what adds a choice here.
+ *
+ * Names are deduped and blanks dropped: `companyName` is not unique (dedup is a
+ * manual admin action, not a DB constraint) and a <select> cannot carry two
+ * options with the same value.
+ */
+export function useCompanyNameOptions(enabled: boolean): Options {
+  const { data, isLoading } = useListCompaniesQuery(PAGE, { skip: !enabled });
+  const rows = data?.data;
+  return useMemo(() => {
+    // Mirrors useLookupOptions: only "loading" yields undefined, so a settled
+    // empty list reads as "nothing to choose" instead of hanging on "Loading…".
+    if (isLoading) return undefined;
+    const names = [
+      ...new Set((rows ?? []).map((c) => c.companyName.trim()).filter(Boolean)),
+    ];
+    return names
+      .sort((a, b) => a.localeCompare(b))
+      .map((name) => ({ value: name, label: name }));
+  }, [rows, isLoading]);
+}
+
 /** Funding opportunities. */
 export function useFundingLookup(enabled: boolean): Options {
   const { data, isLoading } = useListFundingQuery(PAGE, { skip: !enabled });
@@ -50,6 +85,37 @@ export function useApplicationLookup(enabled: boolean): Options {
     data?.data,
     isLoading,
     (a) => a.applicationNumber?.trim() || `Application ${a.id.slice(0, 8)}`,
+  );
+}
+
+/**
+ * Referral sources (facilities/accounts), for REVENUE ATTRIBUTION.
+ *
+ * The write-side counterpart to `useReferralSourceNames` below, and the reason
+ * Revenue Intelligence had nothing to report: `invoices.referralSourceId` and the
+ * matching column on contracts existed, and the Intelligence queries aggregated on
+ * them, but no form in the product could set one — so every invoice raised through
+ * the UI carried a null source and "revenue by referral source" was permanently
+ * empty. The chain from an admission to its money is only closed when a human can
+ * pick the account here.
+ */
+export function useReferralSourceLookup(enabled: boolean): Options {
+  const { data, isLoading } = useListReferralsQuery(PAGE, { skip: !enabled });
+  return useLookupOptions(data?.data, isLoading, (r) => r.name);
+}
+
+/**
+ * Admitted/pipeline prospects, for the other half of the same attribution pair.
+ *
+ * Labelled by `patientName` with the stage appended, because a hospice tenant will
+ * hold the same family name more than once and the stage is what tells two apart.
+ */
+export function useProspectLookup(enabled: boolean): Options {
+  const { data, isLoading } = useListProspectsQuery(PAGE, { skip: !enabled });
+  return useLookupOptions(
+    data?.data,
+    isLoading,
+    (p) => `${p.patientName} — ${STAGE_LABELS[p.stage] ?? p.stage}`,
   );
 }
 

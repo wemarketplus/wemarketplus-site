@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { Paperclip } from 'lucide-react';
-import { Button, Input, Label, Select } from '@/shared/ui/core';
+import { Button, DatePicker, Input, Label, Select } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import { useUploadExpenseReceiptMutation } from '../api/mileageApi';
 import { ExpenseType } from '../types/fieldTypes';
@@ -168,9 +168,8 @@ export function AttachReceiptDialog({
 
         <div>
           <Label htmlFor="ar-date">Date</Label>
-          <Input
+          <DatePicker
             id="ar-date"
-            type="date"
             value={expenseDate}
             onChange={(e) => setExpenseDate(e.target.value)}
           />

@@ -33,14 +33,26 @@ export function ClReferralsTable({
 
   const columns: ReadonlyArray<Column<ClReferralSourceRecord>> = [
     {
+      /**
+       * The partner's NAME, and nothing else.
+       *
+       * This cell used to print `email ?? phone ?? '—'` on a second line under
+       * the name. Three things were wrong with it. The column is headed "Name",
+       * so a contact address under it reads as part of the name rather than as a
+       * separate fact. It was inconsistent — whichever of the two happened to be
+       * stored appeared, so one row showed an address and the next a phone
+       * number with nothing saying which. And it put an email in front of
+       * everyone with list access on a screen that only needs to identify the
+       * partner; the address is on the record, which is where someone who
+       * actually needs to contact them looks.
+       *
+       * Organization is already its own column, so nothing that identifies the
+       * partner was lost. Edit (in the row actions) is where email and phone are
+       * read and written.
+       */
       key: 'name',
       header: 'Name',
-      cell: (r) => (
-        <div>
-          <p className="font-bold text-foreground">{r.name}</p>
-          <p className="text-[11px] text-muted">{r.email ?? r.phone ?? '—'}</p>
-        </div>
-      ),
+      cell: (r) => <span className="font-bold text-foreground">{r.name}</span>,
     },
     {
       key: 'type',
@@ -53,6 +65,27 @@ export function ClReferralsTable({
         ),
     },
     { key: 'organization', header: 'Organization', cell: (r) => r.organization ?? '—' },
+    {
+      /**
+       * CITY. The add/edit form has always asked for it — REFERRAL_FIELDS labels
+       * the `address` column "City" — and the backend has always stored it, but
+       * no column rendered it, so the one fact that says WHERE a partner is was
+       * write-only. It also made the value look unsaveable: someone editing a
+       * partner's city had nowhere to confirm the change had taken, which is how
+       * "City cannot be updated" gets reported against a PATCH that works.
+       *
+       * Reads `address` rather than a `city` field because that IS the column
+       * behind the form's City input (cl_referral_sources has no separate city);
+       * renaming the column is a migration this does not need.
+       *
+       * Placed next to Organization — the other "who/where is this partner"
+       * fact — rather than at the end of the row, and left-aligned like every
+       * other text cell so the column reads down cleanly.
+       */
+      key: 'city',
+      header: 'City',
+      cell: (r) => r.address ?? '—',
+    },
     {
       key: 'leadsSent',
       header: 'Leads sent',

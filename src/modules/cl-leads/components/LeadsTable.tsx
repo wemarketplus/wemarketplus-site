@@ -1,12 +1,11 @@
 import { Users } from 'lucide-react';
 import { CL_MANAGEMENT_ROLES, useRole } from '@/shared/rbac';
-import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
+import { DataTable, Pill, StatusSelect, type Column } from '@/shared/ui/data-display';
 import { EmptyState } from '@/shared/ui/feedback';
 import { EntityRowActions } from '@/shared/ui/entity';
 import { formatDate } from '@/shared/utils/dateFormatter';
 import {
   CARE_LEVEL_LABELS,
-  LEAD_STAGE_LABELS,
   STAGE_OPTIONS,
   STAGE_PILL,
   URGENCY_LABELS,
@@ -42,12 +41,17 @@ export function LeadsTable({
     {
       key: 'name',
       header: 'Name',
-      cell: (l) => (
-        <div>
-          <p className="font-bold text-foreground">{leadName(l)}</p>
-          <p className="text-[11px] text-muted">{l.phone ?? '—'}</p>
-        </div>
-      ),
+      // NAME ONLY. This cell used to print the lead's phone number on a second
+      // line under the name, in a column headed "Name" and with no contact
+      // column anywhere in the table to explain it. Three things were wrong
+      // with it: the pipeline is a scanning view (who is in play, at what stage)
+      // and a phone number is not what you scan by; the number appeared under
+      // a heading that does not claim to show it; and for the many leads with
+      // no phone on file it rendered a bare em dash under every name, so the
+      // rows carried a column of placeholders for a field nobody asked to see.
+      // Phone is still captured and edited on the lead form (LEAD_FIELDS), and
+      // that is where it belongs — one lead at a time, labelled as itself.
+      cell: (l) => <p className="font-bold text-foreground">{leadName(l)}</p>,
     },
     {
       key: 'care',
@@ -56,24 +60,21 @@ export function LeadsTable({
     },
     {
       key: 'stage',
-      header: 'Status',
+      // "Stage", not "Status": the create/edit form labels this field Stage
+      // (LEAD_FIELDS in leadsConstants) and the filter bar says "All stages", so
+      // a column headed "Status" read as a different field than the one just set.
+      header: 'Stage',
+      // One control, not a badge beside a dropdown of the same value — see
+      // StatusSelect. The PATCH behind `onStageChange` is unchanged.
       cell: (l) => (
-        <span className="inline-flex items-center gap-2">
-          <Pill tone={STAGE_PILL[l.stage]}>{LEAD_STAGE_LABELS[l.stage]}</Pill>
-          <select
-            aria-label={`Change stage for ${leadName(l)}`}
-            value={l.stage}
-            disabled={isMutating}
-            onChange={(e) => onStageChange(l, e.target.value)}
-            className="rounded-md border border-border/[0.15] bg-white px-1.5 py-1 text-[11px] text-foreground"
-          >
-            {STAGE_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-        </span>
+        <StatusSelect
+          value={l.stage}
+          tone={STAGE_PILL[l.stage]}
+          options={STAGE_OPTIONS}
+          disabled={isMutating}
+          onChange={(stage) => onStageChange(l, stage)}
+          aria-label={`Change stage for ${leadName(l)}`}
+        />
       ),
     },
     {

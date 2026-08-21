@@ -19,6 +19,21 @@ export const clScheduleSchema = z
     leadId: z.string().optional().or(z.literal('')),
     guideUserId: z.string().optional().or(z.literal('')),
     durationMin: z.string().optional().or(z.literal('')),
+    /**
+     * The tour's two endpoints — the same six flat fields the Book-tour form
+     * carries, so a tour scheduled from the calendar is the same record with the
+     * same route as one booked from the Tour Scheduler.
+     *
+     * Tour-only: a facility visit or a physician lunch already names WHERE it
+     * happened through `locationName`, and giving those a second, differently
+     * shaped location field would be two answers to one question.
+     */
+    fromLocation: z.string().trim().max(200).optional().or(z.literal('')),
+    fromLat: z.number().optional(),
+    fromLng: z.number().optional(),
+    toLocation: z.string().trim().max(200).optional().or(z.literal('')),
+    toLat: z.number().optional(),
+    toLng: z.number().optional(),
     // Visit fields.
     locationName: z.string().max(200).optional().or(z.literal('')),
     contactName: z.string().max(200).optional().or(z.literal('')),

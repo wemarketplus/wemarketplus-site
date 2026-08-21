@@ -8,7 +8,7 @@ import type { Urgency } from '../types/maxTypes';
 // Reproduces the reference Add Lead modal (saveNewLead).
 export function AddLeadModal() {
   const { actions } = useMaxDemo();
-  const [f, setF] = useState({ name: '', phone: '', email: '', care: LEAD_CARE_OPTS[0], source: LEAD_SOURCE_OPTS[0], budget: '', urgency: 'Hot', stage: 'Inquiry', timeline: '', tourdate: '', followdate: new Date(Date.now() + 2 * 86400000).toISOString().split('T')[0], assigned: LEAD_ASSIGNED_OPTS[0], notes: '' });
+  const [f, setF] = useState({ name: '', phone: '', email: '', care: LEAD_CARE_OPTS[0], source: LEAD_SOURCE_OPTS[0], budget: '', urgency: 'High', stage: 'Inquiry', timeline: '', tourdate: '', followdate: new Date(Date.now() + 2 * 86400000).toISOString().split('T')[0], assigned: LEAD_ASSIGNED_OPTS[0], notes: '' });
   const set = (k: string, v: string) => setF((p) => ({ ...p, [k]: v }));
 
   const save = () => {

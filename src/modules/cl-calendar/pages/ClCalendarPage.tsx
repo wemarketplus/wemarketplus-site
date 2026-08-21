@@ -25,10 +25,15 @@ export function ClCalendarPage() {
   const calendar = useClCalendar();
   const schedule = useClScheduleEvent();
 
-  const showOwnerColors = calendar.scope === 'all';
-  // Only "All users" needs the tenant's colours; a personal calendar is one
-  // person's rows, where a per-owner hue carries no information.
-  const colors = useTenantCalendarColors(showOwnerColors);
+  /**
+   * Gates the REQUEST, not the colours. Only "All users" needs everybody's
+   * choice, so a personal calendar keeps its zero extra network cost — but it
+   * still gets a colour, because the only one it can need (the session user's
+   * own) already sits in the auth slice and useTenantCalendarColors returns it
+   * either way. Both views below then paint by owner unconditionally, so the
+   * colour a user picks in their profile shows on the calendar they open.
+   */
+  const colors = useTenantCalendarColors(calendar.scope === 'all');
 
   return (
     <div className="space-y-6">
@@ -68,7 +73,6 @@ export function ClCalendarPage() {
             selectedKey={calendar.selectedKey}
             isFetching={calendar.isFetching}
             colors={colors}
-            showOwnerColors={showOwnerColors}
             onPrevMonth={calendar.prevMonth}
             onNextMonth={calendar.nextMonth}
             onToday={calendar.goToday}
@@ -79,7 +83,6 @@ export function ClCalendarPage() {
             dayKey={calendar.selectedKey}
             events={calendar.selectedEvents}
             colors={colors}
-            showOwnerColors={showOwnerColors}
             onSchedule={() => schedule.openFor(calendar.selectedKey)}
           />
         </div>

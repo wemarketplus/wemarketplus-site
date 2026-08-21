@@ -27,8 +27,8 @@ export function statusBadgeTone(s: string): BadgeTone {
 
 // Maps urgency to its badge tone (reference urgBadge()).
 export function urgencyBadgeTone(u: Urgency): BadgeTone {
-  if (u === 'Hot') return 'red';
-  if (u === 'Warm') return 'amber';
+  if (u === 'High') return 'red';
+  if (u === 'Medium') return 'amber';
   return 'blue';
 }
 
@@ -38,7 +38,7 @@ export function activeLeadCount(leads: readonly Lead[]): number {
 }
 
 export function hotLeads(leads: readonly Lead[]): Lead[] {
-  return leads.filter((l) => l.urgency === 'Hot');
+  return leads.filter((l) => l.urgency === 'High');
 }
 
 export function moveInCount(leads: readonly Lead[]): number {

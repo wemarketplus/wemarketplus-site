@@ -128,9 +128,27 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
           ) : isLoading && !hasResults ? (
             <p className="px-4 py-6 text-center text-[13px] text-muted">Searching…</p>
           ) : !hasResults ? (
-            <p className="px-4 py-6 text-center text-[13px] text-muted">
-              No matches for “{query.trim()}”.
-            </p>
+            /*
+              The needle is NOT echoed back. It sat two lines above this one in
+              the input the user is still looking at, so quoting it added nothing
+              and cost plenty: a long or pasted term wrapped the panel, a stray
+              paste rendered as a wall of quoted text, and any typed value —
+              including one someone would not want on screen — was repeated in
+              larger type than the field itself. What the state has to say is
+              "nothing matched, here is what to try", and neither half needs the
+              query in it. The second line names the three record types this
+              palette actually searches, which is the fix for the most common
+              cause of a miss: searching for something it never covered.
+            */
+            <div className="px-4 py-8 text-center">
+              <p className="text-[13px] font-semibold text-foreground">
+                No results found
+              </p>
+              <p className="mt-1 text-[12px] text-muted">
+                Check the spelling, or try a shorter term — this searches
+                contacts, companies and prospects.
+              </p>
+            </div>
           ) : (
             groups
               .filter((g) => g.results.length > 0)

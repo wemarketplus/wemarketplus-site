@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Button, Input, Label } from '@/shared/ui/core';
+import { Button, Checkbox, Input, Label } from '@/shared/ui/core';
 import { useOnboarding } from '../hooks/useOnboarding';
 import { useOnboardingSubmit } from '../hooks/useOnboardingSubmit';
 import { baaSchema, type BAAFormValues } from '../schema/onboardingSchema';
@@ -69,11 +69,7 @@ export function BAAStep() {
       </div>
 
       <label className="flex items-start gap-3 text-sm text-foreground">
-        <input
-          type="checkbox"
-          className="mt-0.5 h-4 w-4 rounded border border-border/15 bg-surface-raised text-primary focus:ring-primary/50"
-          {...register('acknowledged')}
-        />
+        <Checkbox className="mt-0.5" {...register('acknowledged')} />
         <span>
           I have read the BAA above and confirm I am authorized to sign on behalf
           of my organization.
@@ -86,9 +82,27 @@ export function BAAStep() {
       )}
 
       <div className="flex justify-between">
+        {/*
+          `outline`, not `ghost`, and `lg` to match its partner.
+
+          `ghost` is transparent with `text-muted` and no border, which on this
+          white card left the only way BACK out of the final signing step reading
+          as body copy — 4.95:1 text with nothing around it, no edge to say it
+          was a control at all. `outline` gives it a border and foreground text
+          (17.29:1) while the fill still belongs to "Sign & launch" alone, so the
+          step keeps exactly one primary action. This is the same swap the agency
+          step's Back button already carries — those two are the app's only wizard
+          Back buttons, so both are now `outline`.
+
+          The size is deliberate as well: the submit beside it is `size="lg"`
+          (h-12) and Back defaulted to `md` (h-11), so the footer's two controls
+          sat a pixel off each other. The agency step carries the same pairing, so
+          the wizard's two Back buttons are sized and toned alike.
+        */}
         <Button
           type="button"
-          variant="ghost"
+          variant="outline"
+          size="lg"
           onClick={back}
           disabled={isSubmitting}
         >

@@ -92,6 +92,20 @@ export function useClScheduleEvent(): ClScheduleController {
             ? { durationMin: Number(values.durationMin) }
             : {}),
           ...(values.notes?.trim() ? { notes: values.notes.trim() } : {}),
+          // The route, only when it was actually set. Coordinates go in PAIRS —
+          // the picker writes both or neither, and the server 400s a lone half.
+          ...(values.fromLocation?.trim()
+            ? { fromLocation: values.fromLocation.trim() }
+            : {}),
+          ...(values.fromLat !== undefined && values.fromLng !== undefined
+            ? { fromLat: values.fromLat, fromLng: values.fromLng }
+            : {}),
+          ...(values.toLocation?.trim()
+            ? { toLocation: values.toLocation.trim() }
+            : {}),
+          ...(values.toLat !== undefined && values.toLng !== undefined
+            ? { toLat: values.toLat, toLng: values.toLng }
+            : {}),
         }).unwrap();
         toast.success('Tour scheduled');
         return true;

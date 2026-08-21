@@ -1,6 +1,6 @@
 import { Wrench } from 'lucide-react';
 import { CL_MANAGEMENT_ROLES, useRole } from '@/shared/rbac';
-import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
+import { DataTable, Pill, StatusSelect, type Column } from '@/shared/ui/data-display';
 import { EmptyState } from '@/shared/ui/feedback';
 import { EntityRowActions } from '@/shared/ui/entity';
 import {
@@ -78,24 +78,17 @@ export function MaintenanceTable({
             {MAINTENANCE_STATUS_LABELS[t.status]}
           </Pill>
         ) : (
-          <span className="inline-flex items-center gap-2">
-            <Pill tone={MAINTENANCE_STATUS_PILL[t.status]}>
-              {MAINTENANCE_STATUS_LABELS[t.status]}
-            </Pill>
-            <select
-              aria-label="Change status"
-              value={t.status}
-              disabled={isMutating}
-              onChange={(e) => onStatusChange(t, e.target.value)}
-              className="rounded-md border border-border/[0.15] bg-white px-1.5 py-1 text-[11px] text-foreground"
-            >
-              {MAINTENANCE_STATUS_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
-          </span>
+          // Editable: ONE control that is both the badge and the picker, so the
+          // status is not stated twice. The read-only branch above stays a plain
+          // Pill — same shape and tone, minus the affordance.
+          <StatusSelect
+            value={t.status}
+            tone={MAINTENANCE_STATUS_PILL[t.status]}
+            options={MAINTENANCE_STATUS_OPTIONS}
+            disabled={isMutating}
+            onChange={(status) => onStatusChange(t, status)}
+            aria-label="Change status"
+          />
         ),
     },
     ...(readOnly

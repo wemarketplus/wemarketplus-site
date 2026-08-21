@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Role } from '@/shared/rbac';
-import { Button, Input, Label, PasswordInput, Select } from '@/shared/ui/core';
+import { Button, Checkbox, Input, Label, PasswordInput, Select } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import { useListCustomRolesQuery } from '@/modules/permissions';
 import { ASSIGNABLE_ROLE_OPTIONS } from '../constants/usersConstants';
@@ -164,11 +164,7 @@ export function AddUserModal({
           )}
         </div>
         <label className="flex items-start gap-3 text-sm text-foreground sm:col-span-2">
-          <input
-            type="checkbox"
-            className="mt-0.5 h-4 w-4 rounded border border-border/15 bg-surface-raised text-primary focus:ring-primary/50"
-            {...register('sendInvite')}
-          />
+          <Checkbox className="mt-0.5" {...register('sendInvite')} />
           <span>Email an invite so they can set their own password</span>
         </label>
       </form>

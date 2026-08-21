@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { VoiceDictateButton } from '@/shared/ui/core';
+import { Checkbox, VoiceDictateButton } from '@/shared/ui/core';
 import { EntityFormModal } from '@/shared/ui/entity';
 import { useNoteFormFields } from '../hooks/useNoteFormFields';
 import { useNoteLookups } from '../hooks/useNoteLookups';
@@ -104,11 +104,7 @@ export function NoteFormModal({ open, isSaving, editing, onClose, onSubmit }: No
             would get staff writing to it as if it were one.
           */}
           <label className="flex items-start gap-2 text-sm text-foreground">
-            <input
-              type="checkbox"
-              className="mt-1"
-              {...register('isFamilySensitive')}
-            />
+            <Checkbox className="mt-1" {...register('isFamilySensitive')} />
             <span>
               Team only — not for the family
               <span className="block text-[11px] text-muted-soft">

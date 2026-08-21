@@ -15,6 +15,17 @@ import type {
 
 export type EntityFieldType =
   | 'text'
+  /**
+   * A PLACE. Renders the map picker (search, interactive map, drop a pin, use
+   * my location) instead of a bare text box, and writes the chosen coordinates
+   * into the two fields named by `latField` / `lngField`.
+   *
+   * Here rather than in each form because "where?" is asked by many of them —
+   * an outreach visit, an appointment, a clock-in — and a location captured as
+   * free text is a location nothing downstream can use: two people typing
+   * "clinic" mean two different buildings.
+   */
+  | 'location'
   | 'email'
   | 'tel'
   | 'number'
@@ -65,7 +76,28 @@ export interface EntityField<TValues extends FieldValues> {
   // supplied at render time through EntityFormModalProps.lookups instead, since
   // they come from a server list the form cannot know about statically.
   options?: readonly EntitySelectOption[];
+  /**
+   * For `type: 'date'` / `'datetime-local'` only — the native input's `min`,
+   * e.g. todayLocalDate() to grey out past dates in the picker itself. A
+   * function so a `min` of "today" is read fresh each render rather than
+   * frozen at module load (a form left open across midnight must not still
+   * treat yesterday as selectable).
+   */
+  min?: string | (() => string);
   placeholder?: string;
+  /**
+   * For `type: 'location'` — the fields holding the picked coordinates. Both
+   * required, because a coordinate is only meaningful as a pair, and they are
+   * named rather than derived (`${name}Lat`) so a form can keep the column
+   * names its table already uses: `gpsLat`/`gpsLng` on an outreach visit,
+   * `locationLat`/`locationLng` on an appointment.
+   *
+   * Values are written as STRINGS, matching how these forms hold every other
+   * value; the caller's mapper converts on submit, as it already does for miles
+   * and dates.
+   */
+  latField?: Path<TValues>;
+  lngField?: Path<TValues>;
   /**
    * For `type: 'lookup'` only — a DEPENDENT picker. Names the field whose value
    * decides which list this one offers, for a reference that is polymorphic:
@@ -83,6 +115,22 @@ export interface EntityField<TValues extends FieldValues> {
    * `watch` + `setValue` on EntityFormModal.
    */
   dependsOn?: Path<TValues>;
+  /**
+   * MANDATORY field: renders a `*` after the label and sets `aria-required` on
+   * the control.
+   *
+   * Declared per field rather than derived from the zod schema because the modal
+   * is handed `register` + `errors`, never the schema itself — and reaching into
+   * a resolver's internals to guess which keys are required would break the
+   * moment a field became a union or picked up a refinement.
+   *
+   * It is a LABEL, not a rule: the schema and the DTO still decide what saves.
+   * Every form's required set was previously invisible, so the only way to
+   * discover a mandatory field was to submit and read the error — which is what
+   * the client reported. Mark exactly the fields the schema really requires; a
+   * `*` on an optional field is worse than none at all.
+   */
+  required?: boolean;
   // Span both columns of the 2-col grid (defaults to false = single column).
   full?: boolean;
 }

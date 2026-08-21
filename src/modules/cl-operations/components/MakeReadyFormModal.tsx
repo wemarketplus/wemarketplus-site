@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Button, Input, Label, Select, Textarea } from '@/shared/ui/core';
+import { Button, DatePicker, Input, Label, Select, Textarea } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import type { EntitySelectOption } from '@/shared/ui/entity';
 import { MAKE_READY_STATUS } from '../constants/clOperationsApiConstants';
@@ -118,7 +118,7 @@ export function MakeReadyFormModal({
         </div>
         <div>
           <Label htmlFor="mr-due">Due date</Label>
-          <Input id="mr-due" type="date" {...register('dueDate')} />
+          <DatePicker id="mr-due" {...register('dueDate')} />
         </div>
         {/* Who does the turn. Disabled rather than empty while the staff list
             loads — an empty picker reads as "nobody works here". */}

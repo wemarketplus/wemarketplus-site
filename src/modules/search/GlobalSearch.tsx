@@ -16,11 +16,15 @@ export function GlobalSearch() {
         type="button"
         onClick={openPalette}
         aria-label="Search"
-        className="flex items-center gap-2 rounded-pill border border-border/[0.08] bg-surface/60 py-1.5 pl-3 pr-2 text-[12px] text-muted transition-colors hover:border-border/[0.16] hover:text-foreground"
+        // h-9 matches every other control in the topbar and the Button `sm`
+        // size. The icon is 16px (h-4), the same as the bell and the sign-out
+        // glyph beside it — it was 14px, which read as a lighter, smaller
+        // control than its neighbours at the same nominal size.
+        className="flex h-9 items-center gap-2 rounded-pill border border-border/[0.08] bg-surface/60 pl-3 pr-2 text-[12px] text-muted transition-colors hover:border-border/[0.16] hover:text-foreground"
       >
-        <Search className="h-3.5 w-3.5" />
+        <Search className="h-4 w-4 shrink-0" />
         <span className="hidden sm:inline">Search…</span>
-        <kbd className="hidden items-center rounded bg-foreground/[0.06] px-1.5 py-0.5 text-[10px] text-muted-soft sm:inline-flex">
+        <kbd className="hidden items-center rounded bg-foreground/[0.06] px-1.5 py-0.5 text-[10px] leading-none text-muted-soft sm:inline-flex">
           {isMac ? '⌘' : 'Ctrl'} K
         </kbd>
       </button>

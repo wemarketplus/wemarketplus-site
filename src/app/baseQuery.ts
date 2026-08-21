@@ -41,6 +41,10 @@ const BILLING_PATHS = ['/billing', '/subscription-status'];
 // — it is also every ordinary role denial — so this matches the specific code.
 const PASSWORD_CHANGE_REQUIRED = 'PASSWORD_CHANGE_REQUIRED';
 
+// Thrown by the backend's TierGuard for a feature above the tenant's tier, as
+// opposed to SUBSCRIPTION_REQUIRED for having no subscription at all.
+const UPGRADE_REQUIRED = 'UPGRADE_REQUIRED';
+
 function isPasswordChangeRequired(error: FetchBaseQueryError): boolean {
   if (error.status !== 403) return false;
   const data = error.data as { error?: unknown } | undefined;
@@ -66,10 +70,34 @@ function requirePasswordChange(api: Parameters<typeof rawBaseQuery>[1]): void {
   }
 }
 
-// 402 SUBSCRIPTION_REQUIRED: the tenant has no live subscription, so every
-// feature endpoint is gated until they pick a plan. Hard redirect to the
-// plan picker, mirroring forceLogout's style; the pathname guard prevents a
-// redirect loop while the billing screen itself loads.
+/**
+ * Distinguishes the two very different reasons the API answers 402.
+ *
+ * SUBSCRIPTION_REQUIRED (subscription.guard.ts) means the tenant has no live
+ * subscription at all — every feature endpoint is gated, so bouncing to the plan
+ * picker is the only useful move.
+ *
+ * UPGRADE_REQUIRED (tier.guard.ts) is not that. The tenant IS subscribed; this
+ * one feature sits above their tier. The backend documents the code as existing
+ * precisely "so the frontend can" show an in-place upgrade prompt, and screens
+ * like ManageCustomRoles already compute a `needsUpgrade` flag to do exactly
+ * that — but that code was unreachable, because this interceptor hard-redirected
+ * the whole window to /billing before the component could render. That is the
+ * "Settings tabs bounce me back to Billing" bug: opening a tier-gated tab fired
+ * its query, the 402 landed, and the page navigated away mid-tab-switch.
+ *
+ * So only the first kind redirects; the second is returned to the caller.
+ */
+function isSubscriptionRequired(error: FetchBaseQueryError): boolean {
+  if (error.status !== 402) return false;
+  const data = error.data as { error?: unknown } | undefined;
+  // Default to redirecting when the body carries no code: a 402 we cannot
+  // classify is likelier to be the whole-account gate than a per-feature one.
+  return data?.error !== UPGRADE_REQUIRED;
+}
+
+// Hard redirect to the plan picker, mirroring forceLogout's style; the pathname
+// guard prevents a redirect loop while the billing screen itself loads.
 function redirectToBilling(): void {
   if (
     typeof window !== 'undefined' &&
@@ -87,7 +115,10 @@ export const baseQueryWithReauth: BaseQueryFn<
   await mutex.waitForUnlock();
   let result = await rawBaseQuery(args, api, extraOptions);
 
-  if (result.error?.status === 402) {
+  // Only a whole-account subscription gate redirects. A per-feature
+  // UPGRADE_REQUIRED falls through so the calling screen can render its own
+  // upgrade prompt in place — see isSubscriptionRequired.
+  if (result.error && isSubscriptionRequired(result.error)) {
     redirectToBilling();
     return result;
   }

@@ -1,5 +1,5 @@
-import { Download, RefreshCw, Search } from 'lucide-react';
-import { Button, Card, CardContent, Input } from '@/shared/ui/core';
+import { Download, RefreshCw } from 'lucide-react';
+import { Button, Card, CardContent, SearchInput } from '@/shared/ui/core';
 import { Alert } from '@/shared/ui/data-display';
 import { EntityPagination } from '@/shared/ui/entity';
 import { PortalShell } from '../components/PortalShell';
@@ -24,15 +24,12 @@ export function CompliancePage() {
       <Card dense>
         <CardContent className="space-y-4 px-6 py-5">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="relative max-w-sm flex-1">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
-              <Input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search this page…"
-                className="pl-9"
-              />
-            </div>
+            <SearchInput
+              wrapperClassName="max-w-sm flex-1"
+              value={query}
+              onChange={setQuery}
+              placeholder="Search this page…"
+            />
             <Button variant="secondary" disabled={isExporting} onClick={() => void onExport()}>
               <Download className="h-4 w-4" />
               {isExporting ? 'Preparing…' : `Export ${total} entries`}

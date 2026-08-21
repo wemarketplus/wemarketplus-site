@@ -1,6 +1,6 @@
 import { Building2 } from 'lucide-react';
 import { CL_MANAGEMENT_ROLES, useRole } from '@/shared/rbac';
-import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
+import { DataTable, Pill, StatusSelect, type Column } from '@/shared/ui/data-display';
 import { EmptyState } from '@/shared/ui/feedback';
 import { EntityRowActions } from '@/shared/ui/entity';
 import {
@@ -54,22 +54,17 @@ export function ApartmentsTable({
         readOnly || !onStatusChange ? (
           <Pill tone={APARTMENT_STATUS_PILL[a.status]}>{APARTMENT_STATUS_LABELS[a.status]}</Pill>
         ) : (
-          <span className="inline-flex items-center gap-2">
-            <Pill tone={APARTMENT_STATUS_PILL[a.status]}>{APARTMENT_STATUS_LABELS[a.status]}</Pill>
-            <select
-              aria-label="Change status"
-              value={a.status}
-              disabled={isMutating}
-              onChange={(e) => onStatusChange(a, e.target.value)}
-              className="rounded-md border border-border/[0.15] bg-white px-1.5 py-1 text-[11px] text-foreground"
-            >
-              {APARTMENT_STATUS_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
-          </span>
+          // Editable: ONE control that is both the badge and the picker, so the
+          // status is not stated twice. The read-only branch above stays a plain
+          // Pill — same shape and tone, minus the affordance.
+          <StatusSelect
+            value={a.status}
+            tone={APARTMENT_STATUS_PILL[a.status]}
+            options={APARTMENT_STATUS_OPTIONS}
+            disabled={isMutating}
+            onChange={(status) => onStatusChange(a, status)}
+            aria-label="Change status"
+          />
         ),
     },
     { key: 'resident', header: 'Resident', cell: (a) => a.residentName ?? '—' },

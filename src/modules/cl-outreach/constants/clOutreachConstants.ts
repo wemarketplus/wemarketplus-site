@@ -50,7 +50,16 @@ export const VISIT_FIELDS: ReadonlyArray<EntityField<VisitFormValues>> = [
   { name: 'visitDate', label: 'Visit date', type: 'date' },
   { name: 'visitType', label: 'Type', type: 'select', options: VISIT_TYPE_OPTIONS },
   { name: 'contactName', label: 'Contact', placeholder: 'Dr. Amanda Chen' },
-  { name: 'locationName', label: 'Location / organization', placeholder: 'Dallas Medical Group' },
+  // A PLACE, not a name: the picker writes the organisation's label AND the
+  // gpsLat/gpsLng the table has carried (unwritten) since it was created.
+  {
+    name: 'locationName',
+    label: 'Location / organization',
+    type: 'location',
+    latField: 'gpsLat',
+    lngField: 'gpsLng',
+    placeholder: 'Dallas Medical Group',
+  },
   { name: 'miles', label: 'Miles', type: 'text', placeholder: '12.5' },
   { name: 'notes', label: 'Notes', type: 'textarea', full: true, placeholder: 'What was discussed…' },
 ];
