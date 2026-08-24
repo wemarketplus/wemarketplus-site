@@ -27,7 +27,7 @@ export function CheckInList({ items }: CheckInListProps) {
                   {c.gpsLocation}
                 </p>
               </div>
-              <span className="shrink-0 text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+              <span className="shrink-0 text-[10px] uppercase tracking-label text-muted-soft">
                 {formatDateTime(c.visitDate)}
               </span>
             </li>

@@ -79,6 +79,16 @@ export function tourToEvent(
  * renders without a time chip rather than claiming a spurious midnight. Parsed
  * by splitting the string instead of `new Date('2026-08-11')`, which JS reads as
  * UTC midnight and would shift the row a day back west of Greenwich.
+ *
+ * `ownerId` is `visit.userId`. This used to be hardcoded `null` on the stated
+ * grounds that "outreach visits carry no owner at all — the DTO has no user
+ * field". That was never true of the API: `cl_outreach_visits.userId` is NOT
+ * NULL, the create endpoint fills it from the caller's JWT, and the list
+ * endpoint returns the entity with the field on it. Only this frontend record
+ * type omitted it, so the owner was discarded here and every facility visit and
+ * physician lunch rendered in the grey UNASSIGNED colour — which is what made a
+ * user's chosen profile colour appear to do nothing on the calendar
+ * CommunityLink actually lands them on.
  */
 export function visitToEvent(visit: ClOutreachVisitRecord): ClCalendarEvent {
   const [year, month, day] = visit.visitDate.slice(0, 10).split('-').map(Number);
@@ -96,7 +106,7 @@ export function visitToEvent(visit: ClOutreachVisitRecord): ClCalendarEvent {
     detail: [visit.contactName, visitTypeLabel(visit.visitType)]
       .filter(Boolean)
       .join(' · '),
-    ownerId: null,
+    ownerId: visit.userId,
     to: '/outreach/log',
     isCancelled: false,
   };

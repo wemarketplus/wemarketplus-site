@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { useTenantCalendarColors } from '@/modules/appointments';
 import { Card, CardContent } from '@/shared/ui/core';
 import { ClCalendarDayPanel } from '../components/ClCalendarDayPanel';
@@ -39,7 +40,7 @@ export function ClCalendarPage() {
     <div className="space-y-6">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-3xl text-foreground">Calendar</h1>
+          <h1 className={PAGE_TITLE}>Calendar</h1>
           <p className="text-sm text-muted">
             Tours, facility visits and physician lunches — yours or the whole
             team's.

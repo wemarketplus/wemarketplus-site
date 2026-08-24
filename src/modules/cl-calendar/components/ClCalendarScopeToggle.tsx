@@ -25,7 +25,7 @@ export function ClCalendarScopeToggle({
     <div className="space-y-1.5">
       <label
         htmlFor="cl-cal-scope"
-        className="block text-[10px] font-bold uppercase tracking-[0.1em] text-muted-soft"
+        className="block text-[10px] font-bold uppercase tracking-label text-muted-soft"
       >
         Viewing
       </label>
@@ -40,16 +40,22 @@ export function ClCalendarScopeToggle({
       </Select>
 
       {/*
-        Says out loud what "My calendar" cannot do, rather than quietly showing
-        rows that are not yours. Outreach visits carry no owner in the API, so
-        they appear in both scopes; a marketer who saw a colleague's drop-in on
-        "My calendar" would otherwise reasonably think the filter was broken.
+        Says out loud why a row that is not yours is on "My calendar", rather
+        than letting it look like a broken filter.
+
+        This note used to be about outreach visits, on the belief that they had
+        no owner in the API. They do (`userId`, set from the caller), and "My
+        calendar" filters them correctly now — so that wording was not just
+        stale, it was actively misleading: it told a marketer their own logged
+        visits were nobody's. What is left is the genuinely unassigned tour,
+        since `cl_tours.guideUserId` is nullable and the tour forms offer
+        "— Unassigned —".
       */}
       {scope === 'mine' && hasUnownedEvents && (
         <p className="flex items-start gap-1.5 text-[11px] leading-snug text-muted-soft">
           <Info className="mt-px h-3 w-3 shrink-0" />
-          Logged facility visits are shown to the whole team — they are not
-          recorded against a person yet.
+          Tours with no guide assigned are shown to everyone, so they are not
+          missed.
         </p>
       )}
     </div>
