@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { Check, ChevronDown } from 'lucide-react';
 import { Product, PRODUCT_LABELS } from '@/shared/types';
+import {
+  HEADER_CONTROL_BASE,
+  HEADER_CONTROL_HEIGHT,
+} from '@/shared/ui/core/controlStyles';
 import { cn } from '@/shared/utils/cn';
 import { useActiveProduct } from '../hooks/useActiveProduct';
 import { useEntitlements } from '../hooks/useEntitlements';
@@ -83,12 +87,15 @@ export function ProductSwitcher() {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={`Active dashboard: ${PRODUCT_LABELS[activeProduct]}. Change dashboard`}
-        // h-9 to match the search pill, bell and profile chip either side of it
-        // in the topbar; it was `py-1`, which made it the shortest control in
-        // the row.
+        // Geometry, hairline and surface from HEADER_CONTROL_* so this control,
+        // the search pill, the bell and the profile chip either side of it are
+        // provably the same object. It was `py-1` with its own copy of the
+        // border, which made it both the shortest control in the row and a
+        // second spelling of the row's hairline.
         className={cn(
-          'flex h-9 items-center gap-2 rounded-pill border pl-3 pr-2 transition-colors',
-          'border-border/[0.08] bg-surface/60 hover:border-border/20',
+          HEADER_CONTROL_BASE,
+          HEADER_CONTROL_HEIGHT,
+          'flex items-center gap-2 pl-3 pr-2',
           open && 'border-primary/40 bg-primary/[0.06]',
         )}
       >
@@ -113,11 +120,11 @@ export function ProductSwitcher() {
           role="menu"
           aria-label="Switch dashboard"
           className={cn(
-            'absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-[12px]',
+            'absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-lg',
             'border border-border/[0.1] bg-surface shadow-2xl',
           )}
         >
-          <p className="px-3 pt-2.5 pb-1 text-[10px] uppercase tracking-[0.12em] text-muted-soft">
+          <p className="px-3 pt-2.5 pb-1 text-[10px] uppercase tracking-label text-muted-soft">
             Dashboard
           </p>
           {products.map((product) => {

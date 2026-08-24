@@ -7,21 +7,32 @@ import { NotificationsBell } from '@/modules/notifications';
 import { GlobalSearch } from '@/modules/search';
 import { roleTitle } from '@/shared/rbac';
 import { Button } from '@/shared/ui/core/Button';
+import {
+  HEADER_CONTROL_BASE,
+  HEADER_CONTROL_HEIGHT,
+} from '@/shared/ui/core/controlStyles';
+import { OVERLINE } from '@/shared/ui/core/typography';
+import {
+  SHELL_GUTTER_X,
+  SHELL_HEADER_HEIGHT,
+  SHELL_HEADER_STICKY,
+} from './shellStyles';
 import { confirm, useOverlayOpen } from '@/shared/ui/feedback';
 import { cn } from '@/shared/utils/cn';
 
 // Topbar mirrors wemarketplus-site dashboards: thin hairline divider, user
 // identity + notifications on the right, no theme toggle (dark-only app).
 //
-// `relative z-30` is LOAD-BEARING, not styling. `backdrop-blur-sm` makes this
-// header a stacking context, so a dropdown inside it (the product switcher, and
-// anything else that opens downward from here) cannot escape above `<main>` on
-// its own z-index alone — main comes later in DOM order and paints over the whole
-// header subtree. The menu still LOOKED right, but `elementFromPoint` over it
-// returned the page's <h1>, so every click on it hit the content underneath: the
-// dashboard switcher appeared to do nothing at all. Positioning the header lifts
-// the whole subtree above main. Kept at 30 so the fixed z-50 overlays
-// (NotificationsDrawer, Modal) and the z-[100] command palette still cover it.
+// RENDERED INSIDE THE SCROLL CONTAINER, as `<main>`'s first child, stuck to the
+// top — not as a sibling above it. That is what makes its right edge line up
+// with the page's: a scrolling `<main>` loses a scrollbar's width out of its
+// content box, and a topbar outside that box cannot know how much. See
+// SHELL_HEADER_STICKY in shellStyles.ts for the measurements and for why the
+// `z-30` is still load-bearing after the move.
+//
+// The height and the horizontal gutter both come from shellStyles too: the
+// gutter MUST equal the page wrapper's or the topbar's contents stop lining up
+// with the page's, which is the whole point of the arrangement.
 
 // Ceiling on how long sign-out waits for the server to acknowledge the
 // revocation before giving up and clearing this device anyway.
@@ -126,26 +137,49 @@ export function DashboardHeader() {
   return (
     <header
       className={cn(
-        'relative z-30 flex h-16 items-center justify-between border-b border-border/[0.06] bg-bg/80 px-6 backdrop-blur-sm',
+        'flex items-center justify-between border-b border-border/[0.06] bg-bg backdrop-blur-md',
+        // `sticky top-0 z-30` — see SHELL_HEADER_STICKY.
+        //
+        // OPAQUE `bg-bg`, not the `/80` this carried as a non-sticky row. The
+        // translucency used to cost nothing because nothing ever passed behind
+        // it — the topbar sat ABOVE the scroll container. Now that page content
+        // scrolls under it, a translucent bar ghosts that content through
+        // itself: at `/80` a table row's "Independent Living" cell and its
+        // status pill were plainly legible through "Search…" and the product
+        // switcher, and at `/95` they were still faintly visible as smudges.
+        // There is no opacity that both frosts and stays clean here, so the bar
+        // is opaque.
+        //
+        // `backdrop-blur-md` is RETAINED on purpose even though an opaque
+        // background makes it invisible: `backdrop-filter` is what makes this
+        // element a containing block for fixed-position descendants, and
+        // CommandPalette (rendered from in here) portals to document.body
+        // precisely because of that. Dropping the blur would silently make that
+        // portal look redundant — see the comment in CommandPalette.tsx for the
+        // bug that reappears if someone then removes it.
+        SHELL_HEADER_STICKY,
+        SHELL_HEADER_HEIGHT,
+        SHELL_GUTTER_X,
         overlayOpen && 'invisible',
       )}
     >
-      <div className="text-[11px] uppercase tracking-[0.16em] text-muted-soft">
-        WeMarketPlus CRM
-      </div>
+      {/* One eyebrow style for the whole app — 0.16em here against 0.08em on
+          every other kicker was one of the fourteen trackings in use for this
+          single role. See typography.ts (OVERLINE). */}
+      <div className={OVERLINE}>WeMarketPlus CRM</div>
 
       {/*
-        Every control in this row is 36px tall (h-9 — the Button `sm`/`icon`
-        size), so they share one centre line and one cap height. They were
-        previously each sized by their own padding (`py-1`, `py-1.5`, `h-9`),
-        which left the search pill, the switcher, the bell and the profile chip
-        at four different heights stacked against a hairline — the "unbalanced"
-        header. The sizing now lives in each component (see GlobalSearch,
-        ProductSwitcher, NotificationsBell), not in per-instance overrides here.
+        Every control in this row is 36px tall AND wears the same hairline and
+        surface — both from HEADER_CONTROL_* in controlStyles.ts, which each
+        control imports rather than restating.
 
-        `gap-2` throughout, widening to `gap-3` before the sign-out button so the
-        session-ending control is not flush against the profile chip it is most
-        likely to be mis-clicked for.
+        The heights were already equal; the borders were not, and that was the
+        remaining half of the "unbalanced header" report. The search pill, the
+        switcher and the profile chip each carried their own copy of
+        `border-border/[0.08] bg-surface/60` while the bell and the sign-out
+        button were `ghost` Buttons with no border at all — so the row read
+        bordered, bordered, BARE, bordered, BARE, and the bell in particular
+        looked like a glyph dropped between two chips rather than a peer of them.
       */}
       <div className="flex items-center gap-2">
         <GlobalSearch />
@@ -154,7 +188,13 @@ export function DashboardHeader() {
         <ProductSwitcher />
         <NotificationsBell />
         {user && (
-          <div className="flex h-9 items-center gap-2.5 rounded-pill border border-border/[0.08] bg-surface/60 pl-1 pr-3">
+          <div
+            className={cn(
+              HEADER_CONTROL_BASE,
+              HEADER_CONTROL_HEIGHT,
+              'flex items-center gap-2.5 pl-1 pr-3',
+            )}
+          >
             <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/20 text-[11px] font-semibold text-primary">
               {initials}
             </div>
@@ -162,18 +202,22 @@ export function DashboardHeader() {
               <p className="text-[12px] font-semibold leading-none text-foreground">
                 {user.firstName} {user.lastName}
               </p>
-              <p className="mt-1 text-[10px] uppercase leading-none tracking-[0.1em] text-muted-soft">
+              <p className="mt-1 text-[10px] uppercase leading-none tracking-label text-muted-soft">
                 {roleTitle(user.role, user.customRole?.name)}
               </p>
             </div>
           </div>
         )}
+        {/* `outline`, not `ghost`. As a ghost it was the one control in the row
+            with no hit area of its own, which is what made the right end of the
+            header look like it trailed off. It keeps the quiet 600 weight, so
+            it still does not compete with a page's primary action. */}
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
           onClick={signOut}
           aria-label="Sign out"
-          className="ml-1"
+          className="ml-1 border-border/[0.08] text-muted hover:text-foreground"
         >
           <LogOut className="h-4 w-4" />
           <span className="hidden sm:inline">Sign out</span>
