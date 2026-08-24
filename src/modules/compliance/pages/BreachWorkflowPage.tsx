@@ -1,7 +1,14 @@
 import { useState } from 'react';
 import { AlertTriangle } from 'lucide-react';
-import { Button, Card, CardContent, Input, Label } from '@/shared/ui/core';
-import { cn } from '@/shared/utils/cn';
+import {
+  Button,
+  Card,
+  CardContent,
+  Input,
+  Label,
+  Select,
+  Textarea,
+} from '@/shared/ui/core';
 import { PortalShell } from '../components/PortalShell';
 import { BREACH_TYPES, TYPE_LABELS } from '../constants/portalContent';
 import { useBreachWorkflow } from '../hooks/useBreachWorkflow';
@@ -19,27 +26,33 @@ export function BreachWorkflowPage() {
     >
       <Card dense>
         <CardContent className="space-y-5 px-6 py-6">
-          <div className="rounded-[10px] border border-warning/30 bg-warning/[0.07] px-4 py-3 text-[13px] text-warning">
+          <div className="rounded-md border border-warning/30 bg-warning/[0.07] px-4 py-3 text-[13px] text-warning">
             This will: revoke all active sessions, create breach record, start the 60-day
             notification clock, and alert the compliance team.
           </div>
 
           <div className="space-y-1.5">
             <Label htmlFor="breachType">Breach Type</Label>
-            <select
+            {/*
+              <Select>, not a hand-rolled <select>. This restated CONTROL_BASE's
+              styling but sized itself with `py-[11px]` and NO height, which is
+              the exact failure controlStyles.ts exists to prevent: padding only
+              yields a matching height while both controls have matching line
+              boxes, and a select's is not an input's. Measured in the running
+              app it came out 40.87px against the 43.99px <Input> two fields
+              below it — two stacked fields in one form, 3px apart.
+            */}
+            <Select
               id="breachType"
               value={breachType}
               onChange={(e) => setBreachType(e.target.value)}
-              className={cn(
-                'w-full rounded-[10px] border border-border/[0.12] bg-surface-raised px-3.5 py-[11px] text-[14px] text-foreground outline-none focus:border-primary',
-              )}
             >
               {BREACH_TYPES.map((t) => (
                 <option key={t} value={t}>
                   {TYPE_LABELS[t]}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           <div className="space-y-1.5">
@@ -55,16 +68,18 @@ export function BreachWorkflowPage() {
 
           <div className="space-y-1.5">
             <Label htmlFor="desc">Description</Label>
-            <textarea
+            {/* <Textarea> — this was a verbatim copy of that component's class
+                string, which is one more place for the field language to drift
+                from the one that owns it. */}
+            <Textarea
               id="desc"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={4}
-              className="w-full resize-y rounded-[10px] border border-border/[0.12] bg-surface-raised px-3.5 py-2.5 text-[14px] text-foreground outline-none placeholder:text-faint focus:border-primary"
             />
           </div>
 
-          <div className="rounded-[10px] border border-destructive/30 bg-destructive/[0.07] px-4 py-3 text-[13px] text-destructive">
+          <div className="rounded-md border border-destructive/30 bg-destructive/[0.07] px-4 py-3 text-[13px] text-destructive">
             ⚠️ This action is irreversible and will be permanently logged. Only initiate
             for confirmed breaches.
           </div>

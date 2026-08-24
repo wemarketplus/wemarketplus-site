@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Crosshair, Loader2, MapPin, Search } from 'lucide-react';
+import { Crosshair, Loader2, MapPin } from 'lucide-react';
 import { useDebounce, useGpsCapture } from '@/shared/hooks';
-import { Button, Input, Label } from '@/shared/ui/core';
+import { Button, Input, Label, SearchInput } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import { cn } from '@/shared/utils/cn';
 import {
@@ -190,7 +190,7 @@ export function LocationPickerModal({
       size="lg"
       footer={
         <>
-          <Button variant="ghost" onClick={onClose}>
+          <Button variant="secondary" onClick={onClose}>
             Cancel
           </Button>
           <Button onClick={confirm} disabled={!coords}>
@@ -205,13 +205,27 @@ export function LocationPickerModal({
             would otherwise collapse its margin against the label's. */}
         <div className="flex flex-col space-y-1.5">
           <Label htmlFor="location-search">Search for an address or place</Label>
+          {/*
+            <SearchInput>, not a hand-rolled search field. This was the last
+            copy of that markup in the app and it had drifted on both of the
+            things SearchInput exists to pin down:
+
+              · the icon was centred with `top-1/2 -translate-y-1/2`, which
+                rounds to a half-pixel at some zoom levels and heights — the
+                faint "search icon sits a hair high" misalignment SearchInput's
+                `inset-y-0` + flex centring avoids;
+              · the glyph was `text-muted-soft`, a step lighter than the
+                `text-muted` every other search field in the app uses.
+
+            So the one search field inside a dialog looked subtly different from
+            the nineteen on the list pages behind it.
+          */}
           <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-soft" />
-            <Input
+            <SearchInput
               id="location-search"
               value={query}
-              onChange={(event) => {
-                setQuery(event.target.value);
+              onChange={(next) => {
+                setQuery(next);
                 setShowResults(true);
               }}
               // Enter must not submit anything: results arrive on their own, and
@@ -220,16 +234,23 @@ export function LocationPickerModal({
                 if (event.key === 'Enter') event.preventDefault();
               }}
               placeholder="Mercy General Hospital, 4001 J St…"
-              className="pl-9"
               autoComplete="off"
+              // SearchInput already reserves `pr-9` for its own clear button
+              // once there is a value. While a lookup is in flight the spinner
+              // needs a second slot of the same width beside it, or the two
+              // land on top of each other.
+              className={isSearching ? 'pr-[4.5rem]' : undefined}
             />
             {isSearching && (
-              <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-soft" />
+              // `right-9` = just left of the clear button's 36px slot. Centred
+              // with `inset-y-0` + `my-auto`, the same way SearchInput centres
+              // its own two glyphs, so all three agree on the centre line.
+              <Loader2 className="pointer-events-none absolute inset-y-0 right-9 my-auto h-4 w-4 animate-spin text-muted" />
             )}
           </div>
 
           {showResults && canSearch && (
-            <div className="max-h-44 overflow-y-auto rounded-[10px] border border-border/[0.12] bg-surface-raised">
+            <div className="max-h-44 overflow-y-auto rounded-md border border-border/[0.12] bg-surface-raised">
               {(results ?? []).map((place) => (
                 <button
                   key={place.id}
@@ -279,7 +300,7 @@ export function LocationPickerModal({
         </div>
         {gpsError && <p className="text-[11px] text-warning">{gpsError}</p>}
 
-        <div className="space-y-1.5 rounded-[12px] border border-border/[0.1] bg-surface p-3.5">
+        <div className="space-y-1.5 rounded-lg border border-border/[0.1] bg-surface p-3.5">
           <Label htmlFor="location-label">Saved as</Label>
           {/* Editable on purpose. The geocoder's answer for the office car park
               is a street address; what belongs on an expense claim is "Office".

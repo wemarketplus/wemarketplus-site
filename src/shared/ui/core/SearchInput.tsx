@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 import { Search, X } from 'lucide-react';
 import { Input, type InputProps } from './Input';
+import { CONTROL_ICON_INSET, CONTROL_ICON_PADDING } from './controlStyles';
 import { cn } from '@/shared/utils/cn';
 
 export interface SearchInputProps extends Omit<InputProps, 'value' | 'onChange' | 'type'> {
@@ -33,7 +34,14 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     ref,
   ) => (
     <div className={cn('relative', wrapperClassName)}>
-      <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
+      {/* Inset and the padding that reserves room for it are ONE pair from
+          controlStyles, not two literals that have to be kept in step. */}
+      <span
+        className={cn(
+          'pointer-events-none absolute inset-y-0 flex items-center',
+          CONTROL_ICON_INSET,
+        )}
+      >
         <Search className="h-4 w-4 text-muted" />
       </span>
       <Input
@@ -41,7 +49,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className={cn('pl-9', value && 'pr-9', className)}
+        className={cn(CONTROL_ICON_PADDING, value && 'pr-9', className)}
         {...props}
       />
       {value && (
