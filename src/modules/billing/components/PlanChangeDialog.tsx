@@ -53,13 +53,15 @@ export function PlanChangeDialog({
       footer={
         <>
           {/*
-            `ghost`, not `secondary` — the same pairing ConfirmDialog uses, so
-            every confirm footer in the app has one filled action and one quiet
-            way out. Cancel does not need a border to be findable next to a
-            solid green pill, and giving it one made the footer read as two
-            equal choices.
+            `secondary` — the same pairing ConfirmDialog uses, so every confirm
+            footer in the app has one filled action and one quiet way out.
+
+            This was `ghost` on the reasoning that Cancel "does not need a border
+            to be findable next to a solid green pill". It does: borderless muted
+            type on white reads as disabled, which is the low-visibility Cancel QA
+            reported on the sign-out confirm. See ConfirmDialog for the full note.
           */}
-          <Button variant="ghost" onClick={onCancel} disabled={applying}>
+          <Button variant="secondary" onClick={onCancel} disabled={applying}>
             Cancel
           </Button>
           {/*

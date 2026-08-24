@@ -73,7 +73,7 @@ export function ApartmentFormModal({
       size="md"
       footer={
         <>
-          <Button variant="ghost" onClick={close} disabled={isSaving}>
+          <Button variant="secondary" onClick={close} disabled={isSaving}>
             Cancel
           </Button>
           <Button onClick={submit} disabled={isSaving}>

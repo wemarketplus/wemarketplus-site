@@ -29,7 +29,7 @@ export function DisqualifyLeadModal({
       title="Disqualify lead"
       footer={
         <>
-          <Button variant="ghost" onClick={onClose} disabled={isSaving}>
+          <Button variant="secondary" onClick={onClose} disabled={isSaving}>
             Cancel
           </Button>
           <Button onClick={() => onConfirm(reason)} disabled={isSaving}>

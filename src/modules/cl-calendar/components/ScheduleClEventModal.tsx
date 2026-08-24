@@ -131,7 +131,7 @@ export function ScheduleClEventModal({
       size="md"
       footer={
         <>
-          <Button variant="ghost" onClick={onClose} disabled={isSaving}>
+          <Button variant="secondary" onClick={onClose} disabled={isSaving}>
             Cancel
           </Button>
           <Button onClick={submit} disabled={isSaving}>
@@ -158,7 +158,7 @@ export function ScheduleClEventModal({
                   changeKind(choice.value as ClScheduleFormValues['kind'])
                 }
                 className={cn(
-                  'rounded-[10px] border px-3 py-2.5 text-left transition-colors',
+                  'rounded-md border px-3 py-2.5 text-left transition-colors',
                   kind === choice.value
                     ? 'border-primary/50 bg-primary/[0.07]'
                     : 'border-border/[0.12] hover:border-border/25',

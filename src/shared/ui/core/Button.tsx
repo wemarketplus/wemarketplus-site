@@ -3,8 +3,10 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/shared/utils/cn';
 
 // Mirrors wemarketplus-site `.btn-login` / `.btn-main`: pill-shaped, primary
-// accent fill with dark text, weight 800, hover via opacity .88. The accent
-// is `--color-primary` so a [data-product] scope recolors it (azure ↔ amber).
+// accent fill with dark text, hover via opacity .88. The accent is
+// `--color-primary` so a [data-product] scope recolors it (azure ↔ amber).
+// The marketing site draws these at weight 800; in the app they are 700 — see
+// the note below for why that one property deliberately does not mirror.
 //
 // WEIGHT IS PER-VARIANT, not shared. `font-extrabold` used to sit in the base
 // string below, so the 800 that belongs to the site's primary CTA was also
@@ -13,8 +15,18 @@ import { cn } from '@/shared/utils/cn';
 // footer then shouted equally loudly and the footer had no primary action, only
 // two of them: the "Cancel and Confirm should not both appear excessively bold"
 // report. The affordance the fill and the border already encode does not also
-// need the weight, so only the variants that FILL themselves keep 800 and the
-// quiet ones step down to 600.
+// need the weight, so the quiet variants step down to 600.
+//
+// THE FILLED VARIANTS ARE 700, NOT 800, and that half of the same report went
+// unfixed the first time round. Stepping only the quiet variants down closed the
+// gap from the wrong end: the footer went from 800-vs-800 to 800-vs-600, so the
+// filled action still shouted on its own and the SAME complaint came back twice
+// more — "Save Changes text is excessively bold" on My Profile, "Cancel and
+// Confirm Changes are excessively bold" in the plan-switch popup. 800 is a
+// display weight; on a 14px label inside a solid pill it renders heavier than
+// anything else on the page, the h1 included. 700 against 600 still reads as the
+// louder of the two, and the FILL is what actually marks the primary action —
+// the weight only has to agree with it, not carry it alone.
 //
 // `whitespace-nowrap` is STRUCTURAL, not typographic. Every size below pins an
 // explicit height (h-9/h-11/h-12), so a label that wraps does not make its
@@ -32,11 +44,11 @@ const buttonVariants = cva(
       variant: {
         // .btn-login / .btn-main — solid accent pill, dark text
         primary:
-          'rounded-pill bg-primary font-extrabold text-primary-foreground hover:opacity-[0.88]',
+          'rounded-pill bg-primary font-bold text-primary-foreground hover:opacity-[0.88]',
         // reset-password.html gradient. Retuned for the light theme: the old
         // #49b6ff→#8cff66 ramp was a dark-canvas accent and washed out on white.
         gradient:
-          'rounded-pill font-extrabold text-primary-foreground hover:opacity-[0.88] bg-[linear-gradient(90deg,#0f5c44,#16805c)]',
+          'rounded-pill font-bold text-primary-foreground hover:opacity-[0.88] bg-[linear-gradient(90deg,#0f5c44,#16805c)]',
         // subtle filled secondary used across the site
         secondary:
           'rounded-pill border border-border/[0.12] bg-surface-raised font-semibold text-foreground hover:border-border/25',
@@ -45,7 +57,7 @@ const buttonVariants = cva(
         ghost:
           'rounded-pill bg-transparent font-semibold text-muted hover:text-foreground hover:bg-foreground/[0.05]',
         destructive:
-          'rounded-pill bg-destructive font-extrabold text-destructive-foreground hover:opacity-[0.88]',
+          'rounded-pill bg-destructive font-bold text-destructive-foreground hover:opacity-[0.88]',
         link: 'bg-transparent font-semibold text-primary hover:underline underline-offset-4',
       },
       size: {
