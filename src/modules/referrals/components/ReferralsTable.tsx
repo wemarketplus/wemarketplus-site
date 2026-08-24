@@ -63,7 +63,27 @@ const buildColumns = (
       </span>
     ),
   },
-  { key: 'territory', header: 'Territory', cell: (r) => r.territoryArea ?? '—' },
+  {
+    /**
+     * CITY / STATE, named for what it actually holds.
+     *
+     * The header used to say "Territory", but `territoryArea` on a live account
+     * is built by mapReferralSource as `[city, state].join(', ')` — it is the
+     * address the Add/Edit form's City and State inputs write, not the
+     * `territoryId` territory the record separately points at. So a marketer who
+     * typed a city into the form had nowhere on this screen that said "City":
+     * the value was on the row all along, filed under a heading naming a
+     * different concept, which is how "the City column is missing" gets reported
+     * against a column that is right there.
+     *
+     * "City / State" rather than two columns because that is the one fact the
+     * pair answers (where is this account?), and it matches the wording the
+     * locations table already uses for the same pair.
+     */
+    key: 'territory',
+    header: 'City / State',
+    cell: (r) => r.territoryArea ?? '—',
+  },
   {
     key: 'actions',
     header: '',
