@@ -50,6 +50,8 @@ export default {
         DEFAULT: 'var(--radius)',
         md: 'var(--radius)',
         lg: 'var(--radius-lg)',
+        // The card/panel/modal surface. See --radius-card in index.css.
+        card: 'var(--radius-card)',
         xl: 'var(--radius-xl)',
         pill: 'var(--radius-pill)',
       },
@@ -58,6 +60,15 @@ export default {
         // alias so existing `font-display` headings keep rendering.
         sans: ['"Segoe UI"', 'system-ui', '-apple-system', 'Arial', 'sans-serif'],
         display: ['"Segoe UI"', 'system-ui', '-apple-system', 'Arial', 'sans-serif'],
+      },
+      letterSpacing: {
+        // The ONE tracking for uppercase eyebrows, kickers and table column
+        // headers. Fourteen different values (0.02em … 0.16em) were in use for
+        // that single visual role, which is why two labels on adjacent cards
+        // never quite looked like the same style. 0.08em was the most common of
+        // the fourteen, so this is the majority value promoted to a token
+        // rather than a new number. See shared/ui/core/typography.ts (OVERLINE).
+        label: '0.08em',
       },
       borderColor: {
         // Default border uses semi-transparent white per site convention.
