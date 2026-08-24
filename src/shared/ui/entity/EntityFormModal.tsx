@@ -38,7 +38,13 @@ export function EntityFormModal<TValues extends FieldValues>({
       size="lg"
       footer={
         <>
-          <Button variant="ghost" onClick={onClose} disabled={isSaving}>
+          {/*
+            `secondary`, NOT `ghost` — the app's standard quiet button, so Cancel
+            wears a visible hairline + raised wash instead of borderless muted
+            type on white, which reads as disabled next to the filled submit.
+            Same report, same fix as ConfirmDialog; see the note there.
+          */}
+          <Button variant="secondary" onClick={onClose} disabled={isSaving}>
             Cancel
           </Button>
           <Button onClick={onSubmit} disabled={isSaving}>
@@ -47,7 +53,18 @@ export function EntityFormModal<TValues extends FieldValues>({
         </>
       }
     >
-      <form onSubmit={onSubmit} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {/*
+        Form-level `off` as well as per-field: some browsers consult only the
+        form when deciding whether to run profile autofill at all, and a field
+        that opts in with a real token still wins over this (the spec resolves
+        the nearest declaration). Belt and braces, because the failure mode is
+        silent — a value changes and nothing in the app did it.
+      */}
+      <form
+        onSubmit={onSubmit}
+        autoComplete="off"
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+      >
         {fields.map((field) => (
           <EntityFieldControl
             key={field.name}
@@ -142,6 +159,20 @@ function EntityFieldControl<TValues extends FieldValues>({
     // instead and is deliberately excluded — a value the user cannot set is
     // not a field they can be required to fill.
     ...(field.required ? { 'aria-required': true } : {}),
+    /**
+     * Browser autofill is OFF unless the field opts in. Same reasoning as
+     * `aria-required` for the placement: it has to reach every branch below, so
+     * it rides on `control` rather than being repeated five times.
+     *
+     * An entity form describes another RECORD, not the person typing, so the
+     * browser's profile has nothing right to offer — and left unlabelled it does
+     * not stay quiet, it guesses. A form carrying a name + phone + email reads to
+     * Chrome as an address form, at which point its profile heuristics are
+     * applied to every control in the form including the `<select>`s, which is
+     * how the Leads pipeline's Stage changed on its own during an autofill. See
+     * EntityField.autoComplete.
+     */
+    autoComplete: field.autoComplete ?? 'off',
   };
 
   // A place picker owns its own label and writes THREE values (the name and the
