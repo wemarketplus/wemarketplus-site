@@ -54,7 +54,7 @@ export function DailyGoalsView() {
               <Card key={g.id}>
                 <CardContent className="space-y-3 px-5 py-5">
                   <div className="flex items-start justify-between gap-2">
-                    <p className="text-[10px] uppercase tracking-[0.14em] text-muted-soft">
+                    <p className="text-[10px] uppercase tracking-label text-muted-soft">
                       {g.label}
                     </p>
                     {canEdit && (

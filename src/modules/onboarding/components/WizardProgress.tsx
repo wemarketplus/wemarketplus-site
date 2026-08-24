@@ -15,10 +15,10 @@ export function WizardProgress({ current }: WizardProgressProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-soft">
+        <p className="text-[11px] font-semibold uppercase tracking-label text-muted-soft">
           Step {currentIndex + 1} of {STEP_ORDER.length}
         </p>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
+        <p className="text-[11px] font-semibold uppercase tracking-label text-primary">
           {Math.round(progress)}% complete
         </p>
       </div>
@@ -52,7 +52,7 @@ export function WizardProgress({ current }: WizardProgressProps) {
               >
                 {done ? <Check className="h-3.5 w-3.5" /> : i + 1}
               </span>
-              <span className="text-[10px] uppercase tracking-[0.1em]">
+              <span className="text-[10px] uppercase tracking-label">
                 {STEP_LABELS[step]}
               </span>
             </li>

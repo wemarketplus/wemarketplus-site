@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { Alert, DataTable, Pill, SectionHeader } from '@/shared/ui/data-display';
@@ -126,7 +127,7 @@ export function ReferralScorecardPage() {
     <div className="space-y-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-display text-3xl text-foreground">
+          <h1 className={PAGE_TITLE}>
             Referral source scorecard
           </h1>
           <p className="text-sm text-muted">
@@ -141,7 +142,7 @@ export function ReferralScorecardPage() {
               type="button"
               onClick={() => dispatch(setIntelligenceRange(r.value))}
               className={cn(
-                'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
+                'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-label transition-colors',
                 range === r.value
                   ? 'border-primary/40 bg-primary/15 text-primary'
                   : 'border-border/[0.08] text-muted hover:border-border/20 hover:text-foreground',
@@ -188,7 +189,7 @@ export function ReferralScorecardPage() {
             title={`Why ${expandedRow.name} scores ${expandedRow.score.toFixed(1)}`}
             subtitle="Each factor is a signed adjustment to a neutral 5.5 baseline. The rubric is fixed and documented — this is not a model."
           />
-          <div className="rounded-[14px] border border-border/[0.09] bg-surface">
+          <div className="rounded-card border border-border/[0.09] bg-surface">
             {expandedRow.factors.length === 0 ? (
               <p className="px-5 py-4 text-sm text-muted">
                 No factors applied — this account scores the neutral baseline.

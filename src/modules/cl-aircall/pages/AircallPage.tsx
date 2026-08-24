@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { useMemo, useState } from 'react';
 import { MessageSquare, Mail } from 'lucide-react';
 import { Button, Card, CardContent, Input, Select } from '@/shared/ui/core';
@@ -79,7 +80,7 @@ export function AircallPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-display text-3xl text-foreground">Aircall — Call · Text · Email</h1>
+        <h1 className={PAGE_TITLE}>Aircall — Call · Text · Email</h1>
         <p className="text-sm text-muted">
           Compose a text or email from a template and log it to the lead&apos;s activity timeline.
         </p>

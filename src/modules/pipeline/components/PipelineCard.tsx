@@ -52,7 +52,7 @@ export function PipelineCard({
         <p className="truncate text-[11px] text-muted">{card.facilityName}</p>
       )}
       <div className="flex items-center justify-between gap-2">
-        <p className="text-[10px] uppercase tracking-[0.08em] text-muted-soft">
+        <p className="text-[10px] uppercase tracking-label text-muted-soft">
           {card.stageEnteredAt
             ? `In stage since ${formatDate(card.stageEnteredAt)}`
             : 'Stage not yet stamped'}

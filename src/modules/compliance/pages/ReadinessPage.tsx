@@ -20,12 +20,12 @@ export function ReadinessPage() {
             <p className="font-display text-6xl font-black leading-none text-azure">
               {readiness.score}
             </p>
-            <p className="mt-1 text-[13px] uppercase tracking-[0.1em] text-muted">
+            <p className="mt-1 text-[13px] uppercase tracking-label text-muted">
               Rating {readiness.rating}
             </p>
             <span
               className={cn(
-                'mt-3 rounded-pill border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em]',
+                'mt-3 rounded-pill border px-3 py-1 text-[11px] font-semibold uppercase tracking-label',
                 auditReady
                   ? 'border-success/30 bg-success/10 text-success'
                   : 'border-warning/30 bg-warning/10 text-warning',
@@ -39,7 +39,7 @@ export function ReadinessPage() {
         <Card dense className="lg:col-span-2">
           <CardContent className="px-0 pt-0 pb-0">
             <table className="w-full text-[13px]">
-              <thead className="bg-foreground/[0.02] text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+              <thead className="bg-foreground/[0.02] text-[10px] uppercase tracking-label text-muted-soft">
                 <tr>
                   <th className="px-4 py-3 text-left">Control</th>
                   <th className="px-4 py-3 text-left">Score</th>

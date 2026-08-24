@@ -7,7 +7,7 @@ export function OccupancyHero({ apartments }: { apartments: readonly Apartment[]
   return (
     <Card>
       <CardContent className="space-y-1 px-6 py-5">
-        <p className="text-[10px] uppercase tracking-[0.14em] text-muted-soft">
+        <p className="text-[10px] uppercase tracking-label text-muted-soft">
           Occupancy
         </p>
         <p className="font-display text-4xl leading-none text-foreground">

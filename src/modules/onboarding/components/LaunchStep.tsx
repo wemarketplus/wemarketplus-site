@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { Check, MailCheck, Rocket } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/shared/ui/core';
@@ -28,7 +29,7 @@ export function LaunchStep() {
           <MailCheck className="h-6 w-6" />
         </div>
         <div className="space-y-1">
-          <h2 className="font-display text-3xl text-foreground">Check your email</h2>
+          <h2 className={PAGE_TITLE}>Check your email</h2>
           <p className="text-sm text-muted">
             We sent a verification link to{' '}
             <span className="font-semibold text-foreground">
@@ -57,7 +58,7 @@ export function LaunchStep() {
         <Rocket className="h-6 w-6" />
       </div>
       <div className="space-y-1">
-        <h2 className="font-display text-3xl text-foreground">You're live</h2>
+        <h2 className={PAGE_TITLE}>You're live</h2>
         <p className="text-sm text-muted">
           Your workspace is provisioned and ready to go.
         </p>

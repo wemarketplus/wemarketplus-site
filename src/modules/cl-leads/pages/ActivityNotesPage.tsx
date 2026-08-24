@@ -1,3 +1,4 @@
+import { PAGE_TITLE, SECTION_TITLE } from '@/shared/ui/core/typography';
 import { useMemo, useState } from 'react';
 import { NotebookPen } from 'lucide-react';
 import { CL_SALES_ROLES, useRole } from '@/shared/rbac';
@@ -84,7 +85,7 @@ export function ActivityNotesPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-display text-3xl text-foreground">Activity notes</h1>
+        <h1 className={PAGE_TITLE}>Activity notes</h1>
         <p className="text-sm text-muted">
           {canReadLeads
             ? 'General notes, and every call, visit and touchpoint you attach to a lead.'
@@ -94,7 +95,7 @@ export function ActivityNotesPage() {
 
       <Card>
         <CardContent className="space-y-3 pt-6">
-          <h2 className="text-sm font-bold text-foreground">Add activity note</h2>
+          <h2 className={SECTION_TITLE}>Add activity note</h2>
           {saveError && (
             <p className="rounded-md border border-destructive/40 bg-destructive/10 px-3.5 py-2.5 text-sm text-destructive">
               {extractApiErrorMessage(saveError, 'Failed to save note')}
@@ -142,7 +143,7 @@ export function ActivityNotesPage() {
               Failed to load activity notes.
             </p>
           ) : isLoading ? (
-            <div className="rounded-[14px] border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
+            <div className="rounded-card border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
               Loading…
             </div>
           ) : notes.length === 0 ? (
@@ -153,7 +154,7 @@ export function ActivityNotesPage() {
             />
           ) : (
             notes.map((n) => (
-              <div key={n.id} className="rounded-[14px] border border-border/[0.08] bg-surface px-4 py-3.5">
+              <div key={n.id} className="rounded-card border border-border/[0.08] bg-surface px-4 py-3.5">
                 <div className="mb-1.5 flex flex-wrap items-center justify-between gap-1.5">
                   <span className="text-[12px] font-bold text-foreground">{leadLabel(n.leadId)}</span>
                   <span className="text-[11px] text-muted-soft">

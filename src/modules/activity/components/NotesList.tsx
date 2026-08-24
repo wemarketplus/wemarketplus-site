@@ -212,7 +212,7 @@ export function NotesList() {
                   <span className="font-semibold">Next step: </span>
                   {n.nextStep}
                 </p>
-                <p className="text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+                <p className="text-[10px] uppercase tracking-label text-muted-soft">
                   {formatDateTime(n.date)} · {n.assignedTo}
                 </p>
               </CardContent>

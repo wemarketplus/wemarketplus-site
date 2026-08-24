@@ -7,6 +7,7 @@ import {
   useUpdateFeatureFlagMutation,
 } from '../api/featureFlagsApi';
 import type { FeatureFlag } from '../types/featureFlagsApiTypes';
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 
 // SuperAdmin screen to manage runtime feature flags: list every flag and toggle
 // its global default. Per-tenant overrides are shown read-only (a count) since
@@ -36,7 +37,7 @@ export function FeatureFlagsPage() {
           <Flag className="h-5 w-5" />
         </div>
         <div>
-          <h1 className="font-display text-3xl leading-tight text-foreground">
+          <h1 className={PAGE_TITLE}>
             Feature flags
           </h1>
           <p className="mt-1 max-w-2xl text-sm text-muted">
@@ -63,7 +64,7 @@ export function FeatureFlagsPage() {
           <button
             type="button"
             onClick={() => refetch()}
-            className="rounded-pill border border-border/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-foreground"
+            className="rounded-pill border border-border/20 px-3 py-1 text-xs font-semibold uppercase tracking-label text-foreground"
           >
             Retry
           </button>

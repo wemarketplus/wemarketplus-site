@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { useState } from 'react';
 import { DownloadCloud, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
@@ -54,7 +55,7 @@ export function DataExportTab() {
               <DownloadCloud className="h-4 w-4" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-foreground">
+              <h2 className={SECTION_TITLE}>
                 Export your organization's data
               </h2>
               <p className="mt-1 text-sm text-muted">
@@ -65,8 +66,8 @@ export function DataExportTab() {
             </div>
           </div>
 
-          <div className="rounded-[9px] border border-border/[0.08] bg-surface p-4">
-            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-soft">
+          <div className="rounded-md border border-border/[0.08] bg-surface p-4">
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-label text-muted-soft">
               What's included
             </p>
             <ul className="grid grid-cols-1 gap-1.5 text-sm text-muted sm:grid-cols-2">

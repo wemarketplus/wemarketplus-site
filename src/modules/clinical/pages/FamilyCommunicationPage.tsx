@@ -8,6 +8,7 @@ import {
 import { Button, Card, CardContent, Label, Select } from '@/shared/ui/core';
 import { formatDateTime } from '@/shared/utils/dateFormatter';
 import { useFamilyCommunication } from '../hooks/useFamilyCommunication';
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 
 /**
  * Family Communication — the log of every conversation held with a patient's
@@ -51,7 +52,7 @@ export function FamilyCommunicationPage() {
           <MessagesSquare className="h-5 w-5" />
         </div>
         <div>
-          <h1 className="font-display text-3xl leading-tight text-foreground">
+          <h1 className={PAGE_TITLE}>
             Family communication
           </h1>
           <p className="mt-1 max-w-2xl text-sm text-muted">
@@ -148,11 +149,11 @@ export function FamilyCommunicationPage() {
                           speaks to the family next, and they need to know before
                           they repeat something back. */}
                       {entry.isFamilySensitive && (
-                        <span className="rounded-sm bg-warning/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-warning ring-1 ring-warning/25">
+                        <span className="rounded-sm bg-warning/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-label text-warning ring-1 ring-warning/25">
                           Team only
                         </span>
                       )}
-                      <span className="text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+                      <span className="text-[10px] uppercase tracking-label text-muted-soft">
                         {formatDateTime(entry.createdAt)}
                       </span>
                     </div>

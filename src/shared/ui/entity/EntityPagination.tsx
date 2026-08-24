@@ -35,7 +35,7 @@ export function EntityPagination({
    * of "present" versus "faded away".
    */
   const btn =
-    'rounded-pill border px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors ' +
+    'rounded-pill border px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-label transition-colors ' +
     'border-border/[0.14] text-muted hover:border-border/30 hover:bg-foreground/[0.04] hover:text-foreground ' +
     'disabled:cursor-not-allowed disabled:border-border/[0.08] disabled:bg-transparent disabled:text-muted-soft ' +
     'disabled:hover:border-border/[0.08] disabled:hover:bg-transparent disabled:hover:text-muted-soft';
@@ -58,7 +58,7 @@ export function EntityPagination({
 
   return (
     <div className="flex items-center justify-between text-xs text-muted-soft">
-      <span className="uppercase tracking-[0.1em]">
+      <span className="uppercase tracking-label">
         Page {page} of {lastPage}
         {isFetching && page > 1 ? ' · refreshing…' : ''}
       </span>

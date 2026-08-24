@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { Flame } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { CL_LEAD_STAGE, type ClLeadRecord } from '@/modules/cl-leads';
@@ -34,11 +35,11 @@ export function ClHotLeadsPanel({ leads }: { leads: readonly ClLeadRecord[] }) {
     <Card>
       <CardContent className="px-0 pb-0 pt-0">
         <header className="flex flex-wrap items-center gap-3 px-6 py-4">
-          <span className="rounded-[10px] bg-destructive/[0.10] p-2 text-destructive">
+          <span className="rounded-md bg-destructive/[0.10] p-2 text-destructive">
             <Flame className="h-4 w-4" />
           </span>
           <div className="min-w-0 flex-1">
-            <h2 className="text-sm font-semibold text-foreground">Hot leads</h2>
+            <h2 className={SECTION_TITLE}>Hot leads</h2>
             <p className="text-[11px] text-muted-soft">
               Work these first — they need attention today.
             </p>

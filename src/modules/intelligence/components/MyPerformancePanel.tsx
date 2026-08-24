@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { Trophy } from 'lucide-react';
 import { Card, CardContent } from '@/shared/ui/core';
 import { Pill, StatTile } from '@/shared/ui/data-display';
@@ -33,11 +34,11 @@ export function MyPerformancePanel() {
     <Card>
       <CardContent className="space-y-5 px-6 py-5">
         <header className="flex items-center gap-3">
-          <span className="rounded-[10px] bg-gold/[0.12] p-2 text-gold">
+          <span className="rounded-md bg-gold/[0.12] p-2 text-gold">
             <Trophy className="h-4 w-4" />
           </span>
           <div>
-            <h2 className="text-sm font-semibold text-foreground">
+            <h2 className={SECTION_TITLE}>
               Your performance
             </h2>
             <p className="text-[11px] text-muted-soft">
@@ -67,7 +68,7 @@ export function MyPerformancePanel() {
 
         {data.standings.length > 1 && (
           <div>
-            <p className="mb-2 text-[10px] uppercase tracking-[0.14em] text-muted-soft">
+            <p className="mb-2 text-[10px] uppercase tracking-label text-muted-soft">
               Team standings
             </p>
             <ul className="divide-y divide-border">

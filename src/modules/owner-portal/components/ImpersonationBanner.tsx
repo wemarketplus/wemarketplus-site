@@ -43,7 +43,7 @@ export function ImpersonationBanner() {
         type="button"
         onClick={onExit}
         disabled={isStopping}
-        className="inline-flex items-center gap-1.5 rounded-pill border border-amber-400/40 px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-amber-100 transition-colors hover:border-amber-300 hover:text-white disabled:opacity-50"
+        className="inline-flex items-center gap-1.5 rounded-pill border border-amber-400/40 px-3 py-1 text-xs font-semibold uppercase tracking-label text-amber-100 transition-colors hover:border-amber-300 hover:text-white disabled:opacity-50"
       >
         <LogOut className="h-3.5 w-3.5" />
         {isStopping ? 'Exiting…' : 'Exit'}

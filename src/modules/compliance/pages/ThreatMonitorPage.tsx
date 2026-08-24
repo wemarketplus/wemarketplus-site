@@ -55,7 +55,7 @@ export function ThreatMonitorPage() {
           <Card dense className="mt-4">
             <CardContent className="px-0 pt-0 pb-0">
               <header className="px-6 py-4">
-                <p className="text-[10px] uppercase tracking-[0.14em] text-muted-soft">
+                <p className="text-[10px] uppercase tracking-label text-muted-soft">
                   Recent security events
                 </p>
               </header>
@@ -75,7 +75,7 @@ export function ThreatMonitorPage() {
                         </p>
                         <p className="text-xs text-muted">{e.detail}</p>
                       </div>
-                      <span className="shrink-0 text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+                      <span className="shrink-0 text-[10px] uppercase tracking-label text-muted-soft">
                         {formatDateTime(e.occurredAt)}
                       </span>
                     </li>

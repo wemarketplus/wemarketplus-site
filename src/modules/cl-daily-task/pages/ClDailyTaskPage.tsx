@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { CalendarCheck, Clock, PhoneCall } from 'lucide-react';
 import { QueueSection } from '@/modules/daily-queue';
 import { ClQueueRow } from '@/modules/cl-dashboard';
@@ -50,7 +51,7 @@ export function ClDailyTaskPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-display text-3xl text-foreground">Daily task</h1>
+        <h1 className={PAGE_TITLE}>Daily task</h1>
         <p className="text-sm text-muted">
           {totalItems === 0
             ? "Nothing needs you today — you're clear."

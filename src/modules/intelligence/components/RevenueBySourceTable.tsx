@@ -12,7 +12,7 @@ const columns: ReadonlyArray<Column<RevenueBySource>> = [
       <div>
         <span className="font-bold text-foreground">{row.name}</span>
         {row.priorityTier && (
-          <span className="block text-[11px] uppercase tracking-[0.08em] text-muted-soft">
+          <span className="block text-[11px] uppercase tracking-label text-muted-soft">
             Tier {row.priorityTier}
           </span>
         )}

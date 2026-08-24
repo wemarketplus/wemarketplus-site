@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { CheckCircle2 } from 'lucide-react';
 import { Button, Card, CardContent, Input, Label, Logo, Textarea } from '@/shared/ui/core';
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import {
   useResolvePortalQuery,
   useSubmitPortalReferralMutation,
@@ -72,7 +73,7 @@ export function PublicReferralFormPage() {
       ) : isError || !context ? (
         <Card>
           <CardContent className="space-y-2 px-6 py-8">
-            <h1 className="text-lg font-semibold text-foreground">
+            <h1 className={SECTION_TITLE}>
               This referral link is no longer available
             </h1>
             <p className="text-sm text-muted">
@@ -84,7 +85,7 @@ export function PublicReferralFormPage() {
         <Card>
           <CardContent className="space-y-3 px-6 py-8 text-center">
             <CheckCircle2 className="mx-auto h-10 w-10 text-success" />
-            <h1 className="text-lg font-semibold text-foreground">
+            <h1 className={SECTION_TITLE}>
               Referral received
             </h1>
             <p className="text-sm text-muted">{receipt}</p>
@@ -94,7 +95,7 @@ export function PublicReferralFormPage() {
         <Card>
           <CardContent className="space-y-5 px-6 py-7">
             <header className="space-y-1">
-              <h1 className="font-display text-2xl text-foreground">
+              <h1 className={SECTION_TITLE}>
                 Refer a patient
               </h1>
               <p className="text-sm text-muted">

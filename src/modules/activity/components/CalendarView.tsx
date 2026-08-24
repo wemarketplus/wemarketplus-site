@@ -11,7 +11,7 @@ export function CalendarView() {
     <Card>
       <CardContent className="px-0 pt-0 pb-0">
         <header className="px-6 py-4">
-          <p className="text-[10px] uppercase tracking-[0.14em] text-muted-soft">
+          <p className="text-[10px] uppercase tracking-label text-muted-soft">
             Upcoming follow-ups
           </p>
         </header>
@@ -35,7 +35,7 @@ export function CalendarView() {
                   <p className="text-sm font-semibold text-foreground">{e.name}</p>
                   <p className="mt-0.5 text-xs text-muted">{e.nextStep}</p>
                 </div>
-                <span className="shrink-0 text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+                <span className="shrink-0 text-[10px] uppercase tracking-label text-muted-soft">
                   {formatDate(e.followUpDate)}
                 </span>
               </li>

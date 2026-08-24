@@ -52,7 +52,7 @@ export function PipelineColumn({
       <CardContent className="flex h-full flex-col gap-3 px-4 py-4">
         <header className="flex items-center justify-between">
           <span
-            className={`rounded-pill border px-2.5 py-0.5 text-[10px] uppercase tracking-[0.08em] ${stageTone(
+            className={`rounded-pill border px-2.5 py-0.5 text-[10px] uppercase tracking-label ${stageTone(
               stage,
             )}`}
           >

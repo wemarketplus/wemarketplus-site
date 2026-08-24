@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { useMemo, useState } from 'react';
 import { ALL_ROLES, ROLE_LABELS } from '@/shared/rbac';
 import { Button, Card, CardContent, Checkbox, Select } from '@/shared/ui/core';
@@ -133,11 +134,11 @@ export function AlertRoutingPanel() {
       )}
 
       {isLoading ? (
-        <div className="rounded-[14px] border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
+        <div className="rounded-card border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
           Loading…
         </div>
       ) : rows.length === 0 ? (
-        <div className="rounded-[14px] border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
+        <div className="rounded-card border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
           No alert types are available for your products.
         </div>
       ) : (
@@ -149,10 +150,10 @@ export function AlertRoutingPanel() {
                 <CardContent className="space-y-3 pt-6">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <h2 className="text-sm font-bold text-foreground">
+                      <h2 className={SECTION_TITLE}>
                         {meta.label}
                         {!configured && (
-                          <span className="ml-2 align-middle text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-soft">
+                          <span className="ml-2 align-middle text-[10px] font-semibold uppercase tracking-label text-muted-soft">
                             Not configured
                           </span>
                         )}

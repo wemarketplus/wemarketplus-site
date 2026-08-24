@@ -117,7 +117,7 @@ export function ProspectDrawer({
           </div>
 
           <section className="space-y-1.5">
-            <h3 className="text-[10px] uppercase tracking-[0.14em] text-muted-soft">
+            <h3 className="text-[10px] uppercase tracking-label text-muted-soft">
               Referral
             </h3>
             <dl className="grid grid-cols-1 gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
@@ -153,7 +153,7 @@ export function ProspectDrawer({
           </section>
 
           <section className="space-y-1.5">
-            <h3 className="text-[10px] uppercase tracking-[0.14em] text-muted-soft">
+            <h3 className="text-[10px] uppercase tracking-label text-muted-soft">
               Team notes
             </h3>
             <TouchLog

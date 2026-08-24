@@ -33,10 +33,10 @@ export function ViewingAsBadge() {
 
   return (
     <div className="mt-2.5">
-      <p className="mb-1 text-[9px] font-bold uppercase tracking-[0.1em] text-muted-soft">
+      <p className="mb-1 text-[9px] font-bold uppercase tracking-label text-muted-soft">
         Viewing as
       </p>
-      <span className="inline-block rounded-[8px] bg-primary/[0.09] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.06em] text-primary">
+      <span className="inline-block rounded-sm bg-primary/[0.09] px-2 py-1 text-[10px] font-bold uppercase tracking-label text-primary">
         {roleTitle(role, customRole?.name)}
       </span>
     </div>

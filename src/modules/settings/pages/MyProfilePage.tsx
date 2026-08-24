@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { CalendarColorCard } from '../components/CalendarColorCard';
 import { ProfileTab } from '../components/ProfileTab';
 
@@ -27,7 +28,7 @@ export function MyProfilePage() {
   return (
     <div className="space-y-6">
       <div className="space-y-1">
-        <h1 className="font-display text-3xl text-foreground">My profile</h1>
+        <h1 className={PAGE_TITLE}>My profile</h1>
         <p className="text-sm text-muted">
           Your own details and how you appear to the rest of the team.
         </p>

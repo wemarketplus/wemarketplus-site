@@ -1,3 +1,4 @@
+import { PAGE_TITLE, SECTION_TITLE } from '@/shared/ui/core/typography';
 import { useMemo, useRef, useState } from 'react';
 import { Download, FileSpreadsheet, Upload } from 'lucide-react';
 import { toast } from 'sonner';
@@ -81,7 +82,7 @@ export function DataImportExportPage() {
   return (
     <div className="space-y-6">
       <header className="flex flex-col gap-1">
-        <h1 className="font-display text-3xl text-foreground">Data import and export</h1>
+        <h1 className={PAGE_TITLE}>Data import and export</h1>
         <p className="text-sm text-muted">
           Download a template, export your records, or bulk import from a CSV.
         </p>
@@ -92,7 +93,7 @@ export function DataImportExportPage() {
           <div className="max-w-sm space-y-1.5">
             <label
               htmlFor="dataset-type"
-              className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-soft"
+              className="text-[11px] font-semibold uppercase tracking-label text-muted-soft"
             >
               Entity type
             </label>
@@ -122,7 +123,7 @@ export function DataImportExportPage() {
           <CardContent className="space-y-4 pt-6">
             <div className="flex items-center gap-2">
               <Download className="h-4 w-4 text-primary" />
-              <h2 className="text-sm font-semibold text-foreground">Export records</h2>
+              <h2 className={SECTION_TITLE}>Export records</h2>
             </div>
             <p className="text-sm text-muted">
               Download every {dataset.label.toLowerCase()} record in your workspace.
@@ -154,7 +155,7 @@ export function DataImportExportPage() {
           <CardContent className="space-y-4 pt-6">
             <div className="flex items-center gap-2">
               <FileSpreadsheet className="h-4 w-4 text-primary" />
-              <h2 className="text-sm font-semibold text-foreground">Import template</h2>
+              <h2 className={SECTION_TITLE}>Import template</h2>
             </div>
             {dataset.canImport ? (
               <>
@@ -201,7 +202,7 @@ export function DataImportExportPage() {
           <CardContent className="space-y-4 pt-6">
             <div className="flex items-center gap-2">
               <Upload className="h-4 w-4 text-primary" />
-              <h2 className="text-sm font-semibold text-foreground">
+              <h2 className={SECTION_TITLE}>
                 Import {dataset.label.toLowerCase()} from CSV
               </h2>
             </div>
@@ -262,8 +263,8 @@ export function DataImportExportPage() {
                     : '.'}
                 </Alert>
                 {result.errors.length > 0 && (
-                  <div className="rounded-[9px] border border-border/[0.08] bg-surface p-3">
-                    <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-soft">
+                  <div className="rounded-md border border-border/[0.08] bg-surface p-3">
+                    <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-label text-muted-soft">
                       Skipped rows
                     </p>
                     <ul className="max-h-48 space-y-1 overflow-y-auto text-[13px] text-muted">

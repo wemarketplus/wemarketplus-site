@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { Plus } from 'lucide-react';
 import { useAppSelector } from '@/app/hooks';
 import { STAFF_ROLES, useRole } from '@/shared/rbac';
@@ -45,11 +46,11 @@ export function ProspectsPage() {
     <div className="space-y-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-display text-3xl text-foreground">Prospects</h1>
+          <h1 className={PAGE_TITLE}>Prospects</h1>
           <p className="text-sm text-muted">
             {total} prospects across your pipeline
             {isUsingFixture && (
-              <span className="ml-2 rounded-pill bg-foreground/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+              <span className="ml-2 rounded-pill bg-foreground/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-label text-muted-soft">
                 Preview data
               </span>
             )}

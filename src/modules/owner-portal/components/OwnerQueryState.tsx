@@ -22,7 +22,7 @@ function isForbidden(
 export function OwnerQueryState({ isLoading, error, children }: OwnerQueryStateProps) {
   if (isLoading) {
     return (
-      <div className="rounded-[14px] border border-border/[0.08] bg-surface p-10 text-center text-sm text-muted">
+      <div className="rounded-card border border-border/[0.08] bg-surface p-10 text-center text-sm text-muted">
         Loading…
       </div>
     );

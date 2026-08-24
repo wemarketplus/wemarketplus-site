@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Check, PartyPopper, X } from 'lucide-react';
 import { Button, Card, CardContent } from '@/shared/ui/core';
@@ -22,7 +23,7 @@ export function OnboardingChecklistCard() {
             <PartyPopper className="h-6 w-6" />
           </span>
           <div className="space-y-1">
-            <h2 className="font-display text-xl text-foreground">
+            <h2 className={SECTION_TITLE}>
               You are all set up
             </h2>
             <p className="mx-auto max-w-sm text-[13px] text-muted">
@@ -42,7 +43,7 @@ export function OnboardingChecklistCard() {
       <CardContent className="space-y-5 pt-6">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h2 className="font-display text-xl text-foreground">
+            <h2 className={SECTION_TITLE}>
               Get set up in a few steps
             </h2>
             <p className="mt-0.5 text-[13px] text-muted">
@@ -82,7 +83,7 @@ export function OnboardingChecklistCard() {
                 <Link
                   to={step.to}
                   className={cn(
-                    'group flex items-center gap-3 rounded-[14px] border border-border/[0.08] bg-surface px-3.5 py-3 transition-colors',
+                    'group flex items-center gap-3 rounded-card border border-border/[0.08] bg-surface px-3.5 py-3 transition-colors',
                     step.done
                       ? 'opacity-70'
                       : 'hover:border-primary/40 hover:bg-foreground/[0.03]',

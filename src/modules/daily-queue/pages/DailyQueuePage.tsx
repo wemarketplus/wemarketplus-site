@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import {
   CalendarCheck,
   ClipboardList,
@@ -73,7 +74,7 @@ export function DailyQueuePage() {
     <div className="space-y-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-display text-3xl text-foreground">Daily tasks</h1>
+          <h1 className={PAGE_TITLE}>Daily tasks</h1>
           <p className="text-sm text-muted">
             {queue.totalItems === 0
               ? 'Nothing outstanding — you are clear for today.'

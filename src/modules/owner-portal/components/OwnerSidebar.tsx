@@ -10,7 +10,7 @@ export function OwnerSidebar() {
         <Logo size="sm" />
       </div>
       <div className="px-5 py-3 border-b border-border/[0.06]">
-        <p className="text-[10px] uppercase tracking-[0.16em] text-muted-soft">
+        <p className="text-[10px] uppercase tracking-label text-muted-soft">
           Owner portal
         </p>
         <p className="mt-0.5 text-sm font-semibold text-foreground">
@@ -45,7 +45,7 @@ export function OwnerSidebar() {
                   />
                   <span className="truncate">{item.label}</span>
                   {item.badge && (
-                    <span className="ml-auto rounded-pill bg-warning/15 px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] text-warning">
+                    <span className="ml-auto rounded-pill bg-warning/15 px-2 py-0.5 text-[10px] uppercase tracking-label text-warning">
                       {item.badge}
                     </span>
                   )}

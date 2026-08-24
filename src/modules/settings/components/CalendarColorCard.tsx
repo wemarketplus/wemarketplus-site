@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { Check, Sparkles } from 'lucide-react';
 import { useAppSelector } from '@/app/hooks';
 // Deep import rather than the module barrel: the barrel re-exports
@@ -37,7 +38,7 @@ export function CalendarColorCard() {
       <CardContent className="px-6 py-6">
         <header className="mb-6 flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h2 className="text-base font-semibold text-foreground">
+            <h2 className={SECTION_TITLE}>
               Calendar colour
             </h2>
             <p className="mt-1 text-sm text-muted">
@@ -47,7 +48,7 @@ export function CalendarColorCard() {
           </div>
           <div className="flex items-center gap-2 rounded-pill border border-border/[0.08] px-3 py-1.5">
             <span className={cn('h-2.5 w-2.5 rounded-full', effective.dot)} />
-            <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
+            <span className="text-[11px] font-semibold uppercase tracking-label text-muted">
               {current ? 'Your colour' : 'Automatic'}
             </span>
           </div>
@@ -91,7 +92,7 @@ export function CalendarColorCard() {
           disabled={isSaving || current === null}
           onClick={() => void select(null)}
           className={cn(
-            'mt-5 inline-flex items-center gap-2 rounded-pill border px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
+            'mt-5 inline-flex items-center gap-2 rounded-pill border px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-label transition-colors',
             current === null
               ? 'border-primary/40 bg-primary/15 text-primary'
               : 'border-border/[0.08] text-muted hover:border-border/20 hover:text-foreground',

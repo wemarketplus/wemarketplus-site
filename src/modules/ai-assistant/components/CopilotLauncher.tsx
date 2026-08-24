@@ -63,10 +63,10 @@ export function CopilotLauncher() {
   return (
     <section
       aria-label="Copilot"
-      className="fixed bottom-6 right-6 z-40 flex max-h-[70vh] w-[min(22rem,calc(100vw-3rem))] flex-col overflow-hidden rounded-[14px] border border-border/[0.12] bg-surface shadow-2xl"
+      className="fixed bottom-6 right-6 z-40 flex max-h-[70vh] w-[min(22rem,calc(100vw-3rem))] flex-col overflow-hidden rounded-card border border-border/[0.12] bg-surface shadow-2xl"
     >
       <header className="flex items-center gap-2 border-b border-border/[0.08] px-4 py-3">
-        <span className="rounded-[9px] bg-primary/[0.10] p-1.5 text-primary">
+        <span className="rounded-md bg-primary/[0.10] p-1.5 text-primary">
           <Sparkles className="h-4 w-4" />
         </span>
         <div className="min-w-0 flex-1">

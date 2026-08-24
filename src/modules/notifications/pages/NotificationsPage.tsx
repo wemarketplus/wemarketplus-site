@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { useMemo, useState } from 'react';
 import { CheckCheck } from 'lucide-react';
 import { useActiveEntitlement } from '@/modules/access';
@@ -65,7 +66,7 @@ export function NotificationsPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-display text-3xl text-foreground">Notifications</h1>
+          <h1 className={PAGE_TITLE}>Notifications</h1>
           <p className="text-sm text-muted">
             {section === 'feed'
               ? `${unreadCount} unread · everything that's happened across your CRM`
@@ -90,7 +91,7 @@ export function NotificationsPage() {
             type="button"
             onClick={() => setSection(s.value)}
             className={cn(
-              'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
+              'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-label transition-colors',
               section === s.value
                 ? 'border-primary/40 bg-primary/15 text-primary'
                 : 'border-border/[0.08] text-muted hover:border-border/20 hover:text-foreground',
@@ -111,7 +112,7 @@ export function NotificationsPage() {
                   type="button"
                   onClick={() => changeFilter(t.value)}
                   className={cn(
-                    'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
+                    'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-label transition-colors',
                     filter === t.value
                       ? 'border-primary/40 bg-primary/15 text-primary'
                       : 'border-border/[0.08] text-muted hover:border-border/20 hover:text-foreground',

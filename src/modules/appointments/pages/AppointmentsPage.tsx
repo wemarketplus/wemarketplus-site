@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { useState } from 'react';
 import { CalendarDays, List, Plus } from 'lucide-react';
 import { useListJobsQuery } from '@/modules/jobs';
@@ -91,7 +92,7 @@ export function AppointmentsPage() {
               guide sends every role to a tab by that name for the month grid and
               the My calendar / All users switch, both of which are on this screen
               and nowhere else. */}
-          <h1 className="font-display text-3xl text-foreground">Calendar</h1>
+          <h1 className={PAGE_TITLE}>Calendar</h1>
           {/* The agenda counts overdue visits SEPARATELY rather than folding them
               into "scheduled in the next 60 days", which would have been a false
               statement about a visit that was due yesterday. */}
@@ -129,7 +130,7 @@ export function AppointmentsPage() {
                 type="button"
                 onClick={() => setMode(value)}
                 className={cn(
-                  'flex items-center gap-1.5 rounded-pill px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] transition',
+                  'flex items-center gap-1.5 rounded-pill px-3 py-1 text-[11px] font-semibold uppercase tracking-label transition',
                   mode === value
                     ? 'bg-primary/15 text-primary'
                     : 'text-muted hover:text-foreground',

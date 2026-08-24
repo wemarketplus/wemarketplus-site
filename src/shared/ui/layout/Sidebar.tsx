@@ -23,10 +23,10 @@ import { cn } from '@/shared/utils/cn';
 // the rail is one component, and a one-off `py-` on a single item is what made
 // the spacing read as uneven in the first place.
 const NAV_ROW_BASE =
-  'mb-0.5 flex h-8 items-center gap-2.5 rounded-[8px] px-2.5 text-[12px] font-semibold';
+  'mb-0.5 flex h-8 items-center gap-2.5 rounded-sm px-2.5 text-[12px] font-semibold';
 // Section eyebrows: same rhythm above every group, including the first.
 const NAV_SECTION_HEADING =
-  'block px-2.5 pb-1 pt-3 text-[10px] font-extrabold uppercase tracking-[0.11em] text-muted';
+  'block px-2.5 pb-1 pt-3 text-[10px] font-extrabold uppercase tracking-label text-muted';
 
 export function Sidebar() {
   const { role } = useRole();
@@ -77,7 +77,7 @@ export function Sidebar() {
       <div className="flex-shrink-0 px-3 pb-2 pt-3.5">
         <div className="flex items-center gap-2.5">
           <div
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-primary"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary"
           >
             <BrandMark className="h-[18px] w-[18px] text-primary-foreground" />
           </div>
@@ -86,7 +86,7 @@ export function Sidebar() {
               {isCommunity ? 'Community' : 'Hospice'}
               <span className="text-primary">Link</span>
             </div>
-            <div className="mt-0.5 truncate text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-soft">
+            <div className="mt-0.5 truncate text-[10px] font-semibold uppercase tracking-label text-muted-soft">
               {PRODUCT_LABELS[product]}
               {hasActivePlan && ` · ${TIER_LABELS[tier]}`}
             </div>
@@ -136,7 +136,7 @@ export function Sidebar() {
                     >
                       <Icon className="h-4 w-4 shrink-0 text-muted-soft/60" />
                       <span className="truncate">{item.label}</span>
-                      <span className="ml-auto shrink-0 rounded-pill border border-border/[0.12] px-1.5 py-px text-[8px] font-black uppercase tracking-[0.1em] text-muted-soft">
+                      <span className="ml-auto shrink-0 rounded-pill border border-border/[0.12] px-1.5 py-px text-[8px] font-black uppercase tracking-label text-muted-soft">
                         Soon
                       </span>
                     </div>
@@ -210,7 +210,7 @@ export function Sidebar() {
       </nav>
 
       {/* .sb-foot */}
-      <div className="flex-shrink-0 border-t border-border/[0.07] px-3 py-2.5 text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+      <div className="flex-shrink-0 border-t border-border/[0.07] px-3 py-2.5 text-[10px] uppercase tracking-label text-muted-soft">
         {role ? (
           <>Signed in as <span className="font-bold text-foreground">{roleTitle(role, customRole?.name)}</span></>
         ) : (

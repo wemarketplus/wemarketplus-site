@@ -38,7 +38,7 @@ export function PlanPicker({ plans, isLoading, busyPlanKey, onChoose }: PlanPick
           <Card key={plan.key}>
             <CardContent className="flex h-full flex-col gap-4 px-6 py-6">
               <div className="space-y-1">
-                <p className="text-[10px] uppercase tracking-[0.14em] text-muted-soft">
+                <p className="text-[10px] uppercase tracking-label text-muted-soft">
                   {PRODUCT_LABELS[plan.product]}
                 </p>
                 <h3 className="text-lg font-semibold text-foreground">{plan.name}</h3>

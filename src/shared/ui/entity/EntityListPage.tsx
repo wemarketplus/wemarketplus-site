@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Plus } from 'lucide-react';
 import { Button, Card, CardContent } from '@/shared/ui/core';
+import { PAGE_SUBTITLE, PAGE_TITLE } from '@/shared/ui/core/typography';
 import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
 
 interface EntityListPageProps {
@@ -46,8 +47,8 @@ export function EntityListPage({
     <div className="space-y-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex flex-col gap-1">
-          <h1 className="font-display text-3xl text-foreground">{title}</h1>
-          {subtitle && <p className="text-sm text-muted">{subtitle}</p>}
+          <h1 className={PAGE_TITLE}>{title}</h1>
+          {subtitle && <p className={PAGE_SUBTITLE}>{subtitle}</p>}
         </div>
         {(onAdd || actions) && (
           <div className="flex items-center gap-2">
@@ -72,7 +73,7 @@ export function EntityListPage({
           ) : null}
 
           {isLoading ? (
-            <div className="rounded-[14px] border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
+            <div className="rounded-card border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
               Loading…
             </div>
           ) : (

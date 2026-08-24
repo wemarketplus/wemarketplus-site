@@ -66,7 +66,7 @@ export function RemindersView() {
               <CardContent className="px-0 pt-0 pb-0">
                 <header className="flex items-center justify-between px-6 py-3">
                   <span
-                    className={`rounded-pill border px-2.5 py-0.5 text-[10px] uppercase tracking-[0.08em] ${REMINDER_BUCKET_TONE[bucket]}`}
+                    className={`rounded-pill border px-2.5 py-0.5 text-[10px] uppercase tracking-label ${REMINDER_BUCKET_TONE[bucket]}`}
                   >
                     {REMINDER_BUCKET_LABELS[bucket]}
                   </span>
@@ -82,7 +82,7 @@ export function RemindersView() {
                         <p className="mt-0.5 text-xs text-muted">{r.actionDescription}</p>
                       </div>
                       <div className="flex shrink-0 items-center gap-2">
-                        <span className="text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+                        <span className="text-[10px] uppercase tracking-label text-muted-soft">
                           {formatDate(r.dueDate)}
                         </span>
                         {canEdit && (

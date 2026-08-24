@@ -5,6 +5,7 @@ import {
   useAppointmentActions,
   useAppointmentsCalendar,
 } from '@/modules/appointments';
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 
 /**
  * "My visit schedule" — the nurse's own visits, and nobody else's.
@@ -45,7 +46,7 @@ export function MyVisitSchedulePage() {
   return (
     <div className="space-y-4">
       <header>
-        <h1 className="flex items-center gap-2 text-xl font-semibold text-foreground">
+        <h1 className={`flex items-center gap-2 ${PAGE_TITLE}`}>
           <CalendarClock className="size-5" aria-hidden />
           My visit schedule
         </h1>

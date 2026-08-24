@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { Alert, SectionHeader, StatTile } from '@/shared/ui/data-display';
 import { useGetWeeklyReportQuery } from '../api/intelligenceApi';
 import { LeaderboardTable } from '../components/LeaderboardTable';
@@ -25,7 +26,7 @@ export function WeeklyReportPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-display text-3xl text-foreground">Weekly report</h1>
+        <h1 className={PAGE_TITLE}>Weekly report</h1>
         <p className="text-sm text-muted">
           The last seven days: what came in, what closed, and who moved it.
           {data ? ` ${data.window.from.slice(0, 10)} → ${data.window.to.slice(0, 10)}` : ''}

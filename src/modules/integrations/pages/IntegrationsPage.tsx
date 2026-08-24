@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { cn } from '@/shared/utils/cn';
 import { CATEGORIES } from '../constants/integrationsConstants';
 import { IntegrationTileCard } from '../components/IntegrationTileCard';
@@ -11,7 +12,7 @@ export function IntegrationsPage() {
   return (
     <div className="space-y-6">
       <header className="space-y-1">
-        <h1 className="font-display text-3xl text-foreground">Integrations</h1>
+        <h1 className={PAGE_TITLE}>Integrations</h1>
         <p className="text-sm text-muted">
           {total} ways to extend your CRM — pick one to get started.
         </p>
@@ -24,7 +25,7 @@ export function IntegrationsPage() {
             type="button"
             onClick={() => setCategory(c.value)}
             className={cn(
-              'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
+              'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-label transition-colors',
               category === c.value
                 ? 'border-primary/40 bg-primary/15 text-primary'
                 : 'border-border/[0.08] text-muted hover:border-border/20 hover:text-foreground',

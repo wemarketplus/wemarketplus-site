@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { ManageCustomRoles } from '@/modules/permissions';
 import { ADMIN_ONLY, RoleGate } from '@/shared/rbac';
 import { SettingsTabs } from '../components/SettingsTabs';
@@ -15,7 +16,7 @@ export function SettingsPage() {
   return (
     <div className="space-y-6">
       <div className="space-y-1">
-        <h1 className="font-display text-3xl text-foreground">Settings</h1>
+        <h1 className={PAGE_TITLE}>Settings</h1>
         <p className="text-sm text-muted">
           Manage your profile, organization, integrations, and security.
         </p>

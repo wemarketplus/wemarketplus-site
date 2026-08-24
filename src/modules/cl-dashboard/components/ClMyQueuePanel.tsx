@@ -54,7 +54,7 @@ export function ClMyQueuePanel({ role }: { role: Role | null }) {
       {isEmpty && (
         <Card>
           <CardContent className="flex items-center gap-3 px-6 py-5">
-            <span className="rounded-[10px] bg-success/[0.10] p-2 text-success">
+            <span className="rounded-md bg-success/[0.10] p-2 text-success">
               <Sparkles className="h-4 w-4" />
             </span>
             <p className="text-[13px] text-muted">

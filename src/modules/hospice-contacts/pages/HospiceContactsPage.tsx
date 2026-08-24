@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { useState } from 'react';
 import { Mail, MessageSquare, Phone } from 'lucide-react';
 import { toast } from 'sonner';
@@ -145,7 +146,7 @@ export function HospiceContactsPage() {
     <div className="space-y-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-display text-3xl text-foreground">
+          <h1 className={PAGE_TITLE}>
             Hospice contacts
           </h1>
           <p className="text-sm text-muted">

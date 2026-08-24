@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { Card, CardContent } from '@/shared/ui/core';
 import { useGetDriveStatusQuery } from '@/modules/integrations/api/integrationsApi';
 import type { SettingsIntegration } from '../types/settingsTypes';
@@ -12,11 +13,11 @@ interface TileStatus {
 
 const BADGE_CLASSES: Record<BadgeTone, string> = {
   success:
-    'rounded-pill bg-success/15 px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] text-success',
+    'rounded-pill bg-success/15 px-2 py-0.5 text-[10px] uppercase tracking-label text-success',
   muted:
-    'rounded-pill bg-foreground/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] text-muted-soft',
+    'rounded-pill bg-foreground/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-label text-muted-soft',
   pending:
-    'rounded-pill bg-foreground/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] text-muted animate-pulse',
+    'rounded-pill bg-foreground/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-label text-muted animate-pulse',
 };
 
 export function IntegrationsTab() {
@@ -43,7 +44,7 @@ export function IntegrationsTab() {
     <Card>
       <CardContent className="px-6 py-6">
         <header className="mb-6">
-          <h2 className="text-base font-semibold text-foreground">Integrations</h2>
+          <h2 className={SECTION_TITLE}>Integrations</h2>
           <p className="mt-1 text-sm text-muted">
             Connect outside tools to power features inside the CRM.
           </p>

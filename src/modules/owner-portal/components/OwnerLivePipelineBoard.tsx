@@ -40,7 +40,7 @@ export function OwnerLivePipelineBoard({
           <Card key={stage} className="flex flex-col">
             <CardContent className="flex h-full flex-col gap-3 px-4 py-4">
               <div className="flex items-center justify-between">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary">
+                <p className="text-[11px] font-semibold uppercase tracking-label text-primary">
                   {stage}
                 </p>
                 <p className="text-[10px] text-muted-soft">{stageRecords.length}</p>

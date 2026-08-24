@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { useMemo, useState } from 'react';
 import { Card, CardContent, Checkbox, Select } from '@/shared/ui/core';
 import { formatUsd } from '../utils/financialFormat';
@@ -31,7 +32,7 @@ export function LocQuickCalculator({ levels }: LocQuickCalculatorProps) {
   return (
     <Card>
       <CardContent className="space-y-3 pt-6">
-        <h2 className="text-sm font-bold text-foreground">Quick rate calculator</h2>
+        <h2 className={SECTION_TITLE}>Quick rate calculator</h2>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Select value={levelId} onChange={(e) => setLevelId(e.target.value)} aria-label="Level of care">
             <option value="">Select a level…</option>
@@ -62,7 +63,7 @@ export function LocQuickCalculator({ levels }: LocQuickCalculatorProps) {
         </div>
         {total != null && (
           <div className="rounded-md border border-primary/30 bg-primary/10 px-4 py-3">
-            <p className="text-[10px] uppercase tracking-[0.14em] text-muted-soft">Estimated monthly total</p>
+            <p className="text-[10px] uppercase tracking-label text-muted-soft">Estimated monthly total</p>
             <p className="font-display text-2xl text-foreground">{formatUsd(total)}/mo</p>
           </div>
         )}

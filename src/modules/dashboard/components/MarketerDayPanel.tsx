@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { AlertTriangle, Flame, Footprints, PhoneCall, UserPlus } from 'lucide-react';
 import type { ComponentType } from 'react';
 import { Card, CardContent } from '@/shared/ui/core';
@@ -30,12 +31,12 @@ function MetricTile({ progress }: { progress: MetricProgress }) {
   const hit = hasTarget && progress.achieved >= (progress.target ?? 0);
 
   return (
-    <div className="rounded-[14px] border border-border/[0.09] bg-surface px-5 py-5">
+    <div className="rounded-card border border-border/[0.09] bg-surface px-5 py-5">
       <div className="flex items-start justify-between gap-3">
-        <p className="text-[10.5px] font-semibold uppercase tracking-[0.12em] text-muted-soft">
+        <p className="text-[10.5px] font-semibold uppercase tracking-label text-muted-soft">
           {METRIC_LABELS[progress.metric]} this week
         </p>
-        <span className="rounded-[10px] bg-primary/[0.08] p-2 text-primary">
+        <span className="rounded-md bg-primary/[0.08] p-2 text-primary">
           <Icon className="h-4 w-4" />
         </span>
       </div>
@@ -74,7 +75,7 @@ function AlertRow({ alert }: { alert: HotAlert }) {
     <li className="flex flex-wrap items-center gap-3 px-6 py-3">
       <span
         className={cn(
-          'rounded-[8px] p-1.5',
+          'rounded-sm p-1.5',
           overdue
             ? 'bg-destructive/[0.10] text-destructive'
             : 'bg-warning/[0.12] text-warning',
@@ -145,7 +146,7 @@ export function MarketerDayPanel() {
           <header className="flex flex-wrap items-center gap-3 px-6 py-4">
             <span
               className={cn(
-                'rounded-[10px] p-2',
+                'rounded-md p-2',
                 data.hotAlerts.length > 0
                   ? 'bg-destructive/[0.10] text-destructive'
                   : 'bg-success/[0.10] text-success',
@@ -154,7 +155,7 @@ export function MarketerDayPanel() {
               <AlertTriangle className="h-4 w-4" />
             </span>
             <div className="min-w-0 flex-1">
-              <h2 className="text-sm font-semibold text-foreground">
+              <h2 className={SECTION_TITLE}>
                 Needs you today
               </h2>
               <p className="text-[11px] text-muted-soft">

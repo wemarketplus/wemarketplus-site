@@ -29,7 +29,7 @@ export function TerritoryHeatmap({ territories }: { territories: readonly Territ
                   <p className="font-display text-2xl leading-none text-foreground">
                     {t.admissionsCount}
                   </p>
-                  <p className="mt-0.5 text-[10px] uppercase tracking-[0.08em] text-muted-soft">
+                  <p className="mt-0.5 text-[10px] uppercase tracking-label text-muted-soft">
                     {t.assignedMarketer}
                   </p>
                 </div>

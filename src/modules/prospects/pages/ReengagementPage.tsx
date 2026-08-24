@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { RotateCcw } from 'lucide-react';
 import { Card, CardContent } from '@/shared/ui/core';
 import { Pill, StatTile } from '@/shared/ui/data-display';
@@ -31,7 +32,7 @@ export function ReengagementPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-display text-3xl text-foreground">
+        <h1 className={PAGE_TITLE}>
           Re-engagement queue
         </h1>
         <p className="text-sm text-muted">

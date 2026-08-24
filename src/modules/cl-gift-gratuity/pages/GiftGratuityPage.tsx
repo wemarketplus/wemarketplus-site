@@ -1,3 +1,4 @@
+import { PAGE_TITLE, SECTION_TITLE } from '@/shared/ui/core/typography';
 import { useMemo, useState } from 'react';
 import { Gift } from 'lucide-react';
 import { Button, Card, CardContent, DatePicker, Input } from '@/shared/ui/core';
@@ -47,26 +48,26 @@ export function GiftGratuityPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-display text-3xl text-foreground">Gift & gratuity</h1>
+        <h1 className={PAGE_TITLE}>Gift & gratuity</h1>
         <p className="text-sm text-muted">Anti-kickback compliance log for referral-source gifts.</p>
       </header>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Card>
           <CardContent className="space-y-1 px-6 py-5">
-            <p className="text-[10px] uppercase tracking-[0.14em] text-muted-soft">Total logged</p>
+            <p className="text-[10px] uppercase tracking-label text-muted-soft">Total logged</p>
             <p className="font-display text-3xl leading-none text-foreground">{logs.length}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="space-y-1 px-6 py-5">
-            <p className="text-[10px] uppercase tracking-[0.14em] text-muted-soft">Total value</p>
+            <p className="text-[10px] uppercase tracking-label text-muted-soft">Total value</p>
             <p className="font-display text-3xl leading-none text-foreground">${totalValue.toFixed(2)}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="space-y-1 px-6 py-5">
-            <p className="text-[10px] uppercase tracking-[0.14em] text-muted-soft">Compliance violations</p>
+            <p className="text-[10px] uppercase tracking-label text-muted-soft">Compliance violations</p>
             <p className={`font-display text-3xl leading-none ${violations > 0 ? 'text-destructive' : 'text-foreground'}`}>
               {violations}
             </p>
@@ -76,7 +77,7 @@ export function GiftGratuityPage() {
 
       <Card>
         <CardContent className="space-y-3 pt-6">
-          <h2 className="text-sm font-bold text-foreground">Log gift / gratuity</h2>
+          <h2 className={SECTION_TITLE}>Log gift / gratuity</h2>
           {saveError && (
             <p className="rounded-md border border-destructive/40 bg-destructive/10 px-3.5 py-2.5 text-sm text-destructive">
               {extractApiErrorMessage(saveError, 'Failed to save log')}
@@ -103,7 +104,7 @@ export function GiftGratuityPage() {
               Failed to load gift/gratuity logs.
             </p>
           ) : isLoading ? (
-            <div className="rounded-[14px] border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
+            <div className="rounded-card border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
               Loading…
             </div>
           ) : logs.length === 0 ? (
@@ -112,7 +113,7 @@ export function GiftGratuityPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-left text-[11px] uppercase tracking-[0.08em] text-muted-soft">
+                  <tr className="text-left text-[11px] uppercase tracking-label text-muted-soft">
                     <th className="pb-2 pr-3">Date</th>
                     <th className="pb-2 pr-3">Recipient</th>
                     <th className="pb-2 pr-3">Type</th>

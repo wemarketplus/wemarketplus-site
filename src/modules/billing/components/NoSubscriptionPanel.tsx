@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { Sparkles } from 'lucide-react';
 import { Button, Card, CardContent } from '@/shared/ui/core';
 import type { NoSubscriptionPanelProps } from '../types/billingTypes';
@@ -13,7 +14,7 @@ export function NoSubscriptionPanel({ onGoToCrm }: NoSubscriptionPanelProps) {
             <Sparkles className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-base font-semibold text-foreground">
+            <h2 className={SECTION_TITLE}>
               No active subscription
             </h2>
             <p className="mt-1 max-w-xl text-sm text-muted">
