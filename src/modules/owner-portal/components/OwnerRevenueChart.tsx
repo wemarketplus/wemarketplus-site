@@ -21,7 +21,7 @@ export function OwnerRevenueChart({ months }: OwnerRevenueChartProps) {
                   />
                 </div>
                 <p className="text-xs font-semibold text-foreground">{m.month}</p>
-                <p className="text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+                <p className="text-[10px] uppercase tracking-label text-muted-soft">
                   {formatCompactMoney(m.mrr)}
                 </p>
               </div>

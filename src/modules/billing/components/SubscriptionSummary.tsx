@@ -17,11 +17,11 @@ export function SubscriptionSummary({ data }: SubscriptionSummaryProps) {
       </div>
       <Card>
         <CardContent className="space-y-3 px-6 py-6">
-          <p className="text-[10px] uppercase tracking-[0.14em] text-muted-soft">
+          <p className="text-[10px] uppercase tracking-label text-muted-soft">
             Status
           </p>
           <span
-            className={`inline-flex items-center gap-1.5 rounded-pill border px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] ${statusToneClass(data.status)}`}
+            className={`inline-flex items-center gap-1.5 rounded-pill border px-3 py-1 text-xs font-semibold uppercase tracking-label ${statusToneClass(data.status)}`}
           >
             {statusLabel(data.status)}
           </span>

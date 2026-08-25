@@ -130,7 +130,33 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
       HTMLDivElement
     >({ open, onClose: close, width: PANEL_WIDTH, align: 'start' });
 
-    const selected = useMemo(() => parseValue(value), [value]);
+    /**
+     * The text the calendar should treat as the current value.
+     *
+     * `selected` used to be `parseValue(value)` — the PROP alone. That is only
+     * ever right in controlled mode. Every `{...register('field')}` call site
+     * runs this component UNCONTROLLED (see the note on the input below):
+     * react-hook-form drives the field through the ref and passes no `value`, so
+     * `value` is permanently `undefined`, `selected` was permanently `null`, and
+     * the calendar opened with NO day highlighted no matter how long a date had
+     * been sitting in the field. That is the "selected date is not clearly
+     * visible" report at its worst — in the uncontrolled case it was not faint,
+     * it was absent — and it applies to every date field in the app, since they
+     * are all registered fields.
+     *
+     * So in uncontrolled mode read the DOM node, snapshotted when the panel
+     * opens. A snapshot rather than a live read because the node's text changes
+     * WITHOUT a re-render in that mode, so a value computed during render cannot
+     * observe it; opening the panel is a state change, which is both a re-render
+     * and the only moment the selection has to be known. `pick` closes the panel,
+     * so the snapshot cannot go stale while it is on screen.
+     */
+    const [openValue, setOpenValue] = useState('');
+    // Controlled mode is left EXACTLY as it was — the committed `value`, not
+    // `draft` — so the 15 call sites that pass one see no behaviour change; only
+    // the previously broken uncontrolled branch is new.
+    const currentText = value !== undefined ? value : openValue;
+    const selected = useMemo(() => parseValue(currentText), [currentText]);
     const minDate = useMemo(() => parseValue(min), [min]);
     const maxDate = useMemo(() => parseValue(max), [max]);
 
@@ -256,7 +282,12 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
           disabled={disabled}
           aria-label="Open calendar"
           onClick={() => {
-            setViewMonth(startOfMonth(parseValue(draft ?? value ?? '') ?? startOfToday()));
+            const text =
+              value !== undefined
+                ? String(draft ?? value ?? '')
+                : (inputRef.current?.value ?? '');
+            setOpenValue(text);
+            setViewMonth(startOfMonth(parseValue(text) ?? startOfToday()));
             setOpen((v) => !v);
           }}
           className={cn(
@@ -278,7 +309,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
                 width: PANEL_WIDTH,
                 visibility: position ? 'visible' : 'hidden',
               }}
-              className="fixed z-50 rounded-[12px] border border-border/[0.1] bg-surface p-3 shadow-2xl"
+              className="fixed z-50 rounded-lg border border-border/[0.1] bg-surface p-3 shadow-2xl"
             >
               <div className="mb-2 flex items-center justify-between">
                 <button

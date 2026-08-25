@@ -3,6 +3,7 @@ import { Button } from '@/shared/ui/core';
 import { ManageCustomRoles } from '../components/ManageCustomRoles';
 import { PermissionMatrixGrid } from '../components/PermissionMatrixGrid';
 import { usePermissionMatrix } from '../hooks/usePermissionMatrix';
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 
 export function PermissionsPage() {
   const {
@@ -23,7 +24,7 @@ export function PermissionsPage() {
           <ShieldCheck className="h-5 w-5" />
         </div>
         <div>
-          <h1 className="font-display text-3xl leading-tight text-foreground">
+          <h1 className={PAGE_TITLE}>
             Roles &amp; permissions
           </h1>
           <p className="mt-1 max-w-2xl text-sm text-muted">

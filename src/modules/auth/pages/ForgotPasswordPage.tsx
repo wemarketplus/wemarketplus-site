@@ -26,7 +26,7 @@ export function ForgotPasswordPage() {
   if (submitted) {
     return (
       <AuthCardShell title="Forgot your password?" hideFooter>
-        <div className="rounded-[14px] border border-success/30 bg-success/[0.07] p-6 text-center">
+        <div className="rounded-card border border-success/30 bg-success/[0.07] p-6 text-center">
           <div className="mb-2.5 text-[36px]">📧</div>
           <h3 className="mb-2 text-[17px] font-extrabold text-success">
             Check Your Email

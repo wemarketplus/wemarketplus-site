@@ -115,28 +115,36 @@ export function ReferralSourceDrawer({
           </div>
 
           <section className="space-y-1.5">
-            <h3 className="text-[10px] uppercase tracking-[0.14em] text-muted-soft">
+            <h3 className="text-[10px] uppercase tracking-label text-muted-soft">
               Contact
             </h3>
+            {/* Every `dt` is the SAME width (`w-20 shrink-0` below), so the
+                values start on one vertical line down the column. They used to
+                be `flex gap-2` with an auto-width label, which put each value
+                wherever its own label happened to end — "Fax" is half the width
+                of "Address", so the city and state on the Address row sat
+                several pixels left of the phone number above it and the block
+                read as ragged rather than as a list of facts. Fixed width also
+                survives a longer label being added later. */}
             <dl className="grid grid-cols-1 gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
               <div className="flex gap-2">
-                <dt className="text-muted">Contact</dt>
+                <dt className="w-20 shrink-0 text-muted">Contact</dt>
                 <dd className="text-foreground">{source.contactName ?? '—'}</dd>
               </div>
               <div className="flex gap-2">
-                <dt className="text-muted">Phone</dt>
+                <dt className="w-20 shrink-0 text-muted">Phone</dt>
                 <dd className="text-foreground">{source.phone ?? '—'}</dd>
               </div>
               <div className="flex gap-2">
-                <dt className="text-muted">Email</dt>
+                <dt className="w-20 shrink-0 text-muted">Email</dt>
                 <dd className="text-foreground">{source.email ?? '—'}</dd>
               </div>
               <div className="flex gap-2">
-                <dt className="text-muted">Fax</dt>
+                <dt className="w-20 shrink-0 text-muted">Fax</dt>
                 <dd className="text-foreground">{source.fax ?? '—'}</dd>
               </div>
               <div className="flex gap-2 sm:col-span-2">
-                <dt className="text-muted">Address</dt>
+                <dt className="w-20 shrink-0 text-muted">Address</dt>
                 <dd className="text-foreground">
                   {line([
                     source.address,
@@ -150,7 +158,7 @@ export function ReferralSourceDrawer({
           </section>
 
           <section className="space-y-1.5">
-            <h3 className="text-[10px] uppercase tracking-[0.14em] text-muted-soft">
+            <h3 className="text-[10px] uppercase tracking-label text-muted-soft">
               Interaction history
             </h3>
             <TouchLog

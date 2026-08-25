@@ -2,6 +2,7 @@
 // payment tracking) into a small summary dashboard: headline stat tiles derived
 // from the current invoices page plus a recent-invoices table. Deliberately
 // read-only — full invoice CRUD lives in the invoices module.
+import { PAGE_TITLE, SECTION_TITLE } from '@/shared/ui/core/typography';
 import { Card, CardContent } from '@/shared/ui/core';
 import { DataTable, Pill, StatTile, type Column, type PillProps } from '@/shared/ui/data-display';
 import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
@@ -67,7 +68,7 @@ export function FinanceOverviewPage() {
   return (
     <div className="space-y-6">
       <header className="flex flex-col gap-1">
-        <h1 className="font-display text-3xl text-foreground">Finance overview</h1>
+        <h1 className={PAGE_TITLE}>Finance overview</h1>
         <p className="text-sm text-muted">Invoice and revenue snapshot across your tenant</p>
       </header>
 
@@ -91,11 +92,11 @@ export function FinanceOverviewPage() {
 
       <Card>
         <CardContent className="space-y-4 pt-6">
-          <h2 className="text-sm font-semibold uppercase tracking-[0.08em] text-muted">
+          <h2 className={SECTION_TITLE}>
             Recent invoices
           </h2>
           {isLoading ? (
-            <div className="rounded-[14px] border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
+            <div className="rounded-card border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
               Loading…
             </div>
           ) : (

@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { ClipboardList, NotebookPen, Stethoscope } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/shared/ui/core';
@@ -39,11 +40,11 @@ export function ClCareDashboard() {
     <div className="space-y-4">
       <Card>
         <CardContent className="flex flex-wrap items-start gap-3 px-6 py-5">
-          <span className="rounded-[10px] bg-primary/[0.08] p-2 text-primary">
+          <span className="rounded-md bg-primary/[0.08] p-2 text-primary">
             <Stethoscope className="h-4 w-4" />
           </span>
           <div className="min-w-0 flex-1">
-            <h2 className="text-sm font-semibold text-foreground">
+            <h2 className={SECTION_TITLE}>
               Resident care log — coming soon
             </h2>
             <p className="mt-1 text-[12.5px] leading-relaxed text-muted">
@@ -60,9 +61,9 @@ export function ClCareDashboard() {
           <Link
             key={to}
             to={to}
-            className="rounded-[14px] border border-border/[0.09] bg-surface px-5 py-5 transition-colors hover:border-primary/40"
+            className="rounded-card border border-border/[0.09] bg-surface px-5 py-5 transition-colors hover:border-primary/40"
           >
-            <span className="flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-primary/[0.08] text-primary">
+            <span className="flex h-[30px] w-[30px] items-center justify-center rounded-md bg-primary/[0.08] text-primary">
               <Icon className="h-4 w-4" />
             </span>
             <p className="mt-3 text-[15px] font-bold text-foreground">{label}</p>

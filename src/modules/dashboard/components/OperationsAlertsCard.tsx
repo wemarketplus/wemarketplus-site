@@ -41,7 +41,7 @@ export function OperationsAlertsCard({
         />
 
         {alerts.length === 0 ? (
-          <p className="flex items-center gap-2 rounded-[12px] border border-success/25 bg-success/[0.05] px-3.5 py-3 text-[13px] text-muted">
+          <p className="flex items-center gap-2 rounded-lg border border-success/25 bg-success/[0.05] px-3.5 py-3 text-[13px] text-muted">
             <CheckCircle2 className="h-4 w-4 shrink-0 text-success" />
             Nothing needs you right now — no units on notice, no open work orders,
             no hot leads.
@@ -52,7 +52,7 @@ export function OperationsAlertsCard({
               <li
                 key={alert.id}
                 className={cn(
-                  'flex flex-col gap-2.5 rounded-[12px] border px-3.5 py-3 sm:flex-row sm:items-center',
+                  'flex flex-col gap-2.5 rounded-lg border px-3.5 py-3 sm:flex-row sm:items-center',
                   TONE_ROW[alert.tone],
                 )}
               >

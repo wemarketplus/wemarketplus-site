@@ -1,3 +1,4 @@
+import { PAGE_TITLE, SECTION_TITLE } from '@/shared/ui/core/typography';
 import { ShieldCheck } from 'lucide-react';
 import { Card } from '@/shared/ui/core';
 import { ConversationList } from '../components/ConversationList';
@@ -41,7 +42,7 @@ export function SecureMessagingPage() {
     <div className="space-y-4">
       <header className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h1 className="text-xl font-semibold text-foreground">Secure messaging</h1>
+          <h1 className={PAGE_TITLE}>Secure messaging</h1>
           <p className="text-[13px] text-muted">
             Team channels and direct messages, inside your agency.
           </p>
@@ -68,7 +69,7 @@ export function SecureMessagingPage() {
 
         <Card className="flex h-[min(70vh,640px)] flex-col overflow-hidden">
           <div className="border-b border-border px-4 py-3">
-            <h2 className="text-[14px] font-semibold text-foreground">{title}</h2>
+            <h2 className={SECTION_TITLE}>{title}</h2>
             {subtitle && (
               <p className="text-[12px] text-muted-soft">{subtitle}</p>
             )}

@@ -15,7 +15,7 @@ export function OwnerPipelineBoard({ deals }: OwnerPipelineBoardProps) {
           <Card key={stage.value} className="flex flex-col">
             <CardContent className="flex h-full flex-col gap-3 px-4 py-4">
               <div className="flex items-center justify-between">
-                <p className={`text-[11px] font-semibold uppercase tracking-[0.1em] ${stage.tone}`}>
+                <p className={`text-[11px] font-semibold uppercase tracking-label ${stage.tone}`}>
                   {stage.label}
                 </p>
                 <p className="text-[10px] text-muted-soft">{stageDeals.length}</p>

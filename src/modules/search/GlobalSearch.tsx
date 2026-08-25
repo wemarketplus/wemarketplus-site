@@ -1,4 +1,9 @@
 import { Search } from 'lucide-react';
+import {
+  HEADER_CONTROL_BASE,
+  HEADER_CONTROL_HEIGHT,
+} from '@/shared/ui/core/controlStyles';
+import { cn } from '@/shared/utils/cn';
 import { CommandPalette } from './CommandPalette';
 import { useCommandPalette } from './useCommandPalette';
 
@@ -16,11 +21,26 @@ export function GlobalSearch() {
         type="button"
         onClick={openPalette}
         aria-label="Search"
-        // h-9 matches every other control in the topbar and the Button `sm`
-        // size. The icon is 16px (h-4), the same as the bell and the sign-out
-        // glyph beside it — it was 14px, which read as a lighter, smaller
-        // control than its neighbours at the same nominal size.
-        className="flex h-9 items-center gap-2 rounded-pill border border-border/[0.08] bg-surface/60 pl-3 pr-2 text-[12px] text-muted transition-colors hover:border-border/[0.16] hover:text-foreground"
+        // Geometry, hairline and surface all come from HEADER_CONTROL_* rather
+        // than being restated here — this button, the product switcher and the
+        // profile chip each used to carry their own copy of the same border and
+        // background, which is how a "search field" ends up looking like it
+        // belongs to a different design language from the controls beside it.
+        //
+        // `pl-3` is the SAME 12px inset the in-page search fields give their
+        // icon (CONTROL_ICON_INSET), so the two search affordances on a list
+        // page — this trigger and the field below it — put their magnifier at
+        // the same distance from the left edge. `pr-2` is tighter on purpose:
+        // the ⌘K chip carries its own visual padding.
+        //
+        // The icon is 16px (h-4), the same as the bell and the sign-out glyph
+        // beside it — it was 14px, which read as a lighter, smaller control
+        // than its neighbours at the same nominal size.
+        className={cn(
+          HEADER_CONTROL_BASE,
+          HEADER_CONTROL_HEIGHT,
+          'flex items-center gap-2 pl-3 pr-2 text-[12px] text-muted hover:text-foreground',
+        )}
       >
         <Search className="h-4 w-4 shrink-0" />
         <span className="hidden sm:inline">Search…</span>

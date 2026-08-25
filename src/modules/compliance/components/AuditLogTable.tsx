@@ -46,7 +46,7 @@ const columns: ReadonlyArray<Column<AuditLogEntry>> = [
 export function AuditLogTable({ entries, loading, empty }: AuditLogTableProps) {
   if (loading) {
     return (
-      <div className="rounded-[14px] border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
+      <div className="rounded-card border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
         Loading audit entries…
       </div>
     );

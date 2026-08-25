@@ -255,7 +255,7 @@ export function ListboxSelect({
               // Hidden until measured, so the first paint is never at 0,0.
               visibility: position ? 'visible' : 'hidden',
             }}
-            className="fixed z-50 overflow-hidden rounded-[10px] border border-border/[0.12] bg-surface shadow-2xl"
+            className="fixed z-50 overflow-hidden rounded-md border border-border/[0.12] bg-surface shadow-2xl"
           >
             <ul
               ref={listRef}

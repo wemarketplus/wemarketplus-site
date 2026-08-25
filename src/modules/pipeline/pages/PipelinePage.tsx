@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { Plus } from 'lucide-react';
 import { PIPELINE_TYPE_OPTIONS } from '@/modules/prospects/constants/prospectsConstants';
 import { ProspectPipelineType } from '@/modules/prospects/types/prospectsTypes';
@@ -39,11 +40,11 @@ export function PipelinePage() {
     <div className="space-y-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-display text-3xl text-foreground">Pipeline</h1>
+          <h1 className={PAGE_TITLE}>Pipeline</h1>
           <p className="text-sm text-muted">
             {total} open across {columns.length} stages · drag a card to change stage
             {isMoving && (
-              <span className="ml-2 rounded-pill bg-surface-raised px-2 py-0.5 text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+              <span className="ml-2 rounded-pill bg-surface-raised px-2 py-0.5 text-[10px] uppercase tracking-label text-muted-soft">
                 Saving
               </span>
             )}
@@ -104,7 +105,7 @@ export function PipelinePage() {
       {unstaged.length > 0 && (
         <Card>
           <CardContent className="space-y-2 px-5 py-4">
-            <p className="text-[10px] uppercase tracking-[0.14em] text-muted-soft">
+            <p className="text-[10px] uppercase tracking-label text-muted-soft">
               Not on this pipeline ({unstaged.length})
             </p>
             <p className="text-xs text-muted">
@@ -119,7 +120,7 @@ export function PipelinePage() {
                   <span className="truncate text-sm text-foreground">
                     {cardTitle(card)}
                   </span>
-                  <span className="shrink-0 text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+                  <span className="shrink-0 text-[10px] uppercase tracking-label text-muted-soft">
                     {stageLabel(card.stage)}
                   </span>
                 </li>

@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -8,6 +9,7 @@ import {
   Input,
   Label,
   ListboxSelect,
+  Select,
 } from '@/shared/ui/core';
 import { useOrganizationForm } from '../hooks/useOrganizationForm';
 import {
@@ -16,7 +18,6 @@ import {
 } from '../schema/organizationSchema';
 import { US_STATE_OPTIONS } from '@/modules/onboarding/constants/onboardingConstants';
 import { REPORT_TIMEZONE_OPTIONS } from '../constants/settingsConstants';
-import { cn } from '@/shared/utils/cn';
 
 export function OrganizationTab() {
   const {
@@ -54,7 +55,7 @@ export function OrganizationTab() {
     <Card>
       <CardContent className="px-6 py-6">
         <header className="mb-6">
-          <h2 className="text-base font-semibold text-foreground">Organization</h2>
+          <h2 className={SECTION_TITLE}>Organization</h2>
           <p className="mt-1 text-sm text-muted">
             Brand and contact details that appear on referral materials.
           </p>
@@ -158,22 +159,25 @@ export function OrganizationTab() {
 
             <div className="space-y-1.5">
               <Label htmlFor="orgReportTimezone">Report time zone</Label>
-              <select
+              {/*
+                <Select>, not a hand-rolled one. The height matched by luck, but
+                nothing else did: `border-border/10` against the field
+                language's /.12, `px-3` against `px-3.5`, and — the visible
+                one — a focus ring in AZURE while every other field in this same
+                form focuses to `primary`. Tabbing through Organization settings
+                turned one field blue and the rest green.
+              */}
+              <Select
                 id="orgReportTimezone"
                 disabled={busy}
                 {...register('reportTimezone')}
-                className={cn(
-                  'flex h-11 w-full rounded-md border border-border/10 bg-surface-raised px-3 text-sm text-foreground',
-                  'transition-colors focus-visible:outline-none focus-visible:border-azure/70 focus-visible:bg-surface',
-                  'disabled:cursor-not-allowed disabled:opacity-60',
-                )}
               >
                 {REPORT_TIMEZONE_OPTIONS.map((tz) => (
                   <option key={tz.value} value={tz.value}>
                     {tz.label}
                   </option>
                 ))}
-              </select>
+              </Select>
               <p className="text-xs text-muted">
                 Scheduled reports are timed against this zone. The Weekly Report is
                 emailed to administrators every Monday at 7:00&nbsp;AM local time.
@@ -186,9 +190,16 @@ export function OrganizationTab() {
             </div>
 
             <div className="flex items-center justify-end gap-2">
+              {/*
+                `outline`, not `ghost` — the same reasoning as ProfileTab's
+                Reset, which this footer is a copy of. Fixed here too because the
+                two are the same control in the same resting state (`!isDirty`),
+                so leaving this one on `ghost` would have left the reported bug
+                alive on the Settings page it is also reachable from.
+              */}
               <Button
                 type="button"
-                variant="ghost"
+                variant="outline"
                 onClick={() => reset(initialValues)}
                 disabled={!isDirty || busy}
               >

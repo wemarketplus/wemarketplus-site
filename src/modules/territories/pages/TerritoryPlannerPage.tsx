@@ -1,3 +1,4 @@
+import { PAGE_TITLE, SECTION_TITLE } from '@/shared/ui/core/typography';
 import { useMemo } from 'react';
 import { Map as MapIcon } from 'lucide-react';
 import { Card, CardContent } from '@/shared/ui/core';
@@ -90,7 +91,7 @@ export function TerritoryPlannerPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-display text-3xl text-foreground">
+        <h1 className={PAGE_TITLE}>
           Territory planner
         </h1>
         <p className="text-sm text-muted">
@@ -139,7 +140,7 @@ export function TerritoryPlannerPage() {
               <CardContent className="px-0 pb-0 pt-0">
                 <header className="flex flex-wrap items-center gap-3 px-6 py-4">
                   <div className="min-w-0 flex-1">
-                    <h2 className="text-sm font-semibold text-foreground">
+                    <h2 className={SECTION_TITLE}>
                       {group.name}
                     </h2>
                     <p className="text-[11px] text-muted-soft">
@@ -202,7 +203,7 @@ export function TerritoryPlannerPage() {
       {unassigned.length > 0 && (
         <Card>
           <CardContent className="space-y-2 px-6 py-5">
-            <h2 className="text-sm font-semibold text-foreground">
+            <h2 className={SECTION_TITLE}>
               Not in a territory
             </h2>
             {/* Surfaced rather than hidden: an unassigned account is invisible to

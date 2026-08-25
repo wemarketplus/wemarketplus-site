@@ -1,4 +1,5 @@
 import { ShieldCheck } from 'lucide-react';
+import { PAGE_SUBTITLE, PAGE_TITLE } from '@/shared/ui/core/typography';
 import { PortalNav } from './PortalNav';
 import type { PortalShellProps } from '../types/complianceTypes';
 
@@ -11,8 +12,8 @@ export function PortalShell({ title, description, children }: PortalShellProps) 
           <ShieldCheck className="h-5 w-5" />
         </div>
         <div>
-          <h1 className="font-display text-3xl text-foreground">{title}</h1>
-          <p className="mt-1 max-w-2xl text-sm text-muted">{description}</p>
+          <h1 className={PAGE_TITLE}>{title}</h1>
+          <p className={`mt-1 max-w-2xl ${PAGE_SUBTITLE}`}>{description}</p>
         </div>
       </header>
       <PortalNav />

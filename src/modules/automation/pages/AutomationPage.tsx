@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { useMemo } from 'react';
 import { Plus, RotateCcw } from 'lucide-react';
 import { Button, Card, CardContent } from '@/shared/ui/core';
@@ -109,7 +110,7 @@ export function AutomationPage() {
     <div className="space-y-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-display text-3xl text-foreground">Automation</h1>
+          <h1 className={PAGE_TITLE}>Automation</h1>
           <p className="text-sm text-muted">
             Standing follow-up reminders on your prospects, so nothing slips.
             Every one of these also appears in Daily tasks on the day it is due.

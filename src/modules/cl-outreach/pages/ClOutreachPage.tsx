@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { MapPin } from 'lucide-react';
 import { useRole, CL_SALES_ROLES } from '@/shared/rbac';
 import { Button, Select, SearchInput } from '@/shared/ui/core';
@@ -41,7 +42,7 @@ function ViewTabs({
           type="button"
           onClick={() => setView(v.value)}
           className={cn(
-            'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
+            'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-label transition-colors',
             view === v.value
               ? 'border-primary/40 bg-primary/15 text-primary'
               : 'border-border/[0.08] text-muted hover:border-border/20 hover:text-foreground',
@@ -79,7 +80,7 @@ export function ClOutreachPage() {
       <div className="space-y-6">
         <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div className="space-y-1">
-            <h1 className="font-display text-3xl text-foreground">{header.title}</h1>
+            <h1 className={PAGE_TITLE}>{header.title}</h1>
             <p className="text-sm text-muted">{header.subtitle}</p>
           </div>
           {canEdit && (

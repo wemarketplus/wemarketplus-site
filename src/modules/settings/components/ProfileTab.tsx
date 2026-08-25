@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Button, Card, CardContent, Input, Label } from '@/shared/ui/core';
@@ -23,7 +24,7 @@ export function ProfileTab() {
     <Card>
       <CardContent className="px-6 py-6">
         <header className="mb-6">
-          <h2 className="text-base font-semibold text-foreground">Profile</h2>
+          <h2 className={SECTION_TITLE}>Profile</h2>
           <p className="mt-1 text-sm text-muted">
             How your name and email appear across the workspace.
           </p>
@@ -79,9 +80,28 @@ export function ProfileTab() {
           </div>
 
           <div className="flex items-center justify-end gap-2">
+            {/*
+              `outline`, not `ghost`. Reset is a NAMED action in a form footer,
+              and `ghost` gives a named action no affordance at all: no fill, no
+              border, and `text-muted` for its only signal. Because the footer's
+              resting state is `!isDirty` — what every visitor to this page sees
+              before touching a field — `disabled:opacity-50` then halves that one
+              signal, taking the label to 1.98:1 against the white card. It stops
+              reading as a button and reads as a stray grey word, which is the
+              "Reset button has low visibility, making it difficult to identify"
+              report. `outline` keeps it quiet (transparent fill, weight 600,
+              still plainly subordinate to the filled Save) while giving it the
+              two things that survive being dimmed: a pill border, so the control
+              has a SHAPE even when disabled, and `text-foreground` instead of
+              muted grey.
+
+              `ghost` stays right where the surrounding context supplies the
+              affordance — icon buttons, and the Cancel in a dialog footer that
+              is bounded by the dialog itself.
+            */}
             <Button
               type="button"
-              variant="ghost"
+              variant="outline"
               onClick={() => reset(initialValues)}
               disabled={!isDirty || isLoading}
             >

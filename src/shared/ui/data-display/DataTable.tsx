@@ -71,7 +71,7 @@ export function DataTable<T>({ columns, rows, rowKey, empty, selection }: DataTa
 
   if (rows.length === 0) {
     return (
-      <div className="rounded-[14px] border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
+      <div className="rounded-card border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
         {empty ?? 'Nothing to show yet.'}
       </div>
     );
@@ -88,7 +88,7 @@ export function DataTable<T>({ columns, rows, rowKey, empty, selection }: DataTa
      * touching the page's own layout — the body itself still never scrolls
      * sideways, only this element does.
      */
-    <div className="overflow-x-auto rounded-[14px]">
+    <div className="overflow-x-auto rounded-card">
       <table className="w-full min-w-max border-collapse bg-surface text-[12px] text-foreground">
         <thead>
           <tr>
@@ -109,7 +109,7 @@ export function DataTable<T>({ columns, rows, rowKey, empty, selection }: DataTa
               <th
                 key={c.key}
                 className={cn(
-                  'border-b border-border/[0.09] bg-surface-elevated px-[11px] py-2 text-left align-middle text-[10px] font-extrabold uppercase tracking-[0.06em] text-muted',
+                  'border-b border-border/[0.09] bg-surface-elevated px-[11px] py-2 text-left align-middle text-[10px] font-extrabold uppercase tracking-label text-muted',
                   alignmentOf(c.className),
                   c.headerClassName,
                 )}

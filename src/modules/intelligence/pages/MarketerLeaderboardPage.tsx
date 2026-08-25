@@ -1,3 +1,4 @@
+import { PAGE_TITLE, SECTION_TITLE } from '@/shared/ui/core/typography';
 import { Trophy } from 'lucide-react';
 import { Card, CardContent } from '@/shared/ui/core';
 import { Pill, StatTile } from '@/shared/ui/data-display';
@@ -21,7 +22,7 @@ export function MarketerLeaderboardPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-display text-3xl text-foreground">Leaderboard</h1>
+        <h1 className={PAGE_TITLE}>Leaderboard</h1>
         <p className="text-sm text-muted">
           How you rank against your team on admits, conversion and visits.
         </p>
@@ -81,7 +82,7 @@ export function MarketerLeaderboardPage() {
           <Card>
             <CardContent className="px-0 py-0">
               <header className="px-6 py-4">
-                <h2 className="text-sm font-semibold text-foreground">
+                <h2 className={SECTION_TITLE}>
                   Team standings
                 </h2>
                 <p className="text-[11px] text-muted-soft">
@@ -97,7 +98,7 @@ export function MarketerLeaderboardPage() {
                           <th
                             key={h || i}
                             className={cn(
-                              'px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-soft',
+                              'px-4 py-2.5 text-[10px] font-semibold uppercase tracking-label text-muted-soft',
                               i <= 1 ? 'text-left' : 'text-right',
                             )}
                           >

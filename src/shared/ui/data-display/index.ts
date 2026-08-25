@@ -5,3 +5,8 @@ export { Alert, type AlertProps } from './Alert';
 export { DataTable, type Column, type DataTableSelection } from './DataTable';
 export { StatTile, type StatTone } from './StatTile';
 export { SectionHeader } from './SectionHeader';
+export {
+  DAY_CELL_BASE,
+  SELECTED_DAY_CELL,
+  DAY_NUMBER_BASE,
+} from './calendarStyles';

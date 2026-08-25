@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { Button, Card, CardContent } from '@/shared/ui/core';
 import { OwnerScreenHeader } from '../components/OwnerScreenHeader';
 import { OwnerPreviewNotice } from '../components/OwnerPreviewNotice';
@@ -25,7 +26,7 @@ export function OwnerAdminControlsPage() {
                   <Icon className="h-4 w-4" />
                 </div>
                 <div>
-                  <h2 className="text-sm font-semibold text-foreground">{c.title}</h2>
+                  <h2 className={SECTION_TITLE}>{c.title}</h2>
                   <p className="mt-1 text-sm text-muted">{c.description}</p>
                 </div>
                 <Button size="sm" variant="secondary" onClick={() => runControl(c)}>

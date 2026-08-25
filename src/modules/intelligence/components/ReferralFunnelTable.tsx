@@ -17,7 +17,7 @@ const funnelColumns: ReadonlyArray<Column<ReferralFunnelRow>> = [
     cell: (row) => (
       <div>
         <span className="font-bold text-foreground">{row.name}</span>
-        <span className="block text-[11px] uppercase tracking-[0.08em] text-muted-soft">
+        <span className="block text-[11px] uppercase tracking-label text-muted-soft">
           {row.status ?? '—'}
           {row.priorityTier ? ` · tier ${row.priorityTier}` : ''}
         </span>

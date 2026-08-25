@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { useState } from 'react';
 import { Smartphone } from 'lucide-react';
 import { Button, Card, CardContent, Input, Label, PasswordInput } from '@/shared/ui/core';
@@ -70,14 +71,14 @@ export function TwoFactorCard() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-semibold text-foreground">
+                <h2 className={SECTION_TITLE}>
                   Two-factor authentication
                 </h2>
                 <span
                   className={
                     enabled
-                      ? 'rounded-pill border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.08em] text-emerald-300'
-                      : 'rounded-pill border border-border/[0.08] bg-foreground/[0.03] px-2.5 py-1 text-[10px] uppercase tracking-[0.08em] text-muted-soft'
+                      ? 'rounded-pill border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] uppercase tracking-label text-emerald-300'
+                      : 'rounded-pill border border-border/[0.08] bg-foreground/[0.03] px-2.5 py-1 text-[10px] uppercase tracking-label text-muted-soft'
                   }
                 >
                   {enabled ? 'Enabled' : 'Disabled'}
@@ -197,7 +198,7 @@ export function TwoFactorCard() {
               className="mt-1"
             />
           </div>
-          <div className="text-center text-xs uppercase tracking-[0.08em] text-muted-soft">
+          <div className="text-center text-xs uppercase tracking-label text-muted-soft">
             or
           </div>
           <div>

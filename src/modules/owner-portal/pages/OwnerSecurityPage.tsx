@@ -12,7 +12,7 @@ export function OwnerSecurityPage() {
         description="Every privileged action across the platform."
         actions={<OwnerPreviewNotice />}
       />
-      <div className="rounded-[14px] border border-border/[0.08] bg-surface">
+      <div className="rounded-card border border-border/[0.08] bg-surface">
         <EmptyState
           icon={ShieldAlert}
           title="Audit analytics not available yet"

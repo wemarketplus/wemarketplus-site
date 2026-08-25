@@ -1,7 +1,13 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { calendarColorFor } from '@/modules/appointments';
 import type { CalendarColorMap } from '@/modules/appointments';
 import { Card } from '@/shared/ui/core';
+import {
+  DAY_CELL_BASE,
+  DAY_NUMBER_BASE,
+  SELECTED_DAY_CELL,
+} from '@/shared/ui/data-display';
 import { cn } from '@/shared/utils/cn';
 import {
   CL_MAX_CHIPS_PER_DAY,
@@ -74,7 +80,7 @@ export function ClCalendarMonthGrid({
   return (
     <Card className="overflow-hidden">
       <header className="flex items-center gap-3 px-4 py-3">
-        <h2 className="text-[15px] font-extrabold text-foreground">
+        <h2 className={SECTION_TITLE}>
           {clMonthLabel(month)}
         </h2>
         <div className="flex items-center overflow-hidden rounded-pill border border-border/[0.12]">
@@ -89,7 +95,7 @@ export function ClCalendarMonthGrid({
           <button
             type="button"
             onClick={onToday}
-            className="border-x border-border/[0.12] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.08em] text-muted transition hover:bg-foreground/[0.05] hover:text-foreground"
+            className="border-x border-border/[0.12] px-3 py-1 text-[11px] font-bold uppercase tracking-label text-muted transition hover:bg-foreground/[0.05] hover:text-foreground"
           >
             Today
           </button>
@@ -103,7 +109,7 @@ export function ClCalendarMonthGrid({
           </button>
         </div>
         {isFetching && (
-          <span className="text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+          <span className="text-[10px] uppercase tracking-label text-muted-soft">
             Updating…
           </span>
         )}
@@ -113,7 +119,7 @@ export function ClCalendarMonthGrid({
         {CL_WEEKDAY_LABELS.map((label) => (
           <div
             key={label}
-            className="py-1.5 text-center text-[10px] font-bold uppercase tracking-[0.1em] text-muted-soft"
+            className="py-1.5 text-center text-[10px] font-bold uppercase tracking-label text-muted-soft"
           >
             <span className="hidden sm:inline">{label}</span>
             <span className="sm:hidden">{label.charAt(0)}</span>
@@ -130,15 +136,14 @@ export function ClCalendarMonthGrid({
             aria-current={cell.isToday ? 'date' : undefined}
             aria-pressed={selectedKey === cell.key}
             className={cn(
-              'flex flex-col items-stretch gap-1 border-b border-r border-border/[0.09] bg-surface px-1 pb-1 pt-1 text-left transition hover:bg-foreground/[0.035]',
-              selectedKey === cell.key &&
-                'bg-primary/[0.06] ring-1 ring-inset ring-primary/40',
+              DAY_CELL_BASE,
+              selectedKey === cell.key && SELECTED_DAY_CELL,
             )}
           >
             <span className="flex justify-center">
               <span
                 className={cn(
-                  'inline-flex h-[21px] min-w-[21px] items-center justify-center rounded-full px-1 text-[11px] font-semibold tabular-nums leading-none',
+                  DAY_NUMBER_BASE,
                   cell.isToday
                     ? 'bg-primary font-bold text-primary-foreground'
                     : cell.inMonth

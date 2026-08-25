@@ -1,5 +1,11 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Card } from '@/shared/ui/core';
+import {
+  DAY_CELL_BASE,
+  DAY_NUMBER_BASE,
+  SELECTED_DAY_CELL,
+} from '@/shared/ui/data-display';
 import { cn } from '@/shared/utils/cn';
 import {
   APPOINTMENT_STATUS_LABELS,
@@ -87,7 +93,7 @@ export function AppointmentsMonthGrid({
     <Card className="overflow-hidden">
       {/* Toolbar — month label and its nav read as one control. */}
       <header className="flex items-center gap-3 px-4 py-3">
-        <h2 className="text-[15px] font-extrabold text-foreground">
+        <h2 className={SECTION_TITLE}>
           {monthLabel(month)}
         </h2>
         <div className="flex items-center overflow-hidden rounded-pill border border-border/[0.12]">
@@ -102,7 +108,7 @@ export function AppointmentsMonthGrid({
           <button
             type="button"
             onClick={onToday}
-            className="border-x border-border/[0.12] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.08em] text-muted transition hover:bg-foreground/[0.05] hover:text-foreground"
+            className="border-x border-border/[0.12] px-3 py-1 text-[11px] font-bold uppercase tracking-label text-muted transition hover:bg-foreground/[0.05] hover:text-foreground"
           >
             Today
           </button>
@@ -117,7 +123,7 @@ export function AppointmentsMonthGrid({
         </div>
         {/* Month switches refetch; surface it without collapsing the grid. */}
         {isFetching && (
-          <span className="text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+          <span className="text-[10px] uppercase tracking-label text-muted-soft">
             Updating…
           </span>
         )}
@@ -128,7 +134,7 @@ export function AppointmentsMonthGrid({
         {WEEKDAY_LABELS.map((label) => (
           <div
             key={label}
-            className="py-1.5 text-center text-[10px] font-bold uppercase tracking-[0.1em] text-muted-soft"
+            className="py-1.5 text-center text-[10px] font-bold uppercase tracking-label text-muted-soft"
           >
             <span className="hidden sm:inline">{label}</span>
             <span className="sm:hidden">{label.charAt(0)}</span>
@@ -152,17 +158,16 @@ export function AppointmentsMonthGrid({
               aria-current={cell.isToday ? 'date' : undefined}
               aria-pressed={isSelected}
               className={cn(
-                'flex flex-col items-stretch gap-1 border-b border-r border-border/[0.09] px-1 pb-1 pt-1 text-left transition',
                 // Google keeps out-of-month cells white and only greys the number.
-                'bg-surface hover:bg-foreground/[0.035]',
-                isSelected && 'bg-primary/[0.06] ring-1 ring-inset ring-primary/40',
+                DAY_CELL_BASE,
+                isSelected && SELECTED_DAY_CELL,
               )}
             >
               {/* Day number: centered at the top, like Google's month view. */}
               <span className="flex justify-center">
                 <span
                   className={cn(
-                    'inline-flex h-[21px] min-w-[21px] items-center justify-center rounded-full px-1 text-[11px] font-semibold tabular-nums leading-none',
+                    DAY_NUMBER_BASE,
                     cell.isToday
                       ? 'bg-primary font-bold text-primary-foreground'
                       : cell.inMonth

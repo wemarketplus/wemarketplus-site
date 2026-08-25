@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { Button, Card, CardContent } from '@/shared/ui/core';
 import { ALERT_TONE_CLASS } from '../constants/billingConstants';
 import type { BillingAlertProps } from '../types/billingTypes';
@@ -22,7 +23,7 @@ export function BillingAlert({
           <Icon className="h-5 w-5" />
         </div>
         <div className="flex-1">
-          <h2 className="text-base font-semibold text-foreground">{title}</h2>
+          <h2 className={SECTION_TITLE}>{title}</h2>
           <p className="mt-1 text-sm text-muted">{description}</p>
         </div>
         <Button onClick={onAction} disabled={actionDisabled}>

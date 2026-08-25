@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { useMemo, useState } from 'react';
 import { Button, Card, CardContent, Input } from '@/shared/ui/core';
 import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
@@ -26,7 +27,7 @@ export function FinancialSettingsPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-display text-3xl text-foreground">Financial settings</h1>
+        <h1 className={PAGE_TITLE}>Financial settings</h1>
         <p className="text-sm text-muted">Reimbursement and compliance rates.</p>
       </header>
 
@@ -42,7 +43,7 @@ export function FinancialSettingsPage() {
       )}
 
       {isLoading ? (
-        <div className="rounded-[14px] border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
+        <div className="rounded-card border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
           Loading…
         </div>
       ) : (

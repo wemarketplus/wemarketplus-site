@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { Button, Card, CardContent } from '@/shared/ui/core';
 import type { IntegrationTileCardProps } from '../types/integrationsTypes';
 import { STATUS_TONE } from '../constants/integrationsConstants';
@@ -14,13 +15,13 @@ export function IntegrationTileCard({ tile }: IntegrationTileCardProps) {
             <Icon className="h-4 w-4" />
           </div>
           <span
-            className={`rounded-pill border px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] ${STATUS_TONE[tile.status]}`}
+            className={`rounded-pill border px-2 py-0.5 text-[10px] uppercase tracking-label ${STATUS_TONE[tile.status]}`}
           >
             {tile.status}
           </span>
         </div>
         <div>
-          <h2 className="text-sm font-semibold text-foreground">{tile.name}</h2>
+          <h2 className={SECTION_TITLE}>{tile.name}</h2>
           <p className="mt-1 text-sm text-muted">{tile.description}</p>
         </div>
         <Button

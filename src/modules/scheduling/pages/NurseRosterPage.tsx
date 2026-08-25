@@ -1,3 +1,4 @@
+import { PAGE_TITLE, SECTION_TITLE } from '@/shared/ui/core/typography';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { Button, DatePicker, Input, Label, Select } from '@/shared/ui/core';
@@ -134,7 +135,7 @@ export function NurseRosterPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-display text-3xl text-foreground">Nurse scheduling</h1>
+        <h1 className={PAGE_TITLE}>Nurse scheduling</h1>
         <p className="text-sm text-muted">
           Roster nurses and see where booked visits have nobody assigned.
         </p>
@@ -180,7 +181,7 @@ export function NurseRosterPage() {
       )}
 
       <section className="space-y-3">
-        <h2 className="text-[22px] font-black leading-tight text-foreground">
+        <h2 className={SECTION_TITLE}>
           Roster a shift
         </h2>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-5">

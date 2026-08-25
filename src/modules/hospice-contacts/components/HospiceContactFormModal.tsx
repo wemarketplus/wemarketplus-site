@@ -92,7 +92,7 @@ export function HospiceContactFormModal({
       size="lg"
       footer={
         <>
-          <Button variant="ghost" onClick={onClose} disabled={isSaving}>
+          <Button variant="secondary" onClick={onClose} disabled={isSaving}>
             Cancel
           </Button>
           <Button onClick={() => void submit()} disabled={isSaving}>

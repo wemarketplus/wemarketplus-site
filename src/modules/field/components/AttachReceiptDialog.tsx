@@ -139,7 +139,7 @@ export function AttachReceiptDialog({
       }
       footer={
         <>
-          <Button variant="ghost" onClick={onClose}>
+          <Button variant="secondary" onClick={onClose}>
             Cancel
           </Button>
           <Button onClick={submit} disabled={isUploading}>

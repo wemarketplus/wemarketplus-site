@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { ArrowUpRight, Check, RefreshCw } from 'lucide-react';
 import { Button, Card, CardContent } from '@/shared/ui/core';
 import { PRODUCT_LABELS } from '@/shared/types';
@@ -32,7 +33,7 @@ export function ChangePlanPanel({
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <RefreshCw className="h-4 w-4 text-primary" />
-        <h2 className="text-base font-semibold text-foreground">Change plan</h2>
+        <h2 className={SECTION_TITLE}>Change plan</h2>
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {plans.map((plan) => {
@@ -45,7 +46,7 @@ export function ChangePlanPanel({
             <Card key={plan.key}>
               <CardContent className="flex h-full flex-col gap-4 px-6 py-6">
                 <div className="space-y-1">
-                  <p className="text-[10px] uppercase tracking-[0.14em] text-muted-soft">
+                  <p className="text-[10px] uppercase tracking-label text-muted-soft">
                     {PRODUCT_LABELS[plan.product]}
                   </p>
                   <h3 className="text-lg font-semibold text-foreground">{plan.name}</h3>

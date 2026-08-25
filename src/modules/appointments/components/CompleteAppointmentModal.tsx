@@ -95,7 +95,7 @@ export function CompleteAppointmentModal({
       size="lg"
       footer={
         <>
-          <Button variant="ghost" onClick={onClose} disabled={isSaving}>
+          <Button variant="secondary" onClick={onClose} disabled={isSaving}>
             Cancel
           </Button>
           <Button onClick={submit} disabled={isSaving || missingActivityDetail}>
@@ -164,7 +164,7 @@ export function CompleteAppointmentModal({
         </div>
 
         <fieldset className="space-y-3 rounded-md border border-border px-4 py-3">
-          <legend className="px-1 text-[10px] uppercase tracking-[0.14em] text-muted-soft">
+          <legend className="px-1 text-[10px] uppercase tracking-label text-muted-soft">
             Next steps {nextStepsDueDate ? '(reminder will be created)' : '(optional)'}
           </legend>
           <div>
@@ -190,7 +190,7 @@ export function CompleteAppointmentModal({
         </fieldset>
 
         <fieldset className="space-y-3 rounded-md border border-border px-4 py-3">
-          <legend className="px-1 text-[10px] uppercase tracking-[0.14em] text-muted-soft">
+          <legend className="px-1 text-[10px] uppercase tracking-label text-muted-soft">
             Follow-up job {willChain ? '(will be created)' : '(optional)'}
           </legend>
           <div>

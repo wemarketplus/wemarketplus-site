@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { KeyRound, History } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button, Card, CardContent } from '@/shared/ui/core';
@@ -13,7 +14,7 @@ export function SecurityTab() {
               <KeyRound className="h-4 w-4" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-foreground">Password</h2>
+              <h2 className={SECTION_TITLE}>Password</h2>
               <p className="mt-1 text-sm text-muted">
                 Rotate your password — recommended every 90 days.
               </p>
@@ -34,7 +35,7 @@ export function SecurityTab() {
               <History className="h-4 w-4" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-foreground">
+              <h2 className={SECTION_TITLE}>
                 Recent sign-ins
               </h2>
               <p className="mt-1 text-sm text-muted">
@@ -42,7 +43,7 @@ export function SecurityTab() {
               </p>
             </div>
           </div>
-          <span className="rounded-pill border border-border/[0.08] bg-foreground/[0.03] px-2.5 py-1 text-[10px] uppercase tracking-[0.08em] text-muted-soft">
+          <span className="rounded-pill border border-border/[0.08] bg-foreground/[0.03] px-2.5 py-1 text-[10px] uppercase tracking-label text-muted-soft">
             Backend pending
           </span>
         </CardContent>

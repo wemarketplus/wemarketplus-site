@@ -72,7 +72,7 @@ export function OwnerCustomersPage() {
         />
 
         <div className="flex items-center justify-between text-xs text-muted-soft">
-          <span className="uppercase tracking-[0.1em]">
+          <span className="uppercase tracking-label">
             Page {page} of {lastPage}
             {isFetching && page > 1 ? ' · refreshing…' : ''}
           </span>
@@ -81,7 +81,7 @@ export function OwnerCustomersPage() {
               type="button"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="rounded-pill border border-border/[0.08] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted transition-colors hover:border-border/20 hover:text-foreground disabled:opacity-40 disabled:hover:border-border/[0.08] disabled:hover:text-muted"
+              className="rounded-pill border border-border/[0.08] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-label text-muted transition-colors hover:border-border/20 hover:text-foreground disabled:opacity-40 disabled:hover:border-border/[0.08] disabled:hover:text-muted"
             >
               Previous
             </button>
@@ -89,7 +89,7 @@ export function OwnerCustomersPage() {
               type="button"
               onClick={() => setPage((p) => Math.min(lastPage, p + 1))}
               disabled={page >= lastPage}
-              className="rounded-pill border border-border/[0.08] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted transition-colors hover:border-border/20 hover:text-foreground disabled:opacity-40 disabled:hover:border-border/[0.08] disabled:hover:text-muted"
+              className="rounded-pill border border-border/[0.08] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-label text-muted transition-colors hover:border-border/20 hover:text-foreground disabled:opacity-40 disabled:hover:border-border/[0.08] disabled:hover:text-muted"
             >
               Next
             </button>

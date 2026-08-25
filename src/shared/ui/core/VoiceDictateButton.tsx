@@ -56,7 +56,7 @@ export function VoiceDictateButton({
         aria-pressed={isListening}
         aria-label={isListening ? 'Stop dictation' : 'Dictate this note'}
         className={cn(
-          'inline-flex items-center gap-1.5 rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
+          'inline-flex items-center gap-1.5 rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-label transition-colors',
           isListening
             ? 'border-destructive/40 bg-destructive/10 text-destructive'
             : 'border-border/[0.12] text-muted hover:border-border/25 hover:text-foreground',

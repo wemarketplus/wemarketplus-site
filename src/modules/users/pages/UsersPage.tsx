@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { Plus } from 'lucide-react';
 import { extractApiErrorMessage } from '@/modules/auth/utils/errorUtils';
 import { useActiveEntitlement } from '@/modules/access';
@@ -40,7 +41,7 @@ export function UsersPage() {
     <div className="space-y-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex flex-col gap-1">
-          <h1 className="font-display text-3xl text-foreground">
+          <h1 className={PAGE_TITLE}>
             {isHospiceLink ? 'Admin' : 'Team members'}
           </h1>
           <p className="text-sm text-muted">
@@ -87,7 +88,7 @@ export function UsersPage() {
           />
 
           <div className="flex items-center justify-between text-xs text-muted-soft">
-            <span className="uppercase tracking-[0.1em]">
+            <span className="uppercase tracking-label">
               Page {page} of {lastPage}
               {isFetching && page > 1 ? ' · refreshing…' : ''}
             </span>
@@ -96,7 +97,7 @@ export function UsersPage() {
                 type="button"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="rounded-pill border border-border/[0.08] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted transition-colors hover:border-border/20 hover:text-foreground disabled:opacity-40 disabled:hover:border-border/[0.08] disabled:hover:text-muted"
+                className="rounded-pill border border-border/[0.08] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-label text-muted transition-colors hover:border-border/20 hover:text-foreground disabled:opacity-40 disabled:hover:border-border/[0.08] disabled:hover:text-muted"
               >
                 Previous
               </button>
@@ -104,7 +105,7 @@ export function UsersPage() {
                 type="button"
                 onClick={() => setPage((p) => Math.min(lastPage, p + 1))}
                 disabled={page >= lastPage}
-                className="rounded-pill border border-border/[0.08] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted transition-colors hover:border-border/20 hover:text-foreground disabled:opacity-40 disabled:hover:border-border/[0.08] disabled:hover:text-muted"
+                className="rounded-pill border border-border/[0.08] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-label text-muted transition-colors hover:border-border/20 hover:text-foreground disabled:opacity-40 disabled:hover:border-border/[0.08] disabled:hover:text-muted"
               >
                 Next
               </button>

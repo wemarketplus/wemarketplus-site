@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { CheckCheck, X } from 'lucide-react';
 import { Button } from '@/shared/ui/core';
 import { useNotifications } from '../hooks/useNotifications';
@@ -42,8 +43,8 @@ export function NotificationsDrawer() {
       >
         <header className="flex items-center justify-between border-b border-border/[0.06] px-4 py-4">
           <div>
-            <h2 className="text-base font-semibold text-foreground">Notifications</h2>
-            <p className="text-[11px] uppercase tracking-[0.1em] text-muted-soft">
+            <h2 className={SECTION_TITLE}>Notifications</h2>
+            <p className="text-[11px] uppercase tracking-label text-muted-soft">
               {unreadCount} unread
             </p>
           </div>
@@ -76,7 +77,7 @@ export function NotificationsDrawer() {
               type="button"
               onClick={() => changeFilter(f.value)}
               className={cn(
-                'rounded-pill border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
+                'rounded-pill border px-3 py-1 text-[11px] font-semibold uppercase tracking-label transition-colors',
                 filter === f.value
                   ? 'border-primary/40 bg-primary/15 text-primary'
                   : 'border-border/[0.08] text-muted hover:border-border/20 hover:text-foreground',

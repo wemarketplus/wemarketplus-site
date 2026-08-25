@@ -1,16 +1,21 @@
 import { useAppSelector } from '@/app/hooks';
 import { LandingPage } from '@/modules/marketing';
 import { DashboardPage } from '@/modules/dashboard';
-import { Sidebar, DashboardHeader } from '@/shared/ui/layout';
-import { NotificationsDrawer } from '@/modules/notifications';
+import { DashboardLayout } from '@/shared/ui/layout';
 
 // Picks the right "/" experience based on auth state. Mirrors the live site,
 // where wemarketplus.com is a marketing page for visitors and the CRM home
 // for authenticated users.
 //
-// Inlines the dashboard chrome instead of using <DashboardLayout> so the
-// authenticated branch renders DashboardPage as a direct child (DashboardLayout
-// uses <Outlet/> which won't resolve at a top-level route).
+// The authenticated branch renders the REAL <DashboardLayout>, passing the page
+// as children because `<Outlet/>` does not resolve at a top-level route. It used
+// to inline its own copy of the shell instead, which had quietly diverged from
+// the one every other screen uses — different `<main>` gutter (32px against
+// 22px), a `max-w-7xl` clamp no other page has, and no CopilotLauncher or
+// ImpersonationBanner. The visible symptom was the topbar: with the page inset
+// 32px and clamped, "Sign out" overhung the content beneath it by ~25px on this
+// screen and by nothing on the others, and moving from `/` to any list page slid
+// the whole page sideways under a topbar that stayed put.
 export function RootRoute() {
   const isAuthenticated = useAppSelector((s) => s.auth.isAuthenticated);
 
@@ -19,17 +24,8 @@ export function RootRoute() {
   }
 
   return (
-    <div className="flex h-screen w-full bg-bg">
-      <Sidebar />
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <DashboardHeader />
-        <main className="flex-1 overflow-y-auto px-6 pb-16 pt-6 sm:px-8">
-          <div className="mx-auto max-w-7xl animate-fade-in">
-            <DashboardPage />
-          </div>
-        </main>
-      </div>
-      <NotificationsDrawer />
-    </div>
+    <DashboardLayout>
+      <DashboardPage />
+    </DashboardLayout>
   );
 }

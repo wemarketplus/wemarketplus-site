@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { Plus, TriangleAlert, UserCog } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button, Card, CardContent } from '@/shared/ui/core';
@@ -53,7 +54,7 @@ export function ManageCustomRoles() {
             <UserCog className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="font-display text-2xl leading-tight text-foreground">
+            <h2 className={SECTION_TITLE}>
               Manage roles
             </h2>
             <p className="mt-1 max-w-2xl text-sm text-muted">
@@ -115,7 +116,7 @@ export function ManageCustomRoles() {
                   <p className="flex items-center gap-2 text-sm font-semibold text-foreground">
                     {role.name}
                     {!role.isActive && (
-                      <span className="rounded-pill border border-border/[0.12] px-1.5 py-px text-[9px] font-black uppercase tracking-[0.1em] text-muted-soft">
+                      <span className="rounded-pill border border-border/[0.12] px-1.5 py-px text-[9px] font-black uppercase tracking-label text-muted-soft">
                         Disabled
                       </span>
                     )}

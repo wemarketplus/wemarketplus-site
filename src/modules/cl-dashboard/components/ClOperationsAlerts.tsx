@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { AlertTriangle, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/shared/ui/core';
@@ -32,11 +33,11 @@ export function ClOperationsAlerts({
     <Card>
       <CardContent className="px-0 pb-0 pt-0">
         <header className="flex flex-wrap items-center gap-3 px-6 py-4">
-          <span className="rounded-[10px] bg-warning/[0.12] p-2 text-warning">
+          <span className="rounded-md bg-warning/[0.12] p-2 text-warning">
             <AlertTriangle className="h-4 w-4" />
           </span>
           <div className="min-w-0 flex-1">
-            <h2 className="text-sm font-semibold text-foreground">
+            <h2 className={SECTION_TITLE}>
               Operations alerts
             </h2>
             <p className="text-[11px] text-muted-soft">

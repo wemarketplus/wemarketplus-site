@@ -52,11 +52,31 @@ export function ConfirmDialog({
       onClose={onCancel}
       title={title}
       size="sm"
+      compact
       footer={
         <>
-          <Button variant="ghost" onClick={onCancel} disabled={isBusy}>
+          {/*
+            `secondary`, NOT `ghost` — the app's standard quiet button (32 other
+            call sites), so Cancel wears the same hairline + raised wash as every
+            other non-primary action.
+
+            A previous pass moved this to `ghost` to stop the footer reading as
+            "two equal choices". It over-corrected: ghost drops the border, the
+            wash AND the text colour at once, leaving muted grey type floating on
+            white next to a solid green pill — which is the low-visibility Cancel
+            QA then reported. The hierarchy comes from only ONE button being
+            FILLED; `bg-surface-raised` (#fafbfa) is a wash, not a fill, so
+            Cancel stays clearly subordinate while still looking clickable.
+          */}
+          <Button variant="secondary" onClick={onCancel} disabled={isBusy}>
             {cancelLabel}
           </Button>
+          {/*
+            No weight override here on purpose: the filled variants themselves are
+            700, not the 800 display weight, which is what fixed the "confirm
+            button text is excessively bold" half of this report for every filled
+            action at once. See the note at the top of Button.tsx.
+          */}
           <Button
             variant={destructive ? 'destructive' : 'primary'}
             onClick={onConfirm}

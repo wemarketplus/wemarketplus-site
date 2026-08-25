@@ -30,7 +30,7 @@ export interface ClCalendarEvent {
   kind: ClCalendarEventKind;
   /** Local-day bucket, `YYYY-MM-DD`. */
   dayKey: string;
-  /** Full instant for tours; midnight local for visits (see ownerId note). */
+  /** Full instant for tours; midnight local for visits (see visitToEvent). */
   at: ISODateString;
   /** True when `at` carries a meaningful clock time, not just a date. */
   hasTime: boolean;
@@ -40,10 +40,17 @@ export interface ClCalendarEvent {
   /**
    * Whose event this is, or null when the record does not say.
    *
-   * Tours carry `guideUserId`. OUTREACH VISITS CARRY NO OWNER AT ALL — the
-   * cl/outreach-visits DTO has no user field — so every visit is null here and
-   * renders in the unassigned colour. That is why `scope: 'mine'` cannot filter
-   * them; see useClCalendar.
+   * Outreach visits ALWAYS say: `cl_outreach_visits.userId` is NOT NULL and is
+   * set from the caller's JWT, so a visit's owner is the rep who logged it. (An
+   * earlier version of this note claimed visits carried no owner at all and the
+   * mapper hardcoded null to match — wrong on both counts, and the reason a
+   * user's chosen colour never appeared on this calendar.)
+   *
+   * Tours may still be null: `cl_tours.guideUserId` is nullable and both tour
+   * forms offer an explicit "— Unassigned —", so an unassigned tour is a real
+   * state the product supports, not a data defect. Null therefore means exactly
+   * one thing now — nobody is on the hook for this yet — and it renders in the
+   * unassigned grey. `scope: 'mine'` keeps those rows visible; see useClCalendar.
    */
   ownerId: ID | null;
   /** Where the row can actually be edited. */

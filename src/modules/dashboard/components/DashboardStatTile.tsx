@@ -30,13 +30,13 @@ export function DashboardStatTile({ stat }: { stat: DashboardStatCard }) {
       )}
     >
       <div className="flex items-start justify-between gap-3">
-        <p className="max-w-[8.5rem] text-[10.5px] font-semibold uppercase leading-[1.35] tracking-[0.12em] text-muted-soft">
+        <p className="max-w-[8.5rem] text-[10.5px] font-semibold uppercase leading-[1.35] tracking-label text-muted-soft">
           {stat.label}
         </p>
         {Icon && (
           <div
             className={cn(
-              'flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-[9px]',
+              'flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-md',
               TONE_CHIP[stat.tone ?? 'primary'],
             )}
           >
@@ -71,7 +71,7 @@ export function DashboardStatTile({ stat }: { stat: DashboardStatCard }) {
     <Link
       to={stat.to}
       aria-label={`${stat.label}: ${stat.value}`}
-      className="block rounded-[14px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+      className="block rounded-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
     >
       {body}
     </Link>

@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { ClipboardList, Sparkles, Wrench } from 'lucide-react';
@@ -91,7 +92,7 @@ export function ClFieldQueuePage() {
   return (
     <div className="space-y-6">
       <header className="flex flex-col gap-1">
-        <h1 className="font-display text-3xl text-foreground">My queue</h1>
+        <h1 className={PAGE_TITLE}>My queue</h1>
         <p className="text-sm text-muted">
           {data.totalItems === 0
             ? 'Nothing is assigned to you right now — you are clear.'

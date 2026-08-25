@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { Button } from '@/shared/ui/core';
@@ -51,7 +52,7 @@ export function LeadsPage() {
     <div className="space-y-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-display text-3xl text-foreground">Inbound leads</h1>
+          <h1 className={PAGE_TITLE}>Inbound leads</h1>
           <p className="text-sm text-muted">
             {total} referrals in intake · convert to start a pipeline
           </p>

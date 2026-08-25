@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { Link } from 'react-router-dom';
 import { CalendarCheck, ListChecks, MoonStar } from 'lucide-react';
 import { Card, CardContent } from '@/shared/ui/core';
@@ -82,7 +83,7 @@ export function ClDailyTasksPage() {
   return (
     <div className="space-y-6">
       <header className="flex flex-col gap-1">
-        <h1 className="font-display text-3xl text-foreground">Daily tasks</h1>
+        <h1 className={PAGE_TITLE}>Daily tasks</h1>
         <p className="text-sm text-muted">
           {queue.totalItems === 0
             ? 'Nothing needs you today — you are clear.'

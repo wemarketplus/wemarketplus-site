@@ -77,7 +77,7 @@ export function EditUserModal({
       size="lg"
       footer={
         <>
-          <Button variant="ghost" onClick={onClose} disabled={isSaving}>
+          <Button variant="secondary" onClick={onClose} disabled={isSaving}>
             Cancel
           </Button>
           <Button onClick={handleSubmit(onSubmit)} disabled={isSaving}>

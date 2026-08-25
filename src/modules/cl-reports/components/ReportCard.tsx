@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { Download } from 'lucide-react';
 import { Button, Card, CardContent } from '@/shared/ui/core';
 import { formatRelative } from '@/shared/utils/dateFormatter';
@@ -16,7 +17,7 @@ export function ReportCard({ report, live }: Props) {
     <Card>
       <CardContent className="space-y-3 px-5 py-5">
         <div>
-          <h2 className="text-sm font-semibold text-foreground">{report.title}</h2>
+          <h2 className={SECTION_TITLE}>{report.title}</h2>
           <p className="mt-1 text-sm text-muted">{report.description}</p>
         </div>
 
@@ -48,7 +49,7 @@ export function ReportCard({ report, live }: Props) {
         )}
 
         <div className="flex items-center justify-between">
-          <p className="text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+          <p className="text-[10px] uppercase tracking-label text-muted-soft">
             {report.lastRunAt
               ? `Last run ${formatRelative(report.lastRunAt)}`
               : 'Live data'}

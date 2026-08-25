@@ -75,7 +75,7 @@ export function LostReasonModal({
       size="md"
       footer={
         <>
-          <Button variant="ghost" onClick={onCancel} disabled={isSaving}>
+          <Button variant="secondary" onClick={onCancel} disabled={isSaving}>
             Cancel
           </Button>
           <Button onClick={submit} disabled={!canSubmit}>

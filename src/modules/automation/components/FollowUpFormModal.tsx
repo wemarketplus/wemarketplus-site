@@ -80,7 +80,7 @@ export function FollowUpFormModal({
       size="lg"
       footer={
         <>
-          <Button variant="ghost" onClick={onClose} disabled={isSaving}>
+          <Button variant="secondary" onClick={onClose} disabled={isSaving}>
             Cancel
           </Button>
           <Button onClick={submit} disabled={isSaving || !hasProspects}>

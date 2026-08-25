@@ -89,7 +89,7 @@ export function LeadsTable({
             </Button>
           </div>
         ) : (
-          <span className="block text-right text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+          <span className="block text-right text-[10px] uppercase tracking-label text-muted-soft">
             {lead.convertedPipelineId ? 'In pipeline' : '—'}
           </span>
         ),

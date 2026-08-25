@@ -94,7 +94,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
         role="dialog"
         aria-modal="true"
         aria-label="Global search"
-        className="animate-slide-up relative z-10 w-full max-w-xl overflow-hidden rounded-[14px] border border-border/[0.1] bg-surface shadow-2xl"
+        className="animate-slide-up relative z-10 w-full max-w-xl overflow-hidden rounded-card border border-border/[0.1] bg-surface shadow-2xl"
         onKeyDown={onKeyDown}
       >
         <div className="flex items-center gap-3 border-b border-border/[0.07] px-4">
@@ -156,7 +156,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                 const Icon = group.icon;
                 return (
                   <div key={group.key} className="px-2 pb-1">
-                    <p className="flex items-center gap-1.5 px-2 pb-1 pt-2 text-[10px] font-extrabold uppercase tracking-[0.12em] text-muted-soft">
+                    <p className="flex items-center gap-1.5 px-2 pb-1 pt-2 text-[10px] font-extrabold uppercase tracking-label text-muted-soft">
                       <Icon className="h-3 w-3" /> {group.label}
                     </p>
                     {group.results.map((result) => {
@@ -169,7 +169,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                           onClick={() => go(result)}
                           onMouseMove={() => idx >= 0 && setActiveIndex(idx)}
                           className={cn(
-                            'flex w-full flex-col items-start gap-0.5 rounded-[10px] px-3 py-2 text-left',
+                            'flex w-full flex-col items-start gap-0.5 rounded-md px-3 py-2 text-left',
                             isActive ? 'bg-primary/15' : 'hover:bg-foreground/[0.04]',
                           )}
                         >

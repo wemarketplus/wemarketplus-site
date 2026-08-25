@@ -344,7 +344,7 @@ export function MapCanvas({
       onPointerCancel={endPointer}
       onKeyDown={onKeyDown}
       className={cn(
-        'relative overflow-hidden rounded-[12px] border border-border/[0.12] bg-surface-raised',
+        'relative overflow-hidden rounded-lg border border-border/[0.12] bg-surface-raised',
         // `touch-none` hands every touch gesture to the handlers above; without
         // it the browser scrolls the modal instead of panning the map.
         'cursor-grab touch-none select-none active:cursor-grabbing',
@@ -432,7 +432,7 @@ function ZoomButton({
       onPointerDown={(event) => event.stopPropagation()}
       onPointerUp={(event) => event.stopPropagation()}
       onClick={onClick}
-      className="flex h-7 w-7 items-center justify-center rounded-[8px] border border-border/[0.12] bg-bg/85 text-foreground shadow-sm hover:bg-bg"
+      className="flex h-7 w-7 items-center justify-center rounded-sm border border-border/[0.12] bg-bg/85 text-foreground shadow-sm hover:bg-bg"
     >
       {children}
     </button>

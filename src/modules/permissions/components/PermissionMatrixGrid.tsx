@@ -61,7 +61,7 @@ export function PermissionMatrixGrid({
       <table className="w-full border-collapse text-sm">
         <thead>
           <tr className="border-b border-border/[0.08] bg-foreground/[0.02]">
-            <th className="sticky left-0 z-10 bg-surface px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.08em] text-muted">
+            <th className="sticky left-0 z-10 bg-surface px-4 py-3 text-left text-xs font-semibold uppercase tracking-label text-muted">
               Permission
             </th>
             {ALL_ROLES.map((role) => (

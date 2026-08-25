@@ -9,7 +9,7 @@ export function PortalNav() {
     <nav className="flex flex-wrap gap-x-6 gap-y-3 border-b border-border/[0.06] pb-4">
       {GROUPS.map((group) => (
         <div key={group} className="space-y-1.5">
-          <p className="text-[9px] font-black uppercase tracking-[0.12em] text-muted-soft">
+          <p className="text-[9px] font-black uppercase tracking-label text-muted-soft">
             {group}
           </p>
           <div className="flex flex-wrap gap-1.5">

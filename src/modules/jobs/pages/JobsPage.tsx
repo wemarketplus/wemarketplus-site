@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { toast } from 'sonner';
 import { useUpdateJobMutation } from '../api/jobsApi';
 import { JobsFilters } from '../components/JobsFilters';
@@ -35,7 +36,7 @@ export function JobsPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-display text-3xl text-foreground">Jobs</h1>
+        <h1 className={PAGE_TITLE}>Jobs</h1>
         <p className="text-sm text-muted">
           {total} units of work across your pipelines
         </p>

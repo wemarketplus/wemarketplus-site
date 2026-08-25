@@ -29,7 +29,7 @@ export function ReferralsFilters() {
             type="button"
             onClick={() => dispatch(setReferralStatusFilter(chip.value))}
             className={cn(
-              'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
+              'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-label transition-colors',
               status === chip.value
                 ? 'border-primary/40 bg-primary/15 text-primary'
                 : 'border-border/[0.08] text-muted hover:border-border/20 hover:text-foreground',
@@ -47,7 +47,7 @@ export function ReferralsFilters() {
           onClick={() => dispatch(setReferralColdOnly(!coldOnly))}
           aria-pressed={coldOnly}
           className={cn(
-            'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors',
+            'rounded-pill border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-label transition-colors',
             coldOnly
               ? 'border-destructive/40 bg-destructive/15 text-destructive'
               : 'border-border/[0.08] text-muted hover:border-border/20 hover:text-foreground',

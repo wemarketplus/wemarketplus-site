@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { ExternalLink, Paperclip, Plus } from 'lucide-react';
@@ -96,7 +97,7 @@ export function ExpenseReceipts() {
       <CardContent className="px-0 pb-0 pt-0">
         <header className="flex flex-wrap items-center gap-3 px-6 py-4">
           <div className="min-w-0 flex-1">
-            <h2 className="text-sm font-semibold text-foreground">
+            <h2 className={SECTION_TITLE}>
               Expense receipts
             </h2>
             <p className="text-[11px] text-muted-soft">

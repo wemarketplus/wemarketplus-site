@@ -24,15 +24,15 @@ const TONE_CHIP: Record<StatTone, string> = {
 
 export function StatTile({ label, value, hint, tone = 'b', icon: Icon }: StatTileProps) {
   return (
-    <div className="rounded-[14px] border border-border/[0.09] bg-surface px-5 py-5">
+    <div className="rounded-card border border-border/[0.09] bg-surface px-5 py-5">
       <div className="flex items-start justify-between gap-3">
-        <p className="max-w-[8.5rem] text-[10.5px] font-semibold uppercase leading-[1.35] tracking-[0.12em] text-muted-soft">
+        <p className="max-w-[8.5rem] text-[10.5px] font-semibold uppercase leading-[1.35] tracking-label text-muted-soft">
           {label}
         </p>
         {Icon && (
           <div
             className={cn(
-              'flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-[9px]',
+              'flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-md',
               TONE_CHIP[tone],
             )}
           >

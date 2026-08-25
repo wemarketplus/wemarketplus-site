@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { CalendarPlus, Clock, MapPin, User, Video } from 'lucide-react';
 import type { FollowUpItem } from '@/modules/activity/hooks/useFollowUps';
 import { Button, Card } from '@/shared/ui/core';
@@ -70,11 +71,11 @@ export function AppointmentsDayPanel({
   return (
     <Card className="flex h-fit flex-col overflow-hidden">
       <header className="flex items-baseline justify-between gap-2 px-4 py-3">
-        <h2 className="text-[13px] font-extrabold text-foreground">
+        <h2 className={SECTION_TITLE}>
           {dateKey ? dayHeading(dateKey) : 'Select a day'}
         </h2>
         {items.length > 0 && (
-          <span className="text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+          <span className="text-[10px] uppercase tracking-label text-muted-soft">
             {items.length} visit{items.length === 1 ? '' : 's'}
           </span>
         )}
@@ -135,7 +136,7 @@ export function AppointmentsDayPanel({
                 )}
                 <p
                   className={cn(
-                    'text-[10px] font-bold uppercase tracking-[0.08em]',
+                    'text-[10px] font-bold uppercase tracking-label',
                     STATUS_TEXT[appointment.status],
                   )}
                 >
@@ -180,7 +181,7 @@ export function AppointmentsDayPanel({
                 {followUp.detail && (
                   <p className="text-[11px] text-muted">{followUp.detail}</p>
                 )}
-                <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-warning">
+                <p className="text-[10px] font-bold uppercase tracking-label text-warning">
                   Follow-up
                 </p>
               </div>

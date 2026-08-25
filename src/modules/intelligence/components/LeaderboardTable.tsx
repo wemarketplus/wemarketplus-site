@@ -22,7 +22,7 @@ const columns: ReadonlyArray<Column<LeaderboardRow>> = [
     cell: (row) => (
       <div>
         <span className="font-bold text-foreground">{row.name || row.email}</span>
-        <span className="block text-[11px] uppercase tracking-[0.08em] text-muted-soft">
+        <span className="block text-[11px] uppercase tracking-label text-muted-soft">
           {row.role}
         </span>
       </div>

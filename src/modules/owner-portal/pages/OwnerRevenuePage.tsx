@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { LineChart } from 'lucide-react';
 import { Card, CardContent } from '@/shared/ui/core';
 import { EmptyState } from '@/shared/ui/feedback';
@@ -24,7 +25,7 @@ export function OwnerRevenuePage() {
 
       <div className="space-y-4">
         <div className="flex items-center gap-3">
-          <h2 className="font-display text-xl text-foreground">MRR and ARR trend</h2>
+          <h2 className={SECTION_TITLE}>MRR and ARR trend</h2>
           <OwnerPreviewNotice />
         </div>
         <Card>

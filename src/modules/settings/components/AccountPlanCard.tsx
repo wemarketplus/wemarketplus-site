@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { CreditCard, UserCheck, UserPlus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AddUserModal, useAddUser } from '@/modules/users';
@@ -61,7 +62,7 @@ export function AccountPlanCard() {
       <CardContent className="space-y-5 px-6 py-6">
         <header className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h2 className="text-base font-semibold text-foreground">
+            <h2 className={SECTION_TITLE}>
               Plan &amp; seats
             </h2>
             <p className="mt-1 text-sm text-muted">

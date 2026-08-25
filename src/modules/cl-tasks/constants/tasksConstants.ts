@@ -13,11 +13,25 @@ export const CL_TASKS_PAGE_SIZE = 20;
 
 // --- Display labels (backend enums -> human copy) --------------------------
 
+/**
+ * Full words for all four. "Med" was the odd one out — Urgent, High and Low
+ * were spelled in full and only Medium was clipped, so the task form's Priority
+ * dropdown offered "Urgent / High / Med / Low" and read as truncated text
+ * rather than as a deliberate abbreviation. That is the QA report.
+ *
+ * These labels are NOT table-only: `PRIORITY_OPTIONS` below is derived from this
+ * map and is what the create/edit form renders, so an abbreviation chosen to
+ * keep a pill narrow was also shortening an option label, where there is no
+ * width pressure at all. The old note here justified "Med" by the reference
+ * demo — but the demo's own dropdown reads `<option value="Med">Medium</option>`,
+ * i.e. it abbreviates the wire value and spells the label out, which is exactly
+ * what this now does. "Medium" is also no wider than "Urgent", so the pills that
+ * share this map gain nothing from the shorter string either.
+ */
 export const PRIORITY_LABELS: Record<TicketPriority, string> = {
   [TICKET_PRIORITY.Urgent]: 'Urgent',
   [TICKET_PRIORITY.High]: 'High',
-  // "Med" to match the reference demo and the app's own MaintenanceTable.
-  [TICKET_PRIORITY.Medium]: 'Med',
+  [TICKET_PRIORITY.Medium]: 'Medium',
   [TICKET_PRIORITY.Low]: 'Low',
 };
 

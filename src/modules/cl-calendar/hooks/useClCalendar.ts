@@ -29,9 +29,14 @@ export interface ClCalendarController {
   nextMonth: () => void;
   goToday: () => void;
   /**
-   * True when the current scope is hiding nothing it claims to hide — i.e.
-   * whether "My calendar" is trustworthy. False while unowned visits are present,
-   * so the UI can say so. See the ownership note below.
+   * True when at least one loaded row belongs to nobody, so "My calendar" is
+   * showing something that is not the viewer's.
+   *
+   * In practice that now means an UNASSIGNED TOUR and nothing else: visits always
+   * have an owner. Kept (rather than deleted with the visit fix) because
+   * `cl_tours.guideUserId` is nullable by design — the tour forms offer
+   * "— Unassigned —" — so the state it reports is still reachable. Drives the
+   * note under the scope toggle. See the ownership note below.
    */
   hasUnownedEvents: boolean;
   isLoading: boolean;
@@ -51,11 +56,22 @@ const startOfMonth = (date: Date) =>
  * which is an HL pipeline concept CommunityLink has no equivalent of.
  *
  * THE SCOPE CAVEAT, which the UI surfaces rather than hides: "My calendar" can
- * only filter records that say who owns them. Tours do (`guideUserId`); outreach
- * visits do NOT — their DTO carries no user field at all — so unowned visits stay
- * visible in BOTH scopes rather than vanishing from a marketer's own calendar or
- * being falsely attributed to them. `hasUnownedEvents` lets the scope toggle
- * admit this. The fix is a `createdBy`/`userId` field on cl/outreach-visits.
+ * only filter records that say who owns them. Both kinds now do — outreach
+ * visits carry `userId` (NOT NULL, set from the caller's JWT) and tours carry
+ * `guideUserId` — so scope filtering is honest for every visit and for every
+ * assigned tour.
+ *
+ * What remains is narrower than the caveat this block used to describe: a tour's
+ * `guideUserId` is NULLABLE and both tour forms offer "— Unassigned —", so an
+ * unassigned tour genuinely belongs to nobody. Those rows stay visible in BOTH
+ * scopes rather than vanishing from every calendar in the tenant (nobody would
+ * ever see them) or being falsely attributed to whoever is looking.
+ * `hasUnownedEvents` lets the scope toggle say so.
+ *
+ * The previous caveat asserted that visits carried no owner and that the fix was
+ * to add a `userId` field to cl/outreach-visits. The backend already had one;
+ * the frontend record type was simply missing it, so `visitToEvent` threw the
+ * owner away and every visit rendered unowned. See visitToEvent.
  *
  * Fetching is a fixed recent window, not the visible month: neither endpoint
  * takes a date range, so month navigation re-buckets what is already cached
@@ -103,7 +119,9 @@ export function useClCalendar(): ClCalendarController {
 
   const events = useMemo(() => {
     if (scope === 'all') return allEvents;
-    // Unowned rows are kept — see the scope caveat above.
+    // Owner-less rows (an unassigned tour) are kept, so they are not invisible
+    // to everyone at once — see the scope caveat above. Visits now carry a real
+    // owner, so they are filtered like any other row.
     return allEvents.filter(
       (event) => event.ownerId === null || event.ownerId === userId,
     );

@@ -32,7 +32,7 @@ export function NotificationsList({ items, emptyState, onActivate }: Notificatio
                 <p className="truncate text-sm font-semibold text-foreground">
                   {n.title}
                 </p>
-                <span className="shrink-0 text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+                <span className="shrink-0 text-[10px] uppercase tracking-label text-muted-soft">
                   {formatRelative(n.createdAt)}
                 </span>
               </div>

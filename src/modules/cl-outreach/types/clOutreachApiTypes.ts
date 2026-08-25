@@ -6,6 +6,23 @@ import type { ClTaskStatus, TicketPriority } from '../constants/clOutreachApiCon
 export interface ClOutreachVisitRecord {
   id: ID;
   tenantId: ID;
+  /**
+   * The field worker who made the visit — WHO OWNS THIS ROW.
+   *
+   * Non-nullable, because the column is: `cl_outreach_visits.userId` is `uuid`
+   * NOT NULL and `ClOutreachVisitController.create` fills it from the JWT
+   * (`{ ...dto, userId: actor.id }`), so a visit cannot exist without one. It is
+   * deliberately absent from `CreateClOutreachVisitRequest` below for the same
+   * reason: it is derived from the caller, never sent by the client, and a
+   * writable owner field would let one rep log a visit as another.
+   *
+   * This field was MISSING from this type while the backend was already
+   * returning it, which made the shared CommunityLink calendar paint every
+   * facility visit in the grey unassigned colour — the visit's owner was thrown
+   * away at the type boundary rather than at the API. See visitToEvent in
+   * modules/cl-calendar.
+   */
+  userId: ID;
   referralSourceId: ID | null;
   visitDate: string;
   locationName: string | null;

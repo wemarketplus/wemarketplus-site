@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { Plus } from 'lucide-react';
 import { STAFF_ROLES, useRole } from '@/shared/rbac';
 import { Button } from '@/shared/ui/core';
@@ -33,7 +34,7 @@ export function ReferralsPage() {
     <div className="space-y-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-display text-3xl text-foreground">
+          <h1 className={PAGE_TITLE}>
             Referral sources
           </h1>
           <p className="text-sm text-muted">

@@ -16,7 +16,7 @@ export function DashboardActivityList({ items }: DashboardActivityListProps) {
     <Card>
       <CardContent className="px-0 pt-0 pb-0">
         <header className="px-6 py-4">
-          <p className="text-[10px] uppercase tracking-[0.14em] text-muted-soft">
+          <p className="text-[10px] uppercase tracking-label text-muted-soft">
             Recent activity
           </p>
         </header>
@@ -40,7 +40,7 @@ export function DashboardActivityList({ items }: DashboardActivityListProps) {
                 <p className="text-[11px] text-foreground">
                   {formatDateTime(a.occurredAt)}
                 </p>
-                <p className="text-[10px] uppercase tracking-[0.1em] text-muted-soft">
+                <p className="text-[10px] uppercase tracking-label text-muted-soft">
                   {formatRelative(a.occurredAt)}
                 </p>
               </div>

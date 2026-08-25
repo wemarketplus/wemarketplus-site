@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Copy, Plus, QrCode } from 'lucide-react';
@@ -31,7 +32,7 @@ function QrPanel({ id, onClose }: { id: string; onClose: () => void }) {
           <img
             src={data.qrDataUrl}
             alt="QR code for the facility referral form"
-            className="mx-auto h-56 w-56 rounded-[10px] bg-white p-2"
+            className="mx-auto h-56 w-56 rounded-md bg-white p-2"
           />
           <p className="break-all text-[11px] text-muted">{data.url}</p>
           <Button
@@ -108,7 +109,7 @@ export function ReferralPortalPage() {
     <div className="space-y-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-display text-3xl text-foreground">
+          <h1 className={PAGE_TITLE}>
             Facility referral portal
           </h1>
           <p className="text-sm text-muted">

@@ -60,11 +60,20 @@
     --color-destructive: 209 63 63;    /* #d13f3f */
     --color-destructive-foreground: 255 255 255;
 
-    /* Radii — from the site CSS */
+    /* Radii — from the site CSS.
+       Reach for these through Tailwind (`rounded-sm/md/lg/card/xl/pill`) rather
+       than an arbitrary `rounded-[Npx]`. 130 call sites spelled these exact
+       values as arbitrary px — `rounded-[10px]` beside `rounded-md` for the same
+       10px, `rounded-[8px]` beside `rounded-sm` — so the scale existed but was
+       being bypassed, and off-scale one-offs (9px) slipped in beside it. */
     --radius-sm: 8px;
     --radius: 10px;       /* inputs */
     --radius-lg: 12px;    /* small cards / hint boxes */
-    --radius-xl: 18px;    /* auth + dashboard cards */
+    --radius-card: 14px;  /* THE card/panel/modal surface — the app's most-used
+                             radius (29 call sites) and previously the only one
+                             with no token at all, which is why every card
+                             hard-coded it. */
+    --radius-xl: 18px;    /* auth cards */
     --radius-pill: 999px; /* buttons + badges */
   }
 
@@ -183,6 +192,36 @@
 }
 
 @layer utilities {
+  /*
+   * The dropdown chevron for a native <select>.
+   *
+   * A bare <select> renders the OPERATING SYSTEM's arrow, which is a different
+   * glyph, size and inset on every platform — and, crucially, a different glyph
+   * from the `lucide-react` ChevronDown that <ListboxSelect> and <StatusSelect>
+   * draw for themselves. So a filter bar holding one of each showed two
+   * different arrows on two controls that are the same control, and the app's
+   * dropdowns had no single appearance at all.
+   *
+   * `appearance: none` removes the platform arrow (the native PICKER still opens
+   * on click, including the platform picker on touch — only the closed control's
+   * painting changes) and this background draws the lucide chevron in its place:
+   * same 24-unit grid, same 2px-equivalent stroke, same round caps.
+   *
+   * The stroke is #6a726e — `--color-muted`. A data: URI cannot read a CSS
+   * custom property, so the one token that would otherwise drive it is inlined
+   * here, in the single place the chevron is defined, rather than at 84 call
+   * sites. The signed-in app is light-theme only (see :root above), so there is
+   * no second value it would need to take.
+   */
+  .control-chevron {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='24'%20height='24'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%236a726e'%20stroke-width='2.5'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpolyline%20points='6%209%2012%2015%2018%209'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 14px 14px;
+  }
+
   @keyframes wm-breathe {
     0%, 100% { opacity: 1; }
     50%      { opacity: 0.3; }

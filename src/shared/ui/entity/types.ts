@@ -131,6 +131,26 @@ export interface EntityField<TValues extends FieldValues> {
    * `*` on an optional field is worse than none at all.
    */
   required?: boolean;
+  /**
+   * The control's `autocomplete` token. OPT-IN: every field in an entity form
+   * defaults to `'off'`, so set this only where browser autofill is genuinely
+   * wanted (a form that really does ask for the SIGNED-IN USER's own details).
+   *
+   * WHY OFF IS THE DEFAULT. These forms describe OTHER records — a lead, a
+   * contact, a visit — not the person filling them in, so a browser profile has
+   * nothing correct to contribute. It contributes anyway: with no token on any
+   * control, Chrome has to classify the whole form by heuristic, and a form
+   * holding a name, a phone and an email reads to it as an address form. It then
+   * applies profile heuristics to EVERY control in that form, `<select>`s
+   * included, and writes into the ones it thinks it recognises. That is the
+   * "Stage is changed by autofill in the Leads pipeline" report: nothing in the
+   * app touched Stage — the browser did, because nothing had told it not to.
+   *
+   * An app-domain enum (Stage, Urgency, Care level) is never something a browser
+   * profile can know, so the fix is to stop it guessing rather than to guess
+   * which of the nine enums it will mis-hit next.
+   */
+  autoComplete?: string;
   // Span both columns of the 2-col grid (defaults to false = single column).
   full?: boolean;
 }

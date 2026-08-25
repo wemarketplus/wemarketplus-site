@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { Send, Sparkles } from 'lucide-react';
 import { Button, Card, CardContent } from '@/shared/ui/core';
 import { AiPresetChips } from '../components/AiPresetChips';
@@ -14,7 +15,7 @@ export function AiAssistantPage() {
           <Sparkles className="h-5 w-5" />
         </div>
         <div>
-          <h1 className="font-display text-3xl text-foreground">AI assistant</h1>
+          <h1 className={PAGE_TITLE}>AI assistant</h1>
           <p className="mt-1 text-sm text-muted">
             Ask about cold sources, draft follow-ups, or strategize on a stuck deal.
           </p>

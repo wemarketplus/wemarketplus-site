@@ -9,7 +9,7 @@ interface OwnerPreviewNoticeProps {
 
 export function OwnerPreviewNotice({ label }: OwnerPreviewNoticeProps) {
   return (
-    <div className="inline-flex items-center gap-1.5 rounded-pill border border-warning/30 bg-warning/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-warning">
+    <div className="inline-flex items-center gap-1.5 rounded-pill border border-warning/30 bg-warning/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-label text-warning">
       <FlaskConical className="h-3 w-3" />
       {label ?? 'Preview data'}
     </div>

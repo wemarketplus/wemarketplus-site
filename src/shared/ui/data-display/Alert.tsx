@@ -6,7 +6,7 @@ import { cn } from '@/shared/utils/cn';
 // Driven by tokens rather than literal hex so the tones track the palette —
 // the previous values (#79c0ff on a .07 fill) were tuned for a navy page and
 // were unreadable once the app moved to the light editorial theme.
-const alertVariants = cva('rounded-[10px] px-3.5 py-2.5 text-[13px]', {
+const alertVariants = cva('rounded-md px-3.5 py-2.5 text-[13px]', {
   variants: {
     tone: {
       b: 'border border-azure/25 bg-azure/[0.06] text-azure',

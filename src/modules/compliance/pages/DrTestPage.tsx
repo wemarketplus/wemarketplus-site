@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { Button, Card, CardContent } from '@/shared/ui/core';
 import { PortalShell } from '../components/PortalShell';
 import { useDrTest } from '../hooks/useDrTest';
@@ -12,7 +13,7 @@ export function DrTestPage() {
       <Card dense>
         <CardContent className="space-y-4 px-6 py-6">
           <div>
-            <h2 className="text-base font-semibold text-foreground">Run DR Validation</h2>
+            <h2 className={SECTION_TITLE}>Run DR Validation</h2>
             <p className="mt-1 text-sm text-muted">
               Tests: DB read validation, referential integrity, tenant isolation, backup
               verification.

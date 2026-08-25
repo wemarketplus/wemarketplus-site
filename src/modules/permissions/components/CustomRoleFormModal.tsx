@@ -53,7 +53,7 @@ export function CustomRoleFormModal({
       size="lg"
       footer={
         <>
-          <Button variant="ghost" onClick={onClose} disabled={isSaving}>
+          <Button variant="secondary" onClick={onClose} disabled={isSaving}>
             Cancel
           </Button>
           <Button onClick={onSave} disabled={isSaving}>
@@ -121,7 +121,7 @@ export function CustomRoleFormModal({
             ) : (
               catalog.map((group) => (
                 <fieldset key={group.title}>
-                  <legend className="mb-1 text-[10px] font-black uppercase tracking-[0.12em] text-muted-soft">
+                  <legend className="mb-1 text-[10px] font-black uppercase tracking-label text-muted-soft">
                     {group.title}
                   </legend>
                   <div className="grid gap-1 sm:grid-cols-2">

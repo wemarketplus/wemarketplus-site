@@ -74,7 +74,7 @@ export function OwnerPipelineFormModal({
       title={record ? 'Edit pipeline record' : 'New pipeline record'}
       footer={
         <div className="flex justify-end gap-2">
-          <Button variant="ghost" size="sm" onClick={onClose} disabled={isSaving}>
+          <Button variant="secondary" size="sm" onClick={onClose} disabled={isSaving}>
             Cancel
           </Button>
           <Button

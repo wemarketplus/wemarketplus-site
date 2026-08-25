@@ -103,10 +103,15 @@ export const HOUSEKEEPING_STATUS_LABELS: Record<HousekeepingStatus, string> = {
   [HOUSEKEEPING_STATUS.Skipped]: 'Skipped',
 };
 
+// Full words for all four — see the note on cl-tasks' PRIORITY_LABELS, which is
+// the same map spelled twice. This copy has the same defect for the same reason:
+// TICKET_PRIORITY_OPTIONS below is derived from it and feeds the maintenance
+// ticket form's Priority dropdown, so the clipped "Med" was truncating an option
+// label here too, not just a table pill.
 export const TICKET_PRIORITY_LABELS: Record<TicketPriority, string> = {
   [TICKET_PRIORITY.Urgent]: 'Urgent',
   [TICKET_PRIORITY.High]: 'High',
-  [TICKET_PRIORITY.Medium]: 'Med',
+  [TICKET_PRIORITY.Medium]: 'Medium',
   [TICKET_PRIORITY.Low]: 'Low',
 };
 

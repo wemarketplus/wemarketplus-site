@@ -42,10 +42,10 @@ export function ClPortfolioCard({
     <Card>
       <CardContent className="px-5 py-5">
         <div className="flex items-start justify-between gap-3">
-          <p className="text-[10.5px] font-semibold uppercase leading-[1.35] tracking-[0.12em] text-muted-soft">
+          <p className="text-[10.5px] font-semibold uppercase leading-[1.35] tracking-label text-muted-soft">
             {title}
           </p>
-          <span className="flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-[9px] bg-primary/[0.08] text-primary">
+          <span className="flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-md bg-primary/[0.08] text-primary">
             <Icon className="h-4 w-4" />
           </span>
         </div>
@@ -64,7 +64,7 @@ export function ClPortfolioCard({
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         ) : (
-          <p className="mt-4 text-[11px] uppercase tracking-[0.1em] text-muted-soft">
+          <p className="mt-4 text-[11px] uppercase tracking-label text-muted-soft">
             {actionLabel} — available on Max
           </p>
         )}

@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Card, CardContent, Logo } from '@/shared/ui/core';
@@ -36,7 +37,7 @@ export function OnboardingPage() {
       <div className="mx-auto max-w-2xl space-y-7">
         <div className="flex flex-col items-center gap-3">
           <Logo size="lg" />
-          <p className="text-[11px] uppercase tracking-[0.16em] text-muted-soft">
+          <p className="text-[11px] uppercase tracking-label text-muted-soft">
             Welcome aboard · let's get you set up
           </p>
         </div>
@@ -45,7 +46,7 @@ export function OnboardingPage() {
 
         <Card>
           <CardContent className="space-y-6 px-7 py-8">
-            <h1 className="font-display text-3xl text-foreground">
+            <h1 className={PAGE_TITLE}>
               {STEP_LABELS[currentStep] ?? currentStep}
             </h1>
             {currentStep === 'account' && <AccountStep />}

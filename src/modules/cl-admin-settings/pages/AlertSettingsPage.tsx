@@ -1,3 +1,4 @@
+import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { AlertRoutingPanel } from '../components/AlertRoutingPanel';
 
 /**
@@ -12,7 +13,7 @@ export function AlertSettingsPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-display text-3xl text-foreground">Alert settings</h1>
+        <h1 className={PAGE_TITLE}>Alert settings</h1>
         <p className="text-sm text-muted">Who gets notified, and how, for each event.</p>
       </header>
 

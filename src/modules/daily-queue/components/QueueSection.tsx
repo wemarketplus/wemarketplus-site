@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import type { ComponentType, ReactNode } from 'react';
 import { Card, CardContent } from '@/shared/ui/core';
 import { Pill } from '@/shared/ui/data-display';
@@ -39,14 +40,14 @@ export function QueueSection({
           <span
             className={
               urgent && count > 0
-                ? 'rounded-[10px] bg-destructive/[0.10] p-2 text-destructive'
-                : 'rounded-[10px] bg-primary/[0.08] p-2 text-primary'
+                ? 'rounded-md bg-destructive/[0.10] p-2 text-destructive'
+                : 'rounded-md bg-primary/[0.08] p-2 text-primary'
             }
           >
             <Icon className="h-4 w-4" />
           </span>
           <div className="min-w-0 flex-1">
-            <h2 className="text-sm font-semibold text-foreground">{title}</h2>
+            <h2 className={SECTION_TITLE}>{title}</h2>
             <p className="text-[11px] text-muted-soft">{subtitle}</p>
           </div>
           {count > 0 && (
