@@ -170,6 +170,17 @@ export function toCommunityFormValues(c: ClCommunityRecord): CommunityFormValues
     state: c.state ?? '',
     phone: c.phone ?? '',
     address: c.address ?? '',
-    totalUnits: c.totalUnits != null ? String(c.totalUnits) : '',
+    /**
+     * A stored 0 opens the field BLANK, not as "0".
+     *
+     * `totalUnits` is a non-null integer column defaulting to 0, so every
+     * community created before the count was collected holds 0 — it means "never
+     * recorded", not "this building has no units". Now that the schema requires
+     * at least 1, echoing that 0 back into the input would make the Edit form
+     * un-submittable for those rows: someone fixing a phone number would be
+     * blocked by a units error about a value they never entered. Blank is both
+     * honest about what is known and valid to save.
+     */
+    totalUnits: c.totalUnits ? String(c.totalUnits) : '',
   };
 }

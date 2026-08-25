@@ -15,7 +15,26 @@ export const STAT_VALUE = 'text-[26px] font-black leading-none text-[#f4f8ff]';
 export const STAT_SUB = 'mt-[3px] text-[10px] text-[#6b7fa3]';
 
 // .fi / .flb / .fl / .fg / .fw
-export const FI = 'w-full rounded-[8px] border border-white/10 bg-[#0d1f38] px-[11px] py-2 text-[13px] text-[#f4f8ff] outline-none transition-colors focus:border-[#f59e0b]';
+/**
+ * The demo skin's ONE field geometry — the `controlStyles.ts` rule applied to
+ * this design system.
+ *
+ * `py-2` with no height is what the signed-in app already learned not to do: a
+ * select's intrinsic line box is not an input's, so the same class string
+ * rendered a 37.7px search box directly above a 33.8px status dropdown of the
+ * same width on the Lead Pipeline filter stack. The mismatch is the whole of
+ * "Dropdown Controls Have Inconsistent Heights" — it cannot be tuned away with
+ * padding, only pinned.
+ *
+ * 34px is the height the SELECTS already had, so the dropdowns do not move and
+ * only the inputs come into line with them.
+ *
+ * Scoped `:not(textarea)` because 15 demo textareas wear FI too and must keep
+ * growing with their content. The vertical padding is zeroed in the same breath:
+ * with the height pinned, `py-2`'s 16px would push a 13px line box past 34px and
+ * clip the text it is supposed to inset.
+ */
+export const FI = 'w-full rounded-[8px] border border-white/10 bg-[#0d1f38] px-[11px] py-2 text-[13px] text-[#f4f8ff] outline-none transition-colors focus:border-[#f59e0b] [&:not(textarea)]:h-[34px] [&:not(textarea)]:py-0';
 export const FLB = 'text-[11px] font-bold text-[#4b6278]';
 export const FL = 'flex flex-col gap-1';
 export const FG = 'mb-3 grid grid-cols-2 gap-3';

@@ -7,6 +7,7 @@ export { StatTile } from './components/StatTile';
 export { StatGrid } from './components/StatGrid';
 export { DemoButton } from './components/DemoButton';
 export { Field } from './components/Field';
+export { DemoSearch } from './components/DemoSearch';
 export { DemoToast } from './components/DemoToast';
 export { useToastAutohide } from './hooks/useToastAutohide';
 // Re-export, not a definition: useCsvDownload moved to shared/hooks when a

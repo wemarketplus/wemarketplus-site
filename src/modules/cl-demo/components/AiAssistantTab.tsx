@@ -53,6 +53,7 @@ export function AiAssistantTab() {
         </div>
         <div className="mt-2.5 flex gap-2">
           <input
+            autoComplete="off"
             className={`${FI} flex-1`}
             value={input}
             onChange={(e) => setInput(e.target.value)}

@@ -11,7 +11,7 @@ export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 export { Checkbox, type CheckboxProps } from './Checkbox';
 export { DatePicker, DATE_VALUE_FORMAT, type DatePickerProps } from './DatePicker';
 export { Input, type InputProps } from './Input';
-export { Label } from './Label';
+export { Label, type LabelProps } from './Label';
 export { ListboxSelect, type ListboxOption } from './ListboxSelect';
 export { Logo } from './Logo';
 export { PasswordInput } from './PasswordInput';

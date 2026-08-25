@@ -36,32 +36,44 @@ export function AddReferralTab() {
         </DemoButton>
       }
     >
+      {/*
+        Own <form> boundary, `autoComplete="off"`. This is the strongest address
+        signal in the Pro demo — Contact Name, Organization, `type="tel"`,
+        `type="email"`, City — so Chrome classifies it as an address form with
+        high confidence, and once it does, profile heuristics reach every control
+        in the group including the Type dropdown. The fields were also unowned
+        (no <form> existed anywhere in the demo modules), which let that group
+        extend to the tab's other formless controls. See ModalShell for the full
+        note. Submit is prevented: the demo saves to in-memory state.
+      */}
+      <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
       <div className={FG}>
         <Field label="Contact Name *">
-          <input className={FI} value={name} onChange={(e) => setName(e.target.value)} placeholder="Dr. Amanda Chen" />
+          <input autoComplete="off" className={FI} value={name} onChange={(e) => setName(e.target.value)} placeholder="Dr. Amanda Chen" />
         </Field>
         <Field label="Organization">
-          <input className={FI} value={org} onChange={(e) => setOrg(e.target.value)} placeholder="Dallas Medical Group" />
+          <input autoComplete="off" className={FI} value={org} onChange={(e) => setOrg(e.target.value)} placeholder="Dallas Medical Group" />
         </Field>
         <Field label="Type">
-          <select className={FI} value={type} onChange={(e) => setType(e.target.value)}>
+          <select autoComplete="off" className={FI} value={type} onChange={(e) => setType(e.target.value)}>
             {REFERRAL_TYPES.map((t) => <option key={t}>{t}</option>)}
           </select>
         </Field>
         <Field label="Phone">
-          <input className={FI} type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(214) 555-0100" />
+          <input autoComplete="off" className={FI} type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(214) 555-0100" />
         </Field>
         <Field label="Email">
-          <input className={FI} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@org.com" />
+          <input autoComplete="off" className={FI} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@org.com" />
         </Field>
         <Field label="City">
-          <input className={FI} value={city} onChange={(e) => setCity(e.target.value)} placeholder="Dallas" />
+          <input autoComplete="off" className={FI} value={city} onChange={(e) => setCity(e.target.value)} placeholder="Dallas" />
         </Field>
         <Field label="Notes" wide>
-          <textarea className={`${FI} min-h-[72px] resize-y`} rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="How we met, relationship notes…" />
+          <textarea autoComplete="off" className={`${FI} min-h-[72px] resize-y`} rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="How we met, relationship notes…" />
         </Field>
       </div>
       <DemoButton onClick={save}>Save Source</DemoButton>
+      </form>
     </Card>
   );
 }

@@ -37,7 +37,7 @@ export function AgencyStep() {
     >
       <div className="space-y-1.5">
         <Label htmlFor="agencyName">Agency name</Label>
-        <Input id="agencyName" {...register('agencyName')} />
+        <Input id="agencyName" autoComplete="organization" {...register('agencyName')} />
         {errors.agencyName && (
           <p className="text-xs text-destructive">{errors.agencyName.message}</p>
         )}
@@ -46,7 +46,7 @@ export function AgencyStep() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="space-y-1.5 sm:col-span-2">
           <Label htmlFor="city">City</Label>
-          <Input id="city" {...register('city')} />
+          <Input id="city" autoComplete="address-level2" {...register('city')} />
           {errors.city && (
             <p className="text-xs text-destructive">{errors.city.message}</p>
           )}
@@ -84,7 +84,7 @@ export function AgencyStep() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <Label htmlFor="phone">Phone</Label>
-          <Input id="phone" type="tel" {...register('phone')} />
+          <Input id="phone" type="tel" autoComplete="tel" {...register('phone')} />
           {errors.phone && (
             <p className="text-xs text-destructive">{errors.phone.message}</p>
           )}

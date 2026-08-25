@@ -25,6 +25,20 @@ interface ListboxSelectProps {
   disabled?: boolean;
   invalid?: boolean;
   className?: string;
+  /**
+   * Sizing for the chevron, for a trigger that is not field-sized. The 16px
+   * default is right inside a 44px control and far too big inside a 22px status
+   * pill — see StatusSelect, which wears this component's behaviour at badge
+   * geometry.
+   */
+  chevronClassName?: string;
+  /**
+   * A floor for the panel width, in px. The panel is measured from the TRIGGER
+   * so it lines up with the field it belongs to, which is exactly right for a
+   * full-width form control and wrong for a shrink-wrapped pill: an 80px badge
+   * would open an 80px list and clip its own option labels.
+   */
+  minPanelWidth?: number;
   /** Only needed when there is no visible <Label> to point at the trigger. */
   'aria-label'?: string;
 }
@@ -67,6 +81,23 @@ const TYPEAHEAD_RESET_MS = 700;
  * options is served better by the platform picker (which is also the right
  * control on touch). Reach for this when the list is long enough that the
  * browser's own popup stops being a popup.
+ *
+ * ── The SECOND reason to reach for it: an accidental commit that costs ────────
+ * Length is not the only thing wrong with the platform popup. Which pixels of it
+ * commit a value is also the platform's business, and its blank regions — the
+ * list's own padding, its scroll gutter, the strip below the last row — commit
+ * whatever is currently HIGHLIGHTED on mouse-up on some platforms. Nothing in
+ * the page can intercept that, because the popup is not in the page.
+ *
+ * On a form field that is merely annoying: the value is wrong until submit, and
+ * the user can see it and fix it. On a control wired to a live PATCH it is a
+ * silent write to the record — "clicking an empty area of the Fee Status
+ * dropdown selects a fee status", which is what moved StatusSelect onto this
+ * component. So the rule is two-part: reach for this when the list is too long
+ * for the platform popup, OR when a stray commit from it would hit the server.
+ * Commit here happens only from an option's own `onPointerDown`; the panel's
+ * padding belongs to a <ul> with no handler, so blank space is inert by
+ * construction.
  */
 export function ListboxSelect({
   id,
@@ -78,6 +109,8 @@ export function ListboxSelect({
   disabled,
   invalid,
   className,
+  chevronClassName,
+  minPanelWidth,
   'aria-label': ariaLabel,
 }: ListboxSelectProps) {
   const [open, setOpen] = useState(false);
@@ -92,10 +125,14 @@ export function ListboxSelect({
   const listRef = useRef<HTMLUListElement | null>(null);
 
   const close = useCallback(() => setOpen(false), []);
+  // The width the panel will actually be drawn at — trigger width, floored.
+  // Computed once so the popover's flip/clamp maths and the panel's own style
+  // cannot disagree about how wide it is.
+  const drawnWidth = Math.max(panelWidth, minPanelWidth ?? 0);
   const { anchorRef, panelRef, position } = useAnchoredPopover<
     HTMLButtonElement,
     HTMLDivElement
-  >({ open, onClose: close, width: panelWidth, align: 'start' });
+  >({ open, onClose: close, width: drawnWidth, align: 'start' });
 
   const selectedIndex = options.findIndex((o) => o.value === value);
   const selected = selectedIndex >= 0 ? options[selectedIndex] : undefined;
@@ -239,7 +276,11 @@ export function ListboxSelect({
         </span>
         <ChevronDown
           aria-hidden="true"
-          className={cn('h-4 w-4 shrink-0 text-muted transition-transform', open && 'rotate-180')}
+          className={cn(
+            'h-4 w-4 shrink-0 text-muted transition-transform',
+            open && 'rotate-180',
+            chevronClassName,
+          )}
         />
       </button>
 
@@ -250,7 +291,7 @@ export function ListboxSelect({
             style={{
               top: position?.top ?? 0,
               left: position?.left ?? 0,
-              width: panelWidth || undefined,
+              width: drawnWidth || undefined,
               maxHeight: MAX_PANEL_HEIGHT,
               // Hidden until measured, so the first paint is never at 0,0.
               visibility: position ? 'visible' : 'hidden',

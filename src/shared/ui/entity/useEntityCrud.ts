@@ -45,7 +45,20 @@ export function useEntityCrud<
   const submitUpdate = async (id: string, patch: TUpdate): Promise<boolean> => {
     try {
       await update({ id, patch }).unwrap();
-      toast.success(`${cap(noun)} updated`);
+      /**
+       * ONE toast for a burst, via a stable id.
+       *
+       * Unlike create (one modal, one submit) and delete (behind a confirm),
+       * this path is reachable once PER ROW: every list table's status badge
+       * PATCHes on change, so anything that touches several rows at once — a
+       * browser autofill sweeping the table, a bulk action — used to stack N
+       * separate "…updated" popups, capped only by sonner's 3-visible default.
+       * That is the "multiple Update popups" report. Sonner treats a repeated
+       * id as the SAME toast, so N concurrent updates now render as one
+       * message. The per-row PATCHes are unaffected; only the announcement
+       * collapses.
+       */
+      toast.success(`${cap(noun)} updated`, { id: `${noun}-updated` });
       setEditing(null);
       return true;
     } catch (err) {
@@ -70,13 +83,40 @@ export function useEntityCrud<
     }
   };
 
+  /**
+   * `createOpen` and `editing` are separate state but they drive ONE modal —
+   * every consumer renders it as `open={createOpen || editing !== null}` with
+   * `onClose={editing ? closeEdit : closeCreate}`. So they have to be mutually
+   * exclusive, and they were not: nothing behind an open modal is inert (Modal
+   * has no focus trap), so a row's Edit button was still reachable by keyboard
+   * while "Add" was up. Both flags then set meant the Add form silently
+   * retitled to Edit and re-`reset` to that row, `submit` routed to
+   * submitUpdate — the only way an ADD flow can emit "…updated" at all — and
+   * one click on Cancel cleared just the one flag, leaving the modal open.
+   *
+   * Fixed here rather than at ~15 call sites: each opener clears the other
+   * flag, and each closer clears both, so `open` cannot be true with the
+   * component in a state no one asked for.
+   */
   return {
     createOpen,
-    openCreate: () => setCreateOpen(true),
-    closeCreate: () => setCreateOpen(false),
+    openCreate: () => {
+      setEditing(null);
+      setCreateOpen(true);
+    },
+    closeCreate: () => {
+      setEditing(null);
+      setCreateOpen(false);
+    },
     editing,
-    openEdit: (entity: TEntity) => setEditing(entity),
-    closeEdit: () => setEditing(null),
+    openEdit: (entity: TEntity) => {
+      setCreateOpen(false);
+      setEditing(entity);
+    },
+    closeEdit: () => {
+      setCreateOpen(false);
+      setEditing(null);
+    },
     isSaving,
     submitCreate,
     submitUpdate,

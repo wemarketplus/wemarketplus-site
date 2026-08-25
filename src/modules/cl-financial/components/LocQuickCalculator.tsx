@@ -1,6 +1,6 @@
 import { SECTION_TITLE } from '@/shared/ui/core/typography';
 import { useMemo, useState } from 'react';
-import { Card, CardContent, Checkbox, Select } from '@/shared/ui/core';
+import { Card, CardContent, Checkbox, Input, Select } from '@/shared/ui/core';
 import { formatUsd } from '../utils/financialFormat';
 import { num } from '../utils/clFinancialMappers';
 import type { ClLocPricingRecord } from '../types/clFinancialApiTypes';
@@ -51,12 +51,20 @@ export function LocQuickCalculator({ levels }: LocQuickCalculatorProps) {
           </label>
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted">Parking $</span>
-            <input
+            {/*
+              <Input>, not a hand-rolled <input>. This restated CONTROL_BASE by
+              hand and got three things wrong at once: `py-2` with no height
+              (34px against the <Select>'s 44px, and the two share this grid
+              row), `border-border/10` against the shared `/[0.12]`, and
+              `bg-surface` against `bg-surface-raised` — so it read as a
+              lighter, shorter, differently-outlined control beside its own
+              dropdown. See controlStyles.ts.
+            */}
+            <Input
               type="number"
               step="0.01"
               value={parking}
               onChange={(e) => setParking(e.target.value)}
-              className="w-full rounded-md border border-border/10 bg-surface px-3 py-2 text-sm text-foreground outline-none focus:border-primary/50"
               aria-label="Parking fee"
             />
           </div>

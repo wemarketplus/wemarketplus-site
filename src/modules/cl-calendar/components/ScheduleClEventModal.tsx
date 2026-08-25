@@ -1,16 +1,25 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import {
   LocationField,
   toLocationValue,
   type LocationValue,
 } from '@/modules/geocoding';
 import { useTenantStaffOptions } from '@/modules/users';
-import { Button, Input, Label, Select, Textarea } from '@/shared/ui/core';
+import {
+  Button,
+  Input,
+  Label,
+  ListboxSelect,
+  Select,
+  Textarea,
+} from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import { cn } from '@/shared/utils/cn';
+import { nowLocalDateTime, todayLocalDate } from '@/shared/utils/dateFormatter';
 import { CL_SCHEDULE_CHOICES } from '../constants/clCalendarConstants';
+import { clSeedTourWhen } from '../utils/clCalendarUtils';
 import {
   clScheduleSchema,
   type ClScheduleFormValues,
@@ -27,10 +36,16 @@ interface ScheduleClEventModalProps {
   onSubmit: (values: ClScheduleFormValues) => Promise<boolean>;
 }
 
-/** A tour needs a clock; a visit is an all-day record. */
+/**
+ * A tour needs a clock; a visit is an all-day record.
+ *
+ * The clock comes from `clSeedTourWhen` rather than a flat 10:00 so that
+ * clicking TODAY after 10am does not open the form on a time the past-date rule
+ * rejects on sight.
+ */
 const defaults = (dayKey: string): ClScheduleFormValues => ({
   kind: 'tour',
-  when: dayKey ? `${dayKey}T10:00` : '',
+  when: clSeedTourWhen(dayKey),
   leadId: '',
   guideUserId: '',
   durationMin: '60',
@@ -70,6 +85,7 @@ export function ScheduleClEventModal({
     reset,
     watch,
     setValue,
+    control,
     formState: { errors },
   } = useForm<ClScheduleFormValues>({
     resolver: zodResolver(clScheduleSchema),
@@ -79,6 +95,25 @@ export function ScheduleClEventModal({
   const staff = useTenantStaffOptions(open);
   const kind = watch('kind');
   const isTour = kind === 'tour';
+
+  /**
+   * The two long pickers' options with their "none" row PREPENDED.
+   *
+   * A native <select> carried this as an `<option value="">`, and a listbox's
+   * `placeholder` is not a substitute: the placeholder only renders while the
+   * value matches nothing, so with it alone a source picked by mistake could
+   * never be un-picked. Both fields are optional on the wire (`referralSourceId`
+   * / `leadId` are omitted when blank), so "not linked" has to stay reachable as
+   * a real choice.
+   */
+  const sourceChoices = useMemo(
+    () => [{ value: '', label: '— Not linked —' }, ...referralSourceOptions],
+    [referralSourceOptions],
+  );
+  const leadChoices = useMemo(
+    () => [{ value: '', label: '— No lead —' }, ...leadOptions],
+    [leadOptions],
+  );
 
   /**
    * The tour's From/To, assembled for the picker and split back into the flat
@@ -112,7 +147,7 @@ export function ScheduleClEventModal({
   const changeKind = (next: ClScheduleFormValues['kind']) => {
     const day = (watch('when') || dayKey).slice(0, 10);
     setValue('kind', next);
-    setValue('when', next === 'tour' ? `${day}T10:00` : day);
+    setValue('when', next === 'tour' ? clSeedTourWhen(day) : day);
   };
 
   const submit = handleSubmit(async (values) => {
@@ -140,7 +175,7 @@ export function ScheduleClEventModal({
         </>
       }
     >
-      <form onSubmit={submit} className="space-y-4">
+      <form autoComplete="off" onSubmit={submit} className="space-y-4">
         <div>
           <Label>What are you scheduling?</Label>
           <div
@@ -181,6 +216,19 @@ export function ScheduleClEventModal({
             <Input
               id="cs-when"
               type={isTour ? 'datetime-local' : 'date'}
+              /**
+               * Greys out everything before now in the picker itself — at the
+               * MINUTE for a tour, at the DAY for a visit, matching the
+               * precision each field carries and the two branches of the
+               * schema's rule. Called at render, not module load, so a modal
+               * left open across midnight does not still offer yesterday.
+               *
+               * The floor is the first of two layers: a typed value still gets
+               * through it (and this modal submits via an onClick `type="button"`,
+               * so native constraint validation never runs), which is what the
+               * schema rule is for.
+               */
+              min={isTour ? nowLocalDateTime() : todayLocalDate()}
               {...register('when')}
             />
             {errors.when && (
@@ -201,16 +249,26 @@ export function ScheduleClEventModal({
                   <option value="90">1.5 hours</option>
                 </Select>
               </div>
+              {/* The other 100-item list in this modal, bounded for exactly the
+                  same reason as Referral source below. Fixed in the same pass
+                  because it is the same defect one branch away — the Staff
+                  picker beside it is a short tenant list and stays native. */}
               <div className="sm:col-span-2">
                 <Label htmlFor="cs-lead">Prospect</Label>
-                <Select id="cs-lead" {...register('leadId')}>
-                  <option value="">— No lead —</option>
-                  {leadOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </Select>
+                <Controller
+                  control={control}
+                  name="leadId"
+                  render={({ field }) => (
+                    <ListboxSelect
+                      id="cs-lead"
+                      value={field.value ?? ''}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      options={leadChoices}
+                      placeholder="— No lead —"
+                    />
+                  )}
+                />
               </div>
               <div className="sm:col-span-2">
                 <Label htmlFor="cs-guide">Staff member giving the tour</Label>
@@ -251,16 +309,35 @@ export function ScheduleClEventModal({
 
           {!isTour && (
             <>
+              {/* A BOUNDED list, not a native <select>.
+                  This is the tenant's whole referral-source book —
+                  CL_CALENDAR_FETCH_LIMIT is 100, each labelled
+                  "name — organization" — and a native select's popup is drawn by
+                  the browser at whatever height its option count implies, which
+                  for 100 rows is a list taller than the viewport that Chrome then
+                  places over the rest of the modal. `size`, `max-height` and
+                  `overflow` cannot reach it; only not letting the browser draw it
+                  can, which is what <ListboxSelect> exists for (see the note
+                  there — this is the same defect as the 51-state pickers, and the
+                  reason it needs `Controller` is that the trigger is a <button>,
+                  not a form control `register` can ref). Capped at 264px with its
+                  own scrollbar. */}
               <div className="sm:col-span-2">
                 <Label htmlFor="cs-source">Referral source</Label>
-                <Select id="cs-source" {...register('referralSourceId')}>
-                  <option value="">— Not linked —</option>
-                  {referralSourceOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </Select>
+                <Controller
+                  control={control}
+                  name="referralSourceId"
+                  render={({ field }) => (
+                    <ListboxSelect
+                      id="cs-source"
+                      value={field.value ?? ''}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      options={sourceChoices}
+                      placeholder="— Not linked —"
+                    />
+                  )}
+                />
               </div>
               <div>
                 <Label htmlFor="cs-location">Facility / organization</Label>

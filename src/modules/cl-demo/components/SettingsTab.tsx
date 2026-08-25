@@ -21,11 +21,11 @@ export function SettingsTab() {
     <>
       <Card title="Community Settings">
         <div className={FG}>
-          <Field label="Community Name"><input className={FI} value={name} onChange={(e) => setName(e.target.value)} /></Field>
-          <Field label="Phone"><input className={FI} value={phone} onChange={(e) => setPhone(e.target.value)} /></Field>
-          <Field label="City"><input className={FI} value={city} onChange={(e) => setCity(e.target.value)} /></Field>
-          <Field label="State"><input className={FI} value={state} onChange={(e) => setState(e.target.value)} /></Field>
-          <Field label="Address" wide><input className={FI} value={address} onChange={(e) => setAddress(e.target.value)} /></Field>
+          <Field label="Community Name"><input autoComplete="off" className={FI} value={name} onChange={(e) => setName(e.target.value)} /></Field>
+          <Field label="Phone"><input autoComplete="off" className={FI} value={phone} onChange={(e) => setPhone(e.target.value)} /></Field>
+          <Field label="City"><input autoComplete="off" className={FI} value={city} onChange={(e) => setCity(e.target.value)} /></Field>
+          <Field label="State"><input autoComplete="off" className={FI} value={state} onChange={(e) => setState(e.target.value)} /></Field>
+          <Field label="Address" wide><input autoComplete="off" className={FI} value={address} onChange={(e) => setAddress(e.target.value)} /></Field>
         </div>
         <DemoButton onClick={() => actions.toast('Settings saved: ' + name)}>Save Settings</DemoButton>
       </Card>

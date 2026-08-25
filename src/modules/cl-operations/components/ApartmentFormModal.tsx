@@ -82,7 +82,7 @@ export function ApartmentFormModal({
         </>
       }
     >
-      <form onSubmit={submit} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <form autoComplete="off" onSubmit={submit} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="sm:col-span-2">
           <Label htmlFor="ap-community">Community</Label>
           <Select id="ap-community" {...register('communityId')}>

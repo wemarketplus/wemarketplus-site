@@ -105,8 +105,15 @@ export function ExpenseReceipts() {
             </p>
           </div>
           {/* Upload is the primary action; the link form is secondary now that
-              real proof can be stored, so it gets the ghost treatment. */}
-          <Button variant="ghost" size="sm" onClick={() => setOpen(true)}>
+              real proof can be stored, so it gets the OUTLINE treatment — not
+              ghost. As a ghost it was transparent, borderless and `text-muted`
+              sitting immediately left of a filled primary pill, so it had no hit
+              area of its own and read as a caption rather than a peer button
+              (the same defect already fixed on the header's sign-out). Outline
+              gives it a hairline and `text-foreground` while staying
+              `font-semibold` against the primary's `font-bold` + fill, so
+              "Attach photo" is still unambiguously the louder action. */}
+          <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
             <Plus className="h-4 w-4" /> Add link
           </Button>
           <Button size="sm" onClick={() => setUploadOpen(true)}>

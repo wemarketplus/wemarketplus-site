@@ -63,11 +63,28 @@ export const communitySchema = z.object({
   state: z.string().max(200).optional().or(z.literal('')),
   phone: z.string().max(200).optional().or(z.literal('')),
   address: z.string().max(200).optional().or(z.literal('')),
+  /**
+   * Blank is allowed — a community can be filed before anyone counts its doors,
+   * and `cl_communities.totalUnits` is a non-null integer defaulting to 0, which
+   * is what "not recorded yet" looks like in the existing rows.
+   *
+   * But a TYPED zero is not that. `/^\d+$/` matched "0", so the Add community
+   * form accepted a building with no units in it — a community that cannot hold
+   * a resident, cannot have an apartment attached, and divides by zero in every
+   * occupancy figure (see utils/occupancy). So the count, WHEN GIVEN, starts at
+   * one. The two refinements are separate on purpose: "Whole number" and "At
+   * least 1 unit" are different mistakes and deserve different messages.
+   *
+   * Mirrors `@Min(1)` on CreateClCommunityDto/UpdateClCommunityDto — the server
+   * is what actually holds the rule; this is the same rule stated where the user
+   * can see it.
+   */
   totalUnits: z
     .string()
     .optional()
     .or(z.literal(''))
-    .refine((v) => !v || /^\d+$/.test(v), 'Whole number'),
+    .refine((v) => !v || /^\d+$/.test(v), 'Whole number')
+    .refine((v) => !v || Number(v) >= 1, 'At least 1 unit'),
 });
 export type CommunityFormValues = z.infer<typeof communitySchema>;
 

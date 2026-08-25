@@ -23,7 +23,16 @@ export const CL_CALENDAR_FETCH_LIMIT = 100;
 /** Events drawn per cell before collapsing into "+N more". */
 export const CL_MAX_CHIPS_PER_DAY = 2;
 
-/** What to call each kind in the day panel and the schedule modal. */
+/**
+ * What to call each KIND — i.e. each of the two tables behind the calendar.
+ *
+ * NOT what to call each row: an outreach visit can be a facility visit, a
+ * physician lunch or a drop-off, and this map has one entry for all three. It
+ * used to be rendered directly in the day panel, which is why a physician lunch
+ * appeared there as "Facility visit". Rows now carry their own `typeLabel`
+ * (ClCalendarEvent), and these two are its SOURCE for a tour and its FALLBACK
+ * for a visit with no type recorded.
+ */
 export const CL_EVENT_KIND_LABELS: Record<ClCalendarEventKind, string> = {
   [ClCalendarEventKind.Tour]: 'Tour',
   [ClCalendarEventKind.Visit]: 'Facility visit',
@@ -33,9 +42,11 @@ export const CL_EVENT_KIND_LABELS: Record<ClCalendarEventKind, string> = {
  * What the schedule modal can create, in the guide's words: "You can schedule a
  * tour, a facility visit, or even a physician lunch directly."
  *
- * A physician lunch is a VISIT with the `lunch_and_learn` type, not a third
+ * A physician lunch is a VISIT with the `lunch_learn` type, not a third
  * record — so it appears here as its own choice (the guide names it, and a user
- * looking for it should find it) that pre-selects that visit type.
+ * looking for it should find it) that pre-selects that visit type. The value it
+ * writes comes from VISIT_TYPE (cl-outreach); it was spelled out by hand here as
+ * `lunch_and_learn`, which is a value nothing in either repo recognises.
  */
 export const CL_SCHEDULE_CHOICES: ReadonlyArray<{
   value: string;

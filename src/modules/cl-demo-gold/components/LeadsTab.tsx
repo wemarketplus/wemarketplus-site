@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Badge, Card, DemoButton, FI, TBL, TD, TH } from '@/shared/cl-demo';
+import { Badge, Card, DemoButton, DemoSearch, FI, TBL, TD, TH } from '@/shared/cl-demo';
 import { LEAD_FILTER_STATUSES } from '../constants/goldData';
 import { useGoldDemo } from '../hooks/useGoldDemo';
 import { leadStatusTone, urgencyTone } from '../utils/goldFormat';
@@ -21,8 +21,8 @@ export function LeadsTab() {
     <Card
       title={
         <div className="flex flex-wrap items-center gap-2">
-          <input className={`${FI} w-[180px]`} placeholder="Search…" value={q} onChange={(e) => setQ(e.target.value)} />
-          <select className={`${FI} w-[150px]`} value={status} onChange={(e) => setStatus(e.target.value)}>
+          <DemoSearch className="w-[180px]" value={q} onChange={setQ} />
+          <select autoComplete="off" className={`${FI} w-[150px]`} value={status} onChange={(e) => setStatus(e.target.value)}>
             <option value="">All Status</option>
             {LEAD_FILTER_STATUSES.map((s) => <option key={s}>{s}</option>)}
           </select>

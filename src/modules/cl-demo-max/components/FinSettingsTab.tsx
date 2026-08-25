@@ -19,7 +19,7 @@ export function FinSettingsTab() {
               <div className="mb-1.5 text-[10px] text-[#6b7fa3]">{s.hint}</div>
               <div className="flex items-center gap-2">
                 <span className="text-[#6b7fa3]">$</span>
-                <input className={`${FI} max-w-[120px]`} value={draft[s.key]} onChange={(e) => setDraft((d) => ({ ...d, [s.key]: e.target.value }))} />
+                <input autoComplete="off" className={`${FI} max-w-[120px]`} value={draft[s.key]} onChange={(e) => setDraft((d) => ({ ...d, [s.key]: e.target.value }))} />
                 <span className="text-[#6b7fa3]">{s.suffix}</span>
                 <DemoButton sm onClick={() => actions.saveFinSetting(s.key, draft[s.key])}>Save</DemoButton>
               </div>

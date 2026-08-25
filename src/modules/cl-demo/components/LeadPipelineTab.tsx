@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Badge, Card, DemoButton, FI, TBL, TD, TH } from '@/shared/cl-demo';
+import { Badge, Card, DemoButton, DemoSearch, FI, TBL, TD, TH } from '@/shared/cl-demo';
 import { LEAD_STATUSES_FULL, URGENCIES } from '../constants/clDemoData';
 import { useClDemo } from '../hooks/useClDemo';
 import { filterLeads, statusBadgeTone, urgencyBadgeTone } from '../utils/clDemoFormat';
@@ -18,12 +18,12 @@ export function LeadPipelineTab() {
     <Card
       title={
         <div className="flex flex-wrap items-center gap-2">
-          <input className={`${FI} w-[200px]`} placeholder="Search leads…" value={q} onChange={(e) => setQ(e.target.value)} />
-          <select className={`${FI} w-[160px]`} value={status} onChange={(e) => setStatus(e.target.value)}>
+          <DemoSearch className="w-[200px]" placeholder="Search leads…" value={q} onChange={setQ} />
+          <select autoComplete="off" className={`${FI} w-[160px]`} value={status} onChange={(e) => setStatus(e.target.value)}>
             <option value="">All Stages</option>
             {LEAD_STATUSES_FULL.map((s) => <option key={s}>{s}</option>)}
           </select>
-          <select className={`${FI} w-[120px]`} value={urg} onChange={(e) => setUrg(e.target.value)}>
+          <select autoComplete="off" className={`${FI} w-[120px]`} value={urg} onChange={(e) => setUrg(e.target.value)}>
             <option value="">All Urgency</option>
             {URGENCIES.map((u) => <option key={u} value={u}>{u}</option>)}
           </select>

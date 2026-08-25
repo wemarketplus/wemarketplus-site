@@ -62,7 +62,7 @@ export function NotesTab() {
         <div className="flex flex-col gap-2.5">
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="text-[11px] text-[#6b7fa3]">Entered by:</span>
-            <select className={`${FI} w-[240px] !py-1.5`} value={enteredBy} onChange={(e) => setEnteredBy(e.target.value)}>
+            <select autoComplete="off" className={`${FI} w-[240px]`} value={enteredBy} onChange={(e) => setEnteredBy(e.target.value)}>
               <option value="auto">{currentUser} (current user)</option>
               {ENTERED_BY_USERS.map((u) => <option key={u} value={u}>{u}</option>)}
             </select>
@@ -88,8 +88,17 @@ export function NotesTab() {
 
           <div className="relative">
             <div className="mb-1 text-[11px] font-bold uppercase tracking-[0.04em] text-[#8ba4c4]">Contact / Lead / Referral <span className="text-[9px] text-[#f87171]">Who is this note about?</span></div>
+            {/*
+              Geometry from FI, so this sits at the same 34px as the Note Type
+              and Outcome dropdowns it is stacked with — it was a hand-rolled
+              `border-2 px-3 py-2.5` at 43.5px, the tallest control in the form
+              by 9px. The darker `bg-[#060e1b]` stays: this field is deliberately
+              recessed to read as a typeahead, which is a colour difference, not
+              a size one.
+            */}
             <input
-              className="w-full rounded-[8px] border-2 border-white/10 bg-[#060e1b] px-3 py-2.5 text-[13px] text-[#f4f8ff] outline-none focus:border-[#f59e0b]/50"
+              autoComplete="off"
+              className={`${FI} bg-[#060e1b]`}
               placeholder="Start typing a name — leads, referrals, contacts appear…"
               value={contactQ}
               onChange={(e) => { setContactQ(e.target.value); setContactName(''); setDdOpen(true); }}
@@ -116,16 +125,16 @@ export function NotesTab() {
             )}
           </div>
 
-          <Fld label="Note Type"><select className={FI} value={type} onChange={(e) => setType(e.target.value)}>{NOTE_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}</select></Fld>
-          <Fld label="Summary *"><textarea className={`${FI} min-h-[72px]`} rows={3} placeholder="What happened? What was discussed? Emotional tone? Key points raised…" value={summary} onChange={(e) => setSummary(e.target.value)} /></Fld>
-          <Fld label="Outcome"><select className={FI} value={outcome} onChange={(e) => setOutcome(e.target.value)}><option value="">Select outcome…</option>{NOTE_OUTCOMES.map((o) => <option key={o}>{o}</option>)}</select></Fld>
+          <Fld label="Note Type"><select autoComplete="off" className={FI} value={type} onChange={(e) => setType(e.target.value)}>{NOTE_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}</select></Fld>
+          <Fld label="Summary *"><textarea autoComplete="off" className={`${FI} min-h-[72px]`} rows={3} placeholder="What happened? What was discussed? Emotional tone? Key points raised…" value={summary} onChange={(e) => setSummary(e.target.value)} /></Fld>
+          <Fld label="Outcome"><select autoComplete="off" className={FI} value={outcome} onChange={(e) => setOutcome(e.target.value)}><option value="">Select outcome…</option>{NOTE_OUTCOMES.map((o) => <option key={o}>{o}</option>)}</select></Fld>
           <Fld label="Next Step — select or type your own">
-            <select className={FI} value={nextSel} onChange={(e) => setNextSel(e.target.value)}><option value="">Select next step…</option>{NOTE_NEXT_STEPS.map((n) => <option key={n}>{n}</option>)}</select>
-            <input className={`${FI} mt-1.5`} placeholder="Or type a custom next step…" value={nextTxt} onChange={(e) => setNextTxt(e.target.value)} />
+            <select autoComplete="off" className={FI} value={nextSel} onChange={(e) => setNextSel(e.target.value)}><option value="">Select next step…</option>{NOTE_NEXT_STEPS.map((n) => <option key={n}>{n}</option>)}</select>
+            <input autoComplete="off" className={`${FI} mt-1.5`} placeholder="Or type a custom next step…" value={nextTxt} onChange={(e) => setNextTxt(e.target.value)} />
           </Fld>
           <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-            <Fld label="Follow-Up Date"><input className={FI} type="date" value={followDate} onChange={(e) => setFollowDate(e.target.value)} /></Fld>
-            <Fld label="Pipeline Stage at Time of Note"><select className={FI} value={stage} onChange={(e) => setStage(e.target.value)}><option value="">— Select stage —</option>{NOTE_STAGES.map((s) => <option key={s}>{s}</option>)}</select></Fld>
+            <Fld label="Follow-Up Date"><input autoComplete="off" className={FI} type="date" value={followDate} onChange={(e) => setFollowDate(e.target.value)} /></Fld>
+            <Fld label="Pipeline Stage at Time of Note"><select autoComplete="off" className={FI} value={stage} onChange={(e) => setStage(e.target.value)}><option value="">— Select stage —</option>{NOTE_STAGES.map((s) => <option key={s}>{s}</option>)}</select></Fld>
           </div>
           <DemoButton className="mt-1 px-6 py-[11px] text-[14px]" onClick={save}>💾 Save Note</DemoButton>
         </div>
@@ -133,7 +142,7 @@ export function NotesTab() {
 
       <div className="mb-2.5 flex items-center justify-between">
         <div className="text-[13px] font-extrabold text-[#f4f8ff]">Activity Timeline <span className="font-normal text-[#4b6278]">({notes.length} entries)</span></div>
-        <select className={`${FI} w-[150px]`} value={filter} onChange={(e) => setFilter(e.target.value)}>
+        <select autoComplete="off" className={`${FI} w-[150px]`} value={filter} onChange={(e) => setFilter(e.target.value)}>
           <option value="">All Types</option>
           <option value="call">📞 Calls</option><option value="text">💬 Texts</option><option value="email">✉️ Emails</option><option value="missed_call">📵 Missed Calls</option><option value="visit">🤝 Visits</option><option value="manual">📝 Manual Notes</option>
         </select>

@@ -31,13 +31,13 @@ export function GiftTab() {
       <Card title="Log Gift / Gratuity">
         <div className="flex flex-col gap-2.5">
           <div className="rounded-[8px] border border-[#f59e0b]/20 bg-[#f59e0b]/[0.08] px-3 py-2 text-[12px] text-[#f59e0b]">Per-visit limit: <strong>${giftLimit.toFixed(2)}</strong> (Admin can change in Financial Settings)</div>
-          <Field label="Recipient Name *"><input className={FI} placeholder="Dr. Smith…" value={recipient} onChange={(e) => setRecipient(e.target.value)} /></Field>
-          <Field label="Facility"><input className={FI} placeholder="North Park Rehab" value={facility} onChange={(e) => setFacility(e.target.value)} /></Field>
-          <Field label="Visit Date *"><input className={FI} type="date" value={date} onChange={(e) => setDate(e.target.value)} /></Field>
-          <Field label="Gift Type *"><select className={FI} value={type} onChange={(e) => setType(e.target.value)}><option value="">Select…</option>{GIFT_TYPES.map((t) => <option key={t}>{t}</option>)}</select></Field>
-          <Field label={`Gift Value ($)`}><input className={FI} type="number" step={0.01} placeholder="0.00" value={value} onChange={(e) => setValue(e.target.value)} /></Field>
+          <Field label="Recipient Name *"><input autoComplete="off" className={FI} placeholder="Dr. Smith…" value={recipient} onChange={(e) => setRecipient(e.target.value)} /></Field>
+          <Field label="Facility"><input autoComplete="off" className={FI} placeholder="North Park Rehab" value={facility} onChange={(e) => setFacility(e.target.value)} /></Field>
+          <Field label="Visit Date *"><input autoComplete="off" className={FI} type="date" value={date} onChange={(e) => setDate(e.target.value)} /></Field>
+          <Field label="Gift Type *"><select autoComplete="off" className={FI} value={type} onChange={(e) => setType(e.target.value)}><option value="">Select…</option>{GIFT_TYPES.map((t) => <option key={t}>{t}</option>)}</select></Field>
+          <Field label={`Gift Value ($)`}><input autoComplete="off" className={FI} type="number" step={0.01} placeholder="0.00" value={value} onChange={(e) => setValue(e.target.value)} /></Field>
           {over && <div className="rounded-[8px] border border-[#f87171]/25 bg-[#f87171]/[0.08] px-3 py-2 text-[12px] text-[#f87171]">⚠ Exceeds the ${giftLimit} per-visit limit!</div>}
-          <Field label="Visit Purpose"><input className={FI} placeholder="Relationship visit, in-service…" value={purpose} onChange={(e) => setPurpose(e.target.value)} /></Field>
+          <Field label="Visit Purpose"><input autoComplete="off" className={FI} placeholder="Relationship visit, in-service…" value={purpose} onChange={(e) => setPurpose(e.target.value)} /></Field>
           <DemoButton onClick={save}>💾 Save Gift Log</DemoButton>
         </div>
       </Card>

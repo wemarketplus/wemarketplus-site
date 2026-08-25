@@ -6,7 +6,6 @@ import type { CalendarColorMap } from '@/modules/appointments';
 import { Button, Card, CardContent } from '@/shared/ui/core';
 import { Pill } from '@/shared/ui/data-display';
 import { cn } from '@/shared/utils/cn';
-import { CL_EVENT_KIND_LABELS } from '../constants/clCalendarConstants';
 import { ClCalendarEventKind, type ClCalendarEvent } from '../types/clCalendarTypes';
 import { clShortTime } from '../utils/clCalendarUtils';
 
@@ -118,7 +117,11 @@ export function ClCalendarDayPanel({
                       {event.kind === ClCalendarEventKind.Visit && (
                         <MapPin className="mr-1 inline h-3 w-3" />
                       )}
-                      {CL_EVENT_KIND_LABELS[event.kind]}
+                      {/* The row's OWN type — "Lunch & learn", "Drop-off /
+                          materials" — not the label of its kind, which cannot
+                          tell a physician lunch from a facility visit because
+                          both are the same table. */}
+                      {event.typeLabel}
                     </Pill>
                   </Link>
                 </li>

@@ -42,20 +42,20 @@ export function TasksTab() {
         <div className="mb-[14px] rounded-[10px] border border-[#f59e0b]/15 bg-[#071120] p-[14px]">
           <div className={FG}>
             <Field label="Task Title *" wide>
-              <input className={FI} value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Follow up with Dorothy Harrison" />
+              <input autoComplete="off" className={FI} value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Follow up with Dorothy Harrison" />
             </Field>
             <Field label="Due Date">
-              <input className={FI} type="date" value={due} onChange={(e) => setDue(e.target.value)} />
+              <input autoComplete="off" className={FI} type="date" value={due} onChange={(e) => setDue(e.target.value)} />
             </Field>
             <Field label="Priority">
-              <select className={FI} value={priority} onChange={(e) => setPriority(e.target.value as TaskPriority)}>
+              <select autoComplete="off" className={FI} value={priority} onChange={(e) => setPriority(e.target.value as TaskPriority)}>
                 <option value="High">High</option>
                 <option value="Med">Medium</option>
                 <option value="Low">Low</option>
               </select>
             </Field>
             <Field label="Assignee" wide>
-              <input className={FI} value={assignee} onChange={(e) => setAssignee(e.target.value)} placeholder="Sarah M." />
+              <input autoComplete="off" className={FI} value={assignee} onChange={(e) => setAssignee(e.target.value)} placeholder="Sarah M." />
             </Field>
           </div>
           <div className="flex gap-2">

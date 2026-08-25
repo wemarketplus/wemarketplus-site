@@ -26,7 +26,9 @@ export type {
 // The visit-type vocabulary, shared with the CommunityLink calendar so a visit
 // scheduled there and one logged here offer (and label) the same buckets.
 export {
+  VISIT_TYPE,
   VISIT_TYPE_OPTIONS,
   VISIT_TYPE_LABELS,
   visitTypeLabel,
+  type VisitType,
 } from './constants/clOutreachConstants';

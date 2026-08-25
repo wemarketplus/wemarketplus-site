@@ -56,19 +56,19 @@ export function MileageTab() {
       <Card title="Log New Trip">
         <div className={FG}>
           <Field label="Date *">
-            <input className={FI} type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+            <input autoComplete="off" className={FI} type="date" value={date} onChange={(e) => setDate(e.target.value)} />
           </Field>
           <Field label="Miles *">
-            <input className={FI} type="number" step="0.1" value={miles} onChange={(e) => setMiles(e.target.value)} placeholder="12.4" />
+            <input autoComplete="off" className={FI} type="number" step="0.1" value={miles} onChange={(e) => setMiles(e.target.value)} placeholder="12.4" />
           </Field>
           <Field label="From">
-            <input className={FI} value={from} onChange={(e) => setFrom(e.target.value)} placeholder="Sunrise Senior Living" />
+            <input autoComplete="off" className={FI} value={from} onChange={(e) => setFrom(e.target.value)} placeholder="Sunrise Senior Living" />
           </Field>
           <Field label="To">
-            <input className={FI} value={to} onChange={(e) => setTo(e.target.value)} placeholder="Parkland Hospital" />
+            <input autoComplete="off" className={FI} value={to} onChange={(e) => setTo(e.target.value)} placeholder="Parkland Hospital" />
           </Field>
           <Field label="Purpose" wide>
-            <input className={FI} value={purpose} onChange={(e) => setPurpose(e.target.value)} placeholder="Referral visit, community event…" />
+            <input autoComplete="off" className={FI} value={purpose} onChange={(e) => setPurpose(e.target.value)} placeholder="Referral visit, community event…" />
           </Field>
         </div>
         <DemoButton onClick={save}>Log Trip</DemoButton>

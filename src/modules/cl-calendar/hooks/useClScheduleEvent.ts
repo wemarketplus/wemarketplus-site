@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { useListClLeadsQuery } from '@/modules/cl-leads';
-import { useCreateClVisitMutation } from '@/modules/cl-outreach';
+import { useCreateClVisitMutation, VISIT_TYPE } from '@/modules/cl-outreach';
 import { useListClReferralSourcesQuery } from '@/modules/cl-referrals';
 import { useCreateClTourMutation } from '@/modules/cl-tours';
 import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
@@ -116,7 +116,26 @@ export function useClScheduleEvent(): ClScheduleController {
       // conversion — converting it would be the bug.
       await createVisit({
         visitDate: values.when,
-        visitType: values.kind === 'lunch' ? 'lunch_and_learn' : 'in_person',
+        /**
+         * The CANONICAL visit-type values from VISIT_TYPE_OPTIONS — not
+         * hand-written strings.
+         *
+         * Both of the old literals were wrong, in the two different ways a
+         * free-form varchar lets you be wrong:
+         *
+         *  - `'lunch_and_learn'` matched NOTHING. The canonical value is
+         *    `lunch_learn` (no "and"), so `visitTypeLabel` fell through to its
+         *    raw-string fallback and the Outreach Log printed the slug itself,
+         *    while the log's Type filter — an exact `WHERE visitType = …` —
+         *    could never select the row.
+         *  - `'in_person'` matched, but it is the WRONG type: the user picked
+         *    "Facility visit" and got the generic in-person bucket, so the log
+         *    reported a type nobody chose and filtering by facility visits
+         *    missed every one the calendar created.
+         *
+         * Imported rather than retyped so the two screens cannot drift again.
+         */
+        visitType: values.kind === 'lunch' ? VISIT_TYPE.LunchLearn : VISIT_TYPE.FacilityVisit,
         ...(values.locationName?.trim()
           ? { locationName: values.locationName.trim() }
           : {}),

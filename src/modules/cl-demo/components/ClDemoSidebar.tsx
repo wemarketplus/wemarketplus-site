@@ -4,7 +4,7 @@ import { useClDemo } from '../hooks/useClDemo';
 import type { DemoRole } from '../types/clDemoTypes';
 
 // Reproduces the reference <aside class="sb"> exactly: 224px column, brand
-// block, DEMO badge, "Viewing As" role <select>, role-based nav sections, and
+// block, DEMO badge, "Viewing As" role <select autoComplete="off">, role-based nav sections, and
 // the footer link back to the site.
 export function ClDemoSidebar() {
   const { role, activeTab, actions } = useClDemo();
@@ -40,6 +40,7 @@ export function ClDemoSidebar() {
             Viewing As
           </div>
           <select
+            autoComplete="off"
             value={role}
             onChange={(e) => actions.setRole(e.target.value as DemoRole)}
             className="w-full cursor-pointer rounded-[7px] border border-white/10 bg-[#0a1628] px-[9px] py-1.5 text-[12px] font-bold text-[#f0f5ff] outline-none"

@@ -13,6 +13,25 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     <input
       ref={ref}
       type={type}
+      /**
+       * Browser autofill OFF by default, for the same reason <Select> does it —
+       * see the long note there.
+       *
+       * The Select-only version of this was half a fix. Chrome does not decide
+       * per control; it classifies the FORM, and what it classifies on is mostly
+       * the text fields: a name, a `type="tel"` and a `type="email"` are the
+       * three recognised fields its address heuristic needs. Silencing the
+       * `<select>`s while leaving those unlabelled left the classification
+       * happening exactly as before — which is the half that mattered, because
+       * once a form is classified the profile heuristics are applied to every
+       * control in it, dropdowns included.
+       *
+       * Set on the primitive, not per call site: ~30 hand-rolled modals build
+       * their own field rows out of <Input> and would each have had to remember.
+       * Before `{...props}`, so a field that genuinely wants the signed-in
+       * user's own details (`autoComplete="email"` on a profile form) overrides.
+       */
+      autoComplete="off"
       className={cn(
         CONTROL_BASE,
         CONTROL_HEIGHT,
