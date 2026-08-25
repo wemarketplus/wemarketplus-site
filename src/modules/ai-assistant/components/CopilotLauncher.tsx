@@ -3,7 +3,8 @@ import { Send, Sparkles, X } from 'lucide-react';
 import { useActiveProduct } from '@/modules/access';
 import { CL_FIELD_ROLES, useRole } from '@/shared/rbac';
 import { Product } from '@/shared/types';
-import { Button } from '@/shared/ui/core';
+import { Button, CONTROL_HEIGHT } from '@/shared/ui/core';
+import { cn } from '@/shared/utils/cn';
 import { AI_FIELD_PRESETS } from '../constants/aiPresetsConstants';
 import { useAiAssistant } from '../hooks/useAiAssistant';
 import { AiMessageBubble } from './AiMessageBubble';
@@ -125,16 +126,29 @@ export function CopilotLauncher() {
         }}
         className="flex items-center gap-2 border-t border-border/[0.08] px-3 py-3"
       >
+        {/*
+          Geometry from CONTROL_HEIGHT rather than a literal, and the Send
+          button pinned to the same 44px. This row was `h-10` (40px) against a
+          `size="square"` Button (h-9, 36px) — two controls in one flex row, one
+          4px shorter than the other and neither on the app's control scale.
+          Matches AiAssistantPage's composer, which is the same feature at full
+          width. The `px-3.5` and the azure focus treatment stay hand-written:
+          the accent is deliberately not CONTROL_BASE's `focus:border-primary`.
+        */}
         <input
           value={draftPrompt}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Ask anything…"
           aria-label="Ask Copilot"
-          className="flex h-10 w-full rounded-md border border-border/10 bg-surface-raised px-3 text-sm text-foreground placeholder:text-faint focus-visible:border-azure/70 focus-visible:bg-surface focus-visible:outline-none"
+          className={cn(
+            CONTROL_HEIGHT,
+            'flex w-full rounded-md border border-border/10 bg-surface-raised px-3.5 text-sm text-foreground placeholder:text-faint focus-visible:border-azure/70 focus-visible:bg-surface focus-visible:outline-none',
+          )}
         />
         <Button
           type="submit"
           size="square"
+          className={cn(CONTROL_HEIGHT, 'w-11 shrink-0')}
           disabled={isSending || !draftPrompt.trim()}
           aria-label="Send"
         >

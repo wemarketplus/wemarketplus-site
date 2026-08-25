@@ -1,7 +1,7 @@
 import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { useMemo, useState } from 'react';
 import { MessageSquare, Mail } from 'lucide-react';
-import { Button, Card, CardContent, Input, Select } from '@/shared/ui/core';
+import { Button, Card, CardContent, Input, Select, Textarea } from '@/shared/ui/core';
 import { cn } from '@/shared/utils/cn';
 import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
 import { useListClLeadsQuery, useCreateClLeadNoteMutation } from '@/modules/cl-leads';
@@ -131,8 +131,10 @@ export function AircallPage() {
             />
           )}
 
-          <textarea
-            className="w-full rounded-md border border-border/10 bg-surface px-3 py-2.5 text-sm text-foreground outline-none focus:border-primary/50"
+          {/* <Textarea>, so the body lines up with the Subject <Input> directly
+              above it — this was `px-3` on `bg-surface` against the shared
+              `px-3.5` on `bg-surface-raised`. */}
+          <Textarea
             rows={channel === 'email' ? 6 : 3}
             placeholder={channel === 'text' ? 'Type a text message…' : 'Type an email…'}
             value={body}

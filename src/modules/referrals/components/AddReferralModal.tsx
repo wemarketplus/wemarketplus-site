@@ -68,7 +68,7 @@ export function AddReferralModal({ open, isSaving, editing, onClose, onSubmit: s
         </>
       }
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <form autoComplete="off" onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="sm:col-span-2">
           <Label htmlFor="ar-name">Source Name</Label>
           <Input id="ar-name" {...register('name')} />

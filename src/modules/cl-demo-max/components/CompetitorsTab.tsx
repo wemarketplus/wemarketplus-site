@@ -23,12 +23,12 @@ export function CompetitorsTab() {
         {open && (
           <div className="mb-[14px] rounded-[10px] border border-[#f59e0b]/15 bg-[#071120] p-[14px]">
             <div className="mb-3 grid grid-cols-2 gap-3">
-              <Field label="Community Name"><input className={FI} placeholder="Sunrise Gardens" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
-              <Field label="City"><input className={FI} placeholder="Dallas" value={f.city} onChange={(e) => setF({ ...f, city: e.target.value })} /></Field>
-              <Field label="Distance (mi)"><input className={FI} type="number" step={0.1} placeholder="2.4" value={f.dist} onChange={(e) => setF({ ...f, dist: e.target.value })} /></Field>
-              <Field label="AL Rate"><input className={FI} placeholder="$4,200" value={f.al} onChange={(e) => setF({ ...f, al: e.target.value })} /></Field>
-              <Field label="Occupancy"><input className={FI} placeholder="88%" value={f.occ} onChange={(e) => setF({ ...f, occ: e.target.value })} /></Field>
-              <Field label="Notes"><input className={FI} placeholder="Promotions, strengths..." value={f.notes} onChange={(e) => setF({ ...f, notes: e.target.value })} /></Field>
+              <Field label="Community Name"><input autoComplete="off" className={FI} placeholder="Sunrise Gardens" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
+              <Field label="City"><input autoComplete="off" className={FI} placeholder="Dallas" value={f.city} onChange={(e) => setF({ ...f, city: e.target.value })} /></Field>
+              <Field label="Distance (mi)"><input autoComplete="off" className={FI} type="number" step={0.1} placeholder="2.4" value={f.dist} onChange={(e) => setF({ ...f, dist: e.target.value })} /></Field>
+              <Field label="AL Rate"><input autoComplete="off" className={FI} placeholder="$4,200" value={f.al} onChange={(e) => setF({ ...f, al: e.target.value })} /></Field>
+              <Field label="Occupancy"><input autoComplete="off" className={FI} placeholder="88%" value={f.occ} onChange={(e) => setF({ ...f, occ: e.target.value })} /></Field>
+              <Field label="Notes"><input autoComplete="off" className={FI} placeholder="Promotions, strengths..." value={f.notes} onChange={(e) => setF({ ...f, notes: e.target.value })} /></Field>
             </div>
             <div className="flex gap-2"><DemoButton sm onClick={submit}>Add</DemoButton><DemoButton variant="x" sm onClick={() => setOpen(false)}>Cancel</DemoButton></div>
           </div>

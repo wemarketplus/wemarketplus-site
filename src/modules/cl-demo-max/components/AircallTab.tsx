@@ -93,14 +93,14 @@ export function AircallTab() {
           <div className="grid grid-cols-1 gap-[14px] lg:grid-cols-2">
             <Card title="📞 Make a Call">
               <div className="flex flex-col gap-2.5">
-                <Field label="Contact"><select className={FI} value={callContact} onChange={(e) => { setCallContact(e.target.value); setCallPhone(e.target.value.split('|')[1] || ''); }}>
+                <Field label="Contact"><select autoComplete="off" className={FI} value={callContact} onChange={(e) => { setCallContact(e.target.value); setCallPhone(e.target.value.split('|')[1] || ''); }}>
                   <option value="">— Select lead or referral partner —</option>
                   <optgroup label="Hot Leads"><option value="Dorothy Harrison|(214)555-0142">Dorothy Harrison · (214)555-0142</option><option value="Gloria Tran|(469)555-0391">Gloria Tran · (469)555-0391</option><option value="Edna Michaels|(214)555-0567">Edna Michaels · (214)555-0567</option></optgroup>
                   <optgroup label="Referral Partners"><option value="Dr. Amanda Chen|(214)555-0181">Dr. Amanda Chen</option><option value="Sarah Kim RN|(214)555-0182">Sarah Kim RN — Parkland</option></optgroup>
                 </select></Field>
-                <Field label="Phone"><input className={FI} placeholder="(214) 555-0000" value={callPhone} onChange={(e) => setCallPhone(e.target.value)} /></Field>
-                <Field label="Purpose"><select className={FI}><option>Lead Follow-Up</option><option>Tour Confirmation</option><option>Move-In Coordination</option><option>Referral Partner Touch-Base</option></select></Field>
-                <Field label="Pre-Call Notes"><textarea className={`${FI} min-h-[56px]`} rows={2} placeholder="Key points…" /></Field>
+                <Field label="Phone"><input autoComplete="off" className={FI} placeholder="(214) 555-0000" value={callPhone} onChange={(e) => setCallPhone(e.target.value)} /></Field>
+                <Field label="Purpose"><select autoComplete="off" className={FI}><option>Lead Follow-Up</option><option>Tour Confirmation</option><option>Move-In Coordination</option><option>Referral Partner Touch-Base</option></select></Field>
+                <Field label="Pre-Call Notes"><textarea autoComplete="off" className={`${FI} min-h-[56px]`} rows={2} placeholder="Key points…" /></Field>
                 <div className="flex gap-2"><DemoButton className="flex-1" onClick={startCall}>📞 Call via Aircall</DemoButton><DemoButton variant="x" sm onClick={() => actions.toast('Scheduled!')}>🗓 Schedule</DemoButton></div>
               </div>
             </Card>
@@ -121,10 +121,10 @@ export function AircallTab() {
           </div>
           <Card title="📋 Post-Call Log">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <Field label="Outcome"><select className={FI} value={callOutcome} onChange={(e) => setCallOutcome(e.target.value)}><option value="">Select…</option><option>Connected — tour scheduled</option><option>Connected — follow-up set</option><option>Left voicemail</option><option>No answer</option><option>Referral committed</option></select></Field>
-              <Field label="Next Action"><input className={FI} placeholder="e.g. Send proposal…" value={callNext} onChange={(e) => setCallNext(e.target.value)} /></Field>
-              <Field label="Follow-Up Date"><input className={FI} type="date" value={callFollow} onChange={(e) => setCallFollow(e.target.value)} /></Field>
-              <Field label="Summary"><textarea className={`${FI} min-h-[56px]`} rows={2} placeholder="What was discussed…" value={callSummary} onChange={(e) => setCallSummary(e.target.value)} /></Field>
+              <Field label="Outcome"><select autoComplete="off" className={FI} value={callOutcome} onChange={(e) => setCallOutcome(e.target.value)}><option value="">Select…</option><option>Connected — tour scheduled</option><option>Connected — follow-up set</option><option>Left voicemail</option><option>No answer</option><option>Referral committed</option></select></Field>
+              <Field label="Next Action"><input autoComplete="off" className={FI} placeholder="e.g. Send proposal…" value={callNext} onChange={(e) => setCallNext(e.target.value)} /></Field>
+              <Field label="Follow-Up Date"><input autoComplete="off" className={FI} type="date" value={callFollow} onChange={(e) => setCallFollow(e.target.value)} /></Field>
+              <Field label="Summary"><textarea autoComplete="off" className={`${FI} min-h-[56px]`} rows={2} placeholder="What was discussed…" value={callSummary} onChange={(e) => setCallSummary(e.target.value)} /></Field>
             </div>
             <DemoButton variant="g" className="mt-2.5" onClick={saveCall}>💾 Save Log + Queue Follow-Up</DemoButton>
           </Card>
@@ -135,10 +135,10 @@ export function AircallTab() {
         <div className="grid grid-cols-1 gap-[14px] lg:grid-cols-2">
           <Card title="💬 Send Text">
             <div className="flex flex-col gap-2.5">
-              <Field label="To"><select className={FI} value={textContact} onChange={(e) => { setTextContact(e.target.value); setTextPhone(e.target.value.split('|')[1] || ''); }}><option value="">— Select —</option><option value="Dorothy Harrison|(214)555-0142">Dorothy Harrison</option><option value="Gloria Tran|(469)555-0391">Gloria Tran</option><option value="Dr. Amanda Chen|(214)555-0181">Dr. Amanda Chen</option></select></Field>
-              <Field label="Phone"><input className={FI} placeholder="(214) 555-0000" value={textPhone} onChange={(e) => setTextPhone(e.target.value)} /></Field>
-              <Field label="Template"><select className={FI} value="" onChange={(e) => e.target.value && setTextBody(e.target.value)}><option value="">— Insert —</option>{AC_TEXT_TPL.map((t) => <option key={t.l} value={t.v}>{t.l}</option>)}</select></Field>
-              <Field label={`Message  ${textBody.length}/160`}><textarea className={`${FI} min-h-[110px]`} rows={5} placeholder="Type message…" value={textBody} onChange={(e) => setTextBody(e.target.value)} /></Field>
+              <Field label="To"><select autoComplete="off" className={FI} value={textContact} onChange={(e) => { setTextContact(e.target.value); setTextPhone(e.target.value.split('|')[1] || ''); }}><option value="">— Select —</option><option value="Dorothy Harrison|(214)555-0142">Dorothy Harrison</option><option value="Gloria Tran|(469)555-0391">Gloria Tran</option><option value="Dr. Amanda Chen|(214)555-0181">Dr. Amanda Chen</option></select></Field>
+              <Field label="Phone"><input autoComplete="off" className={FI} placeholder="(214) 555-0000" value={textPhone} onChange={(e) => setTextPhone(e.target.value)} /></Field>
+              <Field label="Template"><select autoComplete="off" className={FI} value="" onChange={(e) => e.target.value && setTextBody(e.target.value)}><option value="">— Insert —</option>{AC_TEXT_TPL.map((t) => <option key={t.l} value={t.v}>{t.l}</option>)}</select></Field>
+              <Field label={`Message  ${textBody.length}/160`}><textarea autoComplete="off" className={`${FI} min-h-[110px]`} rows={5} placeholder="Type message…" value={textBody} onChange={(e) => setTextBody(e.target.value)} /></Field>
               <div className="flex gap-2"><DemoButton className="flex-1" onClick={sendText}>💬 Send (Demo)</DemoButton><DemoButton variant="x" sm onClick={() => actions.toast('Scheduled')}>🗓</DemoButton></div>
             </div>
           </Card>
@@ -161,12 +161,12 @@ export function AircallTab() {
         <div className="grid grid-cols-1 gap-[14px] lg:grid-cols-2">
           <Card title="✉️ Compose Email">
             <div className="flex flex-col gap-2.5">
-              <Field label="To"><select className={FI} value={emailContact} onChange={(e) => { setEmailContact(e.target.value); setEmailAddr(e.target.value.split('|')[1] || ''); }}><option value="">— Select —</option><option value="Dorothy Harrison|jharrison.poa@email.com">Dorothy Harrison (POA)</option><option value="Gloria Tran|gtran.family@email.com">Gloria Tran (Family)</option><option value="Dr. Amanda Chen|a.chen@dallasmedical.com">Dr. Amanda Chen</option><option value="Sarah Kim RN|s.kim@parkland.org">Sarah Kim RN</option></select></Field>
-              <Field label="Email"><input className={FI} type="email" placeholder="contact@email.com" value={emailAddr} onChange={(e) => setEmailAddr(e.target.value)} /></Field>
-              <Field label="CC"><input className={FI} type="email" placeholder="optional" value={emailCc} onChange={(e) => setEmailCc(e.target.value)} /></Field>
-              <Field label="Template"><select className={FI} value="" onChange={(e) => { const t = AC_EMAIL_TPL[e.target.value]; if (t) { setEmailSubject(t.s); setEmailBody(t.b); } }}><option value="">— Template —</option><option value="tour">Tour Confirmation</option><option value="proposal">Proposal / Rate Sheet</option><option value="thank">Thank You — Referral</option><option value="followup">General Follow-Up</option><option value="movein">Move-In Prep</option></select></Field>
-              <Field label="Subject"><input className={FI} placeholder="Subject…" value={emailSubject} onChange={(e) => setEmailSubject(e.target.value)} /></Field>
-              <Field label="Body"><textarea className={`${FI} min-h-[130px]`} rows={7} placeholder="Email body…" value={emailBody} onChange={(e) => setEmailBody(e.target.value)} /></Field>
+              <Field label="To"><select autoComplete="off" className={FI} value={emailContact} onChange={(e) => { setEmailContact(e.target.value); setEmailAddr(e.target.value.split('|')[1] || ''); }}><option value="">— Select —</option><option value="Dorothy Harrison|jharrison.poa@email.com">Dorothy Harrison (POA)</option><option value="Gloria Tran|gtran.family@email.com">Gloria Tran (Family)</option><option value="Dr. Amanda Chen|a.chen@dallasmedical.com">Dr. Amanda Chen</option><option value="Sarah Kim RN|s.kim@parkland.org">Sarah Kim RN</option></select></Field>
+              <Field label="Email"><input autoComplete="off" className={FI} type="email" placeholder="contact@email.com" value={emailAddr} onChange={(e) => setEmailAddr(e.target.value)} /></Field>
+              <Field label="CC"><input autoComplete="off" className={FI} type="email" placeholder="optional" value={emailCc} onChange={(e) => setEmailCc(e.target.value)} /></Field>
+              <Field label="Template"><select autoComplete="off" className={FI} value="" onChange={(e) => { const t = AC_EMAIL_TPL[e.target.value]; if (t) { setEmailSubject(t.s); setEmailBody(t.b); } }}><option value="">— Template —</option><option value="tour">Tour Confirmation</option><option value="proposal">Proposal / Rate Sheet</option><option value="thank">Thank You — Referral</option><option value="followup">General Follow-Up</option><option value="movein">Move-In Prep</option></select></Field>
+              <Field label="Subject"><input autoComplete="off" className={FI} placeholder="Subject…" value={emailSubject} onChange={(e) => setEmailSubject(e.target.value)} /></Field>
+              <Field label="Body"><textarea autoComplete="off" className={`${FI} min-h-[130px]`} rows={7} placeholder="Email body…" value={emailBody} onChange={(e) => setEmailBody(e.target.value)} /></Field>
               <div className="flex flex-wrap gap-2"><DemoButton className="flex-1" onClick={sendEmail}>✉️ Send (Demo)</DemoButton><DemoButton variant="x" sm onClick={() => actions.toast('Scheduled')}>🗓</DemoButton><DemoButton variant="x" sm onClick={() => actions.toast('Draft saved')}>📄</DemoButton></div>
             </div>
           </Card>

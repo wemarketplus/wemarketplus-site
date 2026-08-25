@@ -2,7 +2,7 @@ import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { useState } from 'react';
 import { Mail, MessageSquare, Phone } from 'lucide-react';
 import { toast } from 'sonner';
-import { Button, Input } from '@/shared/ui/core';
+import { Button, SearchInput } from '@/shared/ui/core';
 import { Alert, DataTable, Pill, type Column } from '@/shared/ui/data-display';
 import { useDebounce } from '@/shared/hooks';
 import {
@@ -164,12 +164,20 @@ export function HospiceContactsPage() {
         </Alert>
       )}
 
-      <Input
+      {/*
+        <SearchInput>, not a bare <Input>. This was the one list screen in the app
+        whose search box carried no magnifier and no clear button — the field was
+        the right height and hairline, so it passed a geometry check while still
+        reading as a plain text box next to the nineteen filter bars that mark
+        their search with a glyph. The icon and its padding are a pair defined once
+        in controlStyles.ts; hand-rolling the field is what loses them.
+      */}
+      <SearchInput
+        wrapperClassName="max-w-md"
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={setSearch}
         placeholder="Search by name, email, phone, NPI or specialty"
         aria-label="Search contacts"
-        className="max-w-md"
       />
 
       {isLoading ? (

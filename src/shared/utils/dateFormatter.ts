@@ -40,3 +40,18 @@ export const localInputToIso = (local: string): string => {
  * class of bug isoToLocalInput above exists to avoid.
  */
 export const todayLocalDate = (): string => format(new Date(), 'yyyy-MM-dd');
+
+/**
+ * Now, local wall-clock, as a `datetime-local` input expects
+ * ("yyyy-MM-dd'T'HH:mm") — the MINUTE-precision sibling of todayLocalDate.
+ *
+ * Exists because a date-only floor cannot express "not in the past" for a field
+ * that carries a clock: `min={todayLocalDate()}` on a datetime-local input
+ * permits 09:00 today at 14:00 today, which is the tour-scheduler report. Same
+ * local-wall-clock reasoning as above — and the same string shape as the input's
+ * own value, so a plain `<` between them is a correct chronological compare
+ * (both are fixed-width and zero-padded) with no Date parsing and therefore no
+ * timezone conversion to get wrong.
+ */
+export const nowLocalDateTime = (): string =>
+  format(new Date(), "yyyy-MM-dd'T'HH:mm");

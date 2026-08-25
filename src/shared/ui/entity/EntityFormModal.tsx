@@ -221,19 +221,12 @@ function EntityFieldControl<TValues extends FieldValues>({
 
   return (
     <div className={field.full ? 'sm:col-span-2' : undefined}>
-      <Label htmlFor={id}>
+      {/* The `*` now lives on <Label> itself, so the hand-rolled modals that
+          build their own field rows mark required fields the same way this one
+          does instead of having no way to. Rationale for the marker's tone and
+          its `aria-hidden` is recorded there. */}
+      <Label htmlFor={id} required={field.required}>
         {field.label}
-        {field.required && (
-          // The conventional `*`, in the destructive tone so it reads as a
-          // requirement rather than decoration. `aria-hidden` because the
-          // requirement is already announced by `aria-required` on the control
-          // below — without it a screen reader says "star" after every
-          // mandatory label. `title` gives the same explanation to a sighted
-          // user who does not know the convention.
-          <span aria-hidden="true" title="Required" className="ml-0.5 text-destructive">
-            *
-          </span>
-        )}
       </Label>
       {type === 'readonly' ? (
         // Context, not an input. The value is still registered (hidden) so an

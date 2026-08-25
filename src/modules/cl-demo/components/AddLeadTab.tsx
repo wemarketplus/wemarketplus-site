@@ -39,44 +39,51 @@ export function AddLeadTab() {
         </DemoButton>
       }
     >
+      {/* Own <form> boundary, `autoComplete="off"` — the Status and Care Level
+          dropdowns here are app-domain enums a browser profile cannot know, and
+          Full Name + `type="tel"` is enough for Chrome to start guessing. These
+          fields were also unowned, so the guess extended to every other formless
+          control on the tab. See ModalShell for the full note. */}
+      <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
       <div className={FG}>
         <Field label="Full Name *">
-          <input className={FI} value={name} onChange={(e) => setName(e.target.value)} placeholder="Dorothy Harrison" />
+          <input autoComplete="off" className={FI} value={name} onChange={(e) => setName(e.target.value)} placeholder="Dorothy Harrison" />
         </Field>
         <Field label="Phone">
-          <input className={FI} type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(214) 555-0100" />
+          <input autoComplete="off" className={FI} type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(214) 555-0100" />
         </Field>
         <Field label="Care Level">
-          <select className={FI} value={care} onChange={(e) => setCare(e.target.value)}>
+          <select autoComplete="off" className={FI} value={care} onChange={(e) => setCare(e.target.value)}>
             {CARE_LEVELS.map((c) => <option key={c}>{c}</option>)}
           </select>
         </Field>
         <Field label="Status">
-          <select className={FI} value={status} onChange={(e) => setStatus(e.target.value as LeadStatus)}>
+          <select autoComplete="off" className={FI} value={status} onChange={(e) => setStatus(e.target.value as LeadStatus)}>
             {LEAD_STATUSES.map((s) => <option key={s}>{s}</option>)}
           </select>
         </Field>
         <Field label="Urgency">
-          <select className={FI} value={urgency} onChange={(e) => setUrgency(e.target.value as Urgency)}>
+          <select autoComplete="off" className={FI} value={urgency} onChange={(e) => setUrgency(e.target.value as Urgency)}>
             {URGENCIES.map((u) => <option key={u} value={u}>{u}</option>)}
           </select>
         </Field>
         <Field label="Referral Source">
-          <select className={FI} value={source} onChange={(e) => setSource(e.target.value)}>
+          <select autoComplete="off" className={FI} value={source} onChange={(e) => setSource(e.target.value)}>
             {LEAD_SOURCES.map((s) => <option key={s}>{s}</option>)}
           </select>
         </Field>
         <Field label="Follow-Up Date">
-          <input className={FI} type="date" value={fu} onChange={(e) => setFu(e.target.value)} />
+          <input autoComplete="off" className={FI} type="date" value={fu} onChange={(e) => setFu(e.target.value)} />
         </Field>
         <Field label="Age">
-          <input className={FI} type="number" value={age} onChange={(e) => setAge(e.target.value)} placeholder="82" />
+          <input autoComplete="off" className={FI} type="number" value={age} onChange={(e) => setAge(e.target.value)} placeholder="82" />
         </Field>
         <Field label="Notes" wide>
-          <textarea className={`${FI} min-h-[72px] resize-y`} rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Key details, family contacts, budget…" />
+          <textarea autoComplete="off" className={`${FI} min-h-[72px] resize-y`} rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Key details, family contacts, budget…" />
         </Field>
       </div>
       <DemoButton onClick={save}>Save Lead</DemoButton>
+      </form>
     </Card>
   );
 }

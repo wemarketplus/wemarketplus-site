@@ -33,13 +33,13 @@ export function TasksTab() {
         <div className="mb-3 rounded-[10px] border border-[#f59e0b]/15 bg-[#071120] p-[14px]">
           <div className="mb-3 grid grid-cols-2 gap-3">
             <Field label="Title *" wide>
-              <input className={FI} placeholder="Task title" value={title} onChange={(e) => setTitle(e.target.value)} />
+              <input autoComplete="off" className={FI} placeholder="Task title" value={title} onChange={(e) => setTitle(e.target.value)} />
             </Field>
             <Field label="Due Date">
-              <input className={FI} type="date" value={due} onChange={(e) => setDue(e.target.value)} />
+              <input autoComplete="off" className={FI} type="date" value={due} onChange={(e) => setDue(e.target.value)} />
             </Field>
             <Field label="Priority">
-              <select className={FI} value={priority} onChange={(e) => setPriority(e.target.value as TaskPriority)}>
+              <select autoComplete="off" className={FI} value={priority} onChange={(e) => setPriority(e.target.value as TaskPriority)}>
                 <option value="High">High</option>
                 <option value="Med">Medium</option>
                 <option value="Low">Low</option>

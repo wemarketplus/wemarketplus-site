@@ -51,3 +51,33 @@ export function routeCoordinates(log: MileageLogRecord): string {
   }
   return parts.join(' · ');
 }
+
+/**
+ * The human route for a trip, or null when neither endpoint is recorded.
+ *
+ * WHY THIS IS NOT `${from ?? '—'} → ${to ?? '—'}`. That template — which the
+ * route column and the attach-receipt dialog title each spelled out for
+ * themselves — renders "— → —" for a trip logged with neither endpoint, and
+ * "— → Baylor Medical" for one logged with only a destination. An em dash is
+ * this app's "no value" marker everywhere else (see the Purpose and
+ * Reimbursement columns), so an arrow BETWEEN two of them reads as a route
+ * between two unknown places rather than as an absent route, and QA read the
+ * pair as stray symbols. Punctuation cannot say "nothing here" twice and stay
+ * legible.
+ *
+ * So the arrow appears only when there are genuinely two endpoints to join.
+ * One-sided trips name the side they have — a trip TO somewhere is a real,
+ * common thing to log — and a trip with neither returns null for the caller to
+ * render with its own empty marker.
+ */
+export function routeLabel(log: {
+  fromLocation: string | null;
+  toLocation: string | null;
+}): string | null {
+  const from = log.fromLocation?.trim() || null;
+  const to = log.toLocation?.trim() || null;
+  if (from && to) return `${from} → ${to}`;
+  if (from) return `From ${from}`;
+  if (to) return `To ${to}`;
+  return null;
+}

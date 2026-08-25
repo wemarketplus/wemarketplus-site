@@ -29,6 +29,26 @@ export function MileageTab() {
     }
   };
 
+  /**
+   * The receipt picker took ANY file at ANY size and reported it as attached —
+   * a 50 MB upload showed a green tick. Nothing is transmitted here (the demo
+   * keeps a filename in local state), but the drop zone is the surface the
+   * client is shown when asked what the field app does with a receipt, so it has
+   * to refuse what the real one refuses. 10 MB is the production cap: multer's
+   * `limits.fileSize` on the upload route and RECEIPT_MAX_BYTES in
+   * modules/field. Keep the three in step.
+   */
+  const pickReceipt = (chosen: File | null) => {
+    if (!chosen) { setFileName(''); return; }
+    if (chosen.size > RECEIPT_MAX_MB * 1024 * 1024) {
+      actions.toast(`${chosen.name} is ${(chosen.size / (1024 * 1024)).toFixed(1)} MB — receipts must be ${RECEIPT_MAX_MB} MB or smaller`, true);
+      setFileName('');
+      if (fileRef.current) fileRef.current.value = '';
+      return;
+    }
+    setFileName(chosen.name);
+  };
+
   const submit = () => {
     if (!from.trim() || !to.trim()) { actions.toast('From and To addresses are required', true); return; }
     if (!milesNum) { actions.toast('Enter mileage', true); return; }
@@ -55,30 +75,30 @@ export function MileageTab() {
       <div className="grid grid-cols-1 gap-[14px] lg:grid-cols-2">
         <Card title="Log New Trip">
           <div className="flex flex-col gap-2.5">
-            <Field label="Date"><input className={FI} type="date" value={date} onChange={(e) => setDate(e.target.value)} /></Field>
-            <Field label="From Address *"><input className={FI} placeholder="Office, Dallas TX" value={from} onChange={(e) => setFrom(e.target.value)} /></Field>
-            <Field label="To Address *"><input className={FI} placeholder="Baylor Medical, Dallas TX" value={to} onChange={(e) => onToBlurEstimate(e.target.value)} /></Field>
+            <Field label="Date"><input autoComplete="off" className={FI} type="date" value={date} onChange={(e) => setDate(e.target.value)} /></Field>
+            <Field label="From Address *"><input autoComplete="off" className={FI} placeholder="Office, Dallas TX" value={from} onChange={(e) => setFrom(e.target.value)} /></Field>
+            <Field label="To Address *"><input autoComplete="off" className={FI} placeholder="Baylor Medical, Dallas TX" value={to} onChange={(e) => onToBlurEstimate(e.target.value)} /></Field>
             <div className={FL_GAP}>
               <div className="text-[11px] font-bold text-[#4b6278]">Mileage {estimated && <span className="text-[10px] font-normal text-[#4fc87a]">(estimated — verify before submitting)</span>}</div>
-              <input className={FI} type="number" step={0.1} placeholder="Auto-calculated or enter manually" value={miles} onChange={(e) => setMiles(e.target.value)} />
+              <input autoComplete="off" className={FI} type="number" step={0.1} placeholder="Auto-calculated or enter manually" value={miles} onChange={(e) => setMiles(e.target.value)} />
               <div className="mt-1 text-[11px] text-[#6b7fa3]">Reimbursement: <strong className="text-[#4fc87a]">${(milesNum * mileageRate).toFixed(2)}</strong></div>
             </div>
-            <Field label="Purpose"><input className={FI} placeholder="Referral visit, in-service, tour coordination…" value={purpose} onChange={(e) => setPurpose(e.target.value)} /></Field>
+            <Field label="Purpose"><input autoComplete="off" className={FI} placeholder="Referral visit, in-service, tour coordination…" value={purpose} onChange={(e) => setPurpose(e.target.value)} /></Field>
 
             <div className="rounded-[8px] border border-[#f59e0b]/15 bg-[#f59e0b]/[0.06] p-3">
               <div className="mb-2 text-[11px] font-bold uppercase tracking-[0.04em] text-[#f59e0b]">Additional Expense (Optional)</div>
               <div className="flex flex-col gap-2">
-                <Field label="Expense Category"><select className={FI} value={expType} onChange={(e) => setExpType(e.target.value)}><option value="">None</option>{MILEAGE_EXPENSE_TYPES.map((t) => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}</select></Field>
-                <Field label="Expense Amount ($)"><input className={FI} type="number" step={0.01} placeholder="0.00" value={expAmt} onChange={(e) => setExpAmt(e.target.value)} /></Field>
-                <Field label="Notes"><input className={FI} placeholder="Parking at hospital, client lunch…" value={expNotes} onChange={(e) => setExpNotes(e.target.value)} /></Field>
+                <Field label="Expense Category"><select autoComplete="off" className={FI} value={expType} onChange={(e) => setExpType(e.target.value)}><option value="">None</option>{MILEAGE_EXPENSE_TYPES.map((t) => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}</select></Field>
+                <Field label="Expense Amount ($)"><input autoComplete="off" className={FI} type="number" step={0.01} placeholder="0.00" value={expAmt} onChange={(e) => setExpAmt(e.target.value)} /></Field>
+                <Field label="Notes"><input autoComplete="off" className={FI} placeholder="Parking at hospital, client lunch…" value={expNotes} onChange={(e) => setExpNotes(e.target.value)} /></Field>
                 <div className={FL_GAP}>
                   <div className="text-[11px] font-bold text-[#4b6278]">Receipt Upload</div>
                   <div onClick={() => fileRef.current?.click()} className="cursor-pointer rounded-[8px] border-2 border-dashed border-[#f59e0b]/30 p-4 text-center transition-colors hover:border-[#f59e0b]/60">
                     <div className="mb-1.5 text-[20px]">📎</div>
                     <div className="text-[12px] font-bold text-[#f59e0b]">{fileName ? `✅ ${fileName}` : 'Click or drag to upload receipt'}</div>
-                    <div className="mt-0.5 text-[10px] text-[#6b7fa3]">PDF, JPG, PNG, HEIC accepted</div>
+                    <div className="mt-0.5 text-[10px] text-[#6b7fa3]">PDF, JPG, PNG, HEIC — up to {RECEIPT_MAX_MB} MB</div>
                   </div>
-                  <input ref={fileRef} type="file" accept=".pdf,.jpg,.jpeg,.png,.heic,.heif" className="hidden" onChange={(e) => setFileName(e.target.files?.[0]?.name || '')} />
+                  <input ref={fileRef} type="file" accept=".pdf,.jpg,.jpeg,.png,.heic,.heif" className="hidden" onChange={(e) => pickReceipt(e.target.files?.[0] ?? null)} />
                 </div>
               </div>
             </div>
@@ -127,3 +147,6 @@ export function MileageTab() {
 }
 
 const FL_GAP = 'flex flex-col gap-1';
+
+/** Mirrors RECEIPT_MAX_BYTES in modules/field/utils/receiptFiles.ts (10 MB). */
+const RECEIPT_MAX_MB = 10;

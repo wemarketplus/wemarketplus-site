@@ -3,7 +3,10 @@ import { useTenantCalendarColors } from '@/modules/appointments';
 import { Card, CardContent } from '@/shared/ui/core';
 import { ClCalendarDayPanel } from '../components/ClCalendarDayPanel';
 import { ClCalendarMonthGrid } from '../components/ClCalendarMonthGrid';
-import { ClCalendarScopeToggle } from '../components/ClCalendarScopeToggle';
+import {
+  ClCalendarScopeToggle,
+  ClCalendarUnassignedNote,
+} from '../components/ClCalendarScopeToggle';
 import { ScheduleClEventModal } from '../components/ScheduleClEventModal';
 import { useClCalendar } from '../hooks/useClCalendar';
 import { useClScheduleEvent } from '../hooks/useClScheduleEvent';
@@ -46,12 +49,17 @@ export function ClCalendarPage() {
             team's.
           </p>
         </div>
-        <ClCalendarScopeToggle
-          scope={calendar.scope}
-          onChange={calendar.setScope}
-          hasUnownedEvents={calendar.hasUnownedEvents}
-        />
+        <ClCalendarScopeToggle scope={calendar.scope} onChange={calendar.setScope} />
       </header>
+
+      {/* OUTSIDE the header. It belongs to the scope picker, but it cannot live
+          beside it: the header is `items-end`, so a sibling that appears in one
+          scope and not the other moves the picker up and down as the user
+          toggles. See the note on ClCalendarUnassignedNote. */}
+      <ClCalendarUnassignedNote
+        scope={calendar.scope}
+        hasUnownedEvents={calendar.hasUnownedEvents}
+      />
 
       {calendar.isError ? (
         <Card>

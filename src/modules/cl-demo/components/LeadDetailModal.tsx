@@ -44,13 +44,13 @@ export function LeadDetailModal() {
           <div className="mb-[14px] grid grid-cols-2 gap-2.5">
             <div>
               <div className={`mb-1 ${FLB}`}>Status</div>
-              <select className={FI} value={status} onChange={(e) => setStatus(e.target.value as LeadStatus)}>
+              <select autoComplete="off" className={FI} value={status} onChange={(e) => setStatus(e.target.value as LeadStatus)}>
                 {LEAD_STATUSES_FULL.map((s) => <option key={s}>{s}</option>)}
               </select>
             </div>
             <div>
               <div className={`mb-1 ${FLB}`}>Urgency</div>
-              <select className={FI} value={urgency} onChange={(e) => setUrgency(e.target.value as Urgency)}>
+              <select autoComplete="off" className={FI} value={urgency} onChange={(e) => setUrgency(e.target.value as Urgency)}>
                 <option value="High">High</option>
                 <option value="Medium">Medium</option>
                 <option value="Low">Low</option>
@@ -58,16 +58,16 @@ export function LeadDetailModal() {
             </div>
             <div>
               <div className={`mb-1 ${FLB}`}>Follow-Up Date</div>
-              <input className={FI} type="date" value={fu} onChange={(e) => setFu(e.target.value)} />
+              <input autoComplete="off" className={FI} type="date" value={fu} onChange={(e) => setFu(e.target.value)} />
             </div>
             <div>
               <div className={`mb-1 ${FLB}`}>Source</div>
-              <input className={FI} value={source} onChange={(e) => setSource(e.target.value)} />
+              <input autoComplete="off" className={FI} value={source} onChange={(e) => setSource(e.target.value)} />
             </div>
           </div>
           <div className="mb-3">
             <div className={`mb-1 ${FLB}`}>Notes</div>
-            <textarea className={`${FI} min-h-[72px] resize-y`} rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} />
+            <textarea autoComplete="off" className={`${FI} min-h-[72px] resize-y`} rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} />
           </div>
           <div className="flex gap-2">
             <DemoButton onClick={save}>Save Changes</DemoButton>

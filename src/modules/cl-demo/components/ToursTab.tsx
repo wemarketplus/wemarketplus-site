@@ -42,24 +42,24 @@ export function ToursTab() {
         <div className="mb-[14px] rounded-[10px] border border-[#f59e0b]/15 bg-[#071120] p-[14px]">
           <div className={FG}>
             <Field label="Prospect Name *">
-              <input className={FI} value={name} onChange={(e) => setName(e.target.value)} placeholder="Dorothy Harrison" />
+              <input autoComplete="off" className={FI} value={name} onChange={(e) => setName(e.target.value)} placeholder="Dorothy Harrison" />
             </Field>
             <Field label="Care Level">
-              <select className={FI} value={care} onChange={(e) => setCare(e.target.value)}>
+              <select autoComplete="off" className={FI} value={care} onChange={(e) => setCare(e.target.value)}>
                 {TOUR_CARE_LEVELS.map((c) => <option key={c}>{c}</option>)}
               </select>
             </Field>
             <Field label="Date *">
-              <input className={FI} type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+              <input autoComplete="off" className={FI} type="date" value={date} onChange={(e) => setDate(e.target.value)} />
             </Field>
             <Field label="Time">
-              <input className={FI} type="time" value={time} onChange={(e) => setTime(e.target.value)} />
+              <input autoComplete="off" className={FI} type="time" value={time} onChange={(e) => setTime(e.target.value)} />
             </Field>
             <Field label="Tour Guide">
-              <input className={FI} value={guide} onChange={(e) => setGuide(e.target.value)} placeholder="Sarah M." />
+              <input autoComplete="off" className={FI} value={guide} onChange={(e) => setGuide(e.target.value)} placeholder="Sarah M." />
             </Field>
             <Field label="Type">
-              <select className={FI}>
+              <select autoComplete="off" className={FI}>
                 {TOUR_TYPES.map((t) => <option key={t}>{t}</option>)}
               </select>
             </Field>

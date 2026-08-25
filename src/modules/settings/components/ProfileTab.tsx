@@ -41,7 +41,7 @@ export function ProfileTab() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="firstName">First name</Label>
-              <Input id="firstName" {...register('firstName')} />
+              <Input id="firstName" autoComplete="given-name" {...register('firstName')} />
               {errors.firstName && (
                 <p className="text-xs text-destructive">
                   {errors.firstName.message}
@@ -50,7 +50,7 @@ export function ProfileTab() {
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="lastName">Last name</Label>
-              <Input id="lastName" {...register('lastName')} />
+              <Input id="lastName" autoComplete="family-name" {...register('lastName')} />
               {errors.lastName && (
                 <p className="text-xs text-destructive">
                   {errors.lastName.message}
@@ -61,7 +61,7 @@ export function ProfileTab() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" {...register('email')} />
+              <Input id="email" type="email" autoComplete="email" {...register('email')} />
               {errors.email && (
                 <p className="text-xs text-destructive">
                   {errors.email.message}
@@ -70,7 +70,7 @@ export function ProfileTab() {
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="phone">Phone</Label>
-              <Input id="phone" type="tel" {...register('phone')} />
+              <Input id="phone" type="tel" autoComplete="tel" {...register('phone')} />
               {errors.phone && (
                 <p className="text-xs text-destructive">
                   {errors.phone.message}

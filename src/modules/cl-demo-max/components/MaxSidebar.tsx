@@ -4,7 +4,7 @@ import { useMaxDemo } from '../hooks/useMaxDemo';
 import type { MaxRole } from '../types/maxTypes';
 
 // Reproduces the reference <aside class="sb">: 224px column, brand block (green
-// "Max CRM Demo" tier), DEMO badge, "Viewing As" role <select> (7 roles),
+// "Max CRM Demo" tier), DEMO badge, "Viewing As" role <select autoComplete="off"> (7 roles),
 // role-based nav, and footer. Hidden below 640px (mobile uses the bottom nav).
 export function MaxSidebar() {
   const { role, activeTab, actions } = useMaxDemo();
@@ -32,6 +32,7 @@ export function MaxSidebar() {
         <div className="mb-1.5 rounded-[10px] border border-[#f59e0b]/[0.12] bg-[#f59e0b]/[0.05] px-[11px] py-[9px]">
           <div className="mb-[5px] text-[9px] font-extrabold uppercase tracking-[0.1em] text-[#4b6278]">Viewing As</div>
           <select
+            autoComplete="off"
             value={role}
             onChange={(e) => actions.setRole(e.target.value as MaxRole)}
             className="w-full cursor-pointer rounded-[7px] border border-white/10 bg-[#0a1628] px-[9px] py-1.5 text-[12px] font-bold text-[#f0f5ff] outline-none"

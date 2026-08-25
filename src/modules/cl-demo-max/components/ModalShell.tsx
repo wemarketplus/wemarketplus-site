@@ -40,11 +40,36 @@ export function ModalShell({ title, subtitle, borderColor, maxWidth, saveLabel, 
           </div>
           <button type="button" onClick={() => actions.closeModal()} className="cursor-pointer border-none bg-transparent text-[22px] leading-none text-[#6b7fa3]">×</button>
         </div>
-        {children}
-        <div className="mt-[18px] flex gap-2.5">
-          <DemoButton className="flex-1 py-3 text-[14px]" onClick={onSave}>{saveLabel}</DemoButton>
-          <DemoButton variant="x" onClick={() => actions.closeModal()}>Cancel</DemoButton>
-        </div>
+        {/*
+          A REAL <form>, and `autoComplete="off"` on it.
+
+          Every demo field was previously unowned — there was no <form> element
+          anywhere in the three demo modules, so `field.form` was null for all of
+          them. That is worse than an opted-out form, not neutral: Chrome groups
+          unowned controls into a SYNTHETIC form scoped to the document, so this
+          modal's fields were classified together with whatever else on the page
+          happened to be formless — the tab's filter dropdowns and the sidebar's
+          "viewing as" select. Giving the modal its own form boundary is what
+          stops an autofill aimed at these fields reaching those.
+
+          The `off` is belt to that braces: this modal offers Chrome a name, a
+          `type="tel"` and a `type="email"`, which is the three-field threshold
+          its address classifier needs, and once a form is classified the profile
+          heuristics are applied to every control in it — `<select>`s included.
+          That is how "Lead Source" and "Pipeline Stage" changed on their own.
+
+          `onSubmit` is prevented and Save stays a button: the demo has no
+          endpoint, and a real submit would reload the page and lose the demo's
+          in-memory state. The form is here for the autofill boundary and for
+          Enter-to-submit semantics, not to navigate.
+        */}
+        <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
+          {children}
+          <div className="mt-[18px] flex gap-2.5">
+            <DemoButton className="flex-1 py-3 text-[14px]" onClick={onSave}>{saveLabel}</DemoButton>
+            <DemoButton variant="x" onClick={() => actions.closeModal()}>Cancel</DemoButton>
+          </div>
+        </form>
       </div>
     </div>
   );

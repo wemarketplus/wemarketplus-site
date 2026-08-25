@@ -7,6 +7,7 @@ import { useUploadExpenseReceiptMutation } from '../api/mileageApi';
 import { ExpenseType } from '../types/fieldTypes';
 import type { MileageLogRecord } from '../types/fieldTypes';
 import { RECEIPT_ACCEPT, RECEIPT_MAX_BYTES } from '../utils/receiptFiles';
+import { routeLabel } from '../utils/tripLocations';
 
 export const EXPENSE_TYPE_LABELS: Record<ExpenseType, string> = {
   parking: 'Parking',
@@ -63,6 +64,14 @@ export function AttachReceiptDialog({
   const fileInput = useRef<HTMLInputElement>(null);
 
   const [file, setFile] = useState<File | null>(null);
+  /**
+   * Why the oversize message is STATE and not just a toast: a toast is gone in
+   * four seconds, and the thing it was explaining — the file picker — still
+   * reads "no file selected" afterwards, which is indistinguishable from never
+   * having picked one. The reason the file was refused has to stay next to the
+   * field that refused it.
+   */
+  const [rejected, setRejected] = useState<string | null>(null);
   const [expenseType, setExpenseType] = useState<ExpenseType>(
     ExpenseType.Parking,
   );
@@ -76,12 +85,50 @@ export function AttachReceiptDialog({
   useEffect(() => {
     if (!open) return;
     setFile(null);
+    setRejected(null);
     setAmount('');
     setNotes('');
     setExpenseType(ExpenseType.Parking);
     setExpenseDate(trip?.date ?? todayLocal());
     if (fileInput.current) fileInput.current.value = '';
   }, [open, trip?.date, trip?.id]);
+
+  /**
+   * Size is checked HERE, when the file is chosen — not only in submit().
+   *
+   * The submit-time guard alone meant a worker could pick a 40 MB photo, fill in
+   * the date, type, amount and notes, press Attach receipt, and only then be
+   * told the file was never viable: every keystroke after the pick was wasted,
+   * and on a phone the picker is several taps back. It also let the field sit
+   * there displaying an accepted-looking "receipt.jpg · 41.8 MB" in the
+   * meantime, which is what "no file-size validation" describes even though a
+   * cap did exist further down the flow.
+   *
+   * The rejected file is dropped from state AND the input is cleared, so there
+   * is no way to submit it: `value = ''` matters because re-picking the SAME
+   * file would otherwise fire no change event at all, leaving the worker
+   * tapping a picker that appears to do nothing.
+   *
+   * The server's cap (multer `limits.fileSize` plus a byte-length check in
+   * ExpenseReceiptsService) is still the one that holds — this is the fast,
+   * local half of the same rule, and the 413 branch below covers the case where
+   * the two ever disagree.
+   */
+  const pick = (chosen: File | null) => {
+    if (chosen && chosen.size > RECEIPT_MAX_BYTES) {
+      const message =
+        `${chosen.name} is ${megabytes(chosen.size)}. ` +
+        `Receipts must be ${megabytes(RECEIPT_MAX_BYTES)} or smaller — ` +
+        `photograph it again at a lower resolution, or attach a PDF.`;
+      setRejected(message);
+      setFile(null);
+      toast.error(`That file is too large (${megabytes(chosen.size)}).`);
+      if (fileInput.current) fileInput.current.value = '';
+      return;
+    }
+    setRejected(null);
+    setFile(chosen);
+  };
 
   const submit = async () => {
     if (!file) {
@@ -132,9 +179,16 @@ export function AttachReceiptDialog({
     <Modal
       open={open}
       onClose={onClose}
+      /*
+        A trip with no endpoints recorded titled this dialog
+        "Attach receipt · — → —". See routeLabel: the arrow is drawn only when
+        there are two places to join, and a routeless trip is identified by the
+        day it was logged instead — which is what the worker recognises it by
+        anyway, and is never blank.
+      */
       title={
         trip
-          ? `Attach receipt · ${trip.fromLocation ?? '—'} → ${trip.toLocation ?? '—'}`
+          ? `Attach receipt · ${routeLabel(trip) ?? `trip on ${trip.date}`}`
           : 'Attach receipt'
       }
       footer={
@@ -156,13 +210,21 @@ export function AttachReceiptDialog({
             id="ar-file"
             type="file"
             accept={RECEIPT_ACCEPT}
-            onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+            onChange={(e) => pick(e.target.files?.[0] ?? null)}
             className="mt-1 block w-full text-xs text-muted file:mr-3 file:rounded-md file:border-0 file:bg-primary/15 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-primary"
           />
-          <p className="mt-1 text-[11px] text-muted-soft">
-            {file
-              ? `${file.name} · ${megabytes(file.size)}`
-              : `JPEG, PNG, WebP or PDF, up to ${megabytes(RECEIPT_MAX_BYTES)}.`}
+          <p
+            className={
+              rejected
+                ? 'mt-1 text-[11px] text-destructive'
+                : 'mt-1 text-[11px] text-muted-soft'
+            }
+            role={rejected ? 'alert' : undefined}
+          >
+            {rejected ??
+              (file
+                ? `${file.name} · ${megabytes(file.size)}`
+                : `JPEG, PNG, WebP or PDF, up to ${megabytes(RECEIPT_MAX_BYTES)}.`)}
           </p>
         </div>
 

@@ -11,16 +11,16 @@ export function SettingsTab() {
       <Card title="Community Settings">
         <div className="mb-3 grid grid-cols-2 gap-3">
           <Field label="Community Name">
-            <input className={FI} defaultValue="Sunrise Senior Living" />
+            <input autoComplete="off" className={FI} defaultValue="Sunrise Senior Living" />
           </Field>
           <Field label="Total Units">
-            <input className={FI} type="number" defaultValue={apts.length} />
+            <input autoComplete="off" className={FI} type="number" defaultValue={apts.length} />
           </Field>
           <Field label="Phone">
-            <input className={FI} defaultValue="(214) 555-0100" />
+            <input autoComplete="off" className={FI} defaultValue="(214) 555-0100" />
           </Field>
           <Field label="City">
-            <input className={FI} defaultValue="Dallas, TX" />
+            <input autoComplete="off" className={FI} defaultValue="Dallas, TX" />
           </Field>
         </div>
         <DemoButton onClick={() => actions.toast('Settings saved!')}>Save Settings</DemoButton>

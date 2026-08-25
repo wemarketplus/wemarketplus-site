@@ -16,7 +16,25 @@ const EMPTY: PaidReferralFormValues = {
   sourceName: '',
   referralFee: '',
   feeStatus: FEE_STATUS.Pending,
-  stage: 'New Referral',
+  /**
+   * BLANK, not 'New Referral'.
+   *
+   * The stage column is `varchar(100) NOT NULL DEFAULT 'New Referral'`
+   * (cl-paid-referral.entity.ts, InitialSchema migration) and
+   * CreateClPaidReferralDto marks `stage` @IsOptional — so the server already
+   * stamps exactly this value when the field is omitted, and the mapper omits
+   * it for a blank (toCreatePaidReferral -> opt('stage', …) drops empty
+   * strings). Pre-filling it here duplicated a server default in the client and
+   * spent the field's placeholder — the form read as though a stage had been
+   * chosen for the user, which is the report.
+   *
+   * Left OPTIONAL rather than turned into a required picker: the DTO does not
+   * require it, and a client-only mandatory rule would invent a constraint the
+   * API does not enforce. The `placeholder: 'New Referral'` on the descriptor
+   * now shows, which is the honest statement — leave it blank and this is what
+   * you get.
+   */
+  stage: '',
 };
 
 interface Props {

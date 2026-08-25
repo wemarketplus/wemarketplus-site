@@ -49,24 +49,24 @@ export function GpsTab() {
         </div>
         <div className={FG}>
           <Field label="Facility *">
-            <input className={FI} value={org} onChange={(e) => setOrg(e.target.value)} placeholder="Parkland Hospital" />
+            <input autoComplete="off" className={FI} value={org} onChange={(e) => setOrg(e.target.value)} placeholder="Parkland Hospital" />
           </Field>
           <Field label="Contact">
-            <input className={FI} value={person} onChange={(e) => setPerson(e.target.value)} placeholder="Dr. Amanda Chen" />
+            <input autoComplete="off" className={FI} value={person} onChange={(e) => setPerson(e.target.value)} placeholder="Dr. Amanda Chen" />
           </Field>
           <Field label="Visit Type">
-            <select className={FI} value={type} onChange={(e) => setType(e.target.value)}>
+            <select autoComplete="off" className={FI} value={type} onChange={(e) => setType(e.target.value)}>
               {GPS_VISIT_TYPES.map((t) => <option key={t}>{t}</option>)}
             </select>
           </Field>
           <Field label="Miles Driven">
-            <input className={FI} type="number" value={miles} onChange={(e) => setMiles(e.target.value)} placeholder="12" />
+            <input autoComplete="off" className={FI} type="number" value={miles} onChange={(e) => setMiles(e.target.value)} placeholder="12" />
           </Field>
           <Field label="GPS Coordinates" wide>
-            <input className={FI} value={coords} readOnly placeholder="Click Capture GPS…" />
+            <input autoComplete="off" className={FI} value={coords} readOnly placeholder="Click Capture GPS…" />
           </Field>
           <Field label="Notes" wide>
-            <textarea className={`${FI} min-h-[60px] resize-y`} rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="What happened? Next steps?" />
+            <textarea autoComplete="off" className={`${FI} min-h-[60px] resize-y`} rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="What happened? Next steps?" />
           </Field>
         </div>
         <div className="mt-1 flex gap-2">

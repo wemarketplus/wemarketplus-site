@@ -35,10 +35,10 @@ export function ConcessionsTab() {
         {open && (
           <div className="mb-[14px] rounded-[10px] border border-[#f59e0b]/15 bg-[#071120] p-[14px]">
             <div className="mb-3 grid grid-cols-2 gap-3">
-              <Field label="Resident Name"><input className={FI} placeholder="Dorothy Harrison" value={res} onChange={(e) => setRes(e.target.value)} /></Field>
-              <Field label="Concession Type"><select className={FI} value={type} onChange={(e) => setType(e.target.value)}>{CONCESSION_TYPE_OPTS.map((t) => <option key={t}>{t}</option>)}</select></Field>
-              <Field label="Value ($)"><input className={FI} type="number" placeholder="2500" value={val} onChange={(e) => setVal(e.target.value)} /></Field>
-              <Field label="Unit"><input className={FI} placeholder="102" value={unit} onChange={(e) => setUnit(e.target.value)} /></Field>
+              <Field label="Resident Name"><input autoComplete="off" className={FI} placeholder="Dorothy Harrison" value={res} onChange={(e) => setRes(e.target.value)} /></Field>
+              <Field label="Concession Type"><select autoComplete="off" className={FI} value={type} onChange={(e) => setType(e.target.value)}>{CONCESSION_TYPE_OPTS.map((t) => <option key={t}>{t}</option>)}</select></Field>
+              <Field label="Value ($)"><input autoComplete="off" className={FI} type="number" placeholder="2500" value={val} onChange={(e) => setVal(e.target.value)} /></Field>
+              <Field label="Unit"><input autoComplete="off" className={FI} placeholder="102" value={unit} onChange={(e) => setUnit(e.target.value)} /></Field>
             </div>
             <div className="flex gap-2"><DemoButton sm onClick={submit}>Submit Request</DemoButton><DemoButton variant="x" sm onClick={() => setOpen(false)}>Cancel</DemoButton></div>
           </div>

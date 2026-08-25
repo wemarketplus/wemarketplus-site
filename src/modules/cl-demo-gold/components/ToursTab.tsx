@@ -21,16 +21,16 @@ export function ToursTab() {
         <div className="mb-[14px] rounded-[10px] border border-[#f59e0b]/15 bg-[#071120] p-[14px]">
           <div className="mb-3 grid grid-cols-2 gap-3">
             <Field label="Prospect *">
-              <input className={FI} placeholder="Prospect name" value={name} onChange={(e) => setName(e.target.value)} />
+              <input autoComplete="off" className={FI} placeholder="Prospect name" value={name} onChange={(e) => setName(e.target.value)} />
             </Field>
             <Field label="Date *">
-              <input className={FI} type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+              <input autoComplete="off" className={FI} type="date" value={date} onChange={(e) => setDate(e.target.value)} />
             </Field>
             <Field label="Time">
-              <input className={FI} type="time" value={time} onChange={(e) => setTime(e.target.value)} />
+              <input autoComplete="off" className={FI} type="time" value={time} onChange={(e) => setTime(e.target.value)} />
             </Field>
             <Field label="Guide">
-              <input className={FI} placeholder="Sarah M." value={guide} onChange={(e) => setGuide(e.target.value)} />
+              <input autoComplete="off" className={FI} placeholder="Sarah M." value={guide} onChange={(e) => setGuide(e.target.value)} />
             </Field>
           </div>
           <div className="flex gap-2">

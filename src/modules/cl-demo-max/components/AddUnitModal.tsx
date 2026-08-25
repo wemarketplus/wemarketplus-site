@@ -19,14 +19,14 @@ export function AddUnitModal() {
   return (
     <ModalShell title="+ Add Apartment Unit" subtitle="Unit will sync to inventory, financial ledger, and occupancy dashboard" borderColor="rgba(79,200,122,.35)" maxWidth="sm:max-w-[620px]" saveLabel="💾 Save Unit + Sync to Ledger" onSave={save}>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <Field label="Unit Number *"><input className={FI} placeholder="101" value={f.unit} onChange={(e) => set('unit', e.target.value)} /></Field>
-        <Field label="Floor Plan"><select className={FI} value={f.type} onChange={(e) => set('type', e.target.value)}>{UNIT_TYPE_OPTS.map((o) => <option key={o}>{o}</option>)}</select></Field>
-        <Field label="Square Footage"><input className={FI} type="number" placeholder="650" value={f.sqft} onChange={(e) => set('sqft', e.target.value)} /></Field>
-        <Field label="Care Level"><select className={FI} value={f.care} onChange={(e) => set('care', e.target.value)}>{UNIT_CARE_OPTS.map((o) => <option key={o}>{o}</option>)}</select></Field>
-        <Field label="Occupancy Status"><select className={FI} value={f.status} onChange={(e) => set('status', e.target.value)}>{UNIT_STATUS_OPTS.map((o) => <option key={o}>{o}</option>)}</select></Field>
-        <Field label="Monthly Rent ($)"><input className={FI} type="number" placeholder="3500" value={f.rate} onChange={(e) => set('rate', e.target.value)} /></Field>
-        <Field label="Current Resident"><input className={FI} value={f.resident} onChange={(e) => set('resident', e.target.value)} /></Field>
-        <Field label="Notes" wide><textarea className={`${FI} min-h-[56px]`} rows={2} placeholder="Unit notes, special features, maintenance history…" value={f.notes} onChange={(e) => set('notes', e.target.value)} /></Field>
+        <Field label="Unit Number *"><input autoComplete="off" className={FI} placeholder="101" value={f.unit} onChange={(e) => set('unit', e.target.value)} /></Field>
+        <Field label="Floor Plan"><select autoComplete="off" className={FI} value={f.type} onChange={(e) => set('type', e.target.value)}>{UNIT_TYPE_OPTS.map((o) => <option key={o}>{o}</option>)}</select></Field>
+        <Field label="Square Footage"><input autoComplete="off" className={FI} type="number" placeholder="650" value={f.sqft} onChange={(e) => set('sqft', e.target.value)} /></Field>
+        <Field label="Care Level"><select autoComplete="off" className={FI} value={f.care} onChange={(e) => set('care', e.target.value)}>{UNIT_CARE_OPTS.map((o) => <option key={o}>{o}</option>)}</select></Field>
+        <Field label="Occupancy Status"><select autoComplete="off" className={FI} value={f.status} onChange={(e) => set('status', e.target.value)}>{UNIT_STATUS_OPTS.map((o) => <option key={o}>{o}</option>)}</select></Field>
+        <Field label="Monthly Rent ($)"><input autoComplete="off" className={FI} type="number" placeholder="3500" value={f.rate} onChange={(e) => set('rate', e.target.value)} /></Field>
+        <Field label="Current Resident"><input autoComplete="off" className={FI} value={f.resident} onChange={(e) => set('resident', e.target.value)} /></Field>
+        <Field label="Notes" wide><textarea autoComplete="off" className={`${FI} min-h-[56px]`} rows={2} placeholder="Unit notes, special features, maintenance history…" value={f.notes} onChange={(e) => set('notes', e.target.value)} /></Field>
       </div>
       <div className="mt-3 rounded-[8px] border border-[#f59e0b]/20 bg-[#f59e0b]/[0.06] p-3 text-[12px] text-[#f59e0b]">🔒 Only Executive Director and Admin can edit rent, market value, and financial data. All changes are audit-logged.</div>
     </ModalShell>

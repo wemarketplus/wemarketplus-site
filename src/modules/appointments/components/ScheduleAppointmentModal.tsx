@@ -110,6 +110,7 @@ export function ScheduleAppointmentModal({
       }
     >
       <form
+        autoComplete="off"
         onSubmit={handleSubmit(onSubmitForm)}
         className="grid grid-cols-1 gap-4 sm:grid-cols-2"
       >

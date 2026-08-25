@@ -2,7 +2,7 @@ import { PAGE_TITLE, SECTION_TITLE } from '@/shared/ui/core/typography';
 import { useMemo, useState } from 'react';
 import { NotebookPen } from 'lucide-react';
 import { CL_SALES_ROLES, useRole } from '@/shared/rbac';
-import { Button, Card, CardContent, DatePicker, Input, Select } from '@/shared/ui/core';
+import { Button, Card, CardContent, DatePicker, Input, Select, Textarea } from '@/shared/ui/core';
 import { EmptyState } from '@/shared/ui/feedback';
 import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
 import {
@@ -111,8 +111,15 @@ export function ActivityNotesPage() {
               ))}
             </Select>
           )}
-          <textarea
-            className="w-full rounded-md border border-border/10 bg-surface px-3 py-2.5 text-sm text-foreground outline-none focus:border-primary/50"
+          {/*
+            <Textarea>, not a hand-rolled one. It sat between the <Select> above
+            and the <Input> row below at `px-3` against their `px-3.5`, on
+            `bg-surface`/`border-border/10` against the shared
+            `bg-surface-raised`/`border-border/[0.12]` — so the note body's text
+            began 2px left of every field it is stacked with, on a slightly
+            darker panel with a fainter hairline.
+          */}
+          <Textarea
             rows={3}
             placeholder="What happened? What was discussed?"
             value={summary}

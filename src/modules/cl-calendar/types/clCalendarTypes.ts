@@ -5,7 +5,9 @@ import type { ID, ISODateString } from '@/shared/types';
  *
  * Deliberately only the two the guide names — "You can schedule a tour, a
  * facility visit, or even a physician lunch directly" — where a physician lunch
- * is a facility visit with a `lunch_and_learn` type, not a third record. Tasks
+ * is an outreach visit with the `lunch_learn` type, not a third record. Which is
+ * exactly why `typeLabel` below exists: two kinds cannot name three things, and
+ * for a while they did not — every visit read as "Facility visit". Tasks
  * are NOT here: Task Manager and Daily Task already own due-dated work, and
  * putting them on the calendar too would mean three screens showing the same row.
  */
@@ -35,6 +37,20 @@ export interface ClCalendarEvent {
   /** True when `at` carries a meaningful clock time, not just a date. */
   hasTime: boolean;
   title: string;
+  /**
+   * What this row IS, in the words the user picked it by — "Tour",
+   * "Facility visit", "Lunch & learn".
+   *
+   * Distinct from `kind`, and that distinction is the bug it exists for. `kind`
+   * has two members because there are two TABLES behind the calendar, so every
+   * outreach visit — facility visit, physician lunch, drop-off — resolved to the
+   * single label "Facility visit" and a physician lunch was rendered as a
+   * facility visit from the moment it was created. The type the user actually
+   * chose lives on the record (`visitType`), so it is carried here rather than
+   * re-derived: the day panel and the month grid must not each own a switch on
+   * the record type to answer the same question.
+   */
+  typeLabel: string;
   /** Secondary line: contact, location, visit type. */
   detail: string;
   /**

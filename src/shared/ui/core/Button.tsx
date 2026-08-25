@@ -49,11 +49,32 @@ const buttonVariants = cva(
         // #49b6ff→#8cff66 ramp was a dark-canvas accent and washed out on white.
         gradient:
           'rounded-pill font-bold text-primary-foreground hover:opacity-[0.88] bg-[linear-gradient(90deg,#0f5c44,#16805c)]',
+        /**
+         * THE QUIET VARIANTS' BORDER IS 50% α, NOT 12/14%.
+         *
+         * These two are the app's "visible but not shouting" buttons, and the
+         * only thing marking their hit area is that hairline — they carry no
+         * fill worth the name (`surface-raised` is #fafbfa, which is 1.02:1
+         * against a white card, i.e. nothing). At 12% α the border blended to
+         * #e2e5e4 over white: 1.29:1, against the 3:1 WCAG 1.4.11 asks of a
+         * control boundary. So a dialog footer's Cancel was, in practice, dark
+         * text floating next to a solid green pill with no button around it —
+         * the "Cancel button has insufficient contrast/visibility" report, and
+         * the reason the Mileage "Add link" action read as a caption.
+         *
+         * 50% is the LOWEST α that clears the floor: it blends to #888f8c
+         * (3.30:1 on white) where 45% gives 2.85:1. It is a token alpha, not a
+         * new colour, so `--color-border` flipping to white in the dark theme
+         * keeps it correct there (≈5.3:1 on #0d0f15) with no second rule.
+         *
+         * Note this was ALSO the bug in the old hover: `hover:border-border/25`
+         * was below the new rest state, so hovering made the button fainter.
+         */
         // subtle filled secondary used across the site
         secondary:
-          'rounded-pill border border-border/[0.12] bg-surface-raised font-semibold text-foreground hover:border-border/25',
+          'rounded-pill border border-border/50 bg-surface-raised font-semibold text-foreground hover:border-border/70',
         outline:
-          'rounded-pill border border-border/[0.14] bg-transparent font-semibold text-foreground hover:bg-foreground/[0.05]',
+          'rounded-pill border border-border/50 bg-transparent font-semibold text-foreground hover:border-border/70 hover:bg-foreground/[0.05]',
         ghost:
           'rounded-pill bg-transparent font-semibold text-muted hover:text-foreground hover:bg-foreground/[0.05]',
         destructive:

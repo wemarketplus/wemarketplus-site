@@ -1,4 +1,5 @@
-import { NavLink } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 // Lucide is the icon system the reference design draws from (24px grid, 2px
 // stroke, rounded caps) and is already the app's icon dependency — every
 // NavItem in navigationConfig already carries one.
@@ -9,6 +10,7 @@ import {
   isNavItemVisible,
 } from '@/shared/config/navigationConfig';
 import { useAppSelector } from '@/app/hooks';
+import { SearchInput } from '@/shared/ui/core';
 import { useRole, roleTitle } from '@/shared/rbac';
 import { Product, TIER_LABELS, PRODUCT_LABELS } from '@/shared/types';
 import { cn } from '@/shared/utils/cn';
@@ -59,8 +61,55 @@ export function Sidebar() {
       ? customRole.navKeys
       : undefined;
 
-  const sections = SECTIONS_BY_PRODUCT[product];
+  /**
+   * MODULE SEARCH — filters THIS rail. Deliberately not the topbar's
+   * Cmd/Ctrl+K palette (modules/search): that one answers "find a record"
+   * (contacts, companies, prospects) and says so in its own empty state. This
+   * one answers "where is that screen", over a rail that runs to ~40 rows
+   * across eight sections at CommunityLink Max. Two different questions, so
+   * reusing the palette would have meant teaching it a second vocabulary; the
+   * shared <SearchInput> is the part worth reusing, and it is.
+   */
+  const [navQuery, setNavQuery] = useState('');
+  const navigate = useNavigate();
+
+  const allSections = SECTIONS_BY_PRODUCT[product];
   const isCommunity = product === Product.CommunityLink;
+
+  /**
+   * ONE notion of "visible" for the rail: entitlement/role visibility and the
+   * text filter are applied in the same pass, so the empty-section check and
+   * the "no modules match" state below cannot disagree with what is rendered.
+   *
+   * Matching the SECTION label too is what makes "financial" or "outreach"
+   * work — the user's mental index of the rail is the eyebrows as much as the
+   * rows.
+   */
+  const sections = useMemo(() => {
+    const needle = navQuery.trim().toLowerCase();
+    return allSections
+      .map((section) => ({
+        ...section,
+        items: section.items.filter(
+          (item) =>
+            isNavItemVisible(item, product, role, tier, allowedNavKeys, section.id) &&
+            (needle === '' ||
+              item.label.toLowerCase().includes(needle) ||
+              section.label.toLowerCase().includes(needle)),
+        ),
+      }))
+      .filter((section) => section.items.length > 0);
+  }, [allSections, navQuery, product, role, tier, allowedNavKeys]);
+
+  /**
+   * Enter goes to the first real match, so the keyboard path is type-and-go
+   * rather than type-then-reach-for-the-mouse. `comingSoon` rows are skipped:
+   * they have no route behind them (see the inert branch below), so navigating
+   * to one would 404.
+   */
+  const firstMatch = navQuery.trim()
+    ? sections.flatMap((section) => section.items).find((item) => !item.comingSoon)
+    : undefined;
 
   // ONE active accent for every product and tier — a tinted pill with
   // accent-coloured text. The rail previously shifted hue per tier/product
@@ -99,13 +148,42 @@ export function Sidebar() {
         <ViewingAsBadge />
       </div>
 
+      {/* MODULE SEARCH — between the brand block and the rows, so it reads as a
+          control over the list it filters rather than as one more nav row.
+          Sized to the rail: `h-8` is NAV_ROW_BASE's own row height and 12px is
+          the row label size, so the field sits in the same rhythm as the rows
+          instead of the 44px/14px page-form geometry CONTROL_HEIGHT gives it.
+          A plain filter input with `aria-controls`, NOT the combobox pattern in
+          ListboxSelect: the results are the nav landmark itself, which stays in
+          the DOM and keeps its own role. */}
+      <div className="flex-shrink-0 px-2 pb-1">
+        <SearchInput
+          value={navQuery}
+          onChange={setNavQuery}
+          placeholder="Search menu…"
+          aria-label="Search menu"
+          aria-controls="sidebar-nav"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && firstMatch) {
+              e.preventDefault();
+              navigate(firstMatch.to);
+              setNavQuery('');
+            }
+          }}
+          className="h-8 text-[12px]"
+        />
+      </div>
+
       {/* .sb-nav */}
-      <nav className="flex-1 overflow-y-auto px-2 pb-2" aria-label="Primary navigation">
+      <nav
+        id="sidebar-nav"
+        className="flex-1 overflow-y-auto px-2 pb-2"
+        aria-label="Primary navigation"
+      >
         {sections.map((section) => {
-          const visibleItems = section.items.filter((i) =>
-            isNavItemVisible(i, product, role, tier, allowedNavKeys, section.id),
-          );
-          if (visibleItems.length === 0) return null;
+          // Already filtered by the memo above — both for visibility and for the
+          // search needle — so a section reaching here always has rows.
+          const visibleItems = section.items;
           const isAdmin = section.id.endsWith('intelligence') || section.id === 'admin' || section.id.endsWith('compliance');
           return (
             <div key={section.id}>
@@ -207,6 +285,12 @@ export function Sidebar() {
             </div>
           );
         })}
+        {/* Only reachable with a needle typed: with an empty query the rail
+            always has rows. `text-muted`, not `muted-soft`, for the same
+            contrast reason as the section eyebrows above. */}
+        {sections.length === 0 && (
+          <p className="px-2.5 pt-3 text-[11px] text-muted">No modules match.</p>
+        )}
       </nav>
 
       {/* .sb-foot */}

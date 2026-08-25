@@ -34,19 +34,19 @@ export function LocCalculatorTab() {
       <div className="grid grid-cols-1 gap-[14px] lg:grid-cols-2">
         <Card title="Base Rate Configuration" action={<DemoButton sm onClick={saveRates}>Save Rates</DemoButton>}>
           <div className="grid grid-cols-2 gap-3">
-            <Field label="IL Base Rate ($/mo)"><input className={FI} type="number" value={il} onChange={(e) => setIl(e.target.value)} /></Field>
-            <Field label="AL Base Rate ($/mo)"><input className={FI} type="number" value={al} onChange={(e) => setAl(e.target.value)} /></Field>
-            <Field label="MC Base Rate ($/mo)"><input className={FI} type="number" value={mc} onChange={(e) => setMc(e.target.value)} /></Field>
-            <Field label="LOC Add-on per Level ($)"><input className={FI} type="number" value={addon} onChange={(e) => setAddon(e.target.value)} /></Field>
+            <Field label="IL Base Rate ($/mo)"><input autoComplete="off" className={FI} type="number" value={il} onChange={(e) => setIl(e.target.value)} /></Field>
+            <Field label="AL Base Rate ($/mo)"><input autoComplete="off" className={FI} type="number" value={al} onChange={(e) => setAl(e.target.value)} /></Field>
+            <Field label="MC Base Rate ($/mo)"><input autoComplete="off" className={FI} type="number" value={mc} onChange={(e) => setMc(e.target.value)} /></Field>
+            <Field label="LOC Add-on per Level ($)"><input autoComplete="off" className={FI} type="number" value={addon} onChange={(e) => setAddon(e.target.value)} /></Field>
           </div>
         </Card>
 
         <Card title="Quick Rate Calculator">
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Care Level"><select className={FI} value={care} onChange={(e) => setCare(e.target.value as 'IL' | 'AL' | 'MC')}><option value="IL">Independent Living</option><option value="AL">Assisted Living</option><option value="MC">Memory Care</option></select></Field>
-            <Field label="LOC Score (1–5)"><input className={FI} type="number" min={1} max={5} value={loc} onChange={(e) => setLoc(e.target.value)} /></Field>
-            <Field label="Second Person?"><select className={FI} value={second} onChange={(e) => setSecond(e.target.value)}><option value="0">No</option><option value="600">Yes (+$600)</option></select></Field>
-            <Field label="Parking ($/mo)"><input className={FI} type="number" value={park} onChange={(e) => setPark(e.target.value)} /></Field>
+            <Field label="Care Level"><select autoComplete="off" className={FI} value={care} onChange={(e) => setCare(e.target.value as 'IL' | 'AL' | 'MC')}><option value="IL">Independent Living</option><option value="AL">Assisted Living</option><option value="MC">Memory Care</option></select></Field>
+            <Field label="LOC Score (1–5)"><input autoComplete="off" className={FI} type="number" min={1} max={5} value={loc} onChange={(e) => setLoc(e.target.value)} /></Field>
+            <Field label="Second Person?"><select autoComplete="off" className={FI} value={second} onChange={(e) => setSecond(e.target.value)}><option value="0">No</option><option value="600">Yes (+$600)</option></select></Field>
+            <Field label="Parking ($/mo)"><input autoComplete="off" className={FI} type="number" value={park} onChange={(e) => setPark(e.target.value)} /></Field>
           </div>
           <DemoButton variant="g" className="mt-2" onClick={calc}>Calculate</DemoButton>
           {result && (

@@ -1,4 +1,5 @@
-import { ChevronDown } from 'lucide-react';
+import { useId } from 'react';
+import { ListboxSelect } from '@/shared/ui/core';
 import { cn } from '@/shared/utils/cn';
 import { PILL_SHAPE, PILL_TONES, type PillProps } from './Pill';
 
@@ -18,6 +19,13 @@ interface StatusSelectProps {
 }
 
 /**
+ * The panel needs to fit "Not applicable" / "Needs attention" at the option
+ * list's own 14px, and the closed pill is only as wide as its current label —
+ * so the list gets a floor rather than the badge's width.
+ */
+const PANEL_MIN_WIDTH = 168;
+
+/**
  * A row's status: ONE control that both reports the current value and changes it.
  *
  * ── The bug this fixes ────────────────────────────────────────────────────────
@@ -34,33 +42,43 @@ interface StatusSelectProps {
  * live PATCH. Deleting the pill would have cost the colour that makes a column
  * of statuses scannable. So neither is dropped: the badge IS the dropdown.
  *
- * A native <select> on purpose — keyboard-operable, screen-reader announced, and
- * it uses the platform picker on touch devices, none of which a div-based menu
- * gives for free. The <select> renders the matching option's own text, so the
- * visible label cannot drift from the stored value.
- *
  * Colour and geometry are imported from Pill rather than restated, so a status
  * badge and an editable status badge are the same object.
  *
- * ── The DEAD ZONE this also fixes ─────────────────────────────────────────────
- * The pill's padding used to live on the wrapper <span>, so the <select> was
- * inset INSIDE it and only covered part of the badge: measured in the leads
- * pipeline, an 80x11px select inside a 114x22px pill — 35% of what looks like
- * one control was live, and the other 65% belonged to a <span> that does
- * nothing. `elementFromPoint` on the chevron returned the SPAN.
+ * ── WHY THIS IS NO LONGER A NATIVE <select> ───────────────────────────────────
+ * It was one, on the reasoning that the platform picker is keyboard-operable,
+ * screen-reader announced and the right control on touch, for free. All true —
+ * and all of it also came with a popup the page does not own, which is the half
+ * that could not stay.
  *
- * The chevron is the worst of it. It is the universal "this opens" affordance,
- * it is `pointer-events-none`, and it sat over the wrapper — so clicking the
- * one part of the badge that advertises a dropdown neither opened it nor even
- * focused it. Nothing was mis-selected by those clicks (the value and the
- * network stayed put, which is what the "clicking empty space selects a status"
- * report feared); they were simply swallowed, which reads as the control
- * randomly ignoring you.
+ * A native popup decides for itself which of its pixels commit a value, and its
+ * blank regions — the list's padding, the scroll gutter, the strip under the
+ * last row — commit whatever is HIGHLIGHTED on mouse-up. That produced the
+ * report "opening the Fee Status dropdown, moving through the options and then
+ * clicking an empty area selects a fee status". On a form field that would be
+ * cosmetic. Here it is not: every `change` on this control is wired straight to
+ * a PATCH (see the eight consumers — leads, tasks, tours, the four operations
+ * boards, paid referrals), so a stray commit is a silent, un-undoable write to
+ * the record. No CSS or JS in the page can reach that popup to prevent it; the
+ * only fix is to stop the browser drawing it.
  *
- * So the PADDING moves onto the <select>. The wrapper then shrink-wraps it and
- * every pixel of the badge — chevron included — is the select's own hit box,
- * with the chevron's `pointer-events-none` now passing clicks down to it rather
- * than to an inert span.
+ * A second defect closed by the same move: a native <select> is a form control,
+ * so Chrome's profile heuristics would fill it. This one carried no
+ * `autoComplete="off"` — the guard `Select` has borne since the "Stage changed
+ * on its own during an autofill" report — and, sitting in a table that is not
+ * inside any <form>, it was exactly the unowned control that heuristic writes
+ * to. One autofill then meant one PATCH and one "…updated" toast PER ROW, which
+ * is the "multiple Update popups after 2-3 referrals" report. A <button> is not
+ * a form control, so there is now nothing here for autofill to write to.
+ *
+ * What replaces it is NOT a hand-rolled menu: it delegates to <ListboxSelect>,
+ * which already implements the full listbox pattern (roving Arrow/Home/End with
+ * `aria-activedescendant`, Enter/Space to commit, Escape to cancel, type-ahead,
+ * a real `role="combobox"` trigger) and — the point of the exercise — commits
+ * ONLY from an option's own pointerdown, with the panel's padding belonging to a
+ * <ul> that has no handler. Blank space is inert by construction. This component
+ * keeps its own name, props and pill geometry, so all eight call sites are
+ * unchanged.
  */
 export function StatusSelect({
   value,
@@ -70,53 +88,35 @@ export function StatusSelect({
   onChange,
   'aria-label': ariaLabel,
 }: StatusSelectProps) {
+  // The listbox needs a stable id to point `aria-activedescendant` at its
+  // options, and a status badge has no <Label> to borrow one from.
+  const id = useId();
+
   return (
-    // The TONE lives on the wrapper, not the <select>: the chevron is a sibling
-    // of the select, so it can only pick up the tone's text colour by
-    // inheritance. The select is transparent and inherits font + colour from
-    // here (Tailwind's preflight makes form controls inherit both).
-    <span
+    <ListboxSelect
+      id={id}
+      value={value}
+      onChange={onChange}
+      options={options}
+      disabled={disabled}
+      aria-label={ariaLabel}
+      minPanelWidth={PANEL_MIN_WIDTH}
+      // 12px glyph, and it inherits the tone's text colour instead of the
+      // field-sized chevron's `text-muted` — the badge is one colour object.
+      chevronClassName="h-3 w-3 text-current opacity-70"
       className={cn(
         PILL_SHAPE,
         PILL_TONES[tone ?? 'b'],
-        // `p-0` hands PILL_SHAPE's px-2.5 to the <select>; `items-stretch`
-        // then makes the select fill the 22px height instead of sitting on
-        // the centre line as an 11px band.
-        'relative items-stretch p-0',
+        // The pill SHRINK-WRAPS and carries no border: both undo a piece of the
+        // shared field geometry ListboxSelect's trigger starts from (`w-full`,
+        // a hairline) that a badge must not wear. `gap-1` closes the 8px field
+        // gap to something a 22px pill can hold.
+        'w-auto gap-1 border-0',
+        // The pill has no border to recolour on focus, so it needs the ring the
+        // bordered field variant does without.
+        'focus-visible:ring-2 focus-visible:ring-primary/50',
         disabled && 'opacity-60',
       )}
-    >
-      <select
-        value={value}
-        disabled={disabled}
-        aria-label={ariaLabel}
-        onChange={(e) => onChange(e.target.value)}
-        className={cn(
-          // pl-2.5 is PILL_SHAPE's own inline padding; pr-6 is the gutter the
-          // chevron is positioned into. Both belong to the select now, so the
-          // badge has no border it does not own.
-          'cursor-pointer appearance-none rounded-pill bg-transparent pl-2.5 pr-6 outline-none',
-          'focus-visible:ring-2 focus-visible:ring-primary/50',
-          'disabled:cursor-not-allowed',
-        )}
-      >
-        {/*
-          The OPTIONS are rendered by the platform, on its own surface — they
-          cannot carry the pill's pastel fill, and forcing colours onto them is
-          unreliable across browsers. The list stays plain text; the colour lives
-          on the closed control, which is the part read when scanning a column.
-        */}
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
-      {/* Decorative — the <select> already announces itself and its value. */}
-      <ChevronDown
-        aria-hidden="true"
-        className="pointer-events-none absolute right-1.5 top-1/2 h-3 w-3 -translate-y-1/2 opacity-70"
-      />
-    </span>
+    />
   );
 }

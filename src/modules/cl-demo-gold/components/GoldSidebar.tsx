@@ -4,7 +4,7 @@ import { useGoldDemo } from '../hooks/useGoldDemo';
 import type { GoldRole } from '../types/goldTypes';
 
 // Reproduces the reference <aside class="sb"> exactly: 224px column, brand
-// block, DEMO badge, "Viewing As" role <select> (5 roles), role-based nav
+// block, DEMO badge, "Viewing As" role <select autoComplete="off"> (5 roles), role-based nav
 // sections, and the footer link back to the site.
 export function GoldSidebar() {
   const { role, activeTab, actions } = useGoldDemo();
@@ -40,6 +40,7 @@ export function GoldSidebar() {
             Viewing As
           </div>
           <select
+            autoComplete="off"
             value={role}
             onChange={(e) => actions.setRole(e.target.value as GoldRole)}
             className="w-full cursor-pointer rounded-[7px] border border-white/10 bg-[#0a1628] px-[9px] py-1.5 text-[12px] font-bold text-[#f0f5ff] outline-none"

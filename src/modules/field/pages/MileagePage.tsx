@@ -25,6 +25,7 @@ import {
   endpointFields,
   hasCoordinates,
   routeCoordinates,
+  routeLabel,
 } from '../utils/tripLocations';
 import type {
   ExpenseReceiptRecord,
@@ -149,7 +150,7 @@ export function MileagePage() {
       // pairs per row would bury them.
       cell: (row) => (
         <span className="inline-flex items-center gap-1.5">
-          {`${row.fromLocation ?? '—'} → ${row.toLocation ?? '—'}`}
+          {routeLabel(row) ?? '—'}
           {hasCoordinates(row) && (
             <span title={routeCoordinates(row)}>
               <MapPin
@@ -197,14 +198,23 @@ export function MileagePage() {
             {attached.some((receipt) => !receipt.hasFile && receipt.receiptUrl) && (
               <span className="text-[11px] text-muted-soft">+ link</span>
             )}
-            <button
-              type="button"
+            {/* The only ACTION in this cell, so it must not be the quietest
+                thing in it. As a bare text button it had no border, no fill and
+                no focus ring, and it sat next to a `text-primary` receipt link
+                and a `text-muted-soft` "+ link" caption — the affordance read
+                as less interactive than the labels around it. Same
+                `secondary`/`sm` pairing every other DataTable action cell uses
+                (see ClReferralsTable's "Log visit"), which also picks up
+                Button's focus-visible ring for free. */}
+            <Button
+              variant="secondary"
+              size="sm"
               onClick={() => setAttachTo(row)}
-              className="inline-flex items-center gap-1 text-[11px] font-semibold text-muted hover:text-foreground"
+              aria-label={`Attach receipt to the trip on ${row.date}`}
             >
-              <Paperclip className="h-3 w-3" />
+              <Paperclip className="h-3.5 w-3.5" />
               {attached.length > 0 ? 'Add' : 'Attach'}
-            </button>
+            </Button>
           </div>
         );
       },

@@ -29,7 +29,7 @@ export function AlertSettingsTab() {
             </div>
             <div className="mt-2 flex items-center gap-2">
               <span className="text-[11px] text-[#6b7fa3]">Channel:</span>
-              <select className={`${FI} w-[120px] !py-1`} value={s.channel} onChange={(e) => update(at.key, { channel: e.target.value })}>{ALERT_CHANNELS.map((ch) => <option key={ch} value={ch}>{ch}</option>)}</select>
+              <select autoComplete="off" className={`${FI} w-[120px]`} value={s.channel} onChange={(e) => update(at.key, { channel: e.target.value })}>{ALERT_CHANNELS.map((ch) => <option key={ch} value={ch}>{ch}</option>)}</select>
               <DemoButton sm onClick={() => actions.saveAlert(at.key, draft[at.key])}>Save</DemoButton>
             </div>
           </Card>

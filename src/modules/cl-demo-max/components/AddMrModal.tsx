@@ -22,10 +22,10 @@ export function AddMrModal() {
   return (
     <ModalShell title="+ New Make-Ready Ticket" subtitle="Auto-creates task checklist and syncs to make-ready board" borderColor="rgba(245,158,11,.35)" maxWidth="sm:max-w-[540px]" saveLabel="💾 Create Make-Ready Ticket" onSave={save}>
       <div className="flex flex-col gap-3">
-        <Field label="Unit Number *"><select className={FI} value={unit} onChange={(e) => setUnit(e.target.value)}><option value="">Select unit…</option>{apts.filter((a) => a.status !== 'occupied').map((a) => <option key={a.id} value={a.unit}>{a.unit}</option>)}</select></Field>
-        <Field label="Move-Out Date"><input className={FI} type="date" value={moveout} onChange={(e) => setMoveout(e.target.value)} /></Field>
-        <Field label="Target Ready Date"><input className={FI} type="date" value={target} onChange={(e) => setTarget(e.target.value)} /></Field>
-        <Field label="Assigned To"><select className={FI} value={assignee} onChange={(e) => setAssignee(e.target.value)}>{MR_ASSIGNED_OPTS.map((o) => <option key={o}>{o}</option>)}</select></Field>
+        <Field label="Unit Number *"><select autoComplete="off" className={FI} value={unit} onChange={(e) => setUnit(e.target.value)}><option value="">Select unit…</option>{apts.filter((a) => a.status !== 'occupied').map((a) => <option key={a.id} value={a.unit}>{a.unit}</option>)}</select></Field>
+        <Field label="Move-Out Date"><input autoComplete="off" className={FI} type="date" value={moveout} onChange={(e) => setMoveout(e.target.value)} /></Field>
+        <Field label="Target Ready Date"><input autoComplete="off" className={FI} type="date" value={target} onChange={(e) => setTarget(e.target.value)} /></Field>
+        <Field label="Assigned To"><select autoComplete="off" className={FI} value={assignee} onChange={(e) => setAssignee(e.target.value)}>{MR_ASSIGNED_OPTS.map((o) => <option key={o}>{o}</option>)}</select></Field>
         <div className="flex flex-col gap-1">
           <div className="text-[11px] font-bold text-[#4b6278]">Make-Ready Tasks</div>
           <div className="flex flex-col gap-1.5 rounded-[8px] border border-white/[0.08] bg-[#060e1b] p-3">

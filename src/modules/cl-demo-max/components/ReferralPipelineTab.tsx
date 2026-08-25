@@ -54,8 +54,8 @@ export function ReferralPipelineTab() {
       <Card
         title={
           <div className="flex flex-wrap gap-2">
-            <select className={`${FI} w-[150px]`} value={typeF} onChange={(e) => setTypeF(e.target.value)}><option value="">All Types</option><option value="Paid">Paid</option><option value="Organic">Organic</option></select>
-            <select className={`${FI} w-[180px]`} value={stageF} onChange={(e) => setStageF(e.target.value)}><option value="">All Stages</option>{REFERRAL_STAGES.map((s) => <option key={s}>{s}</option>)}</select>
+            <select autoComplete="off" className={`${FI} w-[150px]`} value={typeF} onChange={(e) => setTypeF(e.target.value)}><option value="">All Types</option><option value="Paid">Paid</option><option value="Organic">Organic</option></select>
+            <select autoComplete="off" className={`${FI} w-[180px]`} value={stageF} onChange={(e) => setStageF(e.target.value)}><option value="">All Stages</option>{REFERRAL_STAGES.map((s) => <option key={s}>{s}</option>)}</select>
           </div>
         }
         action={<DemoButton sm onClick={addReferral}>+ Add Referral</DemoButton>}

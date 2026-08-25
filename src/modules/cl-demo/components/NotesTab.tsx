@@ -27,21 +27,21 @@ export function NotesTab() {
     <div className="grid grid-cols-1 gap-[14px] lg:[grid-template-columns:1fr_1.4fr]">
       <Card title="Log Note">
         <Field label="Lead / Prospect" className="mb-2.5">
-          <select className={FI} value={leadId} onChange={(e) => setLeadId(e.target.value)}>
+          <select autoComplete="off" className={FI} value={leadId} onChange={(e) => setLeadId(e.target.value)}>
             <option value="">— General Note —</option>
             {leads.map((l) => <option key={l.id} value={l.id}>{l.name}</option>)}
           </select>
         </Field>
         <Field label="Contact Type" className="mb-2.5">
-          <select className={FI} value={contact} onChange={(e) => setContact(e.target.value)}>
+          <select autoComplete="off" className={FI} value={contact} onChange={(e) => setContact(e.target.value)}>
             {NOTE_CONTACT_TYPES.map((c) => <option key={c}>{c}</option>)}
           </select>
         </Field>
         <Field label="Summary *" className="mb-2.5">
-          <textarea className={`${FI} min-h-[72px] resize-y`} rows={3} value={summary} onChange={(e) => setSummary(e.target.value)} placeholder="What happened? Key takeaways…" />
+          <textarea autoComplete="off" className={`${FI} min-h-[72px] resize-y`} rows={3} value={summary} onChange={(e) => setSummary(e.target.value)} placeholder="What happened? Key takeaways…" />
         </Field>
         <Field label="Next Step" className="mb-2.5">
-          <input className={FI} value={next} onChange={(e) => setNext(e.target.value)} placeholder="Schedule tour, send proposal…" />
+          <input autoComplete="off" className={FI} value={next} onChange={(e) => setNext(e.target.value)} placeholder="Schedule tour, send proposal…" />
         </Field>
         <DemoButton onClick={save}>Save Note</DemoButton>
       </Card>

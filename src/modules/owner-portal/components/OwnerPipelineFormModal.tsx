@@ -88,7 +88,7 @@ export function OwnerPipelineFormModal({
         </div>
       }
     >
-      <form id="owner-pipeline-form" onSubmit={submit} className="space-y-4">
+      <form autoComplete="off" id="owner-pipeline-form" onSubmit={submit} className="space-y-4">
         {errorMessage && <Alert tone="r">{errorMessage}</Alert>}
 
         <div className="space-y-1.5">
