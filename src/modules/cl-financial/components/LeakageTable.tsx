@@ -1,4 +1,4 @@
-import { TrendingDown, Check } from 'lucide-react';
+import { TrendingDown, Check, RotateCcw } from 'lucide-react';
 import { CL_FINANCIAL_ROLES, CL_MANAGEMENT_ROLES, useRole } from '@/shared/rbac';
 import { Button } from '@/shared/ui/core';
 import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
@@ -25,6 +25,8 @@ interface LeakageTableProps {
   onEdit: (l: ClLeakageItemRecord) => void;
   onDelete: (l: ClLeakageItemRecord) => void;
   onResolve: (l: ClLeakageItemRecord) => void;
+  /** Puts a resolved item back on the books — see the Action column below. */
+  onReopen: (l: ClLeakageItemRecord) => void;
   onAdd?: () => void;
 }
 
@@ -38,6 +40,7 @@ export function LeakageTable({
   onEdit,
   onDelete,
   onResolve,
+  onReopen,
   onAdd,
 }: LeakageTableProps) {
   const { isAny } = useRole();
@@ -45,15 +48,25 @@ export function LeakageTable({
   const canResolve = isAny(CL_FINANCIAL_ROLES);
 
   const columns: ReadonlyArray<Column<ClLeakageItemRecord>> = [
+    /**
+     * The Issue cell says the ISSUE. Nothing else.
+     *
+     * It stacked `notes` on a second line, and Type ALREADY has its own column
+     * two cells over — so an item whose note named its type ("Unbilled fee",
+     * which is what people write there) printed that value twice in the same
+     * row, once as a caption under the issue and once under the Type header.
+     * That is the "Type information is displayed inside the Issue tab" report,
+     * and the duplication is the half that made it confusing: two cells
+     * disagreeing about which column owns the value.
+     *
+     * So the stacked line goes and Type keeps its dedicated column. Notes stay on
+     * the record — collected and editable in LEAKAGE_FIELDS, and still searched
+     * server-side (`searchFields: ["issue", "type", "notes"]`).
+     */
     {
       key: 'issue',
       header: 'Issue',
-      cell: (l) => (
-        <div>
-          <p className="font-bold text-foreground">{l.issue}</p>
-          {l.notes && <p className="text-[11px] text-muted">{l.notes}</p>}
-        </div>
-      ),
+      cell: (l) => <span className="font-bold text-foreground">{l.issue}</span>,
     },
     {
       key: 'type',
@@ -76,11 +89,51 @@ export function LeakageTable({
         <Pill tone={LEAKAGE_STATUS_PILL[l.status]}>{LEAKAGE_STATUS_LABELS[l.status]}</Pill>
       ),
     },
+    /**
+     * The Action column offers the ONE transition available from the row's
+     * current state. It never restates the state.
+     *
+     * ── What was wrong ────────────────────────────────────────────────────────
+     * A resolved row printed the word "Resolved" here, one cell to the right of
+     * the Status pill already reading "Resolved" — the same value twice in the
+     * same row, under a header promising an action. Anything other than resolved
+     * printed "Open", which is worse than redundant: "Open" is not one of this
+     * resource's statuses at all (they are Active / Ongoing / Review / Fix
+     * needed / Resolved), so the column invented a sixth state and showed it
+     * beside the real one.
+     *
+     * ── What replaces it ─────────────────────────────────────────────────────
+     * Resolved -> Reopen; anything else -> Resolve. That is the whole workflow,
+     * and it is why the Resolve button cannot reappear on a resolved row: an
+     * item is resolved once, and re-resolving it overwrote the original
+     * resolvedBy/resolvedAt (the backend now refuses it outright — see
+     * ClLeakageItemService.resolveWithActor). Reopening clears that stamp and
+     * puts Resolve back, so a wrongly-closed item is recoverable without anyone
+     * having to delete and re-enter it.
+     *
+     * Editing is untouched and stays available in EVERY state, including
+     * resolved: correcting the impact figure on a closed item is ordinary work,
+     * and it is the row-actions menu's job, not this column's.
+     *
+     * A role without CL_FINANCIAL_ROLES gets an em dash — the table's own idiom
+     * for "nothing here" — rather than a word that duplicates the Status cell.
+     */
     {
       key: 'resolve',
       header: 'Action',
-      cell: (l) =>
-        l.status !== LEAKAGE_STATUS.Resolved && canResolve ? (
+      cell: (l) => {
+        if (!canResolve) return <span className="text-muted-soft">—</span>;
+        return l.status === LEAKAGE_STATUS.Resolved ? (
+          <Button
+            variant="ghost"
+            size="sm"
+            disabled={isMutating}
+            onClick={() => onReopen(l)}
+            aria-label={`Reopen ${l.issue}`}
+          >
+            <RotateCcw className="h-3.5 w-3.5" /> Reopen
+          </Button>
+        ) : (
           <Button
             variant="secondary"
             size="sm"
@@ -90,11 +143,8 @@ export function LeakageTable({
           >
             <Check className="h-3.5 w-3.5 text-success" /> Resolve
           </Button>
-        ) : l.status === LEAKAGE_STATUS.Resolved ? (
-          <span className="text-[11px] text-muted-soft">Resolved</span>
-        ) : (
-          <span className="text-[11px] text-muted-soft">Open</span>
-        ),
+        );
+      },
     },
     {
       key: 'actions',

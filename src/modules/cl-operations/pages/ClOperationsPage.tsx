@@ -6,6 +6,7 @@ import {
   CL_MAINTENANCE_ROLES,
   CL_HOUSEKEEPING_ROLES,
 } from '@/shared/rbac';
+import { LOOKUP_PAGE_SIZE } from '@/shared/hooks';
 import { SearchInput } from '@/shared/ui/core';
 import { EntityListPage, EntityPagination } from '@/shared/ui/entity';
 import { useOperationsView } from '../hooks/useOperationsView';
@@ -95,7 +96,28 @@ export function ClOperationsPage() {
     () => (communitiesData?.data ?? []).map((c) => ({ value: c.id, label: c.name })),
     [communitiesData],
   );
-  const { data: allApartmentsData } = useListClApartmentsQuery({ page: 1, limit: 200 });
+  /**
+   * LOOKUP_PAGE_SIZE, not a hand-picked number.
+   *
+   * This asked for `limit: 200`. ClListQueryDto caps `limit` at MAX_LIMIT (100)
+   * and answers 400 above it, so the request never returned a bigger page — it
+   * returned nothing at all. `allApartmentsData` was permanently undefined,
+   * `apartmentOptions` permanently `[]`, and the Unit picker on BOTH make-ready
+   * boards rendered empty with "— Select unit —" as its only entry. Since
+   * makeReadySchema requires an apartmentId, that made the Add Task form
+   * unsubmittable: the units were in Apartment inventory, visible one tab over,
+   * and no task could be created against any of them.
+   *
+   * Nothing about the failure pointed at pagination — a 400 on a background
+   * lookup query surfaces as an empty dropdown, not as an error — which is why
+   * the same mistake has been made and fixed before (see ReferralPortalPage and
+   * clCalendarConstants). Hence the shared constant: it is the limit the API
+   * actually allows, in one place, instead of a number per call site.
+   */
+  const { data: allApartmentsData } = useListClApartmentsQuery({
+    page: 1,
+    limit: LOOKUP_PAGE_SIZE,
+  });
   const apartmentOptions = useMemo(
     () =>
       (allApartmentsData?.data ?? []).map((a) => ({
@@ -156,7 +178,26 @@ export function ClOperationsPage() {
     updateState: mrU,
     remove: deleteMr,
     removeState: mrD,
-    toCreate: toCreateMakeReady,
+    /**
+     * Creating from Make-Ready Clean files the task under the category that board
+     * shows, so it lands on the board it was created from.
+     *
+     * The Clean view narrows the list server-side to `category=housekeeping`
+     * (above), but the form collects no category and `cl_make_ready_tasks.category`
+     * defaults to `general`. So a cleaner who added a task on Make-Ready Clean got
+     * a success toast and an empty board: the row existed, filed as `general`, and
+     * the only view that could have shown it was the full make-ready board they
+     * do not have. Pinning the category on create is what makes "add a task here"
+     * mean what it says.
+     *
+     * Create only. `toUpdate` deliberately does NOT pin it — editing a task from
+     * the Clean board must not silently recategorise a row someone filed as
+     * maintenance or inspection.
+     */
+    toCreate: (values) =>
+      view === 'make-ready-clean'
+        ? { ...toCreateMakeReady(values), category: MAKE_READY_CATEGORY.Housekeeping }
+        : toCreateMakeReady(values),
     toUpdate: toCreateMakeReady,
     labelOf: (t) => t.taskName,
   });

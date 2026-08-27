@@ -39,6 +39,23 @@ interface ListboxSelectProps {
    * would open an 80px list and clip its own option labels.
    */
   minPanelWidth?: number;
+  /**
+   * Geometry for the option ROWS, for a trigger that is not field-sized — the
+   * sibling of `chevronClassName`, and needed for the same reason.
+   *
+   * The default row is sized for a form field: 14px text at 8px/14px padding,
+   * so 37px each. Worn under a 22px status badge that is oversized twice over —
+   * the type is larger than the badge's own 11px, and seven statuses then open a
+   * panel more than ten times the height of the control that produced it.
+   */
+  optionClassName?: string;
+  /**
+   * Ceiling for the open panel, in px. Defaults to MAX_PANEL_HEIGHT, which is
+   * sized for the 51-state list this component was built for; a compact list
+   * whose rows are shorter wants a ceiling that matches, or it caps a list that
+   * would have fitted and adds a scrollbar for the last few pixels.
+   */
+  maxPanelHeight?: number;
   /** Only needed when there is no visible <Label> to point at the trigger. */
   'aria-label'?: string;
 }
@@ -110,9 +127,12 @@ export function ListboxSelect({
   invalid,
   className,
   chevronClassName,
+  optionClassName,
   minPanelWidth,
+  maxPanelHeight,
   'aria-label': ariaLabel,
 }: ListboxSelectProps) {
+  const panelCeiling = maxPanelHeight ?? MAX_PANEL_HEIGHT;
   const [open, setOpen] = useState(false);
   // Which option the keyboard is on. Not the selection — that only changes on
   // commit, so arrowing through the list never writes a value the user did not
@@ -292,7 +312,7 @@ export function ListboxSelect({
               top: position?.top ?? 0,
               left: position?.left ?? 0,
               width: drawnWidth || undefined,
-              maxHeight: MAX_PANEL_HEIGHT,
+              maxHeight: panelCeiling,
               // Hidden until measured, so the first paint is never at 0,0.
               visibility: position ? 'visible' : 'hidden',
             }}
@@ -308,7 +328,7 @@ export function ListboxSelect({
               }
               onKeyDown={onListKeyDown}
               onBlur={onBlur}
-              style={{ maxHeight: MAX_PANEL_HEIGHT }}
+              style={{ maxHeight: panelCeiling }}
               className="overflow-y-auto py-1 outline-none"
             >
               {options.map((option, index) => {
@@ -331,6 +351,10 @@ export function ListboxSelect({
                       'flex cursor-pointer items-baseline gap-2 px-3.5 py-2 text-[14px] text-foreground',
                       index === activeIndex && 'bg-primary/[0.08]',
                       isSelected && 'font-semibold',
+                      // Last, so a caller that passes its own padding or type
+                      // size REPLACES the field-sized defaults above rather than
+                      // fighting them (cn runs tailwind-merge).
+                      optionClassName,
                     )}
                   >
                     <span>{option.label}</span>
