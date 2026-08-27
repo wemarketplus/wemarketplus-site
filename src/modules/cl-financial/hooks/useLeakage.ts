@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useDebounce } from '@/shared/hooks';
+import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
 import { usePaginatedList, useEntityCrud } from '@/shared/ui/entity';
 import {
   useListClLeakageItemsQuery,
@@ -58,8 +59,35 @@ export function useLeakage() {
     try {
       await updateItem({ id: l.id, patch: { status: LEAKAGE_STATUS.Resolved } }).unwrap();
       toast.success('Leakage item resolved');
-    } catch {
-      toast.error('Could not update the leakage item.');
+    } catch (err) {
+      /**
+       * The server's own message, when it has one. Resolving is the one action
+       * here the backend can refuse on a rule rather than on a fault — a second
+       * resolve of an already-resolved item is a 409 saying to reopen it first
+       * (ClLeakageItemService.resolveWithActor) — and that sentence tells the
+       * user what to do next, which "Could not update" does not. Any other
+       * failure still falls back to the generic line.
+       */
+      toast.error(extractApiErrorMessage(err, 'Could not update the leakage item.'));
+    }
+  };
+
+  /**
+   * Puts a resolved item back on the books.
+   *
+   * Active, not the status it held before it was closed: the previous status is
+   * not stored anywhere (there is one `status` column and resolving overwrote
+   * it), and Active is both the default a new item starts in and the honest
+   * reading of a reopened one — money is leaking again and nobody has triaged it
+   * since. The backend clears resolvedBy/resolvedAt on the way out, so the item
+   * does not keep reporting a resolver while it is open.
+   */
+  const reopen = async (l: ClLeakageItemRecord) => {
+    try {
+      await updateItem({ id: l.id, patch: { status: LEAKAGE_STATUS.Active } }).unwrap();
+      toast.success('Leakage item reopened');
+    } catch (err) {
+      toast.error(extractApiErrorMessage(err, 'Could not update the leakage item.'));
     }
   };
 
@@ -79,5 +107,6 @@ export function useLeakage() {
     crud,
     submit,
     resolve,
+    reopen,
   };
 }

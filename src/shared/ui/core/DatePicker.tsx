@@ -222,10 +222,31 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
      *
      * The current text lives in the DOM node in uncontrolled mode and in `draft`
      * in controlled mode, so read the node either way — it is correct in both.
-     * A value that parses and is in range is rewritten in canonical form; one
-     * that does not is discarded, which is the "prevent invalid date input" rule
-     * applied at the only moment it is not hostile to do so (the user has left
-     * the field, so they are not mid-keystroke).
+     *
+     * ── UNPARSEABLE and OUT-OF-RANGE are not the same thing ───────────────────
+     * Both used to be discarded, and the second half of that was wrong.
+     *
+     * "13/45/foo" is not a date. There is no value to keep and no form-level rule
+     * that could explain it, so clearing it is the only sensible normalisation —
+     * that is the "prevent invalid date input" rule, and it stays.
+     *
+     * "2020-01-01" against `min={today}` is a perfectly good date that BREAKS A
+     * RULE. Erasing it silently blanked the field and told the user nothing, and
+     * it also destroyed the value before the form could object: every one of the
+     * seven forms that passes a `min` re-checks the date on submit and sets a
+     * message under the field ("Due date cannot be in the past.") — see
+     * TaskFormModal, whose comment says outright that this layer exists "because
+     * the date input still accepts a TYPED value the calendar would never have
+     * offered". It did not. Layer 2 could never fire, because layer 1 had already
+     * emptied the box, so a typed past date produced no date and no explanation:
+     * on Housekeeping it saved a task with no due date at all, and on the Gift &
+     * Gratuity log it disabled Save with no reason given.
+     *
+     * So an out-of-range value is now KEPT, in canonical form. The calendar still
+     * refuses to offer those days (`disabled` on the day buttons, which is what
+     * stops the common path), and the form that set the rule is what reports it.
+     * A component that owns the geometry of a field should not also be silently
+     * deciding which validation failures the user is allowed to hear about.
      */
     const commitDraft = () => {
       const text = inputRef.current?.value ?? '';
@@ -233,7 +254,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
         if (draft !== null) emit('');
       } else {
         const parsed = parseValue(text);
-        if (parsed && !isOutOfRange(parsed)) {
+        if (parsed) {
           emit(format(parsed, DATE_VALUE_FORMAT));
           setViewMonth(startOfMonth(parsed));
         } else {

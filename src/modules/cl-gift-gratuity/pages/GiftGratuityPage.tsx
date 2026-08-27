@@ -4,6 +4,7 @@ import { Gift } from 'lucide-react';
 import { Button, Card, CardContent, DatePicker, Input } from '@/shared/ui/core';
 import { EmptyState } from '@/shared/ui/feedback';
 import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
+import { todayLocalDate } from '@/shared/utils/dateFormatter';
 import { useCreateGiftGratuityLogMutation, useListGiftGratuityLogsQuery } from '../api/giftGratuityApi';
 
 const PAGE_SIZE = 50;
@@ -24,11 +25,40 @@ export function GiftGratuityPage() {
   const [giftType, setGiftType] = useState('');
   const [giftValue, setGiftValue] = useState('');
   const [visitPurpose, setVisitPurpose] = useState('');
+  // Client-side validation message for the visit date. This page is plain
+  // useState rather than react-hook-form, so there is no formState to hang a
+  // field error on — one piece of state, cleared as soon as the date changes.
+  const [dateError, setDateError] = useState('');
 
   const canSave = Boolean(recipientName.trim() && visitDate && giftType.trim() && giftValue) && !isSaving;
 
   const save = async () => {
     if (!canSave) return;
+    /**
+     * A gift cannot be logged against a day that has already passed.
+     *
+     * There was no check anywhere: a past date saved silently and then sat in the
+     * Date column of the log, which is the reported behaviour ("the date section
+     * shows a past date while the record is successfully saved"). On an
+     * anti-kickback register the visit date is the one field where a back-date is
+     * not a clerical convenience — the log is meant to be the contemporaneous
+     * record of what was given and when.
+     *
+     * The middle of the same three layers the other date fields use: `min` on the
+     * picker below greys out past days, and @IsNotPastDate on
+     * CreateGiftGratuityLogDto is what actually holds the rule — so the same
+     * value cannot be slipped in by posting straight to the API either. This
+     * layer only exists so a TYPED past date reads as a sentence next to the
+     * field instead of a 400 from the server.
+     *
+     * This log is append-only (no edit path exists), so unlike the task and
+     * ledger dates there is no "only when the date changed" case to carve out.
+     */
+    if (visitDate < todayLocalDate()) {
+      setDateError('Visit date cannot be in the past.');
+      return;
+    }
+    setDateError('');
     await createLog({
       recipientName: recipientName.trim(),
       facilityName: facilityName.trim() || undefined,
@@ -40,6 +70,7 @@ export function GiftGratuityPage() {
     setRecipientName('');
     setFacilityName('');
     setVisitDate('');
+    setDateError('');
     setGiftType('');
     setGiftValue('');
     setVisitPurpose('');
@@ -86,7 +117,22 @@ export function GiftGratuityPage() {
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Input placeholder="Recipient name *" value={recipientName} onChange={(e) => setRecipientName(e.target.value)} />
             <Input placeholder="Facility" value={facilityName} onChange={(e) => setFacilityName(e.target.value)} />
-            <DatePicker aria-label="Visit date" value={visitDate} onChange={(e) => setVisitDate(e.target.value)} />
+            <div>
+              {/* `min` greys out past days in the calendar itself — the same
+                  floor the task, lead and housekeeping dates use. Read fresh on
+                  each render, so a page left open across midnight does not still
+                  offer yesterday. */}
+              <DatePicker
+                aria-label="Visit date"
+                min={todayLocalDate()}
+                value={visitDate}
+                onChange={(e) => {
+                  setVisitDate(e.target.value);
+                  setDateError('');
+                }}
+              />
+              {dateError && <p className="mt-1 text-[12px] text-destructive">{dateError}</p>}
+            </div>
             <Input placeholder="Gift type *" value={giftType} onChange={(e) => setGiftType(e.target.value)} />
             <Input type="number" step="0.01" placeholder="Gift value ($) *" value={giftValue} onChange={(e) => setGiftValue(e.target.value)} />
             <Input placeholder="Visit purpose" value={visitPurpose} onChange={(e) => setVisitPurpose(e.target.value)} />
@@ -125,10 +171,16 @@ export function GiftGratuityPage() {
                   {logs.map((l) => (
                     <tr key={l.id} className="border-t border-border/[0.06]">
                       <td className="py-2 pr-3 text-[12px] text-muted">{l.visitDate}</td>
-                      <td className="py-2 pr-3">
-                        <p className="font-semibold text-foreground">{l.recipientName}</p>
-                        {l.facilityName && <p className="text-[11px] text-muted-soft">{l.facilityName}</p>}
-                      </td>
+                      {/* The Recipient cell says WHO received the gift. The
+                          facility was stacked under the name, which is the
+                          "facility details incorrectly displayed in the receipt"
+                          report — on an anti-kickback log a facility printed
+                          under a person's name reads as part of that person's
+                          identity, and this log's job is to be unambiguous about
+                          who was given what. Facility is still collected on the
+                          entry (the Facility input above) and stored on the
+                          record; it is simply not part of the recipient. */}
+                      <td className="py-2 pr-3 font-semibold text-foreground">{l.recipientName}</td>
                       <td className="py-2 pr-3 text-[12px] text-muted">{l.giftType}</td>
                       <td className={`py-2 pr-3 font-bold ${l.complianceOk ? 'text-foreground' : 'text-destructive'}`}>
                         ${Number(l.giftValue).toFixed(2)}

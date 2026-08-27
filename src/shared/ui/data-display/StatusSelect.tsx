@@ -26,6 +26,30 @@ interface StatusSelectProps {
 const PANEL_MIN_WIDTH = 168;
 
 /**
+ * The option list, at BADGE scale rather than field scale.
+ *
+ * ── The bug this fixes ────────────────────────────────────────────────────────
+ * The closed control is a 22px pill, and it was correct. The OPEN list was not:
+ * it kept ListboxSelect's field geometry — 14px type at 8px/14px padding, so a
+ * 37px row — and ListboxSelect's 264px ceiling, which is sized for the 51-state
+ * list that component was built for.
+ *
+ * On Apartment inventory that came out as a 264px panel hanging off a 22px
+ * badge, with a scrollbar, for SEVEN statuses: 7 x 37 + 8 = 267px of content
+ * against a 264px cap, so the list was clipped and scrollable by three pixels.
+ * A dropdown ten times the height of the control that opened it, scrolling to
+ * reveal nothing, is the "excessive height / occupies unnecessary space" report.
+ *
+ * 12px type at 5px/12px padding gives a ~30px row, in proportion to the 11px
+ * badge, and the taller ceiling means a status list of up to ten options — the
+ * longest of the eight consumers is the nine-stage lead pipeline — opens in full
+ * with no scrollbar at all. A longer list than that still caps, which is the
+ * whole point of not being a native popup.
+ */
+const OPTION_CLASS = 'px-3 py-[5px] text-[12px]';
+const PANEL_MAX_HEIGHT = 320;
+
+/**
  * A row's status: ONE control that both reports the current value and changes it.
  *
  * ── The bug this fixes ────────────────────────────────────────────────────────
@@ -101,6 +125,8 @@ export function StatusSelect({
       disabled={disabled}
       aria-label={ariaLabel}
       minPanelWidth={PANEL_MIN_WIDTH}
+      optionClassName={OPTION_CLASS}
+      maxPanelHeight={PANEL_MAX_HEIGHT}
       // 12px glyph, and it inherits the tone's text colour instead of the
       // field-sized chevron's `text-muted` — the badge is one colour object.
       chevronClassName="h-3 w-3 text-current opacity-70"

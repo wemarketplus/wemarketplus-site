@@ -30,15 +30,20 @@ export function CompetitorsTable({
   const canDelete = isAny(CL_MANAGEMENT_ROLES);
 
   const columns: ReadonlyArray<Column<ClCompetitorRecord>> = [
+    /**
+     * The Community cell says the community's NAME. City was stacked under it —
+     * the "City field should not be displayed in the Community tab" report.
+     *
+     * Distance is the next column and is the figure that actually matters when
+     * comparing a competitor's rates to yours, so the city was redundant beside
+     * it as well as misplaced. It stays collected and editable on the record
+     * (`city` in COMPETITOR_FIELDS) and is still searched server-side
+     * (`searchFields: ["name", "city", "notes"]`).
+     */
     {
       key: 'name',
       header: 'Community',
-      cell: (c) => (
-        <div>
-          <p className="font-bold text-foreground">{c.name}</p>
-          {c.city && <p className="text-[11px] text-muted">{c.city}</p>}
-        </div>
-      ),
+      cell: (c) => <span className="font-bold text-foreground">{c.name}</span>,
     },
     {
       key: 'distance',

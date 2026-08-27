@@ -1,6 +1,7 @@
 import type { PillProps } from '@/shared/ui/data-display';
 import type { EntityField, EntitySelectOption } from '@/shared/ui/entity';
 import { CONCESSION_STATUS, LEAKAGE_STATUS, type ConcessionStatus, type LeakageStatus } from './clFinancialApiConstants';
+import { todayLocalDate } from '@/shared/utils/dateFormatter';
 import type { ClFinancialUiState } from '../types/clFinancialTypes';
 import type {
   RevenueFormValues,
@@ -81,7 +82,13 @@ export const REVENUE_CATEGORY_OPTIONS: readonly EntitySelectOption[] = [
 // --- form field descriptors ---------------------------------------------
 
 export const REVENUE_FIELDS: ReadonlyArray<EntityField<RevenueFormValues>> = [
-  { name: 'entryDate', label: 'Entry date', type: 'date' },
+  /**
+   * `min` greys out past days in the picker — the shared mechanism, passed as
+   * the FUNCTION so "today" is read fresh each render rather than frozen at
+   * module load. First of three layers; RevenueFormModal re-checks a typed value
+   * on submit and CreateClRevenueEntryDto enforces it server-side.
+   */
+  { name: 'entryDate', label: 'Entry date', type: 'date', min: todayLocalDate },
   { name: 'category', label: 'Category', type: 'select', options: REVENUE_CATEGORY_OPTIONS },
   { name: 'amount', label: 'Amount', type: 'text', placeholder: '10800' },
   { name: 'budgetAmount', label: 'Budgeted', type: 'text', placeholder: '11000' },

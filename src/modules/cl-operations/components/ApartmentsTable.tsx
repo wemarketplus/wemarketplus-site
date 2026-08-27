@@ -37,15 +37,30 @@ export function ApartmentsTable({
   const canDelete = isAny(CL_MANAGEMENT_ROLES);
 
   const columns: ReadonlyArray<Column<ClApartmentRecord>> = [
+    /**
+     * Unit number and unit type are TWO columns, not one cell with two lines.
+     *
+     * They were stacked — the number in bold with "1BR/1BA" under it in 11px
+     * muted — which is the "Unit Type and Unit Number are displayed in the same
+     * tab" report. Stacking reads as a heading and its caption, so the type
+     * looked like a subtitle of the unit rather than a field of its own: it could
+     * not be scanned down the column, it had no header naming it, and a reader
+     * comparing the studios across a page had to read every cell twice.
+     *
+     * The type also has a column's worth of value on this screen — it is what
+     * the resident is being quoted against the Rate two columns over — so it
+     * gets a header. The value is rendered in ONE place: the Unit cell is now
+     * just the number, so nothing here is duplicated.
+     */
     {
       key: 'unit',
       header: 'Unit',
-      cell: (a) => (
-        <div>
-          <p className="font-bold text-foreground">{a.unitNumber}</p>
-          {a.unitType && <p className="text-[11px] text-muted">{a.unitType}</p>}
-        </div>
-      ),
+      cell: (a) => <span className="font-bold text-foreground">{a.unitNumber}</span>,
+    },
+    {
+      key: 'unitType',
+      header: 'Type',
+      cell: (a) => a.unitType || '—',
     },
     {
       key: 'status',

@@ -179,6 +179,7 @@ export function ClFinancialPage() {
             onEdit={leakage.crud.openEdit}
             onDelete={leakage.crud.confirmDelete}
             onResolve={leakage.resolve}
+            onReopen={leakage.reopen}
             onAdd={canEdit ? leakage.crud.openCreate : undefined}
           />
           <LeakageFormModal

@@ -1,4 +1,5 @@
 import type { PillProps } from '@/shared/ui/data-display';
+import { todayLocalDate } from '@/shared/utils/dateFormatter';
 import type { EntityField, EntitySelectOption } from '@/shared/ui/entity';
 import {
   type Role,
@@ -189,5 +190,18 @@ export const HOUSEKEEPING_FIELDS: ReadonlyArray<EntityField<HousekeepingFormValu
   // `lookup`, so the options come from the live staff list at render time — see
   // EntityField's note on why a record reference is never a free-text field.
   { name: 'assignedTo', label: 'Assigned to', type: 'lookup' },
-  { name: 'dueDate', label: 'Due date', type: 'date' },
+  /**
+   * `min` greys out every day before today in the picker — the same shared
+   * mechanism the reminder, task and lead follow-up dates use (see
+   * tasksConstants TASK_FIELDS), rather than a private rule for this form.
+   *
+   * Passed as the FUNCTION, not `todayLocalDate()`: a module-load value would
+   * freeze "today" for the life of the tab, so a form left open across midnight
+   * would still offer yesterday.
+   *
+   * The picker is the first of three layers — a keyboard user can still TYPE a
+   * past date, so HousekeepingFormModal re-checks on submit and
+   * CreateClHousekeepingTaskDto enforces it server-side (@IsNotPastDate).
+   */
+  { name: 'dueDate', label: 'Due date', type: 'date', min: todayLocalDate },
 ];

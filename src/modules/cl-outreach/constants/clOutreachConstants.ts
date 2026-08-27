@@ -1,4 +1,5 @@
 import type { EntityField, EntitySelectOption } from '@/shared/ui/entity';
+import { todayLocalDate } from '@/shared/utils/dateFormatter';
 import type { VisitFormValues } from '../schema/clOutreachSchema';
 import type { ClOutreachUiState } from '../types/clOutreachTypes';
 
@@ -74,7 +75,13 @@ export function visitTypeLabel(type: string | null): string {
 
 // Log-visit form field descriptors (drive EntityFormModal).
 export const VISIT_FIELDS: ReadonlyArray<EntityField<VisitFormValues>> = [
-  { name: 'visitDate', label: 'Visit date', type: 'date' },
+  /**
+   * `min` greys out past days in the picker — the shared mechanism, passed as the
+   * FUNCTION so "today" is read fresh each render. First of three layers;
+   * VisitFormModal re-checks a typed value on submit and CreateClOutreachVisitDto
+   * enforces it server-side.
+   */
+  { name: 'visitDate', label: 'Visit date', type: 'date', min: todayLocalDate },
   { name: 'visitType', label: 'Type', type: 'select', options: VISIT_TYPE_OPTIONS },
   { name: 'contactName', label: 'Contact', placeholder: 'Dr. Amanda Chen' },
   // A PLACE, not a name: the picker writes the organisation's label AND the

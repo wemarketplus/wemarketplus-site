@@ -39,15 +39,21 @@ export function ConcessionsTable({
   const canDecide = isAny(CL_FINANCIAL_ROLES);
 
   const columns: ReadonlyArray<Column<ClConcessionRecord>> = [
+    /**
+     * The Concession cell says WHAT the concession is. The reason for it does not
+     * belong stacked underneath — that was the "Reason field should not be
+     * displayed in the Concession tab" report.
+     *
+     * Reason is free text ("Competitive match, long-term lead…"), so as a second
+     * line it wrapped to whatever length someone typed and pushed every row on
+     * the page to a different height, while reading as part of the concession's
+     * own name. It stays collected and editable on the record (`reason` in
+     * CONCESSION_FIELDS) where an approver reads it in full.
+     */
     {
       key: 'type',
       header: 'Concession',
-      cell: (c) => (
-        <div>
-          <p className="font-bold text-foreground">{c.type}</p>
-          {c.reason && <p className="text-[11px] text-muted">{c.reason}</p>}
-        </div>
-      ),
+      cell: (c) => <span className="font-bold text-foreground">{c.type}</span>,
     },
     {
       key: 'value',

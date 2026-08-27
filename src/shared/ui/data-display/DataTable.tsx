@@ -71,7 +71,29 @@ export function DataTable<T>({ columns, rows, rowKey, empty, selection }: DataTa
 
   if (rows.length === 0) {
     return (
-      <div className="rounded-card border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
+      /**
+       * The empty state is CENTRED IN THE SPACE THE ROWS WOULD HAVE FILLED, not
+       * just horizontally inside a box that collapsed to its own text.
+       *
+       * `text-center` alone was doing half the job. The box shrank to its
+       * content — 102px for a one-line "no matches" message — so it sat tight up
+       * under the filter bar with the rest of the results area, several hundred
+       * pixels of it, left blank underneath. The message read as a caption
+       * attached to the filters rather than as the answer to the search, and the
+       * page looked like it had failed to finish rendering.
+       *
+       * `min-h` gives it the height of a short page of rows and the flex
+       * centring puts the message in the middle of that, so a search that
+       * matches nothing looks deliberate. Both axes are handled by the flex box,
+       * which is why this holds at every width — nothing here depends on a
+       * measured size — and `text-center` stays for the wrapped second line of
+       * an EmptyState description.
+       *
+       * One place, not thirty: every list table in the app renders its own empty
+       * copy through this slot (see the `empty` prop's consumers), so the
+       * alignment belongs here and not in each of them.
+       */
+      <div className="flex min-h-[260px] flex-col items-center justify-center rounded-card border border-border/[0.09] bg-surface p-10 text-center text-[13px] text-muted">
         {empty ?? 'Nothing to show yet.'}
       </div>
     );

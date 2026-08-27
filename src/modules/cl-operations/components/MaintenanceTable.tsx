@@ -47,15 +47,24 @@ export function MaintenanceTable({
       header: 'Ticket',
       cell: (t) => <span className="font-bold text-foreground">{t.ticketNumber ?? '—'}</span>,
     },
+    /**
+     * The Issue cell says the ISSUE. Nothing else.
+     *
+     * It used to carry the reporter's name on a second line under it, which is
+     * the "Reporter Name is incorrectly displayed in the Issue tab" report: a
+     * name stacked under an issue reads as part of the issue, and the column
+     * header promises one thing while the cell shows two.
+     *
+     * The name is not lost and no column is added for it — this table is already
+     * six columns wide and who reported a ticket is not what a dispatcher scans
+     * the board for. It stays collected and editable on the ticket itself
+     * (`reporterName` in MAINTENANCE_FIELDS, "Reported by"), which is where it is
+     * legitimately required, and it is still searched server-side.
+     */
     {
       key: 'issue',
       header: 'Issue',
-      cell: (t) => (
-        <div>
-          <p className="text-foreground">{t.issue}</p>
-          {t.reporterName && <p className="text-[11px] text-muted">{t.reporterName}</p>}
-        </div>
-      ),
+      cell: (t) => <span className="text-foreground">{t.issue}</span>,
     },
     {
       key: 'priority',
