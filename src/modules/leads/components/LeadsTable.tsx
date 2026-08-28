@@ -27,16 +27,39 @@ export function LeadsTable({
     {
       key: 'patient',
       header: 'Patient',
+      // The patient's NAME, and nothing else. The diagnosis used to be rendered
+      // as a second line inside this cell, so a clinical detail read as part of
+      // the patient's identity and the "Patient" heading described only half of
+      // what sat under it. It has its own column below; the field, the payload
+      // and the form are untouched.
       cell: (lead) => (
-        <div>
-          <p className="font-bold text-foreground">{lead.patientName ?? '—'}</p>
-          {lead.diagnosisReason && (
-            <p className="truncate text-[11px] text-muted">
-              {lead.diagnosisReason}
-            </p>
-          )}
-        </div>
+        <p className="font-bold text-foreground">{lead.patientName ?? '—'}</p>
       ),
+    },
+    {
+      key: 'diagnosis',
+      // Matches the intake form's own label for the field it shows
+      // (AddLeadModal's "Diagnosis / reason"), so the column and the box that
+      // fills it are recognisably the same thing.
+      header: 'Diagnosis / reason',
+      cell: (lead) =>
+        lead.diagnosisReason ? (
+          /*
+           * Free text up to 2000 chars (see leadSchema), so it is capped and
+           * ellipsised rather than allowed to decide the table's width — this
+           * table sits in a `min-w-max` element, so an uncapped cell widens the
+           * whole grid and pushes Status and the row actions off-screen. The cap
+           * is on the BLOCK inside the cell, not on the <td>: a `max-width` on a
+           * cell in an auto-layout table is advisory and browsers ignore it,
+           * while a block child's max-width caps the column's preferred width
+           * for real. `title` keeps the full text reachable on hover.
+           */
+          <span className="block max-w-[240px] truncate" title={lead.diagnosisReason}>
+            {lead.diagnosisReason}
+          </span>
+        ) : (
+          '—'
+        ),
     },
     {
       key: 'origin',

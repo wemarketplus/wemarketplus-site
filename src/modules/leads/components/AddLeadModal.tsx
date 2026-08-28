@@ -1,8 +1,18 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { Button, DatePicker, Input, Label, Select, Textarea } from '@/shared/ui/core';
+import { useMemo } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import {
+  Button,
+  DatePicker,
+  Input,
+  Label,
+  ListboxSelect,
+  Select,
+  Textarea,
+} from '@/shared/ui/core';
 import { useCompanyNameOptions } from '@/shared/hooks/useSharedLookups';
 import { Modal } from '@/shared/ui/feedback';
+import { todayLocalDate } from '@/shared/utils/dateFormatter';
 import { LEAD_SOURCE_OPTIONS } from '../constants/leadsConstants';
 import { newLeadSchema, type NewLeadFormValues } from '../schema/leadSchema';
 import { LeadSourceType } from '../types/leadsTypes';
@@ -22,6 +32,7 @@ export function AddLeadModal({
   onSubmit: submit,
 }: AddLeadModalProps) {
   const {
+    control,
     register,
     handleSubmit,
     reset,
@@ -44,6 +55,32 @@ export function AddLeadModal({
   // is what made referral-source reporting unusable. Gated on `open` so closing
   // the modal is the whole cost of not needing the list.
   const companyOptions = useCompanyNameOptions(open);
+
+  /**
+   * The organisation choices, WITH the "none" row prepended.
+   *
+   * This list is the tenant's whole company book — useCompanyNameOptions asks
+   * for LOOKUP_PAGE_SIZE (100) names — and a native <select> hands that count
+   * straight to the browser, which draws a popup as tall as its option list
+   * implies and places it over whatever is above the field. No CSS reaches that
+   * popup (`size`, `max-height`, `overflow` all apply to the closed control
+   * only), which is exactly the case <ListboxSelect> exists for: same
+   * CONTROL_BASE/CONTROL_HEIGHT trigger as the <Select> it replaces, but a
+   * panel capped at 264px with its own scrollbar.
+   *
+   * The blank row has to be a REAL option rather than the placeholder: a
+   * placeholder only renders while the value matches nothing, so an
+   * organisation picked by mistake could otherwise never be un-picked — and
+   * `referringOrg` is optional (a lead may carry a patient name instead).
+   * Loading and empty keep the exact copy the <option> carried before.
+   */
+  const orgChoices = useMemo(() => {
+    if (!companyOptions) return [{ value: '', label: 'Loading…' }];
+    if (companyOptions.length === 0) {
+      return [{ value: '', label: 'No companies yet — add one in Companies' }];
+    }
+    return [{ value: '', label: '— No organisation —' }, ...companyOptions];
+  }, [companyOptions]);
 
   const close = () => {
     reset();
@@ -106,7 +143,25 @@ export function AddLeadModal({
         </div>
         <div>
           <Label htmlFor="al-dob">Patient DOB</Label>
-          <DatePicker id="al-dob" {...register('patientDob')} />
+          {/*
+            `max` greys out every day after today in the calendar itself — the
+            mirror of the `min: todayLocalDate` the follow-up/due-date fields
+            carry. Called per render rather than captured at module load, so a
+            modal left open across midnight moves its ceiling with the clock.
+            Today stays pickable: the bound is inclusive (DatePicker's
+            `isOutOfRange` only rejects `d > maxDate`).
+
+            First of three layers, and the weakest — it does not stop a future
+            date TYPED into the field, which DatePicker deliberately keeps so the
+            form can report it. See the `patientDob` refine in leadSchema for the
+            second, and IsNotFutureDate on Create/UpdateLeadDto for the one that
+            protects the column.
+          */}
+          <DatePicker
+            id="al-dob"
+            max={todayLocalDate()}
+            {...register('patientDob')}
+          />
           {errors.patientDob && (
             <p className="mt-1 text-[12px] text-destructive">
               {errors.patientDob.message}
@@ -119,24 +174,21 @@ export function AddLeadModal({
         </div>
         <div>
           <Label htmlFor="al-org">Referring organisation</Label>
-          <Select
-            id="al-org"
-            {...register('referringOrg')}
-            disabled={!companyOptions}
-          >
-            <option value="">
-              {!companyOptions
-                ? 'Loading…'
-                : companyOptions.length
-                  ? 'Select a company…'
-                  : 'No companies yet — add one in Companies'}
-            </option>
-            {(companyOptions ?? []).map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </Select>
+          <Controller
+            control={control}
+            name="referringOrg"
+            render={({ field }) => (
+              <ListboxSelect
+                id="al-org"
+                value={field.value ?? ''}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                options={orgChoices}
+                placeholder="Select a company…"
+                disabled={!companyOptions}
+              />
+            )}
+          />
         </div>
         <div className="sm:col-span-2">
           <Label htmlFor="al-reason">Diagnosis / reason</Label>

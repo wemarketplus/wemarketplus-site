@@ -61,7 +61,21 @@ const buildColumns = (
     header: 'Urgency',
     cell: (p) => <Pill tone={URGENCY_PILL[p.urgency]}>{URGENCY_LABELS[p.urgency]}</Pill>,
   },
-  { key: 'source', header: 'Source', cell: (p) => p.referralSource },
+  {
+    // FACILITY — this column used to be headed "Source", and that is the whole
+    // reason a marketer reported their typed Facility "showing up under Source".
+    // The value has always been the referral-source ACCOUNT's name, and in
+    // HospiceLink a referral source IS the facility: it is created from the
+    // Facility field on Add Prospect (ProspectsService.resolveReferralLinks), the
+    // drawer labels the very same value "Facility", and the user guide defines the
+    // referral source as "the facility" (§6.1). One value called two things in two
+    // places reads as two fields whose contents got swapped. There is no separate
+    // source/provenance field on a prospect for it to be confused with — the
+    // channel a referral arrived through lives on the LEAD (`sourceType`).
+    key: 'facility',
+    header: 'Facility',
+    cell: (p) => p.referralSource,
+  },
   { key: 'marketer', header: 'Marketer', cell: (p) => p.assignedMarketer },
   { key: 'next', header: 'Next step', cell: (p) => p.nextStep },
   { key: 'due', header: 'Due', cell: (p) => formatDate(p.followUpDate) },

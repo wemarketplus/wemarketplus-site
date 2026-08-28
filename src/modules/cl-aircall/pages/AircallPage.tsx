@@ -4,6 +4,7 @@ import { MessageSquare, Mail } from 'lucide-react';
 import { Button, Card, CardContent, Input, Select, Textarea } from '@/shared/ui/core';
 import { cn } from '@/shared/utils/cn';
 import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
+import { LOOKUP_PAGE_SIZE } from '@/shared/hooks';
 import { useListClLeadsQuery, useCreateClLeadNoteMutation } from '@/modules/cl-leads';
 import {
   AIRCALL_EMAIL_TEMPLATES,
@@ -19,7 +20,13 @@ const fill = (template: string, name: string) =>
 // the lead's activity timeline via the existing cl/lead-notes endpoint. No live
 // dialer / real carrier send (that needs Aircall API credentials, out of scope).
 export function AircallPage() {
-  const { data: leadsData } = useListClLeadsQuery({ page: 1, limit: 200 });
+  // LOOKUP_PAGE_SIZE, not a hand-picked number: ClListQueryDto caps `limit` at
+  // MAX_LIMIT (100) and answers 400 above it, so `limit: 200` returned nothing at
+  // all rather than a bigger page. `leadOptions` was permanently `[]`, the lead
+  // picker had "Select a lead…" as its only entry, and since `canSend` requires a
+  // leadId the "Send & log" button could never enable — for Text or for Email.
+  // Same failure, same fix as ClOperationsPage and ReferralPortalPage.
+  const { data: leadsData } = useListClLeadsQuery({ page: 1, limit: LOOKUP_PAGE_SIZE });
   const leadOptions = useMemo(
     () =>
       (leadsData?.data ?? []).map((l) => ({

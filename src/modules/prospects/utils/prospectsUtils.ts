@@ -61,7 +61,16 @@ export function mapProspectRecord(
     status: stageToStatus(r.stage),
     phone: r.phone ?? '',
     email: '',
-    referralSource: displayName(names.referralSources, r.referralSourceId),
+    // The FACILITY this referral came from. In HospiceLink a referral source IS
+    // the facility/account (see the ReferralSource entity and
+    // HOSPICELINK-USER-GUIDE §6.1), so this one field answers both names: the
+    // linked account's name when the fan-out resolved one, and the free text the
+    // user typed when it did not. Same precedence the drawer's Facility row uses
+    // — without the fallback an unlinked row rendered an empty cell even though
+    // the user HAD typed a facility.
+    referralSource:
+      displayName(names.referralSources, r.referralSourceId) ||
+      (r.facilityName ?? ''),
     assignedMarketer: displayName(names.users, r.assignedTo),
     nextStep: '',
     // Real pipeline timing now exists: prefer the stage-entry stamp over updatedAt.
