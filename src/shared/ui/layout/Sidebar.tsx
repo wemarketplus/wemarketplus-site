@@ -287,9 +287,19 @@ export function Sidebar() {
         })}
         {/* Only reachable with a needle typed: with an empty query the rail
             always has rows. `text-muted`, not `muted-soft`, for the same
-            contrast reason as the section eyebrows above. */}
+            contrast reason as the section eyebrows above.
+
+            CENTRED IN THE SPACE THE ROWS WOULD HAVE FILLED — the same shape
+            DataTable's `empty` slot uses. It was a bare left-aligned <p> with
+            `pt-3`, so it sat tight under the field with the whole rail blank
+            beneath it and read as a caption on the search input rather than as
+            the answer to it. `min-h-full` gives the flex box the nav's own
+            height to centre within; both axes come from the flex box, so
+            nothing here depends on a measured size. */}
         {sections.length === 0 && (
-          <p className="px-2.5 pt-3 text-[11px] text-muted">No modules match.</p>
+          <div className="flex min-h-full flex-col items-center justify-center px-2.5 text-center">
+            <p className="text-[11px] text-muted">No modules match.</p>
+          </div>
         )}
       </nav>
 

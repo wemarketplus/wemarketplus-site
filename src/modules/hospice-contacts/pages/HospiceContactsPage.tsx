@@ -52,21 +52,33 @@ export function HospiceContactsPage() {
       key: 'fullName',
       header: 'Contact',
       cell: (row) => (
-        <div>
-          <span className="font-bold text-foreground">
-            {row.fullName || `${row.firstName} ${row.lastName}`.trim()}
-          </span>
-          <span className="block text-[11px] text-muted-soft">
-            {row.roleTitle ? ROLE_TITLE_LABELS[row.roleTitle] : '—'}
-            {row.specialty ? ` · ${row.specialty}` : ''}
-          </span>
-        </div>
+        <span className="font-bold text-foreground">
+          {row.fullName || `${row.firstName} ${row.lastName}`.trim()}
+        </span>
       ),
     },
     {
       key: 'contactType',
       header: 'Type',
       cell: (row) => CONTACT_TYPE_LABELS[row.contactType] ?? row.contactType,
+    },
+    /*
+      Role and Specialty are PROFILE, and they carry their own headers rather
+      than riding as an unlabelled caption under the name. Stacked in the
+      Contact cell they had no heading naming them, so on the list they read as
+      part of the neighbouring reach block — the "profile fields showing under
+      Reach" report. Reach below stays what its header says: how you contact the
+      person. Nothing is dropped; both values simply sit under their own name.
+    */
+    {
+      key: 'roleTitle',
+      header: 'Role',
+      cell: (row) => (row.roleTitle ? ROLE_TITLE_LABELS[row.roleTitle] : '—'),
+    },
+    {
+      key: 'specialty',
+      header: 'Specialty',
+      cell: (row) => row.specialty || '—',
     },
     {
       key: 'reach',
@@ -134,7 +146,14 @@ export function HospiceContactsPage() {
           >
             <Mail className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="sm" onClick={() => setEditing(row)}>
+          {/*
+            `secondary`, matching the Automation table's row action: ghost is
+            transparent with `text-muted`, so the one LABELLED control in the
+            column had nothing marking its hit area and read as a caption beside
+            the three icon buttons. The icons stay ghost — that is the shared
+            EntityRowActions idiom for a quiet icon-only row control.
+          */}
+          <Button variant="secondary" size="sm" onClick={() => setEditing(row)}>
             Edit
           </Button>
         </div>

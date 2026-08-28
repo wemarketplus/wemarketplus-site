@@ -49,18 +49,19 @@ export function AutomationPage() {
           // error — the row still has to be readable and cancellable.
           prospectNameById.get(row.prospectId) ?? 'Prospect not in your list',
       },
+      /**
+       * The "What to do" cell says the TASK. Nothing else.
+       *
+       * The cadence note was stacked underneath it, so the reason for circling
+       * back read as part of the instruction — two values under one header. The
+       * note is still captured and stored by the create form; it is simply not
+       * surfaced on this table, which is what the field is for.
+       */
       {
         key: 'title',
         header: 'What to do',
         cell: (row) => (
-          <div className="min-w-0">
-            <p className="font-semibold text-foreground">{row.title}</p>
-            {row.cadenceNote && (
-              <p className="mt-0.5 text-[11px] text-muted-soft">
-                {row.cadenceNote}
-              </p>
-            )}
-          </div>
+          <span className="font-semibold text-foreground">{row.title}</span>
         ),
       },
       {
@@ -73,16 +74,27 @@ export function AutomationPage() {
             <span className="text-muted">{formatDate(row.dueDate)}</span>
           ),
       },
+      /**
+       * Cancel is a real action on every row: listFollowUps returns Pending
+       * automations only, so no already-cancelled row is offered a second
+       * cancel. A labelled text button needs a header to say what it is — the
+       * blank header belongs to the icon-only EntityRowActions.
+       *
+       * `secondary` not `ghost`: ghost is transparent with `text-muted`, so
+       * nothing marked the hit area. Deliberately not `destructive` — a red fill
+       * on every row would make cancelling look like the point of the table.
+       */
       {
         key: 'actions',
-        header: '',
-        headerClassName: 'w-24',
+        header: 'Action',
+        headerClassName: 'w-28',
         cell: (row) => (
           <Button
-            variant="ghost"
+            variant="secondary"
             size="sm"
             disabled={cancellingId === row.id}
             onClick={() => void cancel(row)}
+            aria-label={`Cancel ${row.title}`}
           >
             {cancellingId === row.id ? 'Cancelling…' : 'Cancel'}
           </Button>

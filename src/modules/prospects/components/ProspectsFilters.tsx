@@ -23,7 +23,7 @@ export function ProspectsFilters() {
         wrapperClassName="max-w-sm"
         value={search}
         onChange={(value) => dispatch(setProspectSearch(value))}
-        placeholder="Search by name, email, or source…"
+        placeholder="Search by name, email, or facility…"
       />
       <div className="flex flex-wrap gap-1.5">
         {STATUS_CHIPS.map((chip) => (

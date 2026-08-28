@@ -145,7 +145,14 @@ export function HospiceContactFormModal({
               setRoleTitle(e.target.value as HospiceContactRoleTitle | '')
             }
           >
-            <option value="">—</option>
+            {/*
+              Placeholder for an optional field, not a value. It was labelled `—`,
+              which reads in the open list as a seventh selectable role. Nothing
+              behind it is a dash: hl_contacts_roletitle_enum holds exactly the six
+              roles and is nullable, so "no role" is NULL. The empty VALUE is
+              unchanged, so submit still omits `roleTitle`.
+            */}
+            <option value="">Select a role…</option>
             {(
               Object.keys(ROLE_TITLE_LABELS) as HospiceContactRoleTitle[]
             ).map((value) => (
@@ -199,7 +206,8 @@ export function HospiceContactFormModal({
               )
             }
           >
-            <option value="">—</option>
+            {/* Same placeholder defect as Role at facility, same field group. */}
+            <option value="">Select a method…</option>
             {(
               Object.keys(
                 PREFERRED_METHOD_LABELS,
@@ -223,15 +231,21 @@ export function HospiceContactFormModal({
             onChange={(e) => setSpecialty(e.target.value)}
           />
         </div>
-        <div className="flex items-end">
-          <label className="flex items-center gap-2 text-[13px] text-foreground">
-            <Checkbox
-              checked={doNotContact}
-              onChange={(e) => setDoNotContact(e.target.checked)}
-            />
-            Do not contact
-          </label>
-        </div>
+        {/*
+          The checkbox IS the grid cell, as in EditUserModal's "Account active" row.
+          It was a stretched `flex items-end` wrapper, which bottom-aligned the text
+          line to the cell's edge — sized by the neighbour's Label + 44px control —
+          leaving the box ~12px below the centre of the Specialty input beside it.
+          `sm:h-11` is CONTROL_HEIGHT; with `self-end` it occupies exactly that
+          input's band. Single column has no neighbour to align to, so it is inert.
+        */}
+        <label className="flex cursor-pointer items-center gap-2 self-end text-[13px] text-foreground sm:h-11">
+          <Checkbox
+            checked={doNotContact}
+            onChange={(e) => setDoNotContact(e.target.checked)}
+          />
+          Do not contact
+        </label>
         <div className="sm:col-span-2">
           <Label htmlFor="hc-notes">Notes</Label>
           <Textarea

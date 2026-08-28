@@ -5,6 +5,7 @@ import { CL_SALES_ROLES, useRole } from '@/shared/rbac';
 import { Button, Card, CardContent, DatePicker, Input, Select, Textarea } from '@/shared/ui/core';
 import { EmptyState } from '@/shared/ui/feedback';
 import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
+import { LOOKUP_PAGE_SIZE } from '@/shared/hooks';
 import {
   useListClLeadsQuery,
   useListClLeadNotesQuery,
@@ -33,8 +34,11 @@ const PAGE_SIZE = 50;
 export function ActivityNotesPage() {
   const { isAny } = useRole();
   const canReadLeads = isAny(CL_SALES_ROLES);
+  // LOOKUP_PAGE_SIZE, not a hand-picked number: ClListQueryDto caps `limit` at
+  // 100 and answers 400 above it, so `limit: 200` returned nothing at all and the
+  // lead picker rendered permanently empty. Same fix as AircallPage.
   const { data: leadsData } = useListClLeadsQuery(
-    { page: 1, limit: 200 },
+    { page: 1, limit: LOOKUP_PAGE_SIZE },
     { skip: !canReadLeads },
   );
   const leadOptions = useMemo(
