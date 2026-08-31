@@ -66,9 +66,15 @@ export function DashboardHeader() {
    *
    * Reuses the same `confirm()` host every delete in the app already goes
    * through, so there is no second dialog implementation to keep in sync.
-   * `destructive: false` — signing out is reversible (log back in), so this
-   * gets the neutral primary button and no "cannot be undone" line, unlike a
-   * record delete.
+   * `destructive: false` STAYS, even though the trigger button is now red.
+   * ConfirmDialog couples the flag to a solid red confirm AND to a literal
+   * "This cannot be undone." line, and that line would be false here: signing
+   * out is reversible — you log back in. The unsaved work on the page behind the
+   * dialog is the part that is lost, which the `body` copy already says in
+   * words that are true. A red trigger opening a neutral confirm is a smaller
+   * inconsistency than a dialog that overstates what the action does; making the
+   * line independently controllable would mean widening a shared component's API
+   * for a cosmetic gain on one call site.
    *
    * Fails closed: `confirm()` resolves false when no host is mounted, so a
    * missing ConfirmHost keeps the user signed in rather than logging them out.
@@ -208,16 +214,52 @@ export function DashboardHeader() {
             </div>
           </div>
         )}
-        {/* `outline`, not `ghost`. As a ghost it was the one control in the row
-            with no hit area of its own, which is what made the right end of the
-            header look like it trailed off. It keeps the quiet 600 weight, so
-            it still does not compete with a page's primary action. */}
+        {/*
+          ── SIGN OUT IS RED ──────────────────────────────────────────────────
+          It reads in the app's destructive token (`--color-destructive`,
+          #d13f3f) rather than the `text-muted` grey it wore before, because it
+          is the one control in this header that ends the session — and grey put
+          it at exactly the same visual weight as the search pill and the product
+          switcher beside it.
+
+          `outline` GEOMETRY is kept, and that is deliberate. Two house rules
+          pull against each other here and both are already written down:
+            - this button must have a hit area of its own (the note this comment
+              replaces: as a `ghost` it was the one control in the row with none,
+              which is what made the right end of the header trail off), and
+            - a destructive control gets `text-destructive`, NOT a permanent red
+              fill — see EntityRowActions' doc. A solid red block in the topbar
+              of every screen reads as the page's primary action, which sign out
+              never is.
+          So: the LABEL AND GLYPH go red; the BORDER stays the `outline`
+          variant's own `border-border/50`, and this className no longer spells a
+          border at all.
+
+          That division is measured, not aesthetic. Both properties have a
+          contrast floor and the destructive hue only clears one of them:
+            - Text, WCAG 1.4.3, needs 4.5:1. #d13f3f on #ffffff is 4.67:1 — over
+              the floor for the 13px label. (The glyph is non-text.)
+            - A control BOUNDARY, WCAG 1.4.11, needs 3:1. Red blends far lighter
+              against white than the near-black `--color-border` does, so
+              `border-destructive/40` measures 1.81:1 and even /70 only reaches
+              2.78:1; it takes ~/80 to clear 3:1, which is a loud saturated
+              outline to carry on every route. `border-border/50` blends to
+              #888f8c for 3.30:1 — and Button.tsx's own note records 50% as the
+              lowest alpha that clears the floor, which is why the variant
+              already ships it.
+          Red where red passes, the proven token where it does not. It also means
+          one less custom spelling of a border in the header, which the
+          HEADER_CONTROL_* comment in controlStyles.ts exists to discourage.
+
+          The `variant="destructive"` solid pill is the wrong instrument for a
+          persistent shell control that is on screen on every route.
+        */}
         <Button
           variant="outline"
           size="sm"
           onClick={signOut}
           aria-label="Sign out"
-          className="ml-1 border-border/[0.08] text-muted hover:text-foreground"
+          className="ml-1 text-destructive hover:bg-destructive/[0.08] hover:text-destructive"
         >
           <LogOut className="h-4 w-4" />
           <span className="hidden sm:inline">Sign out</span>

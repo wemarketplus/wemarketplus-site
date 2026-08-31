@@ -4,8 +4,12 @@ import type { ID, ISODateString } from '@/shared/types';
 export interface PortalLink {
   id: ID;
   referralSourceId: ID;
-  /** The URL secret. Shown so an admin can copy or reprint it. */
-  token: string;
+  /**
+   * The URL secret. Shown so an admin can copy or reprint a LIVE link; null once
+   * the link is revoked or expired, because a dead link has nothing to copy.
+   * Mirrors PortalLinkResponseDto.token — see its doc.
+   */
+  token: string | null;
   label: string | null;
   isActive: boolean;
   expiresAt: ISODateString | null;

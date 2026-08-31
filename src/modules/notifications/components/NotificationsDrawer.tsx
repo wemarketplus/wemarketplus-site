@@ -49,8 +49,32 @@ export function NotificationsDrawer() {
             </p>
           </div>
           <div className="flex items-center gap-2">
+            {/*
+              `secondary`, not `ghost` — and this is the same defect Button.tsx's
+              own doc describes for the quiet variants: `ghost` is
+              `bg-transparent text-muted`, so this had NO boundary of any kind.
+              Measured live on the drawer's white surface: #6a726e text, `rgba(0,
+              0, 0, 0)` background, `border-width: 0px`. The label alone clears AA
+              as text (4.95:1), which is exactly why this reads as low-visibility
+              rather than as broken — a control needs 3:1 on its BOUNDARY (WCAG
+              1.4.11), and it had no boundary to measure. Sitting immediately left
+              of the `ghost size="icon"` Close button, the bulk state change and
+              the dismiss were rendered at identical weight.
+
+              `secondary` is the app's existing "visible but not shouting"
+              variant: `border-border/50` (3.30:1 on white — the doc records 50%
+              as the lowest alpha that clears the floor) over `bg-surface-raised`.
+              It is also what the full Notifications PAGE already uses for this
+              same action, so one action now looks like one action on both
+              surfaces. `size="sm"` is kept for the drawer's 36px header band
+              where the page uses the default `md`.
+
+              Close stays `ghost` — that IS the right variant for a dismiss, and
+              keeping it is what re-establishes the difference in weight between
+              the two.
+            */}
             <Button
-              variant="ghost"
+              variant="secondary"
               size="sm"
               disabled={isMarkingAll || unreadCount === 0}
               onClick={markAllRead}

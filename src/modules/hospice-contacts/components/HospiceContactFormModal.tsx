@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button, Checkbox, Input, Label, Select, Textarea } from '@/shared/ui/core';
+import { SUBSECTION_TITLE } from '@/shared/ui/core/typography';
 import { Modal } from '@/shared/ui/feedback';
 import {
   CONTACT_TYPE_LABELS,
@@ -102,6 +103,39 @@ export function HospiceContactFormModal({
       }
     >
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {/*
+          ── WHY THIS FORM IS GROUPED ──────────────────────────────────────────
+          The report was "the Reach tab shows Mobile, Email, First Name, Last
+          Name, Role at Facility and Specialty — profile fields already captured
+          elsewhere, duplicated into Reach".
+
+          There is no tab, and there never was: this is one flat twelve-cell grid,
+          and the Hospice contacts LIST has a "Reach" column beside Role and
+          Specialty columns. Reading that header across a nine-column table is
+          what produced the report — nothing was duplicated, and nothing is stored
+          twice. Every one of the six named fields is a distinct, single column on
+          `hl_contacts`, so deleting any of them would delete data, not a copy:
+          `firstName`/`lastName` compose the server-side `fullName` the whole
+          module keys off, and `roleTitle`/`specialty` are what Prospects and Jobs
+          display. Removing them is not the fix.
+
+          What WAS wrong is that "Reach" had no defined boundary, so any field
+          near it read as being in it. So the boundary is drawn here, once, and
+          the two groups say which is which:
+
+            Profile — who the contact is:    firstName, lastName, contactType,
+                                             roleTitle, npi, specialty
+            Reach   — how to contact them:   phone, mobile, email, fax,
+                                             preferredMethod, doNotContact
+
+          Mobile and Email are the two of the six that genuinely belong to Reach,
+          and they now sit under a heading that says so. The submitted payload is
+          byte-identical — this is grouping, not a data-model change — which is
+          why create and edit are untouched. Headings are `full`-width rows in the
+          same two-column grid rather than nested <div>s, so every field keeps its
+          existing column and 44px band.
+        */}
+        <h3 className={`${SUBSECTION_TITLE} sm:col-span-2`}>Profile</h3>
         <div>
           <Label htmlFor="hc-first">First name</Label>
           <Input
@@ -163,6 +197,19 @@ export function HospiceContactFormModal({
           </Select>
         </div>
         <div>
+          <Label htmlFor="hc-npi">NPI</Label>
+          <Input id="hc-npi" value={npi} onChange={(e) => setNpi(e.target.value)} />
+        </div>
+        <div>
+          <Label htmlFor="hc-specialty">Specialty</Label>
+          <Input
+            id="hc-specialty"
+            value={specialty}
+            onChange={(e) => setSpecialty(e.target.value)}
+          />
+        </div>
+        <h3 className={`${SUBSECTION_TITLE} mt-2 sm:col-span-2`}>Reach</h3>
+        <div>
           <Label htmlFor="hc-phone">Phone</Label>
           <Input
             id="hc-phone"
@@ -219,33 +266,47 @@ export function HospiceContactFormModal({
             ))}
           </Select>
         </div>
-        <div>
-          <Label htmlFor="hc-npi">NPI</Label>
-          <Input id="hc-npi" value={npi} onChange={(e) => setNpi(e.target.value)} />
-        </div>
-        <div>
-          <Label htmlFor="hc-specialty">Specialty</Label>
-          <Input
-            id="hc-specialty"
-            value={specialty}
-            onChange={(e) => setSpecialty(e.target.value)}
-          />
-        </div>
         {/*
-          The checkbox IS the grid cell, as in EditUserModal's "Account active" row.
-          It was a stretched `flex items-end` wrapper, which bottom-aligned the text
-          line to the cell's edge — sized by the neighbour's Label + 44px control —
-          leaving the box ~12px below the centre of the Specialty input beside it.
-          `sm:h-11` is CONTROL_HEIGHT; with `self-end` it occupies exactly that
-          input's band. Single column has no neighbour to align to, so it is inert.
+          A TWO-PART CELL, like every one of its eleven siblings: a <Label> row,
+          then the control in the 44px band under it.
+
+          The previous shape was the checkbox row AS the grid cell, held level with
+          the input beside it by `self-end sm:h-11` (CONTROL_HEIGHT). That did get
+          the box onto the neighbour's centre line — measured at 0px offset from the
+          Specialty input's centre — and it is still not what "aligned" meant here.
+          It was the only cell in the twelve-cell grid with no label row, so column
+          two read LABEL/control five times and then a bare checkbox floating in
+          ~24px of dead space, with the app's one lower-case 13px field caption
+          sitting down in the control band where every other cell holds a 12px
+          uppercase eyebrow. `self-end` also does nothing in the single-column
+          layout below 640px, where the row loses its 44px band entirely and drifts
+          up into the gap under Specialty — so the misalignment was real on mobile
+          and cosmetic-but-visible on desktop.
+
+          With the Label supplying the offset, `h-11` replaces `self-end sm:h-11`
+          and holds at every width. `id`/`htmlFor` follow the `hc-*` convention the
+          other eleven fields use: the wrapping <label> already toggled the box
+          implicitly, but nothing else could point at it (`aria-describedby`, a test,
+          an error message) and the form's own naming rule had one exception.
         */}
-        <label className="flex cursor-pointer items-center gap-2 self-end text-[13px] text-foreground sm:h-11">
-          <Checkbox
-            checked={doNotContact}
-            onChange={(e) => setDoNotContact(e.target.checked)}
-          />
-          Do not contact
-        </label>
+        <div>
+          <Label htmlFor="hc-dnc">Contact preference</Label>
+          {/*
+            No `htmlFor` on this inner <label>: it WRAPS the box, which is the
+            app's checkbox-row idiom (TasksFilters, CustomRoleFormModal,
+            EditUserModal) and associates them implicitly. The `hc-dnc` id is
+            there for the <Label> eyebrow above, so clicking that focuses the box
+            exactly as clicking "SPECIALTY" focuses its input.
+          */}
+          <label className="flex h-11 cursor-pointer items-center gap-2 text-[13px] text-foreground">
+            <Checkbox
+              id="hc-dnc"
+              checked={doNotContact}
+              onChange={(e) => setDoNotContact(e.target.checked)}
+            />
+            Do not contact
+          </label>
+        </div>
         <div className="sm:col-span-2">
           <Label htmlFor="hc-notes">Notes</Label>
           <Textarea

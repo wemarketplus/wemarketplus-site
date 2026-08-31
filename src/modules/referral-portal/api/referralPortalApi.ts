@@ -27,7 +27,7 @@ export const referralPortalApi = createApi({
         params: params ?? undefined,
       }),
       transformResponse: env<PortalLink[]>,
-      providesTags: ['PortalLink'],
+      providesTags: [{ type: 'PortalLink', id: 'LIST' }],
     }),
     getPortalLinkQr: build.query<PortalLinkQr, { id: string; origin: string }>({
       query: ({ id, origin }) => ({
@@ -35,11 +35,22 @@ export const referralPortalApi = createApi({
         params: { origin },
       }),
       transformResponse: env<PortalLinkQr>,
+      /**
+       * Tagged per link id, so revoking invalidates THIS link's cached QR.
+       *
+       * It previously provided no tags at all while `updatePortalLink`
+       * invalidated only `'PortalLink'`, so the QR entry was never touched by a
+       * revoke: a panel left open across one, or reopened inside
+       * `keepUnusedDataFor`, re-served the cached image and URL from RTK Query
+       * without asking the server — which now refuses it. A cache that outlives
+       * the credential it holds is the whole bug in miniature.
+       */
+      providesTags: (_result, _error, { id }) => [{ type: 'PortalLink', id }],
     }),
     createPortalLink: build.mutation<PortalLink, CreatePortalLinkRequest>({
       query: (body) => ({ url: '/referral-portal/links', method: 'POST', body }),
       transformResponse: env<PortalLink>,
-      invalidatesTags: ['PortalLink'],
+      invalidatesTags: [{ type: 'PortalLink', id: 'LIST' }],
     }),
     updatePortalLink: build.mutation<
       PortalLink,
@@ -51,7 +62,12 @@ export const referralPortalApi = createApi({
         body: patch,
       }),
       transformResponse: env<PortalLink>,
-      invalidatesTags: ['PortalLink'],
+      // Both: the row's status pill comes off the LIST entry, and the QR image
+      // comes off the per-id entry a revoke has just made unservable.
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: 'PortalLink', id: 'LIST' },
+        { type: 'PortalLink', id },
+      ],
     }),
   }),
 });

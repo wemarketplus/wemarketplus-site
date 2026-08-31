@@ -1,9 +1,10 @@
 import { PAGE_TITLE } from '@/shared/ui/core/typography';
 import { useState } from 'react';
-import { Mail, MessageSquare, Phone } from 'lucide-react';
+import { Mail, MessageSquare, Phone, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button, SearchInput } from '@/shared/ui/core';
 import { Alert, DataTable, Pill, type Column } from '@/shared/ui/data-display';
+import { EntityRowActions } from '@/shared/ui/entity';
 import { useDebounce } from '@/shared/hooks';
 import {
   CONTACT_TYPE_LABELS,
@@ -16,6 +17,14 @@ import {
 } from '../api/hospiceContactsApi';
 import { HospiceContactFormModal } from '../components/HospiceContactFormModal';
 import { useContactOutreach } from '../hooks/useContactOutreach';
+
+/**
+ * The hover tint every quiet row control in the app wears — the same string
+ * EntityRowActions applies to its pencil (see its doc for why a row control gets
+ * a hover surface rather than a permanent border). Named here so the three
+ * outreach icons and the pencil beside them cannot drift apart again.
+ */
+const ROW_ACTION_TINT = 'text-muted hover:bg-primary/[0.08] hover:text-primary';
 
 /**
  * The hospice contact record — the referring PERSON that Prospects and Jobs point at.
@@ -114,48 +123,74 @@ export function HospiceContactsPage() {
     {
       key: 'actions',
       header: 'Actions',
+      className: 'text-right',
+      /*
+        ── ONE TREATMENT FOR ALL FOUR ROW ACTIONS ──────────────────────────────
+        The report was "the Action button colour is not the colour the UI
+        design defines". The column held three treatments at once: three
+        `ghost size="sm"` icon buttons (transparent, `text-muted` #6a726e, 48px
+        wide because `sm` is `h-9 px-4` — text padding around a 16px glyph) and
+        one `secondary size="sm"` "Edit" (bordered pill, `bg-surface-raised`,
+        `text-foreground`). Measured live: three 48x36 transparent controls with
+        `border-width: 0`, then one 58x36 filled control with a 1px 50%-alpha
+        border. Whichever of the two you consider correct, the column disagreed
+        with itself.
+
+        The design system already answers this — `EntityRowActions` is the app's
+        row-control idiom, used by twenty-odd tables: `ghost` + `size="square"`
+        (36x36, no text padding) + 18px glyph + an explicit tinted hover
+        (`hover:bg-primary/[0.08] hover:text-primary`) so the control announces
+        its hit area on approach instead of carrying a permanent border.
+
+        So Edit is now that component rather than a fourth spelling of it, and
+        the three outreach icons wear the same square geometry and the same hover
+        tint. `ROW_ACTION_TINT` is the one place that hover lives for this cell;
+        the pencil's copy of it comes from EntityRowActions itself.
+
+        The earlier `secondary` was a real fix to a real defect (a bare ghost
+        TEXT button has no hit area at all) — it just fixed it from the wrong
+        end, by making the labelled control the odd one out. An icon-only square
+        with a hover surface has the hit area AND matches its neighbours.
+      */
       cell: (row) => (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center justify-end gap-1">
           <Button
             variant="ghost"
-            size="sm"
+            size="square"
+            className={ROW_ACTION_TINT}
             aria-label={`Call ${row.fullName}`}
             title="Call and log"
             disabled={row.doNotContact || pendingKey === `${row.id}:call`}
             onClick={() => void reach(row, 'call')}
           >
-            <Phone className="h-4 w-4" />
+            <Phone className="h-[18px] w-[18px]" />
           </Button>
           <Button
             variant="ghost"
-            size="sm"
+            size="square"
+            className={ROW_ACTION_TINT}
             aria-label={`Text ${row.fullName}`}
             title="Text and log"
             disabled={row.doNotContact || pendingKey === `${row.id}:text`}
             onClick={() => void reach(row, 'text')}
           >
-            <MessageSquare className="h-4 w-4" />
+            <MessageSquare className="h-[18px] w-[18px]" />
           </Button>
           <Button
             variant="ghost"
-            size="sm"
+            size="square"
+            className={ROW_ACTION_TINT}
             aria-label={`Email ${row.fullName}`}
             title="Email and log"
             disabled={row.doNotContact || pendingKey === `${row.id}:email`}
             onClick={() => void reach(row, 'email')}
           >
-            <Mail className="h-4 w-4" />
+            <Mail className="h-[18px] w-[18px]" />
           </Button>
-          {/*
-            `secondary`, matching the Automation table's row action: ghost is
-            transparent with `text-muted`, so the one LABELLED control in the
-            column had nothing marking its hit area and read as a caption beside
-            the three icon buttons. The icons stay ghost — that is the shared
-            EntityRowActions idiom for a quiet icon-only row control.
-          */}
-          <Button variant="secondary" size="sm" onClick={() => setEditing(row)}>
-            Edit
-          </Button>
+          <EntityRowActions
+            onEdit={() => setEditing(row)}
+            editLabel={`Edit ${row.fullName}`}
+          />
         </div>
       ),
     },
@@ -173,7 +208,16 @@ export function HospiceContactsPage() {
             {data?.total ?? 0} on file.
           </p>
         </div>
-        <Button onClick={() => setIsCreating(true)}>Add contact</Button>
+        {/*
+          The leading <Plus> its four peers all carry — Leads' "Log referral",
+          Referral sources' "Add source", Prospects' "Add prospect", Referral
+          portal's "New link". The variant was already the shared `primary`
+          default; the icon was the only way this page's header action differed
+          from theirs.
+        */}
+        <Button onClick={() => setIsCreating(true)}>
+          <Plus className="h-4 w-4" /> Add contact
+        </Button>
       </header>
 
       {isError && (
