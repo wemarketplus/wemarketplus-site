@@ -43,10 +43,18 @@ interface ListboxSelectProps {
    * Geometry for the option ROWS, for a trigger that is not field-sized — the
    * sibling of `chevronClassName`, and needed for the same reason.
    *
-   * The default row is sized for a form field: 14px text at 8px/14px padding,
-   * so 37px each. Worn under a 22px status badge that is oversized twice over —
+   * The default row is sized for a form field: 14px text at 6px/14px padding,
+   * so 33px each. Worn under a 22px status badge that is oversized twice over —
    * the type is larger than the badge's own 11px, and seven statuses then open a
    * panel more than ten times the height of the control that produced it.
+   *
+   * The default was 8px vertical (37px rows) until the "dropdown height is
+   * excessive" report on Inbound leads: a 37px row is ~1.6x a native select's,
+   * so the Referring organisation list opened at the full 264px ceiling — six
+   * times its own 44px trigger — and seven options summed to 267px, three past
+   * the cap, so a list that visibly fitted still scrolled. 33px keeps a
+   * comfortable target (well over the 24px WCAG 2.2 AA floor) while reading as
+   * the same kind of dropdown as the native <Select> beside it in the same form.
    */
   optionClassName?: string;
   /**
@@ -60,8 +68,9 @@ interface ListboxSelectProps {
   'aria-label'?: string;
 }
 
-// The tallest the option list may get. Eight-ish rows: enough that the list
-// reads as a list and short enough that it cannot become a second page.
+// The tallest the option list may get. Eight rows at the default 33px row:
+// enough that the list reads as a list and short enough that it cannot become a
+// second page. Applied to the <ul> only — see the panel div for why one cap.
 const MAX_PANEL_HEIGHT = 264;
 // How long a run of keystrokes counts as one type-ahead word ("m","d" -> "MD").
 const TYPEAHEAD_RESET_MS = 700;
@@ -312,7 +321,12 @@ export function ListboxSelect({
               top: position?.top ?? 0,
               left: position?.left ?? 0,
               width: drawnWidth || undefined,
-              maxHeight: panelCeiling,
+              // No maxHeight here: the <ul> below carries the one ceiling, and
+              // this div shrink-wraps it. Both used to be capped at
+              // `panelCeiling`, which put the list's own `py-1` INSIDE the same
+              // budget as the rows — so a list whose rows summed to exactly the
+              // ceiling grew a scrollbar for the 8px of padding. One cap, on the
+              // box that actually scrolls.
               // Hidden until measured, so the first paint is never at 0,0.
               visibility: position ? 'visible' : 'hidden',
             }}
@@ -348,7 +362,7 @@ export function ListboxSelect({
                     }}
                     onPointerEnter={() => setActiveIndex(index)}
                     className={cn(
-                      'flex cursor-pointer items-baseline gap-2 px-3.5 py-2 text-[14px] text-foreground',
+                      'flex cursor-pointer items-baseline gap-2 px-3.5 py-1.5 text-[14px] text-foreground',
                       index === activeIndex && 'bg-primary/[0.08]',
                       isSelected && 'font-semibold',
                       // Last, so a caller that passes its own padding or type
