@@ -25,6 +25,8 @@ export const PROSPECTS_FIXTURE: readonly Prospect[] = [
     email: 'eleanor.w@familyhealth.org',
     referralSource: 'Mercy Hospital — Discharge',
     assignedMarketer: 'Avery Cole',
+    // Preview data — no real user owns these rows.
+    assignedTo: null,
     nextStep: 'Send admission packet',
     followUpDate: '2026-05-26T15:00:00Z',
     urgency: Urgency.Hot,
@@ -41,6 +43,8 @@ export const PROSPECTS_FIXTURE: readonly Prospect[] = [
     email: 'h.alvarez@gmail.com',
     referralSource: 'Dr. Patel — Bayview Internal',
     assignedMarketer: 'Avery Cole',
+    // Preview data — no real user owns these rows.
+    assignedTo: null,
     nextStep: 'Confirm RN intake window',
     followUpDate: '2026-05-25T17:30:00Z',
     urgency: Urgency.Warm,
@@ -55,6 +59,8 @@ export const PROSPECTS_FIXTURE: readonly Prospect[] = [
     email: 'm.lin@lindfamily.net',
     referralSource: 'St. Joseph SNF',
     assignedMarketer: 'Jordan Reese',
+    // Preview data — no real user owns these rows.
+    assignedTo: null,
     nextStep: 'First clinical visit complete',
     followUpDate: '2026-06-01T18:00:00Z',
     urgency: Urgency.Cold,
@@ -68,6 +74,8 @@ export const PROSPECTS_FIXTURE: readonly Prospect[] = [
     email: 'family@ortizhome.com',
     referralSource: 'Online intake form',
     assignedMarketer: 'Jordan Reese',
+    // Preview data — no real user owns these rows.
+    assignedTo: null,
     nextStep: 'Schedule discovery call',
     followUpDate: '2026-05-25T20:00:00Z',
     urgency: Urgency.Hot,
@@ -83,6 +91,8 @@ export const PROSPECTS_FIXTURE: readonly Prospect[] = [
     email: 'fbell@bellfamily.org',
     referralSource: 'Community referral',
     assignedMarketer: 'Avery Cole',
+    // Preview data — no real user owns these rows.
+    assignedTo: null,
     nextStep: 'Re-engagement campaign',
     followUpDate: '2026-06-10T16:00:00Z',
     urgency: Urgency.Cold,
@@ -97,6 +107,8 @@ export const PROSPECTS_FIXTURE: readonly Prospect[] = [
     email: 'wkim@kimfamily.us',
     referralSource: 'Dr. Patel — Bayview Internal',
     assignedMarketer: 'Sam Brennan',
+    // Preview data — no real user owns these rows.
+    assignedTo: null,
     nextStep: 'Sign POA paperwork',
     followUpDate: '2026-05-26T22:00:00Z',
     urgency: Urgency.Warm,

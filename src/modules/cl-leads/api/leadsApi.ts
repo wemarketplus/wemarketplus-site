@@ -10,8 +10,10 @@ import type { ApiEnvelope, PaginatedPayload, PaginationParams } from '@/shared/t
 import type {
   ClLeadNoteRecord,
   ClLeadRecord,
+  ClResidentRecord,
   CreateClLeadNoteRequest,
   CreateClLeadRequest,
+  CreateClResidentRequest,
   UpdateClLeadRequest,
 } from '../types/clLeadApiTypes';
 
@@ -22,6 +24,12 @@ export interface ClLeadListParams extends PaginationParams {
   search?: string;
   stage?: string;
   urgency?: string;
+}
+
+// Narrows /cl/lead-notes to one resident's Resident Care Log entries
+// (backend ClListQueryDto's residentId filter).
+export interface ClLeadNoteListParams extends PaginationParams {
+  residentId?: string;
 }
 
 function cleanParams(params?: ClLeadListParams): Record<string, string | number> | undefined {
@@ -71,7 +79,7 @@ const invalidateLeadDerivedCaches = async (
 export const leadsApi = createApi({
   reducerPath: 'clLeadsApi',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['ClLead', 'ClLeadNote'],
+  tagTypes: ['ClLead', 'ClLeadNote', 'ClResident'],
   endpoints: (build) => ({
     listClLeads: build.query<PaginatedPayload<ClLeadRecord>, ClLeadListParams | void>({
       query: (params) => ({ url: '/cl/leads', params: cleanParams(params ?? undefined) }),
@@ -105,8 +113,8 @@ export const leadsApi = createApi({
       onQueryStarted: (_arg, { dispatch, queryFulfilled }) =>
         invalidateLeadDerivedCaches(queryFulfilled, dispatch),
     }),
-    listClLeadNotes: build.query<PaginatedPayload<ClLeadNoteRecord>, PaginationParams | void>({
-      query: (params) => ({ url: '/cl/lead-notes', params: params ?? undefined }),
+    listClLeadNotes: build.query<PaginatedPayload<ClLeadNoteRecord>, ClLeadNoteListParams | void>({
+      query: (params) => ({ url: '/cl/lead-notes', params: cleanParams(params ?? undefined) }),
       transformResponse: (res: ApiEnvelope<PaginatedPayload<ClLeadNoteRecord>>) => res.data,
       providesTags: ['ClLeadNote'],
     }),
@@ -114,6 +122,20 @@ export const leadsApi = createApi({
       query: (body) => ({ url: '/cl/lead-notes', method: 'POST', body }),
       transformResponse: (res: ApiEnvelope<ClLeadNoteRecord>) => res.data,
       invalidatesTags: ['ClLeadNote'],
+    }),
+    // Resident Care Log roster — GET/POST /cl/residents. Active residents
+    // (moveOutDate null) are filtered client-side; the backend has no
+    // "active" equality filter to whitelist for this (moveOutDate IS NULL
+    // isn't an equality match), and the roster per community is small.
+    listClResidents: build.query<PaginatedPayload<ClResidentRecord>, PaginationParams | void>({
+      query: (params) => ({ url: '/cl/residents', params: params ?? undefined }),
+      transformResponse: (res: ApiEnvelope<PaginatedPayload<ClResidentRecord>>) => res.data,
+      providesTags: ['ClResident'],
+    }),
+    createClResident: build.mutation<ClResidentRecord, CreateClResidentRequest>({
+      query: (body) => ({ url: '/cl/residents', method: 'POST', body }),
+      transformResponse: (res: ApiEnvelope<ClResidentRecord>) => res.data,
+      invalidatesTags: ['ClResident'],
     }),
   }),
 });
@@ -126,4 +148,6 @@ export const {
   useDeleteClLeadMutation,
   useListClLeadNotesQuery,
   useCreateClLeadNoteMutation,
+  useListClResidentsQuery,
+  useCreateClResidentMutation,
 } = leadsApi;

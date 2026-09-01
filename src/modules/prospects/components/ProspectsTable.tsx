@@ -1,7 +1,9 @@
 import { UserPlus } from 'lucide-react';
 import { DataTable, Pill, type Column } from '@/shared/ui/data-display';
+import { ListboxSelect } from '@/shared/ui/core';
 import { EmptyState } from '@/shared/ui/feedback';
 import { EntityRowActions } from '@/shared/ui/entity';
+import type { EntitySelectOption } from '@/shared/ui/entity';
 import { formatDate } from '@/shared/utils/dateFormatter';
 import type { Prospect } from '@/shared/types';
 import {
@@ -15,6 +17,9 @@ const buildColumns = (
   onOpen: (id: string) => void,
   onEdit: (id: string) => void,
   onDelete: ((id: string) => void) | undefined,
+  owners: readonly EntitySelectOption[],
+  onOwnerChange: (id: string, userId: string) => void,
+  isAssigning: boolean,
 ): ReadonlyArray<Column<Prospect>> => [
   {
     key: 'prospect',
@@ -76,7 +81,39 @@ const buildColumns = (
     header: 'Facility',
     cell: (p) => p.referralSource,
   },
-  { key: 'marketer', header: 'Marketer', cell: (p) => p.assignedMarketer },
+  {
+    /**
+     * MARKETER — a picker, not a label.
+     *
+     * `prospects.assignedTo` always had an endpoint that accepted it and a create
+     * path that defaulted it to whoever added the row; what it never had was any
+     * control to change it, so this column printed an owner nobody could edit and
+     * reassignment meant calling the API by hand.
+     *
+     * ListboxSelect rather than a native <select> for the reason that component
+     * exists: a native popup is drawn by the browser, and a stray click on its
+     * blank area commits whatever option happens to be highlighted — straight into
+     * a PATCH, since this control saves on change. The application-drawn list has
+     * no click handler on empty space at all. It also caps its panel height, which
+     * a tenant-sized staff list needs and a native popup cannot be told to do.
+     *
+     * NOT the clinical assignment. Putting a patient on a nurse's list means
+     * assigning them a VISIT (`appointments.assignedRep`, the "Assign to" picker in
+     * the scheduling modals). This field is the pipeline's owner.
+     */
+    key: 'marketer',
+    header: 'Marketer',
+    cell: (p) => (
+      <ListboxSelect
+        value={p.assignedTo ?? ''}
+        options={owners}
+        placeholder="— Unassigned —"
+        disabled={isAssigning}
+        onChange={(userId) => onOwnerChange(p.id, userId)}
+        aria-label={`Change owner for ${p.name}`}
+      />
+    ),
+  },
   { key: 'next', header: 'Next step', cell: (p) => p.nextStep },
   { key: 'due', header: 'Due', cell: (p) => formatDate(p.followUpDate) },
   {
@@ -108,6 +145,12 @@ interface ProspectsTableProps {
   onEdit: (id: string) => void;
   /** Omitted (hides the action) for a caller without delete permission. */
   onDelete?: (id: string) => void;
+  /** Assignable staff for the Marketer picker. */
+  owners: readonly EntitySelectOption[];
+  /** Reassigns a row's owner. */
+  onOwnerChange: (id: string, userId: string) => void;
+  /** Disables every owner picker while one is in flight. */
+  isAssigning?: boolean;
 }
 
 export function ProspectsTable({
@@ -117,10 +160,20 @@ export function ProspectsTable({
   onOpen,
   onEdit,
   onDelete,
+  owners,
+  onOwnerChange,
+  isAssigning = false,
 }: ProspectsTableProps) {
   return (
     <DataTable
-      columns={buildColumns(onOpen, onEdit, onDelete)}
+      columns={buildColumns(
+        onOpen,
+        onEdit,
+        onDelete,
+        owners,
+        onOwnerChange,
+        isAssigning,
+      )}
       rows={prospects}
       rowKey={(p) => p.id}
       empty={

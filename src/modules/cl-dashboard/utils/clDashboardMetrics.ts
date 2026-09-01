@@ -144,6 +144,7 @@ export interface ClOccupancySnapshot {
   occupied: number;
   available: number;
   reserved: number;
+  waitlisted: number;
   makeReady: number;
   onNotice: number;
   maintenance: number;
@@ -172,6 +173,7 @@ export function clOccupancySnapshot(
     occupied: count(APARTMENT_STATUS.Occupied),
     available: count(APARTMENT_STATUS.Available),
     reserved: count(APARTMENT_STATUS.Reserved),
+    waitlisted: count(APARTMENT_STATUS.Waitlisted),
     makeReady: count(APARTMENT_STATUS.MakeReady),
     onNotice: count(APARTMENT_STATUS.OnNotice),
     maintenance: count(APARTMENT_STATUS.Maintenance),

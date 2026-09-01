@@ -72,6 +72,9 @@ export function mapProspectRecord(
       displayName(names.referralSources, r.referralSourceId) ||
       (r.facilityName ?? ''),
     assignedMarketer: displayName(names.users, r.assignedTo),
+    // The raw id as well as the resolved name — the Marketer column is a picker
+    // now, and a picker needs the value, not the label.
+    assignedTo: r.assignedTo,
     nextStep: '',
     // Real pipeline timing now exists: prefer the stage-entry stamp over updatedAt.
     followUpDate: r.stageEnteredAt ?? r.updatedAt,

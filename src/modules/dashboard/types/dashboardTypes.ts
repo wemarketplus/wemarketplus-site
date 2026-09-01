@@ -57,6 +57,7 @@ export interface DashboardOperations {
     occupied: number;
     available: number;
     reserved: number;
+    waitlisted: number;
     onNotice: number;
     makeReady: number;
     maintenance: number;

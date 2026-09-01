@@ -11,6 +11,12 @@ export const APARTMENT_STATUS = {
   Available: 'available',
   Occupied: 'occupied',
   Reserved: 'reserved',
+  /**
+   * Spoken for by a waiting list — interest queued, nothing signed. Distinct from
+   * Reserved (a signed resident), which is why only Reserved counts toward
+   * occupancy server-side.
+   */
+  Waitlisted: 'waitlisted',
   OnNotice: 'on_notice',
   MakeReady: 'make_ready',
   Maintenance: 'maintenance',

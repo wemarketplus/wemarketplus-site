@@ -40,6 +40,7 @@ import {
   Upload,
   UserPlus,
   Users,
+  Workflow,
   Wrench,
   ListChecks,
   QrCode,
@@ -478,6 +479,23 @@ const COMMUNITYLINK_SALES: NavSection = {
      */
     { to: '/daily-tasks', label: 'Daily tasks', icon: ListChecks, product: Product.CommunityLink, allow: CL_SALES_ROLES },
     { to: '/leads', label: 'Lead pipeline', icon: LineChart, product: Product.CommunityLink, allow: CL_SALES_ROLES },
+    /**
+     * FOLLOW-UP SEQUENCES — the multi-step, multi-day campaigns.
+     *
+     * Sits beside Lead pipeline rather than under Admin because that is where its
+     * subject lives: a sequence starts when a LEAD reaches a stage, and the person
+     * who works the pipeline is the one who needs to see why a task appeared.
+     *
+     * Deliberately not called "Automation": HospiceLink already has a row by that
+     * name for a different thing (a single standing reminder on one prospect), and
+     * two products using one label for two mechanisms is how the Calendar /
+     * Follow-ups / Daily tasks confusion started. "Follow-up sequences" says what
+     * it is.
+     *
+     * No minTier — the pipeline it acts on is Pro-tier data, so gating the
+     * automation above the data it automates would be arbitrary.
+     */
+    { to: '/automation/sequences', label: 'Follow-up sequences', icon: Workflow, product: Product.CommunityLink, allow: CL_SALES_ROLES },
     // Referral Pipeline is a Max-tier addition alongside Lead Pipeline — a
     // stage-grouped view over the same paid-referral data as Paid Referral
     // Portal below (cl/paid-referrals already carries a `stage` field).
@@ -622,23 +640,27 @@ const COMMUNITYLINK_ACTIVITY: NavSection = {
      */
     { to: '/activity-notes', label: 'Activity notes', icon: NotebookPen, product: Product.CommunityLink, allow: CL_ACTIVITY_NOTES_ROLES },
     /**
-     * Resident care log — ANNOUNCED, NOT BUILT (`comingSoon`).
+     * Resident care log — LIVE. Was `comingSoon`; the blocker this comment used to
+     * describe is resolved, so the comment is updated rather than left to describe
+     * a state that is no longer true (see AddClApartmentWaitlistedStatus's framing
+     * of comments-as-of-the-decision-they-record).
      *
-     * The client's Nurse/Caregiver guide describes this tab in the future tense
-     * ("The Resident Care Log WILL BE where you log wellness checks, incident notes
-     * and family updates tied to a specific resident") and tells the reader to use
-     * Activity Notes above until it lands. This row says exactly that, using the
-     * same inert "Soon" treatment the two Nurse-only HospiceLink rows already use.
+     * The blocker was a data model, not a screen: CommunityLink had no resident
+     * record to attach a wellness check to. `cl_apartments.residentName` was a
+     * nullable varchar on a UNIT — it could not carry a history, it disappeared
+     * when the unit turned over, and two residents sharing a companion suite had
+     * one field between them. `ClResident` (backend) fixes this: one row per
+     * apartment, closed (not deleted) on move-out, at most one active per unit.
      *
-     * It cannot be built yet, and the blocker is a data model, not a screen: there
-     * is no resident record in CommunityLink to attach a wellness check to.
-     * `cl_apartments.residentName` is a nullable varchar on a UNIT — it cannot carry
-     * a history, it disappears when the unit turns over, and two residents sharing a
-     * companion suite have one field between them. The HospiceLink Family
-     * Communication tab this is modelled on hangs off `notes.prospectId`, a real
-     * per-person record with a stage and a history; CommunityLink has no equivalent.
+     * `minTier: Tier.Gold`, NEW ON THIS ROW. A resident is modelled as one row PER
+     * APARTMENT, and apartment inventory (`cl_apartments`) is itself a Gold-tier
+     * feature (`operations_inventory`) — a Pro-tier community has no units for a
+     * resident to attach to. Without this the row would be reachable at Pro and
+     * open onto a form whose apartment picker the backend 402s. Activity Notes
+     * above stays untiered on purpose (it writes to `cl_lead_notes` directly, no
+     * apartment involved) and remains the right tool for a Pro-tier Nurse/Caregiver.
      */
-    { to: '/resident-care-log', label: 'Resident care log', icon: HeartPulse, product: Product.CommunityLink, allow: CL_RESIDENT_CARE_ROLES, comingSoon: true },
+    { to: '/resident-care-log', label: 'Resident care log', icon: HeartPulse, product: Product.CommunityLink, allow: CL_RESIDENT_CARE_ROLES, minTier: Tier.Gold },
     { to: '/gift-gratuity', label: 'Gift & gratuity', icon: Gift, product: Product.CommunityLink, allow: CL_FIELD_ACTIVITY_ROLES, minTier: Tier.Max },
     { to: '/aircall', label: 'Aircall — call · text · email', icon: Phone, product: Product.CommunityLink, allow: CL_SALES_ROLES, minTier: Tier.Max },
   ],
@@ -651,6 +673,24 @@ const COMMUNITYLINK_ADMIN_SETTINGS: NavSection = {
   items: [
     { to: '/alert-settings', label: 'Alert settings', icon: BellRing, product: Product.CommunityLink, allow: ADMIN_ONLY, minTier: Tier.Max },
     { to: '/financial-settings', label: 'Financial settings', icon: Settings2, product: Product.CommunityLink, allow: ADMIN_ONLY, minTier: Tier.Max },
+    /**
+     * IMPORT / EXPORT — the same screen HospiceLink reaches at
+     * /integrations/import (HOSPICELINK_INTEGRATIONS), now reachable from
+     * CommunityLink too.
+     *
+     * The page, its route and the `import_export` permission were always
+     * cross-product — the route carries no product gate, and the permission matrix
+     * already resolves true for CommunityLink's Director, Admin and Owner. The only
+     * thing missing was a row pointing at it, so a CommunityLink admin had no way
+     * in and Add Lead stayed one-at-a-time. Exactly the shape of the team-mileage
+     * gap: a built, permitted screen with no entrance.
+     *
+     * STAFF_ROLES matches the route's own `allow` and the HospiceLink row, so the
+     * sidebar and the gate cannot disagree. No minTier: the datasets a
+     * CommunityLink tenant can import (leads, companies, locations) are Pro-tier
+     * data, and tier-gating the door to Pro-tier data would be arbitrary.
+     */
+    { to: '/integrations/import', label: 'Import / export data', icon: Upload, product: Product.CommunityLink, allow: STAFF_ROLES },
   ],
 };
 

@@ -17,6 +17,7 @@ export interface ClVisitListParams extends PaginationParams {
 
 // CommunityLink outreach — wemarketplus-backend cl/outreach-visits, cl/tasks.
 //   GET/POST/GET:id/PATCH/DELETE  /cl/outreach-visits
+//   POST                          /cl/outreach-visits/schedule
 //   GET/POST/GET:id/PATCH/DELETE  /cl/tasks
 const env = <T>(res: ApiEnvelope<T>) => res.data;
 const list = <T>(res: ApiEnvelope<PaginatedPayload<T>>) => res.data;
@@ -31,8 +32,28 @@ export const clOutreachApi = createApi({
       transformResponse: list<ClOutreachVisitRecord>,
       providesTags: ['ClVisit'],
     }),
+    /**
+     * LOG a visit that already happened — the Outreach Log's form.
+     *
+     * Retrospective on purpose: the server applies no date floor here, because
+     * writing up last week's round is this screen's whole job and `miles` cannot
+     * be known in advance. Use scheduleClVisit for the forward-looking case.
+     */
     createClVisit: build.mutation<ClOutreachVisitRecord, CreateClOutreachVisitRequest>({
       query: (body) => ({ url: '/cl/outreach-visits', method: 'POST', body }),
+      transformResponse: env<ClOutreachVisitRecord>,
+      invalidatesTags: ['ClVisit'],
+    }),
+    /**
+     * SCHEDULE a visit ahead — what the calendar books through.
+     *
+     * Same row and same list as createClVisit; the separate endpoint exists so
+     * the server can floor the date for this intent only. Booking into a day that
+     * has gone is always a mistake; logging one that has gone never is, and while
+     * both shared one endpoint the calendar's rule silently blocked the log.
+     */
+    scheduleClVisit: build.mutation<ClOutreachVisitRecord, CreateClOutreachVisitRequest>({
+      query: (body) => ({ url: '/cl/outreach-visits/schedule', method: 'POST', body }),
       transformResponse: env<ClOutreachVisitRecord>,
       invalidatesTags: ['ClVisit'],
     }),
@@ -70,6 +91,7 @@ export const clOutreachApi = createApi({
 export const {
   useListClVisitsQuery,
   useCreateClVisitMutation,
+  useScheduleClVisitMutation,
   useUpdateClVisitMutation,
   useDeleteClVisitMutation,
   useListClTasksQuery,

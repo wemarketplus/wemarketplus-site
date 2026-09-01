@@ -8,6 +8,7 @@ import {
   useUpdateClLeadMutation,
   useDeleteClLeadMutation,
 } from '../api/leadsApi';
+import { CL_LEAD_STAGE, type ClLostReason } from '../constants/clLeadApiConstants';
 import { CL_LEADS_PAGE_SIZE } from '../constants/leadsConstants';
 import { leadName, toCreateLead, toUpdateLead } from '../utils/leadsUtils';
 import type { LeadFormValues } from '../schema/leadSchema';
@@ -72,9 +73,47 @@ export function useLeadsPage() {
       ? crud.submitUpdate(crud.editing.id, toUpdateLead(values))
       : crud.submitCreate(toCreateLead(values));
 
-  // Inline stage change from the pipeline table's <select> — a targeted PATCH.
-  const changeStage = (lead: ClLeadRecord, stageValue: string) =>
-    crud.submitUpdate(lead.id, { stage: stageValue as ClLeadRecord['stage'] });
+  /**
+   * The lead awaiting a loss reason, or null.
+   *
+   * `Lost` is the one stage that cannot commit straight from the table: the server
+   * requires a reason, so asking for it first is what keeps the control from
+   * firing a request that is guaranteed to fail. Every other stage is unchanged.
+   */
+  const [pendingLoss, setPendingLoss] = useState<ClLeadRecord | null>(null);
+
+  // Inline stage change from the pipeline table — a targeted PATCH, except for
+  // `Lost`, which routes through the reason prompt below.
+  const changeStage = (lead: ClLeadRecord, stageValue: string) => {
+    if (stageValue === CL_LEAD_STAGE.Lost && !lead.lostReason) {
+      // Only when the lead does NOT already carry a reason. Re-selecting `Lost` on
+      // a lead that is already lost with a recorded reason is a no-op the server
+      // accepts as-is, and re-prompting for an answer already on file would read
+      // as the app having forgotten it.
+      setPendingLoss(lead);
+      return undefined;
+    }
+    return crud.submitUpdate(lead.id, {
+      stage: stageValue as ClLeadRecord['stage'],
+    });
+  };
+
+  /** Commits the loss once the prompt has a reason. */
+  const confirmLoss = async (
+    lostReason: ClLostReason,
+    lostReasonDetail: string | null,
+  ) => {
+    if (!pendingLoss) return;
+    await crud.submitUpdate(pendingLoss.id, {
+      stage: CL_LEAD_STAGE.Lost,
+      lostReason,
+      // Sent as null rather than omitted for a non-`other` reason, so switching a
+      // lead from "Other — family postponed" to "Price" does not leave the old
+      // note attached to the new reason.
+      lostReasonDetail,
+    });
+    setPendingLoss(null);
+  };
 
   const hasFilters = Boolean(debouncedSearch.trim() || stage || urgency);
 
@@ -94,5 +133,8 @@ export function useLeadsPage() {
     crud,
     submit,
     changeStage,
+    pendingLoss,
+    cancelLoss: () => setPendingLoss(null),
+    confirmLoss,
   };
 }

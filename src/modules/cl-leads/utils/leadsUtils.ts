@@ -1,8 +1,10 @@
 import { opt } from '@/shared/ui/entity';
-import type {
-  ClCareLevel,
-  ClLeadStage,
-  ClUrgency,
+import {
+  CL_LEAD_STAGE,
+  type ClCareLevel,
+  type ClLeadStage,
+  type ClLostReason,
+  type ClUrgency,
 } from '../constants/clLeadApiConstants';
 import type {
   ClLeadRecord,
@@ -40,6 +42,30 @@ export function toCreateLead(values: LeadFormValues): CreateClLeadRequest {
     ...opt('source', values.source),
     ...opt('followUpDate', values.followUpDate),
     ...opt('notes', values.notes),
+    ...lostReasonPatch(values),
+  };
+}
+
+/**
+ * The loss reason pair, written only when it can be true of the record.
+ *
+ * Off `lost`, both are sent as explicit NULLS rather than omitted. Omitting means
+ * "leave alone", which would let a revived lead keep the reason it was lost for —
+ * and while the server clears them itself on a stage change, saying so here keeps
+ * the request honest about what the form is asserting rather than relying on a
+ * side effect happening somewhere else.
+ */
+function lostReasonPatch(
+  values: LeadFormValues,
+): Pick<CreateClLeadRequest, 'lostReason' | 'lostReasonDetail'> {
+  if (values.stage !== CL_LEAD_STAGE.Lost) {
+    return { lostReason: null, lostReasonDetail: null };
+  }
+  return {
+    lostReason: (values.lostReason || null) as ClLostReason | null,
+    // Only `other` carries a note; anything else clears a note left over from a
+    // previous answer of `other`.
+    lostReasonDetail: values.lostReasonDetail?.trim() || null,
   };
 }
 
@@ -60,5 +86,7 @@ export function toLeadFormValues(lead: ClLeadRecord): LeadFormValues {
     source: lead.source ?? '',
     followUpDate: lead.followUpDate ?? '',
     notes: lead.notes ?? '',
+    lostReason: lead.lostReason ?? '',
+    lostReasonDetail: lead.lostReasonDetail ?? '',
   };
 }

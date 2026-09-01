@@ -4,6 +4,7 @@ export {
   clOutreachApi,
   useListClVisitsQuery,
   useCreateClVisitMutation,
+  useScheduleClVisitMutation,
   useUpdateClVisitMutation,
   useDeleteClVisitMutation,
   useListClTasksQuery,

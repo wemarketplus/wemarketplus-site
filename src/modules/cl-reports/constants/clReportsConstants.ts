@@ -11,6 +11,13 @@ export const REPORT_CATALOG: readonly ReportDefinition[] = [
     category: 'sales',
   },
   {
+    id: 'r-lost-reasons',
+    title: 'Lost reasons',
+    description:
+      'Why lost leads were lost, ranked, as a share of losses rather than of the whole book.',
+    category: 'sales',
+  },
+  {
     id: 'r-tour-conversion',
     title: 'Tour-to-move-in conversion',
     description:

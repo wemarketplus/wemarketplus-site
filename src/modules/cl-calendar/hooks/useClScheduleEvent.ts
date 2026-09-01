@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { useListClLeadsQuery } from '@/modules/cl-leads';
-import { useCreateClVisitMutation, VISIT_TYPE } from '@/modules/cl-outreach';
+import { useScheduleClVisitMutation, VISIT_TYPE } from '@/modules/cl-outreach';
 import { useListClReferralSourcesQuery } from '@/modules/cl-referrals';
 import { useCreateClTourMutation } from '@/modules/cl-tours';
 import { extractApiErrorMessage } from '@/shared/utils/errorUtils';
@@ -26,11 +26,18 @@ export interface ClScheduleController {
 /**
  * Creating from the calendar.
  *
- * Writes to the SAME endpoints the Tour Scheduler and Outreach Log write to —
- * POST /cl/tours and POST /cl/outreach-visits — so a tour booked here is the same
- * record, in the same list, with the same validation. The guide's "anything you'd
- * normally track in Outreach Log can be scheduled here first" is only true if
- * these are one record and not a parallel calendar table.
+ * Writes the SAME RECORDS the Tour Scheduler and Outreach Log write — cl_tours
+ * and cl_outreach_visits — so a tour booked here appears in the same list, and
+ * the guide's "anything you'd normally track in Outreach Log can be scheduled
+ * here first" stays true rather than implying a parallel calendar table.
+ *
+ * The visit half posts to /cl/outreach-visits/SCHEDULE rather than the plain
+ * create route. Same row, same service, one difference: the scheduling route
+ * floors the date server-side, because booking into a day that has already gone
+ * is always a mistake. The log's own route deliberately has no floor, since
+ * writing up a visit that already happened is its whole purpose — the two rules
+ * cannot live on one endpoint, and while they did, the calendar's floor silently
+ * blocked back-dated logging.
  *
  * The mutations invalidate their own tags, so the grid refreshes without this
  * hook knowing anything about the calendar's queries.
@@ -40,7 +47,7 @@ export function useClScheduleEvent(): ClScheduleController {
   const [dayKey, setDayKey] = useState('');
 
   const [createTour, tourState] = useCreateClTourMutation();
-  const [createVisit, visitState] = useCreateClVisitMutation();
+  const [scheduleVisit, visitState] = useScheduleClVisitMutation();
 
   // Pickers, loaded only while the modal is open.
   const leads = useListClLeadsQuery(
@@ -114,7 +121,7 @@ export function useClScheduleEvent(): ClScheduleController {
       // 'visit' and 'lunch' are one record; only the type differs. visitDate is a
       // DATE column, so the raw YYYY-MM-DD goes straight through with no zone
       // conversion — converting it would be the bug.
-      await createVisit({
+      await scheduleVisit({
         visitDate: values.when,
         /**
          * The CANONICAL visit-type values from VISIT_TYPE_OPTIONS — not

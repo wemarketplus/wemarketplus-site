@@ -12,11 +12,29 @@ import { ProspectDrawer } from '../components/ProspectDrawer';
 import { useProspectsList } from '../hooks/useProspectsList';
 import { useAddProspect } from '../hooks/useAddProspect';
 import { useProspectDetail } from '../hooks/useProspectDetail';
+import { useProspectOwner } from '../hooks/useProspectOwner';
+import { useTenantStaffOptions } from '@/modules/users';
 
 export function ProspectsPage() {
   const { prospects, records, total, isUsingFixture } = useProspectsList();
   const { open, editing, isSaving, openModal, openEdit, close, submit, remove } = useAddProspect();
   const detail = useProspectDetail();
+
+  /**
+   * The Marketer column AND the drawer's clinical assignment picker are both
+   * reassignment pickers over the same staff list, so the page loads the
+   * tenant's assignable staff once and hands it to both rather than each
+   * fetching its own.
+   *
+   * `/users/assignable` returns id and name only, which is what makes it readable
+   * by a Marketer — the paginated `/users` list is Admin/Owner/Manager-only, and
+   * reaching for it here would have left exactly the roles that own pipeline rows
+   * with an empty picker. It is unfiltered by role for the same reason the
+   * scheduling modals' own "Assign to" pickers are (ScheduleVisitModal,
+   * ScheduleAppointmentModal): the projection carries no role column to filter on.
+   */
+  const { options: owners } = useTenantStaffOptions();
+  const { assign, isSaving: isAssigning } = useProspectOwner();
 
   // Deletion is Admin/Owner/Manager-only on the backend (legacy: admin-only
   // delete) — mirror that gate on the action so a marketer never sees a button
@@ -69,6 +87,9 @@ export function ProspectsPage() {
         onOpen={detail.open}
         onEdit={editById}
         onDelete={canDelete ? deleteById : undefined}
+        owners={owners}
+        onOwnerChange={(id, userId) => void assign(id, userId)}
+        isAssigning={isAssigning}
       />
 
       <AddProspectModal
@@ -86,6 +107,11 @@ export function ProspectsPage() {
         notes={detail.notes}
         isLoading={detail.isLoading}
         isNotesLoading={detail.isNotesLoading}
+        appointment={detail.appointment}
+        isAppointmentLoading={detail.isAppointmentLoading}
+        staffOptions={owners}
+        onAssignRep={(userId) => void detail.assignRep(userId)}
+        isAssigningRep={detail.isAssigningRep}
         onClose={detail.close}
         onAddNote={detail.startLogging}
         onScheduleVisit={detail.startScheduling}

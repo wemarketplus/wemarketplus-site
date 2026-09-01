@@ -93,6 +93,46 @@ export const DATASET_OPTIONS: readonly DatasetOption[] = [
     elevated: true,
     product: Product.HospiceLink,
   },
+  // HospiceLink referral intake. The backend registry has always declared this
+  // dataset; it was simply never listed here, so the one thing "HospiceLink
+  // already has bulk lead import" was taken to mean was not actually reachable
+  // through the UI. Elevated to match — an inbound lead carries patient name, DOB
+  // and diagnosis, and the backend puts `leads` in ELEVATED_EXPORT_TYPES.
+  {
+    type: 'leads',
+    label: 'Inbound leads',
+    canImport: true,
+    elevated: true,
+    product: Product.HospiceLink,
+  },
+  // CommunityLink lead pipeline — the one-at-a-time Add Lead gap.
+  //
+  // NOT elevated, unlike its two HospiceLink neighbours above: a CommunityLink
+  // lead is a prospective resident enquiry with contact details and a budget. No
+  // diagnosis, no date of birth, no patient. Gating a sales list as if it were PHI
+  // would be a permission barrier with nothing behind it.
+  {
+    type: 'cl-leads',
+    label: 'Leads',
+    canImport: true,
+    elevated: false,
+    product: Product.CommunityLink,
+  },
+  // CommunityLink occupancy. Units themselves are created one-at-a-time during
+  // community/property setup; this only bulk-loads resident occupancy onto units
+  // that already exist, matched by unit number — see `upsertKey` on
+  // DatasetDescriptor in the backend registry. A sheet naming a unit number
+  // nobody set up yet is reported as an error, not created as a new unit.
+  //
+  // NOT elevated, matching cl-leads: a resident name and care level is not PHI
+  // the way a diagnosis or date of birth is.
+  {
+    type: 'cl-apartments',
+    label: 'Apartments/Units',
+    canImport: true,
+    elevated: false,
+    product: Product.CommunityLink,
+  },
 ];
 
 /**
