@@ -4,9 +4,11 @@ import { todayLocalDate } from '@/shared/utils/dateFormatter';
 import {
   CL_CARE_LEVEL,
   CL_LEAD_STAGE,
+  CL_LOST_REASON,
   CL_URGENCY,
   type ClCareLevel,
   type ClLeadStage,
+  type ClLostReason,
   type ClUrgency,
 } from './clLeadApiConstants';
 import type { LeadFormValues } from '../schema/leadSchema';
@@ -65,7 +67,22 @@ const toOptions = (labels: Record<string, string>): readonly EntitySelectOption[
   Object.entries(labels).map(([value, label]) => ({ value, label }));
 
 export const CARE_LEVEL_OPTIONS = toOptions(CARE_LEVEL_LABELS);
+/**
+ * Loss reasons, in the order a marketer is most likely to need them rather than
+ * the enum's declaration order — `Other` last, because a list that opens with the
+ * escape hatch gets the escape hatch.
+ */
+export const LOST_REASON_LABELS: Record<ClLostReason, string> = {
+  [CL_LOST_REASON.Price]: 'Price',
+  [CL_LOST_REASON.Location]: 'Location',
+  [CL_LOST_REASON.ChoseCompetitor]: 'Chose a competitor',
+  [CL_LOST_REASON.ChoseHomeCare]: 'Chose home care',
+  [CL_LOST_REASON.Deceased]: 'Deceased',
+  [CL_LOST_REASON.Other]: 'Other',
+};
+
 export const STAGE_OPTIONS = toOptions(LEAD_STAGE_LABELS);
+export const LOST_REASON_OPTIONS = toOptions(LOST_REASON_LABELS);
 export const URGENCY_OPTIONS = toOptions(URGENCY_LABELS);
 
 // --- Create/edit form field descriptors (drive EntityFormModal) ------------
@@ -91,4 +108,35 @@ export const LEAD_FIELDS: ReadonlyArray<EntityField<LeadFormValues>> = [
    */
   { name: 'followUpDate', label: 'Follow-up date', type: 'date', min: todayLocalDate },
   { name: 'notes', label: 'Notes', type: 'textarea', full: true, placeholder: 'Key details, family contacts, budget…' },
+];
+
+/**
+ * The loss reason pair, appended to LEAD_FIELDS only while `stage` is `lost`.
+ *
+ * A separate list rather than two more entries in LEAD_FIELDS with a `showWhen`
+ * flag: the descriptor type has no conditional concept, and inventing one for a
+ * single case would put a rule the shared form has to interpret into every other
+ * form's type. LeadFormModal composes the two lists instead, which keeps the
+ * condition where the condition is understood.
+ *
+ * `required` on both is honest: while the stage IS `lost`, the server requires the
+ * reason, and requires the note when the reason is `Other`. The modal's submit
+ * guard enforces the second half, since "required only for one value of a sibling
+ * field" is not something the asterisk can express.
+ */
+export const LEAD_LOST_FIELDS: ReadonlyArray<EntityField<LeadFormValues>> = [
+  {
+    name: 'lostReason',
+    label: 'Lost reason',
+    type: 'select',
+    required: true,
+    options: LOST_REASON_OPTIONS,
+  },
+  {
+    name: 'lostReasonDetail',
+    label: 'What happened?',
+    type: 'textarea',
+    full: true,
+    placeholder: 'Required when the reason is Other',
+  },
 ];

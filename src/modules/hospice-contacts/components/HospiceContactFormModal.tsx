@@ -64,20 +64,37 @@ export function HospiceContactFormModal({
       return;
     }
     setError(null);
-    // Empty strings are omitted rather than sent: the backend treats an omitted key
-    // as "leave alone" and a null as "clear", and an empty string would fail the
-    // @IsEmail / @MaxLength validators on fields the user simply left blank.
+    /**
+     * Blank string fields are OMITTED; the two blank ENUM fields are sent as NULL.
+     * The difference is the whole fix for "clearing a role or preferred method
+     * silently fails to save".
+     *
+     * The API reads an omitted key as "leave it alone" and an explicit null as
+     * "clear it". For a text field, omitting a blank is right — an empty string
+     * would fail the @IsEmail / @MaxLength validators on a field the user simply
+     * left alone. But for `roleTitle` and `preferredMethod`, omitting is the ONLY
+     * thing this builder used to do, so picking the blank option to clear a value
+     * set earlier sent nothing at all and the old value stayed put.
+     *
+     * They cannot be sent as `''` instead: both are Postgres enum columns, so an
+     * empty string is not a member and @IsEnum would reject it. `null` is the only
+     * way to express "no value" for these two.
+     *
+     * Harmless on create, where there is nothing to clear — null and omitted both
+     * write null into a nullable column — so the two paths stay one builder rather
+     * than diverging on a distinction only one of them cares about.
+     */
     const values: CreateHospiceContactRequest = {
       firstName: firstName.trim(),
       lastName: lastName.trim(),
       contactType,
       doNotContact,
-      ...(roleTitle ? { roleTitle } : {}),
+      roleTitle: roleTitle || null,
+      preferredMethod: preferredMethod || null,
       ...(phone.trim() ? { phone: phone.trim() } : {}),
       ...(mobile.trim() ? { mobile: mobile.trim() } : {}),
       ...(email.trim() ? { email: email.trim() } : {}),
       ...(fax.trim() ? { fax: fax.trim() } : {}),
-      ...(preferredMethod ? { preferredMethod } : {}),
       ...(npi.trim() ? { npi: npi.trim() } : {}),
       ...(specialty.trim() ? { specialty: specialty.trim() } : {}),
       ...(notes.trim() ? { notes: notes.trim() } : {}),

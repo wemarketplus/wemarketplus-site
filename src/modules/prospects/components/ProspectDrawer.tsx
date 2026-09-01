@@ -1,11 +1,13 @@
 import { CalendarPlus, MessageSquarePlus } from 'lucide-react';
-import { Button } from '@/shared/ui/core';
+import { Button, ListboxSelect } from '@/shared/ui/core';
 import { Modal } from '@/shared/ui/feedback';
 import { Pill, StatTile } from '@/shared/ui/data-display';
 import { TouchLog } from '@/modules/activity';
+import type { AppointmentRecord } from '@/modules/appointments/types/appointmentsTypes';
 import { formatDate } from '@/shared/utils/dateFormatter';
 import type { NoteRecord } from '@/modules/activity/types/activityTypes';
 import type { ReferralSourceRecord } from '@/modules/referrals/types/referralsTypes';
+import type { EntitySelectOption } from '@/shared/ui/entity';
 import { STAGE_LABELS, URGENCY_LABELS, URGENCY_PILL } from '../constants/prospectsConstants';
 import type { ProspectRecord } from '../types/prospectsTypes';
 
@@ -24,6 +26,14 @@ interface ProspectDrawerProps {
   notes: readonly NoteRecord[];
   isLoading: boolean;
   isNotesLoading: boolean;
+  /** The visit `assignedRep` would be set on. Undefined when there is none yet. */
+  appointment: AppointmentRecord | undefined;
+  isAppointmentLoading: boolean;
+  /** Assignable staff for the nurse/caregiver picker — the same list the
+   *  Prospects table's Marketer column uses, from `/users/assignable`. */
+  staffOptions: readonly EntitySelectOption[];
+  onAssignRep: (userId: string) => void;
+  isAssigningRep: boolean;
   onClose: () => void;
   onAddNote: () => void;
   onScheduleVisit: () => void;
@@ -36,6 +46,11 @@ export function ProspectDrawer({
   notes,
   isLoading,
   isNotesLoading,
+  appointment,
+  isAppointmentLoading,
+  staffOptions,
+  onAssignRep,
+  isAssigningRep,
   onClose,
   onAddNote,
   onScheduleVisit,
@@ -150,6 +165,39 @@ export function ProspectDrawer({
                 <dd className="text-foreground">{prospect.phone ?? '—'}</dd>
               </div>
             </dl>
+          </section>
+
+          <section className="space-y-1.5">
+            <h3 className="text-[10px] uppercase tracking-label text-muted-soft">
+              Clinical assignment
+            </h3>
+            {/* `appointments.assignedRep`, NOT the Marketer column's
+                `prospects.assignedTo` (the pipeline owner) — see
+                useProspectOwner for why those are two different fields.
+                Assigning a nurse or caregiver here is what puts this patient
+                on their "My patients" list. */}
+            {appointment ? (
+              <>
+                <ListboxSelect
+                  value={appointment.assignedRep ?? ''}
+                  options={staffOptions}
+                  placeholder="— Unassigned —"
+                  disabled={isAssigningRep}
+                  onChange={onAssignRep}
+                  aria-label={`Assign nurse or caregiver for ${prospect.patientName}`}
+                />
+                <p className="text-[11px] text-muted-soft">
+                  Assigning a nurse or caregiver puts this patient on their
+                  &ldquo;My patients&rdquo; list.
+                </p>
+              </>
+            ) : (
+              <p className="text-sm text-muted-soft">
+                {isAppointmentLoading
+                  ? 'Loading visit…'
+                  : 'Schedule a visit for this patient to assign a nurse or caregiver.'}
+              </p>
+            )}
           </section>
 
           <section className="space-y-1.5">

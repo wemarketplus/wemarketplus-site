@@ -65,13 +65,33 @@ export interface CreateHospiceContactRequest {
   firstName: string;
   lastName: string;
   contactType?: HospiceContactType;
-  roleTitle?: HospiceContactRoleTitle;
+  /**
+   * `null` as well as `undefined`, and that is the fix for a real defect.
+   *
+   * This and `preferredMethod` are nullable enum columns, and the API distinguishes
+   * an OMITTED key ("leave it alone") from an explicit `null` ("clear it"). While
+   * the type could only say `undefined`, a user who picked the blank option to
+   * clear a role they had set earlier produced a request with the key absent —
+   * which the server correctly read as "leave it alone", so the old value silently
+   * stayed put and the change appeared to save.
+   *
+   * The server already supported clearing: its update merges any key that is
+   * PRESENT, including null, and skips only `undefined`. Nothing changed there.
+   * What was missing was a client type that could express `null` at all.
+   *
+   * Not `''`: both columns are Postgres ENUMS, so an empty string is not a member
+   * and would fail `@IsEnum` before reaching the database. `null` is the only way
+   * to say "no value" for these two — which is also why they are the only two
+   * fields here that send null rather than being omitted when blank.
+   */
+  roleTitle?: HospiceContactRoleTitle | null;
   companyId?: string;
   phone?: string;
   mobile?: string;
   email?: string;
   fax?: string;
-  preferredMethod?: HospiceContactPreferredMethod;
+  /** See `roleTitle` — same nullable enum column, same reason. */
+  preferredMethod?: HospiceContactPreferredMethod | null;
   npi?: string;
   specialty?: string;
   doNotContact?: boolean;

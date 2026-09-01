@@ -8,18 +8,24 @@ import type { CreateNoteRequest } from '@/modules/activity/types/activityTypes';
 import type { ScheduleVisitRequest } from '@/modules/appointments/types/appointmentsTypes';
 import { prospectsApi, useGetProspectQuery } from '../api/prospectsApi';
 import { PROSPECTS_TAGS } from '../constants/prospectsConstants';
+import { useProspectAssignment } from './useProspectAssignment';
 
 const HISTORY_LIMIT = 50;
 
 /**
  * Drives the prospect detail drawer: the pipeline row, the account it came from,
- * and its team notes.
+ * its team notes, and the clinical assignment on its current visit.
  *
  * The linked ACCOUNT is fetched separately and only when the prospect has one.
  * Showing the facility by name is the visible proof that the fan-out worked — a
  * prospect created from free text now points at a real account record rather
  * than holding a string, and the drawer would look identical either way if it
  * just echoed `facilityName`.
+ *
+ * The clinical assignment (`appointment`/`assignRep`) is delegated to
+ * useProspectAssignment rather than inlined here: it needs its own two-step
+ * fetch (jobs, then the appointment on one of them) that has nothing to do with
+ * the prospect record itself.
  */
 export function useProspectDetail() {
   const dispatch = useAppDispatch();
@@ -47,6 +53,7 @@ export function useProspectDetail() {
 
   const [createNote] = useCreateNoteMutation();
   const [scheduleVisit] = useScheduleVisitMutation();
+  const assignment = useProspectAssignment(openId);
 
   const close = useCallback(() => {
     setOpenId(null);
@@ -112,5 +119,9 @@ export function useProspectDetail() {
     startScheduling: () => setIsScheduling(true),
     stopScheduling: () => setIsScheduling(false),
     schedule,
+    appointment: assignment.appointment,
+    isAppointmentLoading: assignment.isLoading,
+    assignRep: assignment.assign,
+    isAssigningRep: assignment.isSaving,
   };
 }

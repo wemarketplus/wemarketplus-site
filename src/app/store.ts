@@ -53,6 +53,7 @@ import { goldDemoReducer } from '@/modules/cl-demo-gold';
 import { maxDemoReducer } from '@/modules/cl-demo-max';
 import { leadsApi as clLeadsApi } from '@/modules/cl-leads';
 import { clOperationsApi, clOperationsReducer } from '@/modules/cl-operations';
+import { clAutomationApi } from '@/modules/cl-automation';
 import { clOutreachApi, clOutreachReducer } from '@/modules/cl-outreach';
 import { clReferralsApi } from '@/modules/cl-referrals';
 import { clReportsReducer, clReportsApi } from '@/modules/cl-reports';
@@ -135,6 +136,7 @@ const rootReducer = combineReducers({
   [clFinancialApi.reducerPath]: clFinancialApi.reducer,
   [clLeadsApi.reducerPath]: clLeadsApi.reducer,
   [clOperationsApi.reducerPath]: clOperationsApi.reducer,
+  [clAutomationApi.reducerPath]: clAutomationApi.reducer,
   [clOutreachApi.reducerPath]: clOutreachApi.reducer,
   [clReferralsApi.reducerPath]: clReferralsApi.reducer,
   [clToursApi.reducerPath]: clToursApi.reducer,
@@ -220,6 +222,7 @@ export const store = configureStore({
       clFinancialApi.middleware,
       clLeadsApi.middleware,
       clOperationsApi.middleware,
+      clAutomationApi.middleware,
       clOutreachApi.middleware,
       clReferralsApi.middleware,
       clToursApi.middleware,

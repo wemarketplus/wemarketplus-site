@@ -24,6 +24,7 @@ const ROWS: ReadonlyArray<{
   { status: APARTMENT_STATUS.Occupied, key: 'occupied' },
   { status: APARTMENT_STATUS.Available, key: 'available' },
   { status: APARTMENT_STATUS.Reserved, key: 'reserved' },
+  { status: APARTMENT_STATUS.Waitlisted, key: 'waitlisted' },
   { status: APARTMENT_STATUS.OnNotice, key: 'onNotice' },
   { status: APARTMENT_STATUS.MakeReady, key: 'makeReady' },
   { status: APARTMENT_STATUS.Maintenance, key: 'maintenance' },

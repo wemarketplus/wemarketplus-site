@@ -69,6 +69,7 @@ export const APARTMENT_STATUS_LABELS: Record<ApartmentStatus, string> = {
   [APARTMENT_STATUS.Available]: 'Available',
   [APARTMENT_STATUS.Occupied]: 'Occupied',
   [APARTMENT_STATUS.Reserved]: 'Reserved',
+  [APARTMENT_STATUS.Waitlisted]: 'Waitlisted',
   [APARTMENT_STATUS.OnNotice]: 'On notice',
   [APARTMENT_STATUS.MakeReady]: 'Make-ready',
   [APARTMENT_STATUS.Maintenance]: 'Maintenance',
@@ -122,6 +123,9 @@ export const APARTMENT_STATUS_PILL: Record<ApartmentStatus, PillProps['tone']> =
   [APARTMENT_STATUS.Available]: 'g',
   [APARTMENT_STATUS.Occupied]: 'b',
   [APARTMENT_STATUS.Reserved]: 'p',
+  // Same tone family as Reserved: both mean "not available, and not because
+  // something is wrong with the unit".
+  [APARTMENT_STATUS.Waitlisted]: 'p',
   [APARTMENT_STATUS.OnNotice]: 'y',
   [APARTMENT_STATUS.MakeReady]: 'y',
   [APARTMENT_STATUS.Maintenance]: 'r',

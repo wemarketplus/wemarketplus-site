@@ -17,6 +17,7 @@ import {
   CL_SALES_ROLES,
   CL_ALL_ROLES,
   CL_ACTIVITY_NOTES_ROLES,
+  CL_RESIDENT_CARE_ROLES,
   CL_INVENTORY_ROLES,
   CL_MAKE_READY_ROLES,
   CL_MAINTENANCE_ROLES,
@@ -320,6 +321,11 @@ const ClToursPage = lazy(() =>
 const TasksPage = lazy(() =>
   import('@/modules/cl-tasks').then((m) => ({ default: m.TasksPage })),
 );
+const ClAutomationPage = lazy(() =>
+  import('@/modules/cl-automation').then((m) => ({
+    default: m.ClAutomationPage,
+  })),
+);
 const ClOutreachPage = lazy(() =>
   import('@/modules/cl-outreach').then((m) => ({ default: m.ClOutreachPage })),
 );
@@ -337,6 +343,9 @@ const ReferralPipelinePage = lazy(() =>
 );
 const ActivityNotesPage = lazy(() =>
   import('@/modules/cl-leads').then((m) => ({ default: m.ActivityNotesPage })),
+);
+const ResidentCareLogPage = lazy(() =>
+  import('@/modules/cl-leads').then((m) => ({ default: m.ResidentCareLogPage })),
 );
 const GiftGratuityPage = lazy(() =>
   import('@/modules/cl-gift-gratuity').then((m) => ({ default: m.GiftGratuityPage })),
@@ -815,6 +824,24 @@ export function AppRouter() {
               care guide sends here as the stand-in for the not-yet-built Resident
               Care Log. Matches the nav row and the /cl/lead-notes controller. */}
           <Route path="activity-notes" element={<ProtectedRoute allow={CL_ACTIVITY_NOTES_ROLES}><ActivityNotesPage /></ProtectedRoute>} />
+          {/* CL_RESIDENT_CARE_ROLES, Gold+: a resident is one row per apartment
+              (ClResident), and apartment inventory is itself a Gold-tier feature —
+              see the nav row's comment in navigationConfig.tsx. Mirrors the
+              backend's ClResidentController (@RequireFeature("operations_inventory")
+              @Roles(...CL_RESIDENT_CARE_ROLES)). */}
+          <Route path="resident-care-log" element={<RequireEntitlement minTier={Tier.Gold}><ProtectedRoute allow={CL_RESIDENT_CARE_ROLES}><ResidentCareLogPage /></ProtectedRoute></RequireEntitlement>} />
+          {/*
+            FOLLOW-UP SEQUENCES. `CL_SALES_ROLES` mirrors the controller's own
+            class-level @Roles exactly, so the sidebar and the gate cannot disagree
+            — the divergence that left twelve HospiceLink routes unguarded came
+            from these two lists being maintained independently.
+
+            Reading is open to the whole sales group on purpose: a rep who finds an
+            automated task in their list needs to be able to see which sequence put
+            it there. Creating and editing are narrowed to Admin/Owner/Manager
+            inside the page, matching the controller's per-route @Roles.
+          */}
+          <Route path="automation/sequences" element={<ProtectedRoute allow={CL_SALES_ROLES}><ClAutomationPage /></ProtectedRoute>} />
           <Route path="gift-gratuity" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_FIELD_ACTIVITY_ROLES}><GiftGratuityPage /></ProtectedRoute></RequireEntitlement>} />
           <Route path="aircall" element={<RequireEntitlement minTier={Tier.Max}><ProtectedRoute allow={CL_SALES_ROLES}><AircallPage /></ProtectedRoute></RequireEntitlement>} />
           {/* Tasks is visible/usable by every CommunityLink role, including

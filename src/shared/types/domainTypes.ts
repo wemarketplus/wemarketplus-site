@@ -33,6 +33,15 @@ export interface Prospect {
   email: string;
   referralSource: string;
   assignedMarketer: string;
+  /**
+   * The owning user's ID, carried alongside the resolved display name above.
+   *
+   * Both are needed and neither replaces the other: the name is what a pipeline is
+   * read by, and the id is what a reassignment picker has to hold as its value. The
+   * table used to have only the name, which is why the column could show an owner
+   * but never change one.
+   */
+  assignedTo: ID | null;
   nextStep: string;
   followUpDate: ISODateString;
   urgency: Urgency;
